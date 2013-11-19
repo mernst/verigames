@@ -933,8 +933,8 @@ package scenes.game.components
 		
 		public function moveToPoint(percentPoint:Point):void
 		{
-			var contentX:Number = percentPoint.x * m_currentLevel.m_boundingBox.width / scaleX;
-			var contentY:Number = percentPoint.y * m_currentLevel.m_boundingBox.height / scaleY;
+			var contentX:Number = m_currentLevel.m_boundingBox.x / scaleX + percentPoint.x * m_currentLevel.m_boundingBox.width / scaleX;
+			var contentY:Number = m_currentLevel.m_boundingBox.y / scaleY + percentPoint.y * m_currentLevel.m_boundingBox.height / scaleY;
 			trace(contentX, contentY);
 			moveContent(contentX, contentY);
 		}

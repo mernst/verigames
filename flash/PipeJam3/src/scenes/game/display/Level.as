@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import events.ErrorEvent;
 	import events.MiniMapEvent;
 	
 	import audio.AudioManager;
@@ -103,6 +104,7 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_hidingErrorText:Boolean = false;
 		private var m_segmentHovered:GameEdgeSegment;
+		public var errorList:Dictionary = new Dictionary();
 		
 		private var m_nodesInactiveContainer:Sprite = new Sprite();
 		private var m_jointsInactiveContainer:Sprite = new Sprite();
@@ -615,6 +617,8 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
 			trace(visibleNodes, visibleJoints, visibleLines);
 			
@@ -1008,6 +1012,8 @@ package scenes.game.display
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			removeEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			super.dispose();
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
@@ -1327,6 +1333,16 @@ package scenes.game.display
 				oldBB.height != m_boundingBox.height) {
 					dispatchEvent(new MiniMapEvent(MiniMapEvent.LEVEL_RESIZED));
 			}
+		}
+		
+		private function onErrorAdded(evt:ErrorEvent):void
+		{
+			errorList[evt.errorParticleSystem.id] = evt.errorParticleSystem;
+		}
+		
+		private function onErrorRemoved(evt:ErrorEvent):void
+		{
+			delete errorList[evt.errorParticleSystem.id];
 		}
 		
 		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void

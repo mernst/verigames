@@ -1,6 +1,9 @@
 package scenes.game.components
 {
 	import assets.AssetInterface;
+	import display.BasicButton;
+	import display.MapHideButton;
+	import display.MapShowButton;
 	import display.NineSliceBatch;
 	import display.TextBubble;
 	import events.MiniMapEvent;
@@ -12,6 +15,8 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -29,12 +34,19 @@ package scenes.game.components
 		public static const WIDTH:Number = 0.8 * 140;
 		public static const HEIGHT:Number = 0.8 * 134;
 		
-		public static const LEFT_BUFFER_PCT:Number = (44.0 + 15.0) / 280.0;  // extra +15 to avoid bottom left corner (diagonal border)
-		public static const BOTTOM_BUFFER_PCT:Number = (62.0 + 15.0) / 268.0;// extra +15 to avoid bottom left corner (diagonal border)
+		public static const HIDDEN_Y:Number = HEIGHT * 60.0 / 268.0 - HEIGHT;
+		public static const SHOWN_Y:Number = 0;
 		
 		public static const CLICK_AREA:Rectangle = new Rectangle(WIDTH * 44.0 / 280.0, 0.0, (1.0 - 44.0 / 280.0) * WIDTH, (1.0 - 62.0 / 268.0) * HEIGHT);
+		public static const VIEW_AREA:Rectangle = CLICK_AREA.clone();
+		{
+			VIEW_AREA.inflate( -15.0 * WIDTH / 280.0, -15.0 * HEIGHT / 268.0);
+		}
+		public static const HIDE_SHOW_BUTTON_LOC:Point = new Point(CLICK_AREA.x + 0.5 * CLICK_AREA.width, CLICK_AREA.bottom + 2);
+		private static const HIDE_SHOW_TIME_SEC:Number = 0.8;
 		
-		protected var conflictList:Vector.<ErrorPair>;
+		protected var errorPairs:Dictionary = new Dictionary();
+		protected var widgetPairs:Dictionary = new Dictionary();
 		protected var currentLevel:Level;
 		
 		protected var backgroundImage:Image;
@@ -42,6 +54,11 @@ package scenes.game.components
 		protected var errorLayer:Sprite;
 		protected var viewRectLayer:Sprite;
 		private var m_clickPane:Quad; // clickable area
+		private var m_showButton:BasicButton;
+		private var m_hideButton:BasicButton;
+		private var m_hidden:Boolean = true;
+		private var m_hiding:Boolean = false; // true if animating up to hide
+		private var m_showing:Boolean = false; // true if animating down to show
 		
 		private var m_viewSpaceIndicator:Sprite;
 		private var m_viewSpaceQuads:Vector.<Quad>;
@@ -53,14 +70,17 @@ package scenes.game.components
 		
 		public function MiniMap()
 		{
+			super();
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			var background:Texture = atlas.getTexture("MapMaximized");
 			backgroundImage = new Image(background);
 			addChild(backgroundImage);
 			
+			width = WIDTH;
+			height = HEIGHT;
+			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
-			conflictList = new Vector.<ErrorPair>;
 			
 			gameNodeLayer = new Sprite();
 			addChild(gameNodeLayer);
@@ -74,7 +94,55 @@ package scenes.game.components
 			m_clickPane.y = CLICK_AREA.y / scaleY;
 			addChild(m_clickPane);
 			
+			m_showButton = new MapShowButton();
+			m_showButton.addEventListener(Event.TRIGGERED, showMap);
+			m_hideButton = new MapHideButton();
+			m_hideButton.addEventListener(Event.TRIGGERED, hideMap);
+			m_showButton.x = m_hideButton.x = HIDE_SHOW_BUTTON_LOC.x / scaleX;
+			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
+			addChild(m_showButton);
+			
 			isDirty = true;
+		}
+		
+		public function hideMap(evt:Event):void
+		{
+			if (m_hiding) return;
+			if (m_hidden && !m_showing) return;
+			// Swap out hide button with show button
+			if (m_showButton) addChild(m_showButton);
+			if (m_hideButton) m_hideButton.removeFromParent();
+			// Stop showing animation (if any) and animate this up to hide
+			Starling.juggler.removeTweens(this);
+			m_showing = false;
+			m_hiding = true;
+			Starling.juggler.tween(this, HIDE_SHOW_TIME_SEC, { y:HIDDEN_Y, transition: Transitions.EASE_OUT, onComplete:onHideComplete } );
+		}
+		
+		private function onHideComplete():void
+		{
+			m_hiding = false;
+			m_hidden = true;
+		}
+		
+		public function showMap(evt:Event):void
+		{
+			if (m_showing) return;
+			if (!m_hidden && !m_hiding) return;
+			// Swap out show button with hide button
+			if (m_hideButton) addChild(m_hideButton);
+			if (m_showButton) m_showButton.removeFromParent();
+			// Stop hiding animation (if any) and animate this down to show
+			Starling.juggler.removeTweens(this);
+			m_hiding = false;
+			m_showing = true;
+			Starling.juggler.tween(this, HIDE_SHOW_TIME_SEC, { y:SHOWN_Y, transition: Transitions.EASE_OUT, onComplete:onShowComplete } );
+		}
+		
+		private function onShowComplete():void
+		{
+			m_showing = false;
+			m_hidden = false;
 		}
 		
 		public function addedToStage(event:starling.events.Event):void
@@ -102,20 +170,13 @@ package scenes.game.components
 			var touches:Vector.<Touch> = event.touches;
 			if(event.getTouches(this, TouchPhase.ENDED).length || event.getTouches(this, TouchPhase.MOVED).length)
 			{
-				var currentPoint:Point = touches[0].getLocation(this);
-				//factor in scale
-				currentPoint.x *= scaleX;
-				currentPoint.y *= scaleY;
-				// adjust for borders
-				currentPoint.x -= LEFT_BUFFER_PCT * WIDTH;
-				//switch point to percentages
-				currentPoint.x /= (1.0 - LEFT_BUFFER_PCT) * WIDTH;
-				currentPoint.y /= (1.0 - BOTTOM_BUFFER_PCT) * HEIGHT;
+				var mapPoint:Point = touches[0].getLocation(this);
+				var levPct:Point = map2pct(mapPoint);
+				trace("levPct:" + levPct);
 				// clamp to 0->1
-				currentPoint.x = XMath.clamp(currentPoint.x, 0.0, 1.0);
-				currentPoint.y = XMath.clamp(currentPoint.y, 0.0, 1.0);
-				trace("currentPoint:" + currentPoint);
-				dispatchEvent(new MoveEvent(MoveEvent.MOVE_TO_POINT, null, currentPoint, null));
+				levPct.x = XMath.clamp(levPct.x, 0.0, 1.0);
+				levPct.y = XMath.clamp(levPct.y, 0.0, 1.0);
+				dispatchEvent(new MoveEvent(MoveEvent.MOVE_TO_POINT, null, levPct, null));
 			}
 		}
 		
@@ -133,25 +194,17 @@ package scenes.game.components
 		{
 			if (gameNodeLayer) gameNodeLayer.removeChildren(0, -1, true);
 			if (errorLayer) errorLayer.removeChildren(0, -1, true);
-			
-			if (m_clickPane) {
-				m_clickPane.width = CLICK_AREA.width / scaleX;
-				m_clickPane.height = CLICK_AREA.height / scaleY;
-				m_clickPane.x = CLICK_AREA.x / scaleX;
-				m_clickPane.y = CLICK_AREA.y / scaleY;
+			if (!currentLevel) return;
+			errorPairs = new Dictionary();
+			for (var errorId:String in currentLevel.errorList) {
+				var error:ErrorParticleSystem = currentLevel.errorList[errorId];
+				errorAdded(error, false);
 			}
-			
-			for (var errorId:String in ErrorParticleSystem.errorList)
-			{
-				var error:ErrorParticleSystem = ErrorParticleSystem.errorList[errorId];
-				if(error != null && error.parent != null)
-					errorAdded(error);
-			}
-			if (currentLevel) {
-				var widgets:Vector.<GameNode> = currentLevel.getNodes();
-				for (var i:int = 0; i < widgets.length; i++) {
-					addWidget(widgets[i]);
-				}
+			errorLayer.flatten();
+			widgetPairs = new Dictionary();
+			var widgets:Vector.<GameNode> = currentLevel.getNodes();
+			for (var i:int = 0; i < widgets.length; i++) {
+				addWidget(widgets[i], false);
 			}
 			gameNodeLayer.flatten();
 			drawViewSpaceIndicator();
@@ -165,7 +218,7 @@ package scenes.game.components
 				if (m_viewSpaceQuads == null) {
 					m_viewSpaceQuads = new Vector.<Quad>();
 					for (var i:int = 0; i < 8; i++) {
-						var myq:Quad = new Quad(80, 80, TextBubble.GOLD);
+						var myq:Quad = new Quad(1, 1, TextBubble.GOLD);
 						m_viewSpaceQuads.push(myq);
 						m_viewSpaceIndicator.addChild(myq);
 					}
@@ -173,16 +226,15 @@ package scenes.game.components
 				viewRectLayer.addChild(m_viewSpaceIndicator);
 			}
 			
-			
-			var viewWidth:Number = (1.0 - LEFT_BUFFER_PCT) * (WIDTH / scaleX) * (GridViewPanel.WIDTH / m_contentScale) / visibleBB.width;
-			var viewHeight:Number = (1.0 - BOTTOM_BUFFER_PCT) * (HEIGHT / scaleY) * ((GridViewPanel.HEIGHT /*- GameControlPanel.OVERLAP*/) / m_contentScale) / visibleBB.height;
+			var viewWidth:Number = (VIEW_AREA.width / scaleX) * (GridViewPanel.WIDTH / m_contentScale) / visibleBB.width;
+			var viewHeight:Number = (VIEW_AREA.height / scaleY) * ((GridViewPanel.HEIGHT /*- GameControlPanel.OVERLAP*/) / m_contentScale) / visibleBB.height;
 			
 			var viewTopLeftInLevelSpace:Point = new Point(-m_contentX / m_contentScale, -m_contentY / m_contentScale);
 			var viewTopLeftInMapSpace:Point = level2map(viewTopLeftInLevelSpace);
 			var viewX:Number = viewTopLeftInMapSpace.x;
 			var viewY:Number = viewTopLeftInMapSpace.y;
 			
-			// Setup quads to indicate view:
+			// Setup quad crosshairs/frame to indicate view:
 			//           |2
 			//     ------6-------
 			//0----|4           5|------1
@@ -225,35 +277,46 @@ package scenes.game.components
 			return levelBB;
 		}
 		
-		public function errorAdded(errorParticle:ErrorParticleSystem):void
+		public function errorAdded(errorParticle:ErrorParticleSystem, flatten:Boolean = true):void
 		{
 			if (!errorLayer) return;
-			if (!currentLevel) return;
+			if (!errorParticle.parent) return;
 			
 			var errImage:Image = new Image(ErrorParticleSystem.errorTexture);
 			errImage.width = errImage.height = 80;
 			errImage.alpha = 0.6;
 			errImage.color = 0xFF0000;
 			var errorPair:ErrorPair = new ErrorPair(errImage, errorParticle);
-			conflictList.push(errorPair);
-			if (!errorParticle.parent) return;
+			var prevErrorPair:ErrorPair = errorPairs[errorParticle.id];
+			if (prevErrorPair) prevErrorPair.icon.removeFromParent(true);
+			errorPairs[errorParticle.id] = errorPair;
 			
 			var errPt:Point = level2map(currentLevel.globalToLocal(errorParticle.localToGlobal(new Point())));
 			
-			errorPair.image.x = errPt.x - 0.5 * errorPair.image.width;
-			errorPair.image.y = errPt.y - 0.5 * errorPair.image.height; 
+			errorPair.icon.x = errPt.x - 0.5 * errorPair.icon.width;
+			errorPair.icon.y = errPt.y - 0.5 * errorPair.icon.height; 
 			
-			errorLayer.addChild(errorPair.image);
-			errorLayer.flatten();
+			errorLayer.addChild(errorPair.icon);
+			if (flatten) errorLayer.flatten();
 		}
 		
-		private function addWidget(widget:GameNode):void
+		public function errorRemoved(errorParticle:ErrorParticleSystem):void
+		{
+			var errorPair:ErrorPair = errorPairs[errorParticle.id];
+			if (errorPair) {
+				errorPair.icon.removeFromParent(true);
+				errorLayer.flatten();
+			}
+			delete errorPairs[errorParticle.id];
+		}
+		
+		public function addWidget(widget:GameNode, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
-			if (!currentLevel) return;
-			
-			var iconWidth:Number = widget.m_boundingBox.width / 2.0;
-			var iconHeight:Number = widget.m_boundingBox.height / 2.0;
+			var widgetTopLeft:Point = level2map(widget.m_boundingBox.topLeft);
+			var widgetBotRight:Point = level2map(widget.m_boundingBox.bottomRight);
+			var iconWidth:Number = Math.min(2 / scaleX, widgetBotRight.x - widgetTopLeft.x);
+			var iconHeight:Number = widget.m_boundingBox.height / 2.0; // keep constant height so widgets always visible
 			var icon:NineSliceBatch = new NineSliceBatch(iconWidth, iconHeight, iconHeight / 3.0, iconHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", widget.assetName);
 			
 			var iconLoc:Point = level2map(currentLevel.globalToLocal(widget.localToGlobal(new Point(0.5 * widget.m_boundingBox.width, 0.5 * widget.m_boundingBox.height))));
@@ -261,14 +324,19 @@ package scenes.game.components
 			icon.x = iconLoc.x - 0.5 * icon.width;
 			icon.y = iconLoc.y - 0.5 * icon.height; 
 			
+			var prevPair:WidgetPair = widgetPairs[widget.m_id];
+			if (prevPair) prevPair.icon.removeFromParent(true);
+			var widgetPair:WidgetPair = new WidgetPair(icon, widget);
+			widgetPairs[widget.m_id] = widgetPair;
+			
 			gameNodeLayer.addChild(icon);
+			if (flatten) gameNodeLayer.flatten();
 		}
 		
 		private function level2pct(pt:Point):Point
 		{
 			var pct:Point = new Point((pt.x - visibleBB.x) / visibleBB.width,
 			                          (pt.y - visibleBB.y) / visibleBB.height);
-			//trace("level pct:" + pct);
 			//pct.x = XMath.clamp(pct.x, 0.0, 1.0);
 			//pct.y = XMath.clamp(pct.y, 0.0, 1.0);
 			return pct;
@@ -276,9 +344,8 @@ package scenes.game.components
 		
 		private function map2pct(pt:Point):Point
 		{
-			var pct:Point = new Point((pt.x - LEFT_BUFFER_PCT * WIDTH / scaleX) / ((1.0 - LEFT_BUFFER_PCT) * WIDTH / scaleX),
-			                          pt.y / ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY));
-			//trace("map pct:" + pct);
+			var pct:Point = new Point((pt.x - VIEW_AREA.x / scaleX) / (VIEW_AREA.width / scaleX),
+			                          (pt.y - VIEW_AREA.y / scaleY) / (VIEW_AREA.height / scaleY));
 			//pct.x = XMath.clamp(pct.x, 0.0, 1.0);
 			//pct.y = XMath.clamp(pct.y, 0.0, 1.0);
 			return pct;
@@ -288,15 +355,13 @@ package scenes.game.components
 		{
 			var pt:Point = new Point(visibleBB.width * pct.x + visibleBB.x,
 			                         visibleBB.height * pct.y + visibleBB.y);
-			//trace("level pt:" + pt);
 			return pt;
 		}
 		
 		private function pct2map(pct:Point):Point
 		{
-			var pt:Point = new Point(pct.x * ((1.0 - LEFT_BUFFER_PCT) * WIDTH / scaleX) + LEFT_BUFFER_PCT * WIDTH / scaleX,
-			                         pct.y * ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY));
-			//trace("map pt:" + pt);
+			var pt:Point = new Point(pct.x * (VIEW_AREA.width / scaleX) + VIEW_AREA.x / scaleX,
+			                         pct.y * (VIEW_AREA.height / scaleY) + VIEW_AREA.y / scaleY);
 			return pt;
 		}
 		
@@ -305,20 +370,6 @@ package scenes.game.components
 			var pct:Point = level2pct(pt);
 			return pct2map(pct);
 		}
-		
-		public function errorRemoved(errorParticle:ErrorParticleSystem):void
-		{
-			for (var i:int = 0; i<conflictList.length; i++)
-			{
-				var errorPair:ErrorPair = conflictList[i];
-				if(errorPair.particle.id == errorParticle.id)
-				{
-					errorPair.image.removeFromParent();
-					conflictList.splice(i,1);
-				}
-			}
-		}
-		
 	}
 }
 
@@ -327,12 +378,26 @@ import particle.ErrorParticleSystem;
 import starling.display.Image;
 internal class ErrorPair
 {
-	public var image:Image;
+	public var icon:Image;
 	public var particle:ErrorParticleSystem;
 	
-	public function ErrorPair(_image:Image, _particle:ErrorParticleSystem)
+	public function ErrorPair(_icon:Image, _particle:ErrorParticleSystem)
 	{
-		image = _image;
+		icon = _icon;
 		particle = _particle;
+	}
+}
+
+import scenes.game.display.GameNode;
+import display.NineSliceBatch;
+internal class WidgetPair
+{
+	public var icon:NineSliceBatch;
+	public var widget:GameNode;
+	
+	public function WidgetPair(_icon:NineSliceBatch, _widget:GameNode)
+	{
+		icon = _icon;
+		widget = _widget;
 	}
 }

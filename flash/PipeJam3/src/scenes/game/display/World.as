@@ -188,11 +188,10 @@ package scenes.game.display
 			addChild(gameControlPanel);
 			
 			miniMap = new MiniMap();
-			miniMap.width = MiniMap.WIDTH;
-			miniMap.height = MiniMap.HEIGHT;
 			miniMap.x = Constants.GameWidth - MiniMap.WIDTH;
-			miniMap.y = 0;
+			miniMap.y = MiniMap.HIDDEN_Y;
 			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
+			miniMap.visible = false;
 			addChild(miniMap);
 			
 			onEdgeSetChange(); //update score
@@ -592,6 +591,7 @@ package scenes.game.display
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
+			if (miniMap && evt && evt.edgeSetChanged) miniMap.addWidget(evt.edgeSetChanged); // removes prev widget, adds new colored widget
 			if (!level_changed) return;
 			var edgeSetId:String = "";
 			if (evt && evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
@@ -713,7 +713,7 @@ package scenes.game.display
 						
 						m_currentLevelNumber++;
 					}
-					
+					m_currentLevelNumber = m_currentLevelNumber % levels.length;
 				}
 			}
 			else {
@@ -730,12 +730,12 @@ package scenes.game.display
 		
 		public function onErrorAdded(event:ErrorEvent):void
 		{
-			miniMap.errorAdded(event.errorParticleSystem);
+			if (miniMap) miniMap.errorAdded(event.errorParticleSystem);
 		}
 		
 		public function onErrorRemoved(event:ErrorEvent):void
 		{
-			miniMap.errorRemoved(event.errorParticleSystem);
+			if (miniMap) miniMap.errorRemoved(event.errorParticleSystem);
 		}
 		
 		private function onMoveToPointEvent(evt:MoveEvent):void
@@ -924,9 +924,16 @@ package scenes.game.display
 			
 			active_level = newLevel;
 			
+			if (newLevel.tutorialManager) {
+				miniMap.visible = newLevel.tutorialManager.getMiniMapShown();
+			} else {
+				miniMap.visible = true;
+			}
+			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			
 			newLevel.initialize();
+			
 			onEdgeSetChange();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
@@ -936,7 +943,6 @@ package scenes.game.display
 			} else {
 				gameControlPanel.onZoomReset();
 			}
-			ErrorParticleSystem.resetList();
 			newLevel.start();
 			newLevel.updateScore();
 			

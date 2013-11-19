@@ -29,9 +29,6 @@ package particle
 		
 		protected static var nextID:int = 0;
 		public var id:int;
-		//need to store these somewhere, as they get created before the world is finished
-		public static var errorList:Dictionary = new Dictionary();
-		public static var movedErrorList:Dictionary = new Dictionary();
 		
 		public function ErrorParticleSystem(errorProps:PropDictionary = null) 
 		{
@@ -43,9 +40,7 @@ package particle
 				errorTexture = Texture.fromBitmap(new ErrorParticle());
 			}
 			
-			id=nextID++;
-            errorList[id] = this;
-			movedErrorList[id] = this;
+			id = nextID++;
             mParticleSystem = new PDParticleSystem(errorConfig, errorTexture);
 			if (errorProps && !errorProps.hasProp(PropDictionary.PROP_NARROW)) {
 				for (var prop:String in errorProps.iterProps()) {
@@ -68,13 +63,6 @@ package particle
             addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
         }
         
-		public static function resetList():void
-		{
-			errorList = new Dictionary();
-			movedErrorList = new Dictionary();
-			nextID = 0;
-		}
-		
         private function onAddedToStage(evt:Event):void
         {
 			addChild(mHitQuad);
@@ -93,8 +81,6 @@ package particle
 			mParticleSystem.stop();
 			mParticleSystem.removeFromParent();
 			Starling.juggler.remove(mParticleSystem);
-			delete errorList[id];
-			delete movedErrorList[id];
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, this));
 		}
 	}

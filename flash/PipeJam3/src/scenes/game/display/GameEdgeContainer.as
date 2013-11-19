@@ -929,7 +929,6 @@ package scenes.game.display
 			
 			errorContainer.x = newX;
 			errorContainer.y = newY;
-			if (m_errorParticleSystem) ErrorParticleSystem.movedErrorList[m_errorParticleSystem.id] = m_errorParticleSystem;
 			
 			if (plug) {
 				plug.x = newX;
