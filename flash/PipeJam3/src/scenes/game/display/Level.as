@@ -1929,7 +1929,8 @@ package scenes.game.display
 				// TODO: this should be here: totalLines += nodeSet.getNumLines();
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
 					totalLines += nodeSet.getNumLines(); // TODO: move above
-					if (nodeSet.isWide()) {
+					var properIsWide:Boolean = nodeSet.m_edgeSet ? !nodeSet.m_edgeSet.getProps().hasProp(PropDictionary.PROP_NARROW) : nodeSet.isWide();
+					if (properIsWide) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
 							scoringNodes.push(nodeSet);
