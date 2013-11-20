@@ -78,7 +78,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return intersection.getIntersectionKind().toString();
+        return intersection.getUID() + " (" + intersection.getIntersectionKind() + ")";
     }
 
 }

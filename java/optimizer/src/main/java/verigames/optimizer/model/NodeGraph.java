@@ -6,6 +6,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.StubBoard;
 import verigames.level.World;
+import verigames.optimizer.common.DisjointSet;
 import verigames.utilities.MultiMap;
 
 import java.util.AbstractCollection;
@@ -163,16 +164,16 @@ public class NodeGraph {
     }
 
     /**
-     * @see #toWorld(ReverseMapping)
+     * Create a new world from this graph.
+     * @return a fully constructed world
      */
     public World toWorld() {
         return toWorld(new ReverseMapping());
     }
 
     /**
-     * Create a new world from this graph. The given mapping will be updated to
-     * reflect any changes in intersection or chute IDs.
-     * @param mapping the reverse mapping
+     * Create a new world from this graph.
+     * @param mapping a reverse mapping to update (since some things may get renamed during export)
      * @return a fully constructed world
      */
     public World toWorld(ReverseMapping mapping) {
@@ -191,6 +192,7 @@ public class NodeGraph {
             boardsByLevel.put(n.getLevelName(), n.getBoardName());
 
             Intersection intersection = n.getIntersection();
+            int id = intersection.getUID();
             Intersection newIntersection;
             if (intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD) {
                 String subnetworkName = intersection.asSubboard().getSubnetworkName();
@@ -246,12 +248,12 @@ public class NodeGraph {
                     Intersection end = newIntersectionsByNode.get(edge.getDst());
                     String endPort = edge.getDstPort().getName();
                     newBoard.add(start, startPort, end, endPort, newChute);
-                    ReverseMapping.EdgeID e1 = new ReverseMapping.EdgeID(edge);
-                    ReverseMapping.EdgeID e2 = new ReverseMapping.EdgeID(start.getUID(), startPort, end.getUID(), endPort);
-                    if (!mapping.hasWidthMapping(e1))
-                        mapping.mapEdge(e1, e2);
-                    if (!mapping.hasBuzzsawMapping(e2))
-                        mapping.mapBuzzsaw(e1, e2);
+                    EdgeID oldid = new EdgeID(edge);
+                    EdgeID newid = new EdgeID(newChute);
+                    if (edge.isEditable() && !mapping.hasWidthMapping(edge))
+                        mapping.mapEdge(oldid, newid);
+                    if (!mapping.hasBuzzsawMapping(edge))
+                        mapping.mapBuzzsaw(oldid, newid);
                 }
                 newLevel.addBoard(boardName, newBoard);
             }
@@ -419,6 +421,11 @@ public class NodeGraph {
         return edgesList;
     }
 
+    public Collection<Set<Edge>> getEdgeSets() {
+        // edgeSets.values may contain duplicates
+        return new HashSet<>(edgeSets.values());
+    }
+
     public Set<Edge> edgeSet(Edge edge) {
         return edgeSet(edge.getTarget());
     }
@@ -444,6 +451,19 @@ public class NodeGraph {
         return e1.getVariableID() >= 0 &&
                 e2.getVariableID() >= 0 &&
                 edgeSet(e1).contains(e2);
+    }
+
+    /**
+     * Determine whether two var IDs are linked.
+     * @param varID1 the first var id
+     * @param varID2 the second var id
+     * @return true if varID1 and varID2 are linked
+     */
+    public boolean areLinked(int varID1, int varID2) {
+        return varID1 >= 0 &&
+                varID2 >= 0 &&
+                edgeSets.get(varID1) != null &&
+                edgeSets.get(varID1) == edgeSets.get(varID2);
     }
 
     /**

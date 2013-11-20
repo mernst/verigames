@@ -8,8 +8,11 @@ import verigames.level.Level;
 import verigames.level.RandomWorldGenerator;
 import verigames.level.World;
 import verigames.optimizer.model.MismatchException;
+import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
+import verigames.optimizer.model.Solution;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
@@ -50,17 +53,28 @@ public class OptimizerTest {
     }
 
     @Test
-    public void mappingIsValid() throws MismatchException {
+    public void mappingIsValid() throws MismatchException, IOException {
         Optimizer optimizer = new Optimizer();
         for (World world1 : worlds) {
             ReverseMapping mapping = new ReverseMapping();
+            System.out.println("$$$$$");
             World world2 = optimizer.optimizeWorld(world1, mapping);
+            System.out.println(new NodeGraph(world1).getNodes());
+            System.out.println(new NodeGraph(world1).getEdges());
+            System.out.println(new NodeGraph(world2).getNodes());
+            System.out.println(new NodeGraph(world2).getEdges());
+            mapping.export(System.out);
             mapping.check(world1, world2); // all looks ok?
-            mapping.apply(world1, world2); // no exceptions should be thrown
+
+            // make sure no exceptions are thrown
+            mapping.solutionForUnoptimized(
+                    new NodeGraph(world1),
+                    new NodeGraph(world2),
+                    new Solution(world2)).applyTo(world1);
 
             // only mutable chutes should be mapped
             for (Chute c : world1.getChutes()) {
-                if (mapping.mapWidth(c) != null) {
+                if (mapping.hasWidthMapping(c)) {
                     assert c.isEditable();
                 }
             }

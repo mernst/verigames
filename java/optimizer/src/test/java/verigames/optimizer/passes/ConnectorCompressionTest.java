@@ -14,8 +14,8 @@ import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
+import verigames.optimizer.model.Solution;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -384,7 +384,10 @@ public class ConnectorCompressionTest {
 
                 // translate this back to the original world
                 System.out.println("------------");
-                mapping.apply(world, optimizedWorld);
+                mapping.solutionForUnoptimized(
+                        new NodeGraph(world),
+                        new NodeGraph(optimizedWorld),
+                        new Solution(optimizedWorld)).applyTo(world);
 
                 // figure out if there are "conflicts" in the optimized world
                 // (we'll just assume that our incoming node drops large balls)
@@ -402,13 +405,6 @@ public class ConnectorCompressionTest {
                 if (noConflict) {
                     // verify that if there are NO conflicts in the optimized
                     // world, then there are NO conflicts in the unoptimized one
-                    try {
-                        mapping.export(System.out);
-                    } catch (IOException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
-                    System.out.println("Unopt: " + e1 + "..." + e2);
-                    System.out.println("Opt: " + g.getEdges());
                     assert noConflictU;
                 } else {
                     // verify that if there ARE conflicts in the optimized
@@ -424,7 +420,10 @@ public class ConnectorCompressionTest {
                 }
 
                 // translate this back to the original world
-                mapping.apply(world, optimizedWorld);
+                mapping.solutionForUnoptimized(
+                        new NodeGraph(world),
+                        new NodeGraph(optimizedWorld),
+                        new Solution(optimizedWorld)).applyTo(world);
 
                 // figure out if there are "conflicts" (we'll just assume
                 // that our incoming node drops large balls)

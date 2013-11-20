@@ -69,11 +69,6 @@ public class ChuteEndElimination extends AbstractIterativePass {
         for (Edge e : brokenEdges) {
             Node src = e.getSrc();
 
-            // for all removed mutable edges, force them to be wide
-            if (e.getEdgeData().isEditable()) {
-                mapping.forceWide(e);
-            }
-
             // we should only have edges with missing targets, or something has gone very wrong
             assert g.getNodes().contains(src);
             assert !g.getNodes().contains(e.getDst());
