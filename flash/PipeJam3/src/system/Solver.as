@@ -33,7 +33,7 @@ package system
 				allMovesPerformed = allMovesPerformed.concat(suggestedMoves);
 				if (score < bestScore) break;
 				bestScore = score;
-			//	trace("New Target: " + bestScore);
+				//trace("New Target: " + bestScore);
 			}
 			// Undo moves to reset level graph
 			for (var m:int = 0; m < allMovesPerformed.length; m++) {
@@ -95,7 +95,9 @@ package system
 							for (e = 0; e < wideEdgeSets.length; e++) {
 								gameNode = level.getNode(wideEdgeSets[e].id);
 								if (!gameNode) continue;
-								numMoves += moveSet.addMoveSafe(gameNode, prop, newPropValue) ? 1 : 0;
+								if (gameNode.isEditable()) {
+									numMoves += moveSet.addMoveSafe(gameNode, prop, newPropValue) ? 1 : 0;
+								}
 							}
 							if (numMoves > 0) moveSets.push(moveSet);
 						}
@@ -107,15 +109,15 @@ package system
 			for (var m:int = 0; m < moveSets.length; m++) {
 				var movesToTry:MoveSet = moveSets[m];
 				prevScore = level.currentScore;
-			//	trace("Checking moves:");
+				//trace("Checking moves:");
 				var movesToSuggest:Vector.<EdgeSetChangeEvent> = performMoves(movesToTry);
 				simulator.updateOnBoxSizeChange("", level.level_name);
 				level.updateScore();
 				if (level.currentScore >= prevScore) {
-				//	trace("Good moves! Net score increase: " + (level.currentScore - prevScore));
+					//trace("Good moves! Net score increase: " + (level.currentScore - prevScore));
 					suggestedMoves = suggestedMoves.concat(movesToSuggest);
 				} else {
-				//	trace("Bad moves! Net score increase: " + (level.currentScore - prevScore) + " Undoing...");
+					//trace("Bad moves! Net score increase: " + (level.currentScore - prevScore) + " Undoing...");
 					performMoves(movesToTry, true);
 					simulator.updateOnBoxSizeChange("", level.level_name);
 					level.updateScore();
@@ -153,7 +155,11 @@ package system
 			var newValue:Boolean = undo ? !evt.propValue : evt.propValue;
 			if (gameNode.m_edgeSet.getProps().hasProp(evt.prop) == newValue) return false;
 			gameNode.m_edgeSet.setProp(evt.prop, newValue);
-	//		/*if (!undo)*/ trace("--> Make " + gameNode.m_id + (newValue ? " NARROW" : " WIDE"));
+			if ((evt.prop == PropDictionary.PROP_NARROW) && (gameNode.m_isWide == newValue)) {
+				gameNode.m_isWide = !newValue;
+				gameNode.m_isDirty = true;
+			}
+			/*if (!undo)*/ //trace("--> Make " + gameNode.m_id + (newValue ? " NARROW" : " WIDE"));
 			return true;
 		}
 		
@@ -182,6 +188,7 @@ internal class MoveSet {
 	public function addMoveSafe(gameNode:GameNode, prop:String, value:Boolean):Boolean
 	{
 		if (!gameNode.m_edgeSet) return false;
+		if (!gameNode.isEditable()) return false;
 		var propToMovesDict:Dictionary;
 		if (m_edgeSetIdPropToMoves.hasOwnProperty(gameNode.m_edgeSet.id)) {
 			propToMovesDict = m_edgeSetIdPropToMoves[gameNode.m_edgeSet.id] as Dictionary;

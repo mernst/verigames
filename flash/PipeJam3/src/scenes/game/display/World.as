@@ -1,6 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	import events.MiniMapEvent;
+	import particle.ErrorParticleSystem;
+	import scenes.game.components.MiniMap;
 	
 	import audio.AudioManager;
 	
@@ -70,6 +73,7 @@ package scenes.game.display
 	{
 		protected var edgeSetGraphViewPanel:GridViewPanel;
 		public var gameControlPanel:GameControlPanel;
+		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
 		
 		protected var shareDialog:SaveDialog;
@@ -183,6 +187,13 @@ package scenes.game.display
 			}
 			addChild(gameControlPanel);
 			
+			miniMap = new MiniMap();
+			miniMap.x = Constants.GameWidth - MiniMap.WIDTH;
+			miniMap.y = MiniMap.HIDDEN_Y;
+			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
+			miniMap.visible = false;
+			addChild(miniMap);
+			
 			onEdgeSetChange(); //update score
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
@@ -246,12 +257,15 @@ package scenes.game.display
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			
+			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
+			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
+			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
+			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			
 			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-			addEventListener(ErrorEvent.ERROR_MOVED, onErrorMoved);
 			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
 			
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
@@ -559,9 +573,25 @@ package scenes.game.display
 			if (gameControlPanel) gameControlPanel.onZoomReset();
 		}
 		
+		public function onErrorsMoved(event:MiniMapEvent):void
+		{
+			if (miniMap) miniMap.isDirty = true;
+		}
+		
+		public function onLevelResized(event:MiniMapEvent):void
+		{
+			if (miniMap) miniMap.isDirty = true;
+		}
+		
+		public function onViewspaceChanged(event:MiniMapEvent):void
+		{
+			miniMap.onViewspaceChanged(event);
+		}
+		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
+			if (miniMap && evt && evt.edgeSetChanged) miniMap.addWidget(evt.edgeSetChanged); // removes prev widget, adds new colored widget
 			if (!level_changed) return;
 			var edgeSetId:String = "";
 			if (evt && evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
@@ -683,7 +713,7 @@ package scenes.game.display
 						
 						m_currentLevelNumber++;
 					}
-					
+					m_currentLevelNumber = m_currentLevelNumber % levels.length;
 				}
 			}
 			else {
@@ -700,17 +730,12 @@ package scenes.game.display
 		
 		public function onErrorAdded(event:ErrorEvent):void
 		{
-			gameControlPanel.errorAdded(event.errorParticleSystem, active_level);
+			if (miniMap) miniMap.errorAdded(event.errorParticleSystem);
 		}
 		
 		public function onErrorRemoved(event:ErrorEvent):void
 		{
-			gameControlPanel.errorRemoved(event.errorParticleSystem);
-		}
-		
-		public function onErrorMoved(event:ErrorEvent):void
-		{
-			gameControlPanel.errorMoved(event.errorParticleSystem);
+			if (miniMap) miniMap.errorRemoved(event.errorParticleSystem);
 		}
 		
 		private function onMoveToPointEvent(evt:MoveEvent):void
@@ -866,6 +891,7 @@ package scenes.game.display
 			if (!newLevel) {
 				return;
 			}
+			
 			if (PipeJam3.logging) {
 				var details:Object, qid:int;
 				if (active_level) {
@@ -898,9 +924,16 @@ package scenes.game.display
 			
 			active_level = newLevel;
 			
+			if (newLevel.tutorialManager) {
+				miniMap.visible = newLevel.tutorialManager.getMiniMapShown();
+			} else {
+				miniMap.visible = true;
+			}
+			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			
 			newLevel.initialize();
+			
 			onEdgeSetChange();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
@@ -923,10 +956,12 @@ package scenes.game.display
 				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
 				active_level.updateScore();
 			}
+			
 			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
 			active_level.resetBestScore();
 			
 			gameControlPanel.newLevelSelected(newLevel);
+			miniMap.isDirty = true;
 			//	newLevel.setConstraints();
 			//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
@@ -967,6 +1002,9 @@ package scenes.game.display
 			removeEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
 			removeEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			removeEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
+			removeEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
+			removeEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
+			removeEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
 			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			

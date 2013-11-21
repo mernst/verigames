@@ -270,6 +270,36 @@ package scenes.game.display
 			return true;
 		}
 		
+		public function getMiniMapShown():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+					return false;
+				case SKILLS_B_TUTORIAL:
+				case END_TUTORIAL:
+					return true;
+			}
+			return true;
+		}
+		
 		public function getLayoutFixed():Boolean
 		{
 			switch (m_tutorialTag) {
@@ -637,7 +667,7 @@ package scenes.game.display
 						NineSliceBatch.TOP_LEFT, null);
 				case SKILLS_B_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Good work!\nNow try this one!",
+						"Good work!\nTry using the map\nin the top right\nto navigate this\nlarger level.",
 						null,
 						null,
 						NineSliceBatch.TOP_LEFT, null);

@@ -5,17 +5,17 @@ import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
-import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
  *     <li>{@link #forceWide(Edge)}</li>
  *     <li>{@link #forceNarrow(Edge)}</li>
  * </ul>
- * You will also want to call {@link #mapBuzzsaw(NodeGraph, Edge, Edge)} when
+ * You will also want to call {@link #mapBuzzsaw(Edge, Edge)} when
  * appropriate to ensure that buzzsaws are transferred correctly.
  * </p>
  * <p>
@@ -49,65 +49,10 @@ import java.util.regex.Pattern;
  */
 public class ReverseMapping {
 
-    protected static class EdgeID {
-        public final int src;
-        public final String srcPort;
-        public final int dst;
-        public final String dstPort;
-
-        public EdgeID(int src, String srcPort, int dst, String dstPort) {
-            this.src = src;
-            this.srcPort = srcPort;
-            this.dst = dst;
-            this.dstPort = dstPort;
-        }
-
-        public EdgeID(Edge e) {
-            this(e.getSrc().getIntersection().getUID(),
-                    e.getSrcPort().getName(),
-                    e.getDst().getIntersection().getUID(),
-                    e.getSrcPort().getName());
-        }
-
-        public EdgeID(Chute c) {
-            this(c.getStart().getUID(),
-                    c.getStartPort(),
-                    c.getEnd().getUID(),
-                    c.getEndPort());
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            EdgeID edgeID = (EdgeID) o;
-            if (dst != edgeID.dst) return false;
-            if (src != edgeID.src) return false;
-            if (!dstPort.equals(edgeID.dstPort)) return false;
-            if (!srcPort.equals(edgeID.srcPort)) return false;
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = src;
-            result = 31 * result + srcPort.hashCode();
-            result = 31 * result + dst;
-            result = 31 * result + dstPort.hashCode();
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "EdgeID{" +
-                    "src=" + src +
-                    ", srcPort='" + srcPort + '\'' +
-                    ", dst=" + dst +
-                    ", dstPort='" + dstPort + '\'' +
-                    '}';
-        }
-
-    }
+    /**
+     * Character set used for reading/writing
+     */
+    public static final Charset CHARSET = Charset.forName("ascii");
 
     /**
      * Represents what a chute can map to. Either it maps to another chute
@@ -197,7 +142,7 @@ public class ReverseMapping {
     }
 
     public static ReverseMapping load(InputStream stream) throws IOException {
-        Scanner scanner = new Scanner(stream);
+        Scanner scanner = new Scanner(new InputStreamReader(stream, CHARSET));
         scanner.nextLine(); // drop the comment line at the top
         ReverseMapping map = new ReverseMapping();
         loadMap(scanner, map.widthMapping);
@@ -246,19 +191,23 @@ public class ReverseMapping {
     }
 
     public void export(OutputStream output) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, CHARSET));
         writer.write("# this is an automatically generated verigames optimizer mapping file, created on " + new Date() + "\n");
         exportMap(writer, widthMapping);
         exportMap(writer, buzzsawMapping);
         writer.flush();
     }
 
-    public boolean hasWidthMapping(EdgeID e) {
-        return widthMapping.containsKey(e);
+    public boolean hasWidthMapping(Chute c) {
+        return widthMapping.containsKey(new EdgeID(c));
     }
 
-    public boolean hasBuzzsawMapping(EdgeID e) {
-        return buzzsawMapping.containsKey(e);
+    public boolean hasWidthMapping(Edge e) {
+        return widthMapping.containsKey(new EdgeID(e));
+    }
+
+    public boolean hasBuzzsawMapping(Edge e) {
+        return buzzsawMapping.containsKey(new EdgeID(e));
     }
 
     /**
@@ -274,16 +223,16 @@ public class ReverseMapping {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
-        // we get this for free
-        if (unoptimized.equals(optimized))
-            return;
         // by default, edges in the same edge set will do the right thing
         if (g.areLinked(unoptimized, optimized))
             return;
-        mapEdge(new EdgeID(optimized), new EdgeID(unoptimized));
+        mapEdge(new EdgeID(unoptimized), new EdgeID(optimized));
     }
 
     protected void mapEdge(EdgeID unoptimized, EdgeID optimized) {
+        // we get this for free
+        if (unoptimized.equals(optimized))
+            return;
         widthMapping.put(unoptimized, new Mapping(optimized));
     }
 
@@ -293,20 +242,14 @@ public class ReverseMapping {
      * @param unoptimized  the edge in the unoptimized world
      * @param optimized    the edge in the optimized world
      */
-    public void mapBuzzsaw(NodeGraph g, Edge unoptimized, Edge optimized) {
-        // immutable edges can't map to anything
-        if (!unoptimized.isEditable())
-            return;
-        // we get this for free
-        if (unoptimized.equals(optimized))
-            return;
-        // by default, edges in the same edge set will do the right thing
-        if (g.areLinked(unoptimized, optimized))
-            return;
-        mapEdge(new EdgeID(optimized), new EdgeID(unoptimized));
+    public void mapBuzzsaw(Edge unoptimized, Edge optimized) {
+        mapBuzzsaw(new EdgeID(unoptimized), new EdgeID(optimized));
     }
 
     protected void mapBuzzsaw(EdgeID unoptimized, EdgeID optimized) {
+        // we get this for free
+        if (unoptimized.equals(optimized))
+            return;
         buzzsawMapping.put(unoptimized, new Mapping(optimized));
     }
 
@@ -355,17 +298,9 @@ public class ReverseMapping {
     }
 
     /**
-     * Force the given chute to be narrow or wide in the solution.
-     * Has no effect if the unoptimized argument is immutable.
-     *
-     * <p>NOTE: either the given chute must not be linked to any
-     * other edges, or you must forceNarrow all the edges in its
-     * edge set to the same value.
-     * @param unoptimized a chute in the unoptimized world
-     * @param narrow      true to force to narrow, false to force
-     *                    to wide
+     * Used for testing only.
      */
-    public void forceNarrow(Chute unoptimized, boolean narrow) {
+    protected void forceNarrow(Chute unoptimized, boolean narrow) {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
@@ -401,13 +336,21 @@ public class ReverseMapping {
         if (src == null)
             throw new MismatchException("Missing intersection " + e.src);
         Chute chute = src.getOutput(e.srcPort);
-        if (!chute.getEndPort().equals(e.dstPort) || chute.getEnd().getUID() != e.dst)
-            throw new MismatchException("Missing chute " + e);
+        if (chute == null)
+            throw new MismatchException("Intersection " + e.src + " has no output port " + e.srcPort);
+        if (!chute.getEndPort().equals(e.dstPort))
+            throw new MismatchException("Chute " + chute.getUID() + " destination port is " + chute.getEndPort() + "; should be " + e.dstPort);
+        if (chute.getEnd().getUID() != e.dst)
+            throw new MismatchException("Chute " + chute.getUID() + " destination intersection is " + chute.getEnd().getUID() + "; should be " + e.dst);
         return chute;
     }
 
-    public Mapping mapWidth(Chute c) {
-        return map(widthMapping, new EdgeID(c));
+    protected Mapping getWidthMapping(EdgeID e) {
+        return map(widthMapping, e);
+    }
+
+    protected Mapping getBuzzsawMapping(EdgeID e) {
+        return map(buzzsawMapping, e);
     }
 
     protected Mapping map(Map<EdgeID, Mapping> m, Chute c) {
@@ -432,13 +375,6 @@ public class ReverseMapping {
         return result;
     }
 
-    private void setWidth(Collection<Chute> chutes, boolean narrow) {
-        for (Chute c : chutes) {
-            if (c.isEditable())
-                c.setNarrow(narrow);
-        }
-    }
-
     /**
      * Do a bunch of assertions to make sure everything is OK. This is a
      * sanity-check method and when everything is stable we can probably
@@ -446,8 +382,9 @@ public class ReverseMapping {
      * you write the optimized world and this mapping to disk.
      * @param unoptimized  the unoptimized world
      * @param optimized    the optimized world
+     * @throws AssertionError when something is very wrong
      */
-    public void check(World unoptimized, World optimized) throws MismatchException {
+    public void check(World unoptimized, World optimized) {
         Collection<Set<Chute>> unoptimizedEdgeSets = unoptimized.getLinkedChutes();
         Map<Integer, Intersection> optimizedIntersectionsByID = intersectionsByID(optimized);
         for (Set<Chute> chutes : unoptimizedEdgeSets) {
@@ -456,9 +393,14 @@ public class ReverseMapping {
             for (Chute c : chutes) {
                 Mapping width = map(widthMapping, c);
                 if (width != null) {
+                    assert c.isEditable();
                     if (width.edge != null) {
-                        Chute target = findChute(optimizedIntersectionsByID, optimized, width.edge);
-                        mappings.add(optimized.getLinkedVarIDs(target.getVariableID()));
+                        try {
+                            Chute target = findChute(optimizedIntersectionsByID, optimized, width.edge);
+                            mappings.add(optimized.getLinkedVarIDs(target.getVariableID()));
+                        } catch (MismatchException e) {
+                            // hm, deleted edge? no problem.
+                        }
                     } else {
                         mappings.add(width.val);
                     }
@@ -468,75 +410,94 @@ public class ReverseMapping {
                 Set<Integer> vs = new HashSet<>();
                 for (Chute c : chutes)
                     vs.add(c.getVariableID());
-                Util.logVerbose("Problematic mapping: " + vs + " => " + mappings);
+                System.err.println("Problematic mapping: " + vs + " => " + mappings);
             }
             assert mappings.size() <= 1;
         }
     }
 
+    public Edge findEdge(NodeGraph g, Map<Integer, Node> nodesByID, EdgeID id) {
+        Node start = nodesByID.get(id.src);
+        if (start == null)
+            return null;
+        Collection<Edge> outgoing = g.outgoingEdges(start);
+        for (Edge e : outgoing) {
+            if (new EdgeID(e).equals(id))
+                return e;
+        }
+        return null;
+    }
+
     /**
-     * Convert a solution on the optimized world to a solution on the
-     * unoptimized world.
-     *
-     * <p>Precondition: all editable chutes in both worlds have non-negative
-     * var IDs. (This is because negative var IDs are treated specially.)
-     * @param unoptimized  [IN/OUT] the unoptimized world to solve
-     * @param optimized    the already solved optimized world
+     * Given an optimized world and its solution, get a solution for the unoptimized version.
+     * @param unoptimizedGraph   the unoptimized graph
+     * @param optimizedGraph     the optimized graph
+     * @param optimizedSolution  the solution for the optimized graph
+     * @return a solution for the unoptimized graph
+     * @throws MismatchException when this mapping does not properly apply to the given graphs
      */
-    public void apply(World unoptimized, World optimized) throws MismatchException {
-        Collection<Set<Chute>> unoptimizedChutes = unoptimized.getLinkedChutes();
-        MultiMap<Integer, Chute> optimizedChutesByVarID = chutesByVarID(optimized);
-        Map<Integer, Intersection> optimizedIntersectionsByID = intersectionsByID(optimized);
-        for (Set<Chute> chutes : unoptimizedChutes) {
-            // figuring out widths is complicated
-            Chute c = Util.first(chutes);
-            Mapping mapping = map(widthMapping, c);
+    public Solution solutionForUnoptimized(
+            NodeGraph unoptimizedGraph,
+            NodeGraph optimizedGraph,
+            Solution optimizedSolution) throws MismatchException {
 
-            Set<Integer> vs = new HashSet<>();
-            for (Chute ch : chutes) {
-                vs.add(ch.getVariableID());
-            }
+        Map<Integer, Node> optimizedNodesByID = new HashMap<>();
+        for (Node n : optimizedGraph.getNodes()) {
+            optimizedNodesByID.put(n.getIntersection().getUID(), n);
+        }
 
-            if (mapping == null) { // no widthMapping? copy result from solved world
+        Solution result = new Solution();
 
-                // Find some matching variable ID in the optimized world
-                Collection<Chute> srcs = Collections.emptySet();
-                for (Integer varID : vs) {
-                    srcs = optimizedChutesByVarID.get(varID);
-                    if (!srcs.isEmpty())
-                        break;
-                }
-                if (srcs.isEmpty()) {
-                    continue; // no correspondence? must not matter.
-                }
-                setWidth(chutes, Util.first(srcs).isNarrow());
-
-            } else if (mapping.edge != null) { // widthMapping? copy result from corresponding chute
-
-                Chute src = findChute(optimizedIntersectionsByID, optimized, mapping.edge);
-                setWidth(chutes, src.isNarrow());
-
-            } else { // forced value? set it
-
-                setWidth(chutes, mapping.val);
-
-            }
-
-            // figuring out buzzsaws is easy
-            for (Chute chute : chutes) {
-                Mapping buzz = map(buzzsawMapping, chute);
-                if (buzz != null) {
-                    if (buzz.edge != null) {
-                        Chute src = findChute(optimizedIntersectionsByID, optimized, buzz.edge);
-                        chute.setBuzzsaw(src.hasBuzzsaw());
-                    } else {
-                        chute.setBuzzsaw(buzz.val);
+        for (Collection<Edge> edgeSet : unoptimizedGraph.getEdgeSets()) {
+            boolean narrow = false;
+            loop:
+            for (Edge e : edgeSet) {
+                if (!e.isEditable())
+                    continue;
+                EdgeID id = new EdgeID(e);
+                Mapping m = getWidthMapping(id);
+                if (m == null) {
+                    for (Edge optEdge : optimizedGraph.edgeSet(e.getVariableID())) {
+                        if (optimizedSolution.isNarrow(optEdge)) {
+                            narrow = true;
+                            break loop;
+                        }
                     }
                 } else {
-                    chute.setBuzzsaw(false);
+                    if (m.edge != null) {
+                        Edge optEdge = findEdge(optimizedGraph, optimizedNodesByID, m.edge);
+                        if (optimizedSolution.isNarrow(optEdge)) {
+                            narrow = true;
+                            break;
+                        }
+                    } else {
+                        if (m.val) {
+                            narrow = true;
+                            break;
+                        }
+                    }
                 }
             }
+            for (Edge e : edgeSet) {
+                if (e.isEditable())
+                    result.setNarrow(e, narrow);
+            }
         }
+
+        for (Edge unOpt : unoptimizedGraph.getEdges()) {
+            EdgeID id = new EdgeID(unOpt);
+            Mapping m = getBuzzsawMapping(id);
+            if (m == null) {
+                m = new Mapping(id);
+            }
+            if (m.edge != null) {
+                result.setBuzzsaw(unOpt, optimizedSolution.hasBuzzsaw(findEdge(optimizedGraph, optimizedNodesByID, m.edge)));
+            } else {
+                result.setBuzzsaw(unOpt, m.val);
+            }
+        }
+
+        return result;
     }
 
     @Override

@@ -23,14 +23,12 @@ package particle
 		
 		private static var errorInited:Boolean = false;
 		private static var errorConfig:XML;
-		private static var errorTexture:Texture;
+		public static var errorTexture:Texture;
 		private var mParticleSystem:PDParticleSystem;
 		private var mHitQuad:Quad;
 		
 		protected static var nextID:int = 0;
 		public var id:int;
-		//need to store these somewhere, as they get created before the world is finished
-		public static var errorList:Dictionary = new Dictionary;
 		
 		public function ErrorParticleSystem(errorProps:PropDictionary = null) 
 		{
@@ -42,8 +40,7 @@ package particle
 				errorTexture = Texture.fromBitmap(new ErrorParticle());
 			}
 			
-			id=nextID++;
-            errorList[id] = this;
+			id = nextID++;
             mParticleSystem = new PDParticleSystem(errorConfig, errorTexture);
 			if (errorProps && !errorProps.hasProp(PropDictionary.PROP_NARROW)) {
 				for (var prop:String in errorProps.iterProps()) {
@@ -76,7 +73,6 @@ package particle
             
             addChild(mParticleSystem);
             Starling.juggler.add(mParticleSystem);
-			
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, this));
         }
 		
@@ -85,8 +81,6 @@ package particle
 			mParticleSystem.stop();
 			mParticleSystem.removeFromParent();
 			Starling.juggler.remove(mParticleSystem);
-			
-			errorList[id] = null;
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, this));
 		}
 	}

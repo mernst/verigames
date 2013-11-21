@@ -10,7 +10,9 @@ import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
 import verigames.optimizer.model.MismatchException;
+import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
+import verigames.optimizer.model.Solution;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -69,10 +71,12 @@ public class SolutionTransferMain {
         if (toFile == null) { missing("to"); return; }
         if (mappingFile == null) { missing("mapping"); return; }
 
-        final WorldXMLParser parser = new WorldXMLParser(true);
+        final WorldXMLParser worldParser = new WorldXMLParser(true);
         final World optimized;
+        final Solution optimizedSolution;
         try {
-            optimized = parser.parse(Util.getInputStream(fromFile));
+            optimized = worldParser.parse(Util.getInputStream(fromFile));
+            optimizedSolution = new Solution(optimized);
         } catch (FileNotFoundException e) {
             err("Failed to open optimized XML file '" + fromFile + "' for reading");
             return;
@@ -80,7 +84,7 @@ public class SolutionTransferMain {
 
         final World unoptimized;
         try {
-            unoptimized = parser.parse(Util.getInputStream(toFile));
+            unoptimized = worldParser.parse(Util.getInputStream(toFile));
         } catch (FileNotFoundException e) {
             err("Failed to open unoptimized XML file '" + toFile + "' for reading");
             return;
@@ -98,15 +102,26 @@ public class SolutionTransferMain {
         }
 
         try {
-            mapping.apply(unoptimized, optimized);
+            Solution solution = mapping.solutionForUnoptimized(
+                    new NodeGraph(unoptimized),
+                    new NodeGraph(optimized),
+                    optimizedSolution);
+            solution.applyTo(unoptimized);
         } catch (MismatchException e) {
             err("Solution transfer failed: " + e);
+            System.exit(1);
+            return;
         }
 
         try {
-            new WorldXMLPrinter().print(unoptimized, new PrintStream(Util.getOutputStream(outputFile)), null);
+            new WorldXMLPrinter().print(
+                    unoptimized,
+                    new PrintStream(Util.getOutputStream(outputFile)),
+                    null);
         } catch (FileNotFoundException e) {
             err("Failed to open output file '" + outputFile + "' for writing");
+            System.exit(1);
+            return;
         }
 
     }

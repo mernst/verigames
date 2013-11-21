@@ -5,6 +5,7 @@ package scenes.game.components
 	import display.NineSliceButton;
 	import display.ToolTipText;
 	import events.MenuEvent;
+	import events.MiniMapEvent;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
@@ -80,7 +81,7 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
-		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
+		public static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
@@ -89,7 +90,7 @@ package scenes.game.components
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
-			
+			// TODO: we want to avoid class dependency loops, fix this World <-> GridViewPanel to World -> GridViewPanel
 			m_world = world;
 			currentMode = NORMAL_MODE;
 			
@@ -650,6 +651,7 @@ package scenes.game.components
 				if(m_currentLevel)
 				{
 					m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
+					m_currentLevel.removeEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 					content.removeChild(m_currentLevel);
 					if (m_currentLevel.tutorialManager) {
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
@@ -677,6 +679,7 @@ package scenes.game.components
 				}
 				swapBackgroundImage(seed);
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+				m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 				if (m_currentLevel.tutorialManager) {
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
@@ -751,6 +754,11 @@ package scenes.game.components
 			}
 		}
 		
+		private function onLevelViewChanged(evt:MiniMapEvent):void
+		{
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+		}
+		
 		public function recenter():void
 		{
 			content.x = 0;
@@ -813,6 +821,8 @@ package scenes.game.components
 				inactiveContent.y = content.y;
 				scaleContent(m_currentLevel.tutorialManager.getStartScaleFactor());
 			}
+			
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		private var m_fanfareContainer:Sprite = new Sprite();
@@ -923,7 +933,10 @@ package scenes.game.components
 		
 		public function moveToPoint(percentPoint:Point):void
 		{
-			moveContent(percentPoint.x* m_currentLevel.m_boundingBox.width/scaleX, percentPoint.y * m_currentLevel.m_boundingBox.height/scaleY);
+			var contentX:Number = m_currentLevel.m_boundingBox.x / scaleX + percentPoint.x * m_currentLevel.m_boundingBox.width / scaleX;
+			var contentY:Number = m_currentLevel.m_boundingBox.y / scaleY + percentPoint.y * m_currentLevel.m_boundingBox.height / scaleY;
+			trace(contentX, contentY);
+			moveContent(contentX, contentY);
 		}
 		
 		/**
@@ -937,6 +950,7 @@ package scenes.game.components
 			inactiveContent.x = content.x;
 			content.y = ( -panY * content.scaleY + clipRect.height / 2);
 			inactiveContent.y = content.y;
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		/**

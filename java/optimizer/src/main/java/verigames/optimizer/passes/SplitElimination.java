@@ -62,8 +62,8 @@ public class SplitElimination implements OptimizationPass {
 
                     mapping.mapEdge(g, src, srcReplacement);
                     mapping.mapEdge(g, e2, e2Replacement);
-                    mapping.mapBuzzsaw(g, src, srcReplacement);
-                    mapping.mapBuzzsaw(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(src, srcReplacement);
+//                    mapping.mapBuzzsaw(e2, e2Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be
@@ -81,8 +81,8 @@ public class SplitElimination implements OptimizationPass {
 
                     mapping.mapEdge(g, src, srcReplacement);
                     mapping.mapEdge(g, e1, e1Replacement);
-                    mapping.mapBuzzsaw(g, src, srcReplacement);
-                    mapping.mapBuzzsaw(g, e1, e1Replacement);
+//                    mapping.mapBuzzsaw(src, srcReplacement);
+//                    mapping.mapBuzzsaw(e1, e1Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be

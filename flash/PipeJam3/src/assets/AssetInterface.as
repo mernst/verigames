@@ -122,6 +122,13 @@ package assets
 		public static const PipeJamSubTexture_ThumbOver:String = "ScrollbarButtonMouseover";
 		public static const PipeJamSubTexture_ThumbSelected:String = "ScrollbarButtonClick";
 		public static const PipeJamSubTexture_ScrollBarTrack:String = "Scrollbar";
+		// Level select atlas textures:
+		public static const LevelSelectSubTexture_MapMaximizeButton:String = "MaximizeButton";
+		public static const LevelSelectSubTexture_MapMaximizeButtonClick:String = "MaximizeButtonClick";
+		public static const LevelSelectSubTexture_MapMaximizeButtonMouseover:String = "MaximizeButtonMouseover";
+		public static const LevelSelectSubTexture_MapMinimizeButton:String = "MinimizeButton";
+		public static const LevelSelectSubTexture_MapMinimizeButtonClick:String = "MinimizeButtonClick";
+		public static const LevelSelectSubTexture_MapMinimizeButtonMouseover:String = "MinimizeButtonMouseover";
 		
         public static function getTexture(file:String, name:String):Texture
         {

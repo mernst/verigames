@@ -81,8 +81,8 @@ public class MergeElimination implements OptimizationPass {
                     Edge dstReplacement = g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
                     mapping.mapEdge(g, e2, e2Replacement);
                     mapping.mapEdge(g, dst, dstReplacement);
-                    mapping.mapBuzzsaw(g, e2, e2Replacement);
-                    mapping.mapBuzzsaw(g, dst, dstReplacement);
+                    mapping.mapBuzzsaw(e2, e2Replacement);
+                    mapping.mapBuzzsaw(dst, dstReplacement);
                 } else if (e2.getSrc().getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
                     g.removeNode(e2.getSrc());
                     g.removeNode(n);
@@ -91,8 +91,8 @@ public class MergeElimination implements OptimizationPass {
                     Edge dstReplacement = g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
                     mapping.mapEdge(g, e1, e1Replacement);
                     mapping.mapEdge(g, dst, dstReplacement);
-                    mapping.mapBuzzsaw(g, e1, e1Replacement);
-                    mapping.mapBuzzsaw(g, dst, dstReplacement);
+                    mapping.mapBuzzsaw(e1, e1Replacement);
+                    mapping.mapBuzzsaw(dst, dstReplacement);
                 // If this merge drops to an END node we can split it up (described above).
                 // The deleted outgoing edge should be made wide to avoid conflicts.
                 } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
@@ -104,8 +104,8 @@ public class MergeElimination implements OptimizationPass {
                     mapping.forceWide(dst);
                     mapping.mapEdge(g, e1, e1Replacement);
                     mapping.mapEdge(g, e2, e2Replacement);
-                    mapping.mapBuzzsaw(g, e1, e1Replacement);
-                    mapping.mapBuzzsaw(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(e1, e1Replacement);
+                    mapping.mapBuzzsaw(e2, e2Replacement);
                 }
 
             }

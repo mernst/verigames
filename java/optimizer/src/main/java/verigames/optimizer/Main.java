@@ -9,7 +9,6 @@ import org.apache.commons.cli.ParseException;
 import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
-import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.io.FileNotFoundException;
@@ -103,7 +102,7 @@ public class Main {
 
         try {
             mapping.check(world, optimizedWorld);
-        } catch (MismatchException | AssertionError e) {
+        } catch (AssertionError e) {
             System.err.println("Uh oh! Something is very very wrong. This is a bug. Here is a stacktrace:");
             e.printStackTrace();
             System.exit(1);

@@ -139,28 +139,33 @@ package scenes.game.display
 			}
 		}
 		
+		public function get assetName():String
+		{
+			var _assetName:String;
+			if(m_isEditable == true)
+			{
+				if (m_isWide == true)
+					_assetName = AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix;
+				else
+					_assetName = AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix;
+			}
+			else //not adjustable
+			{
+				if(m_isWide == true)
+					_assetName = AssetInterface.PipeJamSubTexture_GrayDarkBoxPrefix;
+				else
+					_assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
+			}
+			if (m_isSelected) _assetName += "Select";
+			return _assetName;
+		}
+		
 		override public function draw():void
 		{
 			if (m_costume) {
 				m_costume.removeFromParent(true);
 			}
 			
-			var assetName:String;
-			if(m_isEditable == true)
-			{
-				if (m_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix;
-			}
-			else //not adjustable
-			{
-				if(m_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_GrayDarkBoxPrefix;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
-			}
-			if (m_isSelected) assetName += "Select";
 			m_costume = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
 			addChild(m_costume);
 			

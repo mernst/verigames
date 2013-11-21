@@ -95,7 +95,9 @@ public class Edge {
 
     @Override
     public String toString() {
-        return "Edge(" + getEdgeData() + ")";
+        return "Edge(" + getSrc().getIntersection().getUID()
+                + " -> "+ getDst().getIntersection().getUID()
+                + ", " + getEdgeData() + ")";
     }
 
 }

@@ -2,6 +2,8 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import events.ErrorEvent;
+	import events.MiniMapEvent;
 	
 	import audio.AudioManager;
 	
@@ -102,6 +104,7 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_hidingErrorText:Boolean = false;
 		private var m_segmentHovered:GameEdgeSegment;
+		public var errorList:Dictionary = new Dictionary();
 		
 		private var m_nodesInactiveContainer:Sprite = new Sprite();
 		private var m_jointsInactiveContainer:Sprite = new Sprite();
@@ -615,6 +618,8 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
 			trace(visibleNodes, visibleJoints, visibleLines);
 			
@@ -828,6 +833,8 @@ package scenes.game.display
 		}
 		
 		//update current layout info based on node/edge position
+		// TODO: We don't want Level to depend on World, let's avoid circular 
+		// class dependency and have World -> Level, not World <-> Level
 		public function updateLayoutXML(world:World, includeThumbnail:Boolean = false):void
 		{
 			var children:XMLList = m_levelLayoutXML.children();
@@ -1006,6 +1013,8 @@ package scenes.game.display
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			removeEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			super.dispose();
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
@@ -1317,7 +1326,24 @@ package scenes.game.display
 				maxX = Math.max(maxX, m_edgeList[i].m_boundingBox.right);
 				maxY = Math.max(maxY, m_edgeList[i].m_boundingBox.bottom);
 			}
+			var oldBB:Rectangle = m_boundingBox.clone();
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			if (oldBB.x != m_boundingBox.x ||
+			    oldBB.y != m_boundingBox.y ||
+				oldBB.width != m_boundingBox.width ||
+				oldBB.height != m_boundingBox.height) {
+					dispatchEvent(new MiniMapEvent(MiniMapEvent.LEVEL_RESIZED));
+			}
+		}
+		
+		private function onErrorAdded(evt:ErrorEvent):void
+		{
+			errorList[evt.errorParticleSystem.id] = evt.errorParticleSystem;
+		}
+		
+		private function onErrorRemoved(evt:ErrorEvent):void
+		{
+			delete errorList[evt.errorParticleSystem.id];
 		}
 		
 		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void
@@ -1403,6 +1429,7 @@ package scenes.game.display
 			totalMoveDist.x += delta.x;
 			totalMoveDist.y += delta.y;
 			trace(totalMoveDist);
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.ERRORS_MOVED));
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
 		
@@ -1902,7 +1929,8 @@ package scenes.game.display
 				// TODO: this should be here: totalLines += nodeSet.getNumLines();
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
 					totalLines += nodeSet.getNumLines(); // TODO: move above
-					if (nodeSet.isWide()) {
+					var properIsWide:Boolean = nodeSet.m_edgeSet ? !nodeSet.m_edgeSet.getProps().hasProp(PropDictionary.PROP_NARROW) : nodeSet.isWide();
+					if (properIsWide) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
 							scoringNodes.push(nodeSet);
