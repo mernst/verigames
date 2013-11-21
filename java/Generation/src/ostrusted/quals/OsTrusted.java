@@ -20,6 +20,11 @@ import com.sun.source.tree.Tree;
 @ImplicitFor(
     trees={
         Tree.Kind.STRING_LITERAL,
+        Tree.Kind.BOOLEAN_LITERAL,
+        Tree.Kind.INT_LITERAL,
+        Tree.Kind.FLOAT_LITERAL,
+        Tree.Kind.DOUBLE_LITERAL,
+        Tree.Kind.LONG_LITERAL,
         Tree.Kind.NULL_LITERAL
     })
 public @interface OsTrusted {}
