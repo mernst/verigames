@@ -1,7 +1,8 @@
 //This script inherits many settings from java/build.gradle
 
 dependencies {
-	compile fileTree(dir: "lib",  include: "**/*.jar")
+	compile fileTree(dir: "lib", include: "**/*.jar", exclude: "junit-4.8.2.jar")
+	testCompile files("lib/junit-4.8.2.jar")
 }
 
 sourceSets {
