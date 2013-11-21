@@ -1,19 +1,9 @@
 package verigames.optimizer.model;
 
-import verigames.level.Chute;
-import verigames.level.World;
-
 /**
  * An edge in a {@link NodeGraph}.
  */
 public class Edge {
-
-    public static Edge fromChute(World w, Chute c) {
-        return new Edge(
-                Node.fromIntersection(w, c.getStart()), new Port(c.getStartPort()),
-                Node.fromIntersection(w, c.getEnd()), new Port(c.getEndPort()),
-                EdgeData.fromChute(c));
-    }
 
     private final Node src;
     private final Port srcPort;
