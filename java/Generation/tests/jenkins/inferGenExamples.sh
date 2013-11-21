@@ -40,7 +40,7 @@ do
 		done
 	fi
 	
-	eval sh $distDir"/scripts/inferNullness.sh "$f
+	eval python $distDir"/scripts/verigames.py --checker ostrusted.OsTrustedChecker "$f
 	
 	if [ $? -ne 0 ]
 		then  
