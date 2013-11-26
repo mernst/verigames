@@ -104,7 +104,7 @@ public class PrettyDotPrinter {
     private Map<String, String> nodeProperties(Intersection intersection) {
         Map<String, String> result = new HashMap<>();
         result.put("label", intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD ?
-                "SUBBOARD " + intersection.asSubboard().getSubnetworkName() :
+                "SUBBOARD " + intersection.getUID() + ": " + intersection.asSubboard().getSubnetworkName() :
                 intersection.getIntersectionKind() + " " + intersection.getUID());
 
         switch (intersection.getIntersectionKind()) {
