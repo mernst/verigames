@@ -76,7 +76,7 @@ public class PrettyDotPrinter {
         Map<String, String> result = new HashMap<>();
 
         String label = chute.getUID() + " " + chute.getDescription() + " " +
-                (chute.getVariableID() > 0 ? " (var#" + chute.getVariableID() + ")" : "");
+                (chute.getVariableID() >= 0 ? " (var#" + chute.getVariableID() + ")" : "");
         label += "\\n(" + (chute.isNarrow() ? "narrow" : "wide") + ")";
         if (!chute.isEditable()) {
             label += "\\n(not editable)";
