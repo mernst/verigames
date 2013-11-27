@@ -1906,7 +1906,7 @@ package scenes.game.display
 			
 			/*
 			 * New Scoring:
-			 * +75 for each line going thru/starting/ending @ a box
+			 * +75 for each edge
 			 * +25 for wide inputs
 			 * +25 for narrow outputs
 			 * -75 for errors
@@ -1921,14 +1921,15 @@ package scenes.game.display
 			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var errorEdges:Vector.<Edge> = new Vector.<Edge>();
 			var errorPorts:Vector.<Port> = new Vector.<Port>();
+			for (var edge:Object in edgeDictionary) {
+				++ totalLines;
+			}
 			// Pass over all nodes, find nodes involved in scoring
 			var allNodes:Vector.<GameNode> = getNodes();
 			for (var nodeI:int = 0; nodeI < allNodes.length; nodeI++)
 			{
 				var nodeSet:GameNode = allNodes[nodeI];
-				// TODO: this should be here: totalLines += nodeSet.getNumLines();
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
-					totalLines += nodeSet.getNumLines(); // TODO: move above
 					var properIsWide:Boolean = nodeSet.m_edgeSet ? !nodeSet.m_edgeSet.getProps().hasProp(PropDictionary.PROP_NARROW) : nodeSet.isWide();
 					if (properIsWide) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
