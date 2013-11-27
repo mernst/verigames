@@ -67,12 +67,8 @@ public class Optimizer {
     }
 
     public World optimizeWorld(World source, ReverseMapping mapping) {
-        System.err.println("Converting data...");
         NodeGraph g = new NodeGraph(source);
-        System.err.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         optimize(g, mapping);
-        System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
-        System.err.println("Converting data back...");
         return g.toWorld(mapping);
     }
 

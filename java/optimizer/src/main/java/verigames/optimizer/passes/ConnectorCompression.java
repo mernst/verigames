@@ -7,7 +7,6 @@ import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.EdgeData;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
-import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
@@ -25,11 +24,6 @@ public class ConnectorCompression implements OptimizationPass {
         // avoid concurrent modifications.
         for (Node node : new ArrayList<>(g.getNodes())) {
             if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
-
-                // HACK: fixes boards with dangling connectors
-                if (g.outgoingEdges(node).size() == 0) {
-                    g.addEdge(node, Port.OUTPUT, Util.newNodeOnSameBoard(node, Intersection.Kind.END), Port.INPUT, EdgeData.WIDE);
-                }
 
                 // for this node kind: one incoming edge, one outgoing edge
                 Edge incomingEdge = Util.first(g.incomingEdges(node));

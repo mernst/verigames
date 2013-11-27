@@ -6,14 +6,19 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import verigames.level.Level;
+import verigames.level.StubBoard;
 import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
+import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -71,10 +76,30 @@ public class Main {
             return;
         }
 
-        System.err.println("Starting optimization...");
+        System.err.println("Converting data...");
+        NodeGraph g = new NodeGraph(world);
+
+        System.err.println("Preprocessing...");
+        int nodes = g.getNodes().size();
+        int edges = g.getEdges().size();
+        Map<String, StubBoard> stubs = new HashMap<>();
+        for (Level l : world.getLevels().values()) {
+            stubs.putAll(l.getStubBoards());
+        }
+        new Preprocessor().preprocess(g, stubs);
+        int nodeDelta = g.getNodes().size() - nodes;
+        int edgeDelta = g.getEdges().size() - edges;
+        System.err.println("Finished preprocessing: " +
+                (nodeDelta >= 0 ? "+" : "") + nodeDelta + " nodes, " +
+                (edgeDelta >= 0 ? "+" : "") + edgeDelta + " edges");
+
+        System.err.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         Optimizer optimizer = new Optimizer();
         ReverseMapping mapping = new ReverseMapping();
-        World optimizedWorld = optimizer.optimizeWorld(world, mapping);
+        optimizer.optimize(g, mapping);
+        System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
+        System.err.println("Converting data back...");
+        World optimizedWorld = g.toWorld(mapping);
 
         System.err.println("Writing world...");
         try {

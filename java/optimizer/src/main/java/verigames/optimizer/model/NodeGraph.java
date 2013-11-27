@@ -410,6 +410,12 @@ public class NodeGraph {
         removeEdge(e.getSrc(), e.getSrcPort(), e.getDst(), e.getDstPort());
     }
 
+    public void removeEdges(Collection<Edge> toRemove) {
+        for (Edge e : toRemove) {
+            removeEdge(e);
+        }
+    }
+
     public Collection<Edge> getEdges() {
         // TODO: return a view, not a copy
         Collection<Edge> edgesList = new ArrayList<Edge>();
