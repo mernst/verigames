@@ -133,4 +133,34 @@ assigns the NonNegative type to any nonnegative integer literals, and also to
 the addition, multiplication, or division of any two NonNegative integers. These
 properties are implemented in the NonNegativeAnnotatedTypeFactory.
 
-TODO finish this section
+It should subclass games.GameAnnotatedTypeFactory
+
+Methods:
+- Constructor:
+  - Should take an instance of the Checker as a parameter.
+  - Should call postInit();
+- createTreeAnnotator():
+  - Should return a TreeAnnotator (see below)
+
+TreeAnnotator: You should subclass TreeAnnotator
+(http://types.cs.washington.edu/checker-framework/current/api/checkers/types/TreeAnnotator.html)
+in an inner class, and pass an instance of it back in the createTreeAnnotator()
+method.
+
+
+TreeAnnotator Methods:
+- Constructor:
+  - Should call the superclass constructor with the enclosing
+    instance of the AnnotatedTypeFactory as an argument.
+- visit* methods:
+  - See the javadocs (linked above) for information on which visit methods you
+    can override
+
+For the NonNegative checker, we override visitLiteral and visitBinary.
+
+visitLiteral is used to apply the NonNegative annotation to nonnegative integer
+literals.
+
+visitBinary is used to apply the NonNegatvie annotation to integer arithmetic
+operations. For example, a NonNegative plus a NonNegative is a NonNegative. This
+behavior is implemented in visitBinary.
