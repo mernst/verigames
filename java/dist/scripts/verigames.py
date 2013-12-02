@@ -61,11 +61,15 @@ encrypted_checker = Checker('encrypted.EncryptedChecker', 'trusted.TrustedVisito
     solver='trusted.TrustedGameSolver', subanno='@encrypted.quals.Encrypted', superanno='@encrypted.quals.Plaintext')
 ostrusted_checker = Checker('ostrusted.OsTrustedChecker', 'trusted.TrustedVisitor',
     solver='trusted.TrustedGameSolver', subanno='@ostrusted.quals.OsTrusted', superanno='@ostrusted.quals.OsUntrusted')
+nonnegative_checker = Checker('nonnegative.NonNegativeChecker', 'nonnegative.NonNegativeVisitor',
+    solver='trusted.TrustedGameSolver', subanno='@nonnegative.quals.NonNegative', superanno='@nonnegative.quals.UnknownSign')
 
 checkers={nninf_checker.name: nninf_checker,
         trusted_checker.name: trusted_checker,
         encrypted_checker.name: encrypted_checker,
-        ostrusted_checker.name: ostrusted_checker}
+        ostrusted_checker.name: ostrusted_checker,
+        nonnegative_checker.name: nonnegative_checker,
+        }
 
 def error(msg):
     print >> sys.stderr, msg

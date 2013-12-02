@@ -7,7 +7,6 @@ import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.EdgeData;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
-import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
@@ -25,11 +24,6 @@ public class ConnectorCompression implements OptimizationPass {
         // avoid concurrent modifications.
         for (Node node : new ArrayList<>(g.getNodes())) {
             if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
-
-                // HACK: fixes boards with dangling connectors
-                if (g.outgoingEdges(node).size() == 0) {
-                    g.addEdge(node, Port.OUTPUT, Util.newNodeOnSameBoard(node, Intersection.Kind.END), Port.INPUT, EdgeData.WIDE);
-                }
 
                 // for this node kind: one incoming edge, one outgoing edge
                 Edge incomingEdge = Util.first(g.incomingEdges(node));
@@ -70,26 +64,19 @@ public class ConnectorCompression implements OptimizationPass {
                 newChute);
 
         // map the old chutes to the new one
+        // NOTE: If the new chute is immutable narrow, then it means a conflict
+        // may be inevitable. No mapping needs to happen. If the new chute is
+        // immutable wide, then we must have shown that the other chute can be
+        // made wide without trouble.
         if (newChute.isEditable()) {
             mapping.mapEdge(g, incoming, result);
             mapping.mapEdge(g, outgoing, result);
-        } else {
-            // Delicate note: it IS IMPORTANT that we check these edges are
-            // conflict free before mapping them. This is because narrow
-            // immutable chutes always consume an edge, even if it is not
-            // conflict free, and we do NOT want to force an entire edge
-            // set to be narrow just because one of its edges was deemed
-            // useless. Put another way, if an edge is not conflict free,
-            // then we don't want to force its whole edge set to a particular
-            // value. To remove it, we must have already shown that it can't
-            // create any conflicts no matter what it is set to.
-            if (Util.conflictFree(g, incoming))
-                mapping.forceNarrow(incoming, newChute.isNarrow());
-            if (Util.conflictFree(g, outgoing))
-                mapping.forceNarrow(outgoing, newChute.isNarrow());
+        } else if (!newChute.isNarrow()) {
+            mapping.forceWide(incoming);
+            mapping.forceWide(outgoing);
         }
 
-        mapping.mapBuzzsaw(g, incoming, result);
+        mapping.mapBuzzsaw(incoming, result);
 
         return result;
     }

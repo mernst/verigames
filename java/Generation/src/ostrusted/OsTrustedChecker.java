@@ -1,5 +1,6 @@
 package ostrusted;
 
+import ostrusted.quals.PolyOsTrusted;
 import trusted.TrustedChecker;
 import ostrusted.quals.OsTrusted;
 import ostrusted.quals.OsUntrusted;
@@ -16,7 +17,7 @@ import javax.lang.model.util.Elements;
  * [2]  CWE-78  Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
  */
 
-@TypeQualifiers({ OsTrusted.class, OsUntrusted.class })
+@TypeQualifiers({ OsTrusted.class, OsUntrusted.class, PolyOsTrusted.class })
 public class OsTrustedChecker extends TrustedChecker implements
         InferenceTypeChecker {
 

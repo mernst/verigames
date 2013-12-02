@@ -1,24 +1,8 @@
 package verigames.optimizer.model;
 
-import verigames.level.Board;
 import verigames.level.Intersection;
-import verigames.level.Level;
-import verigames.level.World;
-
-import java.util.Map;
 
 public class Node {
-
-    public static Node fromIntersection(World w, Intersection i) {
-        assert !w.underConstruction();
-        Board board = i.getBoard();
-        for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
-            if (levelEntry.getValue().getBoards().values().contains(board)) {
-                return new Node(levelEntry.getKey(), board.getName(), i);
-            }
-        }
-        throw new RuntimeException("the given intersection was not found in the given world");
-    }
 
     private final String levelName;
     private final String boardName;
@@ -78,7 +62,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return intersection.getIntersectionKind().toString();
+        return intersection.getUID() + " (" + intersection.getIntersectionKind() + ")";
     }
 
 }

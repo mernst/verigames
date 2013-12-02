@@ -1,4 +1,4 @@
-package verigames.optimizer.model;
+package verigames.optimizer.common;
 
 /**
  * Disjoint set (a.k.a. union-find) data structure. Generally used to

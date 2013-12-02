@@ -999,6 +999,10 @@ abstract class GameSolver extends ConstraintSolver {
   def addVariableSubtypeConstraint( board : Board, supervar : AbstractVariable, subvar : AbstractVariable ) {
     import Intersection.Kind._
 
+    if( supervar == subvar ) {
+      return
+    }
+
     val lastSubtypeISect   = findIntersection( board, subvar )
     val lastSupertypeISect = findIntersection( board, supervar )
 

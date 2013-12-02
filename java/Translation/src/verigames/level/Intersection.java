@@ -272,7 +272,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   /**
    * Dangerous package-level factory method that lets you specify the ID.
    */
-  public static Subboard subboardFactory(int id, String methodName)
+  static Subboard subboardFactory(int id, String methodName)
   {
     return new Subboard(id, methodName);
   }

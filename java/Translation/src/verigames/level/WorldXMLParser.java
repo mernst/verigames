@@ -303,7 +303,7 @@ public class WorldXMLParser
       name = nameAttr.getValue();
     }
 
-    final Board b = new Board();
+    final Board b = new Board(name);
 
     final Elements nodesElts = boardElt.getChildElements("node");
     final Elements edgesElts = boardElt.getChildElements("edge");
