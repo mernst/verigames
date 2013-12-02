@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Flow Jam Statistics</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" type="text/css">
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css">
+  <!--<link rel="stylesheet" href="bootstrap-datetimepicker-0.0.11/css/bootstrap-datetimepicker.min.css" type="text/css">-->
+  <link rel="stylesheet" href="bootstrap-datepicker/css/datepicker.css" type="text/css">
+  <!-- JavaScript -->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>-->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+  <!--<script src="bootstrap-datetimepicker-0.0.11/js/bootstrap-datetimepicker.min.js" type="text/javascript" charset="utf-8"></script>-->
+  <script src="bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript" charset="utf-8"></script>
+  <script src="date/date.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	var localGoogle = google;
+	$(document).ready(function(){
+		localGoogle.setOnLoadCallback(onLoadGoogleAPI);
+		$('#dropoff_stacked').change(function(e){
+			drawDropoffChart();
+		});
+		$('#datadatestart').datepicker().on('changeDate', function(ev) {
+		  filterData();
+		  drawCharts();
+		});
+		$('#datadateend').datepicker().on('changeDate', function(ev) {
+		  filterData();
+		  drawCharts();
+		});
+		$('#sessionsperday_stacked').change(function(e){
+			drawColumnChart(sessionsPerDayData, "sessionsperday", "Sessions", "Sessions per Day", true);
+		});
+		$('#levelsperday_stacked').change(function(e){
+			drawColumnChart(levelsPerDayData, "levelsperday", "Levels played", "Total Levels Played per Day", true);
+		});
+		$('#playsperlevel_stacked').change(function(e){
+			drawColumnChart(playsPerLevelData, "playsperlevel", "Total Plays", "Total Plays per Level", true);
+		});
+		$('#movesperlevel_completedonly').change(function(e){
+			filterData();
+			drawMovesCharts();
+		});
+		$('.btn-group').button();
+		$("#movesperlevel_type").change(function e() {
+			showMovesChart();
+		});
+	});
+	
+	var TUTORIALS = [
+		{"name": "IntroWidget", "qid":"1", "targetScore":"400"},
+		{"name": "WidgetPractice", "qid":"2" ,"targetScore":"700"},
+		{"name": "LockedWidget", "qid":"3" ,"targetScore":"550"},
+		{"name": "Links", "qid":"4" ,"targetScore":"400"},
+		{"name": "Passages", "qid":"5" ,"targetScore":"350"},
+		{"name": "Jams", "qid":"6" ,"targetScore":"75"},
+		{"name": "Widen", "qid":"7" ,"targetScore":"375"},
+		{"name": "LockedPassage", "qid":"8" ,"targetScore":"450"},
+		{"name": "Optimize", "qid":"9" ,"targetScore":"1000"},
+		{"name": "Splits", "qid":"10" ,"targetScore":"175"},
+		{"name": "Merges", "qid":"11" ,"targetScore":"150"},
+		{"name": "SplitMerge", "qid":"17" ,"targetScore":"575"},
+		{"name": "ZoomPan", "qid":"13" ,"targetScore":"150"},
+		{"name": "Layout", "qid":"12" ,"targetScore":"200"},
+		{"name": "GroupSelect", "qid":"18" ,"targetScore":"n/a"},
+		{"name": "CreateJoint", "qid":"19" ,"targetScore":"n/a"},
+		{"name": "SkillsA", "qid":"14" ,"targetScore":"1625"},
+		{"name": "SkillsB", "qid":"15" ,"targetScore":"4950"}
+	];
+	var TUTORIAL_LIST = {
+		"IntroWidget": true,
+		"WidgetPractice": true,
+		"LockedWidget": true,
+		"Links": true,
+		"Passages": true,
+		"Jams": true,
+		"Widen": true,
+		"LockedPassage": true,
+		"Optimize": true,
+		"Splits": true,
+		"Merges": true,
+		"SplitMerge": true,
+		"ZoomPan": true,
+		"Layout": true,
+		"GroupSelect": true,
+		"CreateJoint": true,
+		"SkillsA": true,
+		"SkillsB": true
+	};
+	  
+	var PLAYER_LEVELS = []
+	  
+	function onLoadGoogleAPI() {
+	    $.getJSON( "player_levels.json", function(data) {
+			PLAYER_LEVELS = data;
+			console.log( "success" );
+			filterData();
+			drawCharts();
+		});
+	}
+	  
+	updateProgress(1, "");
+	var dropOffData = [['Tutorial',  'Logged in uids', 'Anonymous uids']];
+	var sessionsPerDayData = [['Day',  'Logged in sessions', 'Anonymous sessions']];
+	var levelsPerDayData = [['Day',  'Logged in levels', 'Anonymous levels']];
+	var playsPerLevelData = [['Level',  'Logged in plays', 'Anonymous plays']];
+	var meanMovesPerLevelData = [['Level',  'Logged in mean moves', 'Anonymous mean moves']];
+	var medianMovesPerLevelData = [['Level',  'Logged in median moves', 'Anonymous median moves']];
+	var maxMovesPerLevelData = [['Level',  'Logged in max moves', 'Anonymous max moves']];
+	var minMovesPerLevelData = [['Level',  'Logged in min moves', 'Anonymous min moves']];
+	var meanTimePerLevelData = [['Level',  'Logged in mean time (minutes)', 'Anonymous mean time (minutes)']];
+	var medianTimePerLevelData = [['Level',  'Logged in median time (minutes)', 'Anonymous median time (minutes)']];
+	var maxTimePerLevelData = [['Level',  'Logged in max time (minutes)', 'Anonymous max time (minutes)']];
+	var minTimePerLevelData = [['Level',  'Logged in min time (minutes)', 'Anonymous min time (minutes)']];
+	
+	var includeHosts = ["flowjam.verigames.com"];
+	function filterData() {
+		updateProgress(0, "Filtering data...");
+		dataDict = {
+			'anon':      { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'level_plays': {}, 'level_moves': {}, 'hosts': {} },
+			'logged_in': { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'level_plays': {}, 'level_moves': {}, 'hosts': {} }
+		};
+		startDatePickerVal = $("#datadatestart")[0].value;
+		startDate = Date.parse(startDatePickerVal);
+		startDate = startDate ? startDate.getTime() / 1000.0 : null;
+		endDatePickerVal = $("#datadateend")[0].value;
+		endDate = Date.parse(endDatePickerVal);
+		endDate = endDate ? endDate.getTime() / 1000.0 : null;
+		for (var line = 0; line < PLAYER_LEVELS.length; line++) {
+			row = PLAYER_LEVELS[line];
+			host = row["pl_referrer_host"];
+			if (!host) continue;
+			uid = row["pl_uid"];
+			var isLoggedIn = uid ? (uid.indexOf("cgs_vg_") == 0) : false;
+			// Hosts
+			if (!dataDict['logged_in']['hosts'].hasOwnProperty(host)) dataDict['logged_in']['hosts'][host] = 0;
+			if (!dataDict['anon']['hosts'].hasOwnProperty(host)) dataDict['anon']['hosts'][host] = 0;
+			if (isLoggedIn) {
+				dataDict['logged_in']['hosts'][host]++;
+			} else {
+				dataDict['anon']['hosts'][host]++;
+			}
+			var approvedHost = false;
+			for (var h = 0; h < includeHosts.length; h++) {
+				if (host == includeHosts[h]) {
+					approvedHost = true;
+					break;
+				}
+			}
+			if (!approvedHost) continue; // only use approved hosts
+			var targetScore = parseInt(row["targetscore"]);
+			var score = parseInt(row["score"]);
+			queststarttime = parseInt(row["log_q_ts"]);
+			if (queststarttime && startDate && (queststarttime < startDate)) continue;
+			questendtime = parseInt(row["endtime"]);
+			if (questendtime && endDate && (questendtime > endDate)) continue;
+			nactions = parseInt(row["actions"]);
+			levelName = newTutorialName(row["levelName"]);
+			if (levelName) {
+				// Dropoff processing
+				if (uid) {
+					if (!dataDict['logged_in']['n_level_uids'].hasOwnProperty(levelName)) dataDict['logged_in']['n_level_uids'][levelName] = 0;
+					if (!dataDict['anon']['n_level_uids'].hasOwnProperty(levelName)) dataDict['anon']['n_level_uids'][levelName] = 0;
+					if (!dataDict['logged_in']['levels_uids'].hasOwnProperty(levelName)) dataDict['logged_in']['levels_uids'][levelName] = {};
+					if (!dataDict['anon']['levels_uids'].hasOwnProperty(levelName)) dataDict['anon']['levels_uids'][levelName] = {};
+					
+					if (isLoggedIn && !dataDict['logged_in']['levels_uids'][levelName].hasOwnProperty(uid)) {
+						dataDict['logged_in']['levels_uids'][levelName][uid] = true;
+						dataDict['logged_in']['n_level_uids'][levelName]++;
+					} else if (!isLoggedIn && !dataDict['anon']['levels_uids'][levelName].hasOwnProperty(uid)) {
+						dataDict['anon']['levels_uids'][levelName][uid] = true;
+						dataDict['anon']['n_level_uids'][levelName]++;
+					}
+				}
+				// Plays/level processing
+				if (!dataDict['logged_in']['level_plays'].hasOwnProperty(levelName)) dataDict['logged_in']['level_plays'][levelName] = 0;
+				if (!dataDict['anon']['level_plays'].hasOwnProperty(levelName)) dataDict['anon']['level_plays'][levelName] = 0;
+				if (isLoggedIn) {
+					dataDict['logged_in']['level_plays'][levelName]++;
+				} else {
+					dataDict['anon']['level_plays'][levelName]++;
+				}
+				// Moves/level processing
+				var movesTargetScoreRequired = $('#movesperlevel_completedonly')[0].checked;
+				var scoreOK = !movesTargetScoreRequired || (!isNaN(targetScore) && !isNaN(score) && (score >= targetScore));
+				if (!isNaN(nactions) && scoreOK) {
+					if (!dataDict['logged_in']['level_moves'].hasOwnProperty(levelName)) dataDict['logged_in']['level_moves'][levelName] = [];
+					if (!dataDict['anon']['level_moves'].hasOwnProperty(levelName)) dataDict['anon']['level_moves'][levelName] = [];
+					if (isLoggedIn) {
+						dataDict['logged_in']['level_moves'][levelName].push(nactions);
+					} else {
+						dataDict['anon']['level_moves'][levelName].push(nactions);
+					}
+				}
+			}
+			// Sessions/day processing
+			sessionstarttime = parseInt(row["pl_log_ts"]);
+			sessionid = row["sessionid"];
+			if (sessionstarttime && sessionid) {
+				var sessionstartdate = new Date(sessionstarttime * 1000.0);
+				var sessionDateKey = sessionstartdate.toLocaleDateString();
+				if (!dataDict['logged_in']['day_sessions'].hasOwnProperty(sessionDateKey)) dataDict['logged_in']['day_sessions'][sessionDateKey] = {};
+				if (!dataDict['anon']['day_sessions'].hasOwnProperty(sessionDateKey)) dataDict['anon']['day_sessions'][sessionDateKey] = {};
+				if (isLoggedIn) {
+					dataDict['logged_in']['day_sessions'][sessionDateKey][sessionid] = true;
+				} else {
+					dataDict['anon']['day_sessions'][sessionDateKey][sessionid] = true;
+				}
+			}
+			// Plays/day processing
+			if (queststarttime) {
+				var startdate = new Date(queststarttime * 1000.0);
+				var dateKey = startdate.toLocaleDateString();
+				if (!dataDict['logged_in']['day_plays'].hasOwnProperty(dateKey)) dataDict['logged_in']['day_plays'][dateKey] = 0;
+				if (!dataDict['anon']['day_plays'].hasOwnProperty(dateKey)) dataDict['anon']['day_plays'][dateKey] = 0;
+				if (isLoggedIn) {
+					dataDict['logged_in']['day_plays'][dateKey]++;
+				} else {
+					dataDict['anon']['day_plays'][dateKey]++;
+				}
+			}
+			updateProgress(line / PLAYER_LEVELS.length, "Filtering data...");
+		}
+	
+		// Build table data
+		// Level Dropoff
+		dropOffData = [['Tutorial',  'Logged in uids', 'Anonymous uids']];
+		for (var i = 0; i < TUTORIALS.length; i++) {
+			var desc = TUTORIALS[i]["name"] + "\n\r qid:" + TUTORIALS[i]["qid"];
+			var nLog = 0;
+			var nAnon = 0;
+			if (dataDict['logged_in']['n_level_uids'][TUTORIALS[i]["name"]]) nLog = dataDict['logged_in']['n_level_uids'][TUTORIALS[i]["name"]];
+			if (dataDict['anon']['n_level_uids'][TUTORIALS[i]["name"]]) nAnon = dataDict['anon']['n_level_uids'][TUTORIALS[i]["name"]];
+			dropOffData.push([desc, nLog, nAnon]);
+		}
+		// Sessions/day
+		sessionsPerDayData = [];
+		for (var dateKey in dataDict['logged_in']['day_sessions']) {
+			var nLoggedInSessions = 0;
+			for (var sessionKey in dataDict['logged_in']['day_sessions'][dateKey]) nLoggedInSessions++;
+			var nAnonSessions = 0;
+			for (var sessionKey in dataDict['anon']['day_sessions'][dateKey]) nAnonSessions++;
+			sessionsPerDayData.push([dateKey, nLoggedInSessions, nAnonSessions]);
+		}
+		sessionsPerDayData.sort(dateKeySort);
+		sessionsPerDayData.unshift(['Day',  'Logged in sessions', 'Anonymous sessions']);
+		// Plays/day
+		levelsPerDayData = [];
+		for (var dateKey in dataDict['logged_in']['day_plays']) {
+			var nLoggedInPlays = dataDict['logged_in']['day_plays'][dateKey];
+			var nAnonPlays = dataDict['anon']['day_plays'][dateKey];
+			levelsPerDayData.push([dateKey, nLoggedInPlays, nAnonPlays]);
+		}
+		levelsPerDayData.sort(dateKeySort);
+		levelsPerDayData.unshift(['Day',  'Logged in levels', 'Anonymous levels']);
+		// Plays/level
+		playsPerLevelData = [['Level',  'Logged in plays', 'Anonymous plays']];
+		for (var i = 0; i < TUTORIALS.length; i++) {
+			// Add tutorials first
+			var tutName = TUTORIALS[i]["name"];
+			var nLoggedInPlays = dataDict['logged_in']['level_plays'].hasOwnProperty(tutName) ? dataDict['logged_in']['level_plays'][tutName] : 0;
+			var nAnonPlays = dataDict['anon']['level_plays'].hasOwnProperty(tutName) ? dataDict['anon']['level_plays'][tutName] : 0;
+			playsPerLevelData.push([tutName, nLoggedInPlays, nAnonPlays]);
+		}
+		for (var levelName in dataDict['logged_in']['level_plays']) {
+			// Then the rest
+			if (TUTORIAL_LIST.hasOwnProperty(levelName)) continue;
+			var nLoggedInPlays = dataDict['logged_in']['level_plays'][levelName];
+			var nAnonPlays = dataDict['anon']['level_plays'][levelName];
+			playsPerLevelData.push([levelName, nLoggedInPlays, nAnonPlays]);
+		}
+		// Moves/level
+		meanMovesPerLevelData = [['Level',  'Logged in mean moves', 'Anonymous mean moves']];
+		medianMovesPerLevelData = [['Level',  'Logged in median moves', 'Anonymous median moves']];
+		maxMovesPerLevelData = [['Level',  'Logged in max moves', 'Anonymous max moves']];
+		minMovesPerLevelData = [['Level',  'Logged in min moves', 'Anonymous min moves']];
+		for (var i = 0; i < TUTORIALS.length; i++) {
+			var tutName = TUTORIALS[i]["name"];
+			var loggedInMoveArr = dataDict['logged_in']['level_moves'][tutName] || [];
+			var loggedInStatArr = getMeanMedianMaxMin(loggedInMoveArr);
+			var anonMoveArr = dataDict['anon']['level_moves'][tutName] || [];
+			var anonStatArr = getMeanMedianMaxMin(anonMoveArr);
+			meanMovesPerLevelData.push([tutName, loggedInStatArr[0], anonStatArr[0]]);
+			medianMovesPerLevelData.push([tutName, loggedInStatArr[1], anonStatArr[1]]);
+			maxMovesPerLevelData.push([tutName, loggedInStatArr[2], anonStatArr[2]]);
+			minMovesPerLevelData.push([tutName, loggedInStatArr[3], anonStatArr[3]]);
+		}
+		for (var levelName in dataDict['logged_in']['level_plays']) {
+			if (TUTORIAL_LIST.hasOwnProperty(levelName)) continue;
+			var loggedInMoveArr = dataDict['logged_in']['level_moves'][levelName] || [];
+			var loggedInStatArr = getMeanMedianMaxMin(loggedInMoveArr);
+			var anonMoveArr = dataDict['anon']['level_moves'][levelName] || [];
+			var anonStatArr = getMeanMedianMaxMin(anonMoveArr);
+			meanMovesPerLevelData.push([levelName, loggedInStatArr[0], anonStatArr[0]]);
+			medianMovesPerLevelData.push([levelName, loggedInStatArr[1], anonStatArr[1]]);
+			maxMovesPerLevelData.push([levelName, loggedInStatArr[2], anonStatArr[2]]);
+			minMovesPerLevelData.push([levelName, loggedInStatArr[3], anonStatArr[3]]);
+		}
+		
+		updateProgress(1, "Filtering data...");
+	}
+	
+	function getMeanMedianMaxMin(arr) {
+		if (arr.length == 0) return [0, 0, 0, 0];
+		var total = 0;
+		var max = Number.NEGATIVE_INFINITY;
+		var min = Number.POSITIVE_INFINITY;
+		for (var n = 0; n < arr.length; n++) {
+			total += arr[n];
+			max = Math.max(arr[n], max);
+			min = Math.min(arr[n], min);
+		}
+		var mean = total / arr.length;
+		var median = getMedian(arr);
+		return [mean, median, max, min];
+	}
+	
+	function getMedian(arr) {
+		arr.sort(function(a,b) {return a - b;});
+	    var mid = Math.floor(arr.length/2);
+	    return (arr.length % 2) ? arr[mid] : ((arr[mid-1] + arr[mid]) / 2.0);
+	}
+	
+	function newTutorialName(oldname) {
+		switch (oldname) {
+			case "SatisfyBoxes": return "LockedWidget";
+			case "Clashes": return "Jams";
+			case "WidenBoxes": return "Widen";
+			case "NarrowBoxes": return "LockedPassage";
+			case "SplitMergePractice": return "SplitMerge";
+		}
+		return oldname;
+	}
+	
+	function dateKeySort(a, b) {
+		var da = new Date(a[0]);
+		var db = new Date(b[0]);
+		if (da < db) return -1;
+		if (db < da) return 1;
+		return 0;
+	}
+	
+	function updateProgress(pct, task) {
+		// TODO
+	}
+	
+	function drawCharts() {
+		drawDropoffChart();
+		drawColumnChart(sessionsPerDayData, "sessionsperday", "Sessions", "Sessions per Day", true);
+		drawColumnChart(levelsPerDayData, "levelsperday", "Levels played", "Total Levels Played per Day", true);
+		drawColumnChart(playsPerLevelData, "playsperlevel", "Total Plays", "Total Plays per Level", true);
+		drawMovesCharts();
+		// add more charts here
+	}
+	
+	function drawMovesCharts() {
+		$("#movesperlevel_mean_chart_div").show();
+		$("#movesperlevel_median_chart_div").show();
+		$("#movesperlevel_max_chart_div").show();
+		$("#movesperlevel_min_chart_div").show();
+		drawColumnChart(meanMovesPerLevelData, "movesperlevel_mean", "Mean Moves per level", "Mean Moves per Level", false);
+		drawColumnChart(medianMovesPerLevelData, "movesperlevel_median", "Median Moves per level", "Median Moves per Level", false);
+		drawColumnChart(maxMovesPerLevelData, "movesperlevel_max", "Max Moves per level", "Max Moves per Level", false);
+		drawColumnChart(minMovesPerLevelData, "movesperlevel_min", "Min Moves per level", "Min Moves per Level", false);
+		showMovesChart();
+	}
+	
+	function showMovesChart() {
+		$("#movesperlevel_mean_chart_div").hide();
+		$("#movesperlevel_median_chart_div").hide();
+		$("#movesperlevel_max_chart_div").hide();
+		$("#movesperlevel_min_chart_div").hide();
+		if ($($('#movesperlevel_mean')[0]).hasClass("active")) {
+			$("#movesperlevel_mean_chart_div").show();
+		} else if ($($('#movesperlevel_median')[0]).hasClass("active")) {
+			$("#movesperlevel_median_chart_div").show();
+		} else if ($($('#movesperlevel_max')[0]).hasClass("active")) {
+			$("#movesperlevel_max_chart_div").show();
+		} else if ($($('#movesperlevel_min')[0]).hasClass("active")) {
+			$("#movesperlevel_min_chart_div").show();
+		}
+	}
+	
+	function drawDropoffChart() {
+	    var data = google.visualization.arrayToDataTable(dropOffData);
+		var chart;
+		if ($('#dropoff_stacked')[0].checked) {
+			chart = new google.visualization.SteppedAreaChart(document.getElementById('dropoff_chart_div'));
+		} else {
+			chart = new google.visualization.LineChart(document.getElementById('dropoff_chart_div'));
+		}
+		var options = {
+	    	title: 'Flow Jam total unique players per tutorial',
+			vAxis: {title: 'Unique uids (total)'},
+			isStacked: true
+		};
+		chart.draw(data, options);
+	}
+	
+	function drawColumnChart(array_data, prefix, ylabel, chart_title, can_stack) {
+		var data = google.visualization.arrayToDataTable(array_data);
+		var chart = new google.visualization.ColumnChart(document.getElementById(prefix + '_chart_div'));
+		var options = {
+	    	title: chart_title,
+			vAxis: {title: ylabel},
+			isStacked: can_stack ? $('#' + prefix +'_stacked')[0].checked : false
+		};
+		chart.draw(data, options);
+	}
+</script>
+
+
+</head>
+
+<body>
+  <div class="panel panel-default" style="padding:10px">
+  	<div class="panel-heading">Flow Jam verigames.com Statistics</div>
+  	<div class="panel panel-primary" style="margin:10px">
+  	  <div class="panel-heading">Filter data:</div>
+  	  <div class="panel-body">
+        <span class="input-group-addon">
+        	Data Start:<input type="text" class="datepicker" value="" id="datadatestart">
+        </span>
+        <span class="input-group-addon">
+        	Data End:<input type="text" class="datepicker" value="" id="datadateend">
+        </span>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Tutorial Dropoff:</div>
+      <div class="panel-body">
+          <div id="dropoff_chart_div" style="width: 900px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="dropoff_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Sessions per Day:</div>
+      <div class="panel-body">
+          <div id="sessionsperday_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="sessionsperday_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Plays per Day:</div>
+      <div class="panel-body">
+          <div id="levelsperday_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="levelsperday_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Plays per Level:</div>
+      <div class="panel-body">
+          <div id="playsperlevel_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="playsperlevel_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Moves per Level:</div>
+      <div class="panel-body">
+		  <div id="movesperlevel_mean_chart_div" style="display:none; width: 1200px; height: 500px;"></div>
+		  <div id="movesperlevel_median_chart_div" style="display:none; width: 1200px; height: 500px;"></div>
+		  <div id="movesperlevel_max_chart_div" style="display:none; width: 1200px; height: 500px;"></div>
+		  <div id="movesperlevel_min_chart_div" style="display:none; width: 1200px; height: 500px;"></div>
+		  <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="movesperlevel_completedonly" checked="true"> Only include completed levels (score >= targetScore)
+            </span>
+          </div>
+		  <div id="movesperlevel_type" class="btn-group" style="margin:10px" data-toggle="buttons">
+			<label class="btn btn-primary active" id="movesperlevel_mean">
+			  <input type="radio" name="options"> Mean
+			</label>
+			<label class="btn btn-primary" id="movesperlevel_median">
+			  <input type="radio" name="options"> Median
+			</label>
+			<label class="btn btn-primary" id="movesperlevel_max">
+			  <input type="radio" name="options"> Max
+			</label>
+			<label class="btn btn-primary" id="movesperlevel_min">
+			  <input type="radio" name="options"> Min
+			</label>
+		  </div>
+      </div>
+    </div>
+</body>
+
+
+</html>
