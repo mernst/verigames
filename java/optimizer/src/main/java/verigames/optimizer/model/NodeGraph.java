@@ -86,6 +86,9 @@ public class NodeGraph {
      * the {@link EdgeData} for the edge. To keep things simple,
      * the (Node, Port, EdgeData) info is extracted into the
      * {@link Target} class which encapsulates all this data.
+     *
+     * <p>NOTE: A key is present if and only if the node is in the
+     * graph. This is used to store the set of nodes.
      */
     private final Map<Node, Map<Port, Target>> edges;
 
@@ -109,16 +112,10 @@ public class NodeGraph {
      */
     private final Map<Integer, Set<Edge>> edgeSets;
 
-    /**
-     * Lists all the nodes in this graph
-     */
-    private final Set<Node> nodes;
-
     public NodeGraph() {
         edges = new HashMap<>();
         redges = new MultiMap<>();
         edgeSets = new HashMap<>();
-        nodes = new HashSet<>();
     }
 
     public NodeGraph(World w) {
@@ -210,10 +207,10 @@ public class NodeGraph {
         MultiMap<String, Edge> edgesByBoard = new MultiMap<>();
         Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
         Set<Integer> reservedIDs = new HashSet<>();
-        for (Node n : nodes) {
+        for (Node n : getNodes()) {
             reservedIDs.add(n.getIntersection().getUID());
         }
-        for (Node n : nodes) {
+        for (Node n : getNodes()) {
             nodesByLevel.put(n.getLevelName(), n);
             nodesByBoard.put(n.getBoardName(), n);
             boardsByLevel.put(n.getLevelName(), n.getBoardName());
@@ -322,7 +319,9 @@ public class NodeGraph {
     }
 
     public void addNode(Node n) {
-        nodes.add(n);
+        if (!edges.containsKey(n)) {
+            edges.put(n, new HashMap<Port, Target>());
+        }
     }
 
     public void removeNode(Node n) {
@@ -355,9 +354,6 @@ public class NodeGraph {
         // Step 3: cleanup
         redges.remove(n);
         edges.remove(n);
-
-        // Step 4: remove the node
-        nodes.remove(n);
     }
 
     public void removeNodes(Collection<Node> toRemove) {
@@ -367,7 +363,7 @@ public class NodeGraph {
     }
 
     public Collection<Node> getNodes() {
-        return Collections.unmodifiableSet(nodes);
+        return edges.keySet();
     }
 
     /**
@@ -375,15 +371,10 @@ public class NodeGraph {
      * if they are not already present.
      */
     public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData edgeData) {
-        nodes.add(src);
-        nodes.add(dst);
-        Map<Port, Target> dsts = edges.get(src);
-        if (dsts == null) {
-            dsts = new HashMap<>();
-            edges.put(src, dsts);
-        }
+        addNode(src);
+        addNode(dst);
         Target target = new Target(dst, dstPort, edgeData);
-        dsts.put(srcPort, target);
+        edges.get(src).put(srcPort, target);
         redges.put(dst, src);
         Edge e = new Edge(src, srcPort, target);
         if (edgeData.getVariableID() >= 0) {
@@ -416,9 +407,6 @@ public class NodeGraph {
                 // conveys some meaningful info. I.e. even if we remove all edges with
                 // a given var ID, that var ID should remain linked to the same set.
             }
-        }
-        if (dsts.isEmpty()) {
-            edges.remove(src);
         }
 
         boolean removeReverseEdge = true;
