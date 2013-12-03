@@ -172,6 +172,29 @@ public class NodeGraph {
     }
 
     /**
+     * Construct an intersection whose UID is NOT in the set of reserved IDs.
+     *
+     * <p>Why do we need this, you might ask? And that is a reasonable question.
+     * Sadly we decided to use ints for IDs instead of something more sane, like
+     * {@link java.util.UUID}. As a result, the world export routine may
+     * accidentally construct intersections with IDs that already existed in the
+     * imported world. This routine helps us avoid that.
+     * @param reserved        forbidden IDs
+     * @param kind            intersection kind
+     * @param subnetworkName  subnetwork name (ignored when kind != SUBBOARD)
+     * @return a new intersection
+     */
+    private Intersection intersectionWithFreshID(Set<Integer> reserved, Intersection.Kind kind, String subnetworkName) {
+        Intersection i;
+        do {
+            i = (kind == Intersection.Kind.SUBBOARD) ?
+                    Intersection.subboardFactory(subnetworkName) :
+                    Intersection.factory(kind);
+        } while (reserved.contains(i.getUID()));
+        return i;
+    }
+
+    /**
      * Create a new world from this graph.
      * @param mapping a reverse mapping to update (since some things may get renamed during export)
      * @return a fully constructed world
@@ -186,6 +209,10 @@ public class NodeGraph {
         MultiMap<String, String> boardsByLevel = new MultiMap<>();
         MultiMap<String, Edge> edgesByBoard = new MultiMap<>();
         Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
+        Set<Integer> reservedIDs = new HashSet<>();
+        for (Node n : nodes) {
+            reservedIDs.add(n.getIntersection().getUID());
+        }
         for (Node n : nodes) {
             nodesByLevel.put(n.getLevelName(), n);
             nodesByBoard.put(n.getBoardName(), n);
@@ -196,9 +223,9 @@ public class NodeGraph {
             Intersection newIntersection;
             if (intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD) {
                 String subnetworkName = intersection.asSubboard().getSubnetworkName();
-                newIntersection = Intersection.subboardFactory(subnetworkName);
+                newIntersection = intersectionWithFreshID(reservedIDs, Intersection.Kind.SUBBOARD, subnetworkName);
             } else {
-                newIntersection = Intersection.factory(intersection.getIntersectionKind());
+                newIntersection = intersectionWithFreshID(reservedIDs, intersection.getIntersectionKind(), null);
             }
             if (intersection.getX() >= 0)
                 newIntersection.setX(intersection.getX());
