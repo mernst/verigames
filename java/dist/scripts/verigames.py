@@ -63,12 +63,15 @@ ostrusted_checker = Checker('ostrusted.OsTrustedChecker', 'trusted.TrustedVisito
     solver='trusted.TrustedGameSolver', subanno='@ostrusted.quals.OsTrusted', superanno='@ostrusted.quals.OsUntrusted')
 nonnegative_checker = Checker('nonnegative.NonNegativeChecker', 'nonnegative.NonNegativeVisitor',
     solver='trusted.TrustedGameSolver', subanno='@nonnegative.quals.NonNegative', superanno='@nonnegative.quals.UnknownSign')
+download_checker = Checker('download.DownloadChecker', 'trusted.TrustedVisitor',
+    solver='trusted.TrustedGameSolver', subanno='@download.quals.VerifiedResource', superanno='@download.quals.ExternalResource')
 
 checkers={nninf_checker.name: nninf_checker,
         trusted_checker.name: trusted_checker,
         encrypted_checker.name: encrypted_checker,
         ostrusted_checker.name: ostrusted_checker,
         nonnegative_checker.name: nonnegative_checker,
+        download_checker.name: download_checker,
         }
 
 def error(msg):
