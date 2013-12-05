@@ -127,6 +127,9 @@ public class NodeGraph {
             linkVarIDs(varIDs);
         }
 
+        // avoids object duplication -- there aren't (in general) that many unique ports in a world
+        Map<String, Port> ports = new HashMap<>();
+
         // go through each board and extract all the intersections & chutes
         Map<Intersection, Node> nodeMap = new HashMap<>();
         for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
@@ -151,8 +154,21 @@ public class NodeGraph {
                     addNode(node);
                 }
                 for (Chute chute : board.getEdges()) {
-                    addEdge(nodeMap.get(chute.getStart()), new Port(chute.getStartPort()),
-                            nodeMap.get(chute.getEnd()), new Port(chute.getEndPort()),
+
+                    Port input = ports.get(chute.getStartPort());
+                    if (input == null) {
+                        input = new Port(chute.getStartPort());
+                        ports.put(chute.getStartPort(), input);
+                    }
+
+                    Port output = ports.get(chute.getEndPort());
+                    if (output == null) {
+                        output = new Port(chute.getEndPort());
+                        ports.put(chute.getEndPort(), output);
+                    }
+
+                    addEdge(nodeMap.get(chute.getStart()), input,
+                            nodeMap.get(chute.getEnd()), output,
                             EdgeData.fromChute(chute));
                 }
             }

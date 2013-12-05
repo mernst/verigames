@@ -43,6 +43,8 @@ public class Preprocessor {
 
     private final Port INPUT2 = new Port(Port.INPUT.getName() + "2");
     private final Port OUTPUT2 = new Port(Port.OUTPUT.getName() + "2");
+    private final Port LARGE_BRANCH = new Port(BallSizeTest.LARGE_PORT);
+    private final Port SMALL_BRANCH = new Port(BallSizeTest.SMALL_PORT);
 
     private Map<String, Schema> boardSchemas(NodeGraph g, Map<String, StubBoard> stubboardsByName) {
         Map<String, Schema> result = new HashMap<>();
@@ -110,9 +112,7 @@ public class Preprocessor {
         Intersection.Kind k = n.getIntersection().getIntersectionKind();
         switch (k) {
             case BALL_SIZE_TEST:
-                return Arrays.asList(
-                        new Port(BallSizeTest.LARGE_PORT),
-                        new Port(BallSizeTest.SMALL_PORT));
+                return Arrays.asList(LARGE_BRANCH, SMALL_BRANCH);
             case START_SMALL_BALL:
             case START_LARGE_BALL:
             case START_PIPE_DEPENDENT_BALL:
