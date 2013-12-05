@@ -30,10 +30,11 @@ public class WorldXMLParser
   public static final int version = 3;
 
   private final boolean preserveIDs;
+  private final boolean validate;
 
   public WorldXMLParser()
   {
-    this(false);
+    this(false, true);
   }
 
   /**
@@ -41,10 +42,13 @@ public class WorldXMLParser
    *                    (NOTE: enabling this option is dangerous, as it allows
    *                    the possibility of ID clashes with newly created chutes
    *                    and intersections.)
+   * @param validate    true to perform validation on the imported world (see
+   *                    {@link verigames.level.XMLValidator#validate(World)}).
    */
-  public WorldXMLParser(boolean preserveIDs)
+  public WorldXMLParser(boolean preserveIDs, boolean validate)
   {
     this.preserveIDs = preserveIDs;
+    this.validate = validate;
   }
 
   /**
@@ -89,7 +93,12 @@ public class WorldXMLParser
     final Element root = doc.getRootElement();
 
     World w = processWorld(root);
-    XMLValidator.validate(w);
+
+    if (validate)
+    {
+      XMLValidator.validate(w);
+    }
+
     return w;
   }
 

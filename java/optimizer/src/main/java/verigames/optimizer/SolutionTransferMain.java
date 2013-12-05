@@ -71,7 +71,7 @@ public class SolutionTransferMain {
         if (toFile == null) { missing("to"); return; }
         if (mappingFile == null) { missing("mapping"); return; }
 
-        final WorldXMLParser worldParser = new WorldXMLParser(true);
+        final WorldXMLParser worldParser = new WorldXMLParser(true, false);
         final World optimized;
         final Solution optimizedSolution;
         try {
