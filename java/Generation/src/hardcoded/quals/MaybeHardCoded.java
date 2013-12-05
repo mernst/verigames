@@ -19,9 +19,15 @@ import checkers.quals.TypeQualifier;
 @SubtypeOf({})
 @DefaultQualifierInHierarchy
 @ImplicitFor(
-	trees={
-			Tree.Kind.STRING_LITERAL
-	})
+    trees={
+        Tree.Kind.BOOLEAN_LITERAL,
+        Tree.Kind.CHAR_LITERAL,
+        Tree.Kind.DOUBLE_LITERAL,
+        Tree.Kind.FLOAT_LITERAL,
+        Tree.Kind.INT_LITERAL,
+        Tree.Kind.LONG_LITERAL,
+        Tree.Kind.STRING_LITERAL,
+    })
 public @interface MaybeHardCoded {
 
 }
