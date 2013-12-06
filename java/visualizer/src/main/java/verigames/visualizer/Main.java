@@ -66,7 +66,7 @@ public class Main {
             return;
         }
 
-        WorldXMLParser parser = new WorldXMLParser();
+        WorldXMLParser parser = new WorldXMLParser(true, true);
         World world = parser.parse(input);
         String path = outputFolder.getAbsolutePath();
 
