@@ -37,6 +37,11 @@ public class WorldXMLParser
     this(false, true);
   }
 
+  public WorldXMLParser(boolean preserveIDs)
+  {
+    this(preserveIDs, true);
+  }
+
   /**
    * @param preserveIDs true to preserve IDs on chutes and intersections
    *                    (NOTE: enabling this option is dangerous, as it allows
