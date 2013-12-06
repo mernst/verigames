@@ -1,8 +1,5 @@
 package verigames.optimizer.model;
 
-import verigames.level.Chute;
-import verigames.level.World;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +20,7 @@ public class Solution {
     /**
      * Set of edges with buzzsaws.
      */
-    private Set<EdgeID> buzzsawEdges;
+    private Set<Edge> buzzsawEdges;
 
     /**
      * Empty solution. All edges are wide and there are no buzzsaws.
@@ -33,25 +30,11 @@ public class Solution {
         buzzsawEdges = new HashSet<>();
     }
 
-    /**
-     * Load the solution stored in the given world.
-     * @param w the world to load from
-     */
-    public Solution(World w) {
-        this();
-        for (Chute c : w.getChutes()) {
-            if (c.isEditable() && c.isNarrow())
-                narrowEdges.add(c.getVariableID());
-            if (c.hasBuzzsaw())
-                buzzsawEdges.add(new EdgeID(c));
-        }
-    }
-
     public void setBuzzsaw(Edge e, boolean buzzsaw) {
         if (buzzsaw)
-            buzzsawEdges.add(new EdgeID(e));
+            buzzsawEdges.add(e);
         else
-            buzzsawEdges.remove(new EdgeID(e));
+            buzzsawEdges.remove(e);
     }
 
     public void setNarrow(Edge e, boolean narrow) {
@@ -64,33 +47,11 @@ public class Solution {
     }
 
     public boolean hasBuzzsaw(Edge e) {
-        return e != null && buzzsawEdges.contains(new EdgeID(e));
+        return e != null && buzzsawEdges.contains(e);
     }
 
     public boolean isNarrow(Edge e) {
         return e != null && (e.isEditable() ? narrowEdges.contains(e.getVariableID()) : e.isNarrow());
-    }
-
-    public void applyTo(World w) {
-        for (Chute c : w.getChutes()) {
-            if (c.isEditable())
-                c.setNarrow(false);
-            c.setBuzzsaw(buzzsawEdges.contains(new EdgeID(c)));
-        }
-        for (Set<Chute> chutes : w.getLinkedChutes()) {
-            // If ANY chute in the edge set is marked narrow, ALL of them get
-            // marked narrow. This is an arbitrary but reasonable way to
-            // resolve conflicts.
-            boolean narrow = false;
-            for (Chute c : chutes) {
-                if (c.isEditable() && narrowEdges.contains(c.getVariableID()))
-                    narrow = true;
-            }
-            for (Chute c : chutes) {
-                if (c.isEditable())
-                    c.setNarrow(narrow);
-            }
-        }
     }
 
     @Override

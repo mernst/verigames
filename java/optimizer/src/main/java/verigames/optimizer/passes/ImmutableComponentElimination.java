@@ -25,7 +25,7 @@ public class ImmutableComponentElimination implements OptimizationPass {
             }
             boolean hasFixedNode = false;
             for (Node node : subgraph.getNodes()) {
-                Intersection.Kind kind = node.getIntersection().getIntersectionKind();
+                Intersection.Kind kind = node.getKind();
                 hasFixedNode = (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING);
                 if (hasFixedNode)
                     break;

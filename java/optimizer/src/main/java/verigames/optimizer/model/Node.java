@@ -6,17 +6,17 @@ public class Node {
 
     private final String levelName;
     private final String boardName;
-    private final Intersection intersection;
+    private final Intersection.Kind kind;
     private final BoardRef subboard;
 
-    public Node(String levelName, String boardName, Intersection intersection) {
-        this(levelName, boardName, intersection, null);
+    public Node(String levelName, String boardName, Intersection.Kind kind) {
+        this(levelName, boardName, kind, null);
     }
 
-    public Node(String levelName, String boardName, Intersection intersection, BoardRef subboard) {
+    public Node(String levelName, String boardName, Intersection.Kind kind, BoardRef subboard) {
         this.levelName = levelName;
         this.boardName = boardName;
-        this.intersection = intersection;
+        this.kind = kind;
         this.subboard = subboard;
     }
 
@@ -28,8 +28,8 @@ public class Node {
         return boardName;
     }
 
-    public Intersection getIntersection() {
-        return intersection;
+    public Intersection.Kind getKind() {
+        return kind;
     }
 
     /**
@@ -48,21 +48,8 @@ public class Node {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return intersection.equals(node.intersection);
-    }
-
-    @Override
-    public int hashCode() {
-        return intersection.hashCode();
-    }
-
-    @Override
     public String toString() {
-        return intersection.getUID() + " (" + intersection.getIntersectionKind() + ")";
+        return "Node(" + hashCode() + ", " + getKind() + ")";
     }
 
 }

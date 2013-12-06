@@ -59,7 +59,7 @@ public class MergeElimination implements OptimizationPass {
         // of a list we are iterating over
         for (Node n : new ArrayList<>(g.getNodes())) {
 
-            if (n.getIntersection().getIntersectionKind() == Intersection.Kind.MERGE) {
+            if (n.getKind() == Intersection.Kind.MERGE) {
 
                 List<Edge> incoming = new ArrayList<>(g.incomingEdges(n));
 
@@ -73,7 +73,7 @@ public class MergeElimination implements OptimizationPass {
                 // If either node was a small ball drop, we can remove this
                 // merge and the drop and place a connector instead. No mapping
                 // needs to take place.
-                if (e1.getSrc().getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
+                if (e1.getSrc().getKind() == Intersection.Kind.START_SMALL_BALL) {
                     g.removeNode(e1.getSrc());
                     g.removeNode(n);
                     g.addNode(connector);
@@ -83,7 +83,7 @@ public class MergeElimination implements OptimizationPass {
                     mapping.mapEdge(g, dst, dstReplacement);
                     mapping.mapBuzzsaw(e2, e2Replacement);
                     mapping.mapBuzzsaw(dst, dstReplacement);
-                } else if (e2.getSrc().getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
+                } else if (e2.getSrc().getKind() == Intersection.Kind.START_SMALL_BALL) {
                     g.removeNode(e2.getSrc());
                     g.removeNode(n);
                     g.addNode(connector);
@@ -95,7 +95,7 @@ public class MergeElimination implements OptimizationPass {
                     mapping.mapBuzzsaw(dst, dstReplacement);
                 // If this merge drops to an END node we can split it up (described above).
                 // The deleted outgoing edge should be made wide to avoid conflicts.
-                } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
+                } else if (dst.getDst().getKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
                     g.removeNode(n);
                     Node end2 = Util.newNodeOnSameBoard(n, Intersection.Kind.END);
                     g.addNode(end2);

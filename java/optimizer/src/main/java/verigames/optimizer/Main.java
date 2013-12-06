@@ -6,18 +6,15 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import verigames.level.Level;
 import verigames.level.StubBoard;
-import verigames.level.World;
-import verigames.level.WorldXMLParser;
-import verigames.level.WorldXMLPrinter;
+import verigames.optimizer.io.ReverseMappingIO;
+import verigames.optimizer.io.WorldIO;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
@@ -66,26 +63,24 @@ public class Main {
         Util.setVerbose(cmd.hasOption("verbose"));
 
         System.err.println("Reading world...");
-        WorldXMLParser parser = new WorldXMLParser(true, false);
-        World world;
+        WorldIO io = new WorldIO();
+        NodeGraph g;
+        Map<Integer, Edge> edgeIDMapping;
+        Map<String, StubBoard> stubs;
         try {
-            world = parser.parse(Util.getInputStream(inputFile));
+            WorldIO.LoadedWorld data = io.load(Util.getInputStream(inputFile), false);
+            g = data.getGraph();
+            edgeIDMapping = data.getEdgeIDMapping();
+            stubs = data.getStubs();
         } catch (FileNotFoundException e) {
             System.err.println("Failed to open input XML file '" + inputFile + "' for reading");
             System.exit(1);
             return;
         }
 
-        System.err.println("Converting data...");
-        NodeGraph g = new NodeGraph(world);
-
         System.err.println("Preprocessing...");
         int nodes = g.getNodes().size();
         int edges = g.getEdges().size();
-        Map<String, StubBoard> stubs = new HashMap<>();
-        for (Level l : world.getLevels().values()) {
-            stubs.putAll(l.getStubBoards());
-        }
         new Preprocessor().preprocess(g, stubs);
         int nodeDelta = g.getNodes().size() - nodes;
         int edgeDelta = g.getEdges().size() - edges;
@@ -96,16 +91,14 @@ public class Main {
         System.err.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         Optimizer optimizer = new Optimizer();
         ReverseMapping mapping = new ReverseMapping();
+        mapping.initAll(edgeIDMapping);
         optimizer.optimize(g, mapping);
         System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
-        System.err.println("Converting data back...");
-        World optimizedWorld = g.toWorld(mapping);
 
         System.err.println("Writing world...");
         try {
-            PrintStream printStream = new PrintStream(Util.getOutputStream(outputFile));
-            WorldXMLPrinter writer = new WorldXMLPrinter();
-            writer.print(optimizedWorld, printStream, null);
+            Map<Edge, Integer> output = io.export(Util.getOutputStream(outputFile), g);
+            mapping.finalizeAll(output);
         } catch (FileNotFoundException e) {
             System.err.println("Failed to open output XML file '" + outputFile + "' for writing");
             System.exit(1);
@@ -114,7 +107,7 @@ public class Main {
 
         System.err.println("Writing reverse mapping...");
         try {
-            mapping.export(Util.getOutputStream(mappingFile));
+            new ReverseMappingIO().export(Util.getOutputStream(mappingFile), mapping);
         } catch (FileNotFoundException e) {
             System.err.println("Failed to open mapping output file '" + mappingFile + "' for writing");
             System.exit(1);
@@ -125,14 +118,14 @@ public class Main {
             return;
         }
 
-        try {
-            mapping.check(world, optimizedWorld);
-        } catch (AssertionError e) {
-            System.err.println("Uh oh! Something is very very wrong. This is a bug. Here is a stacktrace:");
-            e.printStackTrace();
-            System.exit(1);
-            return;
-        }
+//        try {
+//            mapping.check(world, optimizedWorld);
+//        } catch (AssertionError e) {
+//            System.err.println("Uh oh! Something is very very wrong. This is a bug. Here is a stacktrace:");
+//            e.printStackTrace();
+//            System.exit(1);
+//            return;
+//        }
 
         System.err.println("Done");
 

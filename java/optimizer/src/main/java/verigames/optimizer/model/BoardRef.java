@@ -10,15 +10,18 @@ import verigames.level.StubBoard;
  */
 public class BoardRef {
 
+    private final String name;
     private final Board board;
     private final StubBoard stubBoard;
 
-    public BoardRef(Board board) {
+    public BoardRef(String name, Board board) {
+        this.name = name;
         this.board = board;
         this.stubBoard = null;
     }
 
-    public BoardRef(StubBoard stubBoard) {
+    public BoardRef(String name, StubBoard stubBoard) {
+        this.name = name;
         this.board = null;
         this.stubBoard = stubBoard;
     }
@@ -33,6 +36,10 @@ public class BoardRef {
 
     public StubBoard asStubBoard() {
         return stubBoard;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

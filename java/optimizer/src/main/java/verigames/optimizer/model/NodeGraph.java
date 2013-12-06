@@ -1,11 +1,5 @@
 package verigames.optimizer.model;
 
-import verigames.level.Board;
-import verigames.level.Chute;
-import verigames.level.Intersection;
-import verigames.level.Level;
-import verigames.level.StubBoard;
-import verigames.level.World;
 import verigames.optimizer.common.DisjointSet;
 import verigames.utilities.MultiMap;
 
@@ -20,7 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A mutable graph representing a {@link verigames.level.World}.
+ * A mutable graph representing a Verigames world. This is an alternate
+ * representation for the {@link verigames.level.World} class which the
+ * optimizer finds more useful.
  */
 public class NodeGraph {
 
@@ -116,222 +112,6 @@ public class NodeGraph {
         edges = new HashMap<>();
         redges = new MultiMap<>();
         edgeSets = new HashMap<>();
-    }
-
-    public NodeGraph(World w) {
-        this();
-
-        // set up edge sets
-        Set<Set<Integer>> linkedVars = w.getLinkedVarIDs();
-        for (Set<Integer> varIDs : linkedVars) {
-            linkVarIDs(varIDs);
-        }
-
-        // avoids object duplication -- there aren't (in general) that many unique ports in a world
-        Map<String, Port> ports = new HashMap<>();
-
-        // go through each board and extract all the intersections & chutes
-        Map<Intersection, Node> nodeMap = new HashMap<>();
-        for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
-            final String levelName = levelEntry.getKey();
-            final Level level = levelEntry.getValue();
-            for (Map.Entry<String, Board> boardEntry : level.getBoards().entrySet()) {
-                final String boardName = boardEntry.getKey();
-                final Board board = boardEntry.getValue();
-                for (Intersection intersection : board.getNodes()) {
-                    final Node node;
-                    if (intersection.isSubboard()) {
-                        String subboardName = intersection.asSubboard().getSubnetworkName();
-                        Board subBoard = w.getBoard(subboardName);
-                        StubBoard stubBoard = w.getStubBoard(subboardName);
-                        assert (subBoard != null) ^ (stubBoard != null);
-                        BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
-                        node = new Node(levelName, boardName, intersection, ref);
-                    } else {
-                        node = new Node(levelName, boardName, intersection);
-                    }
-                    nodeMap.put(intersection, node);
-                    addNode(node);
-                }
-                for (Chute chute : board.getEdges()) {
-
-                    Port input = ports.get(chute.getStartPort());
-                    if (input == null) {
-                        input = new Port(chute.getStartPort());
-                        ports.put(chute.getStartPort(), input);
-                    }
-
-                    Port output = ports.get(chute.getEndPort());
-                    if (output == null) {
-                        output = new Port(chute.getEndPort());
-                        ports.put(chute.getEndPort(), output);
-                    }
-
-                    addEdge(nodeMap.get(chute.getStart()), input,
-                            nodeMap.get(chute.getEnd()), output,
-                            EdgeData.fromChute(chute));
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Create a new world from this graph.
-     * @return a fully constructed world
-     */
-    public World toWorld() {
-        return toWorld(new ReverseMapping());
-    }
-
-    /**
-     * Construct an intersection whose UID is NOT in the set of reserved IDs.
-     *
-     * <p>Why do we need this, you might ask? And that is a reasonable question.
-     * Sadly we decided to use ints for IDs instead of something more sane, like
-     * {@link java.util.UUID}. As a result, the world export routine may
-     * accidentally construct intersections with IDs that already existed in the
-     * imported world. This routine helps us avoid that.
-     * @param reserved        forbidden IDs
-     * @param kind            intersection kind
-     * @param subnetworkName  subnetwork name (ignored when kind != SUBBOARD)
-     * @return a new intersection
-     */
-    private Intersection intersectionWithFreshID(Set<Integer> reserved, Intersection.Kind kind, String subnetworkName) {
-        Intersection i;
-        do {
-            i = (kind == Intersection.Kind.SUBBOARD) ?
-                    Intersection.subboardFactory(subnetworkName) :
-                    Intersection.factory(kind);
-        } while (reserved.contains(i.getUID()));
-        return i;
-    }
-
-    /**
-     * Create a new world from this graph.
-     * @param mapping a reverse mapping to update (since some things may get renamed during export)
-     * @return a fully constructed world
-     */
-    public World toWorld(ReverseMapping mapping) {
-        World world = new World();
-
-        // Assemble some info
-        Collection<Edge> edges = getEdges();
-        MultiMap<String, Node> nodesByLevel = new MultiMap<>();
-        MultiMap<String, Node> nodesByBoard = new MultiMap<>();
-        MultiMap<String, String> boardsByLevel = new MultiMap<>();
-        MultiMap<String, Edge> edgesByBoard = new MultiMap<>();
-        Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
-        Set<Integer> reservedIDs = new HashSet<>();
-        for (Node n : getNodes()) {
-            reservedIDs.add(n.getIntersection().getUID());
-        }
-        for (Node n : getNodes()) {
-            nodesByLevel.put(n.getLevelName(), n);
-            nodesByBoard.put(n.getBoardName(), n);
-            boardsByLevel.put(n.getLevelName(), n.getBoardName());
-
-            Intersection intersection = n.getIntersection();
-            int id = intersection.getUID();
-            Intersection newIntersection;
-            if (intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD) {
-                String subnetworkName = intersection.asSubboard().getSubnetworkName();
-                newIntersection = intersectionWithFreshID(reservedIDs, Intersection.Kind.SUBBOARD, subnetworkName);
-            } else {
-                newIntersection = intersectionWithFreshID(reservedIDs, intersection.getIntersectionKind(), null);
-            }
-            if (intersection.getX() >= 0)
-                newIntersection.setX(intersection.getX());
-            if (intersection.getY() >= 0)
-                newIntersection.setY(intersection.getY());
-            newIntersectionsByNode.put(n, newIntersection);
-        }
-        for (Edge e : edges) {
-            edgesByBoard.put(e.getSrc().getBoardName(), e);
-        }
-
-        // Build the data structure
-        for (String levelName : nodesByLevel.keySet()) {
-            Level newLevel = new Level();
-            for (String boardName : boardsByLevel.get(levelName)) {
-                Set<Node> boardNodes = nodesByBoard.get(boardName);
-                Board newBoard = new Board(boardName);
-
-                // Inane restriction on Boards: callers must add incoming node first
-                Node incoming = null;
-                for (Node node : boardNodes) {
-                    if (node.getIntersection().getIntersectionKind() == Intersection.Kind.INCOMING) {
-                        incoming = node;
-                        break;
-                    }
-                }
-                if (incoming == null)
-                    throw new RuntimeException("No incoming node exists for board '" + boardName + "'");
-                newBoard.addNode(newIntersectionsByNode.get(incoming));
-
-                // add the rest
-                for (Node node : boardNodes) {
-                    if (node != incoming) // do not add the incoming node twice
-                        newBoard.addNode(newIntersectionsByNode.get(node));
-                    if (node.getIntersection().isSubboard()) {
-                        String subboardName = node.getIntersection().asSubboard().getSubnetworkName();
-                        BoardRef ref = node.getBoardRef();
-                        if (ref.isStub() && world.getStubBoard(subboardName) == null && !newLevel.contains(subboardName)) {
-                            newLevel.addStubBoard(subboardName, ref.asStubBoard());
-                        }
-                    }
-                }
-                for (Edge edge : edgesByBoard.get(boardName)) {
-                    Chute newChute = edge.getEdgeData().toChute();
-                    Intersection start = newIntersectionsByNode.get(edge.getSrc());
-                    String startPort = edge.getSrcPort().getName();
-                    Intersection end = newIntersectionsByNode.get(edge.getDst());
-                    String endPort = edge.getDstPort().getName();
-                    newBoard.add(start, startPort, end, endPort, newChute);
-                    EdgeID oldid = new EdgeID(edge);
-                    EdgeID newid = new EdgeID(newChute);
-                    if (edge.isEditable() && !mapping.hasWidthMapping(edge))
-                        mapping.mapEdge(oldid, newid);
-                    if (!mapping.hasBuzzsawMapping(edge))
-                        mapping.mapBuzzsaw(oldid, newid);
-                }
-                newLevel.addBoard(boardName, newBoard);
-            }
-            world.addLevel(levelName, newLevel);
-        }
-
-        // Link up var IDs
-        Set<Integer> varIDsToSave = new HashSet<>();
-        for (Edge e : edges) {
-            varIDsToSave.add(e.getVariableID());
-        }
-        Map<Integer, Integer> canonicalVars = new HashMap<>();
-        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
-            Integer varID = entry.getKey();
-            if (varIDsToSave.contains(varID)) {
-                Set<Edge> edgeSet = entry.getValue();
-                for (Edge e : edgeSet) {
-                    canonicalVars.put(e.getVariableID(), varID);
-                }
-            }
-        }
-        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
-            Integer varID = entry.getKey();
-            if (varIDsToSave.contains(varID)) {
-                Integer canonical = canonicalVars.get(varID);
-                if (canonical != null && !canonical.equals(varID)) {
-                    for (Edge e : entry.getValue()) {
-                        if (e.getEdgeData().getVariableID() == varID) {
-                            world.linkByVarID(varID, canonical);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        world.finishConstruction();
-        return world;
     }
 
     public void addNode(Node n) {
@@ -458,9 +238,8 @@ public class NodeGraph {
         return edgesList;
     }
 
-    public Collection<Set<Edge>> getEdgeSets() {
-        // edgeSets.values may contain duplicates
-        return new HashSet<>(edgeSets.values());
+    public Map<Integer, Set<Edge>> getEdgeSetsByVarID() {
+        return edgeSets;
     }
 
     public Set<Edge> edgeSet(Edge edge) {
@@ -504,8 +283,9 @@ public class NodeGraph {
     }
 
     /**
-     * Indicate that all the variables in the given collection should
-     * be linked. See {@link World#linkByVarID(int, int)} for more info.
+     * Indicate that all the variables in the given collection should be
+     * linked. See {@link verigames.level.World#linkByVarID(int, int)} for
+     * more info.
      * @param varIDs a collection of var IDs to link
      */
     public void linkVarIDs(Collection<Integer> varIDs) {

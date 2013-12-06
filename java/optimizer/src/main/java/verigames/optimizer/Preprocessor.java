@@ -55,7 +55,7 @@ public class Preprocessor {
                 s = new Schema();
                 result.put(n.getBoardName(), s);
             }
-            switch (n.getIntersection().getIntersectionKind()) {
+            switch (n.getKind()) {
                 case INCOMING:
                     for (Edge e : g.outgoingEdges(n)) {
                         s.inputs.add(e.getSrcPort());
@@ -85,7 +85,7 @@ public class Preprocessor {
     }
 
     private List<Port> inputs(NodeGraph g, Map<String, Schema> boardSchemas, Node n) {
-        Intersection.Kind k = n.getIntersection().getIntersectionKind();
+        Intersection.Kind k = n.getKind();
         switch (k) {
             case BALL_SIZE_TEST:
             case CONNECT:
@@ -101,7 +101,7 @@ public class Preprocessor {
             case INCOMING:
                 return Collections.emptyList();
             case SUBBOARD:
-                return boardSchemas.get(n.getIntersection().asSubboard().getSubnetworkName()).inputs;
+                return boardSchemas.get(n.getBoardRef().getName()).inputs;
             case OUTGOING:
                 return boardSchemas.get(n.getBoardName()).outputs;
         }
@@ -109,7 +109,7 @@ public class Preprocessor {
     }
 
     private List<Port> outputs(NodeGraph g, Map<String, Schema> boardSchemas, Node n) {
-        Intersection.Kind k = n.getIntersection().getIntersectionKind();
+        Intersection.Kind k = n.getKind();
         switch (k) {
             case BALL_SIZE_TEST:
                 return Arrays.asList(LARGE_BRANCH, SMALL_BRANCH);
@@ -126,7 +126,7 @@ public class Preprocessor {
             case OUTGOING:
                 return Collections.emptyList();
             case SUBBOARD:
-                return boardSchemas.get(n.getIntersection().asSubboard().getSubnetworkName()).outputs;
+                return boardSchemas.get(n.getBoardRef().getName()).outputs;
             case INCOMING:
                 return boardSchemas.get(n.getBoardName()).inputs;
         }
@@ -134,7 +134,7 @@ public class Preprocessor {
     }
 
     private boolean inputPortNamesMatter(Node n) {
-        switch (n.getIntersection().getIntersectionKind()) {
+        switch (n.getKind()) {
             case OUTGOING:
             case SUBBOARD:
                 return true;
@@ -143,7 +143,7 @@ public class Preprocessor {
     }
 
     private boolean outputPortNamesMatter(Node n) {
-        switch (n.getIntersection().getIntersectionKind()) {
+        switch (n.getKind()) {
             case INCOMING:
             case SUBBOARD:
             case BALL_SIZE_TEST:

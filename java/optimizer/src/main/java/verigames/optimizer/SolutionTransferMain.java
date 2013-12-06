@@ -6,17 +6,19 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import verigames.level.Chute;
 import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
-import verigames.optimizer.model.MismatchException;
-import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.io.ReverseMappingIO;
 import verigames.optimizer.model.ReverseMapping;
-import verigames.optimizer.model.Solution;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main class for the tool that transfers solutions from optimized boards to
@@ -71,12 +73,10 @@ public class SolutionTransferMain {
         if (toFile == null) { missing("to"); return; }
         if (mappingFile == null) { missing("mapping"); return; }
 
-        final WorldXMLParser worldParser = new WorldXMLParser(true, false);
+        WorldXMLParser worldParser = new WorldXMLParser(true, false);
         final World optimized;
-        final Solution optimizedSolution;
         try {
             optimized = worldParser.parse(Util.getInputStream(fromFile));
-            optimizedSolution = new Solution(optimized);
         } catch (FileNotFoundException e) {
             err("Failed to open optimized XML file '" + fromFile + "' for reading");
             return;
@@ -92,7 +92,7 @@ public class SolutionTransferMain {
 
         final ReverseMapping mapping;
         try {
-            mapping = ReverseMapping.load(Util.getInputStream(mappingFile));
+            mapping = new ReverseMappingIO().load(Util.getInputStream(mappingFile));
         } catch (FileNotFoundException e) {
             err("Failed to open mapping file '" + toFile + "' for reading");
             return;
@@ -101,17 +101,7 @@ public class SolutionTransferMain {
             return;
         }
 
-        try {
-            Solution solution = mapping.solutionForUnoptimized(
-                    new NodeGraph(unoptimized),
-                    new NodeGraph(optimized),
-                    optimizedSolution);
-            solution.applyTo(unoptimized);
-        } catch (MismatchException e) {
-            err("Solution transfer failed: " + e);
-            System.exit(1);
-            return;
-        }
+        applySolution(optimized, mapping, unoptimized);
 
         try {
             new WorldXMLPrinter().print(
@@ -124,6 +114,60 @@ public class SolutionTransferMain {
             return;
         }
 
+    }
+
+    public static void applySolution(World optimized, ReverseMapping mapping, World unoptimized) {
+
+        // Step 0: collect some info
+
+        Map<Integer, Boolean> narrownessByVarID = new HashMap<>();
+        Map<Integer, Boolean> narrowness = new HashMap<>();
+        Map<Integer, Boolean> buzzsaws = new HashMap<>();
+
+        for (Chute c : optimized.getChutes()) {
+            if (c.isEditable() && c.getVariableID() > -1) {
+                narrowness.put(c.getUID(), c.isNarrow());
+                narrownessByVarID.put(c.getVariableID(), c.isNarrow());
+            }
+            buzzsaws.put(c.getUID(), c.hasBuzzsaw());
+        }
+
+        // Step 1: copy widths from corresponding var IDs
+
+        for (Collection<Chute> set : unoptimized.getLinkedChutes()) {
+            boolean narrow = false;
+            for (Chute c : set) {
+                Boolean n = narrownessByVarID.get(c.getVariableID());
+                if (n != null && n) {
+                    narrow = true;
+                    break;
+                }
+            }
+            for (Chute c : set) {
+                if (c.isEditable())
+                    c.setNarrow(narrow);
+            }
+        }
+
+        // Step 2: use the mapping to finish the job
+
+        for (Chute c : unoptimized.getChutes()) {
+            c.setBuzzsaw(mapping.hasBuzzsaw(c.getUID(), buzzsaws));
+        }
+
+        for (Collection<Chute> set : unoptimized.getLinkedChutes()) {
+            boolean narrow = false;
+            for (Chute c : set) {
+                if (mapping.isNarrow(c.getUID(), narrowness)) {
+                    narrow = true;
+                    break;
+                }
+            }
+            for (Chute c : set) {
+                if (c.isEditable() && narrow)
+                    c.setNarrow(true);
+            }
+        }
     }
 
 }

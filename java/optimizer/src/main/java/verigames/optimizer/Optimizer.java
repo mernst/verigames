@@ -1,6 +1,5 @@
 package verigames.optimizer;
 
-import verigames.level.World;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 import verigames.optimizer.passes.BallDropElimination;
@@ -37,6 +36,10 @@ public class Optimizer {
      */
     public static final int DEFAULT_MAX_ITERATIONS = 20;
 
+    public void optimize(NodeGraph g) {
+        optimize(g, new ReverseMapping(), DEFAULT_PASSES);
+    }
+
     public void optimize(NodeGraph g, ReverseMapping map) {
         optimize(g, map, DEFAULT_PASSES);
     }
@@ -64,12 +67,6 @@ public class Optimizer {
             nodes = g.getNodes().size();
             edges = g.getEdges().size();
         }
-    }
-
-    public World optimizeWorld(World source, ReverseMapping mapping) {
-        NodeGraph g = new NodeGraph(source);
-        optimize(g, mapping);
-        return g.toWorld(mapping);
     }
 
 }

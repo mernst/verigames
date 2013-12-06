@@ -1,168 +1,137 @@
 package verigames.optimizer.model;
 
+import org.junit.BeforeClass;
 import org.testng.annotations.Test;
 import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
+import verigames.optimizer.SolutionTransferMain;
+import verigames.optimizer.Util;
+import verigames.optimizer.io.WorldIO;
+import verigames.utilities.Pair;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Test
 public class ReverseMappingTest {
 
-    @Test
-    public void testWidthMapping() {
-        ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        m.mapEdge(e1, e2);
-        assert m.getWidthMapping(e1).edge.equals(e2);
-        assert m.getWidthMapping(e2) == null;
-        assert m.getBuzzsawMapping(e1) == null;
+    List<Node> nodes;
+    List<Edge> edges;
+
+    @BeforeClass
+    public void setup() {
+        nodes = new ArrayList<>();
+        for (int i = 0; i < 100; ++i) {
+            nodes.add(new Node("a", "b", Intersection.Kind.CONNECT));
+        }
+
+        edges = new ArrayList<>();
+        for (int i = 0; i < 99; ++i) {
+            edges.add(new Edge(
+                    nodes.get(i), Port.OUTPUT,
+                    nodes.get(i + 1), Port.INPUT,
+                    EdgeData.createMutable(i, "x")));
+        }
     }
 
     @Test
-    public void testOverwriteWidthMapping() {
+    public void testWidthMapping() {
         ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        EdgeID e3 = new EdgeID(3, "4", 5, "6");
-        m.mapEdge(e1, e2);
-        m.mapEdge(e1, e3);
-        assert m.getWidthMapping(e1).edge.equals(e3);
-        assert m.getWidthMapping(e2) == null;
-        assert m.getWidthMapping(e3) == null;
-        assert m.getBuzzsawMapping(e1) == null;
+        m.putWidthMapping(1, new ReverseMapping.EdgeMapping(2));
+        assert m.getWidthMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
     }
 
     @Test
     public void testChainWidthMapping() {
         ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        EdgeID e3 = new EdgeID(3, "4", 5, "6");
-        m.mapEdge(e1, e2);
-        m.mapEdge(e2, e3);
-        assert m.getWidthMapping(e1).edge.equals(e3);
-        assert m.getWidthMapping(e2).edge.equals(e3);
-        assert m.getWidthMapping(e3) == null;
-        assert m.getBuzzsawMapping(e1) == null;
+        NodeGraph g = new NodeGraph();
+        m.initEdge(1, edges.get(0));
+        m.mapEdge(g, edges.get(0), edges.get(1));
+        m.mapEdge(g, edges.get(1), edges.get(3));
+        m.finalizeEdge(edges.get(3), 2);
+        assert m.getWidthMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
+        assert !m.getBuzzsawMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
     }
 
     @Test
     public void testFixedWidthMapping() {
         ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        m.forceNarrow(e1, true);
-        assert m.getWidthMapping(e1).val;
-        m.forceNarrow(e1, false);
-        assert !m.getWidthMapping(e1).val;
-        m.mapEdge(e1, e2);
-        m.forceNarrow(e2, true);
-        assert m.getWidthMapping(e1).val;
-        assert m.getWidthMapping(e2).val;
+
+        m.initEdge(1, edges.get(0));
+        m.forceNarrow(edges.get(0));
+        m.finalizeEdge(edges.get(0), 2);
+        assert m.getWidthMappings().get(1).equals(ReverseMapping.TRUE);
+
+        m.initEdge(4, edges.get(1));
+        m.forceWide(edges.get(1));
+        m.finalizeEdge(edges.get(1), 5);
+        assert m.getWidthMappings().get(4).equals(ReverseMapping.FALSE);
     }
 
     @Test
     public void testBuzzsawMapping() {
         ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        m.mapBuzzsaw(e1, e2);
-        assert m.getBuzzsawMapping(e1).edge.equals(e2);
-        assert m.getBuzzsawMapping(e2) == null;
-        assert m.getWidthMapping(e1) == null;
-    }
-
-    @Test
-    public void testOverwriteBuzzsawMapping() {
-        ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        EdgeID e3 = new EdgeID(3, "4", 5, "6");
-        m.mapBuzzsaw(e1, e2);
-        m.mapBuzzsaw(e1, e3);
-        assert m.getBuzzsawMapping(e1).edge.equals(e3);
-        assert m.getBuzzsawMapping(e2) == null;
-        assert m.getBuzzsawMapping(e3) == null;
-        assert m.getWidthMapping(e1) == null;
+        m.putBuzzsawMapping(1, new ReverseMapping.EdgeMapping(2));
+        assert m.getBuzzsawMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
     }
 
     @Test
     public void testChainBuzzsawMapping() {
         ReverseMapping m = new ReverseMapping();
-        EdgeID e1 = new EdgeID(1, "1", 2, "2");
-        EdgeID e2 = new EdgeID(1, "1", 2, "3");
-        EdgeID e3 = new EdgeID(3, "4", 5, "6");
-        m.mapBuzzsaw(e1, e2);
-        m.mapBuzzsaw(e2, e3);
-        assert m.getBuzzsawMapping(e1).edge.equals(e3);
-        assert m.getBuzzsawMapping(e2).edge.equals(e3);
-        assert m.getBuzzsawMapping(e3) == null;
-        assert m.getWidthMapping(e1) == null;
+        NodeGraph g = new NodeGraph();
+        m.initEdge(1, edges.get(0));
+        m.mapBuzzsaw(edges.get(0), edges.get(1));
+        m.mapBuzzsaw(edges.get(1), edges.get(3));
+        m.finalizeEdge(edges.get(3), 2);
+        assert !m.getWidthMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
+        assert m.getBuzzsawMappings().get(1).equals(new ReverseMapping.EdgeMapping(2));
     }
 
     @Test
-    public void testBuzzsawTransfer() throws MismatchException {
+    public void testBuzzsawTransfer() {
         ReverseMapping m = new ReverseMapping();
 
         NodeGraph g = new NodeGraph();
-        Node n1 = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
-        Node n2 = new Node("a", "b", Intersection.factory(Intersection.Kind.OUTGOING));
-        Edge e = g.addEdge(n1, new Port("1"), n2, new Port("2"), EdgeData.createMutable(1, "desc"));
+        Edge e = g.addEdge(
+                new Node("a", "b", Intersection.Kind.INCOMING),
+                Port.OUTPUT,
+                new Node("a", "b", Intersection.Kind.OUTGOING),
+                Port.INPUT,
+                EdgeData.createMutable(1, "x"));
 
-        Solution x = new Solution();
+        World w1 = new WorldIO().toWorld(g).getFirst(); // "optimized" world
+        World w2 = new WorldIO().toWorld(g).getFirst(); // "unoptimized" world
 
-        x.setBuzzsaw(e, true);
-        Solution s1 = m.solutionForUnoptimized(g, g, x);
-        assert s1.hasBuzzsaw(e);
+        Chute c1 = Util.first(w1.getChutes());
+        Chute c2 = Util.first(w2.getChutes());
 
-        x.setBuzzsaw(e, false);
-        Solution s2 = m.solutionForUnoptimized(g, g, x);
-        assert !s2.hasBuzzsaw(e);
+        // simulate optimization
+        m.initEdge(c2.getUID(), e);
+        m.finalizeEdge(e, c1.getUID());
+
+        assert m.getBuzzsawMappings().get(c2.getUID()).equals(new ReverseMapping.EdgeMapping(c1.getUID()));
+
+        Util.first(w1.getChutes()).setBuzzsaw(true);
+        SolutionTransferMain.applySolution(w1, m, w2);
+        assert Util.first(w2.getChutes()).hasBuzzsaw();
+
+        Util.first(w1.getChutes()).setBuzzsaw(false);
+        SolutionTransferMain.applySolution(w1, m, w2);
+        assert !Util.first(w2.getChutes()).hasBuzzsaw();
+    }
+
+    private void apply(ReverseMapping m, World unoptimized, World optimized) {
+        SolutionTransferMain.applySolution(optimized, m, unoptimized);
     }
 
     @Test
-    public void testIO() throws IOException {
-        ReverseMapping mapping = new ReverseMapping();
-
-        EdgeID one = new EdgeID(1, "a", 2, "b");
-        EdgeID two = new EdgeID(2, "a", 2, "b");
-        EdgeID three = new EdgeID(3, "a", 2, "b");
-        EdgeID four = new EdgeID(4, "a", 2, "b");
-        EdgeID five = new EdgeID(5, "a", 2, "b");
-        EdgeID six = new EdgeID(6, "a", 2, "b");
-
-        mapping.forceNarrow(one, true);
-        mapping.forceNarrow(two, false);
-        mapping.mapEdge(three, four);
-        mapping.mapEdge(five, six);
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        mapping.export(output);
-
-        ReverseMapping mapping2 = ReverseMapping.load(new ByteArrayInputStream(output.toByteArray()));
-
-        assert mapping.equals(mapping2);
-    }
-
-    private void apply(ReverseMapping m, World unoptimized, World optimized) throws MismatchException {
-        m.solutionForUnoptimized(
-                new NodeGraph(unoptimized),
-                new NodeGraph(optimized),
-                new Solution(optimized)).applyTo(unoptimized);
-    }
-
-    @Test
-    public void testApply() throws MismatchException, IOException {
+    public void testApply() throws IOException {
 
         Board board = new Board();
         board.addNode(Intersection.Kind.INCOMING);
@@ -219,14 +188,17 @@ public class ReverseMappingTest {
         // --------
 
         ReverseMapping mapping = new ReverseMapping();
-        mapping.forceNarrow(c1, true);
-        mapping.forceNarrow(c2, false);
-        EdgeID intermediate = new EdgeID(300, "x", 400, "y");
-        mapping.mapEdge(new EdgeID(c3), intermediate);
-        mapping.mapEdge(intermediate, new EdgeID(optimizedChute));
+        mapping.initEdge(c1.getUID(), edges.get(1));
+        mapping.initEdge(c2.getUID(), edges.get(2));
+        mapping.initEdge(c3.getUID(), edges.get(3));
+        mapping.forceNarrow(edges.get(1), true);
+        mapping.forceNarrow(edges.get(2), false);
+        Edge intermediate = edges.get(50);
+        mapping.mapEdge(new NodeGraph(), edges.get(3), intermediate);
 
-        mapping.mapBuzzsaw(new EdgeID(c3), intermediate);
-        mapping.mapBuzzsaw(intermediate, new EdgeID(optimizedChute));
+        mapping.mapBuzzsaw(edges.get(3), intermediate);
+
+        mapping.finalizeEdge(intermediate, optimizedChute.getUID());
 
         apply(mapping, world, optimized);
         assert c1.isNarrow();
@@ -250,11 +222,9 @@ public class ReverseMappingTest {
      * NodeGraph and exporting to a world again.
      *
      * Buzzsaws should be transferred successfully.
-     *
-     * @throws MismatchException
      */
     @Test
-    public void testDefaultBuzzsawTransfer() throws MismatchException {
+    public void testDefaultBuzzsawTransfer() {
 
         Board board = new Board();
         Intersection in = board.addNode(Intersection.Kind.INCOMING);
@@ -276,7 +246,11 @@ public class ReverseMappingTest {
         //------------------------------
 
         ReverseMapping map = new ReverseMapping();
-        World world2 = new NodeGraph(world).toWorld(map);
+        WorldIO.LoadedWorld w = new WorldIO().load(world);
+        map.initAll(w.getEdgeIDMapping());
+        Pair<World, Map<Edge, Integer>> p = new WorldIO().toWorld(w.getGraph());
+        World world2 = p.getFirst();
+        map.finalizeAll(p.getSecond());
 
         //------------------------------
 
@@ -328,7 +302,7 @@ public class ReverseMappingTest {
      *
      */
     @Test
-    public void testApply2() throws MismatchException {
+    public void testApply2() {
         for (boolean narrow : Arrays.asList(true, false)) {
             Chute c1 = new Chute(1, "a");
             Chute c2 = new Chute(1, "b");
@@ -359,13 +333,16 @@ public class ReverseMappingTest {
             c2.setNarrow(!narrow);
             c3.setNarrow(narrow);
 
+
+            ReverseMapping m = new ReverseMapping();
+
             c3.setNarrow(false);
-            apply(new ReverseMapping(), unoptimized, optimized);
+            apply(m, unoptimized, optimized);
             assert c1.isNarrow() == c3.isNarrow();
             assert c2.isNarrow() == c3.isNarrow();
 
             c3.setNarrow(true);
-            apply(new ReverseMapping(), unoptimized, optimized);
+            apply(m, unoptimized, optimized);
             assert c1.isNarrow() == c3.isNarrow();
             assert c2.isNarrow() == c3.isNarrow();
         }

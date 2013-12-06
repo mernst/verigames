@@ -20,8 +20,7 @@ import java.util.Set;
 public class ChuteEndElimination extends AbstractIterativePass {
 
     public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved) {
-        Intersection i = node.getIntersection();
-        Intersection.Kind kind = i.getIntersectionKind();
+        Intersection.Kind kind = node.getKind();
 
         // Remove end nodes when the incoming edge is conflict-free.
         if (kind == Intersection.Kind.END && Util.conflictFree(g, Util.first(g.incomingEdges(node)))) {

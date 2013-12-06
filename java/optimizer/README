@@ -77,9 +77,9 @@ Pinched chutes are converted into narrow immutable chutes.
 Layout is not preserved. If you optimize a graph, you will need to lay it out
 again somehow.
 
-Edge IDs, node IDs, variable IDs, and descriptions are not preserved. The
-mapping can be used to reconstruct this information. (Don't worry though! the
-new IDs will all be perfectly valid in the new world.)
+Edge IDs, node IDs, and descriptions are not preserved. The mapping can be used
+to reconstruct this information. (Don't worry though! the new IDs will all be
+perfectly valid in the new world.) Also note: variable IDs ARE preserved.
 
 The optimizer assumes that the world you give it is unsolved, so it makes no
 attempt to preserve any existing solution. In particular:
