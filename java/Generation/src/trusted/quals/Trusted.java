@@ -19,7 +19,13 @@ import com.sun.source.tree.Tree;
 @SubtypeOf(Untrusted.class)
 @ImplicitFor(
     trees={
+        Tree.Kind.BOOLEAN_LITERAL,
+        Tree.Kind.CHAR_LITERAL,
+        Tree.Kind.DOUBLE_LITERAL,
+        Tree.Kind.FLOAT_LITERAL,
+        Tree.Kind.INT_LITERAL,
+        Tree.Kind.LONG_LITERAL,
+        Tree.Kind.NULL_LITERAL,
         Tree.Kind.STRING_LITERAL,
-        Tree.Kind.NULL_LITERAL
     })
 public @interface Trusted {}

@@ -13,6 +13,8 @@ public class XMLValidator
   public static void main(String[] args)
   {
     World w = new WorldXMLParser().parse(System.in);
+    // the parser calls validate, but we'll call it anyway so we know this
+    // self-contained validator does its job even if the parser is modified
     validate(w);
   }
 

@@ -88,7 +88,9 @@ public class WorldXMLParser
 
     final Element root = doc.getRootElement();
 
-    return processWorld(root);
+    World w = processWorld(root);
+    XMLValidator.validate(w);
+    return w;
   }
 
   private World processWorld(final Element worldElt)
