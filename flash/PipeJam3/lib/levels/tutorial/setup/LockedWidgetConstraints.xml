@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="LockedWidget" qid="3" targetScore="550">
+  <level id="LockedWidget" qid="3" targetScore="700">
     <box id="LockedWidget5" width="wide" editable="false"/>
     <box id="LockedWidget4" width="wide" editable="true"/>
     <box id="LockedWidget3" width="narrow" editable="true"/>

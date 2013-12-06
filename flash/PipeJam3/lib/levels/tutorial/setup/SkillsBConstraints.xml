@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="SkillsB" qid="15" targetScore="4950">
+  <level id="SkillsB" qid="15" targetScore="6900">
     <box id="es26" width="narrow" editable="true"/>
     <box id="es24" width="narrow" editable="true"/>
     <box id="es25" width="wide" editable="true"/>
