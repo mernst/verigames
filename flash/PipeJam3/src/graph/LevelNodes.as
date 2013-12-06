@@ -65,7 +65,10 @@ package graph
 				new_board_name = m_obfuscator.getBoardName(_original_board_name, original_level_name);
 			}
 			if (boardNodesDictionary[new_board_name] == null) {
-				boardNodesDictionary[new_board_name] = new BoardNodes(new_board_name, _original_board_name);
+				boardNodesDictionary[new_board_name] = new BoardNodes(new_board_name, _original_board_name, true);
+			}
+			if (!(boardNodesDictionary[new_board_name] as BoardNodes).is_stub) {
+				throw new Error("Attempting to add stub width to non-stub board: " + _original_board_name + " (port: " + _port_num + ")");
 			}
 			(boardNodesDictionary[new_board_name] as BoardNodes).addStubBoardPortWidth(_port_num, _stub_width, _is_input);
 		}

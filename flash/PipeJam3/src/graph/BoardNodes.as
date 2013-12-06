@@ -40,11 +40,13 @@ package graph
 		
 		public var incoming_node:Node;
 		public var outgoing_node:Node;
+		public var is_stub:Boolean;
 		
-		public function BoardNodes(_obfuscated_board_name:String, _original_board_name:String) 
+		public function BoardNodes(_obfuscated_board_name:String, _original_board_name:String, _is_stub:Boolean = false) 
 		{
 			board_name = _obfuscated_board_name;
 			original_board_name = _original_board_name;
+			is_stub = _is_stub;
 		}
 		
 		public function addNode(_node:Node):void {
