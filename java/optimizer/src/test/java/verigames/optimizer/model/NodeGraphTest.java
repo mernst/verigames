@@ -20,6 +20,44 @@ import java.util.Random;
 public class NodeGraphTest {
 
     @Test
+    public void testBasics() {
+        NodeGraph g = new NodeGraph();
+        Node incoming = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
+        Node connect = Util.newNodeOnSameBoard(incoming, Intersection.Kind.OUTGOING);
+        Node outgoing = Util.newNodeOnSameBoard(connect, Intersection.Kind.CONNECT);
+
+        g.addNode(incoming);
+        assert g.getNodes().size() == 1;
+        assert g.getNodes().contains(incoming);
+
+        EdgeData data = EdgeData.createMutable(1, "?");
+        Edge e1 = g.addEdge(incoming, Port.OUTPUT, connect, Port.INPUT, data);
+        Edge e2 = g.addEdge(connect, Port.OUTPUT, outgoing, Port.INPUT, data);
+
+        assert g.getNodes().size() == 3;
+        assert g.getNodes().containsAll(Arrays.asList(incoming, connect, outgoing));
+        assert g.getEdges().size() == 2;
+        assert g.outgoingEdges(incoming).size() == 1;
+        assert g.incomingEdges(incoming).size() == 0;
+        assert g.outgoingEdges(connect).size() == 1;
+        assert g.incomingEdges(connect).size() == 1;
+        assert g.outgoingEdges(outgoing).size() == 0;
+        assert g.incomingEdges(outgoing).size() == 1;
+
+        g.removeEdge(e1);
+        assert g.getEdges().size() == 1;
+        assert g.getEdges().contains(e2);
+        assert !g.getEdges().contains(e1);
+        assert g.getNodes().size() == 3;
+        assert g.getNodes().containsAll(Arrays.asList(incoming, connect, outgoing));
+
+        g.removeNode(connect);
+        assert g.getEdges().isEmpty();
+        assert g.getNodes().size() == 2;
+        assert g.getNodes().containsAll(Arrays.asList(incoming, outgoing));
+    }
+
+    @Test
     public void testEdgeSets() {
         NodeGraph g = new NodeGraph();
         Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
