@@ -118,15 +118,6 @@ public class Main {
             return;
         }
 
-//        try {
-//            mapping.check(world, optimizedWorld);
-//        } catch (AssertionError e) {
-//            System.err.println("Uh oh! Something is very very wrong. This is a bug. Here is a stacktrace:");
-//            e.printStackTrace();
-//            System.exit(1);
-//            return;
-//        }
-
         System.err.println("Done");
 
     }
