@@ -8,6 +8,7 @@ import verigames.level.StubBoard;
 import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
+import verigames.optimizer.Util;
 import verigames.optimizer.model.BoardRef;
 import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.EdgeData;
@@ -212,32 +213,16 @@ public class WorldIO {
         }
 
         // Link up var IDs
-        Set<Integer> varIDsToSave = new HashSet<>();
-        for (Edge e : edges) {
-            varIDsToSave.add(e.getVariableID());
-        }
-        Map<Integer, Integer> canonicalVars = new HashMap<>();
-        for (Map.Entry<Integer, Set<Edge>> entry : g.getEdgeSetsByVarID().entrySet()) {
-            Integer varID = entry.getKey();
-            if (varIDsToSave.contains(varID)) {
-                Set<Edge> edgeSet = entry.getValue();
-                for (Edge e : edgeSet) {
-                    canonicalVars.put(e.getVariableID(), varID);
-                }
-            }
-        }
-        for (Map.Entry<Integer, Set<Edge>> entry : g.getEdgeSetsByVarID().entrySet()) {
-            Integer varID = entry.getKey();
-            if (varIDsToSave.contains(varID)) {
-                Integer canonical = canonicalVars.get(varID);
-                if (canonical != null && !canonical.equals(varID)) {
-                    for (Edge e : entry.getValue()) {
-                        if (e.getEdgeData().getVariableID() == varID) {
-                            world.linkByVarID(varID, canonical);
-                            break;
-                        }
-                    }
-                }
+        Set<Integer> realVarIDs = g.nonnegativeVarIDs();
+        for (Set<Integer> linked : g.linkedVarIDs()) {
+            Set<Integer> x = new HashSet<>(linked);
+            x.retainAll(realVarIDs);
+            if (x.isEmpty())
+                continue;
+            int canonical = Util.first(x);
+            for (int id : x) {
+                if (id != canonical)
+                    world.linkByVarID(canonical, id);
             }
         }
 

@@ -62,7 +62,9 @@ public class WorldIOTest {
         // Check edge set presence
         for (Edge e1 : g.getEdges()) {
             for (Edge e2 : g.getEdges()) {
-                if (w.areVarIDsLinked(e1.getEdgeData().getVariableID(), e2.getEdgeData().getVariableID())) {
+                if (e1.getVariableID() >= 0 &&
+                        e2.getVariableID() >= 0 &&
+                        w.areVarIDsLinked(e1.getEdgeData().getVariableID(), e2.getEdgeData().getVariableID())) {
                     assert g.edgeSet(e1).equals(g.edgeSet(e2));
                 }
             }
