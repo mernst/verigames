@@ -115,7 +115,6 @@ public class WorldIO {
                     Edge e = g.addEdge(nodeMap.get(chute.getStart()), input,
                             nodeMap.get(chute.getEnd()), output,
                             EdgeData.fromChute(chute));
-                    System.err.println("expected " + chute + " to " + e);
                     mapping.put(chute.getUID(), e);
 
                     solution.setBuzzsaw(e, chute.hasBuzzsaw());
