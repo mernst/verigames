@@ -24,14 +24,12 @@ public class NodeGraph {
     // complexity in this file.
 
     /**
-     * Conceptually, an edge connects a port on one node to a
-     * port on another. This map is a strange way of storing
-     * that info, but gives us a lot of efficiency. It maps
+     * This is the primary data structure for the graph. It maps
      * every source Node to a set of Port mappings. A Port
-     * mapping maps a source Port to a collection of (Node, Port)
+     * mapping maps each source Port to a collection of (Node, Port)
      * destination pairs.
      *
-     * <p>Here, however, we store an additional piece of data:
+     * <p>Here, however, we need to store an extra piece of data:
      * the {@link EdgeData} for the edge. To keep things simple,
      * all the info is stored in the {@link Edge} class.
      *
@@ -55,11 +53,19 @@ public class NodeGraph {
 
     /**
      * Maps variable IDs (integers) to all the edges in this graph that
-     * have the given ID. NOTE: edges that have negative variable IDs
-     * are NOT stored in this collection.
+     * have the given ID. This is used in conjuction with
+     * {@link #linkedVars} to determine what edges share widths.
+     *
+     * <p>NOTE: edges that have negative variable IDs are NOT stored in
+     * this collection.
      */
     private final MultiMap<Integer, Edge> edgesByVarID;
 
+    /**
+     * Construct an empty graph.
+     * @see #addNode(Node)
+     * @see #addEdge(Node, Port, Node, Port, EdgeData)
+     */
     public NodeGraph() {
         edges = new HashMap<>();
         redges = new MultiMap<>();
@@ -67,16 +73,33 @@ public class NodeGraph {
         edgesByVarID = new MultiMap<>();
     }
 
+    /**
+     * Add a node to the graph. It will not be connected to anything.
+     * @param n the node to add
+     * @see #addEdge(Node, Port, Node, Port, EdgeData)
+     * @see #getNodes()
+     */
     public void addNode(Node n) {
         if (!edges.containsKey(n)) {
             edges.put(n, new HashMap<Port, Edge>());
         }
     }
 
+    /**
+     * Remove a single node and all connected edges from the graph.
+     * @param n the node to remove
+     * @see #removeNodes(java.util.Collection)
+     */
     public void removeNode(Node n) {
         removeNodes(Collections.singleton(n));
     }
 
+    /**
+     * Remove a collection of nodes from the graph. All edges connected
+     * to these nodes are also removed.
+     * @param toRemove the nodes to remove
+     * @see #removeNode(Node)
+     */
     public void removeNodes(Collection<Node> toRemove) {
         // Step 1: remove the edges out of this node
         Collection<Edge> edgesToRemove = new ArrayList<>();
@@ -93,13 +116,24 @@ public class NodeGraph {
         }
     }
 
+    /**
+     * Get all the nodes in this graph.
+     * @return all the nodes
+     * @see #addNode(Node)
+     */
     public Collection<Node> getNodes() {
         return edges.keySet();
     }
 
     /**
-     * Add an edge (if it wasn't already present). This will also add the given nodes,
-     * if they are not already present.
+     * Add an edge (if it wasn't already present). This will also add the
+     * given nodes, if they are not already present.
+     * @param src      the source node
+     * @param srcPort  the port on the source node
+     * @param dst      the target node
+     * @param dstPort  the port on the target node
+     * @param edgeData information about this edge
+     * @return the edge that was added
      */
     public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData edgeData) {
         addNode(src);
@@ -114,8 +148,12 @@ public class NodeGraph {
     }
 
     /**
-     * Remove an edge (if present). The getNodes of the edge are not removed, even if they
-     * are disconnected from the graph as a result of this action.
+     * Remove an edge (if present).
+     *
+     * @param src      the source node
+     * @param srcPort  the port on the source node
+     * @param dst      the target node
+     * @param dstPort  the port on the target node
      */
     public void removeEdge(Node src, Port srcPort, Node dst, Port dstPort) {
         Map<Port, Edge> dsts = edges.get(src);
@@ -129,19 +167,31 @@ public class NodeGraph {
         }
     }
 
+    /**
+     * Remove an edge (if present).
+     * @param e the edge to remove
+     */
     public void removeEdge(Edge e) {
         removeEdge(e.getSrc(), e.getSrcPort(), e.getDst(), e.getDstPort());
     }
 
+    /**
+     * Remove some edges (if present).
+     * @param toRemove the edges to remove
+     */
     public void removeEdges(Collection<Edge> toRemove) {
         for (Edge e : toRemove) {
             removeEdge(e);
         }
     }
 
+    /**
+     * Get all the edges in this graph.
+     * @return all the edges in the graph
+     */
     public Collection<Edge> getEdges() {
         // TODO: return a view, not a copy?
-        Collection<Edge> edgesList = new ArrayList<Edge>();
+        Collection<Edge> edgesList = new ArrayList<>();
         for (Map.Entry<Node, Map<Port, Edge>> entry : edges.entrySet()) {
             for (Map.Entry<Port, Edge> entry2 : entry.getValue().entrySet()) {
                 edgesList.add(entry2.getValue());
@@ -150,6 +200,12 @@ public class NodeGraph {
         return edgesList;
     }
 
+    /**
+     * Get all the edges linked to the given one. That is, all the edges that
+     * must share the same width as the given one.
+     * @param edge the edge
+     * @return all the edges in the same edge set
+     */
     public Set<Edge> edgeSet(Edge edge) {
         int varID = edge.getVariableID();
         if (varID < 0)
@@ -199,10 +255,18 @@ public class NodeGraph {
         linkedVars.union(varIDs);
     }
 
+    /**
+     * Get all sets of linked var IDs containing more than 1 var ID
+     * @return the sets of linked var IDs
+     */
     public Collection<Set<Integer>> linkedVarIDs() {
         return linkedVars.getNontrivialClusters();
     }
 
+    /**
+     * Get all the nonnegative var IDs in this graph
+     * @return the sets of nonnegative var IDs
+     */
     public Set<Integer> nonnegativeVarIDs() {
         return edgesByVarID.keySet();
     }
@@ -226,6 +290,12 @@ public class NodeGraph {
         return redges.get(dst);
     }
 
+    /**
+     * Get all the components of this graph. No edge in the graph
+     * connects two different components, however, edges in different
+     * components may be linked.
+     * @return the disjoint components of the graph
+     */
     public Collection<Subgraph> getComponents() {
         Clustering<Node> nodeClusters = new Clustering<>();
         for (Edge e : getEdges()) {
@@ -254,6 +324,10 @@ public class NodeGraph {
         return result;
     }
 
+    /**
+     * Remove all the geometry in a given subgraph.
+     * @param subgraph the subgraph to remove
+     */
     public void removeSubgraph(Subgraph subgraph) {
         removeEdges(subgraph.getEdges());
         removeNodes(subgraph.getNodes());
