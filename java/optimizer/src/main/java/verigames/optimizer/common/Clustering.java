@@ -90,11 +90,11 @@ public class Clustering<T> {
             Integer idb = getClusterID(b);
             if (idb != null) {
                 if (idb != clusterID) {
-                    for (T bb : reverse.get(idb)) {
+                    Set<T> others = reverse.remove(idb);
+                    for (T bb : others) {
                         map.put(bb, clusterID);
                     }
-                    reverse.putAll(clusterID, reverse.get(idb));
-                    reverse.remove(idb);
+                    reverse.putAll(clusterID, others);
                 }
             } else {
                 map.put(b, clusterID);
