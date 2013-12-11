@@ -15,7 +15,6 @@ import verigames.optimizer.model.EdgeData;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
-import verigames.optimizer.model.Solution;
 import verigames.utilities.MultiMap;
 import verigames.utilities.Pair;
 
@@ -32,20 +31,15 @@ public class WorldIO {
 
     public static class LoadedWorld {
         private final NodeGraph graph;
-        private final Solution solution;
         private final Map<Integer, Edge> edgeIDMapping;
         private final Map<String, StubBoard> stubs;
-        public LoadedWorld(NodeGraph graph, Solution solution, Map<Integer, Edge> edgeIDMapping, Map<String, StubBoard> stubs) {
+        public LoadedWorld(NodeGraph graph, Map<Integer, Edge> edgeIDMapping, Map<String, StubBoard> stubs) {
             this.graph = graph;
-            this.solution = solution;
             this.edgeIDMapping = edgeIDMapping;
             this.stubs = stubs;
         }
         public NodeGraph getGraph() {
             return graph;
-        }
-        public Solution getSolution() {
-            return solution;
         }
         public Map<Integer, Edge> getEdgeIDMapping() {
             return edgeIDMapping;
@@ -61,7 +55,6 @@ public class WorldIO {
 
     public LoadedWorld load(World w) {
         NodeGraph g = new NodeGraph();
-        Solution solution = new Solution();
         Map<Integer, Edge> mapping = new HashMap<>();
 
         // set up edge sets
@@ -117,9 +110,6 @@ public class WorldIO {
                             EdgeData.fromChute(chute));
                     mapping.put(chute.getUID(), e);
 
-                    solution.setBuzzsaw(e, chute.hasBuzzsaw());
-                    solution.setNarrow(e, chute.isNarrow());
-
                 }
             }
         }
@@ -129,14 +119,10 @@ public class WorldIO {
             stubs.putAll(l.getStubBoards());
         }
 
-        return new LoadedWorld(g, solution, mapping, stubs);
+        return new LoadedWorld(g, mapping, stubs);
     }
 
     public Pair<World, Map<Edge, Integer>> toWorld(NodeGraph g) {
-        return toWorld(g, new Solution());
-    }
-
-    public Pair<World, Map<Edge, Integer>> toWorld(NodeGraph g, Solution solution) {
 
         Map<Edge, Integer> mapping = new HashMap<>();
         World world = new World();
@@ -230,11 +216,7 @@ public class WorldIO {
     }
 
     public Map<Edge, Integer> export(OutputStream out, NodeGraph g) {
-        return export(out, g, new Solution());
-    }
-
-    public Map<Edge, Integer> export(OutputStream out, NodeGraph g, Solution solution) {
-        Pair<World, Map<Edge, Integer>> p = toWorld(g, solution);
+        Pair<World, Map<Edge, Integer>> p = toWorld(g);
         World world = p.getFirst();
 
         PrintStream printStream = new PrintStream(out);
