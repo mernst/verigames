@@ -10,7 +10,15 @@ import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
 
 /**
- * @see MaybeHardCoded
+ * Indicates that the contained data may have been hard-coded into the source
+ * code.<p/>
+ *
+ * All literals except null are given this type implicitly. Unless declared
+ * otherwise, types written by the programmer are assumed to be {@code
+ * MaybeHardCoded}.<p/>
+ *
+ * @see NotHardCoded
+ * @see trusted.quals.UnTrusted
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,6 +26,7 @@ import checkers.quals.TypeQualifier;
 @TypeQualifier
 @SubtypeOf({})
 @DefaultQualifierInHierarchy
+// TODO since this is the default qualifier, is this necessary?
 @ImplicitFor(
     trees={
         Tree.Kind.BOOLEAN_LITERAL,

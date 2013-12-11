@@ -31,8 +31,14 @@ public class HardCodedAnnotatedTypeFactory extends GameAnnotatedTypeFactory {
         }
 
         /**
-         * Handles String concatenation; at least one @Trusted + @Trusted = @Trusted.
-         * Any other concatenation results in @Untursted.
+         * Handles String concatenation.
+         *
+         * s1 + s2 results in s3
+         *
+         * s3 is @NotHardCoded if either s1 or s2 is @NotHardCoded.
+         *
+         * This contrasts with the original trusted checker, where both s1 and
+         * s2 would have to be trusted in order for s3 to be trusted.
          */
         @Override
         public Void visitBinary(BinaryTree tree, AnnotatedTypeMirror type) {

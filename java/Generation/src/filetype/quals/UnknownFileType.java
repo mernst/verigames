@@ -7,7 +7,13 @@ import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
 
 /**
- * @see OsTrusted
+ * Indicates that the contained data may not have a safe file type to receive
+ * from an untrusted source.<p/>
+ *
+ * Types are implicitly given this annotation.<p/>
+ *
+ * @see SafeFileType
+ * @see trusted.quals.Untrusted
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
