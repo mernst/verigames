@@ -89,7 +89,7 @@ public class WorldIO {
                         StubBoard stubBoard = w.getStubBoard(subboardName);
                         assert (subBoard != null) ^ (stubBoard != null);
                         BoardRef ref = subBoard != null ?
-                                new BoardRef(subboardName, subBoard) :
+                                new BoardRef(subboardName) :
                                 new BoardRef(subboardName, stubBoard);
                         node = new Node(levelName, boardName, intersection.getIntersectionKind(), ref);
                     } else {

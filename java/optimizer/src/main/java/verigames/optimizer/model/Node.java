@@ -35,13 +35,8 @@ public class Node {
     /**
      * If this node is a subboard, then this returns
      * the board it references. The result is null if
-     * the underlying {@link Intersection} is not a
+     * {@link #getKind()} is not
      * {@link Intersection.Kind#SUBBOARD SUBBOARD}.
-     *
-     * <p>
-     * For the name of the referenced board, use
-     * {@code this.getIntersection().asSubboard().getSubnetworkName()}.
-     * </p>
      */
     public BoardRef getBoardRef() {
         return subboard;
