@@ -28,7 +28,7 @@ import com.mongodb.Mongo;
  * (We could do the same when someone expresses a liking for a specific graph, then we could search for other constraints files.)
  */
 public class GameLevelInserter {
-	static String mongoAddress = "flowjam.verigames.com";
+	static String mongoAddress = "54.208.82.42";
 
 	/**
 	 * @param args
