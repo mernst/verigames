@@ -66,7 +66,7 @@ Mapping Format
 TODO: document this once it stabilizes
 
 For now the only documentation are the load and export methods in
-ReverseMapping.java in the source code.
+ReverseMappingIO.java in the source code.
 
 
 Issues, Gotchas, and Limitations
