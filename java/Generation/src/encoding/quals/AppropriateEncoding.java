@@ -12,6 +12,23 @@ import checkers.quals.ImplicitFor;
 import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
 
+/**
+ * A type annotation to indicate that data has the proper encoding for some
+ * purpose.<p/>
+ *
+ * It is the responsibility of the user to determine what, exactly, that
+ * encoding is.<p/>
+ *
+ * Concatenating any two appropriately encoded {@code String}s with the +
+ * operator results in an appropriately encoded {@code String}.<p/>
+ *
+ * The null literal is, by default, considered to be appropriately encoded.<p/>
+ *
+ * This annotation is intended to be used with {@code String}s.
+ *
+ * @see UnknownEncoding
+ * @see trusted.quals.Trusted
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})

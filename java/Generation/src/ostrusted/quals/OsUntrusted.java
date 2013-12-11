@@ -7,7 +7,14 @@ import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
 
 /**
+ * Represents data that may not be suitable to pass to OS commands such as
+ * exec.<p/>
+ *
+ * Types are implicitly {@code OsUntrusted}.
+ *
  * @see OsTrusted
+ * @see PolyOsTrusted
+ * @see trusted.quals.UnTrusted
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

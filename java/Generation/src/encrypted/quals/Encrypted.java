@@ -12,6 +12,17 @@ import checkers.quals.TypeQualifier;
 
 import com.sun.source.tree.Tree;
 
+/**
+ * A type annotation representing encrypted String data.<p/>
+ *
+ * The concatenation via the + operator of any two {@code Encrypted String}s is
+ * also an {@code Encrypted String}.<p/>
+ *
+ * Null literals are, by default, given an {@code Encrypted} type.<p/>
+ *
+ * @see Plaintext
+ * @see trusted.quals.Trusted
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
