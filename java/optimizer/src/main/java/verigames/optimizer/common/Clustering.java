@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -131,12 +130,7 @@ public class Clustering<T> {
 
     @Override
     public String toString() {
-        List<Set<T>> all = new ArrayList<>();
-        for (Integer i : reverse.keySet()) {
-            Set<T> set = reverse.get(i);
-            all.add(set);
-        }
-        return all.toString();
+        return getNontrivialClusters().toString();
     }
 
 }
