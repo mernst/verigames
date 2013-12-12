@@ -53,7 +53,7 @@ public class NodeGraph {
 
     /**
      * Maps variable IDs (integers) to all the edges in this graph that
-     * have the given ID. This is used in conjuction with
+     * have the given ID. This is used in conjunction with
      * {@link #linkedVars} to determine what edges share widths.
      *
      * <p>NOTE: edges that have negative variable IDs are NOT stored in
