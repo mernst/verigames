@@ -24,8 +24,7 @@ public class BallDropElimination extends AbstractIterativePass {
 
     @Override
     public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved, ReverseMapping mapping) {
-        Intersection i = node.getIntersection();
-        Intersection.Kind kind = i.getIntersectionKind();
+        Intersection.Kind kind = node.getKind();
 
         // Remove small starts and no-ball starts.
         if (kind == Intersection.Kind.START_SMALL_BALL || kind == Intersection.Kind.START_NO_BALL) {

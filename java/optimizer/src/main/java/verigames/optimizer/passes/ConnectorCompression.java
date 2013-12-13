@@ -23,7 +23,7 @@ public class ConnectorCompression implements OptimizationPass {
         // and getNodes just returns a view of the nodes in the graph. We want to
         // avoid concurrent modifications.
         for (Node node : new ArrayList<>(g.getNodes())) {
-            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
+            if (node.getKind() == Intersection.Kind.CONNECT) {
 
                 // for this node kind: one incoming edge, one outgoing edge
                 Edge incomingEdge = Util.first(g.incomingEdges(node));
@@ -54,7 +54,7 @@ public class ConnectorCompression implements OptimizationPass {
 
         // remove the node
         assert outgoing.getSrc().equals(connector);
-        assert connector.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT;
+        assert connector.getKind() == Intersection.Kind.CONNECT;
         g.removeNode(connector);
 
         // add an edge where it used to be

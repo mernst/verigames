@@ -6,11 +6,14 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
+import verigames.optimizer.io.WorldIO;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
 @Test
 public class BallDropEliminationTest {
+
+    final WorldIO io = new WorldIO();
 
     @Test
     public void testBasics() {
@@ -34,11 +37,11 @@ public class BallDropEliminationTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new BallDropElimination().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -82,11 +85,11 @@ public class BallDropEliminationTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new BallDropElimination().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -123,11 +126,11 @@ public class BallDropEliminationTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new BallDropElimination().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());

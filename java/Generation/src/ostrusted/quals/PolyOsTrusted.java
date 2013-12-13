@@ -6,9 +6,15 @@ import checkers.quals.TypeQualifier;
 import java.lang.annotation.*;
 
 /**
- * A polymorphic qualifier for the Tainting type system.
+ * A Polymorphic qualifier for {@code OsTrusted}.<p/>
  *
- * @checker_framework_manual #tainting-checker Tainting Checker
+ * See {@link
+ * http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#qualifier-polymorphism}
+ * for information on the semantics of polymorphic qualifiers in the checker
+ * framework.<p/>
+ *
+ * @see OsTrusted
+ * @see OsUntrusted
  */
 @Documented
 @TypeQualifier

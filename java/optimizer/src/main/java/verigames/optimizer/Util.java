@@ -76,7 +76,7 @@ public class Util {
      * @return true if the edge is conflict free, or false otherwise
      */
     public static boolean conflictFree(NodeGraph g, Edge e) {
-        return (e.getSrc().getIntersection().getIntersectionKind() != Intersection.Kind.START_PIPE_DEPENDENT_BALL) &&
+        return (e.getSrc().getKind() != Intersection.Kind.START_PIPE_DEPENDENT_BALL) &&
                 ((!e.isEditable() && !e.isNarrow()) ||
                  (e.isEditable() && g.edgeSet(e).size() <= 1));
     }
@@ -100,8 +100,7 @@ public class Util {
     public static Node newNodeOnSameBoard(Node n, Intersection.Kind kind) {
         String levelName = n.getLevelName();
         String boardName = n.getBoardName();
-        Intersection i = Intersection.factory(kind);
-        return new Node(levelName, boardName, i);
+        return new Node(levelName, boardName, kind);
     }
 
     /**

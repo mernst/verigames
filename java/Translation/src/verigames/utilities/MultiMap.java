@@ -28,6 +28,17 @@ public class MultiMap<K,V>
     delegate = new LinkedHashMap<K, Set<V>>();
   }
 
+  protected Set<V> getOrCreateSet(K key)
+  {
+    Set<V> result = delegate.get(key);
+    if (result == null)
+    {
+      result = new LinkedHashSet<>();
+      delegate.put(key, result);
+    }
+    return result;
+  }
+
   /**
    * Adds a mapping from {@code key} to {@code value}. Does not remove any
    * previous mappings.
@@ -37,16 +48,19 @@ public class MultiMap<K,V>
    */
   public void put(K key, V value)
   {
-    if (delegate.containsKey(key))
-    {
-      delegate.get(key).add(value);
-    }
-    else
-    {
-      Set<V> values = new LinkedHashSet<V>();
-      values.add(value);
-      delegate.put(key, values);
-    }
+    getOrCreateSet(key).add(value);
+  }
+
+  /**
+   * Add a mapping from {@code key} to each one of {@code values}. Does not
+   * remove any previous mappings.
+   *
+   * @param key
+   * @param values
+   */
+  public void putAll(K key, Collection<V> values)
+  {
+    getOrCreateSet(key).addAll(values);
   }
 
   /**

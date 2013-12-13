@@ -2,20 +2,23 @@ package verigames.optimizer;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import verigames.level.Board;
-import verigames.level.Chute;
-import verigames.level.Level;
 import verigames.level.RandomWorldGenerator;
 import verigames.level.World;
-import verigames.optimizer.model.MismatchException;
+import verigames.optimizer.io.ReverseMappingIO;
+import verigames.optimizer.io.WorldIO;
+import verigames.optimizer.model.Edge;
+import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
-import verigames.optimizer.model.Solution;
+import verigames.utilities.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Tests various invariants of the optimizer.
@@ -29,9 +32,33 @@ import java.util.Random;
 public class OptimizerTest {
 
     Collection<World> worlds;
+    WorldIO io;
+
+    public static class Stats {
+        int numLevels = 0;
+        int numBoards = 0;
+        int numNodes = 0;
+        int numEdges = 0;
+    }
+
+    public Stats info(NodeGraph g) {
+        Stats s = new Stats();
+        s.numNodes = g.getNodes().size();
+        s.numEdges = g.getEdges().size();
+        Set<String> boardNames = new HashSet<>();
+        Set<String> levelNames = new HashSet<>();
+        for (Node n : g.getNodes()) {
+            levelNames.add(n.getLevelName());
+            boardNames.add(n.getBoardName());
+        }
+        s.numLevels = levelNames.size();
+        s.numBoards = boardNames.size();
+        return s;
+    }
 
     @BeforeClass
     public void setup() {
+        io = new WorldIO();
         final int NUM_WORLDS = 10;
         final int RANDOM_SEED = 33; // arbitrary, but consistent from run to run
 
@@ -47,37 +74,33 @@ public class OptimizerTest {
     public void worldIsValid() {
         Optimizer optimizer = new Optimizer();
         for (World world1 : worlds) {
-            World world2 = optimizer.optimizeWorld(world1, new ReverseMapping());
+            WorldIO.LoadedWorld w = io.load(world1);
+            NodeGraph g = w.getGraph();
+            ReverseMapping m = new ReverseMapping();
+            m.initAll(w.getEdgeIDMapping());
+            optimizer.optimize(g, m);
+            World world2 = io.toWorld(g).getFirst();
             world2.validateSubboardReferences();
         }
     }
 
     @Test
-    public void mappingIsValid() throws MismatchException, IOException {
+    public void mappingIsValid() throws IOException {
         Optimizer optimizer = new Optimizer();
         for (World world1 : worlds) {
+            WorldIO.LoadedWorld w = io.load(world1);
+            NodeGraph g = w.getGraph();
             ReverseMapping mapping = new ReverseMapping();
-            System.out.println("$$$$$");
-            World world2 = optimizer.optimizeWorld(world1, mapping);
-            System.out.println(new NodeGraph(world1).getNodes());
-            System.out.println(new NodeGraph(world1).getEdges());
-            System.out.println(new NodeGraph(world2).getNodes());
-            System.out.println(new NodeGraph(world2).getEdges());
-            mapping.export(System.out);
-            mapping.check(world1, world2); // all looks ok?
+            mapping.initAll(w.getEdgeIDMapping());
+            optimizer.optimize(g, mapping);
+
+            Pair<World, Map<Edge, Integer>> p = io.toWorld(g);
+            mapping.finalizeAll(p.getSecond());
+            World world2 = p.getFirst();
+            new ReverseMappingIO().export(System.out, mapping);
 
             // make sure no exceptions are thrown
-            mapping.solutionForUnoptimized(
-                    new NodeGraph(world1),
-                    new NodeGraph(world2),
-                    new Solution(world2)).applyTo(world1);
-
-            // only mutable chutes should be mapped
-            for (Chute c : world1.getChutes()) {
-                if (mapping.hasWidthMapping(c)) {
-                    assert c.isEditable();
-                }
-            }
+            SolutionTransferMain.applySolution(world2, mapping, world1);
 
         }
     }
@@ -88,36 +111,15 @@ public class OptimizerTest {
 
         for (World world1 : worlds) {
 
-            int numLevels1 = world1.getLevels().size();
-            int numBoards1 = 0;
-            int numNodes1 = 0;
-            int numEdges1 = 0;
-            for (Level level : world1.getLevels().values()) {
-                for (Board board : level.getBoards().values()) {
-                    ++numBoards1;
-                    numNodes1 += board.getNodes().size();
-                    numEdges1 += board.getEdges().size();
-                }
-            }
+            NodeGraph g = io.load(world1).getGraph();
+            Stats s1 = info(g);
+            optimizer.optimize(g);
+            Stats s2 = info(g);
 
-            World world2 = optimizer.optimizeWorld(world1, new ReverseMapping());
-
-            int numLevels2 = world2.getLevels().size();
-            int numBoards2 = 0;
-            int numNodes2 = 0;
-            int numEdges2 = 0;
-            for (Level level : world2.getLevels().values()) {
-                for (Board board : level.getBoards().values()) {
-                    ++numBoards2;
-                    numNodes2 += board.getNodes().size();
-                    numEdges2 += board.getEdges().size();
-                }
-            }
-
-            assert numLevels2 <= numLevels1;
-            assert numBoards2 <= numBoards1;
-            assert numNodes2 <= numNodes1;
-            assert numEdges2 <= numEdges1;
+            assert s2.numLevels <= s1.numLevels;
+            assert s2.numBoards <= s1.numBoards;
+            assert s2.numNodes <= s1.numNodes;
+            assert s2.numEdges <= s1.numEdges;
 
         }
     }

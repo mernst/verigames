@@ -37,7 +37,7 @@ public class SplitElimination implements OptimizationPass {
         // wrap the nodes in a new array list to avoid concurrent modification
         // of a list we are iterating over
         for (Node n : new ArrayList<>(g.getNodes())) {
-            if (n.getIntersection().getIntersectionKind() == Intersection.Kind.SPLIT) {
+            if (n.getKind() == Intersection.Kind.SPLIT) {
                 List<Edge> outgoing = new ArrayList<>(g.outgoingEdges(n));
 
                 // expect 2 outputs and 1 input
@@ -52,7 +52,7 @@ public class SplitElimination implements OptimizationPass {
 
                 // If either node is an END node, we can remove this
                 // split and the END and place a connector instead.
-                if (e1.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
+                if (e1.getDst().getKind() == Intersection.Kind.END &&
                         (Util.conflictFree(g, e1) || srcAndE1Linked)) {
                     g.removeNode(e1.getDst());
                     g.removeNode(n);
@@ -63,7 +63,7 @@ public class SplitElimination implements OptimizationPass {
                     mapping.mapEdge(g, src, srcReplacement);
                     mapping.mapEdge(g, e2, e2Replacement);
                     mapping.mapBuzzsaw(src, srcReplacement);
-//                    mapping.mapBuzzsaw(e2, e2Replacement);
+                    mapping.mapBuzzsaw(e2, e2Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be
@@ -71,7 +71,7 @@ public class SplitElimination implements OptimizationPass {
                     if (!srcAndE1Linked) {
                         mapping.forceWide(e1);
                     }
-                } else if (e2.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
+                } else if (e2.getDst().getKind() == Intersection.Kind.END &&
                         (Util.conflictFree(g, e2) || srcAndE2Linked)) {
                     g.removeNode(e2.getDst());
                     g.removeNode(n);
@@ -81,8 +81,8 @@ public class SplitElimination implements OptimizationPass {
 
                     mapping.mapEdge(g, src, srcReplacement);
                     mapping.mapEdge(g, e1, e1Replacement);
-//                    mapping.mapBuzzsaw(src, srcReplacement);
-//                    mapping.mapBuzzsaw(e1, e1Replacement);
+                    mapping.mapBuzzsaw(src, srcReplacement);
+                    mapping.mapBuzzsaw(e1, e1Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be

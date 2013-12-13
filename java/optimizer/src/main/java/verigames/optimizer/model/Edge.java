@@ -7,18 +7,16 @@ public class Edge {
 
     private final Node src;
     private final Port srcPort;
-    private final NodeGraph.Target target;
+    private final Node dst;
+    private final Port dstPort;
+    private final EdgeData data;
 
     public Edge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData data) {
         this.src = src;
         this.srcPort = srcPort;
-        this.target = new NodeGraph.Target(dst, dstPort, data);
-    }
-
-    public Edge(Node src, Port srcPort, NodeGraph.Target target) {
-        this.src = src;
-        this.srcPort = srcPort;
-        this.target = target;
+        this.dst = dst;
+        this.dstPort = dstPort;
+        this.data = data;
     }
 
     public Node getSrc() {
@@ -29,49 +27,44 @@ public class Edge {
         return srcPort;
     }
 
-    public NodeGraph.Target getTarget() {
-        return target;
-    }
-
     public Node getDst() {
-        return target.getDst();
+        return dst;
     }
 
     public Port getDstPort() {
-        return target.getDstPort();
+        return dstPort;
     }
 
     public EdgeData getEdgeData() {
-        return target.getEdgeData();
+        return data;
     }
 
     public int getVariableID() {
-        return target.getEdgeData().getVariableID();
+        return data.getVariableID();
     }
 
     public String getDescription() {
-        return target.getEdgeData().getDescription();
+        return data.getDescription();
     }
 
     public boolean isNarrow() {
-        return target.getEdgeData().isNarrow();
+        return data.isNarrow();
     }
 
     public boolean isEditable() {
-        return target.getEdgeData().isEditable();
+        return data.isEditable();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Edge edge = (Edge) o;
-
+        if (!data.equals(edge.data)) return false;
+        if (!dst.equals(edge.dst)) return false;
+        if (!dstPort.equals(edge.dstPort)) return false;
         if (!src.equals(edge.src)) return false;
         if (!srcPort.equals(edge.srcPort)) return false;
-        if (!target.equals(edge.target)) return false;
-
         return true;
     }
 
@@ -79,14 +72,16 @@ public class Edge {
     public int hashCode() {
         int result = src.hashCode();
         result = 31 * result + srcPort.hashCode();
-        result = 31 * result + target.hashCode();
+        result = 31 * result + dst.hashCode();
+        result = 31 * result + dstPort.hashCode();
+        result = 31 * result + data.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Edge(" + getSrc().getIntersection().getUID()
-                + " -> "+ getDst().getIntersection().getUID()
+        return "Edge(" + getSrc()
+                + " -> "+ getDst()
                 + ", " + getEdgeData() + ")";
     }
 

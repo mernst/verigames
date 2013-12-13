@@ -19,8 +19,8 @@ public class UtilTest {
     @Test
     void testImmutableWideConflictFree() {
         NodeGraph g = new NodeGraph();
-        Node start = new Node("l", "b", Intersection.factory(Intersection.Kind.INCOMING));
-        Node end = new Node("l", "b", Intersection.factory(Intersection.Kind.OUTGOING));
+        Node start = new Node("l", "b", Intersection.Kind.INCOMING);
+        Node end = new Node("l", "b", Intersection.Kind.OUTGOING);
         Edge e1 = g.addEdge(start, new Port("1"), end, new Port("2"), EdgeData.WIDE);
         assert Util.conflictFree(g, e1);
     }
@@ -31,8 +31,8 @@ public class UtilTest {
     @Test
     void testIsolatedConflictFree() {
         NodeGraph g = new NodeGraph();
-        Node start = new Node("l", "b", Intersection.factory(Intersection.Kind.INCOMING));
-        Node end = new Node("l", "b", Intersection.factory(Intersection.Kind.OUTGOING));
+        Node start = new Node("l", "b", Intersection.Kind.INCOMING);
+        Node end = new Node("l", "b", Intersection.Kind.OUTGOING);
         Edge e1 = g.addEdge(start, new Port("1"), end, new Port("2"), EdgeData.createMutable(1, "hello"));
         assert Util.conflictFree(g, e1);
     }
@@ -43,8 +43,8 @@ public class UtilTest {
     @Test
     void testSameVarIDNotConflictFree() {
         NodeGraph g = new NodeGraph();
-        Node start = new Node("l", "b", Intersection.factory(Intersection.Kind.INCOMING));
-        Node end = new Node("l", "b", Intersection.factory(Intersection.Kind.OUTGOING));
+        Node start = new Node("l", "b", Intersection.Kind.INCOMING);
+        Node end = new Node("l", "b", Intersection.Kind.OUTGOING);
         EdgeData data1 = EdgeData.createMutable(1, "hello");
         EdgeData data2 = EdgeData.createMutable(1, "hello");
         Edge e1 = g.addEdge(start, new Port("1"), end, new Port("2"), data1);
@@ -59,8 +59,8 @@ public class UtilTest {
     @Test
     void testLinkedEdgesNotConflictFree() {
         NodeGraph g = new NodeGraph();
-        Node start = new Node("l", "b", Intersection.factory(Intersection.Kind.INCOMING));
-        Node end = new Node("l", "b", Intersection.factory(Intersection.Kind.OUTGOING));
+        Node start = new Node("l", "b", Intersection.Kind.INCOMING);
+        Node end = new Node("l", "b", Intersection.Kind.OUTGOING);
         EdgeData data1 = EdgeData.createMutable(1, "hello");
         EdgeData data2 = EdgeData.createMutable(2, "hello");
         Edge e1 = g.addEdge(start, new Port("1"), end, new Port("2"), data1);
@@ -76,8 +76,8 @@ public class UtilTest {
     @Test
     void testPipeDependentBallNotConflictFree() {
         NodeGraph g = new NodeGraph();
-        Node start = new Node("l", "b", Intersection.factory(Intersection.Kind.START_PIPE_DEPENDENT_BALL));
-        Node end = new Node("l", "b", Intersection.factory(Intersection.Kind.END));
+        Node start = new Node("l", "b", Intersection.Kind.START_PIPE_DEPENDENT_BALL);
+        Node end = new Node("l", "b", Intersection.Kind.END);
         EdgeData data = EdgeData.createMutable(1, "hello");
         Edge e = g.addEdge(start, Port.INPUT, end, Port.OUTPUT, data);
         assert !Util.conflictFree(g, e);

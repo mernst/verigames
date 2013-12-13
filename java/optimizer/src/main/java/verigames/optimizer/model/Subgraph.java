@@ -1,6 +1,6 @@
 package verigames.optimizer.model;
 
-
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,20 +26,25 @@ public class Subgraph {
         nodes.add(node);
     }
 
+    public void addNodes(Collection<Node> ns) {
+        nodes.addAll(ns);
+    }
+
     public void addEdge(Edge edge) {
         edges.add(edge);
+    }
+
+    public void addEdges(Collection<Edge> es) {
+        edges.addAll(es);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Subgraph subgraph = (Subgraph) o;
-
         if (!edges.equals(subgraph.edges)) return false;
         if (!nodes.equals(subgraph.nodes)) return false;
-
         return true;
     }
 

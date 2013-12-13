@@ -6,15 +6,15 @@ import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
+import verigames.optimizer.SolutionTransferMain;
 import verigames.optimizer.Util;
+import verigames.optimizer.io.WorldIO;
 import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.EdgeData;
-import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
-import verigames.optimizer.model.Solution;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +24,7 @@ import java.util.List;
 public class ConnectorCompressionTest {
 
     final boolean[] bools = { true, false };
+    final WorldIO io = new WorldIO();
 
     /**
      * Connectors should be compressed in the expected way
@@ -42,11 +43,11 @@ public class ConnectorCompressionTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new ConnectorCompression().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -94,11 +95,11 @@ public class ConnectorCompressionTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new ConnectorCompression().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -136,11 +137,11 @@ public class ConnectorCompressionTest {
         World world = new World();
         world.addLevel("level", level);
         world.validateSubboardReferences();
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new ConnectorCompression().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -208,11 +209,11 @@ public class ConnectorCompressionTest {
         world.addLevel("level", level);
         world.finishConstruction();
 
-        NodeGraph g = new NodeGraph(world);
+        NodeGraph g = io.load(world).getGraph();
 
         new ConnectorCompression().optimize(g, new ReverseMapping());
 
-        World finalWorld = g.toWorld();
+        World finalWorld = io.toWorld(g).getFirst();
         assert finalWorld.getLevels().size() == 1;
 
         Level finalLevel = Util.first(finalWorld.getLevels().values());
@@ -258,14 +259,11 @@ public class ConnectorCompressionTest {
      */
     private NodeGraph mkGraph(EdgeData incoming, EdgeData outgoing) {
         NodeGraph g = new NodeGraph();
-        Intersection i = Intersection.factory(Intersection.Kind.INCOMING);
-        Intersection c = Intersection.factory(Intersection.Kind.CONNECT);
-        Intersection o = Intersection.factory(Intersection.Kind.OUTGOING);
         String level = "level";
         String board = "board";
-        Node in = new Node(level, board, i);
-        Node cn = new Node(level, board, c);
-        Node on = new Node(level, board, o);
+        Node in = new Node(level, board, Intersection.Kind.INCOMING);
+        Node cn = new Node(level, board, Intersection.Kind.CONNECT);
+        Node on = new Node(level, board, Intersection.Kind.OUTGOING);
         g.addEdge(in, Port.OUTPUT, cn, Port.INPUT, incoming);
         g.addEdge(cn, Port.OUTPUT, on, Port.INPUT, outgoing);
         return g;
@@ -347,7 +345,7 @@ public class ConnectorCompressionTest {
      * chutes.
      */
     @Test
-    public void testFullCompression() throws MismatchException {
+    public void testFullCompression() {
         ConnectorCompression compression = new ConnectorCompression();
         for (EdgeData e1 : allChuteCombos()) {
             for (EdgeData e2 : allChuteCombos()) {
@@ -366,10 +364,10 @@ public class ConnectorCompressionTest {
                 world.finishConstruction();
 
                 // Optimize the world
-                NodeGraph g = new NodeGraph(world);
+                NodeGraph g = io.load(world).getGraph();
                 ReverseMapping mapping = new ReverseMapping();
                 compression.optimize(g, mapping);
-                World optimizedWorld = g.toWorld();
+                World optimizedWorld = io.toWorld(g).getFirst();
 
                 // find all the chutes in the optimized world
                 Collection<Chute> optimizedChutes = optimizedWorld.getChutes();
@@ -384,10 +382,7 @@ public class ConnectorCompressionTest {
 
                 // translate this back to the original world
                 System.out.println("------------");
-                mapping.solutionForUnoptimized(
-                        new NodeGraph(world),
-                        new NodeGraph(optimizedWorld),
-                        new Solution(optimizedWorld)).applyTo(world);
+                SolutionTransferMain.applySolution(optimizedWorld, mapping, world);
 
                 // figure out if there are "conflicts" in the optimized world
                 // (we'll just assume that our incoming node drops large balls)
@@ -420,10 +415,7 @@ public class ConnectorCompressionTest {
                 }
 
                 // translate this back to the original world
-                mapping.solutionForUnoptimized(
-                        new NodeGraph(world),
-                        new NodeGraph(optimizedWorld),
-                        new Solution(optimizedWorld)).applyTo(world);
+                SolutionTransferMain.applySolution(optimizedWorld, mapping, world);
 
                 // figure out if there are "conflicts" (we'll just assume
                 // that our incoming node drops large balls)

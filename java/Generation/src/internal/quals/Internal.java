@@ -10,7 +10,13 @@ import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
 
 /**
+ * Indicates that the contained data may not be acceptable to display to the
+ * end-user.<p/>
+ *
+ * All types are given this annotation implicitly.<p/>
+ *
  * @see Public
+ * @see trusted.quals.Untrusted
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,6 +24,7 @@ import checkers.quals.TypeQualifier;
 @TypeQualifier
 @SubtypeOf({})
 @DefaultQualifierInHierarchy
+// TODO is this necessary since it's the default qualifier anyway?
 @ImplicitFor(
 	    trees={
 	        Tree.Kind.STRING_LITERAL
