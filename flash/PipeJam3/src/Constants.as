@@ -14,7 +14,7 @@ package
 		public static const TOOL_TIP_DELAY_SEC:Number = 1.0;
 		public static const NUM_BACKGROUNDS:int = 12;
 		
-		public static const POINTS_PER_LINE:Number = 75;
+		public static const POINTS_PER_EDGE:Number = 75;
 		public static const WIDE_INPUT_POINTS:Number = 25;
 		public static const NARROW_OUTPUT_POINTS:Number = 25;
 		public static const ERROR_POINTS:Number = -75;

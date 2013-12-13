@@ -271,7 +271,12 @@ package scenes.game.display
 					case NodeTypes.INCOMING:
 					case NodeTypes.START_PIPE_DEPENDENT_BALL:
 						//trace("Hide line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-						hideLine = true;
+						if (newEdge.to_node.kind != NodeTypes.SUBBOARD) {
+							hideLine = true;
+						} else if ((newEdge.to_node.kind == NodeTypes.SUBBOARD) && myJoint && myJoint.hidden) {
+							// Unhide the joint and show this edge
+							myJoint.hideComponent(false);
+						}
 						break;
 				}
 			} else {
@@ -279,15 +284,25 @@ package scenes.game.display
 					case NodeTypes.OUTGOING:
 						// Only need to create outgoing joint if others come out of it,
 						// if joint was not created, don't create the line
-						if (myJoint && !myJoint.hidden) {
-							hideLine = false;
-						} else {
+						if (myJoint == null) {
 							hideLine = true;
+						} else if (myJoint.hidden) {
+							if (newEdge.from_node.kind == NodeTypes.SUBBOARD) {
+								// Unhide the joint and show this edge
+								myJoint.hideComponent(false);
+							} else {
+								hideLine = true;
+							}
 						}
 						break;
 					case NodeTypes.END:
 						//trace("Hide line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-						hideLine = true;
+						if (newEdge.from_node.kind != NodeTypes.SUBBOARD) {
+							hideLine = true;
+						} else if ((newEdge.from_node.kind == NodeTypes.SUBBOARD) && myJoint && myJoint.hidden) {
+							// Unhide the joint and show this edge
+							myJoint.hideComponent(false);
+						}
 						break;
 				}
 			}
@@ -497,7 +512,7 @@ package scenes.game.display
 				var foundNode:Node = levelNodes.getNode(jointLayoutXML.@id);
 				var inIndx:int = jointID.indexOf(Constants.XML_ANNOT_IN);
 				var outIndx:int = jointID.indexOf(Constants.XML_ANNOT_OUT);
-				var foundPort:Port;
+				var foundPort:Port = null;
 				if (inIndx > -1) {
 					foundNode = levelNodes.getNode(jointID.substring(0, inIndx));
 					var inPortID:String = jointID.substring(inIndx + Constants.XML_ANNOT_IN.length);
@@ -508,17 +523,20 @@ package scenes.game.display
 					foundNode = levelNodes.getNode(jointID.substring(0, outIndx));
 					var outPortID:String = jointID.substring(outIndx + Constants.XML_ANNOT_OUT.length);
 					if (foundNode) {
-						foundNode.getOutgoingPort(outPortID);
+						foundPort = foundNode.getOutgoingPort(outPortID);
 					}
 				}
-				
 				if (foundNode) {
 					// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
 					switch (foundNode.kind) {
 						case NodeTypes.INCOMING:
+							jointLayoutXML.@visible = (foundPort && foundPort.edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
+							break;
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
+							jointLayoutXML.@visible = (foundNode && foundNode.outgoing_ports.length && foundNode.outgoing_ports[0].edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
+							break;
 						case NodeTypes.END:
-							jointLayoutXML.@visible="false";
+							jointLayoutXML.@visible = (foundNode && foundNode.incoming_ports.length && foundNode.incoming_ports[0].edge.from_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
 							break;
 						case NodeTypes.OUTGOING:
 							// Only create the joint for an outgoing node if other lines connect
@@ -526,7 +544,7 @@ package scenes.game.display
 							// to this OUTGOING edge)
 							var numOutputs:Number = Number(jointLayoutXML.@outputs);
 							if (isNaN(numOutputs) || (numOutputs == 0)) {
-								jointLayoutXML.@visible="false";
+								jointLayoutXML.@visible = "false";
 							}
 							break;
 					}
@@ -1987,13 +2005,13 @@ package scenes.game.display
 			}
 			
 			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
-			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			m_currentScore = Constants.POINTS_PER_EDGE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
 			if (recordBestScore && (m_currentScore > m_bestScore)) {
 				m_bestScore = m_currentScore;
 				trace("New best score: " + m_bestScore);
 				fillConstraintsXML(m_levelBestScoreConstraintsXML);
 			}
-			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
+			m_baseScore = Constants.POINTS_PER_EDGE * totalLines;
 			m_conflictEdgesDirty = true;
 		}
 		
