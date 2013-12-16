@@ -37,9 +37,8 @@ package networking
 		public static var DELETE_SAVED_LEVEL:int = 9;
 		public static var START_LEVEL:int = 10;
 		public static var STOP_LEVEL:int = 11;
-		public static var REPORT_PERFORMANCE:int = 12;
-		public static var REPORT_PREFERENCE:int = 13;
-		public static var REPORT_LEADERBOARD_SCORE:int = 14;
+		public static var REPORT_PLAYER_RATING:int = 12;
+		public static var REPORT_LEADERBOARD_SCORE:int = 13;
 				
 		public static var USE_LOCAL:int = 1;
 		public static var USE_DATABASE:int = 2;
@@ -119,18 +118,11 @@ package networking
 			fileHandler.sendMessage(STOP_LEVEL, null);
 		}
 		
-		static public function reportPlayerPerformance(score:String):void
+		static public function reportPlayerPreference(preference:String):void
 		{
-			PipeJamGame.levelInfo.performance = score;
+			PipeJamGame.levelInfo.preference = preference;
 			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REPORT_PERFORMANCE, null, null, score);
-		}
-		
-		static public function reportPlayerPreference(score:String):void
-		{
-			PipeJamGame.levelInfo.preference = score;
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REPORT_PREFERENCE, null, null, score);
+			fileHandler.sendMessage(REPORT_PLAYER_RATING, null, null);
 		}
 		
 		//connect to the db and get a list of all levels
@@ -446,12 +438,10 @@ package networking
 					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/stopped&method=PUT";
 					method = URLRequestMethod.POST; 
 					break;
-				case REPORT_PREFERENCE:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/levels/"+ PipeJamGame.levelInfo.m_levelId+"/preference/"+PipeJamGame.levelInfo.preference+"/report&method=POST";
-					method = URLRequestMethod.POST; 
-					break;
-				case REPORT_PERFORMANCE:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/levels/"+ PipeJamGame.levelInfo.m_levelId +"/performance/"+PipeJamGame.levelInfo.performance+"/report&method=POST";
+				case REPORT_PLAYER_RATING:
+					// /level/report/playerID/level/preference/performance
+					request = "/level/report/"+PlayerValidation.playerID+"/"+ PipeJamGame.levelInfo.m_levelId
+					+"/"+PipeJamGame.levelInfo.preference+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case CREATE_RA_LEVEL:
@@ -503,8 +493,7 @@ package networking
 					{
 						requestStart = "/level/submit/";
 						var eRating:int = int(Math.round(PipeJamGame.levelInfo.enjoymentRating*20));
-						var dRating:int = int(Math.round(PipeJamGame.levelInfo.difficultyRating*20));
-						requestEnd = "/" + eRating+ "/"+ dRating+"/"+m_fileType;
+						requestEnd = "/" + eRating+"/"+m_fileType;
 					}
 					
 					//these need to match the proxy server, or we need to figure out json transfer...

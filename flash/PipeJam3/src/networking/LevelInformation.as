@@ -54,7 +54,6 @@ package networking
 		
 		//these are currently the same values as the two ratings below
 		public var preference:String;
-		public var performance:String;	
 		
 		public var enjoymentRating:Number;
 		public var difficultyRating:Number;		
@@ -116,7 +115,6 @@ package networking
 			levelObj.m_metadata = cloneObj(m_metadata);
 			
 			levelObj.preference = preference;
-			levelObj.performance = performance;
 			
 			levelObj.enjoymentRating = enjoymentRating;
 			levelObj.difficultyRating = difficultyRating;	
