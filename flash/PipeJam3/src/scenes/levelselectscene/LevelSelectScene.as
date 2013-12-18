@@ -1,5 +1,8 @@
 package scenes.levelselectscene
 {
+	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
+	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
@@ -14,9 +17,11 @@ package scenes.levelselectscene
 	
 	import feathers.controls.List;
 	
-	import flash.events.MouseEvent;
-	
-	import networking.*;
+	import networking.GameFileHandler;
+	import networking.LevelInformation;
+	import networking.NetworkConnection;
+	import networking.PlayerValidation;
+	import networking.TutorialController;
 	
 	import particle.ErrorParticleSystem;
 	
@@ -173,10 +178,10 @@ package scenes.levelselectscene
 				newLevelListBox.startBusyAnimation(newLevelListBox);
 				
 				GameFileHandler.levelInfoVector = null;
-				GameFileHandler.matchArrayObjects = null;
+				GameFileHandler.completedLevelVector = null;
 				GameFileHandler.savedMatchArrayObjects = null;
-				GameFileHandler.requestLevels(onRequestLevels);
 				GameFileHandler.getLevelMetadata(onRequestLevels);
+				GameFileHandler.getCompletedLevels(onRequestLevels);
 				GameFileHandler.getSavedLevels(onRequestSavedLevels);
 			}
 			else
@@ -311,8 +316,6 @@ package scenes.levelselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
-			if(PlayerValidation.playerLoggedIn)
-				GameFileHandler.refuseLevels();
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
@@ -344,7 +347,7 @@ package scenes.levelselectscene
 			try{
 				if(result == NetworkConnection.EVENT_COMPLETE)
 				{
-					if(GameFileHandler.levelInfoVector != null && GameFileHandler.matchArrayObjects != null)
+					if(GameFileHandler.levelInfoVector != null && GameFileHandler.completedLevelVector != null)
 						onGetLevelMetadataComplete();
 				}
 			}
@@ -374,15 +377,24 @@ package scenes.levelselectscene
 		protected function onGetLevelMetadataComplete():void
 		{
 			matchArrayMetadata = new Array;
-			for(var i:int = 0; i<GameFileHandler.matchArrayObjects.length; i++)
+			var i:int = 0;
+			var completedLevelDictionary:Dictionary = new Dictionary();
+			for(i = 0; i<GameFileHandler.completedLevelVector.length; i++)
 			{
-				var match:Object = GameFileHandler.matchArrayObjects[i];
-				var savedObj:Object = fileLevelNameFromMatch(match, GameFileHandler.levelInfoVector, matchArrayMetadata);
-				if(savedObj)
-					savedObj.unlocked = true;
+				var completedLevel:Object = GameFileHandler.completedLevelVector[i];
+				completedLevelDictionary[completedLevel.levelID] = completedLevel;
+			}
+
+			for(i = 0; i<GameFileHandler.levelInfoVector.length; i++)
+			{
+				var match:Object = GameFileHandler.levelInfoVector[i];
+				matchArrayMetadata.push(match);
+				match.unlocked = true;
+				if(completedLevelDictionary[match.levelId] != null)
+					match.checked = true;
 			}
 			
-			setNewLevelInfo(matchArrayMetadata);
+			setNewLevelInfo(matchArrayMetadata); 
 			
 			onRequestLevelsComplete();
 		}
@@ -404,7 +416,7 @@ package scenes.levelselectscene
 		
 		protected function onRequestLevelsComplete():void
 		{
-			if(GameFileHandler.levelInfoVector != null && GameFileHandler.matchArrayObjects != null && newLevelListBox != null)
+			if(GameFileHandler.levelInfoVector != null && GameFileHandler.completedLevelVector != null && newLevelListBox != null)
 				newLevelListBox.stopBusyAnimation();
 			
 			if(GameFileHandler.savedMatchArrayObjects != null && savedLevelsListBox != null)

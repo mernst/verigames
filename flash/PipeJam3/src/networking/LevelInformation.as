@@ -1,24 +1,7 @@
 package networking
 {	
-	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
-	
-	import events.MenuEvent;
-	import events.NavigationEvent;
-	
-	import flash.events.*;
-	import flash.net.*;
-	import flash.system.Security;
-	import flash.text.*;
 	import flash.utils.*;
-	
-	import graph.BoardNodes;
-	
-	import scenes.game.display.World;
-	
-	import starling.events.*;
-	
-	import utils.XString;
+
 
 	/** this is the main holder of information about the level.*/
 	public class LevelInformation
@@ -54,7 +37,6 @@ package networking
 		
 		//these are currently the same values as the two ratings below
 		public var preference:String;
-		public var performance:String;	
 		
 		public var enjoymentRating:Number;
 		public var difficultyRating:Number;		
@@ -116,7 +98,6 @@ package networking
 			levelObj.m_metadata = cloneObj(m_metadata);
 			
 			levelObj.preference = preference;
-			levelObj.performance = performance;
 			
 			levelObj.enjoymentRating = enjoymentRating;
 			levelObj.difficultyRating = difficultyRating;	

@@ -104,38 +104,6 @@ package dialogs
 			addChild(enjoymentStarsBackground);
 			addChild(enjoymentStars);
 			enjoymentStars.addChild(enjoymentQuad);
-
-			var label2:TextFieldWrapper = TextFactory.getInstance().createTextField("How hard was it?", AssetsFont.FONT_UBUNTU, _width - 30, 32, 18, 0x243079);
-			TextFactory.getInstance().updateAlign(label1, 1, 1);
-			label2.x = 15 + background.x;
-			label2.y = enjoymentStars.y + enjoymentStars.height - 4;
-			addChild(label2);
-			
-			var difficultyStarsMaskBackgroundTexture:Texture = AssetInterface.getTexture("Menu", "RatingStarsClass");
-			var difficultyStarsMask:Image = new Image(difficultyStarsMaskBackgroundTexture);
-			difficultyStarsMask.width *= starScaleFactor;
-			difficultyStarsMask.height *= starScaleFactor;
-			
-			var difficultyStars:PixelMaskDisplayObject = new PixelMaskDisplayObject();
-			difficultyStars.x = enjoymentStars.x
-			difficultyStars.y = label2.y + label2.height - 7;
-			difficultyStars.width = difficultyStarsMask.width;
-			difficultyStars.height = difficultyStarsMask.height;
-			difficultyStars.addEventListener(TouchEvent.TOUCH, overDifficultyStars);
-			
-			difficultyQuad = new Quad(difficultyStarsMask.width/2, difficultyStarsMask.height, 0x243079);
-			difficultyStars.mask = difficultyStarsMask;
-			
-			var difficultyBackgroundStarsTexture:Texture = AssetInterface.getTexture("Menu", "RatingStarsClass");
-			difficultyStarsBackground = new Image(difficultyBackgroundStarsTexture);
-			difficultyStarsBackground.x = difficultyStars.x;
-			difficultyStarsBackground.y = difficultyStars.y;
-			difficultyStarsBackground.width *= starScaleFactor;
-			difficultyStarsBackground.height *= starScaleFactor;
-			difficultyStarsBackground.addEventListener(TouchEvent.TOUCH, overDifficultyStars);
-			addChild(difficultyStarsBackground);
-			addChild(difficultyStars);
-			difficultyStars.addChild(difficultyQuad);
 		}
 		
 		private function overEnjoymentStars(e:TouchEvent):void
@@ -188,14 +156,8 @@ package dialogs
 			if (PipeJamGame.levelInfo == null) 
 				PipeJamGame.levelInfo = new LevelInformation();
 			PipeJamGame.levelInfo.enjoymentRating = eRating;
-			var dRating:Number = this.difficultyRating*5.0;
-			//round to two decimal places
-			dRating *= 100;
-			dRating = Math.round(dRating);
-			dRating /= 100;
-			PipeJamGame.levelInfo.difficultyRating = dRating;
-			GameFileHandler.reportPlayerPreference((int(Math.round(eRating*20))).toString()); //0-100 scale
-			GameFileHandler.reportPlayerPerformance((int(Math.round(dRating*20))).toString()); //0-100 scale
+			
+			GameFileHandler.reportPlayerPreference ((int(Math.round(eRating*20))).toString()); //0-100 scale
 			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			
 			GameFileHandler.reportScore();

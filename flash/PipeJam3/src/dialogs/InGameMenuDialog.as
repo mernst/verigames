@@ -5,12 +5,9 @@ package dialogs
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	
-	import events.MenuEvent;
 	import events.NavigationEvent;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
-	import networking.PlayerValidation;
 	
 	import scenes.BaseComponent;
 	import scenes.Scene;
@@ -20,7 +17,6 @@ package dialogs
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
-	import starling.display.Sprite;
 	import starling.events.Event;
 
 	public class InGameMenuDialog extends BaseComponent
@@ -198,8 +194,6 @@ package dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			if(PlayerValidation.playerLoggedIn)
-				GameFileHandler.stopLevel();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		

@@ -16,45 +16,14 @@ public class MongoFileInserter {
 	public String xmlID;
 	public String layoutID;
 	public String constraintsID;
-	
-    public static void main(String[] args) throws Exception 
-    {
-         //Connect to database
-        Mongo mongo = new Mongo( mongoAddress );
-        String dbName = "gameapi";
-        DB db = mongo.getDB( dbName );
-         
-        MongoFileInserter inserter = new MongoFileInserter(db);
-        
-        if(args.length == 1)
-        {
-	        File fileDir = new File(args[0]);
-	        if(fileDir.isDirectory())
-	        {
-	        	File[] files = fileDir.listFiles(new FilenameFilter() {
-	        	    public boolean accept(File directory, String fileName) {
-	        	        return fileName.endsWith(".zip") 
-	        	        && !fileName.endsWith("Layout.zip") 
-	        	        && !fileName.endsWith("Constraints.zip");
-	        	    }});
-	        	
-	        	for(int i=0; i<files.length; i++)
-	        	{
-	        		File xmlFile = files[i];
-	        		inserter.addLevelFiles(xmlFile);
-	        	}
-	        }
-        }
- 
-	    mongo.close();
-    }
     
-    public MongoFileInserter(DB _db)
+    public MongoFileInserter(DB _db, String gridFSName)
     {
     	db = _db;
-    	fs = new GridFS( db );
+    	fs = new GridFS( db, gridFSName);
     }
     
+    //add xml and Layout.xml file
     public void addLevelFiles(File xmlFile) throws IOException
     {
 		GridFSInputFile xmlin = fs.createFile( xmlFile );
@@ -73,17 +42,16 @@ public class MongoFileInserter {
         File layoutFile = new File(filebase+"Layout.zip");
         //Save layout into database
         GridFSInputFile layoutIn = fs.createFile( layoutFile );
-        layoutIn.put("xmlID", xmlin.getId().toString()+"L");
-        layoutIn.put("name", "Starter Layout");
         layoutIn.save();
         layoutID = layoutIn.getId().toString();
-        
-        File constraintsFile = new File(filebase+"Constraints.zip");
-        //Save image into database
+    }
+    
+    public String addConstraintsFile(File constraintsFile, String worldVersion) throws IOException
+    {
         GridFSInputFile conin = fs.createFile( constraintsFile );
-        conin.put("xmlID", xmlin.getId().toString()+"C");
-        conin.put("name", "Starter Constraints");
+        conin.put("version", worldVersion);
         conin.save();
         constraintsID = conin.getId().toString();
+        return constraintsID;
     }
 }

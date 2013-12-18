@@ -2,6 +2,7 @@
 
 import java.net.*;
 import java.util.Date;
+import java.util.HashMap;
 import java.io.*;
 
 import com.mongodb.BasicDBObject;
@@ -27,6 +28,14 @@ public class ProxyServer {
 	//set to true to not log, and display log to console
 	static public boolean runLocally = false;
 	
+	static public String LEVELS = "Level";
+	static public String SUBMITTED_LEVELS = "SubmittedLevels";
+	static public String SAVED_LEVELS = "SavedLevels";
+	static public String SUBMITTED_LAYOUTS = "SubmittedLayouts";
+	static public String COMPLETED_LEVELS = "CompletedLevels";
+	static public String COMPLETED_TUTORIALS = "CompletedTutorials";
+	static public String LOG = "log";
+	
 	//not currently doing anything, will eventually allow for receiving messages but not forward them
 	//make sure it's false
 	static public boolean testSilent = false;
@@ -37,12 +46,16 @@ public class ProxyServer {
         Mongo mongo = new Mongo( dbURL );
         String dbName = "gameapi";
         DB db = mongo.getDB( dbName );
-        DBCollection levelColl = db.getCollection("Level");
-        DBCollection submittedLevelColl = db.getCollection("SubmittedLevels");
-        DBCollection savedLevelColl = db.getCollection("SavedLevels");
-        DBCollection submittedLayoutColl = db.getCollection("SubmittedLayouts");
-        DBCollection tutorialColl = db.getCollection("CompletedTutorials");
+        HashMap<String, DBCollection> collectionMap = new HashMap<String, DBCollection>();
+        
+        collectionMap.put(LEVELS, db.getCollection("Level"));
+        collectionMap.put(SUBMITTED_LEVELS, db.getCollection("SubmittedLevels"));
+        collectionMap.put(SAVED_LEVELS, db.getCollection("SavedLevels"));
+        collectionMap.put(SUBMITTED_LAYOUTS, db.getCollection("SubmittedLayouts"));
+        collectionMap.put(COMPLETED_TUTORIALS, db.getCollection("CompletedTutorials"));
+        collectionMap.put(COMPLETED_LEVELS, db.getCollection("CompletedLevels"));
         logColl = db.getCollection("log");
+        collectionMap.put(LOG, logColl);
         //Create GridFS object
         GridFS fs = new GridFS( db );
         
@@ -66,7 +79,7 @@ public class ProxyServer {
 
         while (listening) {
         	try{
-            new ProxyThread(serverSocket.accept(), fs, levelColl, submittedLevelColl, savedLevelColl, submittedLayoutColl, logColl, tutorialColl).start();
+            new ProxyThread(serverSocket.accept(), fs, collectionMap).start();
         	} catch (Exception e) {
                 //can redirect this to error log
             	log(ProxyThread.LOG_EXCEPTION, e.toString());
