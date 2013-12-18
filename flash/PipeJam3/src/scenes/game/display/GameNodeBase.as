@@ -196,7 +196,7 @@ package scenes.game.display
 			{
 				if (DEBUG_TRACE_IDS) trace("GameNodeBase '" + m_id + "'");
 				if (DEBUG_TRACE_IDS) for (var i:int = 0; i < m_incomingEdges.length; i++) trace("i:" + m_incomingEdges[i].graphEdge.from_node.kind + "->" + m_incomingEdges[i].graphEdge.to_node.kind);
-				if (DEBUG_TRACE_IDS) for (var i:int = 0; i < m_outgoingEdges.length; i++) trace("o:" + m_outgoingEdges[i].graphEdge.from_node.kind + "->" + m_outgoingEdges[i].graphEdge.to_node.kind);
+				if (DEBUG_TRACE_IDS) for (var o:int = 0; o < m_outgoingEdges.length; o++) trace("o:" + m_outgoingEdges[o].graphEdge.from_node.kind + "->" + m_outgoingEdges[o].graphEdge.to_node.kind);
 				//for (var ee:int = 0; ee < m_edgePortArray.length; ee++) trace(ee + " p:" + m_edgePortArray[ee] + " e:" + (edgeAt(ee) ? edgeAt(ee).m_id : null));////debug
 				//for each (var inEdge:GameEdgeContainer in m_incomingEdges) trace(inEdge.m_id + " inpos:" + inEdge.incomingEdgePosition + " toport:" + inEdge.m_toPortID);
 				//for each (var outEdge:GameEdgeContainer in m_outgoingEdges) trace(outEdge.m_id + " outpos:" + outEdge.outgoingEdgePosition + " fromport:" + outEdge.m_fromPortID);
