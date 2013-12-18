@@ -161,7 +161,7 @@ def classic2grid(infile, outfile):
 	
 	world = pulldom.parse('%s.xml' % infile)
 	num = 0
-	print('Gathering level subboards from XML.'),
+	print('Gathering level subboards/varid-sets from XML.'),
 	for event, node in world:
 		if event != pulldom.START_ELEMENT:
 			continue
@@ -197,7 +197,8 @@ def classic2grid(infile, outfile):
 				parseLevel(node)
 			except Exception as e:
 				logging.warning('Failed on level: %s -- %s' % (node.getAttribute('name'), e))
-	
+	print 'Output %s levels' % num
+	print 'Outputting global constraints file: %sConstraints.xml ...' % outfile
 	# Output constaints file portion for this level
 	constraintout =  '<?xml version="1.0" ?>\n'
 	constraintout += '<graph id="world" version="3">\n'
@@ -564,7 +565,6 @@ def parseLevel(lx):
 	newlevelxml += '<world version="3">\n'
 	newlevelxml += ' <linked-varIDs>\n'
 	for levelvaridset in levelvaridsetedges:
-		# TODO
 		varsetxml = varidsetsxml.get(levelvaridset)
 		if varsetxml is None: # not in original world xml
 			continue
@@ -578,11 +578,11 @@ def parseLevel(lx):
 		if levelfound == lname: # if already a stub in this level, move on
 			continue
 		stubxstr = stubboardxml.get(boardcall)
-		#print 'Adding stubboard to level: %s' % boardcall
+		#print 'Adding stubboard %s to level: %s' % (boardcall, lname)
 		if stubxstr is None:
 			continue
-		stubx = Document().createTextNode('\n   %s' % stubxstr)
-		boardsx.appendChild(stubx)
+		stubx = parseString(stubxstr)
+		boardsx.appendChild(stubx.documentElement)
 	newlevelxml += lx.toxml() + "\n"
 	newlevelxml += '</world>'
 	writelevel = open('%s.xml' % lname, 'w')
