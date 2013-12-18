@@ -236,7 +236,7 @@ public class ProxyThread extends Thread {
         HttpResponse response = client.execute(method);
 
         return response;
-	}
+	} 
     
     public HttpResponse doPut(String request) throws Exception 
     {
@@ -404,8 +404,34 @@ public class ProxyThread extends Thread {
 		else if(request.indexOf("/level/report") != -1)
 		{
 			//format:  /level/report/playerID/levelID/preference
-    		submitPlayerRatings(fileInfo);
+			submitCompletedLevelInfo(fileInfo);
     		writeString("{success: true}", out);
+		}
+		else if(request.indexOf("/level/completed") != -1)
+		{
+			//format:  /level/completed/playerID
+			if(fileInfo.length < 4)
+			{
+				writeString("Error: no player ID", out);
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /layout/get/name
+			//returns: layout with specified name
+			BasicDBObject findobj = new BasicDBObject();
+			findobj.put("playerID", fileInfo[3]);
+			DBCollection completedLevelCollection = collectionMap.get(ProxyServer.COMPLETED_LEVELS);
+	        DBCursor cursor = completedLevelCollection.find(findobj);	  
+	        StringBuffer buff = new StringBuffer(request+"//");
+	        try {
+            	while(cursor.hasNext()) {
+ 	        	   DBObject obj = cursor.next();
+		        	   buff.append(obj.toString());  
+		           }
+		           writeString(buff.toString(), out);
+		           log(LOG_TO_DB, "level completed info returned");
+		        } finally {
+		        }
 		}
 		else if(request.indexOf("/layout/get/all") != -1)
 		{
@@ -616,14 +642,14 @@ public class ProxyThread extends Thread {
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 
-    public void submitPlayerRatings(String[] fileInfo)
+    public void submitCompletedLevelInfo(String[] fileInfo)
     {
     	DBObject playerRatingsObj = new BasicDBObject();
-    	playerRatingsObj.put("player", fileInfo[3]);
-    	playerRatingsObj.put("level", fileInfo[4]);
+    	playerRatingsObj.put("playerID", fileInfo[3]);
+    	playerRatingsObj.put("levelID", fileInfo[4]);
     	playerRatingsObj.put("preference", fileInfo[5]);
     	
-    	DBCollection playerRatingsCollection = collectionMap.get(ProxyServer.PLAYER_RATINGS);
+    	DBCollection playerRatingsCollection = collectionMap.get(ProxyServer.COMPLETED_LEVELS);
     	WriteResult r2 = playerRatingsCollection.insert(playerRatingsObj);
  		log(LOG_ERROR, r2.getLastError().toString());
     }

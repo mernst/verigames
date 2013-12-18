@@ -1,19 +1,7 @@
 package networking
-{
-	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
-	
+{	
 	import flash.events.*;
 	import flash.net.*;
-	import flash.system.Security;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.World;
-	
-	import utils.Base64Decoder;
-	import utils.Base64Encoder;
 
 	//one NetworkConnection object created for each connection and used only once
 	public class NetworkConnection

@@ -13,8 +13,6 @@ package networking
 	import scenes.Scene;
 	import scenes.game.display.World;
 	
-	import starling.core.Starling;
-	
 	import utils.Base64Encoder;
 	
 	/** How to use:
@@ -25,18 +23,14 @@ package networking
 	 */
 	public class GameFileHandler
 	{
-		public static var REQUEST_LEVELS:int = 1;
+		public static var GET_COMPLETED_LEVELS:int = 1;
 		public static var GET_ALL_LEVEL_METADATA:int = 2;
 		public static var SAVE_LAYOUT:int = 3;
-		public static var REFUSE_LEVELS:int = 4;
 		public static var REQUEST_LAYOUT_LIST:int = 5;
-		public static var CREATE_RA_LEVEL:int = 6;	
 		public static var SAVE_LEVEL:int = 7;
 		public static var GET_ALL_SAVED_LEVELS:int = 8;
 		public static var GET_SAVED_LEVEL:int = 15;
 		public static var DELETE_SAVED_LEVEL:int = 9;
-		public static var START_LEVEL:int = 10;
-		public static var STOP_LEVEL:int = 11;
 		public static var REPORT_PLAYER_RATING:int = 12;
 		public static var REPORT_LEADERBOARD_SCORE:int = 13;
 				
@@ -44,11 +38,12 @@ package networking
 		public static var USE_DATABASE:int = 2;
 		public static var USE_URL:int = 3;
 		
+		static public var GET_COMPLETED_LEVELS_REQUEST:String = "/level/completed";
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 	
 		static public var levelInfoVector:Vector.<Object> = null;
-		static public var matchArrayObjects:Object = null;
+		static public var completedLevelVector:Vector.<Object> = null;
 		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
 		static public var numLevels:int = 10;
@@ -93,30 +88,7 @@ package networking
 			fileHandler.sendMessage(DELETE_SAVED_LEVEL, null, _levelIDString);
 		}
 		
-		static public function requestLevels(callback:Function):void
-		{
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(REQUEST_LEVELS, fileHandler.onRequestLevelFinished);
-		}
-		
-		static public function refuseLevels():void
-		{
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REFUSE_LEVELS, null);
-		}
-		
-		static public function startLevel(levelObj:Object):void
-		{
-			PipeJamGame.levelInfo = new LevelInformation(levelObj);
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(START_LEVEL, null);
-		}
-		
-		static public function stopLevel():void
-		{
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(STOP_LEVEL, null);
-		}
+
 		
 		static public function reportPlayerPreference(preference:String):void
 		{
@@ -131,6 +103,14 @@ package networking
 			levelInfoVector = null;
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
 			fileHandler.sendMessage(GET_ALL_LEVEL_METADATA, fileHandler.setLevelMetadataFromCurrent);
+		}
+		
+		//connect to the db and get a list of all completed levels
+		static public function getCompletedLevels(callback:Function):void
+		{
+			levelInfoVector = null;
+			var fileHandler:GameFileHandler = new GameFileHandler(callback);
+			fileHandler.sendMessage(GET_COMPLETED_LEVELS, fileHandler.setCompletedLevels);
 		}
 		
 		//connect to the db and get a list of all saved levels
@@ -153,21 +133,12 @@ package networking
 			//this involves:
 			//saving the level (layout and constraints, on either save or submit/share)
 			//saving the score, level and player info
-			//reporting the player performance/preference to the RA
-			
+			//reporting the player performance/preference
 			var fileHandler:GameFileHandler = new GameFileHandler();
 			fileHandler.m_fileType = fileType;
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
-			//need to create an RA Level so we can use the levelID
-			if(saveType == MenuEvent.SUBMIT_LEVEL)
-			{
-				fileHandler.sendMessage(CREATE_RA_LEVEL, fileHandler.onRALevelCreated);
-			}
-			else //save level
-			{
-				fileHandler.saveLevelWithID(null);
-			}
+			fileHandler.saveLevelWithID("1"); //passing an ID is important, but we don't have an RA id any more, so we don't care what it is.
 		}	
 		
 		static public function reportScore():void
@@ -354,17 +325,6 @@ package networking
 				m_callback(result, list);
 		}
 		
-		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
-		{
-			if(e != null && (e.target.data as String).length > 0)
-			{
-				matchArrayObjects = JSON.parse(e.target.data).matches;
-				//handle callback ourselves since we want to use request info, not refuse;
-			}
-			m_callback(result);
-			sendMessage(REFUSE_LEVELS, null);
-		}
-		
 		public function onRequestSavedLevelsFinished(result:int, layoutObjects:Vector.<Object>):void
 		{
 			savedMatchArrayObjects = layoutObjects;
@@ -378,16 +338,13 @@ package networking
 			m_callback(result);
 		}
 		
-
-		public function onRALevelCreated(result:int, e:flash.events.Event):void
+		//called when level metadata is loaded 
+		public function setCompletedLevels(result:int, levelObjects:Vector.<Object>):void
 		{
-			var raLevelObj:Object = JSON.parse(e.target.data);
-			var levelID:String = raLevelObj.id;
-			m_levelCreated = true;
-			saveLevelWithID(levelID);
+			completedLevelVector = levelObjects;
+			m_callback(result);
 		}
 		
-		//if levelID == null, we are just saving, not submitting (which creates a new level id for future use...)
 		public function saveLevelWithID(levelID:String):void
 		{
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, levelID, m_levelFilesString);
@@ -422,34 +379,18 @@ package networking
 			
 			switch(type)
 			{
-				case REQUEST_LEVELS:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/count/"+numLevels+"/match&method=POST";
-					method = URLRequestMethod.POST; 
-					break;
-				case REFUSE_LEVELS:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/refused&method=PUT";
-					method = URLRequestMethod.POST; 
-					break;
-				case START_LEVEL:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/levels/"+ PipeJamGame.levelInfo.m_levelId+"/started&method=PUT";
-					method = URLRequestMethod.POST; 
-					break;
-				case STOP_LEVEL:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+PlayerValidation.playerID+"/stopped&method=PUT";
-					method = URLRequestMethod.POST; 
-					break;
 				case REPORT_PLAYER_RATING:
 					// /level/report/playerID/level/preference/performance
 					request = "/level/report/"+PlayerValidation.playerID+"/"+ PipeJamGame.levelInfo.m_levelId
 					+"/"+PipeJamGame.levelInfo.preference+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
-				case CREATE_RA_LEVEL:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/levels/new&method=POST";
+
+				//database messages
+				case GET_COMPLETED_LEVELS:
+					request = GET_COMPLETED_LEVELS_REQUEST+"/"+PlayerValidation.playerID+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
-				
-				//database messages
 				case GET_ALL_LEVEL_METADATA:
 					request = METADATA_GET_ALL_REQUEST+"&method=DATABASE";
 					method = URLRequestMethod.POST; 

@@ -32,7 +32,7 @@ public class ProxyServer {
 	static public String SUBMITTED_LEVELS = "SubmittedLevels";
 	static public String SAVED_LEVELS = "SavedLevels";
 	static public String SUBMITTED_LAYOUTS = "SubmittedLayouts";
-	static public String PLAYER_RATINGS = "PlayerRatings";
+	static public String COMPLETED_LEVELS = "CompletedLevels";
 	static public String COMPLETED_TUTORIALS = "CompletedTutorials";
 	static public String LOG = "log";
 	
@@ -48,13 +48,14 @@ public class ProxyServer {
         DB db = mongo.getDB( dbName );
         HashMap<String, DBCollection> collectionMap = new HashMap<String, DBCollection>();
         
-        collectionMap.put("Level", db.getCollection("Level"));
-        collectionMap.put("SubmittedLevels", db.getCollection("SubmittedLevels"));
-        collectionMap.put("SavedLevels", db.getCollection("SavedLevels"));
-        collectionMap.put("SubmittedLayouts", db.getCollection("SubmittedLayouts"));
-        collectionMap.put("CompletedTutorials", db.getCollection("CompletedTutorials"));
+        collectionMap.put(LEVELS, db.getCollection("Level"));
+        collectionMap.put(SUBMITTED_LEVELS, db.getCollection("SubmittedLevels"));
+        collectionMap.put(SAVED_LEVELS, db.getCollection("SavedLevels"));
+        collectionMap.put(SUBMITTED_LAYOUTS, db.getCollection("SubmittedLayouts"));
+        collectionMap.put(COMPLETED_TUTORIALS, db.getCollection("CompletedTutorials"));
+        collectionMap.put(COMPLETED_LEVELS, db.getCollection("CompletedLevels"));
         logColl = db.getCollection("log");
-        collectionMap.put("log", logColl);
+        collectionMap.put(LOG, logColl);
         //Create GridFS object
         GridFS fs = new GridFS( db );
         
