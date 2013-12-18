@@ -5,7 +5,7 @@
 import sys, os
 
 color_names = [
-		"Aqua", "Azure", "Blue", "Black", "Brown", "Coral", "Cyan", "Fuchsia", "Gray", "Green", "Indigo", "Ivory", "Khaki", "Lavendar", 
+		"Aqua", "Azure", "Blue", "Black", "Brown", "Coral", "Cyan", "Fuchsia", "Gray", "Green", "Indigo", "Ivory", "Khaki", "Lavender", 
 		"Lime", "Magenta", "Maroon", "Mint", "Navy", "Olive", "Orange", "Pink", "Plum", "Purple", "Red", "Salmon", "Silver", "Teal",
 		"Turquoise", "Violet", "White", "Yellow"
 		];
@@ -47,8 +47,9 @@ if __name__ == "__main__":
 	cmd = os.popen('ls /w %s*Constraints.xml' % inputpath)
 	for filename in cmd:
 		#get root file name
-		fileroot = filename.strip().lstrip(inputpath).rstrip('Constraints.xml')
-		
+		fileroot = filename.strip()[len(inputpath):-len('Constraints.xml')]
+		print fileroot
+		'''
 		#get new file name
 		filename = adjectives[index1] + nature_nouns[index2]
 		index1 = index1+1
@@ -61,5 +62,5 @@ if __name__ == "__main__":
 		os.popen('copy %s%s.xml %s%s.xml' % (inputpath, fileroot, outputpath, filename))
 		os.popen('copy %s%sLayout.xml %s%sLayout.xml' % (inputpath, fileroot, outputpath, filename))
 		os.popen('copy %s%sConstraints.xml %s%sConstraints.xml' % (inputpath, fileroot, outputpath, filename))
-	
+		'''
 	

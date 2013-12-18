@@ -5,7 +5,7 @@ import com.mongodb.Mongo;
 
 /*
  * The Plan:
- * 
+ * (Partly out of date. See "The New Plan", below.)
  * Create a level in the RA. This contains the official levelID.
  * 
  * Add the three files. The base xml, the starter layout, the first constraints file. The latter two contain a xmlID equal to
@@ -26,6 +26,16 @@ import com.mongodb.Mongo;
  * 
  * When choosing a specific layout, we will present a list of 'filename's that was found by searching for the xmlID+'L' id.
  * (We could do the same when someone expresses a liking for a specific graph, then we could search for other constraints files.)
+ * 
+ * The New Plan (removal of the RA use, center on on global constraints file)
+ * 
+ * Each game level consists of two specific files, the xml and the layout file. Each group of game level files shares a global constraint file.
+ * This means that the central file isn't the constraints file any more.
+ * 
+ * Most of the above applies, except for there being one universal constraint file.
+ * 
+ *  
+ * 
  */
 public class GameLevelInserter {
 	static String mongoAddress = "54.208.82.42";
@@ -36,33 +46,37 @@ public class GameLevelInserter {
 	public static void main(String[] args) {
 	       Mongo mongo = null;
 		try {
+			
+			if(args.length != 4)
+			{
+				System.out.println("Arguments need to be: directory, evaluationfile, typesystem_versionID, priorityLevel");
+				return;
+			}
+			
 			mongo = new Mongo( mongoAddress );
 	        String dbName = "gameapi";
 	        DB db = mongo.getDB( dbName );
 	        
 	        File dir = new File(args[0]);
 	        File difficultyFile = new File(args[1]);
-	        MongoFileInserter fileInserter = new MongoFileInserter(db);
-        	RALevelInserter raLevelInserter = new RALevelInserter();
-        	MongoLevelInserter mongoLevelInserter = new MongoLevelInserter(db, difficultyFile);
-        	
-        	String raLevelID = "3";
-        	String priorityLevel = "5";
-        	boolean activate = true;
-        	if(args.length>3)
-        	{
-	        	//raLevelID = args[2];
-	        	priorityLevel = args[2];
-	        	activate = Boolean.parseBoolean(args[3]);
-        	}
+	        String typesystem_version_id = args[2];
+	        String priorityLevel = args[3];
+	        
+	        MongoFileInserter fileInserter = new MongoFileInserter(db, "fs" + "/" + typesystem_version_id);
+        	MongoLevelInserter mongoLevelInserter = new MongoLevelInserter(db, difficultyFile, typesystem_version_id, priorityLevel);
         	
 	        if(dir.isDirectory())
 	        {
+	        	File constraintsFile = new File(dir.getPath() + File.separator + "constraints.xml");
+	        	String constraintsFileID = fileInserter.addConstraintsFile(constraintsFile, typesystem_version_id);
+	        	
+	        	//now add to constraints table
+	        	// TO DO
+	        	
 	        	File[] files = dir.listFiles(new FilenameFilter() {
 	        	    public boolean accept(File directory, String fileName) {
 	        	        return fileName.endsWith(".zip") 
-	        	        && !fileName.endsWith("Layout.zip") 
-	        	        && !fileName.endsWith("Constraints.zip");
+	        	        && !fileName.endsWith("Layout.zip");
 	        	    }});
 	        	
 	        	for(int i=0; i<files.length; i++)
@@ -70,31 +84,11 @@ public class GameLevelInserter {
 	        		File xmlFile = files[i];
 	        		System.out.println("File is : " + xmlFile.getName());
 	        		fileInserter.addLevelFiles(xmlFile);
-		        	raLevelID = raLevelInserter.createNewLevel();
-		        	System.out.println("Level ID is : " + raLevelID);
 		        	int index = xmlFile.getName().lastIndexOf('.');
 		        	String fileName = xmlFile.getName().substring(0, index);
-		        	mongoLevelInserter.addLevel(raLevelID, fileInserter, fileName);
-		        	raLevelInserter.setPriority(raLevelID, Integer.parseInt(priorityLevel));
-		        	if(activate)
-		        		raLevelInserter.activateLevel(raLevelID, activate);
+		        	mongoLevelInserter.addLevel(fileInserter, fileName);
 	        	}
-	        }
-	        else
-	        {
-	        	File file = dir;
-	        	//This section isn't equivalent to passing in a directory, as this is for single files pushed on the website
-	        	System.out.println("File is : " + file.getName());
-        		fileInserter.addLevelFiles(file);
-
-	        	int index = file.getName().lastIndexOf('.');
-	        	String fileName = file.getName().substring(0, index);
-	        	mongoLevelInserter.addLevel(raLevelID, fileInserter, fileName);
-	        	raLevelInserter.setPriority(raLevelID, Integer.parseInt(priorityLevel));
-	        	if(activate)
-	        		raLevelInserter.activateLevel(raLevelID, activate);
-	        }
-	        
+	        }	        
 		} catch (Exception e) {
 			if(mongo != null)
 				mongo.close();

@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+NOTE:  (I know this code doesn't compile anymore, that's part of the purpose of this note....)
+This project has been superceded by scripts that use the ASP evaluate functions to generate information about the levels.
+ENDNOTE....
+
 public class DifficultyRater extends ChainBase {
 
     File layoutFile;
