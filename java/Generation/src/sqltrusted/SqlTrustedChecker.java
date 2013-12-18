@@ -10,6 +10,10 @@ import javacutils.AnnotationUtils;
 
 import javax.lang.model.util.Elements;
 
+/**
+ * [1] CWE-89: Improper Neutralization of Special Elements used in an SQL
+ * Command ('SQL Injection')
+ */
 @TypeQualifiers({ SqlTrusted.class, SqlUntrusted.class })
 public class SqlTrustedChecker extends TrustedChecker implements
         InferenceTypeChecker {
