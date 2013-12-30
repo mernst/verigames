@@ -382,7 +382,7 @@ package scenes.levelselectscene
 			for(i = 0; i<GameFileHandler.completedLevelVector.length; i++)
 			{
 				var completedLevel:Object = GameFileHandler.completedLevelVector[i];
-				completedLevelDictionary[completedLevel.levelID] = completedLevel;
+				completedLevelDictionary[completedLevel.xmlID] = completedLevel;
 			}
 
 			for(i = 0; i<GameFileHandler.levelInfoVector.length; i++)
@@ -390,10 +390,12 @@ package scenes.levelselectscene
 				var match:Object = GameFileHandler.levelInfoVector[i];
 				matchArrayMetadata.push(match);
 				match.unlocked = true;
-				if(completedLevelDictionary[match.levelId] != null)
+				if(completedLevelDictionary[match.xmlID] != null)
 					match.checked = true;
 			}
 			
+			//alphabetize array
+			matchArrayMetadata.sortOn('name');
 			setNewLevelInfo(matchArrayMetadata); 
 			
 			onRequestLevelsComplete();
