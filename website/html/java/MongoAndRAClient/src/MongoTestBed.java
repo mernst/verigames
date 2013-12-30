@@ -41,29 +41,35 @@ public class MongoTestBed {
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
-   //     map.put("player", "52a88de73463501c50000c93"); 
+   //  map.put("rootlevelId", "5293ee90e4b06170777f9ff7"); 
+     //    map.put("name", "EmptyDesert"); 
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
  //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
   //    listFiles("fs/ostrusted/6");
       
 //        System.out.println("Level");
-      listEntries(db, "SubmittedLevels", map);
+        listEntries(db, "Level", map);
+  //     String[] levelIDArray = getConstraintIDs(db, "SubmittedLevels");
+   //    for(int index = 0; index < levelIDArray.length; index++)
+       {
+    //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
+       }
 //       System.out.println("SavedLevels");
-       listEntries(db, "CompletedLevels", map);
+  //     listEntries(db, "CompletedLevels", map);
 //       System.out.println("SubmittedLayouts");
 //       listEntriesToFile(db, "SubmittedLayouts", map, "submittedlayouts1211.txt");
 //      System.out.println("SubmittedLevels");
-//      listEntriesToFile(db, "SubmittedLevels", map, "submittedlevels1211.txt");
+      listEntriesToFile(db, "Level", map, "levels1226.txt");
  //      map.put("playerID", firstArg);
  //      map.put("levelID", "15");
-  //    listFilesToFile(fs, "files.txt");
+ //     listFilesToFile("fs", "files.txt");
  //     listEntriesToFile(db, "SavedLevels", map, "savedLevels.txt");
 //      downloadSavedLevel(db, "fs", "5266f4b3e4b06170777f9dee", "test.zip");
         // listLog(db);
  //           saveAndCleanLog(db, "1211");
         
-       listCollectionNames(db);
+//       listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
@@ -177,6 +183,32 @@ public class MongoTestBed {
          outputFile.close();
 	}
 	
+	//constraintIDs are used to map a level entry to the file
+	static public String[] getConstraintIDs(DB db, String collectionName)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		int length = (int)collection.count();
+		
+		String[] idArray = new String[length];
+		int index = 0;
+		
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find();
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+           	idArray[index] = obj.get("constraintsID").toString();
+            System.out.println(idArray[index]);
+            index++;
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+        
+        return idArray;
+	}
+	
 	static public void downloadSavedLevel(DB db, String fsname, String levelID, String outputFileName) throws Exception
 	{
 		DBObject level = findOneEntry(db, "SavedLevels", "levelId", levelID);
@@ -188,6 +220,19 @@ public class MongoTestBed {
 			String objString = obj.toString();
 			writeFileLocally(fsname, objString, outputFileName);
 		}
+	}
+	
+	static public DBObject findEntryByID(DB db, String collectionName, String idStr)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		ObjectId id = new ObjectId(idStr);
+		
+		DBObject foundOne = null;
+		try { 
+			foundOne = collection.findOne(id);
+       } finally {
+       }
+       return foundOne;
 	}
 	
 	static public DBObject findOneEntry(DB db, String collectionName, String key, String value)

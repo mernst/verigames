@@ -419,9 +419,9 @@ public class ProxyThread extends Thread {
 			//format:  /layout/get/name
 			//returns: layout with specified name
 			BasicDBObject findobj = new BasicDBObject();
-			findobj.put("playerID", fileInfo[3]);
-			DBCollection completedLevelCollection = collectionMap.get(ProxyServer.COMPLETED_LEVELS);
-	        DBCursor cursor = completedLevelCollection.find(findobj);	  
+			findobj.put("player", fileInfo[3]);
+			DBCollection submittedLevelCollection = collectionMap.get(ProxyServer.SUBMITTED_LEVELS);
+	        DBCursor cursor = submittedLevelCollection.find(findobj);	  
 	        StringBuffer buff = new StringBuffer(request+"//");
 	        try {
             	while(cursor.hasNext()) {
@@ -613,9 +613,8 @@ public class ProxyThread extends Thread {
     	
         if(submitAlso)
         {
-        	properties.put("enjoymentRating", fileInfo[16]);
-        	properties.put("difficultyRating", fileInfo[17]);
-        	submittedLevelObj.put("version", fileInfo[18]);
+        	properties.put("preference", fileInfo[16]);
+        	submittedLevelObj.put("version", fileInfo[17]);
         	submittedLevelObj.put("shareWithGroup", 1);
         }
         else
