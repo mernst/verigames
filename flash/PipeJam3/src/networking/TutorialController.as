@@ -1,7 +1,10 @@
 package networking
 {
+	import com.adobe.serialization.json.JSON;
+	
 	import flash.events.Event;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import flash.utils.Dictionary;
 	
 	import events.MenuEvent;
@@ -17,7 +20,6 @@ package networking
 	import starling.display.Sprite;
 	
 	import utils.XString;
-	
 	
 	public class TutorialController extends Sprite
 	{			
@@ -268,20 +270,30 @@ package networking
 		{
 			var request:String;
 			var method:String;
+			var data:Object;
 			var url:String = null;
+			
+			var messages:Array = new Array ();  			
+			var vars: URLVariables = new URLVariables();
+
+			
 			switch(type)
 			{
 				case TUTORIAL_LEVEL_COMPLETE:
 					request = "/tutorial/level/complete/"+PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_levelId+"&method=DATABASE";
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelId});
+					var data_id:String = com.adobe.serialization.json.JSON.encode(messages);
+					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayedTutorial&data_id='"+data_id+"'";
+
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_COMPLETED_TUTORIAL_LEVELS:
-					request = "/tutorial/levels/completed/"+PlayerValidation.playerID+"&method=DATABASE";
+					url = "http://flowjam.verigames.com/game/interop.php?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
 					method = URLRequestMethod.POST; 
 					break;
 			}
-			
-			NetworkConnection.sendMessage(callback, request, null, null, method);
+
+			NetworkConnection.sendPythonMessage(callback, null, url, method);
 		}
 	}
 }

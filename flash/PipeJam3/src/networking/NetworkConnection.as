@@ -1,7 +1,15 @@
 package networking
 {	
-	import flash.events.*;
-	import flash.net.*;
+	import flash.events.Event;
+	import flash.events.HTTPStatusEvent;
+	import flash.events.IEventDispatcher;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.utils.Dictionary;
 
 	//one NetworkConnection object created for each connection and used only once
 	public class NetworkConnection
@@ -17,6 +25,7 @@ package networking
 		static public var productionProxy:String = "http://flowjam.verigames.com/proxy";
 		static public var localProxy:String = "http://128.95.2.112:8001";
 		static public var PROXY_URL:String = productionProxy;
+		static public var productionInterop:String = "http://flowjam.verigames.com/game/interop.php";
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -46,8 +55,16 @@ package networking
 			connection.m_callback = callback;
 			connection.sendURL(request, data, method, url);
 		}
+		
+		static public function sendPythonMessage(callback:Function, data:Object = null, url:String = null, method:String = URLRequestMethod.GET):void
+		{
 			
-		protected function sendURL(request:String, data:String, method:String, url:String):void
+			var connection:NetworkConnection = new NetworkConnection();
+			connection.m_callback = callback;
+			connection.sendURL("", data, method, url);
+		}
+			
+		protected function sendURL(request:String, data:Object, method:String, url:String):void
 		{
 			var urlRequest:URLRequest;
 			var rand:String = "";
@@ -65,7 +82,7 @@ package networking
 				if(data != null)
 				{
 					urlRequest.contentType = URLLoaderDataFormat.TEXT;
-					urlRequest.data = data+"\n"; //terminate line so Java can use readLine to get message
+					urlRequest.data = data;//+"\n"; //terminate line so Java can use readLine to get message
 				}
 				else
 					urlRequest.data = null;
@@ -123,32 +140,50 @@ package networking
 			{
 				trace("in complete " + e.target.data);
 				var objString:String = e.target.data;
-				var messageTypeEnd:int = objString.indexOf("//");
-				if(messageTypeEnd != -1)
+				var pythonMessageStart:int = objString.indexOf("///");
+				if(pythonMessageStart != -1)
 				{
-					var messageType:String = objString.substring(0, messageTypeEnd);
-					var startIndex:int = messageTypeEnd + 2;
-					var objEndIndex:int = findJSONObjectEnd(objString, startIndex);
-					
-					var currentJSONObjects:Vector.<Object> = new Vector.<Object>;
-					while(objEndIndex != -1)
-					{
-						var JSONObjString:String = objString.substring(startIndex, objEndIndex+1);
-						currentJSONObjects.push(JSON.parse(JSONObjString));
-						startIndex = objEndIndex+1;
-						objEndIndex = findJSONObjectEnd(objString, startIndex);
-					}
-					
-					trace("return message " + messageType);
-					m_callback(EVENT_COMPLETE, currentJSONObjects);
+					var message:String = objString.substring(pythonMessageStart+3, objString.length - 1);
+					var obj:Object = JSON.parse(message);
+					var vec:Vector.<Object> = new Vector.<Object>;
+					for each(var entry:Object in obj)
+						vec.push(entry);
+					m_callback(EVENT_COMPLETE, vec);
 				}
-				else if(m_callback != null)
-					m_callback(EVENT_COMPLETE, e);
+				else
+				{
+					var messageTypeEnd:int = objString.indexOf("//");
+					if(messageTypeEnd != -1)
+					{
+						var messageType:String = objString.substring(0, messageTypeEnd);
+						var startIndex:int = messageTypeEnd + 2;
+						var objEndIndex:int = findJSONObjectEnd(objString, startIndex);
+						
+						var currentJSONObjects:Vector.<Object> = new Vector.<Object>;
+						while(objEndIndex != -1)
+						{
+							var JSONObjString:String = objString.substring(startIndex, objEndIndex+1);
+							currentJSONObjects.push(JSON.parse(JSONObjString));
+							startIndex = objEndIndex+1;
+							objEndIndex = findJSONObjectEnd(objString, startIndex);
+						}
+						
+						trace("return message " + messageType);
+						m_callback(EVENT_COMPLETE, currentJSONObjects);
+					}
+					else if(m_callback != null)
+						m_callback(EVENT_COMPLETE, e);
+				}
 			}
 			catch(err:Error)
 			{
 				trace("ERROR: failure in complete handler " + err);
 			}
+		}
+		
+		public function getObjectsFromJSON(json:String):Vector.<Object>
+		{
+			return null;
 		}
 		
 		//when passed an array of JSON objects, or a single object, will
