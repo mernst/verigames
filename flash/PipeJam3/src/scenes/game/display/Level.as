@@ -1,9 +1,14 @@
 package scenes.game.display
 {
+	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
+	import flash.utils.Timer;
+	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
-	import events.ErrorEvent;
-	import events.MiniMapEvent;
 	
 	import audio.AudioManager;
 	
@@ -13,19 +18,14 @@ package scenes.game.display
 	
 	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
+	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
+	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import events.PropertyModeChangeEvent;
 	import events.UndoEvent;
-	
-	import flash.events.TimerEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	import flash.utils.Timer;
 	
 	import graph.BoardNodes;
 	import graph.Edge;
@@ -37,6 +37,7 @@ package scenes.game.display
 	import graph.PropDictionary;
 	
 	import networking.GameFileHandler;
+	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	
@@ -55,7 +56,6 @@ package scenes.game.display
 	
 	import utils.Base64Encoder;
 	import utils.XString;
-	import networking.LevelInformation;
 	
 	/**
 	 * Level all game components - boxes, lines and joints
@@ -530,13 +530,13 @@ package scenes.game.display
 					// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
 					switch (foundNode.kind) {
 						case NodeTypes.INCOMING:
-							jointLayoutXML.@visible = (foundPort && foundPort.edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
+							jointLayoutXML.@visible = (foundPort != null && foundPort.edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
 							break;
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-							jointLayoutXML.@visible = (foundNode && foundNode.outgoing_ports.length && foundNode.outgoing_ports[0].edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
+							jointLayoutXML.@visible = (foundNode != null && foundNode.outgoing_ports.length && foundNode.outgoing_ports[0].edge.to_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
 							break;
 						case NodeTypes.END:
-							jointLayoutXML.@visible = (foundNode && foundNode.incoming_ports.length && foundNode.incoming_ports[0].edge.from_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
+							jointLayoutXML.@visible = (foundNode != null && foundNode.incoming_ports.length && foundNode.incoming_ports[0].edge.from_node.kind == NodeTypes.SUBBOARD).toString().toLowerCase();
 							break;
 						case NodeTypes.OUTGOING:
 							// Only create the joint for an outgoing node if other lines connect

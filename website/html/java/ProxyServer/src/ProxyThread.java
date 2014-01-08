@@ -25,12 +25,6 @@ import sun.misc.BASE64Decoder;
 public class ProxyThread extends Thread {
     private Socket socket = null;
     private GridFS fs = null;
-    private DBCollection levelCollection = null;
-    private DBCollection submittedLevelsCollection = null;
-    private DBCollection savedLevelsCollection = null;
-    private DBCollection submittedLayoutsCollection = null;
-    private DBCollection logCollection = null;
-    private DBCollection tutorialCollection = null;
     private static final int BUFFER_SIZE = 32768;
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
@@ -43,6 +37,8 @@ public class ProxyThread extends Thread {
 	private String gameURL = productiongameURL;
 	private String httpport = "";
 
+	private HashMap<String, DBCollection> collectionMap;
+	
 	static public int LOG_REQUEST = 0;
 	static public int LOG_RESPONSE = 1;
 	static public int LOG_TO_DB = 2;
@@ -52,17 +48,12 @@ public class ProxyThread extends Thread {
 	
 	String currentLayoutFileID = null;
 	String currentConstraintFileID = null;
-    public ProxyThread(Socket socket, GridFS fs, DBCollection levelCollection, DBCollection submittedLevelsCollection, 
-    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection, DBCollection tutorialCollection) {
+    public ProxyThread(Socket socket, GridFS fs, HashMap<String, DBCollection> _collectionMap) {
         super("ProxyThread");
         this.socket = socket;
         this.fs = fs;
-        this.levelCollection = levelCollection;
-        this.submittedLevelsCollection = submittedLevelsCollection;
-        this.savedLevelsCollection = savedLevelsCollection;
-        this.submittedLayoutsCollection = submittedLayoutsCollection;
-        this.logCollection = logCollection;
-        this.tutorialCollection = tutorialCollection;
+        
+        collectionMap = _collectionMap;
     }
 
     public void run() {
@@ -245,7 +236,7 @@ public class ProxyThread extends Thread {
         HttpResponse response = client.execute(method);
 
         return response;
-	}
+	} 
     
     public HttpResponse doPut(String request) throws Exception 
     {
@@ -316,6 +307,7 @@ public class ProxyThread extends Thread {
 				//returns: list of all saved levels associated with the player id
 	    		StringBuffer buff = new StringBuffer(request+"//");
 	    		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
+	    		DBCollection savedLevelsCollection = collectionMap.get(ProxyServer.SAVED_LEVELS);
 	    		DBCursor cursor = savedLevelsCollection.find(nameObj);
 
 	            try {
@@ -334,10 +326,14 @@ public class ProxyThread extends Thread {
     			StringBuffer buff = new StringBuffer(request+"//");
 				try{
 				ObjectId idObj = new ObjectId(fileInfo[5]);
+				DBCollection savedLevelsCollection = collectionMap.get(ProxyServer.SAVED_LEVELS);
     			DBObject obj = savedLevelsCollection.findOne(idObj);
 	    		//is this is a saved level ID? else check regular levels
 	    		if(obj == null)
+	    		{
+	    			DBCollection levelCollection = collectionMap.get(ProxyServer.LEVELS);
 	    			obj = levelCollection.findOne(idObj);
+	    		}
 	    		
     			buff.append(obj.toString()); 
     			writeString(buff.toString(), out);
@@ -361,6 +357,7 @@ public class ProxyThread extends Thread {
 	        BasicDBObject query = new BasicDBObject();
 	        query.put("_id", id);
             try {
+            	DBCollection savedLevelsCollection = collectionMap.get(ProxyServer.SAVED_LEVELS);
             	savedLevelsCollection.remove(query);
 		        writeString("{success: true}", out);
 	        	log(LOG_RESPONSE, "level deleted "+fileInfo[3]);
@@ -392,6 +389,7 @@ public class ProxyThread extends Thread {
 			//format:  /level/metadata/get/all
 			//returns: metadata records for all levels
     		StringBuffer buff = new StringBuffer(request+"//");
+    		DBCollection levelCollection = collectionMap.get(ProxyServer.LEVELS);
 	    	DBCursor cursor = levelCollection.find();
 	    	try {
 		           while(cursor.hasNext()) {
@@ -401,6 +399,38 @@ public class ProxyThread extends Thread {
 		           writeString(buff.toString(), out);
 		        } finally {
 		           cursor.close();
+		        }
+		}
+		else if(request.indexOf("/level/report") != -1)
+		{
+			//format:  /level/report/playerID/levelID/preference
+			submitCompletedLevelInfo(fileInfo);
+    		writeString("{success: true}", out);
+		}
+		else if(request.indexOf("/level/completed") != -1)
+		{
+			//format:  /level/completed/playerID
+			if(fileInfo.length < 4)
+			{
+				writeString("Error: no player ID", out);
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /layout/get/name
+			//returns: layout with specified name
+			BasicDBObject findobj = new BasicDBObject();
+			findobj.put("player", fileInfo[3]);
+			DBCollection submittedLevelCollection = collectionMap.get(ProxyServer.SUBMITTED_LEVELS);
+	        DBCursor cursor = submittedLevelCollection.find(findobj);	  
+	        StringBuffer buff = new StringBuffer(request+"//");
+	        try {
+            	while(cursor.hasNext()) {
+ 	        	   DBObject obj = cursor.next();
+		        	   buff.append(obj.toString());  
+		           }
+		           writeString(buff.toString(), out);
+		           log(LOG_TO_DB, "level completed info returned");
+		        } finally {
 		        }
 		}
 		else if(request.indexOf("/layout/get/all") != -1)
@@ -416,7 +446,8 @@ public class ProxyThread extends Thread {
 			//returns: list of all layouts associated with the xmlID
     		StringBuffer buff = new StringBuffer(request+"//");
     		DBObject nameObj = new BasicDBObject("xmlID", fileInfo[4]+'L');
-    		   DBCursor cursor = this.submittedLayoutsCollection.find(nameObj);
+    		DBCollection submittedLayoutsCollection = collectionMap.get(ProxyServer.SUBMITTED_LAYOUTS);
+    		DBCursor cursor = submittedLayoutsCollection.find(nameObj);
             try {
             	while(cursor.hasNext()) {
  	        	   DBObject obj = cursor.next();
@@ -462,6 +493,7 @@ public class ProxyThread extends Thread {
 			levelObj.put("playerID", fileInfo[4]);
 	        levelObj.put("levelID", fileInfo[5]);
 			log(LOG_TO_DB, levelObj.toMap().toString());
+			DBCollection tutorialCollection = collectionMap.get(ProxyServer.COMPLETED_TUTORIALS);
 			WriteResult r1 = tutorialCollection.insert(levelObj);
 			log(LOG_ERROR, r1.getLastError().toString());
 			
@@ -479,6 +511,7 @@ public class ProxyThread extends Thread {
 			//returns: layout with specified name
 			BasicDBObject findobj = new BasicDBObject();
 			findobj.put("playerID", fileInfo[4]);
+			DBCollection tutorialCollection = collectionMap.get(ProxyServer.COMPLETED_TUTORIALS);
 	        DBCursor cursor = tutorialCollection.find(findobj);	  
 	        StringBuffer buff = new StringBuffer(request+"//");
 	        try {
@@ -528,6 +561,7 @@ public class ProxyThread extends Thread {
 			levelObj.put("layoutID", xmlIn.getId().toString());
 			currentLayoutFileID = xmlIn.getId().toString();
 			log(LOG_TO_DB, levelObj.toMap().toString());
+			DBCollection submittedLayoutsCollection = collectionMap.get(ProxyServer.SUBMITTED_LEVELS);
 			WriteResult r1 = submittedLayoutsCollection.insert(levelObj);
 			log(LOG_ERROR, r1.getLastError().toString());
 		}
@@ -579,9 +613,8 @@ public class ProxyThread extends Thread {
     	
         if(submitAlso)
         {
-        	properties.put("enjoymentRating", fileInfo[16]);
-        	properties.put("difficultyRating", fileInfo[17]);
-        	submittedLevelObj.put("version", fileInfo[18]);
+        	properties.put("preference", fileInfo[16]);
+        	submittedLevelObj.put("version", fileInfo[17]);
         	submittedLevelObj.put("shareWithGroup", 1);
         }
         else
@@ -598,14 +631,28 @@ public class ProxyThread extends Thread {
         WriteResult r2 = null;
         if(submitAlso)
         {
+        	DBCollection submittedLevelsCollection = collectionMap.get(ProxyServer.SUBMITTED_LEVELS);
         	r2 = submittedLevelsCollection.insert(submittedLevelObj);
         	log(LOG_ERROR, r2.getLastError().toString());
         }
         
+        DBCollection savedLevelsCollection = collectionMap.get(ProxyServer.SAVED_LEVELS);
         r2 = savedLevelsCollection.insert(submittedLevelObj);
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 
+    public void submitCompletedLevelInfo(String[] fileInfo)
+    {
+    	DBObject playerRatingsObj = new BasicDBObject();
+    	playerRatingsObj.put("playerID", fileInfo[3]);
+    	playerRatingsObj.put("levelID", fileInfo[4]);
+    	playerRatingsObj.put("preference", fileInfo[5]);
+    	
+    	DBCollection playerRatingsCollection = collectionMap.get(ProxyServer.COMPLETED_LEVELS);
+    	WriteResult r2 = playerRatingsCollection.insert(playerRatingsObj);
+ 		log(LOG_ERROR, r2.getLastError().toString());
+    }
+    
     public HttpResponse doURL(String request, byte[] buf) throws Exception  
     {
     	String url = null;
@@ -653,6 +700,7 @@ public class ProxyThread extends Thread {
 	     	logObj.put("type", type);
 	      	logObj.put("threadID", threadId);
 	    	logObj.put("line", line);
+	    	DBCollection logCollection = collectionMap.get(ProxyServer.LOG);
 			logCollection.insert(logObj);
     	}
    	

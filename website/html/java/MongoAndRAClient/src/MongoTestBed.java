@@ -28,6 +28,7 @@ public class MongoTestBed {
 
     private static final boolean removeLevels = false;
 
+    static DB db;
 	public static void main(String[] args) throws Exception {
 
 	//	String firstArg = args[0];
@@ -37,30 +38,38 @@ public class MongoTestBed {
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
         String dbName = "gameapi";
-        DB db = mongo.getDB( dbName );
-        //Create GridFS object
-        GridFS fs = new GridFS( db );
-   //     listFiles(fs);
+        db = mongo.getDB( dbName );
+        
       HashMap<String, String> map = new HashMap<String, String>();
-
+   //  map.put("rootlevelId", "5293ee90e4b06170777f9ff7"); 
+     //    map.put("name", "EmptyDesert"); 
+     
+      //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
+ //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
+  //    listFiles("fs/ostrusted/6");
+      
 //        System.out.println("Level");
-//       listEntries(db, "Level", map, false);
+        listEntries(db, "Level", map);
+  //     String[] levelIDArray = getConstraintIDs(db, "SubmittedLevels");
+   //    for(int index = 0; index < levelIDArray.length; index++)
+       {
+    //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
+       }
 //       System.out.println("SavedLevels");
-//       listEntries(db, "SavedLevels", map, false);
+  //     listEntries(db, "CompletedLevels", map);
 //       System.out.println("SubmittedLayouts");
-//       listEntries(db, "SubmittedLayouts", map, false);
+//       listEntriesToFile(db, "SubmittedLayouts", map, "submittedlayouts1211.txt");
 //      System.out.println("SubmittedLevels");
-//      listEntries(db, "SubmittedLevels", map, false);
-//       map.put("player", "51e5b3460240288229000026"); 
+      listEntriesToFile(db, "Level", map, "levels1226.txt");
  //      map.put("playerID", firstArg);
  //      map.put("levelID", "15");
-  //    listFilesToFile(fs, "files.txt");
+ //     listFilesToFile("fs", "files.txt");
  //     listEntriesToFile(db, "SavedLevels", map, "savedLevels.txt");
-      downloadSavedLevel(db, fs, "5266f4b3e4b06170777f9dee", "test.zip");
+//      downloadSavedLevel(db, "fs", "5266f4b3e4b06170777f9dee", "test.zip");
         // listLog(db);
- //           saveAndCleanLog(db, "1112");
+ //           saveAndCleanLog(db, "1211");
         
-       listCollectionNames(db);
+//       listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
@@ -139,8 +148,9 @@ public class MongoTestBed {
         }
 	}
 	
-	static public void listFiles(GridFS fs)
+	static public void listFiles(String fsname)
 	{
+		GridFS fs = new GridFS(db, fsname);
         DBCursor cursor = fs.getFileList();
         try { 
             while(cursor.hasNext()) {
@@ -152,8 +162,9 @@ public class MongoTestBed {
          }
 	}
 	
-	static public void listFilesToFile(GridFS fs, String fileName) throws Exception
+	static public void listFilesToFile(String fsname, String fileName) throws Exception
 	{
+		GridFS fs = new GridFS(db, fsname);
         DBCursor cursor = fs.getFileList();
         
 		FileOutputStream outputFile = new FileOutputStream(fileName);
@@ -172,7 +183,33 @@ public class MongoTestBed {
          outputFile.close();
 	}
 	
-	static public void downloadSavedLevel(DB db, GridFS fs, String levelID, String outputFileName) throws Exception
+	//constraintIDs are used to map a level entry to the file
+	static public String[] getConstraintIDs(DB db, String collectionName)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		int length = (int)collection.count();
+		
+		String[] idArray = new String[length];
+		int index = 0;
+		
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find();
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+           	idArray[index] = obj.get("constraintsID").toString();
+            System.out.println(idArray[index]);
+            index++;
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+        
+        return idArray;
+	}
+	
+	static public void downloadSavedLevel(DB db, String fsname, String levelID, String outputFileName) throws Exception
 	{
 		DBObject level = findOneEntry(db, "SavedLevels", "levelId", levelID);
 		Object obj = null;
@@ -181,8 +218,21 @@ public class MongoTestBed {
 			obj = level.get("constraintsID");
 
 			String objString = obj.toString();
-			writeFileLocally(fs, objString, outputFileName);
+			writeFileLocally(fsname, objString, outputFileName);
 		}
+	}
+	
+	static public DBObject findEntryByID(DB db, String collectionName, String idStr)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		ObjectId id = new ObjectId(idStr);
+		
+		DBObject foundOne = null;
+		try { 
+			foundOne = collection.findOne(id);
+       } finally {
+       }
+       return foundOne;
 	}
 	
 	static public DBObject findOneEntry(DB db, String collectionName, String key, String value)
@@ -202,6 +252,31 @@ public class MongoTestBed {
        }
        return obj;
 	}
+	
+	static public void uploadFile(String filename) throws Exception
+	{
+		uploadFile(filename, "fs");
+	}
+	
+	static public String uploadFile(String filename, String gridFSName) throws Exception
+	{
+		File newFile = new File(filename);
+        //Save layout into database
+		GridFS fs = new GridFS( db, gridFSName );
+        GridFSInputFile inputFile = fs.createFile(newFile);
+        inputFile.save();
+        return inputFile.getId().toString();
+	}
+	
+	static public void removeFile(String gridFSName, String objectID) throws Exception
+	{
+		GridFS fs = new GridFS( db, gridFSName );
+        ObjectId id = new ObjectId(objectID);
+
+        fs.remove(id);
+	}
+	
+	
         
  //       db.createCollection("SavedLevels", null);
   //      DBCollection foo = db.getCollection("SubmittedLevels");
@@ -463,10 +538,10 @@ public class MongoTestBed {
         }
     }
     
-    static void writeFileLocally(GridFS fs, String objectID, String outputfilename ) throws Exception
+    static void writeFileLocally(String gridFSName, String objectID, String outputfilename ) throws Exception
     {
     	ObjectId field = new ObjectId(objectID);
-    	
+    	GridFS fs = new GridFS( db, gridFSName );
 		GridFSDBFile obj = fs.find(field);
         try {
         		FileOutputStream outputFile = new FileOutputStream(outputfilename);

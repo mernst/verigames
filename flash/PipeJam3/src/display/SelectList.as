@@ -57,10 +57,7 @@ package display
 		public function SelectList(_width:Number, _height:Number)
 		{
 			initialHeight = _height;
-			
-			//		background = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "BlueLightBox");
-			//		addChild(background);
-			
+						
 			var scrollbarWidth:Number = 10.0;
 			
 			mainAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
@@ -104,9 +101,6 @@ package display
 			buttonPane.x = 0;
 			buttonPane.y = 0;
 			addChild(buttonPane);
-			
-			//		addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
-			//		addEventListener(Event.TRIGGERED, onButtonToggle);
 		}
 		
 		protected function onTouchUpArrow(event:TouchEvent):void

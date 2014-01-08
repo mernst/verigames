@@ -148,6 +148,9 @@ package scenes.game.display
 				
 				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
 				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
+				//if we didn't find the level, assume this is a global constraints file
+				if(levelConstraintsXML == null)
+					levelConstraintsXML = m_constraintsXML;
 				
 				var targetScore:int = int.MAX_VALUE;
 				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
@@ -346,7 +349,7 @@ package scenes.game.display
 		
 		protected function postSubmitDialog(event:MenuEvent):void
 		{
-			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(150, 150);
+			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(150, 120);
 			addChild(submitLevelDialog);
 		}
 		

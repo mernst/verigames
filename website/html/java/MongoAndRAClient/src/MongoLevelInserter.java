@@ -19,49 +19,17 @@ public class MongoLevelInserter {
 	DBCollection levelColl = null;
 	DBCollection layoutColl = null;
 	Document difficultyRatings;
+	String priority;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Mongo mongo = null;
-		DB db = null;
-		
-		if(args.length < 3)
-		{
-			System.out.println("Usage: (this app, whatever it's called) mongoFileID raLevelID LevelName");
-			return;
-		}
-        try{
-			mongo = new Mongo( mongoAddress );
-	        String dbName = "gameapi";
-	        db = mongo.getDB( dbName );
-//			parentIDList.add("51815bcfa8e027680cbd21b1");
-//			nameList.add("Seth's Level");
-//			
-//			parentIDList.add("51815bc3a8e027680cbd21ab");
-//			nameList.add("Simple Level");
-			
-	        MongoLevelInserter inserter = new MongoLevelInserter(db, new File(args[3]));
-	        
-	        inserter.addLevel(args[0], args[1], args[2]);
-	      
-		}catch(Exception e)
-		{
-			
-		}
-		finally
-		{
-
-		}
-	}
-	
-	public MongoLevelInserter(DB _db, File difficultyFile)
+	public MongoLevelInserter(DB _db, File difficultyFile, String extension, String _priority)
 	{
 		db = _db;
-	    levelColl = db.getCollection("Level");
-	    layoutColl = db.getCollection("SubmittedLayouts");
+		priority = _priority;
+		if(extension != "")
+			extension = "/" + extension;
+		
+	    levelColl = db.getCollection("Level" + extension);
+	    layoutColl = db.getCollection("SubmittedLayouts" + extension);
 	    if(difficultyFile != null)
 	    {
 	    	try{
@@ -85,37 +53,26 @@ public class MongoLevelInserter {
 			return false;
 	}
 	
-	public void addLevel(String levelID, String xmlID, String levelName)
+	public void addLevel(MongoFileInserter inserter, String levelName)
 	{
- 		DBObject levelobj = createLevelObject(levelID, xmlID, xmlID, xmlID, levelName);
-		WriteResult r1 = levelColl.insert(levelobj);
-		System.out.println(r1.getLastError());
-		
-		DBObject layoutobj = createLayoutObject(levelID, xmlID, xmlID, xmlID, levelName);
-		r1 = layoutColl.insert(layoutobj);
-		System.out.println(r1.getLastError());
-	}
-	
-	public void addLevel(String levelID, MongoFileInserter inserter, String levelName)
-	{
- 		DBObject obj = createLevelObject(levelID, inserter, levelName);
+ 		DBObject obj = createLevelObject(inserter, levelName);
 		WriteResult r1 = levelColl.insert(obj);
 		System.out.println(r1.getLastError());
 		
-		DBObject layoutobj = createLayoutObject(levelID, inserter, levelName);
+		DBObject layoutobj = createLayoutObject(inserter);
 		r1 = layoutColl.insert(layoutobj);
 		System.out.println(r1.getLastError());
 	}
 	
-	public DBObject createLevelObject(String levelID, MongoFileInserter inserter, String name)
+	public DBObject createLevelObject(MongoFileInserter inserter, String filename)
 	{
-		return createLevelObject(levelID, inserter.xmlID, inserter.layoutID, inserter.constraintsID, name);
-	}
-	
-	//NOTE:levelId needs to stay named that (and be unique), as DB will throw error without
-	public DBObject createLevelObject(String levelID, String xmlID, String layoutID, String constraintsID, String name)
-	{
-		System.out.println( levelID+" " +xmlID+" " +layoutID+" " +constraintsID+" " +name);
+		String xmlID = inserter.xmlID;
+		String layoutID = inserter.layoutID;
+		String constraintsID = inserter.constraintsID;
+		String name = filename;
+
+		System.out.println(xmlID+" " +layoutID+" " +constraintsID+" " +name);
+		
 		int numBoxes = 5;
 		int numEdges = 5;
 		int numConflicts = 0;
@@ -143,8 +100,6 @@ public class MongoLevelInserter {
 			}
 		}
 		DBObject levelObj = new BasicDBObject();
-		levelObj.put("levelId", levelID);
-		levelObj.put("rootlevelId", levelID);
 		levelObj.put("xmlID", xmlID);
 		levelObj.put("layoutID", layoutID);
 		levelObj.put("constraintsID", constraintsID);
@@ -173,17 +128,13 @@ public class MongoLevelInserter {
 		return levelObj;
 	}
 
-	public DBObject createLayoutObject(String levelID, MongoFileInserter inserter, String name)
+	public DBObject createLayoutObject(MongoFileInserter inserter)
 	{
-		return createLayoutObject(levelID, inserter.xmlID, inserter.layoutID, inserter.constraintsID, name);
-	}
-	
-	//NOTE:levelId needs to stay named that (and be unique), as DB will throw error without
-	public DBObject createLayoutObject(String levelID, String xmlID, String layoutID, String constraintsID, String name)
-	{
+		String xmlID = inserter.xmlID;
+		String layoutID = inserter.layoutID;
+		
 		DBObject layoutObj = new BasicDBObject();
 		layoutObj.put("name", "Starter Layout");
-        layoutObj.put("levelId", levelID);
         layoutObj.put("layoutID", layoutID);
 		layoutObj.put("xmlID", xmlID+"L");
 		

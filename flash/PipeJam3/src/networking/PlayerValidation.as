@@ -123,7 +123,8 @@ package networking
 							PipeJam3.logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, PipeJam3.pipeJam3.stage, LoggingServerInterface.CGS_VERIGAMES_PREFIX + playerID);
 						}
 						controller.setStatus(ACTIVATING_PLAYER);
-						checkPlayerExistence();
+						onValidationSucceeded();
+						//checkPlayerExistence(); no need to check RA
 						return; //wait for callback to continue
 					}
 				}
@@ -186,10 +187,7 @@ package networking
 		{
 			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
-				playerLoggedIn = true; //whee
-				Achievements.getAchievementsEarnedForPlayer();
-				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
-				controller.setStatus(VALIDATION_SUCCEEDED);
+				onValidationSucceeded();
 			}
 			else
 			{
@@ -198,6 +196,14 @@ package networking
 			
 			
 			pipejamCallbackFunction();
+		}
+		
+		public function onValidationSucceeded():void
+		{
+			playerLoggedIn = true; //whee
+			Achievements.getAchievementsEarnedForPlayer();
+			TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+			controller.setStatus(VALIDATION_SUCCEEDED);
 		}
 		
 		public function onValidationFailed():void
