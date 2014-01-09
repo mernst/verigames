@@ -22,6 +22,9 @@ class Node:
 		self.pt = None
 		self.width = None
 		self.height = NODE_HEIGHT
+		self.type_value = None
+		self.keyfor_value = None
+		self.default_value = None
 
 	def addinput(self, edge):
 		if self.inputs.get(edge.id) is None:
@@ -120,13 +123,16 @@ def getportx(node, portnum):
 def getstaggeredlineheight(lineindex):
 	return (lineindex * 0.75 + 0.75) / 2.0
 
-# Main method to create layout, constraints files from constraint input json
+# Main method to create layout, assignments files from constraint input json
 def constraints2grid(infilename, outfilename):
 	regex1 = re.compile("(var|type):(.*) ?(<|=)= ?(var|type):(.*)", re.IGNORECASE)
 	regex2 = re.compile("(var|type):(.*)", re.IGNORECASE)
 	nodes = {}
 	edges = {}
+	assignments = {}
 	parser = ijson.parse(open(infilename + '.json', 'r'))
+	current_var = None
+	current_asg = None
 	for prefix, event, value in parser:
 		#print 'prefix: %s event: %s value: %s' % (prefix, event, value)
 		if (prefix, event) == ('constraints', 'start_array'):
@@ -157,6 +163,8 @@ def constraints2grid(infilename, outfilename):
 			constr2['rhs'] = value
 		elif (prefix, event) == ('constraints.item.constraint', 'string'):
 			constr2['constr_oper'] = value
+			if value != 'subtype' and value != 'equality':
+				print 'Warning! Unsupported constraint type found: %s' % value
 		elif (prefix, event) == ('constraints.item', 'end_map'):
 			lhs = constr2.get('lhs')
 			rhs = constr2.get('rhs')
@@ -181,10 +189,55 @@ def constraints2grid(infilename, outfilename):
 				print 'Error parsing constraint: %s %s %s' % (lhs, constr_oper, rhs)
 			constr2 = None
 		# End Format 2
-		# End constraint array item processing
 		elif (prefix, event) == ('constraints', 'end_array'):
 			pass
-
+		# End constraint array item processing
+		# Begin variables processing
+		elif (prefix, event) == ('variables', 'start_map'):
+			current_var = None
+		elif (prefix, event) == ('variables', 'map_key'):
+			current_var = value
+		elif current_var is not None:
+			if (prefix, event) == ('variables.%s' % current_var, 'start_map'):
+				if assignments.get(current_var) is not None:
+					print 'Warning: multiple assignments found for same var: "%s"' % current_var
+				assignments[current_var] = {}
+			elif (prefix, event) == ('variables.%s.keyfor_value' % current_var, 'start_array'):
+				if assignments[current_var].get('keyfor_value') is not None:
+					print 'Warning: multiple keyfor_value arrays found for var: "%s"' % current_var
+				assignments[current_var]['keyfor_value'] = []
+			elif (prefix, event) == ('variables.%s.keyfor_value.item' % current_var, 'string'):
+				assignments[current_var]['keyfor_value'].append(value)
+			elif (prefix, event) == ('variables.%s.type_value' % current_var, 'string'):
+				assignments[current_var]['type_value'] = value
+			elif (prefix, event) == ('variables.%s' % current_var, 'end_map'):
+				current_var = None
+		elif (prefix, event) == ('variables', 'end_map'):
+			current_var = None
+		# End variables processing
+		# Begin assignments processing
+		elif (prefix, event) == ('assignments', 'start_map'):
+			current_asg = None
+		elif (prefix, event) == ('assignments', 'map_key'):
+			current_asg = value
+		elif current_asg is not None:
+			if (prefix, event) == ('assignments.%s' % current_asg, 'start_map'):
+				if assignments.get(current_asg) is not None:
+					print 'Warning: multiple assignments found for same var: "%s"' % current_asg
+				assignments[current_asg] = {}
+			elif (prefix, event) == ('assignments.%s.keyfor_value' % current_asg, 'start_array'):
+				if assignments[current_asg].get('keyfor_value') is not None:
+					print 'Warning: multiple keyfor_value arrays found for var: "%s"' % current_asg
+				assignments[current_asg]['keyfor_value'] = []
+			elif (prefix, event) == ('assignments.%s.keyfor_value.item' % current_asg, 'string'):
+				assignments[current_asg]['keyfor_value'].append(value)
+			elif (prefix, event) == ('assignments.%s.type_value' % current_asg, 'string'):
+				assignments[current_asg]['type_value'] = value
+			elif (prefix, event) == ('assignments.%s' % current_asg, 'end_map'):
+				current_asg = None
+		elif (prefix, event) == ('assignments', 'end_map'):
+			current_asg = None
+		# End assignments processing
 	# Create graphviz input file
 	graphin =  'digraph G {\n'
 	graphin += '  size="50,50";\n'
@@ -284,7 +337,16 @@ def constraints2grid(infilename, outfilename):
 	layoutf += '}}' # end layout {} file {}
 	with open(outfilename + 'Layout.json','w') as writelayout:
 		writelayout.write(layoutf)
-		
+	with open(outfilename + 'Assignments.json','w') as writeasg:
+		writeasg.write('{"assignments":{\n')
+		firstline = True
+		for varid in assignments:
+			if firstline == True:
+				firstline = False
+			else:
+				writeasg.write(',\n')
+			writeasg.write('{"%s":%s}' % (varid, json.dumps(assignments[varid], separators=(',', ':')))) # separators: no whitespace
+		writeasg.write('\n}}')
 ### Command line interface ###
 if __name__ == "__main__":
 	if len(sys.argv) != 2 and len(sys.argv) != 3:
