@@ -334,11 +334,11 @@ package scenes.levelselectscene
 				PipeJamGameScene.inTutorial = false;
 			
 			if (dataObj) {
-				if (dataObj.hasOwnProperty("levelId")) {
+			//	if (dataObj.hasOwnProperty("levelId")) {
 					PipeJamGameScene.inDemo = false;
 					PipeJamGame.levelInfo = new LevelInformation(dataObj);
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-				}
+			//	}
 			}
 		}
 		
@@ -382,7 +382,7 @@ package scenes.levelselectscene
 			for(i = 0; i<GameFileHandler.completedLevelVector.length; i++)
 			{
 				var completedLevel:Object = GameFileHandler.completedLevelVector[i];
-				completedLevelDictionary[completedLevel.xmlID] = completedLevel;
+ 				completedLevelDictionary[completedLevel.xmlID] = completedLevel;
 			}
 
 			for(i = 0; i<GameFileHandler.levelInfoVector.length; i++)

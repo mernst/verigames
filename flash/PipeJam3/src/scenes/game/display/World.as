@@ -407,10 +407,9 @@ package scenes.game.display
 			}
 			else //MenuEvent.LEVEL_SUBMITTED
 			{
-				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
-				numLinesInText = 3;
+				dialogText = "Level Submitted!";
 			//	socialText = "I just finished a level!"; wait till social integration library
-				dialogHeight = 130;
+			//	dialogHeight = 130;
 				callbackFunction = reportSubmitAchievement;
 			}
 			

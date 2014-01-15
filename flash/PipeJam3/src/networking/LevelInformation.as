@@ -2,7 +2,6 @@ package networking
 {	
 	import flash.utils.*;
 
-
 	/** this is the main holder of information about the level.*/
 	public class LevelInformation
 	{				
@@ -42,7 +41,6 @@ package networking
 		public var difficultyRating:Number;		
 		
 		public var shareWithGroup:int;
-		
 
 		public function LevelInformation(levelObj:Object = null)
 		{
@@ -114,6 +112,25 @@ package networking
 			for (var key:Object in obj) {
 				clone[key] = obj[key];
 			}
+			return clone;
+		}
+		
+		//need the object without the "m_" in variable names 
+		public function cloneObjForDatabase():Object
+		{
+			var varList:XMLList = flash.utils.describeType(this)..variable;
+			var clone:Object = new Object();
+			for(var i:int; i < varList.length(); i++)
+			{
+				var key:String = varList[i].@name;
+				var cloneKey:String = null;
+				if(key.indexOf("m_") != -1)
+					cloneKey = key.substring(2);
+				else
+					cloneKey = key;
+				clone[cloneKey] = this[key];
+			}
+
 			return clone;
 		}
 	}

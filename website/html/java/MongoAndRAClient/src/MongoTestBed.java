@@ -41,7 +41,8 @@ public class MongoTestBed {
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
-   //  map.put("rootlevelId", "5293ee90e4b06170777f9ff7"); 
+     map.put("player", "51e5b3460240288229000026"); 
+   //  map.put("xmlID", "52798634a8e0e0e5438239d4L");
      //    map.put("name", "EmptyDesert"); 
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
@@ -49,18 +50,20 @@ public class MongoTestBed {
   //    listFiles("fs/ostrusted/6");
       
 //        System.out.println("Level");
-        listEntries(db, "Level", map);
+ //       listEntries(db, "CompletedTutorials", map);
+    // 	listFiles("fs");
+    //	writeFileLocally("fs", "52d4855727f4030c9139be8a", "test2.zip");
   //     String[] levelIDArray = getConstraintIDs(db, "SubmittedLevels");
    //    for(int index = 0; index < levelIDArray.length; index++)
        {
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
        }
 //       System.out.println("SavedLevels");
-  //     listEntries(db, "CompletedLevels", map);
+       listEntries(db, "SavedLevels", map);
 //       System.out.println("SubmittedLayouts");
-//       listEntriesToFile(db, "SubmittedLayouts", map, "submittedlayouts1211.txt");
+ //      listEntriesToFile(db, "SavedLevels", map, "SavedLevels0107.txt");
 //      System.out.println("SubmittedLevels");
-      listEntriesToFile(db, "Level", map, "levels1226.txt");
+ //     listEntriesToFile(db, "Level", map, "levels1226.txt");
  //      map.put("playerID", firstArg);
  //      map.put("levelID", "15");
  //     listFilesToFile("fs", "files.txt");
@@ -69,7 +72,7 @@ public class MongoTestBed {
         // listLog(db);
  //           saveAndCleanLog(db, "1211");
         
-//       listCollectionNames(db);
+       listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
