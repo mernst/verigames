@@ -561,7 +561,7 @@ public class ProxyThread extends Thread {
 			levelObj.put("layoutID", xmlIn.getId().toString());
 			currentLayoutFileID = xmlIn.getId().toString();
 			log(LOG_TO_DB, levelObj.toMap().toString());
-			DBCollection submittedLayoutsCollection = collectionMap.get(ProxyServer.SUBMITTED_LEVELS);
+			DBCollection submittedLayoutsCollection = collectionMap.get(ProxyServer.SUBMITTED_LAYOUTS);
 			WriteResult r1 = submittedLayoutsCollection.insert(levelObj);
 			log(LOG_ERROR, r1.getLastError().toString());
 		}

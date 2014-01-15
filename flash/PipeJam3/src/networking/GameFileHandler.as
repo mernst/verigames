@@ -1,18 +1,23 @@
 package networking
-{
+{	
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	
 	import events.MenuEvent;
 	
-	import flash.events.*;
-	import flash.net.*;
-	import flash.net.URLLoader;
-	import starling.events.Event;
-	import scenes.game.PipeJamGameScene;
 	import scenes.Scene;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.World;
 	
+	import starling.events.Event;
+	
+	import utils.Base64Decoder;
 	import utils.Base64Encoder;
 	
 	/** How to use:
@@ -58,6 +63,8 @@ package networking
 		public var m_constraintsSaved:Boolean = false;
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
+		
+		public static var getFileURL:String = "http://flowjam.verigames.com/game/interop.php?function=getFile";
 
 		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
 		{
@@ -67,7 +74,7 @@ package networking
 		
 		static public function getFileByID(id:String, callback:Function):void
 		{
-			var fileURL:String = "/file/get/" + id;
+			var fileURL:String = getFileURL + "&data_id=\"" + id + "\"";
 			
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
 			fileHandler.loadFile(USE_DATABASE, fileURL);
@@ -94,7 +101,7 @@ package networking
 		{
 			PipeJamGame.levelInfo.preference = preference;
 			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REPORT_PLAYER_RATING, null, null);
+			fileHandler.sendMessage(REPORT_PLAYER_RATING, fileHandler.defaultJSONCallback, null);
 		}
 		
 		//connect to the db and get a list of all levels
@@ -138,7 +145,7 @@ package networking
 			fileHandler.m_fileType = fileType;
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
-			fileHandler.saveLevelWithID("1"); //passing an ID is important, but we don't have an RA id any more, so we don't care what it is.
+			fileHandler.saveLevel(saveType);
 		}	
 		
 		static public function reportScore():void
@@ -198,17 +205,18 @@ package networking
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
 						gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						gameFileHandler.loadFile(loadType, "/file/get/" +PipeJamGame.levelInfo.m_constraintsID+"/constraints");
+						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_constraintsID+"\"");
 					}
 					else
 					{
 						var levelInfo:LevelInformation = PipeJamGame.levelInfo;
+						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_xmlID+"\"");
 						var worldFileHandler:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler.loadFile(loadType, "/file/get/" + PipeJamGame.levelInfo.m_xmlID+"/xml");
+						worldFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_xmlID+"\"");
 						var layoutFileHandler:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler.loadFile(loadType, "/file/get/" + PipeJamGame.levelInfo.m_layoutID+"/layout");
+						layoutFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_layoutID+"\"");
 						var constraintsFileHandler:GameFileHandler = new GameFileHandler(constraintsFileLoadedCallback);
-						constraintsFileHandler.loadFile(loadType, "/file/get/" +PipeJamGame.levelInfo.m_constraintsID+"/constraints");	
+						constraintsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_constraintsID+"\"");	
 					}
 				}
 				else if(fileName && fileName.length > 0)
@@ -236,7 +244,7 @@ package networking
 		{
 			fzip = new FZip();
 			fzip.addEventListener(flash.events.Event.COMPLETE, zipLoaded);
-			fzip..addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			fzip.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			
 			var loader:URLLoader = new URLLoader();
 			switch(loadType)
@@ -244,7 +252,9 @@ package networking
 				case USE_DATABASE:
 				{
 					
-					fzip.load(new URLRequest(NetworkConnection.PROXY_URL +fileName+ "&method=DATABASE"));
+				//	fzip.load(new URLRequest(fileName));
+					loader.addEventListener(flash.events.Event.COMPLETE, fileLoadCallback);
+					loader.load(new URLRequest(fileName));
 					break;
 				}
 				case USE_LOCAL:
@@ -265,8 +275,21 @@ package networking
 			trace("ioErrorHandler: " + event);
 		}
 		
-		private function zipLoaded(e:flash.events.Event):void {
-			fzip.removeEventListener(flash.events.Event.COMPLETE, zipLoaded);
+		private function fileLoadCallback(e:flash.events.Event):void {
+			
+			var s:String = e.target.data;
+			var decodedString:Base64Decoder = new Base64Decoder();
+			decodedString.decode(s);
+			var z:FZip = new FZip();
+			z.loadBytes(decodedString.toByteArray());
+			zipLoaded(null, z);
+		}
+		
+		private function zipLoaded(e:flash.events.Event = null, z:FZip = null):void {
+			if(z == null)
+				fzip.removeEventListener(flash.events.Event.COMPLETE, zipLoaded);
+			else
+				fzip = z;
 			var zipFile:FZipFile;
 			if(fzip.getFileCount() == 3)
 			{
@@ -345,12 +368,12 @@ package networking
 			m_callback(result);
 		}
 		
-		public function saveLevelWithID(levelID:String):void
+		public function saveLevel(saveType:String):void
 		{
-			sendMessage(SAVE_LEVEL, onLevelSubmitted, levelID, m_levelFilesString);
+			sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
 		}
 		
-		public function onLevelSubmitted(result:int, e:flash.events.Event):void
+		public function onLevelSubmitted(result:int,levelObjects:Vector.<Object>):void
 		{
 			if(m_saveType == MenuEvent.SAVE_LEVEL)
 				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SAVED));
@@ -373,6 +396,9 @@ package networking
 			var request:String;
 			var method:String;
 			var url:String = null;
+			var usePython:Boolean = true;
+			var messages:Array = new Array (); 
+			var data_id:String;
 			
 			if(callback == null)
 				callback = defaultCallback;
@@ -380,72 +406,46 @@ package networking
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					// /level/report/playerID/level/preference/performance
-					request = "/level/report/"+PlayerValidation.playerID+"/"+ PipeJamGame.levelInfo.m_levelId
-					+"/"+PipeJamGame.levelInfo.preference+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					messages.push ({'playerID': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
+					data_id = JSON.stringify(messages);
+					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;
-
-				//database messages
 				case GET_COMPLETED_LEVELS:
-					request = GET_COMPLETED_LEVELS_REQUEST+"/"+PlayerValidation.playerID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=getCompletedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_ALL_LEVEL_METADATA:
-					request = METADATA_GET_ALL_REQUEST+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=getActiveLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case REQUEST_LAYOUT_LIST:
-					request = LAYOUTS_GET_ALL_REQUEST+PipeJamGame.levelInfo.m_xmlID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_xmlID + 'L';
 					break;
 				case GET_ALL_SAVED_LEVELS:
-					request = "/level/get/saved/"+PlayerValidation.playerID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=getSavedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_SAVED_LEVEL:
-					request = "/level/get/saved/0/"+data+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=getLevel&data_id="+PipeJamGame.levelInfo.m_xmlID;
 					break;
 				case SAVE_LAYOUT:
-					request = "/layout/save/"+PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_xmlID+"/"+info+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID+"L",'name': info});
+					data_id = JSON.stringify(messages);
+					url = "http://flowjam.verigames.com/game/interop.php?function=saveLayoutPOST&data_id='"+data_id+"'";
 					break;
 				case DELETE_SAVED_LEVEL:
-					request = "/level/delete/"+info+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = "http://flowjam.verigames.com/game/interop.php?function=deleteSavedLevel&data_id="+info;
 					break;
 				case SAVE_LEVEL:
 					var props:Object = PipeJamGame.levelInfo.m_metadata.properties;
-					var scoreASString:String = String(PipeJamGame.levelInfo.m_score);
-					var levelID:String = info as String;
-					method = URLRequestMethod.POST;
-					var requestStart:String = "";
-					var requestMiddle:String = "";
-					var requestEnd:String = "";
-					//var paramObject:String = ""; maybe in the future json params and add as a param on end of request?
-					if(info == null) //we are just saving the level, because we don't have a new ID
-					{
-						requestStart = "/level/save/";
-						levelID = PipeJamGame.levelInfo.m_levelId;
-						requestEnd = "/"+m_fileType+"/"+PipeJamGame.levelInfo.shareWithGroup;
-					}
+					var levelInfo:Object = PipeJamGame.levelInfo.cloneObjForDatabase();
+					levelInfo.score =  String(PipeJamGame.levelInfo.m_score);
+					levelInfo.playerID =  PlayerValidation.playerID;
+					levelInfo.version =  m_fileType;
+					levelInfo.preference =  String(int(Math.round(PipeJamGame.levelInfo.enjoymentRating*20)));
+					levelInfo.player = levelInfo.playerID; //Get the right name, should have be consistent....
+					data_id = JSON.stringify(levelInfo);
+					if(info == MenuEvent.SAVE_LEVEL)
+						url = "http://flowjam.verigames.com/game/interop.php?function=saveLevelPOST&data_id='"+data_id+"'";
 					else
-					{
-						requestStart = "/level/submit/";
-						var eRating:int = int(Math.round(PipeJamGame.levelInfo.enjoymentRating*20));
-						requestEnd = "/" + eRating+"/"+m_fileType;
-					}
-					
-					//these need to match the proxy server, or we need to figure out json transfer...
-					requestMiddle = PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_xmlID+"/"+encodeURIComponent(PipeJamGame.levelInfo.m_layoutName)+"/"+PipeJamGame.levelInfo.m_layoutID
-					+ "/"+encodeURIComponent(PipeJamGame.levelInfo.m_name)
-					+ "/" + levelID +"/"+scoreASString
-					+ "/" + props.boxes + "/" + props.lines+ "/"+ props.visibleboxes
-					+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonusnodes;
-					
-					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
-					
+						url = "http://flowjam.verigames.com/game/interop.php?function=submitLevelPOST&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
@@ -454,6 +454,7 @@ package networking
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
 					request = "/api/score&method=URL";
+					url = "http://flowjam.verigames.com/game/interop.php?function=passURLPOST&data_id='/api/score'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
@@ -469,14 +470,10 @@ package networking
 					parameters.push(paramLeaderScoreObj);
 					dataObj.parameter = parameters;
 					data = JSON.stringify(dataObj);
-					var enc:Base64Encoder = Base64Encoder.getEncoder();
-					enc.encode(data);
-					data = enc.toString();
-					method = URLRequestMethod.POST; 
 					break;
 			}
 			
-			NetworkConnection.sendMessage(callback, request, data, url, method);
+			NetworkConnection.sendPythonMessage(callback, data, url, URLRequestMethod.POST);
 		}
 	}
 }

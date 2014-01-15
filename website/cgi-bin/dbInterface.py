@@ -3,11 +3,16 @@
 
 import sys
 import pymongo
+import gridfs
 import bson
+import time
 from pymongo import Connection
 from pymongo import database
 from bson.objectid import ObjectId
-
+from bson import json_util
+import json
+import base64
+import requests
 
 def getOverallLeaders():
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -70,6 +75,140 @@ def getTopScoresForLevel(levelID):
 		concatList.append('},')
 	return '{ Scores: [' + ''.join(concatList).strip(',') + '] }'
 
+def getPlayerGroup(playerID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupMemberColl = db.Group_Members
+	groupColl = db.Groups
+	concatList = []
+	currentMemberRecord = groupMemberColl.find_one({"userID":playerID})
+	currentGroup = groupColl.find_one({"_id":ObjectId(currentMemberRecord["groupID"])})
+	concatList.append('{ "GroupName" : "')
+	concatList.append(currentGroup["name"].encode('ascii', 'replace'))
+	concatList.append('", "Type" : ')
+	concatList.append(str(currentGroup["type"]))
+	concatList.append(', "ID" : "')
+	concatList.append(str(currentGroup["_id"]))
+	concatList.append('", "Admin" : ')
+	concatList.append(str(currentMemberRecord["isAdmin"]))
+	concatList.append(', "Members": [')
+	comma = ""
+	for member in groupMemberColl.find({"groupID":ObjectId(currentGroup["_id"]), "userID": {"$ne": playerID}}):
+		concatList.append(comma)
+		concatList.append('{ "MemberName" : "')
+		concatList.append(member["user_name"].encode('ascii', 'replace'))
+		concatList.append('", "Admin" : ')
+		concatList.append(str(member["isAdmin"]))
+		concatList.append(', "ID": "')
+		concatList.append(str(member["userID"]))
+		concatList.append('" }')
+		comma = ","
+	concatList.append('] }')
+	return '{ PlayerGroup: [' + ''.join(concatList).strip(',') + '] }'
+	
+def getMessagesForPlayer(playerID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	messagesColl = db.Messages
+	groupMemberColl = db.Group_Members
+	concatList = []
+	for message in messagesColl.find({"userID":playerID}).sort("date",-1):
+		senderName = "New player"
+		groupMember = groupMemberColl.find_one({"userID":message["senderID"]})
+		if groupMember != None:
+			senderName = groupMember["user_name"].encode('ascii', 'replace')
+	
+		concatList.append('{ "Title" : "')
+		concatList.append(message["title"].encode('ascii', 'replace'))
+		concatList.append('", "Content" : "')
+		concatList.append(message["content"].encode('ascii', 'replace'))
+		concatList.append('", "Sender" : "')
+		concatList.append(senderName)
+		concatList.append('", "IsRead" : ')
+		concatList.append(message["isRead"])
+		concatList.append('},')
+	return '{ Messages: [' + ''.join(concatList).strip(',') + '] }'
+
+def removeFromCurrentGroup(userID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupColl = db.Groups
+	groupMembersColl = db.Group_Members
+	userName = ""
+	currentGroupMem = groupMembersColl.find_one({"userID":userID})
+	if currentGroupMem != None:
+		#check if it is their default group, if so then that will need to be deactivated
+		currentGroup = groupColl.find_one({"_id":ObjectId(currentGroupMem["groupID"])})
+		if currentGroup != None and currentGroup['type'] == 1:
+			groupColl.update({"_id":ObjectId(currentGroupMem["groupID"])}, {"$set": {"status": 0}})
+		userName = currentGroupMem['user_name']
+		groupMembersColl.remove({"userID":groupID})
+	return userName
+	
+def createGroup(groupData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupColl = db.Groups
+	groupMembersColl = db.Group_Members
+	groupObj = json.loads(groupData)
+	removeFromCurrentGroup(groupObj[u'user_id'])
+	groupID = str(groupColl.insert({"name":groupObj[u'group_name'], "type":groupObj[u'group_type'], "status":1}))
+	groupMembersColl.insert({"active": 1, "groupID": groupID, "isAdmin": 1, "isOwner": 1, "userID": groupObj[u'user_id'], "user_name": groupObj[u'user_name']})
+	return '{ GroupID: ' + groupID + '}'
+	
+def joinGroup(joinData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupMembersColl = db.Group_Members
+	memberObj = json.loads(joinData)
+	removeFromCurrentGroup(memberObj[u'user_id'])
+	groupMembersColl.insert({"active": 1, "groupID": memberObj[u'group_id'], "isAdmin": 1, "isOwner": 1, "userID": memberObj[u'user_id'], "user_name": memberObj[u'user_name']})
+	return '{ true }'
+
+def changeMembership(membershipData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupMembersColl = db.Group_Members
+	memberObj = json.loads(membershipData)
+	groupMembersColl.update({"groupID": memberObj[u'group_id'], "userID": memberObj[u'user_id']}, {"$set": {"isAdmin": memberObj[u'admin'], "isOwner": memberObj[u'owner']}})
+	return '{ true }'
+
+def acceptInvite(messageID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupMembersColl = db.Group_Members
+	messagesColl = db.Messages
+	invite = messagesColl.find_one({"_id":ObjectId(messageID)})
+	if invite != None:
+		if invite['isInvite'] == 1: #deactivate old group, join new one
+			userName = removeFromCurrentGroup(invite["toID"])
+			groupMembersColl.insert({"active": 1, "groupID": invite['groupID'], "isAdmin": invite['makeAdmin'], "isOwner": 0, "userID": invite["toID"], "user_name": userName})
+			messagesColl.remove({"_id":ObjectId(messageID)})
+	return '{ true }'
+
+#TODO: check that this user hasn't submitted a message in the previous X seconds, to prevent spamming?
+def sendGroupMessage(messageData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	groupMembersColl = db.Group_Members
+	messagesColl = db.Messages
+	messageObj = json.loads(messageData)
+	if messageObj[u'toID'] != -1:
+		messagesColl.insert({"fromID": messageObj[u'fromID'], "toID": messageObj[u'toID'], "groupID": messageObj[u'groupID'], "body": messageObj[u'body'], "isInvite": messageObj[u'invite'], "isRead": 0, "makeAdmin": messageObj[u'makeAdmin'], "sentDate": time.time()})
+	else:
+		for member in groupMembersColl.find({"groupID":messageObj[u'groupID']}):
+			messagesColl.insert({"fromID": messageObj[u'fromID'], "toID": member["userID"], "body": messageObj[u'body'], "isInvite": 0, "isRead": 0, "sentDate": time.time()})
+
+def updateGroupMessage(updateData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	messagesColl = db.Messages
+	updateObj = json.loads(updateData)
+	if updateObj[u'type'] == 0:
+		messagesColl.update({"_id": ObjectID(updateObj[u'id'])}, {"$set": {"isRead": 1}})
+	elif updateObj[u'type'] == 1:
+		messagesColl.remove({"_id": ObjectID(updateObj[u'id'])})
+	
 def getScoresForGroup(groupID):
 	client = Connection('api.flowjam.verigames.com', 27017)
 	db = client.gameapi
@@ -81,8 +220,6 @@ def getScoresForGroup(groupID):
 		levelData = levelColl.find_one({"xmlID":level["xmlID"]})
 		if levelData != None:
 			levelName = levelData["name"]
-			
-			
 		else:
 			levelName = "Retired level"
 		concatList.append('{ "LevelName" : "')
@@ -93,7 +230,160 @@ def getScoresForGroup(groupID):
 		concatList.append(str(level["score"]))
 		concatList.append('},')
 	return '{ Scores: [' + ''.join(concatList).strip(',') + '] }'
+
+def findJoinableGroup(groupName):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.Groups
+	concatList = []
+	#group types: 0- public, 1- default personal, 2- private visible, 3- private invite-only
+	findClause = {"$or": [ { "type": 0}, {"type": 2} ]}
+	if groupName != "all":
+		findClause = {"$or": [ { "type": 0}, {"type": 2} ], "name": {"$regex": groupName, "$options": "i"}}
+		
+	for group in collection.find(findClause):
+		concatList.append('{ "GroupName" : "')
+		concatList.append(group[u'name'].encode('ascii', 'replace'))
+		concatList.append('", "GroupID" : ')
+		concatList.append('"' + str(group["_id"]) + '"')
+		concatList.append(', "Type" : ')
+		concatList.append('"' + str(group["type"]) + '"')
+		concatList.append('},')
+	return '{ Groups: [' + ''.join(concatList).strip(',') + '] }'
+
+def getPlayedTutorials(playerID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.CompletedTutorials
+	concatList = []
+	for level in collection.find({"playerID":playerID}):
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
 	
+def reportPlayedTutorial(messageData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.CompletedTutorials
+	messageObj = json.loads(messageData)
+	collection.insert(messageObj)
+	return '///success'
+
+def deleteSavedLevel(id):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SavedLevels
+	collection.remove({"_id":ObjectId(id)})
+	return '///success'
+
+def getSavedLevels(playerID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SavedLevels
+	concatList = []
+	for level in collection.find({"player":playerID}):
+		#print level
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
+
+def getActiveLevels():
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.Level
+	concatList = []
+	for level in collection.find():
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
+
+def getCompletedLevels(playerID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.CompletedLevels
+	concatList = []
+	for level in collection.find({"playerID":playerID}):
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
+
+def reportPlayerRating(messageData):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.CompletedLevels
+	messageObj = json.loads(messageData)
+	collection.insert(messageObj)
+	return '///success'
+
+def getFile(fileID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	fs = gridfs.GridFS(db)
+	f = fs.get(ObjectId(fileID)).read()
+	encoded = base64.b64encode(f)
+	return encoded
+
+def getSavedLayouts(xmlID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SubmittedLayouts
+	concatList = []
+	for level in collection.find({"xmlID":xmlID}):
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
+
+def saveLayout(messageData, fileContents):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SubmittedLayouts
+	fs = gridfs.GridFS(db)
+	messageObj = json.loads(messageData)
+	decoded = base64.b64decode(fileContents)
+	test = fs.put(decoded)
+	messageObj[0]["layoutID"] = str(test)
+	collection.insert(messageObj)
+	return '///success'
+
+def saveLevel(messageData, fileContents):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SavedLevels
+	fs = gridfs.GridFS(db)
+	messageObj = json.loads(messageData)
+	decoded = base64.b64decode(fileContents)
+	test = fs.put(decoded)
+	messageObj["constraintsID"] = str(test)
+	collection.insert(messageObj)
+	return '///success'
+
+def submitLevel(messageData, fileContents):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+	collection = db.SubmittedLevels
+	fs = gridfs.GridFS(db)
+	messageObj = json.loads(messageData)
+	decoded = base64.b64decode(fileContents)
+	test = fs.put(decoded)
+	messageObj["constraintsID"] = str(test)
+	id = collection.insert(messageObj)
+	return '///success'
+
+#pass url to localhost:3000
+def passURL(url):
+	resp = requests.get('http://localhost:3000' + url)
+	return resp.json()
+
+def passURLPOST(url, postdata):
+	resp = requests.post('http://localhost:3000' + url, data=postdata, headers = {'content-type': 'application/json'})
+	return resp.json()
+	
+#CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
 if sys.argv[1] == "overallLeaders":
     print(getOverallLeaders())
 elif sys.argv[1] == "levelList":
@@ -104,5 +394,56 @@ elif sys.argv[1] == "topForLevel":
 	print(getTopScoresForLevel(sys.argv[2]))
 elif sys.argv[1] == "groupScores":
 	print(getScoresForGroup(sys.argv[2]))
+elif sys.argv[1] == "getPlayerGroup":
+	print(getPlayerGroup(sys.argv[2]))
+elif sys.argv[1] == "playerMessages":
+	print(getMessagesForPlayer(sys.argv[2]))
+elif sys.argv[1] == "removeFromGroup":
+	print(removeFromCurrentGroup(sys.argv[2]))
+elif sys.argv[1] == "createGroup":
+	print(createGroup(sys.argv[2]))
+elif sys.argv[1] == "joinGroup":
+	print(joinGroup(sys.argv[2]))
+elif sys.argv[1] == "changeMembership":
+	print(changeMembership(sys.argv[2]))
+elif sys.argv[1] == "acceptInvite":
+	print(acceptInvite(sys.argv[2]))
+elif sys.argv[1] == "sendGroupMessage":
+	print(sendGroupMessage(sys.argv[2]))	
+elif sys.argv[1] == "updateGroupMessage":
+	print(updateGroupMessage(sys.argv[2]))	
+elif sys.argv[1] == "findJoinableGroup":
+	print(findJoinableGroup(sys.argv[2]))
+elif sys.argv[1] == "findPlayedTutorials":
+	print(getPlayedTutorials(sys.argv[2]))
+elif sys.argv[1] == "reportPlayedTutorial":
+	print(reportPlayedTutorial(sys.argv[2]))
+elif sys.argv[1] == "deleteSavedLevel":
+	print(deleteSavedLevel(sys.argv[2]))
+elif sys.argv[1] == "getSavedLevels":
+	print(getSavedLevels(sys.argv[2]))
+elif sys.argv[1] == "getActiveLevels":
+	print(getActiveLevels())
+elif sys.argv[1] == "getCompletedLevels":
+	print(getCompletedLevels(sys.argv[2]))
+elif sys.argv[1] == "reportPlayerRating":
+	print(reportPlayerRating(sys.argv[2]))
+elif sys.argv[1] == "getFile":
+	print(getFile(sys.argv[2]))
+elif sys.argv[1] == "getSavedLayouts":
+	print(getSavedLayouts(sys.argv[2]))
+elif sys.argv[1] == "saveLayoutPOST":
+	print(saveLayout(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "saveLevelPOST":
+	print(saveLevel(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "submitLevelPOST":
+	print(submitLevel(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "passURL":
+	print(passURL(sys.argv[2]))
+elif sys.argv[1] == "passURLPOST":
+	print(passURLPOST(sys.argv[2], sys.argv[3]))
+
+elif sys.argv[1] == "foo":
+	print("bar")
 else:
     print(sys.argv[1] + " not found")
