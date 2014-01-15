@@ -12,6 +12,7 @@ from bson.objectid import ObjectId
 from bson import json_util
 import json
 import base64
+import requests
 
 def getOverallLeaders():
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -373,8 +374,16 @@ def submitLevel(messageData, fileContents):
 	id = collection.insert(messageObj)
 	return '///success'
 
-#CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
+#pass url to localhost:3000
+def passURL(url):
+	resp = requests.get('http://localhost:3000' + url)
+	return resp.json()
 
+def passURLPOST(url, postdata):
+	resp = requests.post('http://localhost:3000' + url, data=postdata, headers = {'content-type': 'application/json'})
+	return resp.json()
+	
+#CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
 if sys.argv[1] == "overallLeaders":
     print(getOverallLeaders())
 elif sys.argv[1] == "levelList":
@@ -423,13 +432,16 @@ elif sys.argv[1] == "getFile":
 	print(getFile(sys.argv[2]))
 elif sys.argv[1] == "getSavedLayouts":
 	print(getSavedLayouts(sys.argv[2]))
-elif sys.argv[1] == "saveFileLayout":
+elif sys.argv[1] == "saveLayoutPOST":
 	print(saveLayout(sys.argv[2], sys.argv[3]))
-elif sys.argv[1] == "saveFileLevel":
+elif sys.argv[1] == "saveLevelPOST":
 	print(saveLevel(sys.argv[2], sys.argv[3]))
-elif sys.argv[1] == "saveFileSubmitLevel":
+elif sys.argv[1] == "submitLevelPOST":
 	print(submitLevel(sys.argv[2], sys.argv[3]))
-
+elif sys.argv[1] == "passURL":
+	print(passURL(sys.argv[2]))
+elif sys.argv[1] == "passURLPOST":
+	print(passURLPOST(sys.argv[2], sys.argv[3]))
 
 elif sys.argv[1] == "foo":
 	print("bar")
