@@ -24,7 +24,6 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.OutlineFilter;
@@ -169,24 +168,19 @@ package scenes.game.components
 				return;
 			}
 			// Update visible objects
-			if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
-					" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
-					" dt:" + int(currentViewRect.top - m_lastVisibleRefreshViewRect.top) +
-					" db:" + int(currentViewRect.bottom - m_lastVisibleRefreshViewRect.bottom));
+			//if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
+					//" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
+					//" dt:" + int(currentViewRect.top - m_lastVisibleRefreshViewRect.top) +
+					//" db:" + int(currentViewRect.bottom - m_lastVisibleRefreshViewRect.bottom));
 			var i:int;
 			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
 				if (m_currentLevel.m_edgeList[i].hidden) continue;
-				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].m_boundingBox, currentViewRect);
+				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].boundingBox, currentViewRect);
 			}
 			const gameNodes:Vector.<GameNode> = m_currentLevel.getNodes();
 			for (i = 0; i < gameNodes.length; i++) {
 				if (gameNodes[i].hidden) continue;
-				gameNodes[i].visible = isOnScreen(gameNodes[i].m_boundingBox, currentViewRect);
-			}
-			const gameJoints:Vector.<GameJointNode> = m_currentLevel.getJoints();
-			for (i = 0; i < gameJoints.length; i++) {
-				if (gameJoints[i].hidden) continue;
-				gameJoints[i].visible = isOnScreen(gameJoints[i].m_boundingBox, currentViewRect);
+				gameNodes[i].visible = isOnScreen(gameNodes[i].boundingBox, currentViewRect);
 			}
 			// Reset total move dist, now that we've updated the visible objects around this view
 			m_currentLevel.totalMoveDist = new Point();
@@ -665,7 +659,7 @@ package scenes.game.components
 					}
 				}
 				m_currentLevel = level;
-				var seed:int = m_currentLevel.levelNodes.qid;
+				var seed:int = m_currentLevel.levelGraph.qid;
 				if (seed < 0) {
 					seed = 0;
 					for (var c:int = 0; c < m_currentLevel.level_name.length; c++) {
@@ -992,7 +986,7 @@ package scenes.game.components
 					break;
 				case TutorialEvent.HIGHLIGHT_PASSAGE:
 					edge = m_currentLevel.getEdgeContainer(evt.componentId);
-					if (edge && edge.m_innerBoxSegment) spotlightComponent(edge.m_innerBoxSegment, 3.0, 3, 2);
+					if (edge && edge.innerFromBoxSegment) spotlightComponent(edge.innerFromBoxSegment, 3.0, 3, 2);
 					break;
 				case TutorialEvent.HIGHLIGHT_CLASH:
 					edge = m_currentLevel.getEdgeContainer(evt.componentId);

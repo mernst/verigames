@@ -313,13 +313,13 @@ package scenes.game.components
 		public function addWidget(widget:GameNode, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
-			var widgetTopLeft:Point = level2map(widget.m_boundingBox.topLeft);
-			var widgetBotRight:Point = level2map(widget.m_boundingBox.bottomRight);
+			var widgetTopLeft:Point = level2map(widget.boundingBox.topLeft);
+			var widgetBotRight:Point = level2map(widget.boundingBox.bottomRight);
 			var iconWidth:Number = Math.min(2 / scaleX, widgetBotRight.x - widgetTopLeft.x);
-			var iconHeight:Number = widget.m_boundingBox.height / 2.0; // keep constant height so widgets always visible
+			var iconHeight:Number = widget.boundingBox.height / 2.0; // keep constant height so widgets always visible
 			var icon:NineSliceBatch = new NineSliceBatch(iconWidth, iconHeight, iconHeight / 3.0, iconHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", widget.assetName);
 			
-			var iconLoc:Point = level2map(currentLevel.globalToLocal(widget.localToGlobal(new Point(0.5 * widget.m_boundingBox.width, 0.5 * widget.m_boundingBox.height))));
+			var iconLoc:Point = level2map(currentLevel.globalToLocal(widget.localToGlobal(new Point(0.5 * widget.boundingBox.width, 0.5 * widget.boundingBox.height))));
 			
 			icon.x = iconLoc.x - 0.5 * icon.width;
 			icon.y = iconLoc.y - 0.5 * icon.height; 

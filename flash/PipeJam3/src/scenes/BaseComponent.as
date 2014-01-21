@@ -132,22 +132,15 @@ package scenes
 			this.y = _y;
 		}
 		
-		public static function findBoundingBox(componentXML:XML):Rectangle
+		public static function findBoundingBox(layoutObj:Object):Rectangle
 		{			
 			var bb:Rectangle = new Rectangle;
-			bb.x = componentXML.@x * Constants.GAME_SCALE;
-			bb.y = componentXML.@y * Constants.GAME_SCALE;
-			bb.width = componentXML.@width * Constants.GAME_SCALE;
-			bb.height = componentXML.@height * Constants.GAME_SCALE;
+			bb.x = Number(layoutObj["x"]) * Constants.GAME_SCALE;
+			bb.y = Number(layoutObj["y"]) * Constants.GAME_SCALE;
+			bb.width = Number(layoutObj["w"]) * Constants.GAME_SCALE;
+			bb.height = Number(layoutObj["h"]) * Constants.GAME_SCALE;
 			
 			return bb;
-		}
-		
-		public function findNodePosition(componentXML:XML):Point
-		{
-			var pos:Point = new Point(componentXML.@x * Constants.GAME_SCALE, componentXML.@y * Constants.GAME_SCALE);
-			
-			return pos;
 		}
 		
 		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void

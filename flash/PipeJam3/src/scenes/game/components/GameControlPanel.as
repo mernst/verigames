@@ -23,7 +23,6 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.PipeJamGameScene;

@@ -6,7 +6,7 @@ package scenes.game.display
 	import starling.core.Starling;
 	import networking.TutorialController;
 	
-	import events.EdgeSetChangeEvent;
+	import events.WidgetChangeEvent;
 	
 	import flash.geom.Point;
 	
@@ -132,13 +132,13 @@ package scenes.game.display
 			}
 		}
 		
-		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onWidgetChange(evt:WidgetChangeEvent):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, widthTxt:String;
 			switch (m_tutorialTag) {
 				case CLASH_TUTORIAL:
-					if (evt.edgeSetChanged.isWide()) {
+					if (evt.widgetChanged.isWide()) {
 						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
 					}
@@ -147,22 +147,22 @@ package scenes.game.display
 					break;
 				case LINKS_TUTORIAL:
 					var edgeId:String;
-					if (evt.edgeSetChanged.m_id == "SatisfyBoxes1") {
+					if (evt.widgetChanged.m_id == "SatisfyBoxes1") {
 						edgeId = "e1__OUT__";
-					} else if (evt.edgeSetChanged.m_id == "SatisfyBoxes3") {
+					} else if (evt.widgetChanged.m_id == "SatisfyBoxes3") {
 						edgeId = "e3__OUT__";
 					} else {
 						break;
 					}
-					widthTxt = evt.edgeSetChanged.isWide() ? "Wide Link" : "Narrow Link";
+					widthTxt = evt.widgetChanged.isWide() ? "Wide Link" : "Narrow Link";
 					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
 				case WIDEN_TUTORIAL:
-					if (evt.edgeSetChanged.m_id == "WidenBoxes10") {
-						if (!evt.edgeSetChanged.isWide()) {
+					if (evt.widgetChanged.m_id == "WidenBoxes10") {
+						if (!evt.widgetChanged.isWide()) {
 							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 							tips.push(tip);
 						}
@@ -171,8 +171,8 @@ package scenes.game.display
 					}
 					break;
 				case SPLIT_TUTORIAL:
-					if (evt.edgeSetChanged.m_id == "Splits1") {
-						widthTxt = evt.edgeSetChanged.isWide() ? "Wide" : "Narrow";
+					if (evt.widgetChanged.m_id == "Splits1") {
+						widthTxt = evt.widgetChanged.isWide() ? "Wide" : "Narrow";
 						tip = new TutorialManagerTextInfo(widthTxt + " Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
 						tip = new TutorialManagerTextInfo(widthTxt + " Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
@@ -182,21 +182,21 @@ package scenes.game.display
 					}
 					break;
 				case MERGE_TUTORIAL:
-					if ((evt.edgeSetChanged.m_id == "Merges1") || (evt.edgeSetChanged.m_id == "Merges2")) {
-						if (evt.edgeSetChanged.m_outgoingEdges.length != 1) break;
-						if (evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent == null) break;
-						if (evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges.length != 2) break;
-						var edge1:GameEdgeContainer = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[0];
-						var edge2:GameEdgeContainer = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[1];
+					if ((evt.widgetChanged.m_id == "Merges1") || (evt.widgetChanged.m_id == "Merges2")) {
+						if (evt.widgetChanged.orderedOutgoingEdges.length != 1) break;
+						if (evt.widgetChanged.orderedOutgoingEdges[0].m_toNode == null) break;
+						if (evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges.length != 2) break;
+						var edge1:GameEdgeContainer = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[0];
+						var edge2:GameEdgeContainer = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[1];
 						if (edge2.m_id == "e1__OUT__") {
-							edge1 = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[1];
-							edge2 = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[0];
+							edge1 = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[1];
+							edge2 = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[0];
 						}
 						var edge1Wide:Boolean = edge1.isWide();
 						var edge2Wide:Boolean = edge2.isWide();
 						if ((edge1.m_id != "e1__OUT__") || (edge2.m_id != "e2__OUT__")) break;
-						if (evt.edgeSetChanged.m_id == "Merges1") edge1Wide = evt.edgeSetChanged.isWide();
-						if (evt.edgeSetChanged.m_id == "Merges2") edge2Wide = evt.edgeSetChanged.isWide();
+						if (evt.widgetChanged.m_id == "Merges1") edge1Wide = evt.widgetChanged.isWide();
+						if (evt.widgetChanged.m_id == "Merges2") edge2Wide = evt.widgetChanged.isWide();
 						if (edge1Wide || edge2Wide) {
 							if (edge1Wide) {
 								tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
@@ -408,11 +408,6 @@ package scenes.game.display
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
 		}
 		
-		private function pointToJoint(name:String):Function
-		{
-			return function(currentLevel:Level):DisplayObject { return currentLevel.getJoint(name); };
-		}
-		
 		private function pointToEdge(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
@@ -431,8 +426,8 @@ package scenes.game.display
 		{
 			return function(currentLevel:Level):DisplayObject {
 				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-				if (edge && edge.m_innerBoxSegment) {
-					return edge.m_innerBoxSegment;
+				if (edge && edge.innerFromBoxSegment) {
+					return edge.innerFromBoxSegment;
 				} else {
 					return null;
 				}
@@ -458,9 +453,9 @@ package scenes.game.display
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
 				case LOCKED_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("LockedWidget2"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("var_0"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("LockedWidget5"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("var_1"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case CLASH_TUTORIAL:
@@ -612,7 +607,7 @@ package scenes.game.display
 						"When a link is SPLIT, the output\n" +
 						"Links will match the input Link.",
 						null,
-						pointToJoint("n10__IN__0"),
+						pointToNode("n10__IN__0"),
 						NineSliceBatch.TOP_RIGHT, null);
 				case MERGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
@@ -620,7 +615,7 @@ package scenes.game.display
 						"Link will be wide if any\n" +
 						"input Link is wide.",
 						null,
-						pointToJoint("n123"),
+						pointToNode("n123"),
 						NineSliceBatch.RIGHT, null);
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new TutorialManagerTextInfo(

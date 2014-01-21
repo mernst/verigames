@@ -1,7 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	import constraints.ConstraintGraph;
 	import events.MiniMapEvent;
+	import flash.utils.Dictionary;
 	import particle.ErrorParticleSystem;
 	import scenes.game.components.MiniMap;
 	
@@ -17,7 +19,7 @@ package scenes.game.display
 	import display.ToolTipText;
 	
 	import events.ConflictChangeEvent;
-	import events.EdgeSetChangeEvent;
+	import events.WidgetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.MenuEvent;
@@ -33,15 +35,6 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	import flash.utils.ByteArray;
-	
-	import graph.ConflictDictionary;
-	import graph.Edge;
-	import graph.EdgeSetRef;
-	import graph.LevelNodes;
-	import graph.Network;
-	import graph.Node;
-	import graph.Port;
-	import graph.PropDictionary;
 	
 	import networking.*;
 	
@@ -60,7 +53,6 @@ package scenes.game.display
 	import starling.events.KeyboardEvent;
 	import starling.textures.Texture;
 	
-	import system.PipeSimulator;
 	import system.Solver;
 	import system.VerigameServerConstants;
 	
@@ -89,86 +81,61 @@ package scenes.game.display
 		
 		protected var m_currentLevelNumber:int;
 
-		/** Network for this world */
-		public var m_network:Network;
-		
-		/** simulator for the network */
-		public var m_simulator:PipeSimulator;
-		
-		/** Original XML used for this world */
-		public var world_xml:XML;
-		
-		/** True if at least one level on this board has not succeeded */
-		public var failed:Boolean = false;
-		
 		protected var undoStack:Vector.<UndoEvent>;
 		protected var redoStack:Vector.<UndoEvent>;
 		
-		private var m_layoutXML:XML;
-		private var m_constraintsXML:XML;
+		private var m_worldGraphDict:Dictionary;
+		/** Original JSON used for this world */
+		private var m_worldObj:Object;
+		private var m_layoutObj:Object;
+		private var m_assignmentsObj:Object;
 		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
 		
 		static protected var m_numWidgetsClicked:int = 0;
 		
-		/**
-		 * World that contains levels that each contain boards that each contain pipes
-		 * @param	_x X coordinate, this is currently unused
-		 * @param	_y Y coordinate, this is currently unused
-		 * @param	_width Width, this is currently unused
-		 * @param	_height Height, this is currently unused
-		 * @param	_name Name of the level
-		 * @param	_system The parent VerigameSystem instance
-		 */
-		public function World(_network:Network, _world_xml:XML, _layout:XML,  _constraints:XML)
+		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
-//			super(_x, _y, _width, _height);
-			m_network = _network;
-			world_xml = _world_xml;
-			m_layoutXML = _layout;
-			m_constraintsXML = _constraints;
+			m_worldGraphDict = _worldGraphDict;
+			m_worldObj = _worldObj;
+			m_layoutObj = _layout;
+			m_assignmentsObj = _assignments;
 			
 			m_world = this;
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
+			var allLevels:Array = m_worldObj["levels"];
+			
 			// create World
-			var original_subboard_nodes:Vector.<Node> = new Vector.<Node>();
-			for (var level_index:uint = 0; level_index < world_xml["level"].length(); level_index++) {
-				var my_level_xml:XML = world_xml["level"][level_index];
-				var my_level_name:String = m_network.obfuscator.getLevelName(my_level_xml.attribute("name").toString());
-				if ((m_network.LevelNodesDictionary[my_level_name] == null) || (m_network.LevelNodesDictionary[my_level_name] == undefined)) {
-					// This is true if there are no edges in the level, skip this level
-					PipeJamGame.printDebug("No edges found on level " + my_level_name + " skipping this level and not creating...");
-					continue;
-				}
-				var my_levelNodes:LevelNodes = (m_network.LevelNodesDictionary[my_level_name] as LevelNodes);
-				PipeJamGame.printDebug("Creating level: " + my_level_name);
-				
-				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
-				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
-				//if we didn't find the level, assume this is a global constraints file
-				if(levelConstraintsXML == null)
-					levelConstraintsXML = m_constraintsXML;
+			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
+				var levelObj:Object = allLevels[level_index];
+				var levelName:String = levelObj["id"];
+				var levelLayoutObj:Object = findLevelFile(levelName, m_layoutObj);
+				var levelAssignmentsObj:Object = findLevelFile(levelName, m_assignmentsObj);
+				// if we didn't find the level, assume this is a global constraints file
+				if(levelAssignmentsObj == null) levelAssignmentsObj = m_assignmentsObj;
 				
 				var targetScore:int = int.MAX_VALUE;
-				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
-					targetScore = int(levelConstraintsXML.attribute("targetScore"));
+				if ((levelAssignmentsObj["targetScore"] != undefined) && !isNaN(int(levelAssignmentsObj["targetScore"]))) {
+					targetScore = int(levelAssignmentsObj["targetScore"]);
 				}
-				var levelNameFound:String = my_levelNodes.original_level_name;
+				var levelNameFound:String = levelName;
 				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_name) {
 					levelNameFound = PipeJamGame.levelInfo.m_name;
 				}
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore, levelNameFound);
+				if (!m_worldGraphDict.hasOwnProperty(levelName)) {
+					throw new Error("World level found without constriant graph:" + levelName);
+				}
+				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
+				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, targetScore, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
 					firstLevel = my_level; //grab first one..
 				}
 			}
-			
-			m_simulator = new PipeSimulator(m_network);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
@@ -197,7 +164,7 @@ package scenes.game.display
 			miniMap.visible = false;
 			addChild(miniMap);
 			
-			onEdgeSetChange(); //update score
+			onWidgetChange(); //update score
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
@@ -231,7 +198,7 @@ package scenes.game.display
 			selectLevel(firstLevel);
 			
 			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
-			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
+			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
@@ -359,16 +326,18 @@ package scenes.game.display
 			if(active_level != null)
 			{
 				//update and collect all xml, and then bundle, zip, and upload
-				var outputXML:XML = updateXML();
-				active_level.updateLevelXML();
+				var outputObj:Object = updateAssignments();
+				active_level.updateLevelObj();
 				
-				var collectionXML:XML = <container version="1"/>;
-				collectionXML.@qid = outputXML.qid;
-				collectionXML.appendChild(active_level.m_levelLayoutXMLWrapper);
-				collectionXML.appendChild(active_level.m_levelConstraintsXMLWrapper);
-				collectionXML.appendChild(outputXML);
+				var containerObj:Object = { "container": { "version":"1" }};
+				containerObj["container"]["level"] = active_level.levelObj;
+				containerObj["container"]["layout"] = active_level.m_levelLayoutObjWrapper;
+				containerObj["container"]["assignments"] = active_level.m_levelAssignmentsObjWrapper;
+				for (var key:String in outputObj) {
+					containerObj["container"][key] = outputObj[key];
+				}
 				
-				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
+				var zip:ByteArray = active_level.zipJsonFile(containerObj, "container");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
 				GameFileHandler.submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
@@ -464,7 +433,6 @@ package scenes.game.display
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
-		
 		public function setNewLayout(event:MenuEvent):void
 		{
 			if(active_level != null && event.data.layoutFile) {
@@ -472,78 +440,21 @@ package scenes.game.display
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile.@id;
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile["id"];
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
 				PipeJamGame.levelInfo.m_layoutUpdated = true;
 			}
 		}
 		
-		/**
-		 * Updates XML with edge information (widths, etc)
-		 * @param	overwriteWorldXML: True to preserve changes across multiple levels and overwrite local XML, false to create new XML and return that
-		 * @return Instance of current world XML if overwritten, new instance with new updates if not
-		 */
-		public function updateXML(overwriteWorldXML:Boolean = true, returnLevelXMLOnly:Boolean = false):XML {
-			//update xml from original
-			var output_xml:XML = overwriteWorldXML ? world_xml : new XML(world_xml);
-			var activeLevelXML:XML;
-			for each (var my_level:Level in levels) {
-				// Find this level in XML
-				if (my_level.levelNodes == null) {
-					continue;
-				}
-				var my_level_xml_indx:int = -1;
-				for (var level_indx:uint = 0; level_indx < output_xml["level"].length(); level_indx++) {
-					if (output_xml["level"][level_indx].attribute("name").toString() == my_level.levelNodes.original_level_name) {
-						my_level_xml_indx = level_indx;
-						break;
-					}
-				}
-				//found xml representation?
-				if (my_level_xml_indx > -1) {
-					//loop through all boards, find the edges. Update these with new buzzsaw and width info.
-					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
-						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
-							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
-							var my_edge:Edge = my_level.levelNodes.getEdge(my_edge_id);
-							if (my_edge) {
-								var my_width:String = my_edge.linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW) ? "narrow" : "wide";
-								// For buzzsaw, only consider narrowness - no concept of a keyfor buzzsaw at this point
-								var edgeHasJam:Boolean = my_edge.hasConflictProp(PropDictionary.PROP_NARROW);
-								var portHasJam:Boolean = my_edge.to_port.hasConflictProp(PropDictionary.PROP_NARROW);
-								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@width = my_width;
-								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@buzzsaw = (edgeHasJam || portHasJam).toString();// classic: my_edge.has_buzzsaw.toString();
-							} else {
-								throw new Error("World.getUpdatedXML(): Edge pipe not found for edge id: " + my_edge_id);
-							}
-						}
-					}
-				} else {
-					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
-				}
-				if ((m_network.world_version == "1") || (m_network.world_version == "2")) {
-					//Update the xml with the stamp state information. Only update existing stamps, not adding new ones
-					var edgeSetXML:XMLList = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"];
-					var numEdgeSets:uint = edgeSetXML.length();
-					for (var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
-						var edgeSetID:String = edgeSetXML[edgeSetIndex].attribute("id").toString();
-						if (my_level.levelNodes.edge_set_dictionary.hasOwnProperty(edgeSetID)) {
-							var linkedEdgeSet:EdgeSetRef = my_level.levelNodes.edge_set_dictionary[edgeSetID] as EdgeSetRef;
-							for (var stampIndex:uint = 0; stampIndex < edgeSetXML[edgeSetIndex]["stamp"].length(); stampIndex++) {
-								var stampID:String = edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@id;
-								edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@active = linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
-							}
-						}
-					}
-				} else {
-					// TODO: stamp support not implemented in XML version 3
-				}
-				if (my_level == active_level) {
-					activeLevelXML = output_xml["level"][my_level_xml_indx];
-				}
-			}	
-			return returnLevelXMLOnly ? activeLevelXML : output_xml;
+		public function updateAssignments(currentLevelOnly:Boolean = false):Object
+		{
+			// TODO: think about this more, when do we update WORLD assignments? Real-time or in this method?
+			if (currentLevelOnly) {
+				if (active_level) return m_worldObj["levels"][active_level.name]["assignments"];
+				return { };
+			}
+			return m_assignmentsObj;
 		}
 		
 		public function onZoomIn(event:MenuEvent):void
@@ -591,14 +502,13 @@ package scenes.game.display
 			miniMap.onViewspaceChanged(event);
 		}
 		
-		public function onEdgeSetChange(evt:EdgeSetChangeEvent = null):void
+		public function onWidgetChange(evt:WidgetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
-			if (miniMap && evt && evt.edgeSetChanged) miniMap.addWidget(evt.edgeSetChanged); // removes prev widget, adds new colored widget
+			if (miniMap && evt && evt.widgetChanged) miniMap.addWidget(evt.widgetChanged); // removes prev widget, adds new colored widget
 			if (!level_changed) return;
-			var edgeSetId:String = "";
-			if (evt && evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
-			m_simulator.updateOnBoxSizeChange(edgeSetId, level_changed.level_name);
+			var nodeId:String = "";
+			if (evt && evt.widgetChanged && evt.widgetChanged.constraintVar) nodeId = evt.widgetChanged.constraintVar.id;
 			level_changed.updateScore(true);
 			gameControlPanel.updateScore(level_changed, false);
 			if (evt && !evt.silent) {
@@ -618,8 +528,8 @@ package scenes.game.display
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
-					if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet)
-						details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+					if (evt.widgetChanged && evt.widgetChanged.constraintVar)
+						details[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] = evt.widgetChanged.constraintVar.id;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, level_changed.getTimeMs());
@@ -721,7 +631,7 @@ package scenes.game.display
 			}
 			else {
 				m_currentLevelNumber = (m_currentLevelNumber + 1) % levels.length;
-				updateXML(); // save world progress
+				updateAssignments(); // save world progress
 			}
 			var callback:Function =
 				function():void
@@ -823,8 +733,8 @@ package scenes.game.display
 					case 76: //'l' for copy layout
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
-							active_level.updateLayoutXML(this);
-							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
+							active_level.updateLayoutObj(this);
+							System.setClipboard(active_level.m_levelLayoutObjWrapper.toString());
 						}
 						break;
 					case 66: //'b' for load Best scoring config
@@ -836,22 +746,22 @@ package scenes.game.display
 					case 67: //'c' for copy constraints
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
-							active_level.updateConstraintXML();
-							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
+							active_level.updateAssignmentsObj();
+							System.setClipboard(active_level.m_levelAssignmentsObjWrapper.toString());
 						}
 						break;
-					case 65: //'a' for copy of ALL (world) xml
+					case 65: //'a' for copy of ALL (world)
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
-							var outputXML:XML = updateXML();
-							System.setClipboard(outputXML.toString());
+							var worldObj:Object = updateAssignments();
+							System.setClipboard(JSON.stringify(worldObj));
 						}
 						break;
-					case 88: //'x' for copy of level xml
+					case 88: //'x' for copy of level
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
-							var levelXML:XML = updateXML(true, true);
-							System.setClipboard(levelXML.toString());
+							var levelObj:Object = updateAssignments(true);
+							System.setClipboard(JSON.stringify(levelObj));
 						}
 						break;
 				}
@@ -900,7 +810,7 @@ package scenes.game.display
 				if (active_level) {
 					details = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
-					qid = (active_level.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelNodes.qid;
+					qid = (active_level.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelGraph.qid;
 					//if (PipeJamGame.levelInfo) {
 					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
 					//}
@@ -911,7 +821,7 @@ package scenes.game.display
 				if (PipeJamGame.levelInfo) {
 					details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
 				}
-				qid = (newLevel.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelNodes.qid;
+				qid = (newLevel.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelGraph.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
 			if (restart) {
@@ -937,7 +847,7 @@ package scenes.game.display
 			
 			newLevel.initialize();
 			
-			onEdgeSetChange();
+			onWidgetChange();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
@@ -952,11 +862,9 @@ package scenes.game.display
 			var startTime:Number = new Date().getTime();
 			var isTutorialLevel:Boolean = (active_level.m_tutorialTag && active_level.m_tutorialTag.length);
 			if (!isTutorialLevel && (active_level.getTargetScore() == int.MAX_VALUE)) {
-				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
+				var newTarget:int = Solver.getInstance().findTargetScore(active_level);
 				active_level.setTargetScore(newTarget);
-				if(PipeJamGame.levelInfo != null)
-					PipeJamGame.levelInfo.m_targetScore = newTarget;
-				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
+				if(PipeJamGame.levelInfo != null) PipeJamGame.levelInfo.m_targetScore = newTarget;
 				active_level.updateScore();
 			}
 			
@@ -965,8 +873,6 @@ package scenes.game.display
 			
 			gameControlPanel.newLevelSelected(newLevel);
 			miniMap.isDirty = true;
-			//	newLevel.setConstraints();
-			//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
 		
 		private function onRemovedFromStage():void
@@ -981,7 +887,7 @@ package scenes.game.display
 			removeEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			
 			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
-			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
+			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
@@ -1015,41 +921,18 @@ package scenes.game.display
 			
 			if(active_level)
 				removeChild(active_level, true);
-			m_network = null;
-			world_xml = null;
-			m_layoutXML = null;
+			m_worldObj = null;
+			m_layoutObj = null;
 		}
 		
-		public function findLevel(index:uint):Level
+		public function findLevelFile(name:String, fileObj:Object):Object
 		{
-			for (var my_level_index:uint = 0; my_level_index < levels.length; my_level_index++) {
-				var level:Level = levels[my_level_index];
-				if(level.levelNodes.metadata["index"] == index)
-					return level;
-			}	
-			
-			return null;
-		}
-		
-		public function findLevelFile(name:String, xml:XML):XML
-		{
-			var xmlList:XMLList = xml.level;
-			for each(var level:XML in xmlList)
-			{
-				var levelName:String = level.@id;
-				if(levelName.length == 0)
-					levelName = level.@name;
-				
-				var matchIndex:int = levelName.indexOf(name);
-				if(matchIndex != -1 && matchIndex+(name).length == levelName.length)
-					return level;
+			var levels:Array = fileObj["levels"];
+			if (!levels) return fileObj; // if no levels, assume global file
+			for (var i:int = 0; i < levels.length; i++) {
+				var levelName:String = levels[i]["id"];
+				if (levelName == name) return levels[i];
 			}
-			
-			//if level is null, see if we are a version 3 (global) constraint file without levels
-			if("@version" in xml)
-				if(xml.@version == "3")
-					return xml;
-			
 			return null;
 		}
 		

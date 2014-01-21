@@ -36,6 +36,7 @@ package scenes.game.display
 		static public var MARKER_JOINT:int = 1;
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
+		private var m_props:PropDictionary;
 		
 		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
@@ -138,10 +139,10 @@ package scenes.game.display
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
 			
-			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && getProps().hasProp(m_propertyMode)) {
 				m_jointImage = createJoint(isRound, false, m_isWide, m_incomingPt, m_outgoingPt, KEYFOR_COLOR);
 			} else {
-				var isGray:Boolean = isRound ? m_isEditable : true; // TODO: for now, all non-round joints forced as editable
+				var isGray:Boolean = m_isEditable;
 				var myColor:uint = isHoverOn ? 0xeeeeee : 0xcccccc;
 				m_jointImage = createJoint(isRound, isGray, m_isWide, m_incomingPt, m_outgoingPt, myColor);
 			}

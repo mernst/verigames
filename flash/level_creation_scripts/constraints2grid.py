@@ -67,7 +67,7 @@ class Node:
 			sortedout.append((edge.tonode.pt.x, edge.id))
 		sortedout = sorted(sortedout)
 		self.sortedoutputs = [self.outputs.get(n[1]) for n in sortedout]
-		p = 0
+		# DON'T reset p=0, rather keep counting so that input ports don't overlap output ports
 		for edge in self.sortedoutputs:
 			edge.fromport = p
 			p += 1
@@ -238,6 +238,13 @@ def constraints2grid(infilename, outfilename):
 		elif (prefix, event) == ('assignments', 'end_map'):
 			current_asg = None
 		# End assignments processing
+	# if there are assignments (vars) that weren't involved in constraints, include them now
+	for asgid in assignments:
+		parts = asgid.split(':')
+		formattedid = '%s_%s' % (parts[0], parts[1])
+		if formattedid in nodes:
+			continue
+		nodes[formattedid] = Node(formattedid)
 	# Create graphviz input file
 	graphin =  'digraph G {\n'
 	graphin += '  size="50,50";\n'
@@ -254,8 +261,9 @@ def constraints2grid(infilename, outfilename):
 	# Nodes
 	for nodeid in nodes:
 		node = nodes[nodeid]
-		node.width = round(float((max(node.ninputs, node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
-		graphin += '%s [width=%s];\n' % (node.id, node.width)
+		node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
+		calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
+		graphin += '%s [width=%s,height=%s];\n' % (node.id, node.width, calcheight)
 	# Edges
 	for edgeid in edges:
 		graphin += '%s;\n' % edgeid
@@ -267,7 +275,9 @@ def constraints2grid(infilename, outfilename):
 		sfdpcmd.read()
 	# Layout node positions from output
 	nodelayout = {}
-	layoutf =  '{"layout": {\n'
+	layoutf =  '{\n'
+	layoutf += '"id": "%s",\n' % infilename
+	layoutf += '"layout": {\n'
 	layoutf += '  "vars": {\n'
 	with open(outfilename + '-OUT.txt','r') as readgraph:
 		firstline = True
@@ -338,15 +348,16 @@ def constraints2grid(infilename, outfilename):
 	with open(outfilename + 'Layout.json','w') as writelayout:
 		writelayout.write(layoutf)
 	with open(outfilename + 'Assignments.json','w') as writeasg:
-		writeasg.write('{"assignments":{\n')
+		writeasg.write('{"id": "%s",\n' % infilename)
+		writeasg.write('"assignments":{\n')
 		firstline = True
 		for varid in assignments:
 			if firstline == True:
 				firstline = False
 			else:
 				writeasg.write(',\n')
-			writeasg.write('{"%s":%s}' % (varid, json.dumps(assignments[varid], separators=(',', ':')))) # separators: no whitespace
-		writeasg.write('\n}}')
+			writeasg.write('"%s":%s' % (varid, json.dumps(assignments[varid], separators=(',', ':')))) # separators: no whitespace
+		writeasg.write('}\n}')
 ### Command line interface ###
 if __name__ == "__main__":
 	if len(sys.argv) != 2 and len(sys.argv) != 3:

@@ -1,0 +1,13 @@
+{
+"id": "IntroWidget",
+"tutorial": "widget",
+"qid": 0,
+"layout": {
+  "vars": {
+    "var_1":{"y":0.88,"x":2.99,"w":1.8,"h":1.0},
+    "var_0":{"y":2.96,"x":0.9,"w":1.8,"h":1.0}
+  },
+  "constraints": {
+
+  }
+}}

@@ -75,7 +75,6 @@ package scenes.game.display
 			m_plugContainer.visible = !m_hideSegments;
 			draw();
 			
-			m_isDirty = false;
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -227,9 +226,6 @@ package scenes.game.display
 			if (m_borderIsWide == _isWide) {
 				return;
 			}
-			if (!m_isEditable) {
-				return;
-			}
 			m_borderIsWide = _isWide;
 			m_isDirty = true;
 		}
@@ -276,7 +272,7 @@ package scenes.game.display
 				m_socket.y = 0;
 			}
 			
-			if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+			if (m_dir == GameEdgeContainer.DIR_TO) {
 				edgeSegment.x = interiorPt.x;
 				edgeSegment.y = interiorPt.y - m_height;
 			} else {
@@ -322,9 +318,6 @@ package scenes.game.display
 		override public function setIsWide(b:Boolean):void
 		{
 			if (m_isWide == b) {
-				return;
-			}
-			if (!m_isEditable) {
 				return;
 			}
 			m_isWide = b;

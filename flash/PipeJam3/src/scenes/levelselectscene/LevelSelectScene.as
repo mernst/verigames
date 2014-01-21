@@ -191,9 +191,8 @@ package scenes.levelselectscene
 				new_levels_button.enabled = false;
 				saved_levels_button.enabled = false;
 			}
-
-						
-			setTutorialXMLFile(TutorialController.tutorialXML);
+			
+			setTutorialFile(TutorialController.tutorialObj);
 			
 			if(!TutorialController.getTutorialController().isTutorialDone() || !PlayerValidation.playerLoggedIn)
 				onTutorialButtonTriggered(null);
@@ -510,18 +509,17 @@ package scenes.levelselectscene
 			this.savedLevelsListBox.setButtonArray(_savedLevelInfo, true);
 		}
 		
-		public function setTutorialXMLFile(tutorialXML:XML):void
+		public function setTutorialFile(tutorialObj:Object):void
 		{
-			var tutorialLevels:XMLList = tutorialXML["level"];
+			var tutorialLevels:Array = tutorialObj["levels"];
 			var tutorialController:TutorialController = TutorialController.getTutorialController();
-			
-				
 			var tutorialArray:Array = new Array;
-			for each(var levelXML:XML in tutorialLevels)
+			for (var i:int = 0; i < tutorialLevels.length; i++)
 			{
+				var levelObj:Object = tutorialLevels[i];
 				var obj:Object = new Object;
-				obj.levelId = levelXML.@qid.toString();
-				obj.name = levelXML.@name.toString();
+				obj.levelId = levelObj["qid"].toString();
+				obj.name = levelObj["id"].toString();
 				
 				//unlock all that user should be able play, check the ones they have played
 				if(PipeJam3.RELEASE_BUILD)

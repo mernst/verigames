@@ -1,0 +1,15 @@
+{
+"id": "WidgetPractice",
+"tutorial": "widgetpractice",
+"qid": 1,
+"layout": {
+  "vars": {
+    "var_3":{"y":0.38,"x":0.4,"w":1.8,"h":1.0},
+    "var_2":{"y":3.17,"x":0.71,"w":1.8,"h":1.0},
+    "var_1":{"y":0.68,"x":3.69,"w":1.8,"h":1.0},
+    "var_0":{"y":3.18,"x":3.9,"w":1.8,"h":1.0}
+  },
+  "constraints": {
+
+  }
+}}

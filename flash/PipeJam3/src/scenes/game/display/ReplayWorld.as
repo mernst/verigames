@@ -1,30 +1,24 @@
 package scenes.game.display
 {
-	import audio.AudioManager;
-	import cgs.server.logging.actions.ClientAction;
-	import display.TextBubble;
-	import events.EdgeSetChangeEvent;
-	import events.UndoEvent;
-	import graph.PropDictionary;
-	import server.ReplayController;
-	import starling.events.Event;
-	
 	import flash.ui.Keyboard;
-	
-	import graph.Network;
-	
+	import flash.utils.Dictionary;
+	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
+	import audio.AudioManager;
+	import cgs.server.logging.actions.ClientAction;
+	import events.WidgetChangeEvent;
+	import server.ReplayController;
 	import system.VerigameServerConstants;
-	
 	import utils.XString;
 	
+	// TODO: reconfigure for json
 	public class ReplayWorld extends World
 	{
 		
-		public function ReplayWorld(_network:Network, _world_xml:XML, _layout:XML, _constraints:XML)
+		public function ReplayWorld(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
-			super(_network, _world_xml, _layout, _constraints);
+			super(_worldGraphDict, _worldObj, _layout, _assignments);
 			//this.touchable = false;// disable user interaction
 		}
 		
@@ -60,9 +54,9 @@ package scenes.game.display
 		{
 			if (!action.detailObject) return;
 			if (!active_level) return;
-			var edgeSetId:String, propChanged:String, newPropValue:Boolean;
-			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID]) {
-				edgeSetId = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] as String;
+			var varId:String, propChanged:String, newPropValue:Boolean;
+			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_VAR_ID]) {
+				varId = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] as String;
 			}
 			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED]) {
 				propChanged = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] as String;
@@ -70,17 +64,17 @@ package scenes.game.display
 			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE]) {
 				newPropValue = XString.stringToBool(action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] as String);
 			}
-			if (edgeSetId && propChanged) {
-				var gameNode:GameNode = active_level.getNode(edgeSetId);
+			if (varId && propChanged) {
+				var gameNode:GameNode = active_level.getNode(varId);
 				if (!gameNode) {
-					PipeJam3.showReplayText("Replay action failed: Game node not found: " + edgeSetId);
+					PipeJam3.showReplayText("Replay action failed: Game node not found: " + varId);
 					return;
 				}
-				var eventToPerform:EdgeSetChangeEvent = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, propChanged, newPropValue);
+				var eventToPerform:WidgetChangeEvent = new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, propChanged, newPropValue);
 				gameNode.handleUndoEvent(eventToPerform, isUndo);
-				PipeJam3.showReplayText("performed: " + edgeSetId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : ""));
+				PipeJam3.showReplayText("performed: " + varId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : ""));
 			} else {
-				PipeJam3.showReplayText("Replay action failed, edgeSetId: " + edgeSetId + " propChanged: " + propChanged);
+				PipeJam3.showReplayText("Replay action failed, varId: " + varId + " propChanged: " + propChanged);
 			}
 		}
 		
@@ -90,8 +84,8 @@ package scenes.game.display
 			if (!active_level) return;
 			if (!edgeSetGraphViewPanel) return;
 			var edgeSetId:String, propChanged:String, newPropValue:Boolean;
-			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID]) {
-				edgeSetId = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] as String;
+			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_VAR_ID]) {
+				edgeSetId = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] as String;
 			}
 			if (action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED]) {
 				propChanged = action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] as String;

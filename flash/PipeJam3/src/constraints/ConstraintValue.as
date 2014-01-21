@@ -1,7 +1,7 @@
 package constraints 
 {
 	
-	public class ConstraintValue extends ConstraintSide
+	public class ConstraintValue
 	{
 		public static const TYPE_0:String = "0";
 		public static const TYPE_1:String = "1";
@@ -9,36 +9,36 @@ package constraints
 		public static const VERBOSE_TYPE_0:String = "type:0";
 		public static const VERBOSE_TYPE_1:String = "type:1";
 		
-		public var val:uint;
-		public var str:String;
-		public var verbose:String;
+		public var intVal:uint;
+		public var strVal:String;
+		public var verboseStrVal:String;
 		
 		public function ConstraintValue(_val:uint) 
 		{
-			val = _val;
-			switch (val) {
+			intVal = _val;
+			switch (intVal) {
 				case 0:
-					str = TYPE_0;
-					verbose = VERBOSE_TYPE_0;
+					strVal = TYPE_0;
+					verboseStrVal = VERBOSE_TYPE_0;
 					break;
 				case 1:
-					str = TYPE_1;
-					verbose = VERBOSE_TYPE_1;
+					strVal = TYPE_1;
+					verboseStrVal = VERBOSE_TYPE_1;
 					break;
 				default:
-					throw new Error("Unexpected Constraint Value: " + val);
+					throw new Error("Unexpected Constraint Value: " + intVal);
 					break;
 			}
 		}
 		
-		public override function getValue():ConstraintValue
+		public function clone():ConstraintValue
 		{
-			return this;
+			return new ConstraintValue(intVal);
 		}
 		
 		public function toString():String
 		{
-			return verbose;
+			return verboseStrVal;
 		}
 		
 		public static function fromStr(str:String):ConstraintValue

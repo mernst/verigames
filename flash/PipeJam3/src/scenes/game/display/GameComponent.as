@@ -14,10 +14,10 @@ package scenes.game.display
 		protected static const DEBUG_TRACE_IDS:Boolean = true;
 		public var m_id:String;
 		
-		public var m_isSelected:Boolean;
+		public var isSelected:Boolean;
 		public var m_isDirty:Boolean = false;
 		
-		public var m_boundingBox:Rectangle;
+		public var boundingBox:Rectangle;
 		
 		//these are here in that they determine color, so all screen objects need them set
 		public var m_isWide:Boolean = false;
@@ -27,7 +27,6 @@ package scenes.game.display
 		public var isHoverOn:Boolean = false;
 		public var draggable:Boolean = true;
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
-		protected var m_props:PropDictionary = new PropDictionary();
 		public var m_forceColor:Number = -1;
 		private var m_hidden:Boolean = false;
 		
@@ -48,15 +47,15 @@ package scenes.game.display
 			super();
 			
 			m_id = _id;
-			m_isSelected = false;
+			isSelected = false;
 		}
 		
 		public function componentMoved(delta:Point):void
 		{
 			x += delta.x;
 			y += delta.y;
-			m_boundingBox.x += delta.x;
-			m_boundingBox.y += delta.y;
+			boundingBox.x += delta.x;
+			boundingBox.y += delta.y;
 		}
 		
 		public function getScore():Number
@@ -82,7 +81,7 @@ package scenes.game.display
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;
-			m_isSelected = isSelected;
+			isSelected = isSelected;
 		}
 		
 		public function hideComponent(hide:Boolean):void
@@ -162,14 +161,15 @@ package scenes.game.display
 		{
 		}
 		
-		protected function get hasProp():Boolean
+		public function getProps():PropDictionary
 		{
-			return m_props.hasProp(m_propertyMode);
+			// Implemented by children
+			return new PropDictionary();
 		}
 		
 		public function setProps(props:PropDictionary):void
 		{
-			m_props = props.clone();
+			// Implemented by children
 			m_isDirty = true;
 		}
 		

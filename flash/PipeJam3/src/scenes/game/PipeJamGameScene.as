@@ -1,34 +1,21 @@
 package scenes.game
 {
-	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
-	
-	import events.NavigationEvent;
-	
 	import flash.events.Event;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.utils.ByteArray;
-	
-	import graph.Network;
-	
-	import networking.*;
-	
-	import scenes.Scene;
-	import scenes.game.display.World;
-	import scenes.game.display.ReplayWorld;
-	
-	import starling.core.Starling;
+	import flash.utils.Dictionary;
 	import starling.display.*;
 	import starling.events.Event;
 	
-	import state.ParseXMLState;
+	import networking.*;
+	import scenes.game.display.ReplayWorld;
+	import scenes.game.display.World;
+	import scenes.Scene;
+	import state.ParseConstraintGraphState;
 	
 	public class PipeJamGameScene extends Scene
 	{		
-		protected var nextParseState:ParseXMLState;
+		protected var nextParseState:ParseConstraintGraphState;
 		
-		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
+		//takes a partial path to the files, using the base file name. -.json, -Layout.json and -Constraints.json will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
 			"../SampleWorlds/hadoop-typedbytes-Type"
@@ -39,20 +26,18 @@ package scenes.game
 		static public var inTutorial:Boolean = false;
 		static public var inDemo:Boolean = false;
 		
-		public var m_worldXML:XML;
-		public var m_layoutXML:XML;
-		public var m_constraintsXML:XML;
-		public var m_allInOneXML:XML;
+		protected var m_worldObj:Object;
+		protected var m_layoutObj:Object;
+		protected var m_assignmentsObj:Object;
 		
 		protected var m_layoutLoaded:Boolean = false;
-		protected var m_constraintsLoaded:Boolean = false;
+		protected var m_assignmentsLoaded:Boolean = false;
 		protected var m_worldLoaded:Boolean = false;
 		
 		/** Start button image */
 		protected var start_button:Button;
 		private var active_world:World;
-		private var m_network:Network;
-		
+		private var m_worldGraphDict:Dictionary
 		
 		public function PipeJamGameScene(game:PipeJamGame)
 		{
@@ -61,10 +46,8 @@ package scenes.game
 		
 		protected override function addedToStage(event:starling.events.Event):void
 		{
-			var fileName:String;
-						
 			super.addedToStage(event);
-			m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
+			m_layoutLoaded = m_worldLoaded = m_assignmentsLoaded = false;
 			GameFileHandler.loadGameFiles(onWorldLoaded, onLayoutLoaded, onConstraintsLoaded);
 		}
 		
@@ -74,97 +57,79 @@ package scenes.game
 			active_world = null;
 		}
 		
-		private function onLayoutLoaded(_layoutXML:XML):void {
-			m_layoutXML = _layoutXML; 
+		private function onLayoutLoaded(_layoutObj:Object):void
+		{
+			m_layoutObj = _layoutObj; 
 			m_layoutLoaded = true;
-			//call, but probably wait on xml
-			tasksComplete();
+			checkTasksComplete();
 		}
 		
-		private function onConstraintsLoaded(_constraintsXML:XML):void {
-			m_constraintsXML = _constraintsXML;
-			m_constraintsLoaded = true;
-			//call, but probably wait on xml
-			tasksComplete();
+		private function onConstraintsLoaded(_assignmentsObj:Object):void
+		{
+			m_assignmentsObj = _assignmentsObj;
+			m_assignmentsLoaded = true;
+			checkTasksComplete();
 		}
 		
 		//might be a single xml file, or maybe an array of three xml files
-		private function onWorldLoaded(obj:Object):void { 
-			if(obj is XML)
-				m_worldXML = obj as XML;
-			else if(obj is Array)
+		private function onWorldLoaded(obj:Object):void
+		{ 
+			if(obj is Array)
 			{
-				m_worldXML = (obj as Array)[0];
-				m_constraintsXML = (obj as Array)[1];
-				m_layoutXML = (obj as Array)[2];
-				m_constraintsLoaded = true;
+				m_worldObj = (obj as Array)[0];
+				m_assignmentsObj = (obj as Array)[1];
+				m_layoutObj = (obj as Array)[2];
+				m_assignmentsLoaded = true;
 				m_layoutLoaded = true;
+			} else {
+				m_worldObj = obj;
 			}
 			m_worldLoaded = true;
-			tasksComplete();
+			checkTasksComplete();
 		}
 		
-		public function parseXML():void
+		public function parseJson():void
 		{
+			
 			if(nextParseState)
 				nextParseState.removeFromParent();
-			nextParseState = new ParseXMLState(m_worldXML);
+			nextParseState = new ParseConstraintGraphState(m_worldObj);
 			addChild(nextParseState); //to allow done parsing event to be caught
-			this.addEventListener(ParseXMLState.WORLD_PARSED, worldComplete);
+			this.addEventListener(ParseConstraintGraphState.WORLD_PARSED, worldComplete);
 			nextParseState.stateLoad();
 		}
 		
 		public function worldComplete(event:starling.events.Event):void
 		{
-			m_network = event.data as Network;
+			m_worldGraphDict = event.data as Dictionary;
 			m_worldLoaded = true;
-			this.removeEventListener(ParseXMLState.WORLD_PARSED, worldComplete);
-			worldXMLParsed();
+			this.removeEventListener(ParseConstraintGraphState.WORLD_PARSED, worldComplete);
+			onWorldParsed();
 		}
 		
-		public function tasksComplete():void
+		public function checkTasksComplete():void
 		{
-			if(m_layoutLoaded && m_worldLoaded && m_constraintsLoaded)
+			if(m_layoutLoaded && m_worldLoaded && m_assignmentsLoaded)
 			{
 				trace("everything loaded");
-				parseXML();
+				parseJson();
 			}
 		}
 		
-		protected function worldXMLParsed():void
+		protected function onWorldParsed():void
 		{
-			if(nextParseState)
-				nextParseState.removeFromParent();
-			
-			active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);
-			
-			addChild(active_world);
-		}
-		
-		
-		/**
-		 * This function is called after the graph structure (Nodes, edges) has been read in from XML. It converts nodes/edges to a playable world.
-		 * @param	_worldNodes
-		 * @param	_world_xml
-		 * @return
-		 */
-		public function createWorldFromNodes(_worldNodes:Network, _world_xml:XML, _layout:XML, _constraints:XML):World {
+			if (nextParseState) nextParseState.removeFromParent();
 			try {
-				
-				m_network = _worldNodes;
 				PipeJamGame.printDebug("Creating World...");
-				var world:World;
 				if (PipeJam3.REPLAY_DQID) {
-					world = new ReplayWorld(_worldNodes, _world_xml, _layout, _constraints);
+					active_world = new ReplayWorld(m_worldGraphDict, m_worldObj, m_layoutObj, m_assignmentsObj);
 				} else {
-					world = new World(_worldNodes, _world_xml, _layout, _constraints);
+					active_world = new World(m_worldGraphDict, m_worldObj, m_layoutObj, m_assignmentsObj);
 				}
 			} catch (error:Error) {
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
-				var debug:int = 0;
 			}
-			
-			return world;
+			addChild(active_world);
 		}
 	}
 }

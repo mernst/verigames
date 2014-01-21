@@ -15,9 +15,9 @@ package networking
 		public var m_levelId:String;
 		
 		/** various DB file ids */
-		public var m_xmlID:String
+		public var m_levelID:String
 		public var m_layoutID:String;
-		public var m_constraintsID:String;
+		public var m_assignmentsID:String;
 		
 		public var m_name:String;
 		public var m_layoutName:String;
@@ -78,9 +78,9 @@ package networking
 			levelObj.m_version = m_version;
 			levelObj.m_id = m_id;
 			levelObj.m_levelId = m_levelId;
-			levelObj.m_xmlID = m_xmlID;
+			levelObj.m_levelID = m_levelID;
 			levelObj.m_layoutID = m_layoutID;
-			levelObj.m_constraintsID = m_constraintsID;
+			levelObj.m_assignmentsID = m_assignmentsID;
 			
 			levelObj.m_name = m_name;
 			levelObj.m_layoutName = m_layoutName;

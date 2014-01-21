@@ -1,6 +1,6 @@
 package system 
 {
-	import events.EdgeSetChangeEvent;
+	import events.WidgetChangeEvent;
 	import flash.utils.Dictionary;
 	import graph.ConflictDictionary;
 	import graph.Edge;
@@ -22,12 +22,12 @@ package system
 		
 		public function Solver(lock:SingletonLock):void { }
 		
-		public function findTargetScore(level:Level, simulator:PipeSimulator, iter:int = 3):int
+		public function findTargetScore(level:Level, iter:int = 3):int
 		{
 			var bestScore:int = level.currentScore;
-			var allMovesPerformed:Vector.<EdgeSetChangeEvent> = new Vector.<EdgeSetChangeEvent>();
+			var allMovesPerformed:Vector.<WidgetChangeEvent> = new Vector.<WidgetChangeEvent>();
 			for (var i:int = 0; i < iter; i++) {
-				var suggestedMoves:Vector.<EdgeSetChangeEvent> = getSuggestedMoves(level, simulator);
+				var suggestedMoves:Vector.<WidgetChangeEvent> = getSuggestedMoves(level);
 				if (suggestedMoves.length == 0) break; // no moves to suggest
 				var score:int = level.currentScore;
 				allMovesPerformed = allMovesPerformed.concat(suggestedMoves);
@@ -37,12 +37,12 @@ package system
 			}
 			// Undo moves to reset level graph
 			for (var m:int = 0; m < allMovesPerformed.length; m++) {
-				performEdgeSetChangeEvent(allMovesPerformed[m], true);
+				performWidgetChangeEvent(allMovesPerformed[m], true);
 			}
 			return bestScore;
 		}
 		
-		public function getSuggestedMoves(level:Level, simulator:PipeSimulator):Vector.<EdgeSetChangeEvent>
+		public function getSuggestedMoves(level:Level):Vector.<WidgetChangeEvent>
 		{
 			// TODO: Props besides NARROW
 			var narrowMovesGroups:Array = new Array();
@@ -50,90 +50,92 @@ package system
 			var prop:String, wideEdgeSets:Vector.<EdgeSetRef>, e:int;
 			var moveSets:Vector.<MoveSet> = new Vector.<MoveSet>();
 			var moveSet:MoveSet, numMoves:int, gameNode:GameNode;
+			var conflicts:Array = [];
+			// TODO: get from level.levelGraph and adapt for constraints, not simulator/old graph format
 			// If no target score, establish one by making simple moves
-			for (var boardName:String in simulator.boardToConflicts) {
-				if (!level.boardInLevel(boardName)) continue;
-				var boardConflicts:ConflictDictionary = (simulator.boardToConflicts[boardName] as ConflictDictionary);
-				for (var portKey:String in boardConflicts.iterPorts()) {
-					var port:Port = boardConflicts.getPort(portKey);
-					var portConfl:PropDictionary = boardConflicts.getPortConflicts(portKey);
-					for (prop in portConfl.iterProps()) {
+			//for (var boardName:String in conflicts) {
+				//if (!level.boardInLevel(boardName)) continue;
+				//var boardConflicts:ConflictDictionary = (simulator.boardToConflicts[boardName] as ConflictDictionary);
+				//for (var portKey:String in boardConflicts.iterPorts()) {
+					//var port:Port = boardConflicts.getPort(portKey);
+					//var portConfl:PropDictionary = boardConflicts.getPortConflicts(portKey);
+					//for (prop in portConfl.iterProps()) {
 						// TODO: Props besides NARROW
-						if (prop == PropDictionary.PROP_NARROW) {
-							moveSet = new MoveSet();
-							numMoves = 0;
-							wideEdgeSets = port.edge.getOriginatingEdgeSetsMatchingPropValue(prop, false);
-							for (e = 0; e < wideEdgeSets.length; e++) {
-								gameNode = level.getNode(wideEdgeSets[e].id);
-								if (!gameNode) continue;
-								if (gameNode.isEditable()) {
-									numMoves += moveSet.addMoveSafe(gameNode, prop, true) ? 1 : 0;
-								}
-							}
-							if (numMoves > 0) moveSets.push(moveSet);
-						}
-					}
-				}
-				for (var edgeKey:String in boardConflicts.iterEdges()) {
-					var edge:Edge = boardConflicts.getEdge(edgeKey);
-					var edgeConfl:PropDictionary = boardConflicts.getEdgeConflicts(edgeKey);
-					for (prop in edgeConfl.iterProps()) {
+						//if (prop == PropDictionary.PROP_NARROW) {
+							//moveSet = new MoveSet();
+							//numMoves = 0;
+							//wideEdgeSets = port.edge.getOriginatingEdgeSetsMatchingPropValue(prop, false);
+							//for (e = 0; e < wideEdgeSets.length; e++) {
+								//gameNode = level.getNode(wideEdgeSets[e].id);
+								//if (!gameNode) continue;
+								//if (gameNode.isEditable()) {
+									//numMoves += moveSet.addMoveSafe(gameNode, prop, true) ? 1 : 0;
+								//}
+							//}
+							//if (numMoves > 0) moveSets.push(moveSet);
+						//}
+					//}
+				//}
+				//for (var edgeKey:String in boardConflicts.iterEdges()) {
+					//var edge:Edge = boardConflicts.getEdge(edgeKey);
+					//var edgeConfl:PropDictionary = boardConflicts.getEdgeConflicts(edgeKey);
+					//for (prop in edgeConfl.iterProps()) {
 						// TODO: Props besides NARROW
-						if (prop == PropDictionary.PROP_NARROW) {
-							var newPropValue:Boolean;
-							if (edge.has_pinch || !edge.editable) {
+						//if (prop == PropDictionary.PROP_NARROW) {
+							//var newPropValue:Boolean;
+							//if (edge.has_pinch || !edge.editable) {
 								// Can't change this width, try making narrow upstream
-								newPropValue = true;
-								wideEdgeSets = edge.getOriginatingEdgeSetsMatchingPropValue(prop, false);
-							} else if (!edge.is_wide && edge.editable) {
+								//newPropValue = true;
+								//wideEdgeSets = edge.getOriginatingEdgeSetsMatchingPropValue(prop, false);
+							//} else if (!edge.is_wide && edge.editable) {
 								// Try making this wide and widening downstream
-								newPropValue = false;
-								wideEdgeSets = edge.getDownStreamEdgeSetsMatchingPropValue(prop, true, level.original_level_name);
-							}
-							moveSet = new MoveSet();
-							numMoves = 0;
-							for (e = 0; e < wideEdgeSets.length; e++) {
-								gameNode = level.getNode(wideEdgeSets[e].id);
-								if (!gameNode) continue;
-								if (gameNode.isEditable()) {
-									numMoves += moveSet.addMoveSafe(gameNode, prop, newPropValue) ? 1 : 0;
-								}
-							}
-							if (numMoves > 0) moveSets.push(moveSet);
-						}
-					}
-				}
-			}
-			var prevScore:int;
-			var suggestedMoves:Vector.<EdgeSetChangeEvent> = new Vector.<EdgeSetChangeEvent>();
-			for (var m:int = 0; m < moveSets.length; m++) {
-				var movesToTry:MoveSet = moveSets[m];
-				prevScore = level.currentScore;
+								//newPropValue = false;
+								//wideEdgeSets = edge.getDownStreamEdgeSetsMatchingPropValue(prop, true, level.original_level_name);
+							//}
+							//moveSet = new MoveSet();
+							//numMoves = 0;
+							//for (e = 0; e < wideEdgeSets.length; e++) {
+								//gameNode = level.getNode(wideEdgeSets[e].id);
+								//if (!gameNode) continue;
+								//if (gameNode.isEditable()) {
+									//numMoves += moveSet.addMoveSafe(gameNode, prop, newPropValue) ? 1 : 0;
+								//}
+							//}
+							//if (numMoves > 0) moveSets.push(moveSet);
+						//}
+					//}
+				//}
+			//}
+			//var prevScore:int;
+			var suggestedMoves:Vector.<WidgetChangeEvent> = new Vector.<WidgetChangeEvent>();
+			//for (var m:int = 0; m < moveSets.length; m++) {
+				//var movesToTry:MoveSet = moveSets[m];
+				//prevScore = level.currentScore;
 				//trace("Checking moves:");
-				var movesToSuggest:Vector.<EdgeSetChangeEvent> = performMoves(movesToTry);
-				simulator.updateOnBoxSizeChange("", level.level_name);
-				level.updateScore();
-				if (level.currentScore >= prevScore) {
+				//var movesToSuggest:Vector.<WidgetChangeEvent> = performMoves(movesToTry);
+				//simulator.updateOnBoxSizeChange("", level.level_name);
+				//level.updateScore();
+				//if (level.currentScore >= prevScore) {
 					//trace("Good moves! Net score increase: " + (level.currentScore - prevScore));
-					suggestedMoves = suggestedMoves.concat(movesToSuggest);
-				} else {
+					//suggestedMoves = suggestedMoves.concat(movesToSuggest);
+				//} else {
 					//trace("Bad moves! Net score increase: " + (level.currentScore - prevScore) + " Undoing...");
-					performMoves(movesToTry, true);
-					simulator.updateOnBoxSizeChange("", level.level_name);
-					level.updateScore();
-				}
-			}
+					//performMoves(movesToTry, true);
+					//simulator.updateOnBoxSizeChange("", level.level_name);
+					//level.updateScore();
+				//}
+			//}
 			return suggestedMoves;
 		}
 		
-		private function performMoves(movesToPerform:MoveSet, undo:Boolean = false):Vector.<EdgeSetChangeEvent>
+		private function performMoves(movesToPerform:MoveSet, undo:Boolean = false):Vector.<WidgetChangeEvent>
 		{
-			var movesPerformed:Vector.<EdgeSetChangeEvent> = new Vector.<EdgeSetChangeEvent>();
+			var movesPerformed:Vector.<WidgetChangeEvent> = new Vector.<WidgetChangeEvent>();
 			for (var edgeSetKey:String in movesToPerform.iterEdgeSets()) {
 				// TODO: prop besides narrow
-				var edgeMoves:Vector.<EdgeSetChangeEvent> = movesToPerform.getMoves(edgeSetKey, PropDictionary.PROP_NARROW);
+				var edgeMoves:Vector.<WidgetChangeEvent> = movesToPerform.getMoves(edgeSetKey, PropDictionary.PROP_NARROW);
 				for (var em:int = 0; em < edgeMoves.length; em++) {
-					var performed:Boolean = performEdgeSetChangeEvent(edgeMoves[em], undo);
+					var performed:Boolean = performWidgetChangeEvent(edgeMoves[em], undo);
 					if (performed) movesPerformed.push(edgeMoves[em]);
 				}
 			}
@@ -146,15 +148,15 @@ package system
 		 * @param	undo
 		 * @return
 		 */
-		private function performEdgeSetChangeEvent(evt:EdgeSetChangeEvent, undo:Boolean = false):Boolean
+		private function performWidgetChangeEvent(evt:WidgetChangeEvent, undo:Boolean = false):Boolean
 		{
-			var gameNode:GameNode = evt.edgeSetChanged;
+			var gameNode:GameNode = evt.widgetChanged;
 			if (!gameNode) return false;
 			if (!gameNode.isEditable()) return false;
-			if (!gameNode.m_edgeSet) return false;
+			if (!gameNode.constraintVar) return false;
 			var newValue:Boolean = undo ? !evt.propValue : evt.propValue;
-			if (gameNode.m_edgeSet.getProps().hasProp(evt.prop) == newValue) return false;
-			gameNode.m_edgeSet.setProp(evt.prop, newValue);
+			if (gameNode.constraintVar.getProps().hasProp(evt.prop) == newValue) return false;
+			gameNode.constraintVar.setProp(evt.prop, newValue);
 			if ((evt.prop == PropDictionary.PROP_NARROW) && (gameNode.m_isWide == newValue)) {
 				gameNode.m_isWide = !newValue;
 				gameNode.m_isDirty = true;
@@ -166,7 +168,7 @@ package system
 	}
 }
 
-import events.EdgeSetChangeEvent;
+import events.WidgetChangeEvent;
 import flash.utils.Dictionary;
 import scenes.game.display.GameNode;
 
@@ -187,19 +189,19 @@ internal class MoveSet {
 	 */
 	public function addMoveSafe(gameNode:GameNode, prop:String, value:Boolean):Boolean
 	{
-		if (!gameNode.m_edgeSet) return false;
+		if (!gameNode.constraintVar) return false;
 		if (!gameNode.isEditable()) return false;
 		var propToMovesDict:Dictionary;
-		if (m_edgeSetIdPropToMoves.hasOwnProperty(gameNode.m_edgeSet.id)) {
-			propToMovesDict = m_edgeSetIdPropToMoves[gameNode.m_edgeSet.id] as Dictionary;
+		if (m_edgeSetIdPropToMoves.hasOwnProperty(gameNode.constraintVar.id)) {
+			propToMovesDict = m_edgeSetIdPropToMoves[gameNode.constraintVar.id] as Dictionary;
 			if (propToMovesDict.hasOwnProperty(prop)) {
 				return false;
 			}
 		} else {
 			propToMovesDict = new Dictionary();
 		}
-		propToMovesDict[prop] = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, prop, value);
-		m_edgeSetIdPropToMoves[gameNode.m_edgeSet.id] = propToMovesDict;
+		propToMovesDict[prop] = new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, prop, value);
+		m_edgeSetIdPropToMoves[gameNode.constraintVar.id] = propToMovesDict;
 		return true;
 	}
 	
@@ -208,13 +210,13 @@ internal class MoveSet {
 		return m_edgeSetIdPropToMoves;
 	}
 	
-	public function getMoves(edgeSetId:String, prop:String):Vector.<EdgeSetChangeEvent>
+	public function getMoves(edgeSetId:String, prop:String):Vector.<WidgetChangeEvent>
 	{
-		var moves:Vector.<EdgeSetChangeEvent> = new Vector.<EdgeSetChangeEvent>();
+		var moves:Vector.<WidgetChangeEvent> = new Vector.<WidgetChangeEvent>();
 		if (m_edgeSetIdPropToMoves.hasOwnProperty(edgeSetId)) {
 			var propToMovesDict:Dictionary = m_edgeSetIdPropToMoves[edgeSetId] as Dictionary;
 			if (propToMovesDict.hasOwnProperty(prop)) {
-				var move:EdgeSetChangeEvent = propToMovesDict[prop] as EdgeSetChangeEvent;
+				var move:WidgetChangeEvent = propToMovesDict[prop] as WidgetChangeEvent;
 				moves.push(move);
 			}
 		}

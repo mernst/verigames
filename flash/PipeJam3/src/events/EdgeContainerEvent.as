@@ -6,6 +6,7 @@ package events
 	import scenes.game.display.GameEdgeSegment;
 	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
+	import starling.events.Touch;
 	
 	public class EdgeContainerEvent extends Event 
 	{
@@ -24,8 +25,9 @@ package events
 		public var container:GameEdgeContainer;
 		public var segmentIndex:int;
 		public var jointIndex:int;
+		public var touches:Vector.<Touch>;
 		
-		public function EdgeContainerEvent(type:String, _segment:GameEdgeSegment = null, _joint:GameEdgeJoint = null) 
+		public function EdgeContainerEvent(type:String, _segment:GameEdgeSegment = null, _joint:GameEdgeJoint = null, _touches:Vector.<Touch> = null) 
 		{
 			super(type, true);
 			segment = _segment;
@@ -38,6 +40,8 @@ package events
 			} else {
 				trace("WARNING: Event expects edge segment or joint with a parent edge container.");
 			}
+			touches = _touches;
+			if (touches == null) touches = new Vector.<Touch>();
 		}
 		
 		private static function getEdgeContainerParent(comp:GameComponent):GameEdgeContainer

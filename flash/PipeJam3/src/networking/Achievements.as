@@ -6,7 +6,7 @@ package networking
 	import flash.utils.Dictionary;
 	
 	import scenes.game.display.World;
-	import events.EdgeSetChangeEvent;
+	import events.WidgetChangeEvent;
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
@@ -143,7 +143,7 @@ package networking
 			if(PlayerValidation.playerLoggedIn != true)
 				return;
 			
-			if(type == EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED)
+			if(type == WidgetChangeEvent.LEVEL_WIDGET_CHANGED)
 			{
 				if(value == 1)
 				{
