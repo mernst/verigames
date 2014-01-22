@@ -734,7 +734,7 @@ package scenes.game.display
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
 							active_level.updateLayoutObj(this);
-							System.setClipboard(active_level.m_levelLayoutObjWrapper.toString());
+							System.setClipboard(JSON.stringify(active_level.m_levelLayoutObjWrapper));
 						}
 						break;
 					case 66: //'b' for load Best scoring config
@@ -747,7 +747,7 @@ package scenes.game.display
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
 							active_level.updateAssignmentsObj();
-							System.setClipboard(active_level.m_levelAssignmentsObjWrapper.toString());
+							System.setClipboard(JSON.stringify(active_level.m_levelAssignmentsObjWrapper));
 						}
 						break;
 					case 65: //'a' for copy of ALL (world)

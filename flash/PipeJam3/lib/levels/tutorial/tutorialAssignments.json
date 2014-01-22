@@ -27,4 +27,20 @@
 "var:2":{},
 "var:3":{}}
 }
+,
+{"id": "Links",
+"qid": 3,
+"targetScore": 380,
+"assignments":{
+"var:0":{},
+"var:1":{},
+"var:2":{}}
+}
+,
+{"id": "Jams",
+"qid": 4,
+"targetScore": 100,
+"assignments":{
+"var:0":{}}
+}
 ]}

@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<graph id="world">
-  <level id="Jams" qid="6" targetScore="150">
-    <box id="Clashes1" width="wide" editable="true"/>
-    <box id="Clashes2" width="narrow" editable="false"/>
-  </level>
-</graph>

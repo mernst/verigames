@@ -17,7 +17,7 @@ package constraints
 		private var m_value:ConstraintValue;
 		public var constraint:Constraint;
 		
-		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean = false, _scoringConfig:ConstraintScoringConfig = null, _possibleKeyfors:Vector.<String> = null, _keyforVals:Vector.<String> = null)
+		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig, _possibleKeyfors:Vector.<String> = null, _keyforVals:Vector.<String> = null)
 		{
 			id = _id;
 			m_value = _val;

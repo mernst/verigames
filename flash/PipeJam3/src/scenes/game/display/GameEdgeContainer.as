@@ -1,5 +1,7 @@
 package scenes.game.display
 {
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import starling.display.DisplayObject;
@@ -383,7 +385,7 @@ package scenes.game.display
 			errorContainer.addChild(m_errorParticleSystem);
 			
 			if (errorTextBubble == null) {
-				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, null, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
+				errorTextBubble = new TextBubble(Math.round(graphConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY)).toString(), 16, ERROR_COLOR, errorContainer, null, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
 			}
 			if (m_hidingErrorText) {
 				errorTextBubble.hideText();
@@ -1055,21 +1057,6 @@ package scenes.game.display
 			}
 			innerFromBoxSegment.m_isDirty = true;
 			innerToBoxSegment.m_isDirty = true;
-		}
-		
-		override public function getScore():Number
-		{
-			return hasError() ? Constants.ERROR_POINTS : 0;
-		}
-		
-		override public function getWideScore():Number
-		{
-			return getScore();
-		}
-		
-		override public function getNarrowScore():Number
-		{
-			return getScore();
 		}
 		
 		public function onEnterFrame():void

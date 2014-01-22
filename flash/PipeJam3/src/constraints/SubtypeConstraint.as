@@ -3,9 +3,9 @@ package constraints
 
 	public class SubtypeConstraint extends Constraint 
 	{
-		public function SubtypeConstraint(_lhs:ConstraintVar, _rhs:ConstraintVar, _customScoring:ConstraintScoringConfig = null) 
+		public function SubtypeConstraint(_lhs:ConstraintVar, _rhs:ConstraintVar, _scoring:ConstraintScoringConfig) 
 		{
-			super(Constraint.SUBTYPE, _lhs, _rhs, _customScoring);
+			super(Constraint.SUBTYPE, _lhs, _rhs, _scoring);
 		}
 		
 		public override function isSatisfied():Boolean

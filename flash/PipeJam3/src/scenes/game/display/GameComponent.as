@@ -58,21 +58,6 @@ package scenes.game.display
 			boundingBox.y += delta.y;
 		}
 		
-		public function getScore():Number
-		{
-			return m_isWide ? getWideScore() : getNarrowScore();
-		}
-		
-		public function getWideScore():Number
-		{
-			return 0;
-		}
-		
-		public function getNarrowScore():Number
-		{
-			return 0;
-		}
-		
 		public function hasError():Boolean
 		{
 			return m_hasError;

@@ -21,14 +21,9 @@ package scenes.game.display
 		public static const WIDGET_PRACTICE_TUTORIAL:String = "widgetpractice";
 		public static const LOCKED_TUTORIAL:String = "locked";
 		public static const LINKS_TUTORIAL:String = "links";
-		public static const PASSAGE_TUTORIAL:String = "passage";
-		public static const CLASH_TUTORIAL:String = "clash";
+		public static const JAMS_TUTORIAL:String = "jams";
 		public static const WIDEN_TUTORIAL:String = "widen";
-		public static const PINCH_TUTORIAL:String = "pinch";
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
-		public static const SPLIT_TUTORIAL:String = "split";
-		public static const MERGE_TUTORIAL:String = "merge";
-		public static const SPLIT_MERGE_PRACTICE_TUTORIAL:String = "splitmergepractice";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
@@ -36,8 +31,6 @@ package scenes.game.display
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
 		public static const SKILLS_B_TUTORIAL:String = "skillsb";
 		// Not currently used:
-		public static const END_TUTORIAL:String = "end";
-		public static const NARROW_TUTORIAL:String = "narrow";
 		public static const COLOR_TUTORIAL:String = "color";
 		
 		private var m_tutorialTag:String;
@@ -55,24 +48,15 @@ package scenes.game.display
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case PINCH_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
-				// Not used:
-				case END_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
 					break;
 				default:
 					throw new Error("Unknown Tutorial encountered: " + m_tutorialTag);
@@ -137,9 +121,9 @@ package scenes.game.display
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, widthTxt:String;
 			switch (m_tutorialTag) {
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 					if (evt.widgetChanged.isWide()) {
-						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("var_0 -> type_0__var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -147,10 +131,10 @@ package scenes.game.display
 					break;
 				case LINKS_TUTORIAL:
 					var edgeId:String;
-					if (evt.widgetChanged.m_id == "SatisfyBoxes1") {
-						edgeId = "e1__OUT__";
-					} else if (evt.widgetChanged.m_id == "SatisfyBoxes3") {
-						edgeId = "e3__OUT__";
+					if (evt.widgetChanged.m_id == "var_1") {
+						edgeId = "var_1 -> type_1__var_1";
+					} else if (evt.widgetChanged.m_id == "var_0") {
+						edgeId = "var_0 -> type_1__var_0";
 					} else {
 						break;
 					}
@@ -164,49 +148,6 @@ package scenes.game.display
 					if (evt.widgetChanged.m_id == "WidenBoxes10") {
 						if (!evt.widgetChanged.isWide()) {
 							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
-							tips.push(tip);
-						}
-						m_currentToolTipsText = tips;
-						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
-					}
-					break;
-				case SPLIT_TUTORIAL:
-					if (evt.widgetChanged.m_id == "Splits1") {
-						widthTxt = evt.widgetChanged.isWide() ? "Wide" : "Narrow";
-						tip = new TutorialManagerTextInfo(widthTxt + " Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
-						tips.push(tip);
-						tip = new TutorialManagerTextInfo(widthTxt + " Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
-						tips.push(tip);
-						m_currentToolTipsText = tips;
-						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
-					}
-					break;
-				case MERGE_TUTORIAL:
-					if ((evt.widgetChanged.m_id == "Merges1") || (evt.widgetChanged.m_id == "Merges2")) {
-						if (evt.widgetChanged.orderedOutgoingEdges.length != 1) break;
-						if (evt.widgetChanged.orderedOutgoingEdges[0].m_toNode == null) break;
-						if (evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges.length != 2) break;
-						var edge1:GameEdgeContainer = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[0];
-						var edge2:GameEdgeContainer = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[1];
-						if (edge2.m_id == "e1__OUT__") {
-							edge1 = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[1];
-							edge2 = evt.widgetChanged.orderedOutgoingEdges[0].m_toNode.orderedIncomingEdges[0];
-						}
-						var edge1Wide:Boolean = edge1.isWide();
-						var edge2Wide:Boolean = edge2.isWide();
-						if ((edge1.m_id != "e1__OUT__") || (edge2.m_id != "e2__OUT__")) break;
-						if (evt.widgetChanged.m_id == "Merges1") edge1Wide = evt.widgetChanged.isWide();
-						if (evt.widgetChanged.m_id == "Merges2") edge2Wide = evt.widgetChanged.isWide();
-						if (edge1Wide || edge2Wide) {
-							if (edge1Wide) {
-								tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
-								tips.push(tip);
-							}
-							if (edge2Wide) {
-								tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e2__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
-								tips.push(tip);
-							}
-							tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e3__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
 							tips.push(tip);
 						}
 						m_currentToolTipsText = tips;
@@ -247,15 +188,8 @@ package scenes.game.display
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 					return false;
 				case ZOOM_PAN_TUTORIAL:
@@ -264,7 +198,6 @@ package scenes.game.display
 				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
-				case END_TUTORIAL:
 					return true;
 			}
 			return true;
@@ -277,15 +210,8 @@ package scenes.game.display
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
@@ -294,7 +220,6 @@ package scenes.game.display
 				case SKILLS_A_TUTORIAL:
 					return false;
 				case SKILLS_B_TUTORIAL:
-				case END_TUTORIAL:
 					return true;
 			}
 			return true;
@@ -302,20 +227,14 @@ package scenes.game.display
 		
 		public function getLayoutFixed():Boolean
 		{
+			return false;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 					return true;
@@ -324,7 +243,6 @@ package scenes.game.display
 				case SKILLS_A_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
 				case LAYOUT_TUTORIAL:
-				case END_TUTORIAL:
 					return false;
 			}
 			return false;
@@ -334,32 +252,24 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+					return 0.9;
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
-					return 0.7;
+				case LINKS_TUTORIAL:
+					return 1.0;
 				case ZOOM_PAN_TUTORIAL:
 					return 3.0;
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 					return 0.6;
-				case PASSAGE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return 1.25;
 				case SKILLS_A_TUTORIAL:
 					return 1.4;
-				case CLASH_TUTORIAL:
-				case MERGE_TUTORIAL:
+				case JAMS_TUTORIAL:
 					return 1.1;
-				case LINKS_TUTORIAL:
-				case PINCH_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
-				case END_TUTORIAL:
 					return 1.0;
 			}
 			return 1.0;
@@ -368,37 +278,20 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
 				case GROUP_SELECT_TUTORIAL:
 					return new Point(0, 11);// move down by 11px
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
 					return new Point(15, -4);//move right 15px (pan left)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
 				case SKILLS_B_TUTORIAL:
 					return new Point(0, -25);// move up by 25px
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return new Point(0, -5);// move up by 5px
-				case PINCH_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
 					return new Point(0, -15);// move up by 15px
-				case MERGE_TUTORIAL:
-					return new Point(-5, 0);//move left 5px
 				case ZOOM_PAN_TUTORIAL:
 					return new Point(40, -10);// move right 40px, up by 10px
-				case CLASH_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case CREATE_JOINT_TUTORIAL:
-				case END_TUTORIAL:
-					return new Point();
 			}
 			return new Point();
 		}
@@ -458,48 +351,18 @@ package scenes.game.display
 					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("var_1"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
-				case CLASH_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+				case JAMS_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case LINKS_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("var_0 -> type_1__var_0"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("e3__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
-					tips.push(tip);
-					break;
-				case PASSAGE_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Start Passage", null, pointToPassage("e33__OUT__"), NineSliceBatch.TOP_RIGHT, NineSliceBatch.BOTTOM_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Thru Passage", null, pointToPassage("e32__OUT__"), NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("End Passage", null, pointToPassage("e53__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("var_1 -> type_1__var_1"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
 					tips.push(tip);
 					break;
 				case WIDEN_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
-					tips.push(tip);
-					break;
-				case PINCH_TUTORIAL:
-					//tip = new TutorialManagerTextInfo("Locked\nGray\nPassage", null, pointToPassage("e20__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
-					//tips.push(tip);
-					tip = new TutorialManagerTextInfo("Unlocked\nBlue\nPassage", null, pointToPassage("e30__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Locked\nGray\nPassage", null, pointToPassage("e40__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
-					tips.push(tip);
-					break;
-				case SPLIT_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
-					tips.push(tip);
-					break;
-				case MERGE_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e2__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e3__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case LAYOUT_TUTORIAL:
@@ -511,20 +374,6 @@ package scenes.game.display
 						pointToNode("Layout1"),
 						NineSliceBatch.BOTTOM_LEFT, null);
 					tips.push(tip);
-					break;
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
-				case CREATE_JOINT_TUTORIAL:
-				case SKILLS_A_TUTORIAL:
-				case SKILLS_B_TUTORIAL:
-				// Not used:
-				case END_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
 					break;
 			}
 			return tips;
@@ -564,21 +413,13 @@ package scenes.game.display
 						null,
 						pointToEdge("e1__OUT__"),
 						NineSliceBatch.LEFT, null);
-				case PASSAGE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Links can begin in, end in, or go\n" +
-						"thru PASSAGES. Change a Widget's\n" +
-						"color to change its Passages.",
-						null,
-						pointToPassage("e32__IN__"),
-						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
-				case CLASH_TUTORIAL:
+				case JAMS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"JAMS happen when wide Links enter\n" +
-						"narrow Passages. Each Jam penalizes\n" +
-						"your score by " + Constants.ERROR_POINTS.toString() + " points.",
+						"narrow Widgets. This Jam penalizes\n" +
+						"your score by " + 100 /* TODO: get from level*/ + " points.",
 						null,
-						pointToClash("e2__IN__"),
+						pointToClash("var_0 -> type_0__var_0"),
 						NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
 				case WIDEN_TUTORIAL:
 					return null;/* new TutorialManagerTextInfo(
@@ -587,39 +428,10 @@ package scenes.game.display
 						null,
 						null,
 						null, null);*/
-				case PINCH_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"GRAY Passages are LOCKED and\n" +
-						"won't change width even if\n" +
-						"their Widget is changed.",
-						null,
-						pointToPassage("e20__IN__"),
-						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Sometimes the best score still has Jams.\n" +
 						"Try different configurations to improve your score!",
-						null,
-						null,
-						null, null);
-				case SPLIT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"When a link is SPLIT, the output\n" +
-						"Links will match the input Link.",
-						null,
-						pointToNode("n10__IN__0"),
-						NineSliceBatch.TOP_RIGHT, null);
-				case MERGE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"When Links MERGE, the output\n" +
-						"Link will be wide if any\n" +
-						"input Link is wide.",
-						null,
-						pointToNode("n123"),
-						NineSliceBatch.RIGHT, null);
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Practice Splits and Merges.",
 						null,
 						null,
 						null, null);
@@ -667,19 +479,6 @@ package scenes.game.display
 						null,
 						NineSliceBatch.TOP_LEFT, null);
 				// The following are not currently in use:
-				case END_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Optimize your first real level!",
-						null,
-						null, 
-						null, null);
-				case NARROW_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Click the upper Widgets to narrow their Links\n" +
-						"and fix the Jams.",
-						null,
-						null,
-						null, null);
 				case COLOR_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Some Widgets want to be a certain color. Match\n" +

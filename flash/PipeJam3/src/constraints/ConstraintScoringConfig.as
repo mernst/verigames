@@ -38,6 +38,13 @@ package constraints
 			for (var childKey:String in childScoringConfig.scoringDict) mergedScoring.updateScoringValue(childKey, childScoringConfig.getScoringValue(childKey));
 			return mergedScoring;
 		}
+		
+		public function clone():ConstraintScoringConfig
+		{
+			var cloneScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
+			for (var key:String in scoringDict) cloneScoring.updateScoringValue(key, getScoringValue(key));
+			return cloneScoring;
+		}
 	}
 
 }

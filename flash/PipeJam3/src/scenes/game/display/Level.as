@@ -131,9 +131,6 @@ package scenes.game.display
 		/** Most recent score of the player */
 		private var m_prevScore:int = 0;
 		
-		/** Base Score = # of lines * possible conflict points */
-		private var m_baseScore:int = 0;
-		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
 		public var original_level_name:String;
@@ -603,8 +600,12 @@ package scenes.game.display
 				var currentLayoutX:Number = (gameNode.x + /*m_boundingBox.x*/ + gameNode.boundingBox.width/2) / Constants.GAME_SCALE;
 				m_levelLayoutObj["layout"]["vars"][varId]["x"] = currentLayoutX.toFixed(2);
 				var currentLayoutY:Number = (gameNode.y + /*m_boundingBox.y*/ + gameNode.boundingBox.height/2) / Constants.GAME_SCALE;
-				m_levelLayoutObj["layout"]["vars"][varId]["x"] = currentLayoutY.toFixed(2);
-				m_levelLayoutObj["layout"]["vars"][varId]["visible"] = (!gameNode.hidden).toString();
+				m_levelLayoutObj["layout"]["vars"][varId]["y"] = currentLayoutY.toFixed(2);
+				if (gameNode.hidden) {
+					m_levelLayoutObj["layout"]["vars"][varId]["visible"] = "false";
+				} else {
+					delete m_levelLayoutObj["layout"]["vars"][varId]["visible"];
+				}
 			}
 			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"]) {
 				if (!edgeContainerDictionary.hasOwnProperty(constraintId)) {
@@ -1490,7 +1491,6 @@ package scenes.game.display
 		public function get currentScore():int { return m_currentScore; }
 		public function get bestScore():int { return m_bestScore; }
 		public function get prevScore():int { return m_prevScore; }
-		public function get baseScore():int { return m_baseScore; }
 		
 		public function resetBestScore():void
 		{
@@ -1508,7 +1508,6 @@ package scenes.game.display
 				trace("New best score: " + m_bestScore);
 				fillAssignmentsObj(m_levelBestScoreAssignmentsObj);
 			}
-			m_baseScore = Constants.POINTS_PER_EDGE * m_edgeList.length;
 			m_conflictEdgesDirty = true;
 		}
 		
