@@ -63,10 +63,10 @@ package scenes.game.display
 			return m_hasError;
 		}
 		
-		public function componentSelected(isSelected:Boolean):void
+		public function componentSelected(_isSelected:Boolean):void
 		{
+			isSelected = _isSelected;
 			m_isDirty = true;
-			isSelected = isSelected;
 		}
 		
 		public function hideComponent(hide:Boolean):void

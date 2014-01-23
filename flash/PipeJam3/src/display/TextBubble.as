@@ -269,6 +269,7 @@ package display
 					case NineSliceBatch.BOTTOM_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
+						break;
 					case NineSliceBatch.BOTTOM_RIGHT:
 						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;

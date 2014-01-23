@@ -43,4 +43,57 @@
 "assignments":{
 "var:0":{}}
 }
+,
+{"id": "Widen",
+"qid": 5,
+"targetScore": 400,
+"assignments":{
+"var:0":{},
+"var:1":{},
+"var:2":{},
+"var:3":{}}
+}
+,
+{"id": "Optimize",
+"qid": 6,
+"targetScore": 620,
+"assignments":{
+"var:0":{},
+"var:1":{},
+"var:2":{},
+"var:3":{}}
+}
+,
+{"id": "ZoomPan",
+"qid": 7,
+"targetScore": 200,
+"assignments":{
+"var:0":{},
+"var:1":{}}
+}
+,
+{"id": "Layout",
+"qid": 8,
+"targetScore": 50,
+"assignments":{
+"var:0":{},
+"var:1":{},
+"var:2":{},
+"var:3":{},
+"var:4":{}}
+}
+,
+{"id": "GroupSelect",
+"qid": 9,
+"assignments":{
+"var:0":{},
+"var:1":{},
+"var:2":{}}
+}
+,
+{"id": "CreateJoint",
+"qid": 10,
+"assignments":{
+"var:0":{}}
+}
 ]}

@@ -151,7 +151,7 @@ package constraints
 		
 		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
 		{
-			var pattern:RegExp = /(var|type):(.*) ?(<|=)= ?(var|type):(.*)/i;
+			var pattern:RegExp = /(var|type):(.*) (<|=)= (var|type):(.*)/i;
 			var result:Object = pattern.exec(_str);
 			if (result == null) throw new Error("Invalid constraint string found: " + _str);
 			if (result.length != 6) throw new Error("Invalid constraint string found: " + _str);
@@ -164,9 +164,9 @@ package constraints
 			var lsuffix:String = "";
 			var rsuffix:String = "";
 			if (lhsType == VAR && rhsType == TYPE) {
-				rsuffix = "__" + VAR + "_" + lhsType;
+				rsuffix = "__" + VAR + "_" + lhsId;
 			} else if (rhsType == VAR && lhsType == TYPE) {
-				lsuffix = "__" + VAR + "_" + rhsType;
+				lsuffix = "__" + VAR + "_" + rhsId;
 			} else if (rhsType == TYPE && lhsType == TYPE) {
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}

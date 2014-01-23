@@ -640,13 +640,13 @@ package scenes.game.display
 		//update current constraint info based on node constraints
 		public function updateAssignmentsObj():void
 		{
-			fillAssignmentsObj(m_levelAssignmentsObj);
+			m_levelAssignmentsObj = createAssignmentsObj();
 			m_levelAssignmentsObjWrapper = { "assignments": m_levelAssignmentsObj, "id": original_level_name };
 		}
 		
-		private function fillAssignmentsObj(assignmentsObj:Object):void
+		private function createAssignmentsObj():Object
 		{
-			assignmentsObj = { "id": original_level_name, "assignments": { } };
+			var assignmentsObj:Object = { "id": original_level_name, "assignments": { } };
 			for each(var node:GameNode in m_nodeList)
 			{
 				if (node.constraintVar.constant) continue;
@@ -660,6 +660,7 @@ package scenes.game.display
 			//{
 				// We were outputting editable, hasJam, id, etc but doesn't seem necessary
 			//}
+			return assignmentsObj;
 		}
 		
 		override public function dispose():void
@@ -1506,7 +1507,7 @@ package scenes.game.display
 			if (recordBestScore && (m_currentScore > m_bestScore)) {
 				m_bestScore = m_currentScore;
 				trace("New best score: " + m_bestScore);
-				fillAssignmentsObj(m_levelBestScoreAssignmentsObj);
+				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 			}
 			m_conflictEdgesDirty = true;
 		}
