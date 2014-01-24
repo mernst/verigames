@@ -38,7 +38,7 @@ package networking
 		public static var DELETE_SAVED_LEVEL:int = 9;
 		public static var REPORT_PLAYER_RATING:int = 12;
 		public static var REPORT_LEADERBOARD_SCORE:int = 13;
-				
+		
 		public static var USE_LOCAL:int = 1;
 		public static var USE_DATABASE:int = 2;
 		public static var USE_URL:int = 3;
@@ -46,13 +46,13 @@ package networking
 		static public var GET_COMPLETED_LEVELS_REQUEST:String = "/level/completed";
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
-	
+		
 		static public var levelInfoVector:Vector.<Object> = null;
 		static public var completedLevelVector:Vector.<Object> = null;
 		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
 		static public var numLevels:int = 10;
-
+		
 		protected var m_callback:Function;
 		protected var fzip:FZip;
 		
@@ -65,7 +65,7 @@ package networking
 		public var m_levelSubmitted:Boolean = false;
 		
 		public static var getFileURL:String = "http://flowjam.verigames.com/game/interop.php?function=getFile";
-
+		
 		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
 		{
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
@@ -86,7 +86,7 @@ package networking
 			
 			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(SAVE_LAYOUT, null, encodedLayoutDescription, _layoutAsString);
+			fileHandler.sendMessage(SAVE_LAYOUT, callback, encodedLayoutDescription, _layoutAsString);
 		}
 		
 		static public function deleteSavedLevel(_levelIDString:String):void
@@ -95,7 +95,7 @@ package networking
 			fileHandler.sendMessage(DELETE_SAVED_LEVEL, null, _levelIDString);
 		}
 		
-
+		
 		
 		static public function reportPlayerPreference(preference:String):void
 		{
@@ -169,7 +169,7 @@ package networking
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
-//				fileName = "tutorial";
+				//				fileName = "tutorial";
 			}
 			if (PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
 			{
@@ -193,7 +193,7 @@ package networking
 					fileName = PipeJamGame.levelInfo.m_baseFileName;
 				else
 					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
-
+				
 				
 				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_constraintsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
@@ -231,7 +231,7 @@ package networking
 			}
 		}
 		
-/************************ End of static functions *********************************/
+		/************************ End of static functions *********************************/
 		
 		public function GameFileHandler(callback:Function =  null)
 		{
@@ -252,7 +252,7 @@ package networking
 				case USE_DATABASE:
 				{
 					
-				//	fzip.load(new URLRequest(fileName));
+					//	fzip.load(new URLRequest(fileName));
 					loader.addEventListener(flash.events.Event.COMPLETE, fileLoadCallback);
 					loader.load(new URLRequest(fileName));
 					break;
@@ -305,14 +305,14 @@ package networking
 					}
 				}
 				m_callback(xmlArray);
-
+				
 			}
 			else
 			{
 				zipFile = fzip.getFileAt(0);
 				var containerXML:XML = new XML(zipFile.content);
 				trace(zipFile.filename);
-
+				
 				if(containerXML.world.length()>0 &&
 					containerXML.constraints.length()>0 &&
 					containerXML.layout.length()>0)
@@ -321,7 +321,7 @@ package networking
 					containerArray[0] = containerXML.world[0];
 					containerArray[1] = containerXML.constraints[0];
 					containerArray[2] = containerXML.layout[0];
-	
+					
 					m_callback(containerArray);
 				}
 				else
@@ -400,13 +400,15 @@ package networking
 			var messages:Array = new Array (); 
 			var data_id:String;
 			
-			if(callback == null)
+			if(m_callback == null && m_callback == null)
 				callback = defaultCallback;
+			else if (callback == null)
+				callback = m_callback;
 			
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					messages.push ({'playerID': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
 					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;

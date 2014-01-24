@@ -348,7 +348,7 @@ def saveLayout(messageData, fileContents):
 	test = fs.put(decoded)
 	messageObj[0]["layoutID"] = str(test)
 	collection.insert(messageObj)
-	return '///success'
+	return 'success' #no '/' as this path contains a non-json callback
 
 def saveLevel(messageData, fileContents):
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -377,11 +377,20 @@ def submitLevel(messageData, fileContents):
 #pass url to localhost:3000
 def passURL(url):
 	resp = requests.get('http://localhost:3000' + url)
-	return resp.json()
+	responseString = resp.json()
+	if len(responseString ) != 0:
+		return responseString 
+	else:
+		return '///success'
 
 def passURLPOST(url, postdata):
 	resp = requests.post('http://localhost:3000' + url, data=postdata, headers = {'content-type': 'application/json'})
-	return resp.json()
+	responseString = resp.json()
+	if len(responseString ) != 0:
+		return responseString 
+	else:
+		return '///success'
+
 	
 #CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
 if sys.argv[1] == "overallLeaders":
