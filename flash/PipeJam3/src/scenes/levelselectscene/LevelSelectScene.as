@@ -541,5 +541,4 @@ package scenes.levelselectscene
 		}
 	}
 }
-import scenes.levelselectscene;
 
