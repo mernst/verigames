@@ -1040,10 +1040,10 @@ package scenes.game.display
 			}
 		}
 		
-		override public function componentSelected(isSelected:Boolean):void
+		override public function componentSelected(_isSelected:Boolean):void
 		{
 			m_isDirty = true;
-			isSelected = isSelected;
+			isSelected = _isSelected;
 		}
 		
 		//only use if the container it's self draws specific items.

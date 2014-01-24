@@ -250,6 +250,10 @@ package scenes.game.display
 		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
+				case JAMS_TUTORIAL:
+					return 1.1;
+				case OPTIMIZE_TUTORIAL:
+					return 1.35;
 				case ZOOM_PAN_TUTORIAL:
 					return 3.0;
 				case LAYOUT_TUTORIAL:
@@ -257,10 +261,8 @@ package scenes.game.display
 					return 0.6;
 				case SKILLS_A_TUTORIAL:
 					return 1.4;
-				case JAMS_TUTORIAL:
-					return 1.1;
-				case OPTIMIZE_TUTORIAL:
-					return 1.35;
+				case SKILLS_B_TUTORIAL:
+					return 3.0;
 			}
 			return 1.0;
 		}
@@ -268,22 +270,22 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
-				case OPTIMIZE_TUTORIAL:
-					return new Point(0, -5);// move up by 5px (pan down)
-				case LAYOUT_TUTORIAL:
-					return new Point(0, 5);// move down by 5px (pan up)
-				case GROUP_SELECT_TUTORIAL:
-					return new Point(0, 25);// move down by 25px
 				case LINKS_TUTORIAL:
 					return new Point(15, -4);//move right 15px (pan left)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
-				case SKILLS_B_TUTORIAL:
-					return new Point(0, -25);// move up by 25px
-				case SKILLS_A_TUTORIAL:
-					return new Point(0, -15);// move up by 15px
+				case OPTIMIZE_TUTORIAL:
+					return new Point(0, -5);// move up by 5px (pan down)
 				case ZOOM_PAN_TUTORIAL:
-					return new Point(-10, 10);// move left 10px, down 10px
+					return new Point( -10, 10);// move left 10px, down 10px
+				case LAYOUT_TUTORIAL:
+					return new Point(0, 5);// move down by 5px (pan up)
+				case GROUP_SELECT_TUTORIAL:
+					return new Point(0, 25);// move down by 25px
+				case SKILLS_A_TUTORIAL:
+					return new Point(0, -8);// move up by 8px
+				case SKILLS_B_TUTORIAL:
+					return new Point(75, 75);// pan left 75 px, up by 75px
 			}
 			return new Point();
 		}

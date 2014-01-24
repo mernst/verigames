@@ -12,8 +12,8 @@ FILES = [
 	'Layout',
 	'GroupSelect',
 	'CreateJoint',
-	# 'SkillsA',
-	# 'SkillsB',
+	'SkillsA',
+	'SkillsB',
 ]
 
 def combineLevels(files):
