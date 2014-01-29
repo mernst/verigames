@@ -47,8 +47,7 @@ package dialogs
 		private var enjoymentStarsBackground:Image;
 		private var difficultyStarsBackground:Image;
 		
-		public var enjoymentRating:Number = 2.5;
-		public var difficultyRating:Number = 2.5;
+		public var enjoymentRating:Number = 0.5;
 		
 		public function SubmitLevelDialog(_width:Number, _height:Number)
 		{
@@ -112,14 +111,6 @@ package dialogs
 			
 			if(returnVal != -1)
 				enjoymentRating = returnVal;
-		}
-		
-		private function overDifficultyStars(e:TouchEvent):void
-		{
-			var returnVal:Number = overStarsDelta(e, difficultyStarsBackground, difficultyQuad);
-			
-			if(returnVal != -1)
-				difficultyRating = returnVal;			 
 		}
 		
 		private function overStarsDelta(e:TouchEvent, obj:Image, quad:Quad):Number

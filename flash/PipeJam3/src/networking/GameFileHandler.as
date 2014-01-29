@@ -86,7 +86,7 @@ package networking
 			
 			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(SAVE_LAYOUT, null, encodedLayoutDescription, _layoutAsString);
+			fileHandler.sendMessage(SAVE_LAYOUT, callback, encodedLayoutDescription, _layoutAsString);
 		}
 		
 		static public function deleteSavedLevel(_levelIDString:String):void
@@ -400,13 +400,15 @@ package networking
 			var messages:Array = new Array (); 
 			var data_id:String;
 			
-			if(callback == null)
+			if(m_callback == null && m_callback == null)
 				callback = defaultCallback;
+			else if (callback == null)
+				callback = m_callback;
 			
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					messages.push ({'playerID': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
 					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;

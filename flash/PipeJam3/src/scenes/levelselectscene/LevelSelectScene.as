@@ -382,7 +382,7 @@ package scenes.levelselectscene
 			for(i = 0; i<GameFileHandler.completedLevelVector.length; i++)
 			{
 				var completedLevel:Object = GameFileHandler.completedLevelVector[i];
- 				completedLevelDictionary[completedLevel.xmlID] = completedLevel;
+ 				completedLevelDictionary[completedLevel.levelID] = completedLevel;
 			}
 
 			for(i = 0; i<GameFileHandler.levelInfoVector.length; i++)
