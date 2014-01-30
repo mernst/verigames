@@ -96,7 +96,7 @@ package display
 			
 			// text field
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, size.x - 2 * m_inset, size.y - 2 * m_inset, m_fontSize, _fontColor);
-			if (_outlineWeight > 0) TextFactory.getInstance().updateFilter(textField, new GlowFilter(_outlineColor, 1, _outlineWeight, _outlineWeight, 4 * _outlineWeight));
+			if (_outlineWeight > 0 && !PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, new GlowFilter(_outlineColor, 1, _outlineWeight, _outlineWeight, 4 * _outlineWeight));
 			textField.x = m_inset;
 			textField.y = m_inset;
 			m_textContainer.addChild(textField);

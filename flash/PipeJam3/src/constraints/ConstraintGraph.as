@@ -207,7 +207,7 @@ package constraints
 			} else if ((rhsResult[1] as String) == VAR && (lhsResult[1] as String) == TYPE) {
 				lsuffix = "__" + VAR + "_" + (rhsResult[2] as String);
 			} else if ((lhsResult[1] as String) == TYPE && (rhsResult[1] as String) == TYPE) {
-				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_constraintJson));
+				//trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_constraintJson));
 			}
 			
 			var lhs:ConstraintVar = parseConstraintSide(lhsResult[1] as String, lhsResult[2] as String, lsuffix, _variableDictionary, _defaultVal, _defaultScoring.clone());

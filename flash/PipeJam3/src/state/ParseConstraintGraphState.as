@@ -20,12 +20,17 @@ package state
 		
 		public override function stateLoad():void {
 			worldGraphsDict = new Dictionary();
-			for (var level_index:int = 0; level_index < worldObj["levels"].length; level_index++) {
-				var levelObj:Object = worldObj["levels"][level_index];
-				var my_task:ParseConstraintGraphTask = new ParseConstraintGraphTask(levelObj, worldGraphsDict);
-				tasksVector.push(my_task);
+			var levelsArr:Array = worldObj["levels"];
+			if (levelsArr) {
+				for (var level_index:int = 0; level_index < worldObj["levels"].length; level_index++) {
+					var levelObj:Object = worldObj["levels"][level_index];
+					var my_task:ParseConstraintGraphTask = new ParseConstraintGraphTask(levelObj, worldGraphsDict);
+					tasksVector.push(my_task);
+				}
+			} else {
+				var task:ParseConstraintGraphTask = new ParseConstraintGraphTask(worldObj, worldGraphsDict);
+				tasksVector.push(task);
 			}
-			
 			super.stateLoad();
 		}
 		

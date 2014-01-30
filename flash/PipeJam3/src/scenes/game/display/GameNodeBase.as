@@ -70,7 +70,6 @@ package scenes.game.display
 			// Reset positions to -1
 			for (i = 0; i < orderedOutgoingEdges.length; i++) orderedOutgoingEdges[i].outgoingEdgePosition = -1;
 			for (j = 0; j < orderedIncomingEdges.length; j++) orderedIncomingEdges[j].incomingEdgePosition = -1;
-			var extEdge:GameEdgeContainer;
 			for (i = 0; i < orderedOutgoingEdges.length; i++)
 			{
 				// m_outgoingEdges have been ordered from min X to 
@@ -92,13 +91,6 @@ package scenes.game.display
 					{
 						oedge.outgoingEdgePosition = currentPos;
 						m_edgePortArray[currentPos] = oedge.m_fromPortID;
-						extEdge = getExtensionEdge(oedge);
-						//trace("oedge:" + oedge.m_id + " assigned:" + currentPos);
-						if (extEdge) {
-							extEdge.incomingEdgePosition = currentPos;
-							// TODO: adjust end position if doesn't match oedge - this would correct previously
-							// laid out levels where this inconsistency now exists (SkillsB, for example)
-						}
 						currentPos++;
 						break;
 					}
@@ -106,12 +98,6 @@ package scenes.game.display
 					{
 						iedge.incomingEdgePosition = currentPos;
 						m_edgePortArray[currentPos] = iedge.m_toPortID;
-						extEdge = getExtensionEdge(iedge);
-						//trace("iedge:" + iedge.m_id + " assigned:" + currentPos);
-						if (extEdge) {
-							extEdge.outgoingEdgePosition = currentPos;
-							if (extEdge == oedge) break;
-						}
 						currentPos++;
 					}
 				}
@@ -120,10 +106,6 @@ package scenes.game.display
 				{
 					oedge.outgoingEdgePosition = currentPos;
 					m_edgePortArray[currentPos] = oedge.m_fromPortID;
-					extEdge = getExtensionEdge(oedge);
-					if (extEdge) {
-						extEdge.incomingEdgePosition = currentPos;
-					}
 					//trace("leftover oedge:" + oedge.m_id + " assigned:" + currentPos);
 					currentPos++;
 				}
@@ -137,10 +119,6 @@ package scenes.game.display
 				{
 					edge.incomingEdgePosition = currentPos;
 					m_edgePortArray[currentPos] = edge.m_toPortID;
-					extEdge = getExtensionEdge(edge);
-					if (extEdge) {
-						extEdge.outgoingEdgePosition = currentPos;
-					}
 					//trace("edge:" + edge.m_id + " assigned:" + currentPos);
 					currentPos++;
 				}
@@ -427,8 +405,8 @@ package scenes.game.display
 			
 			var nextEdgeIndex:int = getNextEdgePosition(edgeIndex, incrementing);
 			var nextEdge:GameEdgeContainer = edgeAt(nextEdgeIndex);
-			//trace("edgeGlobalPtX:" + edgeGlobalPt.x + " savedEdgeGlobalPtX:" + savedEdgeGlobalPt.x + "edgeIndex:" + edgeIndex + " nextEdgeIndex:" + nextEdgeIndex);
 			if (nextEdge == null) trace("nextEdge == null");
+			//trace("edgeGlobalPtX:" + edgeGlobalPt.x + " savedEdgeGlobalPtX:" + savedEdgeGlobalPt.x + "edgeIndex:" + edgeIndex + " nextEdgeIndex:" + nextEdgeIndex);
 			if(nextEdge)
 			{
 				var isNextEdgeOutgoing:Boolean = (nextEdge.m_fromNode == this);
@@ -478,26 +456,11 @@ package scenes.game.display
 			return -1;
 		}
 		
-		public function getExtensionEdge(edge:GameEdgeContainer):GameEdgeContainer
-		{
-			var isOutgoing:Boolean = (edge.m_fromNode == this);
-			if (isOutgoing) {
-				if (m_incomingPortsToEdgeDict.hasOwnProperty(edge.m_fromPortID)) {
-					return m_incomingPortsToEdgeDict[edge.m_fromPortID] as GameEdgeContainer;
-				}
-			} else {
-				if (m_outgoingPortsToEdgeDict.hasOwnProperty(edge.m_toPortID)) {
-					return m_outgoingPortsToEdgeDict[edge.m_toPortID] as GameEdgeContainer;
-				}
-			}
-			return null;
-		}
-		
 		private function edgeAt(edgePortArrayIndex:int):GameEdgeContainer
 		{
 			if (edgePortArrayIndex < 0) return null;
 			if (edgePortArrayIndex > m_edgePortArray.length - 1) return null;
-			var port:String = m_edgePortArray[edgePortArrayIndex] as String;
+			var port:int = m_edgePortArray[edgePortArrayIndex] as int;
 			if (m_incomingPortsToEdgeDict.hasOwnProperty(port)) return m_incomingPortsToEdgeDict[port] as GameEdgeContainer;
 			if (m_outgoingPortsToEdgeDict.hasOwnProperty(port)) return m_outgoingPortsToEdgeDict[port] as GameEdgeContainer;
 			return null;
@@ -512,14 +475,6 @@ package scenes.game.display
 			updateNextEdgePosition(nextEdge, newNextPosition);
 			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing);
 			//trace("rb edge " + nextEdge.m_id + " pt:" + (isNextEdgeOutgoing ? nextEdge.m_startPoint : nextEdge.m_endPoint));
-			var nextEdgeExtension:GameEdgeContainer = getExtensionEdge(nextEdge);
-			if (nextEdgeExtension) {
-				var isNextExtensionEdgeOutgoing:Boolean = nextEdgeExtension.m_fromNode == this ? true : false;
-				//trace("rb edgex0 " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdgeExtension.m_startPoint : nextEdgeExtension.m_endPoint));
-				updateNextEdgePosition(nextEdgeExtension, newNextPosition);
-				nextEdgeExtension.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing);
-				//trace("rb edgex " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdgeExtension.m_startPoint : nextEdgeExtension.m_endPoint));
-			}
 			
 			//edge.hasChanged = true;
 			edge.restoreEdge = false;
@@ -533,20 +488,15 @@ package scenes.game.display
 		protected function updateEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
 		{
 			var isEdgeOutgoing:Boolean = edge.m_fromNode == this ? true : false;
-			var extEdge:GameEdgeContainer = getExtensionEdge(edge);
 			if(isEdgeOutgoing)
 			{
 				if(edge.undoObject.m_savedStartPoint)
 					edge.undoObject.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
-				if(extEdge && extEdge.undoObject && extEdge.undoObject.m_savedEndPoint)
-					extEdge.undoObject.m_savedEndPoint.x = extEdge.globalToLocal(newPosition).x;
 			}
 			else
 			{
 				if(edge.undoObject.m_savedEndPoint)
 					edge.undoObject.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
-				if(extEdge && extEdge.undoObject && extEdge.undoObject.m_savedStartPoint)
-					extEdge.undoObject.m_savedStartPoint.x = extEdge.globalToLocal(newPosition).x;
 			}
 		}
 		
@@ -554,18 +504,13 @@ package scenes.game.display
 		protected function updateNextEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
 		{
 			var isEdgeOutgoing:Boolean = edge.m_fromNode == this ? true : false;
-			var extEdge:GameEdgeContainer = getExtensionEdge(edge);
 			if(isEdgeOutgoing)
 			{
 				edge.m_startPoint.x = edge.globalToLocal(newPosition).x;
-				if(extEdge)
-					extEdge.m_endPoint.x = extEdge.globalToLocal(newPosition).x;
 			}
 			else
 			{
 				edge.m_endPoint.x = edge.globalToLocal(newPosition).x;
-				if(extEdge)
-					extEdge.m_startPoint.x = extEdge.globalToLocal(newPosition).x;
 			}
 		}
 		
@@ -576,9 +521,6 @@ package scenes.game.display
 			var isNextEdgeOutgoing:Boolean = nextEdgeContainer.m_fromNode == this ? true : false;
 			
 			//currentEdgeContainer.hasChanged = false;
-			var extEdge:GameEdgeContainer = getExtensionEdge(currentEdgeContainer);
-			if(extEdge)
-				extEdge.restoreEdge = false;
 			
 			m_edgePortArray[currentPosition] = isNextEdgeOutgoing ? nextEdgeContainer.m_fromPortID : nextEdgeContainer.m_toPortID;
 			m_edgePortArray[nextPosition] = isEdgeOutgoing ? currentEdgeContainer.m_fromPortID : currentEdgeContainer.m_toPortID;
@@ -588,27 +530,18 @@ package scenes.game.display
 			if(isEdgeOutgoing)
 			{
 				currentEdgeContainer.outgoingEdgePosition = nextPosition;
-				if(extEdge)
-					extEdge.incomingEdgePosition = nextPosition;
 			}
 			else
 			{
 				currentEdgeContainer.incomingEdgePosition = nextPosition;
-				if(extEdge)
-					extEdge.outgoingEdgePosition = nextPosition;
 			}
-			var nextExt:GameEdgeContainer = getExtensionEdge(nextEdgeContainer);
 			if(isNextEdgeOutgoing)
 			{
 				nextEdgeContainer.outgoingEdgePosition = currentPosition;
-				if(nextExt)
-					nextExt.incomingEdgePosition = currentPosition;
 			}
 			else
 			{
 				nextEdgeContainer.incomingEdgePosition = currentPosition;
-				if(nextExt)
-					nextExt.outgoingEdgePosition = currentPosition;
 			}
 		}
 		

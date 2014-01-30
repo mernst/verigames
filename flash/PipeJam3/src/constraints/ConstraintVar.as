@@ -29,8 +29,10 @@ package constraints
 			m_props = new PropDictionary();
 			if (m_value.intVal == 0) m_props.setProp(PropDictionary.PROP_NARROW, true);
 			for (var i:int = 0; i < keyforVals.length; i++) m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + keyforVals[i], true);
-			var idParts:Array = id.split("_");
-			if (idParts.length != 2) trace("Warning! Expected variables of the form var_2, found:" + id);
+			var suffixParts:Array = id.split("__");
+			var prefixId:String = suffixParts[0];
+			var idParts:Array = prefixId.split("_");
+			if (idParts.length != 2) trace("Warning! Expected variables of the form var_2, type_0__var_2, found:" + id);
 			formattedId = idParts[0] + ":" + idParts[1];
 			for (var c:int = 2; c < idParts.length; c++) formattedId += "_" + idParts[c]; // add other parts of id, if any
 		}

@@ -239,7 +239,7 @@ package networking
 		{
 			fzip = new FZip();
 			fzip.addEventListener(flash.events.Event.COMPLETE, zipLoaded);
-			fzip..addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			fzip.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			
 			var loader:URLLoader = new URLLoader();
 			switch(loadType)
@@ -290,26 +290,24 @@ package networking
 			else
 			{
 				zipFile = fzip.getFileAt(0);
-				var containerObj:Object = JSON.parse(zipFile.content as String);
-				trace(zipFile.filename);
-				
-				if(containerObj.world.length()>0 &&
-					containerObj.constraints.length()>0 &&
-					containerObj.layout.length()>0)
+				var contentsStr:String = zipFile.content.toString();
+				var containerObj:Object = JSON.parse(contentsStr);
+				var assignmentsObj:Object = containerObj["assignments"];
+				var layoutObj:Object = containerObj["layout"];
+				if (assignmentsObj && layoutObj)
 				{
 					var containerArray:Array = new Array(3);
-					containerArray[0] = containerObj["world"];
-					containerArray[1] = containerObj["assignments"];
-					containerArray[2] = containerObj["layout"];
-					
+					containerArray[0] = containerObj;
+					containerArray[1] = assignmentsObj;
+					containerArray[2] = layoutObj;
+					trace("loaded world file: " + zipFile.filename);
 					m_callback(containerArray);
 				}
 				else
 				{
-					//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
+					trace("loaded individ file: " + zipFile.filename);
 					zipFile = fzip.getFileAt(0);
-					var worldObj:Object = JSON.parse(zipFile.content as String);
-					m_callback(worldObj);
+					m_callback(containerObj);
 				}
 			}
 		}

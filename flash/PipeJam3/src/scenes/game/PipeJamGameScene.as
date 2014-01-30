@@ -18,7 +18,7 @@ package scenes.game
 		//takes a partial path to the files, using the base file name. -.json, -Layout.json and -Constraints.json will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../SampleWorlds/hadoop-typedbytes-Type"
+			"../SampleWorlds/hadoop"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

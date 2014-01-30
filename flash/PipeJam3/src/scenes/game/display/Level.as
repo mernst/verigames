@@ -166,12 +166,12 @@ package scenes.game.display
 			levelGraph = _levelGraph;
 			levelObj = _levelObj;
 			m_levelLayoutObj = XObject.clone(_levelLayoutObj);
-			m_levelOriginalLayoutObj = XObject.clone(_levelLayoutObj);
+			m_levelOriginalLayoutObj = _levelLayoutObj;// XObject.clone(_levelLayoutObj);
 			m_levelLayoutName = _levelLayoutObj["id"];
 			m_levelQID = _levelLayoutObj["qid"];
-			m_levelBestScoreAssignmentsObj = XObject.clone(_levelAssignmentsObj);
-			m_levelOriginalAssignmentsObj = XObject.clone(_levelAssignmentsObj);
-			m_levelAssignmentsObj = XObject.clone(_levelAssignmentsObj);
+			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
+			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
+			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
@@ -229,6 +229,7 @@ package scenes.game.display
 		public function initialize():void
 		{
 			if (initialized) return;
+			trace("Level.initialize()...");
 			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
 				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
@@ -1171,6 +1172,7 @@ package scenes.game.display
 				gameNode.x = gameNode.boundingBox.x;
 				gameNode.y = gameNode.boundingBox.y;
 				gameNode.m_isDirty = true;
+				//gameNode.visible = false; // TODO: zzz
 				m_nodesContainer.addChild(gameNode);
 				nodeCount++;
 			}
@@ -1179,6 +1181,7 @@ package scenes.game.display
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
 				gameEdge.m_isDirty = true;
+				//gameEdge.visible = false; // TODO: zzz
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
 				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
@@ -1349,39 +1352,6 @@ package scenes.game.display
 		{
 			return new Date().time - m_levelStartTime;
 		}	
-		
-		public function getNodesContainer():Sprite
-		{
-			return m_nodesContainer;
-		}
-		
-		public function addGameComponentToStage(component:GameComponent):void
-		{
-			if(component is GameNodeBase)
-				this.m_nodesContainer.addChild(component);
-			else if(component is GameEdgeContainer)
-			{
-				var gameEdge:GameEdgeContainer = component as GameEdgeContainer;
-				this.m_edgesContainer.addChild(gameEdge);
-				this.m_errorContainer.addChild(gameEdge.errorContainer);
-				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
-				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
-			}
-		}
-		
-		public function removeGameComponentFromStage(component:GameComponent):void
-		{
-			if(component is GameNodeBase)
-				this.m_nodesContainer.removeChild(component);
-			else if(component is GameEdgeContainer)
-			{
-				var gameEdge:GameEdgeContainer = component as GameEdgeContainer;
-				this.m_edgesContainer.removeChild(gameEdge);
-				this.m_errorContainer.removeChild(gameEdge.errorContainer);
-				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
-				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
-			}
-		}
 		
 		public function hideErrorText():void
 		{

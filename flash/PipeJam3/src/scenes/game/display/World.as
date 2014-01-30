@@ -6,6 +6,7 @@ package scenes.game.display
 	import flash.utils.Dictionary;
 	import particle.ErrorParticleSystem;
 	import scenes.game.components.MiniMap;
+	import starling.events.EnterFrameEvent;
 	
 	import audio.AudioManager;
 	
@@ -107,7 +108,8 @@ package scenes.game.display
 			redoStack = new Vector.<UndoEvent>();
 			
 			var allLevels:Array = m_worldObj["levels"];
-			
+			if (!allLevels) allLevels = [m_worldObj];
+			trace("Creating World...");
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
 				var levelObj:Object = allLevels[level_index];
@@ -136,16 +138,43 @@ package scenes.game.display
 					firstLevel = my_level; //grab first one..
 				}
 			}
-			
+			trace("Done creating World...");
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
 		
+		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
 		protected function onAddedToStage(event:Event):void
 		{
+			m_initQueue = new Vector.<Function>();
+			m_initQueue.push(initGridViewPanel);
+			m_initQueue.push(initGameControlPanel);
+			m_initQueue.push(initMiniMap);
+			m_initQueue.push(initScoring);
+			m_initQueue.push(initTutorial);
+			m_initQueue.push(initLevel);
+			m_initQueue.push(initEventListeners);
+			m_initQueue.push(initMusic);
+			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+		}
+		
+		protected function onEnterFrame(evt:EnterFrameEvent):void
+		{
+			if (m_initQueue.length > 0) {
+				var func:Function = m_initQueue.shift();
+				func.call();
+			}
+		}
+		
+		private function initGridViewPanel():void {
+			trace("Initializing GridViewPanel...");
 			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
-			
+			trace("Done initializing GridViewPanel.");
+		}
+		
+		private function initGameControlPanel():void {
+			trace("Initializing GameControlPanel...");
 			gameControlPanel = new GameControlPanel();
 			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
@@ -156,16 +185,28 @@ package scenes.game.display
 				gameControlPanel.onZoomReset();
 			}
 			addChild(gameControlPanel);
-			
+			trace("Done initializing GameControlPanel.");
+		}
+		
+		private function initMiniMap():void {
+			trace("Initializing Minimap....");
 			miniMap = new MiniMap();
 			miniMap.x = Constants.GameWidth - MiniMap.WIDTH;
 			miniMap.y = MiniMap.HIDDEN_Y;
 			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
 			miniMap.visible = false;
 			addChild(miniMap);
-			
+			trace("Done initializing Minimap.");
+		}
+		
+		private function initScoring():void {
+			trace("Initializing score...");
 			onWidgetChange(); //update score
-			
+			trace("Done initializing score.");
+		}
+		
+		private function initTutorial():void {
+			trace("Initializing TutorialController...");
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				var obj:LevelInformation = PipeJamGame.levelInfo;
@@ -194,9 +235,17 @@ package scenes.game.display
 					}
 				}
 			}
-			
+			trace("Done initializing TutorialController.");
+		}
+		
+		private function initLevel():void {
+			trace("Initializing Level...");
 			selectLevel(firstLevel);
-			
+			trace("Done initializing Level.");
+		}
+		
+		private function initEventListeners():void {
+			trace("Initializing event listeners...");
 			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
@@ -240,9 +289,13 @@ package scenes.game.display
 			
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
-			
+			trace("Done initializing event listeners.");
+		}
+		
+		private function initMusic():void {
 			AudioManager.getInstance().reset();
 			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
+			trace("Playing music...");
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
@@ -877,6 +930,7 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
+			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			AudioManager.getInstance().reset();
 			
 			if (m_activeToolTip) {
