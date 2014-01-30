@@ -123,10 +123,10 @@ package networking
 			switch(type)
 			{
 				case GET_ACHIEVEMENTS:
-					url = "http://flowjam.verigames.com/game/interop.php?function=passURL&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
 					break;
 				case ADD_ACHIEVEMENT:
-					url = "http://flowjam.verigames.com/game/interop.php?function=passURLPOST&data_id='/api/achievement/assign'";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/achievement/assign'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;

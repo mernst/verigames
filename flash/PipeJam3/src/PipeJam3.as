@@ -46,6 +46,7 @@ package
 		
 		/** Set to true if a build for the server */
 		public static var RELEASE_BUILD:Boolean = true;
+		public static var LOGGING_ON:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
@@ -123,6 +124,11 @@ package
 			if (ExternalInterface.available) {
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
+			
+			var fullURL:String = this.loaderInfo.url;
+			var protocolEndIndex:int = fullURL.indexOf('//');
+			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
+			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
 		}
 		
 		

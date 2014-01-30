@@ -64,7 +64,7 @@ package networking
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
 		
-		public static var getFileURL:String = "http://flowjam.verigames.com/game/interop.php?function=getFile";
+		public static var getFileURL:String = NetworkConnection.productionInterop + "?function=getFile";
 		
 		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
 		{
@@ -410,30 +410,30 @@ package networking
 				case REPORT_PLAYER_RATING:
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
-					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayerRating&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;
 				case GET_COMPLETED_LEVELS:
-					url = "http://flowjam.verigames.com/game/interop.php?function=getCompletedLevels&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=getCompletedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_ALL_LEVEL_METADATA:
-					url = "http://flowjam.verigames.com/game/interop.php?function=getActiveLevels&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=getActiveLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case REQUEST_LAYOUT_LIST:
-					url = "http://flowjam.verigames.com/game/interop.php?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_xmlID + 'L';
+					url = NetworkConnection.productionInterop + "?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_xmlID + 'L';
 					break;
 				case GET_ALL_SAVED_LEVELS:
-					url = "http://flowjam.verigames.com/game/interop.php?function=getSavedLevels&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=getSavedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_SAVED_LEVEL:
-					url = "http://flowjam.verigames.com/game/interop.php?function=getLevel&data_id="+PipeJamGame.levelInfo.m_xmlID;
+					url = NetworkConnection.productionInterop + "?function=getLevel&data_id="+PipeJamGame.levelInfo.m_xmlID;
 					break;
 				case SAVE_LAYOUT:
 					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID+"L",'name': info});
 					data_id = JSON.stringify(messages);
-					url = "http://flowjam.verigames.com/game/interop.php?function=saveLayoutPOST&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=saveLayoutPOST&data_id='"+data_id+"'";
 					break;
 				case DELETE_SAVED_LEVEL:
-					url = "http://flowjam.verigames.com/game/interop.php?function=deleteSavedLevel&data_id="+info;
+					url = NetworkConnection.productionInterop + "?function=deleteSavedLevel&data_id="+info;
 					break;
 				case SAVE_LEVEL:
 					var props:Object = PipeJamGame.levelInfo.m_metadata.properties;
@@ -445,9 +445,9 @@ package networking
 					levelInfo.player = levelInfo.playerID; //Get the right name, should have be consistent....
 					data_id = JSON.stringify(levelInfo);
 					if(info == MenuEvent.SAVE_LEVEL)
-						url = "http://flowjam.verigames.com/game/interop.php?function=saveLevelPOST&data_id='"+data_id+"'";
+						url = NetworkConnection.productionInterop + "?function=saveLevelPOST&data_id='"+data_id+"'";
 					else
-						url = "http://flowjam.verigames.com/game/interop.php?function=submitLevelPOST&data_id='"+data_id+"'";
+						url = NetworkConnection.productionInterop + "p?function=submitLevelPOST&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
@@ -456,7 +456,7 @@ package networking
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
 					request = "/api/score&method=URL";
-					url = "http://flowjam.verigames.com/game/interop.php?function=passURLPOST&data_id='/api/score'";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/score'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;

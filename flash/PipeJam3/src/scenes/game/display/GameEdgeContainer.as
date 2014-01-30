@@ -29,6 +29,7 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import flash.errors.ScriptTimeoutError;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -460,6 +461,7 @@ package scenes.game.display
 		
 		private function onPropsChange(evt:EdgePropChangeEvent):void
 		{
+			
 			var innerSegmentChanged:Boolean = false;
 			if (isTopOfEdge() && (evt.type == EdgePropChangeEvent.EXIT_PROPS_CHANGED)) {
 				innerSegmentChanged = true;
@@ -1430,10 +1432,18 @@ package scenes.game.display
 			super.setProps(props);
 			var i:int;
 			for (i = 0; i < m_edgeJoints.length; i++) {
+				try{
 				m_edgeJoints[i].setProps(props);
+				}catch(e:ScriptTimeoutError) {
+				}
 			}
 			for (i = 0; i < m_edgeSegments.length; i++) {
+				try{
 				m_edgeSegments[i].setProps(props);
+				}
+				catch(e:ScriptTimeoutError) {
+
+				}
 			}
 		}
 		

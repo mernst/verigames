@@ -26,12 +26,14 @@ package networking
 		static public var productionProxy:String = "http://flowjam.verigames.com/pr(not)oxy";
 		static public var localProxy:String = "http://128.95.2.112:8001";
 		static public var PROXY_URL:String = productionProxy;
-		static public var productionInterop:String = "http://flowjam.verigames.com/game/interop.php";
+		static public var productionInterop:String;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
 		
 		public var globalURL:String;
+		
+		public static var baseURL:String;
 		
 		public function NetworkConnection()
 		{
@@ -39,6 +41,12 @@ package networking
 				PROXY_URL = localProxy;
 			else if(PipeJam3.RELEASE_BUILD == false)
 				PROXY_URL = stagingProxy;
+			
+			//if we are debugging this won't work, so just hard code it.
+			if(baseURL.indexOf("http") != -1)
+				productionInterop = baseURL + "/game/interop.php";
+			else
+				productionInterop = "http://flowjam.verigames.com/game/interop.php";
 		}
 		
 		/**

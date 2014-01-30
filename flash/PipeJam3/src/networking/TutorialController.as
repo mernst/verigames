@@ -267,11 +267,11 @@ package networking
 				case TUTORIAL_LEVEL_COMPLETE:
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelId});
 					var data_id:String = JSON.stringify(messages);
-					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayedTutorial&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_COMPLETED_TUTORIAL_LEVELS:
-					url = "http://flowjam.verigames.com/game/interop.php?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
 					method = URLRequestMethod.POST; 
 					break;
 			}
