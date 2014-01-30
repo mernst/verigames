@@ -94,9 +94,11 @@ def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 	elif lhname == 'var' and rhname == 'var':
 		lhs = '%s_%s' % (lhname, lhid)
 		rhs = '%s_%s' % (rhname, rhid)
+	elif rhname == 'type' and lhname == 'type':
+		return
 	else:
-		print 'Warning! Unexpected constraint type (not var/var or var/type) = "%s". Ignoring...' % value
-		return None
+		print 'Warning! Unexpected constraint type (not var/var or var/type) = "%s" / "%s". Ignoring...' % (lhname, rhname)
+		return
 	# Get (or create) nodes
 	fromnode = nodedict.get(lhs)
 	if fromnode is None:
@@ -245,35 +247,39 @@ def constraints2grid(infilename, outfilename):
 		if formattedid in nodes:
 			continue
 		nodes[formattedid] = Node(formattedid)
+	print 'Creating graphviz file...'
 	# Create graphviz input file
 	graphin =  'digraph G {\n'
-	graphin += '  size="50,50";\n'
 	graphin += '  graph [\n'
-	graphin += '    splines=line\n'
+	graphin += '    overlap="scalexy",\n'
+	graphin += '    splines="line"\n'
 	graphin += '  ];\n'
 	graphin += '  node [\n'
-	graphin += '    fontsize=6.0,\n'
+	graphin += '    label="",\n'
 	graphin += '	fixedsize=true,\n'
-	graphin += '	height=1.0,\n'
-	graphin += '	shape=rect\n'
+	graphin += '	shape="rect"\n'
 	graphin += '  ];\n'
-
+	
+	print 'Adding graphviz nodes...'
 	# Nodes
 	for nodeid in nodes:
 		node = nodes[nodeid]
 		node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
 		calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
 		graphin += '%s [width=%s,height=%s];\n' % (node.id, node.width, calcheight)
+	print 'Adding graphviz edges...'
 	# Edges
 	for edgeid in edges:
 		graphin += '%s;\n' % edgeid
 	graphin += '}'
 	with open(outfilename + '-IN.txt','w') as writegraph:
 		writegraph.write(graphin)
+	print 'Layout with graphviz (sfdp)...'
 	# Layout with graphviz
-	with os.popen('sfdp -y -Tplain -o%s-OUT.txt -Tpdf -o%s-OUT.pdf %s-IN.txt' % (outfilename, outfilename, outfilename)) as sfdpcmd:
-		sfdpcmd.read()
+	#with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename, outfilename)) as sfdpcmd:
+	#	sfdpcmd.read()
 	# Layout node positions from output
+	print 'Read in graphviz layout...'
 	nodelayout = {}
 	layoutf =  '{\n'
 	layoutf += '"id": "%s",\n' % infilename
@@ -307,6 +313,7 @@ def constraints2grid(infilename, outfilename):
 				#print 'node id:%s x,y: %s,%s' % (id, x, y)
 	layoutf += '\n  },\n' # end vars {}
 	layoutf += '  "constraints": {\n'
+	print 'Calculate final edge layout...'
 	# Sort node inputs/outputs according to x positions
 	for nodeid in nodes:
 		node = nodes[nodeid]
@@ -345,8 +352,10 @@ def constraints2grid(infilename, outfilename):
 			layoutf += '    "%s":%s' % (edge.id, json.dumps(edgelayout[edge.id], separators=(',', ':'))) # separators: no whitespace
 	layoutf += '\n  }\n' # end constraints {}
 	layoutf += '}}' # end layout {} file {}
+	print 'Write layout file: %sLayout.json' % outfilename
 	with open(outfilename + 'Layout.json','w') as writelayout:
 		writelayout.write(layoutf)
+	print 'Write assignments file: %sAssignments.json' % outfilename
 	with open(outfilename + 'Assignments.json','w') as writeasg:
 		writeasg.write('{"id": "%s",\n' % infilename)
 		writeasg.write('"assignments":{\n')
