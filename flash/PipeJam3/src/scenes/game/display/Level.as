@@ -1172,7 +1172,7 @@ package scenes.game.display
 				gameNode.x = gameNode.boundingBox.x;
 				gameNode.y = gameNode.boundingBox.y;
 				gameNode.m_isDirty = true;
-				//gameNode.visible = false; // TODO: zzz
+				//gameNode.visible = false; // zzz
 				m_nodesContainer.addChild(gameNode);
 				nodeCount++;
 			}
@@ -1181,7 +1181,7 @@ package scenes.game.display
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
 				gameEdge.m_isDirty = true;
-				//gameEdge.visible = false; // TODO: zzz
+				//gameEdge.visible = false; // zzz
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
 				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);

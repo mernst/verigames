@@ -861,7 +861,7 @@ package scenes.game.components
 				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
 				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
 				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, 0xFFEC00);
-				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+				if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				m_fanfareTextContainer.alpha = 1;
 				addChild(m_fanfareTextContainer);

@@ -52,6 +52,8 @@ package
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
+		public static const DISABLE_FILTERS:Boolean = true;
+		
 		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
