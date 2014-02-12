@@ -3,7 +3,6 @@ package networking
 	import flash.events.Event;
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
-	
 	import scenes.loadingscreen.LoadingScreenScene;
 	import starling.display.Sprite;
 	
@@ -12,17 +11,17 @@ package networking
 		[Embed(source = "../../lib/levels/tutorial/tutorial.json", mimeType = "application/octet-stream")]
 		static public const tutorialFileClass:Class;
 		static public const tutorialJson:String = new tutorialFileClass();
-		static public const tutorialObj:Object = com.adobe.serialization.json.JSON.decode(tutorialJson);
+		static public const tutorialObj:Object = JSON.parse(tutorialJson);
 		
 		[Embed(source = "../../lib/levels/tutorial/tutorialLayout.json", mimeType = "application/octet-stream")]
 		static public const tutorialLayoutFileClass:Class;
 		static public const tutorialLayoutJson:String = new tutorialLayoutFileClass();
-		static public const tutorialLayoutObj:Object = com.adobe.serialization.json.JSON.decode(tutorialLayoutJson);
+		static public const tutorialLayoutObj:Object = JSON.parse(tutorialLayoutJson);
 		
 		[Embed(source = "../../lib/levels/tutorial/tutorialAssignments.json", mimeType = "application/octet-stream")]
 		static public const tutorialConstraintsFileClass:Class;
 		static public const tutorialConstraintsJson:String = new tutorialConstraintsFileClass();
-		static public const tutorialConstraintsObj:Object = com.adobe.serialization.json.JSON.decode(tutorialConstraintsJson);
+		static public const tutorialConstraintsObj:Object = JSON.parse(tutorialConstraintsJson);
 		
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
