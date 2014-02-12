@@ -1,24 +1,11 @@
 package networking
 {
-	import com.adobe.serialization.json.JSON;
 	import flash.events.Event;
 	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
 	import flash.utils.Dictionary;
 	
-	import events.MenuEvent;
-	
-	import scenes.game.PipeJamGameScene;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	import scenes.loadingscreen.LoadingScreenScene;
-	
-	import server.LoggingServerInterface;
-	
-	import starling.core.Starling;
 	import starling.display.Sprite;
-	
-	import utils.XString;
 	
 	public class TutorialController extends Sprite
 	{			
@@ -270,21 +257,18 @@ package networking
 			var url:String = null;
 			
 			var messages:Array = new Array ();  			
-			var vars: URLVariables = new URLVariables();
 
 			
 			switch(type)
 			{
 				case TUTORIAL_LEVEL_COMPLETE:
-					request = "/tutorial/level/complete/"+PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_levelId+"&method=DATABASE";
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelId});
-					var data_id:String = com.adobe.serialization.json.JSON.encode(messages);
-					url = "http://flowjam.verigames.com/game/interop.php?function=reportPlayedTutorial&data_id='"+data_id+"'";
-
+					var data_id:String = JSON.stringify(messages);
+					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_COMPLETED_TUTORIAL_LEVELS:
-					url = "http://flowjam.verigames.com/game/interop.php?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
 					method = URLRequestMethod.POST; 
 					break;
 			}

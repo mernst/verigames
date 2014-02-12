@@ -1,18 +1,23 @@
 package networking
-{
+{	
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	
 	import events.MenuEvent;
 	
-	import flash.events.*;
-	import flash.net.*;
-	import flash.net.URLLoader;
-	import starling.events.Event;
-	import scenes.game.PipeJamGameScene;
 	import scenes.Scene;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.World;
 	
+	import starling.events.Event;
+	
+	import utils.Base64Decoder;
 	import utils.Base64Encoder;
 	
 	/** How to use:
@@ -33,7 +38,7 @@ package networking
 		public static var DELETE_SAVED_LEVEL:int = 9;
 		public static var REPORT_PLAYER_RATING:int = 12;
 		public static var REPORT_LEADERBOARD_SCORE:int = 13;
-				
+		
 		public static var USE_LOCAL:int = 1;
 		public static var USE_DATABASE:int = 2;
 		public static var USE_URL:int = 3;
@@ -41,13 +46,13 @@ package networking
 		static public var GET_COMPLETED_LEVELS_REQUEST:String = "/level/completed";
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
-	
+		
 		static public var levelInfoVector:Vector.<Object> = null;
 		static public var completedLevelVector:Vector.<Object> = null;
 		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
 		static public var numLevels:int = 10;
-
+		
 		protected var m_callback:Function;
 		protected var fzip:FZip;
 		
@@ -58,7 +63,9 @@ package networking
 		public var m_constraintsSaved:Boolean = false;
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
-
+		
+		public static var getFileURL:String = NetworkConnection.productionInterop + "?function=getFile";
+		
 		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
 		{
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
@@ -67,7 +74,7 @@ package networking
 		
 		static public function getFileByID(id:String, callback:Function):void
 		{
-			var fileURL:String = "/file/get/" + id;
+			var fileURL:String = getFileURL + "&data_id=\"" + id + "\"";
 			
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
 			fileHandler.loadFile(USE_DATABASE, fileURL);
@@ -79,7 +86,7 @@ package networking
 			
 			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(SAVE_LAYOUT, null, encodedLayoutDescription, _layoutAsString);
+			fileHandler.sendMessage(SAVE_LAYOUT, callback, encodedLayoutDescription, _layoutAsString);
 		}
 		
 		static public function deleteSavedLevel(_levelIDString:String):void
@@ -88,13 +95,13 @@ package networking
 			fileHandler.sendMessage(DELETE_SAVED_LEVEL, null, _levelIDString);
 		}
 		
-
+		
 		
 		static public function reportPlayerPreference(preference:String):void
 		{
 			PipeJamGame.levelInfo.preference = preference;
 			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REPORT_PLAYER_RATING, null, null);
+			fileHandler.sendMessage(REPORT_PLAYER_RATING, fileHandler.defaultJSONCallback, null);
 		}
 		
 		//connect to the db and get a list of all levels
@@ -138,7 +145,7 @@ package networking
 			fileHandler.m_fileType = fileType;
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
-			fileHandler.saveLevelWithID("1"); //passing an ID is important, but we don't have an RA id any more, so we don't care what it is.
+			fileHandler.saveLevel(saveType);
 		}	
 		
 		static public function reportScore():void
@@ -162,7 +169,7 @@ package networking
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
-//				fileName = "tutorial";
+				//				fileName = "tutorial";
 			}
 			if (PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
 			{
@@ -187,7 +194,7 @@ package networking
 					fileName = PipeJamGame.levelInfo.m_baseFileName;
 				else
 					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
-
+				
 				
 				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_assignmentsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
@@ -199,19 +206,19 @@ package networking
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
 						gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						// TODO: probably rename /constraints to /assignments
-						gameFileHandler.loadFile(loadType, "/file/get/" +PipeJamGame.levelInfo.m_assignmentsID+"/constraints");
+						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");
 					}
 					else
 					{
 						var levelInfo:LevelInformation = PipeJamGame.levelInfo;
 						// TODO: probably rename from /xml and /constraints to /level and /assignments
+						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
 						var worldFileHandler:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler.loadFile(loadType, "/file/get/" + PipeJamGame.levelInfo.m_levelID+"/xml");
+						worldFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
 						var layoutFileHandler:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler.loadFile(loadType, "/file/get/" + PipeJamGame.levelInfo.m_layoutID+"/layout");
-						var constraintsFileHandler:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-						constraintsFileHandler.loadFile(loadType, "/file/get/" +PipeJamGame.levelInfo.m_assignmentsID+"/constraints");	
+						layoutFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_layoutID+"\"");
+						var assignmentsFileHandler:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
+						assignmentsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");	
 					}
 				}
 				else if(fileName && fileName.length > 0)
@@ -220,13 +227,13 @@ package networking
 					worldFileHandler1.loadFile(loadType, fileName+".zip");
 					var layoutFileHandler1:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
 					layoutFileHandler1.loadFile(loadType, fileName+"Layout.zip");
-					var constraintsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-					constraintsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
+					var assignmentsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
+					assignmentsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
 				}
 			}
 		}
 		
-/************************ End of static functions *********************************/
+		/************************ End of static functions *********************************/
 		
 		public function GameFileHandler(callback:Function =  null)
 		{
@@ -247,7 +254,9 @@ package networking
 				case USE_DATABASE:
 				{
 					
-					fzip.load(new URLRequest(NetworkConnection.PROXY_URL +fileName+ "&method=DATABASE"));
+					//	fzip.load(new URLRequest(fileName));
+					loader.addEventListener(flash.events.Event.COMPLETE, fileLoadCallback);
+					loader.load(new URLRequest(fileName));
 					break;
 				}
 				case USE_LOCAL:
@@ -268,8 +277,21 @@ package networking
 			trace("ioErrorHandler: " + event);
 		}
 		
-		private function zipLoaded(e:flash.events.Event):void {
-			fzip.removeEventListener(flash.events.Event.COMPLETE, zipLoaded);
+		private function fileLoadCallback(e:flash.events.Event):void {
+			
+			var s:String = e.target.data;
+			var decodedString:Base64Decoder = new Base64Decoder();
+			decodedString.decode(s);
+			var z:FZip = new FZip();
+			z.loadBytes(decodedString.toByteArray());
+			zipLoaded(null, z);
+		}
+		
+		private function zipLoaded(e:flash.events.Event = null, z:FZip = null):void {
+			if(z == null)
+				fzip.removeEventListener(flash.events.Event.COMPLETE, zipLoaded);
+			else
+				fzip = z;
 			var zipFile:FZipFile;
 			if(fzip.getFileCount() == 3)
 			{
@@ -285,7 +307,7 @@ package networking
 					}
 				}
 				m_callback(parsedFileArray);
-
+				
 			}
 			else
 			{
@@ -346,12 +368,12 @@ package networking
 			m_callback(result);
 		}
 		
-		public function saveLevelWithID(levelID:String):void
+		public function saveLevel(saveType:String):void
 		{
-			sendMessage(SAVE_LEVEL, onLevelSubmitted, levelID, m_levelFilesString);
+			sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
 		}
 		
-		public function onLevelSubmitted(result:int, e:flash.events.Event):void
+		public function onLevelSubmitted(result:int,levelObjects:Vector.<Object>):void
 		{
 			if(m_saveType == MenuEvent.SAVE_LEVEL)
 				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SAVED));
@@ -374,79 +396,58 @@ package networking
 			var request:String;
 			var method:String;
 			var url:String = null;
+			var usePython:Boolean = true;
+			var messages:Array = new Array (); 
+			var data_id:String;
 			
-			if(callback == null)
+			if(m_callback == null && m_callback == null)
 				callback = defaultCallback;
+			else if (callback == null)
+				callback = m_callback;
 			
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					// /level/report/playerID/level/preference/performance
-					request = "/level/report/"+PlayerValidation.playerID+"/"+ PipeJamGame.levelInfo.m_levelId
-					+"/"+PipeJamGame.levelInfo.preference+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelID,'preference': PipeJamGame.levelInfo.preference});
+					data_id = JSON.stringify(messages);
+					url = NetworkConnection.productionInterop + "?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;
-
-				//database messages
 				case GET_COMPLETED_LEVELS:
-					request = GET_COMPLETED_LEVELS_REQUEST+"/"+PlayerValidation.playerID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getCompletedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_ALL_LEVEL_METADATA:
-					request = METADATA_GET_ALL_REQUEST+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getActiveLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case REQUEST_LAYOUT_LIST:
-					request = LAYOUTS_GET_ALL_REQUEST+PipeJamGame.levelInfo.m_levelID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_levelID + 'L';
 					break;
 				case GET_ALL_SAVED_LEVELS:
-					request = "/level/get/saved/"+PlayerValidation.playerID+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getSavedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_SAVED_LEVEL:
-					request = "/level/get/saved/0/"+data+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getLevel&data_id="+PipeJamGame.levelInfo.m_levelID;
 					break;
 				case SAVE_LAYOUT:
-					request = "/layout/save/"+PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_levelID+"/"+info+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_levelID+"L",'name': info});
+					data_id = JSON.stringify(messages);
+					url = NetworkConnection.productionInterop + "?function=saveLayoutPOST&data_id='"+data_id+"'";
 					break;
 				case DELETE_SAVED_LEVEL:
-					request = "/level/delete/"+info+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=deleteSavedLevel&data_id="+info;
 					break;
 				case SAVE_LEVEL:
 					var props:Object = PipeJamGame.levelInfo.m_metadata.properties;
-					var scoreASString:String = String(PipeJamGame.levelInfo.m_score);
-					var levelID:String = info as String;
-					method = URLRequestMethod.POST;
-					var requestStart:String = "";
-					var requestMiddle:String = "";
-					var requestEnd:String = "";
-					//var paramObject:String = ""; maybe in the future json params and add as a param on end of request?
-					if(info == null) //we are just saving the level, because we don't have a new ID
-					{
-						requestStart = "/level/save/";
-						levelID = PipeJamGame.levelInfo.m_levelId;
-						requestEnd = "/"+m_fileType+"/"+PipeJamGame.levelInfo.shareWithGroup;
-					}
+					var levelInfo:Object = PipeJamGame.levelInfo.cloneObjForDatabase();
+					levelInfo.score =  String(PipeJamGame.levelInfo.m_score);
+					levelInfo.playerID =  PlayerValidation.playerID;
+					levelInfo.version =  m_fileType;
+					levelInfo.preference =  String(int(Math.round(PipeJamGame.levelInfo.enjoymentRating*20)));
+					levelInfo.player = levelInfo.playerID; //Get the right name, should have be consistent....
+					data_id = JSON.stringify(levelInfo);
+					if(info == MenuEvent.SAVE_LEVEL)
+						url = NetworkConnection.productionInterop + "?function=saveLevelPOST&data_id='"+data_id+"'";
 					else
-					{
-						requestStart = "/level/submit/";
-						var eRating:int = int(Math.round(PipeJamGame.levelInfo.enjoymentRating*20));
-						requestEnd = "/" + eRating+"/"+m_fileType;
-					}
-					
-					//these need to match the proxy server, or we need to figure out json transfer...
-					requestMiddle = PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_levelID+"/"+encodeURIComponent(PipeJamGame.levelInfo.m_layoutName)+"/"+PipeJamGame.levelInfo.m_layoutID
-					+ "/"+encodeURIComponent(PipeJamGame.levelInfo.m_name)
-					+ "/" + levelID +"/"+scoreASString
-					+ "/" + props.boxes + "/" + props.lines+ "/"+ props.visibleboxes
-					+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonusnodes;
-					
-					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
-					
+						url = NetworkConnection.productionInterop + "p?function=submitLevelPOST&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
@@ -455,6 +456,7 @@ package networking
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
 					request = "/api/score&method=URL";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/score'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
@@ -470,14 +472,10 @@ package networking
 					parameters.push(paramLeaderScoreObj);
 					dataObj.parameter = parameters;
 					data = JSON.stringify(dataObj);
-					var enc:Base64Encoder = Base64Encoder.getEncoder();
-					enc.encode(data);
-					data = enc.toString();
-					method = URLRequestMethod.POST; 
 					break;
 			}
 			
-			NetworkConnection.sendMessage(callback, request, data, url, method);
+			NetworkConnection.sendPythonMessage(callback, data, url, URLRequestMethod.POST);
 		}
 	}
 }

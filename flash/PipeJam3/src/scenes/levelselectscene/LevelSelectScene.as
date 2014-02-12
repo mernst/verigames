@@ -39,7 +39,7 @@ package scenes.levelselectscene
 		
 		protected var levelSelectBackground:NineSliceBatch;
 		protected var levelSelectInfoPanel:NineSliceBatch;
-				
+		
 		protected var levelList:List = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
@@ -263,7 +263,7 @@ package scenes.levelselectscene
 					nameText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
 				}
-					
+				
 				removeChild(numNodesText);
 				removeChild(numEdgesText);
 				removeChild(numConflictsText);
@@ -277,21 +277,21 @@ package scenes.levelselectscene
 					numNodesText.x = levelSelectInfoPanel.x + 10;
 					numNodesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
-				
+					
 					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numEdgesText, 0, 1);
 					addChild(numEdgesText);
 					numEdgesText.x = levelSelectInfoPanel.x + 10;
 					numEdgesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
-	
+					
 					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numConflictsText, 0, 1);
 					addChild(numConflictsText);
 					numConflictsText.x = levelSelectInfoPanel.x + 10;
 					numConflictsText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
-	
+					
 					if(currentSelectedLevel.hasOwnProperty("score"))
 					{
 						scoreText = TextFactory.getInstance().createTextField("Score: " + currentSelectedLevel.score, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
@@ -333,11 +333,11 @@ package scenes.levelselectscene
 				PipeJamGameScene.inTutorial = false;
 			
 			if (dataObj) {
-				if (dataObj.hasOwnProperty("levelId")) {
-					PipeJamGameScene.inDemo = false;
-					PipeJamGame.levelInfo = new LevelInformation(dataObj);
-					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-				}
+				//	if (dataObj.hasOwnProperty("levelId")) {
+				PipeJamGameScene.inDemo = false;
+				PipeJamGame.levelInfo = new LevelInformation(dataObj);
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				//	}
 			}
 		}
 		
@@ -381,9 +381,9 @@ package scenes.levelselectscene
 			for(i = 0; i<GameFileHandler.completedLevelVector.length; i++)
 			{
 				var completedLevel:Object = GameFileHandler.completedLevelVector[i];
-				completedLevelDictionary[completedLevel.xmlID] = completedLevel;
+				completedLevelDictionary[completedLevel.levelID] = completedLevel;
 			}
-
+			
 			for(i = 0; i<GameFileHandler.levelInfoVector.length; i++)
 			{
 				var match:Object = GameFileHandler.levelInfoVector[i];
@@ -539,3 +539,4 @@ package scenes.levelselectscene
 		}
 	}
 }
+

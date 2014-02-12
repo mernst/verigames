@@ -1,16 +1,24 @@
 import com.mongodb.*;
 import com.mongodb.gridfs.*;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.bson.types.ObjectId;
 
@@ -41,7 +49,8 @@ public class MongoTestBed {
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
-   //  map.put("rootlevelId", "5293ee90e4b06170777f9ff7"); 
+     map.put("xmlID", "52798635a8e0e0e5438239dcL"); 
+   //  map.put("xmlID", "52798634a8e0e0e5438239d4L");
      //    map.put("name", "EmptyDesert"); 
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
@@ -49,18 +58,23 @@ public class MongoTestBed {
   //    listFiles("fs/ostrusted/6");
       
 //        System.out.println("Level");
-        listEntries(db, "Level", map);
+ //    SaveFileInfo(db, "Level", map);
+  //   SavePlayerSubmissionInfo(db, "SubmittedLevels");
+    // 	listFiles("fs");
+    //	writeFileLocally("fs", "52d4855727f4030c9139be8a", "test2.zip");
   //     String[] levelIDArray = getConstraintIDs(db, "SubmittedLevels");
    //    for(int index = 0; index < levelIDArray.length; index++)
-       {
+       { 
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
        }
-//       System.out.println("SavedLevels");
-  //     listEntries(db, "CompletedLevels", map);
+  //     System.out.println("SaveLevels");
+       listEntries(db, "SubmittedLayouts", map);
 //       System.out.println("SubmittedLayouts");
-//       listEntriesToFile(db, "SubmittedLayouts", map, "submittedlayouts1211.txt");
+//       listEntriesToFile(db, "SubmittedLevels", map, "SubmittedLevels0115.txt");
+       
+ //      SaveFileInfo(db, "SubmittedLevels", map, "SubmittedLevels0115.txt");
 //      System.out.println("SubmittedLevels");
-      listEntriesToFile(db, "Level", map, "levels1226.txt");
+ //     listEntriesToFile(db, "Level", map, "levels1226.txt");
  //      map.put("playerID", firstArg);
  //      map.put("levelID", "15");
  //     listFilesToFile("fs", "files.txt");
@@ -69,7 +83,7 @@ public class MongoTestBed {
         // listLog(db);
  //           saveAndCleanLog(db, "1211");
         
-//       listCollectionNames(db);
+       listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
@@ -124,6 +138,323 @@ public class MongoTestBed {
         }
 		outputFile.close();
 	}
+	
+	static void SaveFileEntriesToFiles(DB db, String collectionName, HashMap<String, String> searchKeys, String fileName) throws Exception
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		HashMap<String, Integer> nameCount = new HashMap<String, Integer>();
+		HashMap<String, String> levelNames = new HashMap<String, String>();
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+     //       out.print(obj.toString() + '\n'); 
+ 
+           	if(!(obj.containsKey("xmlID") && obj.containsKey("name") && obj.containsKey("constraintsID")))
+           			continue;
+           	
+           	if(!obj.containsKey("player") || obj.get("player").toString().equals("51e5b3460240288229000026"))
+       			continue;
+           	
+           	String xmlID = obj.get("xmlID").toString();
+            String levelName = obj.get("name").toString();
+            
+            int newVal = 1;
+            if(nameCount.containsKey(levelName))
+            {
+            	Integer value = nameCount.get(levelName);
+            	newVal = value.intValue() + 1;
+            	nameCount.put(levelName, new Integer(newVal));
+            }
+            else
+            	nameCount.put(levelName, new Integer(1));  
+            
+            File dir = new File("SubmittedLevels/"+xmlID);
+            if(!dir.exists())
+            	dir.mkdir();
+            
+            String constraintsID = obj.get("constraintsID").toString();
+            writeFileLocally("fs", constraintsID, "SubmittedLevels/"+xmlID+ "/" + levelName+newVal+".zip");
+
+            System.out.println(obj);
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+	}
+	
+	static void SaveFileInfo(DB db, String collectionName, HashMap<String, String> searchKeys) throws Exception
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		System.out.println("start");
+		HashMap<String, Integer> nameCount = new HashMap<String, Integer>();
+		HashMap<String, String> prefs = new HashMap<String, String>();
+		HashMap<String, String> levelToName = new HashMap<String, String>();
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+ 
+          	
+           	String xmlID = obj.get("xmlID").toString();
+            String levelName = obj.get("name").toString();
+            levelToName.put(xmlID, levelName);
+            
+            int conflicts = 0;
+            int numboxes = 0;
+            DBObject metadataObj = (DBObject)obj.get("metadata");
+            if(metadataObj != null)
+            {
+	            DBObject propertiesObj = (DBObject)metadataObj.get("properties");
+	            if(propertiesObj != null)
+	            {
+	            	conflicts = new Integer((String)propertiesObj.get("conflicts").toString());
+	            	numboxes =  new Integer((String)propertiesObj.get("boxes").toString());
+	            }
+            }
+             
+            System.out.println(numboxes);
+           
+            HashMap<String, String> submap = new HashMap<String, String>();
+            submap.put("xmlID", xmlID); 
+            
+            
+        //   getFileInfo(db, "SubmittedLevels", submap);
+            
+
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+	}
+	
+	static void getFileInfo(DB db, String collectionName, HashMap<String, String> searchKeys) throws Exception
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		Vector<Object[]> holders = new Vector<Object[]>();
+		
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		
+		int count = 0;
+		int prefs = 0;
+
+		 try { 
+				 cursor = collection.find(field);
+				 while(cursor.hasNext()) 
+				 {
+		           	DBObject obj = cursor.next();
+		           	
+			      	if(!obj.containsKey("player") || obj.get("player").toString().equals("51e5b3460240288229000026"))
+			 			continue;
+			          	
+		            
+		            
+		            DBObject metadataObj = (DBObject)obj.get("metadata");
+		            if(metadataObj != null)
+		            {
+			            DBObject propertiesObj = (DBObject)metadataObj.get("properties");
+			            if(propertiesObj != null)
+			            {
+			            	String prefVal = (String)propertiesObj.get("preference");
+			            	if(prefVal != null)
+			            	{
+			            		if((new Integer(prefVal)).intValue() != 250)
+			            		{
+			            			prefs += (new Integer(prefVal)).intValue();
+			            			count++;
+			            		}
+			            	}
+			            }
+		            }
+		            
+			        Object[] h = new Object[3];
+			        h[0] = (String)obj.get("player");
+		            Date createddate = (Date)obj.get("createdDate");
+		            Calendar cal = Calendar.getInstance();
+		            cal.setTime(createddate);
+		            int month = cal.get(Calendar.MONTH) + 1;
+		            int day = cal.get(Calendar.DAY_OF_MONTH);
+		            int year = cal.get(Calendar.YEAR);
+		            h[1] = month + "/" + day  + "/" + year;
+		            h[2] = new Integer((String)obj.get("score"));
+		            
+		            
+		            holders.add(h);
+		            
+		          }
+				 float prefAve = 0;
+				 	if(count > 0)
+				 		prefAve = prefs/count;
+		            System.out.print("," + count + "," + prefAve);
+		          
+		        //   for(Object[] h:holders)
+		        //	   System.out.print("," + h[2]);
+
+				 System.out.print("\n");
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+	}
+	
+	static public void SavePlayerSubmissionInfo(DB db, String collectionName) throws Exception
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		int count = 0;
+		 try { 
+			 HashMap<String, Vector<DateHolder>> playerToDates = new HashMap<String, Vector<DateHolder>>();
+				 cursor = collection.find();
+				 while(cursor.hasNext()) 
+				 {
+		           	DBObject obj = cursor.next();
+		           	String player = (String)obj.get("player");
+		            Date createddate = (Date)obj.get("createdDate");
+		            if(createddate != null)
+		            {
+			            Calendar cal = Calendar.getInstance();
+			            cal.setTime(createddate);
+			            int month = cal.get(Calendar.MONTH) + 1;
+			            int day = cal.get(Calendar.DAY_OF_MONTH);
+			            int year = cal.get(Calendar.YEAR);
+			            String date = month + "/" + day  + "/" + year;
+			           
+			           	count++;
+			            System.out.println(player + " " + date);
+			            if(playerToDates.get(player) != null)
+			            {
+			            	System.out.println("found player");
+			            	Vector<DateHolder> holder = playerToDates.get(player);
+			            	boolean dateFound = false;
+			            	for(DateHolder dh : holder)
+			            	{
+			            		if(dh.date.equals(date))
+			            		{
+			            			System.out.println("found date");
+			            			dh.count++;
+			            			dateFound = true;
+			            		}
+			            	}
+			            	if(!dateFound)
+			            	{
+				            	DateHolder dh = new DateHolder();
+				            	dh.date = date;
+				            	dh.count = 1;
+				            	dh.player = player;
+				            	holder.add(dh);
+			            	}
+			            		
+			            }
+			            else
+			            {
+			            	Vector<DateHolder> holder = new Vector<DateHolder>();
+			            	DateHolder dh = new DateHolder();
+			            	dh.date = date;
+			            	dh.count = 1;
+			            	dh.player = player;
+			            	holder.add(dh);
+			            	playerToDates.put(player, holder);
+			            }
+		            }
+				 }
+			 	PrintWriter writer = new PrintWriter("player.csv", "UTF-8");
+			 	
+			 	Iterator it = playerToDates.entrySet().iterator();
+			    while (it.hasNext()) {
+			        Map.Entry pairs = (Map.Entry)it.next();
+			        String player = (String)pairs.getKey();
+			        Vector<DateHolder> dates = (Vector<DateHolder>)pairs.getValue();
+			        writer.print(player + "," + dates.size());
+			        for(DateHolder dh:dates)
+			        {
+			        	
+			        	writer.print("," + dh.count);
+			        }
+			        
+			        writer.println("");
+
+			    }
+			    
+		        writer.close(); 
+		 } finally {
+	        	if(cursor != null)
+	        		cursor.close();
+	        }
+		 
+		 System.out.println("");
+		 System.out.println(count);
+	}
+	
+	static public void unZipIt(String zipFile, String outputFile){
+		 
+	     byte[] buffer = new byte[1024];
+	 
+	     try{
+	 
+	    	//create output directory is not exists
+	 
+	    	//get the zip file content
+	    	ZipInputStream zis = 
+	    		new ZipInputStream(new FileInputStream(zipFile));
+	    	//get the zipped file list entry
+	    	ZipEntry ze = zis.getNextEntry();
+	 
+	    	while(ze!=null){
+	 
+	    	   String fileName = ze.getName();
+	           File newFile = new File(outputFile);
+	 
+	           System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+	 
+	            //create all non exists folders
+	            //else you will hit FileNotFoundException for compressed folder
+	            new File(newFile.getParent()).mkdirs();
+	 
+	            FileOutputStream fos = new FileOutputStream(newFile);             
+	 
+	            int len;
+	            while ((len = zis.read(buffer)) > 0) {
+	       		fos.write(buffer, 0, len);
+	            }
+	 
+	            fos.close();   
+	            ze = zis.getNextEntry();
+	    	}
+	 
+	        zis.closeEntry();
+	    	zis.close();
+	 
+	    	System.out.println("Done");
+	 
+	    }catch(IOException ex){
+	       ex.printStackTrace(); 
+	    }
+	   }    
+	
 	static void listEntriesAndRemove(DB db, String collectionName, HashMap<String, String> searchKeys)
 	{
 		BasicDBObject field = new BasicDBObject();
@@ -550,4 +881,22 @@ public class MongoTestBed {
         } finally {
         }
     }
+    
+    static private class PlayerInfoHolder
+	{
+		int score;
+		String date;
+		String player;
+		int count;
+	}
+    
+    static private class DateHolder
+	{
+		String date;
+		String player;
+		int count;
+	}
+    
+    
 }
+

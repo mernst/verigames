@@ -9,6 +9,7 @@ package networking
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import flash.utils.Dictionary;
 
 	//one NetworkConnection object created for each connection and used only once
@@ -22,13 +23,17 @@ package networking
 		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
 		//this should be the proxy server url, not the MongoDB or RA instance URL. Might be the same, might not be.
 		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
-		static public var productionProxy:String = "http://flowjam.verigames.com/proxy";
+		static public var productionProxy:String = "http://flowjam.verigames.com/pr(not)oxy";
 		static public var localProxy:String = "http://128.95.2.112:8001";
 		static public var PROXY_URL:String = productionProxy;
-		static public var productionInterop:String = "http://flowjam.verigames.com/game/interop.php";
+		static public var productionInterop:String;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
+		
+		public var globalURL:String;
+		
+		public static var baseURL:String;
 		
 		public function NetworkConnection()
 		{
@@ -36,6 +41,12 @@ package networking
 				PROXY_URL = localProxy;
 			else if(PipeJam3.RELEASE_BUILD == false)
 				PROXY_URL = stagingProxy;
+			
+			//if we are debugging this won't work, so just hard code it.
+			if(baseURL.indexOf("http") != -1)
+				productionInterop = baseURL + "/game/interop.php";
+			else
+				productionInterop = "http://flowjam.verigames.com/game/interop.php";
 		}
 		
 		/**
@@ -66,6 +77,7 @@ package networking
 			
 		protected function sendURL(request:String, data:Object, method:String, url:String):void
 		{
+			globalURL = url;
 			var urlRequest:URLRequest;
 			var rand:String = "";
 			 //IE caches all requests, so things don't update properly without this
@@ -73,6 +85,7 @@ package networking
 				rand = "&rand="+String(Math.round(Math.random()*1000));
 			
 			urlRequest = new URLRequest(url+request+rand);
+			var loader:URLLoader = new URLLoader();
 			
 			if(method == URLRequestMethod.GET)
 				urlRequest.method = method;
@@ -81,13 +94,15 @@ package networking
 				urlRequest.method = URLRequestMethod.POST;
 				if(data != null)
 				{
+					//var variables:URLVariables = new URLVariables();
+					//variables.file = "test";
 					urlRequest.contentType = URLLoaderDataFormat.TEXT;
+					//loader.dataFormat = URLLoaderDataFormat.VARIABLES;
 					urlRequest.data = data;//+"\n"; //terminate line so Java can use readLine to get message
 				}
 				else
 					urlRequest.data = null;
 			}
-			var loader:URLLoader = new URLLoader();
 			configureListeners(loader);
 			
 			try
@@ -144,11 +159,16 @@ package networking
 				if(pythonMessageStart != -1)
 				{
 					var message:String = objString.substring(pythonMessageStart+3, objString.length - 1);
-					var obj:Object = JSON.parse(message);
 					var vec:Vector.<Object> = new Vector.<Object>;
-					for each(var entry:Object in obj)
-						vec.push(entry);
-					m_callback(EVENT_COMPLETE, vec);
+					if(message.indexOf("succes") == -1) //We've  removed the final character from the string, so this misspelling maybe accurate
+					{
+						var obj:Object = JSON.parse(message);
+						for each(var entry:Object in obj)
+							vec.push(entry);
+					}
+					
+					if(m_callback != null)
+						m_callback(EVENT_COMPLETE, vec);
 				}
 				else
 				{

@@ -1,21 +1,21 @@
 package networking
 {
-	import events.MenuEvent;
-	
 	import flash.events.Event;
+	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
-	import scenes.game.display.World;
 	import events.WidgetChangeEvent;
+	import events.MenuEvent;
+	
+	import scenes.game.display.World;
+	
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	
-	import flash.net.URLRequestMethod;
-	
-	import utils.XString;
 	import utils.Base64Encoder;
+	import utils.XString;
 	
 	public class Achievements
 	{
@@ -63,7 +63,15 @@ package networking
 		
 		protected static function getAchievements(result:int, e:Event):void
 		{
-			var achievementObject:Object = JSON.parse(e.target.data);
+			var startIndex:int = e.target.data.indexOf('{');
+			var endIndex:int = e.target.data.lastIndexOf('}');
+			var str:String = e.target.data.substring(startIndex, endIndex + 1);
+			var pattern1:RegExp = /u'/g;
+			str = str.replace(pattern1, '"');
+			var pattern2:RegExp = /'/g;
+			str = str.replace(pattern2, '"');
+
+			var achievementObject:Object = JSON.parse(str);
 			currentAchievementList = new Dictionary;
 			for each(var achievement:Object in achievementObject.playerAchievements)
 			{
@@ -111,16 +119,14 @@ package networking
 			var method:String;
 			var url:String = null;
 			
-			var enc:Base64Encoder = Base64Encoder.getEncoder();
 			
 			switch(type)
 			{
 				case GET_ACHIEVEMENTS:
-					request = "/api/achievements/search/player?playerId=" + PlayerValidation.playerID + "&method=URL";
-					method = URLRequestMethod.GET; 
+					url = NetworkConnection.productionInterop + "?function=passURL&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
 					break;
 				case ADD_ACHIEVEMENT:
-					request = "/api/achievement/assign&method=URL";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/achievement/assign'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
@@ -128,13 +134,14 @@ package networking
 					dataObj.earnedOn = (new Date()).time;
 					
 					data = JSON.stringify(dataObj);
-					enc.encode(data);
-					data = enc.toString();
+					//var enc:Base64Encoder = Base64Encoder.getEncoder();
+					//enc.encode(data);
+					//data = enc.toString();
 					method = URLRequestMethod.POST; 
 					break;
 			}
 			
-			NetworkConnection.sendMessage(callback, request, data, url, method);
+			NetworkConnection.sendPythonMessage(callback, data, url, URLRequestMethod.POST);
 		}
 		
 		//checks to see if we should award an achievement for the type, and if so, award it

@@ -236,8 +236,10 @@ package scenes.layoutselectscene
 				{
 					obj.layoutFile = layoutFile;
 					if(obj == currentSelectedLayout)
+					{
 						showThumbnail();
-					break;
+						break;
+					}
 				}
 			}
 		}

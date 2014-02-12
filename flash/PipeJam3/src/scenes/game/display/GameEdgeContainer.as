@@ -12,6 +12,7 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import flash.errors.ScriptTimeoutError;
 	
 	import constraints.Constraint;
 	import display.NineSliceBatch;
@@ -328,6 +329,7 @@ package scenes.game.display
 			if (innerFromBoxSegment.edgeSegment)      innerFromBoxSegment.edgeSegment.setProps(m_fromNode.constraintVar.getProps());
 			if (innerFromBoxSegment.innerCircleJoint) innerFromBoxSegment.innerCircleJoint.setProps(m_fromNode.constraintVar.getProps());
 			if (innerFromBoxSegment) innerFromBoxSegment.m_isDirty = true;
+			
 		}
 		
 		private function updateToProps():void {
@@ -1171,10 +1173,18 @@ package scenes.game.display
 			super.setProps(props);
 			var i:int;
 			for (i = 0; i < m_edgeJoints.length; i++) {
+				try{
 				m_edgeJoints[i].setProps(props);
+				}catch(e:ScriptTimeoutError) {
+				}
 			}
 			for (i = 0; i < m_edgeSegments.length; i++) {
+				try{
 				m_edgeSegments[i].setProps(props);
+				}
+				catch(e:ScriptTimeoutError) {
+
+				}
 			}
 		}
 		
