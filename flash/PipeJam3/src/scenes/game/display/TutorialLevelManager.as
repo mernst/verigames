@@ -232,7 +232,6 @@ package scenes.game.display
 		
 		public function getLayoutFixed():Boolean
 		{
-			return false;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
