@@ -19,9 +19,9 @@ package networking
 		static public const tutorialLayoutObj:Object = JSON.parse(tutorialLayoutJson);
 		
 		[Embed(source = "../../lib/levels/tutorial/tutorialAssignments.json", mimeType = "application/octet-stream")]
-		static public const tutorialConstraintsFileClass:Class;
-		static public const tutorialConstraintsJson:String = new tutorialConstraintsFileClass();
-		static public const tutorialConstraintsObj:Object = JSON.parse(tutorialConstraintsJson);
+		static public const tutorialAssignmentsFileClass:Class;
+		static public const tutorialAssignmentsJson:String = new tutorialAssignmentsFileClass();
+		static public const tutorialAssignementsObj:Object = JSON.parse(tutorialAssignmentsJson);
 		
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
@@ -94,11 +94,11 @@ package networking
 			{
 				if (!PipeJamGame.levelInfo) return;
 				if (!completedTutorialList) completedTutorialList = new Dictionary();
-				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_levelId);
+				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
 				if(completedTutorialList[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
-					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_levelId;
+					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_RaLevelID;
 					completedTutorialList[currentLevel] = newTutorialObj;
 					newTutorialObj.post();
 				}
@@ -173,7 +173,7 @@ package networking
 			var currentLevelQID:int;
 			if (!PipeJamGame.levelInfo) 
 				return 0;
-			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_levelId);
+			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
 			
 			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
 			var currentPosition:int = currentLevel["position"];
@@ -261,7 +261,7 @@ package networking
 			switch(type)
 			{
 				case TUTORIAL_LEVEL_COMPLETE:
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelId});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_RaLevelID});
 					var data_id:String = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 

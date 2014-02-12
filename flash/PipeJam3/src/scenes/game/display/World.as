@@ -216,21 +216,21 @@ package scenes.game.display
 				{
 					obj = new LevelInformation();
 					PipeJamGame.levelInfo = obj;
-					obj.m_levelId = String(tutorialController.getFirstTutorialLevel());
-					if(!tutorialController.isTutorialLevelCompleted(obj.m_levelId))
-						nextLevelQID = parseInt(obj.m_levelId);
+					obj.m_RaLevelID = String(tutorialController.getFirstTutorialLevel());
+					if(!tutorialController.isTutorialLevelCompleted(obj.m_RaLevelID))
+						nextLevelQID = parseInt(obj.m_RaLevelID);
 					else
 						nextLevelQID = tutorialController.getNextUnplayedTutorial();
 				}
 				else
-					nextLevelQID = parseInt(obj.m_levelId);
+					nextLevelQID = parseInt(obj.m_RaLevelID);
 				
 				for each(var level:Level in levels)
 				{
 					if(level.m_levelQID == String(nextLevelQID))
 					{
 						firstLevel = level;
-						obj.m_levelId = String(nextLevelQID);
+						obj.m_RaLevelID = String(nextLevelQID);
 						break;
 					}
 				}
@@ -615,7 +615,7 @@ package scenes.game.display
 		{
 			var level:Level = active_level;
 			if (PipeJamGame.levelInfo != null) {
-				var currentLevelID:String = PipeJamGame.levelInfo.m_levelId;
+				var currentLevelID:String = PipeJamGame.levelInfo.m_RaLevelID;
 				//find the level with the current ID
 				for each(level in levels)
 				{
@@ -634,7 +634,7 @@ package scenes.game.display
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.m_levelId);
+			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -668,12 +668,12 @@ package scenes.game.display
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
 					var obj:LevelInformation = PipeJamGame.levelInfo;
-					obj.m_levelId = String(tutorialController.getNextUnplayedTutorial());
+					obj.m_RaLevelID = String(tutorialController.getNextUnplayedTutorial());
 					
 					m_currentLevelNumber = 0;
 					for each(var level:Level in levels)
 					{
-						if(level.m_levelQID == obj.m_levelId)
+						if(level.m_levelQID == obj.m_RaLevelID)
 							break;
 						
 						m_currentLevelNumber++;

@@ -11,7 +11,7 @@ package networking
 		public var m_id:String;
 		
 		/** the RA level. */
-		public var m_levelId:String;
+		public var m_RaLevelID:String;
 		
 		/** various DB file ids */
 		public var m_levelID:String
@@ -75,7 +75,7 @@ package networking
 			var levelObj:Object = new Object();
 			levelObj.m_version = m_version;
 			levelObj.m_id = m_id;
-			levelObj.m_levelId = m_levelId;
+			levelObj.m_levelId = m_RaLevelID;
 			levelObj.m_levelID = m_levelID;
 			levelObj.m_layoutID = m_layoutID;
 			levelObj.m_assignmentsID = m_assignmentsID;

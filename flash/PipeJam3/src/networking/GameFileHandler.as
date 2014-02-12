@@ -60,7 +60,7 @@ package networking
 		protected var m_fileType:int;
 		protected var m_levelFilesString:String;
 		
-		public var m_constraintsSaved:Boolean = false;
+		public var m_assignmentsSaved:Boolean = false;
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
 		
@@ -182,7 +182,7 @@ package networking
 			{
 				
 				layoutFileLoadedCallback(TutorialController.tutorialLayoutObj);
-				assignmentsFileLoadedCallback(TutorialController.tutorialConstraintsObj);
+				assignmentsFileLoadedCallback(TutorialController.tutorialAssignementsObj);
 				worldFileLoadedCallback(TutorialController.tutorialObj);
 			}
 			else
@@ -385,7 +385,7 @@ package networking
 		{
 			//need the constraints file id and the level id to create a db level (reuse the current levelID and layoutID)
 			//also should add user id, so we can track who did what
-			if(m_constraintsSaved == true && m_levelCreated == true)
+			if(m_assignmentsSaved == true && m_levelCreated == true)
 			{
 				//	sendMessage(CREATE_DB_LEVEL, null, ??????);
 			}
@@ -460,7 +460,7 @@ package networking
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
-					dataObj.levelId = PipeJamGame.levelInfo.m_levelId;
+					dataObj.levelId = PipeJamGame.levelInfo.m_RaLevelID;
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";
