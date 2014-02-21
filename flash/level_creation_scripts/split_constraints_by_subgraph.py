@@ -1,9 +1,9 @@
-import os
+import os, sys
 from load_constraints_graph import *
 from operator import itemgetter
 
 def split_constraints_by_subgraph(infilename, outfilename):
-	nodes, edges, assignments = load_constraints_graph(infilename)
+	version, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
 	print 'Splitting into subgraphs...'
 	touched_nodes = {}
 	subgraphs = []
@@ -43,8 +43,41 @@ def split_constraints_by_subgraph(infilename, outfilename):
 	digits = '%s' % len('%s' % nlevels)
 	for i, subgraph in enumerate(sorted_subgraphs):
 		levelid = ('L%0' + digits + 'd_V%s') % (i, subgraph['adjustable_nodes'])
-		# TODO: write subgraph constraints json
-		with open('%s/%sAssignments.json' % (dir, levelid),'w') as writeasg:
+		with open('%s/%s.json' % (dir, levelid), 'w') as writeconstr:
+			writeconstr.write('{"id": "%s",\n' % levelid)
+			writeconstr.write('"version": %s,\n' % version)
+			if scoring is not None:
+				writeconstr.write('"scoring": %s,\n' % json.dumps(scoring))
+			writeconstr.write('"variables":{\n')
+			nodes = subgraph.get('nodes')
+			firstline = True
+			for nodeid in nodes:
+				node = nodes[nodeid]
+				if node.isconstant:
+					continue
+				node_out = node.outputvar()
+				if not node_out:
+					continue
+				if firstline == True:
+					firstline = False
+				else:
+					writeconstr.write(',\n')
+				orig_id = nodeid.replace('var_', 'var:')
+				node_json_str = json.dumps(node_out, separators=(',', ':'))
+				writeconstr.write(' "%s":%s' % (orig_id, node_json_str))
+			writeconstr.write('},\n')
+			writeconstr.write('"constraints":[\n')
+			edges = subgraph.get('edges')
+			firstline = True
+			for edgeid in edges:
+				if firstline == True:
+					firstline = False
+				else:
+					writeconstr.write(',\n')
+				edge = edges[edgeid]
+				writeconstr.write(' "%s"' % edge.constraint)
+			writeconstr.write(']\n}')
+		with open('%s/%sAssignments.json' % (dir, levelid), 'w') as writeasg:
 			writeasg.write('{"id": "%s",\n' % levelid)
 			writeasg.write('"assignments":{\n')
 			firstline = True

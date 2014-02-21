@@ -3,7 +3,6 @@ from load_constraints_graph import *
 
 # Width space given to each incoming/outgoing edge plus 1 unit on each end of a box of padding [][i0][i1]...[in][]
 WIDTHPERPORT = 0.6
-NODE_HEIGHT = 1.0
 DECIMAL_PLACES = 2 # round all layout values to X decimal places
 
 class Point:
@@ -20,7 +19,7 @@ def getstaggeredlineheight(lineindex):
 
 # Main method to create layout, assignments files from constraint input json
 def constraints2grid(infilename, outfilename):
-	nodes, edges, assignments = load_constraints_graph(infilename)
+	version, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
 	print 'Creating graphviz file...'
 	# Create graphviz input file
 	graphin =  'digraph G {\n'
@@ -50,8 +49,8 @@ def constraints2grid(infilename, outfilename):
 		writegraph.write(graphin)
 	print 'Layout with graphviz (sfdp)...'
 	# Layout with graphviz
-	#with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename, outfilename)) as sfdpcmd:
-	#	sfdpcmd.read()
+	with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename)) as sfdpcmd:
+		sfdpcmd.read()
 	# Layout node positions from output
 	print 'Read in graphviz layout...'
 	nodelayout = {}

@@ -1,4 +1,6 @@
-import ijson, re, os
+import ijson, json, re, os
+
+NODE_HEIGHT = 1.0
 
 class Node:
 	def __init__(self, id, isconstant):
@@ -15,9 +17,9 @@ class Node:
 		self.height = NODE_HEIGHT
 		self.type_value = None
 		self.keyfor_value = None
+		self.possible_keyfor = None
 		self.default = None
 		self.score = None
-		self.possible_keyfor = None
 		
 	def addinput(self, edge):
 		if self.inputs.get(edge.id) is None:
@@ -30,6 +32,20 @@ class Node:
 			self.noutputs += 1
 			self.outputs[edge.id] = edge
 			edge.fromnode = self
+	
+	def outputvar(self):
+		var_obj = {}
+		if self.type_value is not None:
+			var_obj["type_value"] = self.type_value
+		if self.keyfor_value is not None:
+			var_obj["keyfor_value"] = self.keyfor_value
+		if self.possible_keyfor is not None:
+			var_obj["possible_keyfor"] = self.keyfor_value
+		if self.default is not None:
+			var_obj["default"] = self.default
+		if self.score is not None:
+			var_obj["score"] = self.score
+		return var_obj
 	
 	def sortedges(self):
 		sortedin = []
@@ -133,9 +149,40 @@ def load_constraints_graph(infilename):
 	current_var_id = None
 	current_var = None
 	current_asg = None
+	current_score_var_id = None
+	version = None
+	scoring = None
 	for prefix, event, value in parser:
 		#print 'prefix: %s event: %s value: %s' % (prefix, event, value)
-		if (prefix, event) == ('constraints', 'start_array'):
+		# Version
+		if (prefix, event) == ('version', 'number'):
+			version = value
+			#print version
+		# Scoring
+		elif (prefix, event) == ('scoring', 'start_map'):
+			if scoring is not None:
+				print 'Warning! Multiple scoring sections detected'
+			scoring = {}
+		elif (prefix, event) == ('scoring.constraints', 'number'):
+			scoring['constraints'] = value
+		elif (prefix, event) == ('scoring.variables', 'start_map'):
+			if scoring.get('variables') is not None:
+				print 'Warning! Multiple scoring.variables sections detected'
+			scoring['variables'] = {}
+		elif (prefix, event) == ('scoring.variables', 'map_key'):
+			current_score_var_id = value
+		elif current_score_var_id is not None:
+			if (prefix, event) == ('scoring.variables.' + current_score_var_id, 'number'):
+				if scoring['variables'].get(current_score_var_id) is not None:
+					print 'Warning! Multiple scoring.variables.%s entries found' % current_score_var_id
+				scoring['variables'][current_score_var_id] = value
+			elif (prefix, event) == ('scoring.variables', 'end_map'):
+				current_score_var_id = None
+				#print 'scoring: %s' % json.dumps(scoring)
+		elif (prefix, event) == ('scoring.variables', 'end_map'):
+			current_score_var_id = None
+		# Constraints
+		elif (prefix, event) == ('constraints', 'start_array'):
 			pass
 		# Begin contraint array item processing
 		# Format 1: "var:10 <= type:0"
@@ -266,4 +313,4 @@ def load_constraints_graph(infilename):
 			continue
 		isconst = (parts[0].lower() != 'var')
 		nodes[formattedid] = Node(formattedid, isconst)
-	return nodes, edges, assignments
+	return version, scoring, nodes, edges, assignments
