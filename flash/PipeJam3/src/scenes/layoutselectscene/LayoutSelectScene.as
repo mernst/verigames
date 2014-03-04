@@ -306,18 +306,15 @@ package scenes.layoutselectscene
 		public function showThumbnail():void
 		{
 			var currentSelectedLayout:Object = currentVisibleListBox.currentSelection.data;	
-			if(currentSelectedLayout.hasOwnProperty("layoutFile"))
-			{		
-				//should be only one
-				var foundThumb:Boolean = false;
-				for each(var thumb:XML in currentSelectedLayout.layoutFile.thumb)
+			if (currentSelectedLayout.hasOwnProperty("layoutFile"))
+			{
+				if (currentSelectedLayout.layoutFile["thumb"])
 				{
-					foundThumb = true;
 					var thumbByteArray:ByteArray = new ByteArray();
 					var dec:Base64Decoder = new Base64Decoder();
-					dec.decode(thumb.*);
+					dec.decode(currentSelectedLayout.layoutFile["thumb"] as String);
 					thumbByteArray = dec.toByteArray();
-				
+					
 					thumbByteArray.uncompress();
 					var thumbActualWidth:int = thumbByteArray.readUnsignedInt();
 					var thumbActualHeight:int = ((thumbByteArray.length - 4) / 4) / thumbActualWidth;
@@ -329,7 +326,7 @@ package scenes.layoutselectscene
 					//now want the image with a max width of 130, and the height proportional, but not over 130.
 					var imageWidth:Number, imageHeight:Number;
 					var scale:Number;
-					if(thumbActualWidth > thumbActualHeight)
+					if (thumbActualWidth > thumbActualHeight)
 					{
 						imageWidth = 130;
 						scale = 130/thumbActualWidth;
@@ -347,15 +344,13 @@ package scenes.layoutselectscene
 					thumbnailViewer.addChild(im);
 					addChild(thumbnailViewer);
 				}
-				
-				if(!foundThumb)
+				else
 				{
 					thumbnailViewer.removeChildren();
 					removeChild(levelSelectInfoPanel);
 					drawInfoPanel();
 					updateSelectedLevelInfo(null, false);
 				}
-
 			}
 		}
 		

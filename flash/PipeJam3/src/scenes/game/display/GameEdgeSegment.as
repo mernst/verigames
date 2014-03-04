@@ -41,6 +41,7 @@
 		
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
+		private var m_props:PropDictionary;
 		
 		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
@@ -106,7 +107,7 @@
 			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
 				(!isMoving || !hasMovedOutsideClickDist)) {
 				// If haven't moved enough, register this as a click on the node itself
-				dispatchEvent(new TouchEvent(EdgeContainerEvent.INNER_SEGMENT_CLICKED, event.touches));
+				dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.INNER_SEGMENT_CLICKED, this, null, event.touches));
 			}
 			if (!draggable) return;
 			
@@ -202,7 +203,7 @@
 				m_quad = null;
 			}
 			
-			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && getProps().hasProp(m_propertyMode)) {
 				m_quad = createEdgeSegment(m_endPt, m_isWide, false);
 				m_quad.color = KEYFOR_COLOR;
 			} else {

@@ -40,7 +40,7 @@ package system
 		public static const ACTION_PARAMETER_PROP_CHANGED:String       = "propChanged";
 		public static const ACTION_PARAMETER_PROP_VALUE:String         = "propValue";
 		public static const ACTION_PARAMETER_EDGE_ID:String            = "edgeId";
-		public static const ACTION_PARAMETER_EDGESET_ID:String         = "edgeSetId";
+		public static const ACTION_PARAMETER_VAR_ID:String             = "varId";
 		public static const ACTION_PARAMETER_STAMP_DICTIONARY:String   = "stampDict";
 		// UI action fields
 		public static const ACTION_PARAMETER_LAYOUT_NAME:String        = "layoutName";

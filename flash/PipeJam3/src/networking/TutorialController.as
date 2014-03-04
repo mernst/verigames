@@ -3,24 +3,26 @@ package networking
 	import flash.events.Event;
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
-	
 	import scenes.loadingscreen.LoadingScreenScene;
 	import starling.display.Sprite;
 	
 	public class TutorialController extends Sprite
 	{			
-		[Embed(source = "../../lib/levels/tutorial/tutorial.xml", mimeType = "application/octet-stream")]
+		[Embed(source = "../../lib/levels/tutorial/tutorial.json", mimeType = "application/octet-stream")]
 		static public const tutorialFileClass:Class;
-		static public const tutorialXML:XML = XML(new tutorialFileClass());
+		static public const tutorialJson:String = new tutorialFileClass();
+		static public const tutorialObj:Object = JSON.parse(tutorialJson);
 		
-		[Embed(source = "../../lib/levels/tutorial/tutorialLayout.xml", mimeType = "application/octet-stream")]
+		[Embed(source = "../../lib/levels/tutorial/tutorialLayout.json", mimeType = "application/octet-stream")]
 		static public const tutorialLayoutFileClass:Class;
-		static public const tutorialLayoutXML:XML = XML(new tutorialLayoutFileClass());
+		static public const tutorialLayoutJson:String = new tutorialLayoutFileClass();
+		static public const tutorialLayoutObj:Object = JSON.parse(tutorialLayoutJson);
 		
-		[Embed(source = "../../lib/levels/tutorial/tutorialConstraints.xml", mimeType = "application/octet-stream")]
-		static public const tutorialConstraintsFileClass:Class;
-		static public const tutorialConstraintsXML:XML = XML(new tutorialConstraintsFileClass());
-
+		[Embed(source = "../../lib/levels/tutorial/tutorialAssignments.json", mimeType = "application/octet-stream")]
+		static public const tutorialAssignmentsFileClass:Class;
+		static public const tutorialAssignmentsJson:String = new tutorialAssignmentsFileClass();
+		static public const tutorialAssignementsObj:Object = JSON.parse(tutorialAssignmentsJson);
+		
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
 		
@@ -81,7 +83,7 @@ package networking
 					completedTutorialList[tutorial] = tutorial;
 				}
 			}
-			setTutorialXML(tutorialXML);
+			setTutorialObj(tutorialObj);
 			
 			LoadingScreenScene.getLoadingScreenScene().changeScene();
 		}
@@ -92,11 +94,11 @@ package networking
 			{
 				if (!PipeJamGame.levelInfo) return;
 				if (!completedTutorialList) completedTutorialList = new Dictionary();
-				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_levelId);
+				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
 				if(completedTutorialList[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
-					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_levelId;
+					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_RaLevelID;
 					completedTutorialList[currentLevel] = newTutorialObj;
 					newTutorialObj.post();
 				}
@@ -142,7 +144,7 @@ package networking
 				var levelFound:Boolean = false;
 				for each(var order:int in tutorialOrderedList)
 				{
-					var nextQID:String = orderToTutorialDictionary[order].@qid;
+					var nextQID:String = orderToTutorialDictionary[order]["qid"];
 					
 					if(!isTutorialLevelCompleted(nextQID))
 					{
@@ -161,7 +163,7 @@ package networking
 		{
 			if (!tutorialOrderedList) return 0;
 			var order:Number = tutorialOrderedList[0];
-			return orderToTutorialDictionary[order].@qid;
+			return orderToTutorialDictionary[order]["qid"];
 		}
 		
 		//uses the current PipeJamGame.levelInfo.levelId to find the next level in sequence that hasn't been played
@@ -171,12 +173,10 @@ package networking
 			var currentLevelQID:int;
 			if (!PipeJamGame.levelInfo) 
 				return 0;
-			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_levelId);
+			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
 			
-			var currentLevel:XML = qidToTutorialDictionary[currentLevelQID];
-			
-			var currentPosition:int = currentLevel.@position;
-			
+			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
+			var currentPosition:int = currentLevel["position"];
 			currentPosition++;
 			var nextPosition:int = currentPosition;
 			
@@ -186,7 +186,7 @@ package networking
 				if(nextPosition == tutorialOrderedList.length)
 					return 0;
 				
-				var nextQID:int = orderToTutorialDictionary[nextPosition].@qid;
+				var nextQID:int = orderToTutorialDictionary[nextPosition]["qid"];
 				
 				//if we chose the last level from the level select screen, assume we want to play in order, done or not
 				if(fromLevelSelectList)
@@ -200,27 +200,23 @@ package networking
 			
 			return 0;
 		}
-
 		
-		public function setTutorialXML(m_worldXML:XML):void
+		public function setTutorialObj(m_worldObj:Object):void
 		{
+			var levels:Array = m_worldObj["levels"];
+			if (!levels) throw new Error("Expecting 'levels' Array in tutorial world JSON");
 			tutorialOrderedList = new Vector.<Number>;
 			orderToTutorialDictionary = new Dictionary;
 			qidToTutorialDictionary = new Dictionary;
 			//order the levels and store the order
-			var children:XMLList = m_worldXML.children();
-			var count:int = 0;
-			for each(var level:XML in children)
+			for (var i:int = 0; i < levels.length; i++)
 			{
-				var qid:Number = Number(level.attribute("qid"));
-				qidToTutorialDictionary[qid] = level;
-				
-				orderToTutorialDictionary[count] = level;
-				
-				level.@position = count;
-				
-				tutorialOrderedList.push(count);
-				count++;
+				var levelObj:Object = levels[i];
+				var qid:Number = Number(levelObj["qid"]);
+				qidToTutorialDictionary[qid] = levelObj;
+				orderToTutorialDictionary[i] = levelObj;
+				levelObj["position"] = i;
+				tutorialOrderedList.push(i);
 			}
 		}
 		
@@ -242,8 +238,8 @@ package networking
 			
 			for each(var position:int in tutorialOrderedList)
 			{
-				var level:XML = orderToTutorialDictionary[position];
-				var qid:String = level.attribute("qid");
+				var level:Object = orderToTutorialDictionary[position];
+				var qid:String = level["qid"];
 				
 				if(isTutorialLevelCompleted(qid) == false)
 					return false;				
@@ -265,7 +261,7 @@ package networking
 			switch(type)
 			{
 				case TUTORIAL_LEVEL_COMPLETE:
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelId});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_RaLevelID});
 					var data_id:String = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 

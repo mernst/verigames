@@ -1,60 +1,32 @@
 import sys
 
 FILES = [
-    'IntroWidget',
-    'WidgetPractice',
-    'LockedWidget',
-    'SatisfyBoxes',
-    'Passages',
-    'Clashes',
-    'WidenBoxes',
-    'NarrowBoxes',
-    'Optimize',
-    'Splits',
-    'Merges',
-	'SplitMergePractice',
-    'ZoomPan',
-    'Layout',
-    'GroupSelect',
+	'IntroWidget',
+	'WidgetPractice',
+	'LockedWidget',
+	'Links',
+	'Jams',
+	'Widen',
+	'Optimize',
+	'ZoomPan',
+	'Layout',
+	'GroupSelect',
 	'CreateJoint',
-    'SkillsA',
-    'SkillsB',
-#    'End',
+	'SkillsA',
+	'SkillsB',
 ]
 
-def combineLevels(files, graphHeader):
-    lines = []
-    
-    if graphHeader:
-        lines += '<?xml version="1.0" encoding="UTF-8"?>\n'
-        lines += '<graph id="world">\n'
-    else:
-        lines += '<?xml version="1.0" encoding="UTF-8"?>\n'
-        lines += '<!DOCTYPE world SYSTEM "world.dtd">\n'
-        lines += '<world version="1">\n'
+def combineLevels(files):
+	lines = '{"levels":[\n'
+	for i, file in enumerate(files):
+		if i > 0:
+			lines += ',\n'
+		for line in open(file):
+			linestr = line.rstrip()
+			lines += linestr + '\n'
+	lines += ']}'
+	return lines
 
-    for file in files:
-        inlevel = False
-
-        for line in open(file):
-            if '<level' in line:
-                inlevel = True
-
-            linestr = line.rstrip()
-            if inlevel and len(linestr) != 0:
-                lines += linestr + '\n'
-
-            if '</level' in line:
-                inlevel = False
-
-    if graphHeader:
-        lines += '</graph>\n'
-    else:
-        lines += '</world>\n'
-
-    return lines
-
-
-open('../tutorial.xml', 'w').writelines(combineLevels([fn + '.xml' for fn in FILES], False))
-open('../tutorialConstraints.xml', 'w').writelines(combineLevels([fn + 'Constraints.xml' for fn in FILES], True))
-open('../tutorialLayout.xml', 'w').writelines(combineLevels([fn + 'Layout.xml' for fn in FILES], True))
+open('../tutorial.json', 'w').writelines(combineLevels([fn + '.json' for fn in FILES]))
+open('../tutorialAssignments.json', 'w').writelines(combineLevels([fn + 'Assignments.json' for fn in FILES]))
+open('../tutorialLayout.json', 'w').writelines(combineLevels([fn + 'Layout.json' for fn in FILES]))

@@ -18,9 +18,13 @@
   <script src="date/date.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
+	console.log("1");
 	google.load("visualization", "1", {packages:["corechart"]});
 	var localGoogle = google;
 	$(document).ready(function(){
+		console.log("onready");
+		$("#datadatestart").val("12/01/2013");
+		$("#myModal").modal("show");
 		localGoogle.setOnLoadCallback(onLoadGoogleAPI);
 		$('#dropoff_stacked').change(function(e){
 			drawDropoffChart();
@@ -36,11 +40,23 @@
 		$('#sessionsperday_stacked').change(function(e){
 			drawColumnChart(sessionsPerDayData, "sessionsperday", "Sessions", "Sessions per Day", true);
 		});
+		$('#playersperday_stacked').change(function(e){
+			drawColumnChart(playersPerDayData, "playersperday", "Unique Players", "Unique Players per Day", true);
+		});
 		$('#levelsperday_stacked').change(function(e){
 			drawColumnChart(levelsPerDayData, "levelsperday", "Levels played", "Total Levels Played per Day", true);
 		});
 		$('#playsperlevel_stacked').change(function(e){
 			drawColumnChart(playsPerLevelData, "playsperlevel", "Total Plays", "Total Plays per Level", true);
+		});
+		$('#playersperweek_stacked').change(function(e){
+			drawColumnChart(playersPerWeekData, "playersperweek", "Unique Players", "Unique Players per Week", true);
+		});
+		$('#newplayersperweek_stacked').change(function(e){
+			drawColumnChart(newPlayersPerWeekData, "newplayersperweek", "New Players", "New Players per Week", true);
+		});
+		$('#hoursplayedperweek_stacked').change(function(e){
+			drawColumnChart(hoursPlayedPerWeekData, "hoursplayedperweek", "Hours Played", "Hours Played per Week", true);
 		});
 		$('#movesperlevel_completedonly').change(function(e){
 			filterData();
@@ -92,38 +108,51 @@
 		"SkillsA": true,
 		"SkillsB": true
 	};
-	  
+	// TODO: add uids of known CSFV users to exclude from data
+	var CSFV_USERS = {
+		
+	}
+	
+	
 	var PLAYER_LEVELS = []
 	  
 	function onLoadGoogleAPI() {
+		console.log("goog loaded");
 	    $.getJSON( "player_levels.json", function(data) {
 			PLAYER_LEVELS = data;
 			console.log( "success" );
 			filterData();
 			drawCharts();
+			$("#myModal").modal("hide");
 		});
 	}
 	  
-	updateProgress(1, "");
-	var dropOffData = [['Tutorial',  'Logged in uids', 'Anonymous uids']];
-	var sessionsPerDayData = [['Day',  'Logged in sessions', 'Anonymous sessions']];
-	var levelsPerDayData = [['Day',  'Logged in levels', 'Anonymous levels']];
-	var playsPerLevelData = [['Level',  'Logged in plays', 'Anonymous plays']];
-	var meanMovesPerLevelData = [['Level',  'Logged in mean moves', 'Anonymous mean moves']];
-	var medianMovesPerLevelData = [['Level',  'Logged in median moves', 'Anonymous median moves']];
-	var maxMovesPerLevelData = [['Level',  'Logged in max moves', 'Anonymous max moves']];
-	var minMovesPerLevelData = [['Level',  'Logged in min moves', 'Anonymous min moves']];
-	var meanTimePerLevelData = [['Level',  'Logged in mean time (minutes)', 'Anonymous mean time (minutes)']];
-	var medianTimePerLevelData = [['Level',  'Logged in median time (minutes)', 'Anonymous median time (minutes)']];
-	var maxTimePerLevelData = [['Level',  'Logged in max time (minutes)', 'Anonymous max time (minutes)']];
-	var minTimePerLevelData = [['Level',  'Logged in min time (minutes)', 'Anonymous min time (minutes)']];
+	var dropOffData = [['Tutorial', 'Logged in uids', 'Anonymous uids']];
+	var sessionsPerDayData = [['Day', 'Logged in sessions', 'Anonymous sessions']];
+	var playersPerDayData = [['Day', 'Logged in unique players', 'Anonymous unique players']];
+	var playersPerWeekData = [['Week starting', 'Logged in unique players', 'Anonymous unique players']];
+	var newPlayersPerWeekData = [['Week starting', 'New logged in players', 'New anonymous players']];
+	var hoursPlayedPerWeekData = [['Week starting', 'Logged in player hours', 'Anonymous player hours']];
+	var levelsPerDayData = [['Day', 'Logged in levels', 'Anonymous levels']];
+	var playsPerLevelData = [['Level', 'Logged in plays', 'Anonymous plays']];
+	var meanMovesPerLevelData = [['Level', 'Logged in mean moves', 'Anonymous mean moves']];
+	var medianMovesPerLevelData = [['Level', 'Logged in median moves', 'Anonymous median moves']];
+	var maxMovesPerLevelData = [['Level', 'Logged in max moves', 'Anonymous max moves']];
+	var minMovesPerLevelData = [['Level', 'Logged in min moves', 'Anonymous min moves']];
+	var meanTimePerLevelData = [['Level', 'Logged in mean time (minutes)', 'Anonymous mean time (minutes)']];
+	var medianTimePerLevelData = [['Level', 'Logged in median time (minutes)', 'Anonymous median time (minutes)']];
+	var maxTimePerLevelData = [['Level', 'Logged in max time (minutes)', 'Anonymous max time (minutes)']];
+	var minTimePerLevelData = [['Level', 'Logged in min time (minutes)', 'Anonymous min time (minutes)']];
 	
-	var includeHosts = ["flowjam.verigames.com"];
+	var includeHosts = {
+		"flowjam.verigames.com": true
+	};
 	function filterData() {
-		updateProgress(0, "Filtering data...");
+		progressPct = 0;
+		progressTask = "Filtering data...";
 		dataDict = {
-			'anon':      { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'level_plays': {}, 'level_moves': {}, 'hosts': {} },
-			'logged_in': { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'level_plays': {}, 'level_moves': {}, 'hosts': {} }
+			'anon':      { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} },
+			'logged_in': { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} }
 		};
 		startDatePickerVal = $("#datadatestart")[0].value;
 		startDate = Date.parse(startDatePickerVal);
@@ -131,6 +160,8 @@
 		endDatePickerVal = $("#datadateend")[0].value;
 		endDate = Date.parse(endDatePickerVal);
 		endDate = endDate ? endDate.getTime() / 1000.0 : null;
+		var earliestDate = startDate ? startDate : null;
+		var prevUsers = {};
 		for (var line = 0; line < PLAYER_LEVELS.length; line++) {
 			row = PLAYER_LEVELS[line];
 			host = row["pl_referrer_host"];
@@ -138,25 +169,27 @@
 			uid = row["pl_uid"];
 			var isLoggedIn = uid ? (uid.indexOf("cgs_vg_") == 0) : false;
 			// Hosts
+			if (CSFV_USERS.hasOwnProperty(uid)) continue; // Skip CSFV users
 			if (!dataDict['logged_in']['hosts'].hasOwnProperty(host)) dataDict['logged_in']['hosts'][host] = 0;
 			if (!dataDict['anon']['hosts'].hasOwnProperty(host)) dataDict['anon']['hosts'][host] = 0;
-			if (isLoggedIn) {
-				dataDict['logged_in']['hosts'][host]++;
-			} else {
-				dataDict['anon']['hosts'][host]++;
-			}
-			var approvedHost = false;
-			for (var h = 0; h < includeHosts.length; h++) {
-				if (host == includeHosts[h]) {
-					approvedHost = true;
-					break;
-				}
-			}
+			var dataKey = isLoggedIn ? 'logged_in' : 'anon';
+			dataDict[dataKey]['hosts'][host]++;
+			var approvedHost = includeHosts.hasOwnProperty(host) ? includeHosts[host] : false;
 			if (!approvedHost) continue; // only use approved hosts
 			var targetScore = parseInt(row["targetscore"]);
 			var score = parseInt(row["score"]);
 			queststarttime = parseInt(row["log_q_ts"]);
-			if (queststarttime && startDate && (queststarttime < startDate)) continue;
+			if (queststarttime && startDate && (queststarttime < startDate)) {
+				// Keep track of old users for "new user" determination
+				prevUsers[uid] = true;
+				continue;
+			}
+			if (!startDate) earliestDate = Math.min(earliestDate, queststarttime);
+			var starthour = 3600 * Math.floor(queststarttime / 3600); // round to nearest hour, queststarttime is in seconds
+			if (!dataDict['logged_in']['hour_user_plays'].hasOwnProperty(starthour)) dataDict['logged_in']['hour_user_plays'][starthour] = {};
+			if (!dataDict['anon']['hour_user_plays'].hasOwnProperty(starthour)) dataDict['anon']['hour_user_plays'][starthour] = {};
+			if (!dataDict[dataKey]['hour_user_plays'][starthour].hasOwnProperty(uid)) dataDict[dataKey]['hour_user_plays'][starthour][uid] = 0;
+			dataDict[dataKey]['hour_user_plays'][starthour][uid]++;
 			questendtime = parseInt(row["endtime"]);
 			if (questendtime && endDate && (questendtime > endDate)) continue;
 			nactions = parseInt(row["actions"]);
@@ -168,34 +201,22 @@
 					if (!dataDict['anon']['n_level_uids'].hasOwnProperty(levelName)) dataDict['anon']['n_level_uids'][levelName] = 0;
 					if (!dataDict['logged_in']['levels_uids'].hasOwnProperty(levelName)) dataDict['logged_in']['levels_uids'][levelName] = {};
 					if (!dataDict['anon']['levels_uids'].hasOwnProperty(levelName)) dataDict['anon']['levels_uids'][levelName] = {};
-					
-					if (isLoggedIn && !dataDict['logged_in']['levels_uids'][levelName].hasOwnProperty(uid)) {
-						dataDict['logged_in']['levels_uids'][levelName][uid] = true;
-						dataDict['logged_in']['n_level_uids'][levelName]++;
-					} else if (!isLoggedIn && !dataDict['anon']['levels_uids'][levelName].hasOwnProperty(uid)) {
-						dataDict['anon']['levels_uids'][levelName][uid] = true;
-						dataDict['anon']['n_level_uids'][levelName]++;
+					if (!dataDict[dataKey]['levels_uids'][levelName].hasOwnProperty(uid)) {
+						dataDict[dataKey]['levels_uids'][levelName][uid] = true;
+						dataDict[dataKey]['n_level_uids'][levelName]++;
 					}
 				}
 				// Plays/level processing
 				if (!dataDict['logged_in']['level_plays'].hasOwnProperty(levelName)) dataDict['logged_in']['level_plays'][levelName] = 0;
 				if (!dataDict['anon']['level_plays'].hasOwnProperty(levelName)) dataDict['anon']['level_plays'][levelName] = 0;
-				if (isLoggedIn) {
-					dataDict['logged_in']['level_plays'][levelName]++;
-				} else {
-					dataDict['anon']['level_plays'][levelName]++;
-				}
+				dataDict[dataKey]['level_plays'][levelName]++;
 				// Moves/level processing
 				var movesTargetScoreRequired = $('#movesperlevel_completedonly')[0].checked;
 				var scoreOK = !movesTargetScoreRequired || (!isNaN(targetScore) && !isNaN(score) && (score >= targetScore));
 				if (!isNaN(nactions) && scoreOK) {
 					if (!dataDict['logged_in']['level_moves'].hasOwnProperty(levelName)) dataDict['logged_in']['level_moves'][levelName] = [];
 					if (!dataDict['anon']['level_moves'].hasOwnProperty(levelName)) dataDict['anon']['level_moves'][levelName] = [];
-					if (isLoggedIn) {
-						dataDict['logged_in']['level_moves'][levelName].push(nactions);
-					} else {
-						dataDict['anon']['level_moves'][levelName].push(nactions);
-					}
+					dataDict[dataKey]['level_moves'][levelName].push(nactions);
 				}
 			}
 			// Sessions/day processing
@@ -206,11 +227,15 @@
 				var sessionDateKey = sessionstartdate.toLocaleDateString();
 				if (!dataDict['logged_in']['day_sessions'].hasOwnProperty(sessionDateKey)) dataDict['logged_in']['day_sessions'][sessionDateKey] = {};
 				if (!dataDict['anon']['day_sessions'].hasOwnProperty(sessionDateKey)) dataDict['anon']['day_sessions'][sessionDateKey] = {};
-				if (isLoggedIn) {
-					dataDict['logged_in']['day_sessions'][sessionDateKey][sessionid] = true;
-				} else {
-					dataDict['anon']['day_sessions'][sessionDateKey][sessionid] = true;
-				}
+				dataDict[dataKey]['day_sessions'][sessionDateKey][sessionid] = true;
+			}
+			// Players/day processing
+			if (queststarttime && uid) {
+				var startdate = new Date(queststarttime * 1000.0);
+				var dateKey = startdate.toLocaleDateString();
+				if (!dataDict['logged_in']['day_players'].hasOwnProperty(dateKey)) dataDict['logged_in']['day_players'][dateKey] = {};
+				if (!dataDict['anon']['day_players'].hasOwnProperty(dateKey)) dataDict['anon']['day_players'][dateKey] = {};
+				dataDict[dataKey]['day_players'][dateKey][uid] = true;
 			}
 			// Plays/day processing
 			if (queststarttime) {
@@ -218,18 +243,18 @@
 				var dateKey = startdate.toLocaleDateString();
 				if (!dataDict['logged_in']['day_plays'].hasOwnProperty(dateKey)) dataDict['logged_in']['day_plays'][dateKey] = 0;
 				if (!dataDict['anon']['day_plays'].hasOwnProperty(dateKey)) dataDict['anon']['day_plays'][dateKey] = 0;
-				if (isLoggedIn) {
-					dataDict['logged_in']['day_plays'][dateKey]++;
-				} else {
-					dataDict['anon']['day_plays'][dateKey]++;
-				}
+				dataDict[dataKey]['day_plays'][dateKey]++;
 			}
-			updateProgress(line / PLAYER_LEVELS.length, "Filtering data...");
+			if (line % 50 == 0) {
+				progressPct = line / PLAYER_LEVELS.length;
+				progressTask = "Filtering data...";
+			}
 		}
-	
+		
 		// Build table data
 		// Level Dropoff
-		dropOffData = [['Tutorial',  'Logged in uids', 'Anonymous uids']];
+		console.log("Formatting Level Dropoff data...");
+		dropOffData = [['Tutorial', 'Logged in uids', 'Anonymous uids']];
 		for (var i = 0; i < TUTORIALS.length; i++) {
 			var desc = TUTORIALS[i]["name"] + "\n\r qid:" + TUTORIALS[i]["qid"];
 			var nLog = 0;
@@ -239,23 +264,124 @@
 			dropOffData.push([desc, nLog, nAnon]);
 		}
 		// Sessions/day
+		console.log("Formatting Sessions/day data...");
 		sessionsPerDayData = [];
+		var nLoggedInSessionsTotal = 0;
+		var nAnonSessionsTotal = 0;
 		for (var dateKey in dataDict['logged_in']['day_sessions']) {
 			var nLoggedInSessions = 0;
 			for (var sessionKey in dataDict['logged_in']['day_sessions'][dateKey]) nLoggedInSessions++;
 			var nAnonSessions = 0;
 			for (var sessionKey in dataDict['anon']['day_sessions'][dateKey]) nAnonSessions++;
+			nLoggedInSessionsTotal += nLoggedInSessions;
+			nAnonSessionsTotal += nAnonSessions;
 			sessionsPerDayData.push([dateKey, nLoggedInSessions, nAnonSessions]);
 		}
+		$("#totalsessionsspan").html((nLoggedInSessionsTotal + nAnonSessionsTotal) + " ("+nLoggedInSessionsTotal+" logged-in | "+nAnonSessionsTotal+" anonymous)");
 		sessionsPerDayData.sort(dateKeySort);
-		sessionsPerDayData.unshift(['Day',  'Logged in sessions', 'Anonymous sessions']);
+		sessionsPerDayData.unshift(['Day', 'Logged in sessions', 'Anonymous sessions']);
+		// Players/day
+		console.log("Formatting Players/day data...");
+		playersPerDayData = [];
+		var nLoggedInPlayersTotal = 0;
+		var nAnonPlayersTotal = 0;
+		for (var dateKey in dataDict['logged_in']['day_players']) {
+			var nLoggedInPlayers = 0;
+			for (var sessionKey in dataDict['logged_in']['day_players'][dateKey]) nLoggedInPlayers++;
+			var nAnonPlayers = 0;
+			for (var sessionKey in dataDict['anon']['day_players'][dateKey]) nAnonPlayers++;
+			nLoggedInPlayersTotal += nLoggedInPlayers;
+			nAnonPlayersTotal += nAnonPlayers;
+			playersPerDayData.push([dateKey, nLoggedInPlayers, nAnonPlayers]);
+		}
+		$("#totalplayersspan").html((nLoggedInPlayersTotal + nAnonPlayersTotal) + " ("+nLoggedInPlayersTotal+" logged-in | "+nAnonPlayersTotal+" anonymous)");
+		playersPerDayData.sort(dateKeySort);
+		playersPerDayData.unshift(['Day', 'Logged in unique players', 'Anonymous unique players']);
+		// Build hourly data
+		var hourlyDataArr = []
+		for (var hourKey in dataDict['logged_in']['hour_user_plays']) {
+			hourlyDataArr.push([hourKey, dataDict['logged_in']['hour_user_plays'][hourKey], dataDict['anon']['hour_user_plays'][hourKey]]);
+		}
+		hourlyDataArr.sort(hourKeySort);
+		// Find previous sunday, start weeks from there, move week by week
+		var firstDay = new Date(earliestDate * 1000.0);
+		var prevSunday = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+		while (prevSunday.getDay() > 0) prevSunday = new Date(prevSunday.getTime() - 24*60*60*1000); // prev day
+		var currentWeekStartingDay = prevSunday;
+		var oneweekms = 7*24*60*60*1000.0;
+		playersPerWeekData = [['Week starting', 'Logged in unique players', 'Anonymous unique players']];
+		newPlayersPerWeekData = [['Week starting', 'New logged in players', 'New anonymous players']];
+		hoursPlayedPerWeekData = [['Week starting', 'Logged in player hours', 'Anonymous player hours']];
+		playersPerWeekData.push([currentWeekStartingDay, 0, 0]);
+		newPlayersPerWeekData.push([currentWeekStartingDay, 0, 0]);
+		hoursPlayedPerWeekData.push([currentWeekStartingDay, 0, 0]);
+		var dateStr = currentWeekStartingDay.toString();
+		var weeklyUsersPlayed = {};
+		var nTotalPlayers = [0, 0];
+		var nTotalNewPlayers = [0, 0];
+		var nTotalHoursPlayed = [0, 0];
+		var usersSinceStartDate = {};
+		for (var i = 0, len = hourlyDataArr.length; i < len; i++) {
+			var thisHour = hourlyDataArr[i][0];
+			while (thisHour * 1000.0 > currentWeekStartingDay.getTime() + oneweekms) {
+				// We have moved to the next week
+				currentWeekStartingDay = new Date(currentWeekStartingDay.getTime() + oneweekms);
+				dateStr = currentWeekStartingDay.toString();
+				weeklyUsersPlayed = {};
+				playersPerWeekData.push([currentWeekStartingDay, 0, 0]);
+				newPlayersPerWeekData.push([currentWeekStartingDay, 0, 0]);
+				hoursPlayedPerWeekData.push([currentWeekStartingDay, 0, 0]);
+			}
+			dateStr = currentWeekStartingDay.toString();
+			var indx = playersPerWeekData.length - 1;
+			// For each hour, there is a list of user keys and values of # plays for that user
+			for (var userKey in hourlyDataArr[i][1]) {
+				// Logged in
+				nTotalHoursPlayed[0]++;
+				if (!usersSinceStartDate.hasOwnProperty(userKey)) {
+					nTotalPlayers[0]++;
+					if (!prevUsers.hasOwnProperty(userKey)) {
+						newPlayersPerWeekData[indx][1]++;
+						nTotalNewPlayers[0]++;
+					}
+				}
+				prevUsers[userKey] = usersSinceStartDate[userKey] = true;
+				if (!weeklyUsersPlayed.hasOwnProperty(userKey)) playersPerWeekData[indx][1]++;
+				weeklyUsersPlayed[userKey] = true;
+				hoursPlayedPerWeekData[indx][1]++;
+			}
+			for (var userKey in hourlyDataArr[i][2]) {
+				// Anon
+				nTotalHoursPlayed[1]++;
+				if (!usersSinceStartDate.hasOwnProperty(userKey)) {
+					nTotalPlayers[1]++;
+					if (!prevUsers.hasOwnProperty(userKey)) {
+						newPlayersPerWeekData[indx][2]++;
+						nTotalNewPlayers[1]++;
+					}
+				}
+				prevUsers[userKey] = usersSinceStartDate[userKey] = true;
+				if (!weeklyUsersPlayed.hasOwnProperty(userKey)) playersPerWeekData[indx][2]++;
+				weeklyUsersPlayed[userKey] = true;
+				hoursPlayedPerWeekData[indx][2]++;
+			}
+		}
+		$("#totalplayerswkspan").html((nTotalPlayers[0] + nTotalPlayers[1]) + " ("+nTotalPlayers[0]+" logged-in | "+nTotalPlayers[1]+" anonymous)");
+		$("#totalnewplayersspan").html((nTotalNewPlayers[0] + nTotalNewPlayers[1]) + " ("+nTotalNewPlayers[0]+" logged-in | "+nTotalNewPlayers[1]+" anonymous)");
+		$("#totalhoursplayedspan").html((nTotalHoursPlayed[0] + nTotalHoursPlayed[1]) + " ("+nTotalHoursPlayed[0]+" logged-in | "+nTotalHoursPlayed[1]+" anonymous)");
 		// Plays/day
+		console.log("Formatting Plays/day data...");
 		levelsPerDayData = [];
+		var nLoggedInPlaysTotal = 0;
+		var nAnonPlaysTotal = 0;
 		for (var dateKey in dataDict['logged_in']['day_plays']) {
 			var nLoggedInPlays = dataDict['logged_in']['day_plays'][dateKey];
 			var nAnonPlays = dataDict['anon']['day_plays'][dateKey];
+			nLoggedInPlaysTotal += nLoggedInPlays;
+			nAnonPlaysTotal += nAnonPlays;
 			levelsPerDayData.push([dateKey, nLoggedInPlays, nAnonPlays]);
 		}
+		$("#totalplaysspan").html((nLoggedInPlaysTotal + nAnonPlaysTotal) + " ("+nLoggedInPlaysTotal+" logged-in | "+nAnonPlaysTotal+" anonymous)");
 		levelsPerDayData.sort(dateKeySort);
 		levelsPerDayData.unshift(['Day',  'Logged in levels', 'Anonymous levels']);
 		// Plays/level
@@ -274,6 +400,7 @@
 			var nAnonPlays = dataDict['anon']['level_plays'][levelName];
 			playsPerLevelData.push([levelName, nLoggedInPlays, nAnonPlays]);
 		}
+		console.log("Formatting moves data...");
 		// Moves/level
 		meanMovesPerLevelData = [['Level',  'Logged in mean moves', 'Anonymous mean moves']];
 		medianMovesPerLevelData = [['Level',  'Logged in median moves', 'Anonymous median moves']];
@@ -301,8 +428,8 @@
 			maxMovesPerLevelData.push([levelName, loggedInStatArr[2], anonStatArr[2]]);
 			minMovesPerLevelData.push([levelName, loggedInStatArr[3], anonStatArr[3]]);
 		}
-		
-		updateProgress(1, "Filtering data...");
+		progressPct = 1;
+		progressTask = "Data loading complete";
 	}
 	
 	function getMeanMedianMaxMin(arr) {
@@ -337,6 +464,12 @@
 		return oldname;
 	}
 	
+	function hourKeySort(a, b) {
+		if (a[0] < b[0]) return -1;
+		if (b[0] < a[0]) return 1;
+		return 0;
+	}
+	
 	function dateKeySort(a, b) {
 		var da = new Date(a[0]);
 		var db = new Date(b[0]);
@@ -345,15 +478,39 @@
 		return 0;
 	}
 	
-	function updateProgress(pct, task) {
-		// TODO
+	var updateIntervalId = setInterval(updateProgress, 50);
+	var progressPct = 0;
+	var progressTask = "";
+	function updateProgress() {
+		var pctOutOf100 = Math.floor(progressPct * 100);
+		$("#progressbar").width(pctOutOf100 + "%");
+		$("#progresstext").html(pctOutOf100 + "% " + progressTask);
+		//$("#progressbar").hide().show();
+		//$("#progresstext").hide().show();
+		console.log("pct: " + pctOutOf100 + " task:" + progressTask);
+		if (progressPct >= 1) {
+			clearInterval(updateIntervalId);
+		}
 	}
 	
 	function drawCharts() {
+		console.log("Drawing Dropoff chart...");
 		drawDropoffChart();
+		console.log("Drawing Sessions/day chart...");
 		drawColumnChart(sessionsPerDayData, "sessionsperday", "Sessions", "Sessions per Day", true);
+		console.log("Drawing Players/day chart...");
+		drawColumnChart(playersPerDayData, "playersperday", "Unique Players", "Unique Players per Day", true);
+		console.log("Drawing Players/wk chart...");
+		drawColumnChart(playersPerWeekData, "playersperweek", "Unique Players", "Unique Players per Week", true);
+		console.log("Drawing New Players/wk chart...");
+		drawColumnChart(newPlayersPerWeekData, "newplayersperweek", "New Players", "New Players per Week", true);
+		console.log("Drawing Hours Played/wk chart...");
+		drawColumnChart(hoursPlayedPerWeekData, "hoursplayedperweek", "Hours Played", "Hours Played per Week", true);
+		console.log("Drawing Levels/day chart...");
 		drawColumnChart(levelsPerDayData, "levelsperday", "Levels played", "Total Levels Played per Day", true);
+		console.log("Drawing Plays/day chart...");
 		drawColumnChart(playsPerLevelData, "playsperlevel", "Total Plays", "Total Plays per Level", true);
+		console.log("Drawing moves charts...");
 		drawMovesCharts();
 		// add more charts here
 	}
@@ -412,6 +569,7 @@
 		};
 		chart.draw(data, options);
 	}
+	
 </script>
 
 
@@ -420,6 +578,22 @@
 <body>
   <div class="panel panel-default" style="padding:10px">
   	<div class="panel-heading">Flow Jam verigames.com Statistics</div>
+  	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	    	<div class="well">
+	    	<h1><img alt="Loading spinner" src="img/spinner.gif"> Loading data dump...</h1>
+	    	</div>
+	    </div>
+	  </div>
+	</div>
+  	<div class="well" style="display: none;">
+  		<div class="progress">
+		  <div class="progress-bar progress-bar-info" id="progressbar" style="width:0%">
+		    <div class="bar" id="progresstext">0% Complete</div>
+		  </div>
+		</div>
+	</div>
   	<div class="panel panel-primary" style="margin:10px">
   	  <div class="panel-heading">Filter data:</div>
   	  <div class="panel-body">
@@ -429,6 +603,42 @@
         <span class="input-group-addon">
         	Data End:<input type="text" class="datepicker" value="" id="datadateend">
         </span>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Unique players per week:</div>
+      <div class="panel-body">
+      	  <p>Total unique players: <span id="totalplayerswkspan"></span></p>
+          <div id="playersperweek_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="playersperweek_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">New unique players per week:</div>
+      <div class="panel-body">
+      	  <p>Total new unique players: <span id="totalnewplayersspan"></span></p>
+          <div id="newplayersperweek_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="newplayersperweek_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Total hours played per week:</div>
+      <div class="panel-body">
+      	  <p>Total hours played: <span id="totalhoursplayedspan"></span></p>
+          <div id="hoursplayedperweek_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="hoursplayedperweek_stacked" checked="true"> Stacked
+            </span>
+          </div>
       </div>
     </div>
     <div class="panel panel-primary" style="margin:10px">
@@ -445,6 +655,7 @@
     <div class="panel panel-primary" style="margin:10px">
       <div class="panel-heading">Sessions per Day:</div>
       <div class="panel-body">
+      	  <p>Total sessions: <span id="totalsessionsspan"></span></p>
           <div id="sessionsperday_chart_div" style="width: 1200px; height: 500px;"></div>
           <div class="well">
             <span class="span2">
@@ -454,8 +665,21 @@
       </div>
     </div>
     <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Unique players per Day:</div>
+      <div class="panel-body">
+      	  <p>Total unique players: <span id="totalplayersspan"></span></p>
+          <div id="playersperday_chart_div" style="width: 1200px; height: 500px;"></div>
+          <div class="well">
+            <span class="span2">
+              <input type="checkbox" id="playersperday_stacked" checked="true"> Stacked
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
       <div class="panel-heading">Plays per Day:</div>
       <div class="panel-body">
+      	  <p>Total plays: <span id="totalplaysspan"></span></p>
           <div id="levelsperday_chart_div" style="width: 1200px; height: 500px;"></div>
           <div class="well">
             <span class="span2">

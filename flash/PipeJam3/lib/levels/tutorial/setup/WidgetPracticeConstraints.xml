@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<graph id="world">
-  <level id="WidgetPractice" qid="2" targetScore="700">
-    <box id="WidgetPractice4" width="narrow" editable="true"/>
-    <box id="WidgetPractice3" width="wide" editable="true"/>
-    <box id="WidgetPractice2" width="wide" editable="true"/>
-    <box id="WidgetPractice1" width="wide" editable="true"/>
-  </level>
-</graph>

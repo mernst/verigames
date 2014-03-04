@@ -16,7 +16,7 @@ package scenes.game.display
 		{
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(str, AssetsFont.FONT_UBUNTU, 100, 25, 8, color);
 			TextFactory.getInstance().updateAlign(textField, TextFactory.HCENTER, TextFactory.VCENTER);
-			TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+			if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 			XSprite.setPivotCenter(textField);
 			addChild(textField);
 		}

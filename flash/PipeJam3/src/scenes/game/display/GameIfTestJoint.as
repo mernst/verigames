@@ -24,7 +24,7 @@ package scenes.game.display
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	
-	public class GameIfTestJoint extends GameJointNode 
+	public class GameIfTestJoint extends GameNode 
 	{
 		private static const LEFT_EDGE_X_LOC:Number = 0.23;// center of left passage is @ x = 23% of the width
 		private static const RIGHT_EDGE_X_LOC:Number = 0.64;//center of right passage is @ x = 64% of the width
@@ -43,9 +43,9 @@ package scenes.game.display
 		{
 			super.setIncomingEdge(edge);
 			m_inputEdge = edge;
-			var newEnd:Point = new Point(m_boundingBox.x + RIGHT_EDGE_X_LOC * m_boundingBox.width - edge.x, edge.m_endPoint.y + m_boundingBox.height / 2.0);
+			var newEnd:Point = new Point(boundingBox.x + RIGHT_EDGE_X_LOC * boundingBox.width - edge.x, edge.m_endPoint.y + boundingBox.height / 2.0);
 			edge.setEndPosition(newEnd);
-			edge.increaseOutputHeight(m_boundingBox.height / 2.0);
+			edge.increaseOutputHeight(boundingBox.height / 2.0);
 		}
 		
 		// TODO: update when input edge changes width
@@ -58,23 +58,23 @@ package scenes.game.display
 		{
 			super.setOutgoingEdge(edge);
 			var newStart:Point;
-			if (edge.graphEdge) {
-				if (edge.graphEdge.is_wide) {
+			if (edge.graphConstraint) {
+				if (edge.graphConstraint.is_wide) {
 					m_wideEdge = edge;
-					newStart = new Point(m_boundingBox.x + RIGHT_EDGE_X_LOC * m_boundingBox.width - edge.x, edge.m_startPoint.y - m_boundingBox.height / 2.0 - 0.2);
+					newStart = new Point(boundingBox.x + RIGHT_EDGE_X_LOC * boundingBox.width - edge.x, edge.m_startPoint.y - boundingBox.height / 2.0 - 0.2);
 				} else {
 					m_narrowEdge = edge;
-					newStart = new Point(m_boundingBox.x + LEFT_EDGE_X_LOC * m_boundingBox.width - edge.x, edge.m_startPoint.y - m_boundingBox.height / 2.0 - 0.2);
+					newStart = new Point(boundingBox.x + LEFT_EDGE_X_LOC * boundingBox.width - edge.x, edge.m_startPoint.y - boundingBox.height / 2.0 - 0.2);
 				}
 				edge.setStartPosition(newStart);
-				edge.increaseInputHeight(m_boundingBox.height / 2.0);
+				edge.increaseInputHeight(boundingBox.height / 2.0);
 			}
 		}
 		
 		override public function draw():void
 		{
-			if (m_costume)
-				m_costume.removeFromParent(true);
+			if (costume)
+				costume.removeFromParent(true);
 			
 			var assetName:String;
 			if (m_propertyMode == PropDictionary.PROP_NARROW) {
@@ -86,12 +86,12 @@ package scenes.game.display
 			}
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var texture:Texture = atlas.getTexture(assetName);
-			m_costume = new Image(texture);
-			var scaleFactor:Number = m_boundingBox.width / m_costume.width;
-			m_costume.width *= scaleFactor;
-			m_costume.height *= scaleFactor;
-			m_costume.y = (m_boundingBox.height - m_costume.height) / 2.0;
-			addChild(m_costume);
+			costume = new Image(texture);
+			var scaleFactor:Number = boundingBox.width / costume.width;
+			costume.width *= scaleFactor;
+			costume.height *= scaleFactor;
+			costume.y = (boundingBox.height - costume.height) / 2.0;
+			addChild(costume);
 			/*
 			if (m_connectionLayer) m_connectionLayer.removeFromParent(true);
 			m_connectionLayer = new Sprite();

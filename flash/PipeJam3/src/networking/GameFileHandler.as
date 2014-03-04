@@ -60,7 +60,7 @@ package networking
 		protected var m_fileType:int;
 		protected var m_levelFilesString:String;
 		
-		public var m_constraintsSaved:Boolean = false;
+		public var m_assignmentsSaved:Boolean = false;
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
 		
@@ -128,7 +128,7 @@ package networking
 			fileHandler.sendMessage(GET_ALL_SAVED_LEVELS, fileHandler.onRequestSavedLevelsFinished);
 		}
 		
-		//request a list of layouts associated with current levelObject xmlID
+		//request a list of layouts associated with current levelObject levelID
 		static public function getLayoutList(callback:Function):void
 		{
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
@@ -154,7 +154,7 @@ package networking
 			fileHandler.sendMessage(REPORT_LEADERBOARD_SCORE, null);
 		}
 		
-		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, constraintsFileLoadedCallback:Function):void
+		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, assignmentsFileLoadedCallback:Function):void
 		{
 			var gameFileHandler:GameFileHandler;
 			//do this so I can debug the object...
@@ -180,9 +180,10 @@ package networking
 			}
 			else if(PipeJamGameScene.inTutorial)
 			{
-				layoutFileLoadedCallback(TutorialController.tutorialLayoutXML);
-				constraintsFileLoadedCallback(TutorialController.tutorialConstraintsXML);
-				worldFileLoadedCallback(TutorialController.tutorialXML);
+				
+				layoutFileLoadedCallback(TutorialController.tutorialLayoutObj);
+				assignmentsFileLoadedCallback(TutorialController.tutorialAssignementsObj);
+				worldFileLoadedCallback(TutorialController.tutorialObj);
 			}
 			else
 			{
@@ -195,7 +196,7 @@ package networking
 					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
 				
 				
-				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_constraintsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_assignmentsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = USE_DATABASE;
 					//is this an all in one file?
@@ -205,18 +206,19 @@ package networking
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
 						gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_constraintsID+"\"");
+						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");
 					}
 					else
 					{
 						var levelInfo:LevelInformation = PipeJamGame.levelInfo;
-						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_xmlID+"\"");
+						// TODO: probably rename from /xml and /constraints to /level and /assignments
+						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
 						var worldFileHandler:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_xmlID+"\"");
+						worldFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
 						var layoutFileHandler:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_layoutID+"\"");
-						var constraintsFileHandler:GameFileHandler = new GameFileHandler(constraintsFileLoadedCallback);
-						constraintsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_constraintsID+"\"");	
+						layoutFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_layoutID+"\"");
+						var assignmentsFileHandler:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
+						assignmentsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");	
 					}
 				}
 				else if(fileName && fileName.length > 0)
@@ -225,8 +227,8 @@ package networking
 					worldFileHandler1.loadFile(loadType, fileName+".zip");
 					var layoutFileHandler1:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
 					layoutFileHandler1.loadFile(loadType, fileName+"Layout.zip");
-					var constraintsFileHandler1:GameFileHandler = new GameFileHandler(constraintsFileLoadedCallback);
-					constraintsFileHandler1.loadFile(loadType, fileName+"Constraints.zip");
+					var assignmentsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
+					assignmentsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
 				}
 			}
 		}
@@ -293,43 +295,41 @@ package networking
 			var zipFile:FZipFile;
 			if(fzip.getFileCount() == 3)
 			{
-				var xmlArray:Array = new Array(3);
+				var parsedFileArray:Array = new Array(3);
 				for (var i:int = 0; i < fzip.getFileCount(); i++) {
 					zipFile = fzip.getFileAt(i);
 					if (zipFile.filename.toLowerCase().indexOf("layout") > -1) {
-						xmlArray[2] = new XML(zipFile.content);
-					} else if (zipFile.filename.toLowerCase().indexOf("constraints") > -1) {
-						xmlArray[1] = new XML(zipFile.content);
+						parsedFileArray[2] = JSON.parse(zipFile.content as String);
+					} else if (zipFile.filename.toLowerCase().indexOf("assignments") > -1) {
+						parsedFileArray[1] = JSON.parse(zipFile.content as String);
 					} else {
-						xmlArray[0] = new XML(zipFile.content);
+						parsedFileArray[0] = JSON.parse(zipFile.content as String);
 					}
 				}
-				m_callback(xmlArray);
+				m_callback(parsedFileArray);
 				
 			}
 			else
 			{
 				zipFile = fzip.getFileAt(0);
-				var containerXML:XML = new XML(zipFile.content);
-				trace(zipFile.filename);
-				
-				if(containerXML.world.length()>0 &&
-					containerXML.constraints.length()>0 &&
-					containerXML.layout.length()>0)
+				var contentsStr:String = zipFile.content.toString();
+				var containerObj:Object = JSON.parse(contentsStr);
+				var assignmentsObj:Object = containerObj["assignments"];
+				var layoutObj:Object = containerObj["layout"];
+				if (assignmentsObj && layoutObj)
 				{
 					var containerArray:Array = new Array(3);
-					containerArray[0] = containerXML.world[0];
-					containerArray[1] = containerXML.constraints[0];
-					containerArray[2] = containerXML.layout[0];
-					
+					containerArray[0] = containerObj;
+					containerArray[1] = assignmentsObj;
+					containerArray[2] = layoutObj;
+					trace("loaded world file: " + zipFile.filename);
 					m_callback(containerArray);
 				}
 				else
 				{
-					//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
+					trace("loaded individ file: " + zipFile.filename);
 					zipFile = fzip.getFileAt(0);
-					var xml:XML = new XML(zipFile.content);
-					m_callback(xml);
+					m_callback(containerObj);
 				}
 			}
 		}
@@ -383,9 +383,9 @@ package networking
 		
 		public function onDBLevelCreated():void
 		{
-			//need the constraints file id and the level id to create a db level (reuse the current xmlID and layoutID)
+			//need the constraints file id and the level id to create a db level (reuse the current levelID and layoutID)
 			//also should add user id, so we can track who did what
-			if(m_constraintsSaved == true && m_levelCreated == true)
+			if(m_assignmentsSaved == true && m_levelCreated == true)
 			{
 				//	sendMessage(CREATE_DB_LEVEL, null, ??????);
 			}
@@ -408,7 +408,7 @@ package networking
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_xmlID,'preference': PipeJamGame.levelInfo.preference});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;
@@ -419,16 +419,16 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case REQUEST_LAYOUT_LIST:
-					url = NetworkConnection.productionInterop + "?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_xmlID + 'L';
+					url = NetworkConnection.productionInterop + "?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_levelID + 'L';
 					break;
 				case GET_ALL_SAVED_LEVELS:
 					url = NetworkConnection.productionInterop + "?function=getSavedLevels&data_id="+PlayerValidation.playerID;
 					break;
 				case GET_SAVED_LEVEL:
-					url = NetworkConnection.productionInterop + "?function=getLevel&data_id="+PipeJamGame.levelInfo.m_xmlID;
+					url = NetworkConnection.productionInterop + "?function=getLevel&data_id="+PipeJamGame.levelInfo.m_levelID;
 					break;
 				case SAVE_LAYOUT:
-					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_xmlID+"L",'name': info});
+					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_levelID+"L",'name': info});
 					data_id = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=saveLayoutPOST&data_id='"+data_id+"'";
 					break;
@@ -460,7 +460,7 @@ package networking
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
-					dataObj.levelId = PipeJamGame.levelInfo.m_levelId;
+					dataObj.levelId = PipeJamGame.levelInfo.m_RaLevelID;
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";

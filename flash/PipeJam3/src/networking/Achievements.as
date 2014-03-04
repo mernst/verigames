@@ -4,7 +4,7 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
-	import events.EdgeSetChangeEvent;
+	import events.WidgetChangeEvent;
 	import events.MenuEvent;
 	
 	import scenes.game.display.World;
@@ -150,7 +150,7 @@ package networking
 			if(PlayerValidation.playerLoggedIn != true)
 				return;
 			
-			if(type == EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED)
+			if(type == WidgetChangeEvent.LEVEL_WIDGET_CHANGED)
 			{
 				if(value == 1)
 				{

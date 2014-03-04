@@ -10,10 +10,18 @@ package constraints
 		public static const GENERICS_NODE:String = "enabled_check";
 		
 		public var type:String;
+		public var lhs:ConstraintVar;
+		public var rhs:ConstraintVar;
+		public var scoring:ConstraintScoringConfig;
 		
-		public function Constraint(_type:String) 
+		public function Constraint(_type:String, _lhs:ConstraintVar, _rhs:ConstraintVar, _scoring:ConstraintScoringConfig) 
 		{
 			type = _type;
+			lhs = _lhs;
+			rhs = _rhs;
+			lhs.constraint = this;
+			rhs.constraint = this;
+			scoring = _scoring;
 		}
 		
 		public function isSatisfied():Boolean
