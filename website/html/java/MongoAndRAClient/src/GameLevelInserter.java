@@ -62,28 +62,32 @@ public class GameLevelInserter {
 	        String typesystem_version_id = args[2];
 	        String priorityLevel = args[3];
 	        
-	        MongoFileInserter fileInserter = new MongoFileInserter(db, "fs" + "/" + typesystem_version_id);
+	        MongoFileInserter fileInserter = new MongoFileInserter(db, "fs");
         	MongoLevelInserter mongoLevelInserter = new MongoLevelInserter(db, difficultyFile, typesystem_version_id, priorityLevel);
         	
 	        if(dir.isDirectory())
-	        {
-	        	File constraintsFile = new File(dir.getPath() + File.separator + "constraints.xml");
-	        	String constraintsFileID = fileInserter.addConstraintsFile(constraintsFile, typesystem_version_id);
-	        	
+	        {	        	
 	        	//now add to constraints table
 	        	// TO DO
 	        	
 	        	File[] files = dir.listFiles(new FilenameFilter() {
 	        	    public boolean accept(File directory, String fileName) {
 	        	        return fileName.endsWith(".zip") 
-	        	        && !fileName.endsWith("Layout.zip");
+	        	        && !fileName.endsWith("Layout.zip") && !fileName.endsWith("Constraints.zip");
 	        	    }});
 	        	
 	        	for(int i=0; i<files.length; i++)
 	        	{
-	        		File xmlFile = files[i];
+
+		        	File xmlFile = files[i];
 	        		System.out.println("File is : " + xmlFile.getName());
-	        		fileInserter.addLevelFiles(xmlFile);
+	        		
+	        		String filename = xmlFile.getName();
+	        		String rootfilename = filename.substring(0, filename.length()-4);
+		        	File constraintsFile = new File(dir.getPath() + File.separator + rootfilename + "Constraints.zip");
+		        	String constraintsFileID = fileInserter.addConstraintsFile(constraintsFile, typesystem_version_id);
+
+		        	fileInserter.addLevelFiles(xmlFile);
 		        	int index = xmlFile.getName().lastIndexOf('.');
 		        	String fileName = xmlFile.getName().substring(0, index);
 		        	mongoLevelInserter.addLevel(fileInserter, fileName);

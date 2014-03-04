@@ -25,8 +25,9 @@ public class MongoLevelInserter {
 	{
 		db = _db;
 		priority = _priority;
-		if(extension != "")
-			extension = "/" + extension;
+		extension = "";
+	//	if(extension != "")
+	//		extension = "/" + extension;
 		
 	    levelColl = db.getCollection("Level" + extension);
 	    layoutColl = db.getCollection("SubmittedLayouts" + extension);
@@ -76,9 +77,7 @@ public class MongoLevelInserter {
 		int numBoxes = 5;
 		int numEdges = 5;
 		int numConflicts = 0;
-		int numVisibleBoxes = 5;
-		int numVisibleEdges = 5;
-		int numBonusNodes = 5;
+		int startingValue = 5;
 		//find the levelID in the difficulty ratings, if it exists
 		if(difficultyRatings != null)
 		{
@@ -87,15 +86,13 @@ public class MongoLevelInserter {
 			{
 				Node node = nList.item(i);
 				Element element = (Element) node;
-				String nodeName = element.getAttribute("id");
+				String nodeName = element.getAttribute("new_name");
 				if(nodeName.equals(name))
 				{
-					numBoxes = Integer.parseInt(element.getAttribute("nodes"));
-					numEdges = Integer.parseInt(element.getAttribute("edges"));
+					numBoxes = Integer.parseInt(element.getAttribute("node_count"));
+					numEdges = Integer.parseInt(element.getAttribute("edge_count"));
 					numConflicts = Integer.parseInt(element.getAttribute("conflicts"));
-					numVisibleBoxes = Integer.parseInt(element.getAttribute("visible_nodes"));
-					numVisibleEdges = Integer.parseInt(element.getAttribute("visible_edges"));
-					numBonusNodes = Integer.parseInt(element.getAttribute("bonus_nodes"));
+					startingValue = Integer.parseInt(element.getAttribute("value"));
 				}
 			}
 		}
@@ -104,6 +101,9 @@ public class MongoLevelInserter {
 		levelObj.put("layoutID", layoutID);
 		levelObj.put("constraintsID", constraintsID);
 		levelObj.put("name", name);
+		
+		levelObj.put("version", "v6test");
+		
 		DBObject metadataObj = new BasicDBObject();
 		levelObj.put("metadata", metadataObj);
 
@@ -117,10 +117,10 @@ public class MongoLevelInserter {
 		DBObject propertiesObj = new BasicDBObject();
 		propertiesObj.put("boxes", numBoxes);
 		propertiesObj.put("lines", numEdges);
-		propertiesObj.put("visibleboxes", numVisibleBoxes);
-		propertiesObj.put("visiblelines", numVisibleEdges);
+		propertiesObj.put("visibleboxes", numBoxes);
+		propertiesObj.put("visiblelines", numEdges);
+		propertiesObj.put("startingValue", startingValue);
 		propertiesObj.put("conflicts", numConflicts);
-		propertiesObj.put("bonus_nodes", numBonusNodes);
 		metadataObj.put("properties", propertiesObj);
 		
 		System.out.println(levelObj);

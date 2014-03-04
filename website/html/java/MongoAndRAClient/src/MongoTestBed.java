@@ -49,27 +49,31 @@ public class MongoTestBed {
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
-     map.put("xmlID", "52798635a8e0e0e5438239dcL"); 
-   //  map.put("xmlID", "52798634a8e0e0e5438239d4L");
+ //    map.put("version", "v6test"); 
+ //    map.put("$oid" , "5293eedaa8e047a495eaac01");
      //    map.put("name", "EmptyDesert"); 
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
  //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
+
   //    listFiles("fs/ostrusted/6");
       
 //        System.out.println("Level");
- //    SaveFileInfo(db, "Level", map);
+   //  SaveFileInfo(db, "SubmittedLevels", map);
+  //   SaveFileEntriesToFiles(db, "SubmittedLevels", map);
   //   SavePlayerSubmissionInfo(db, "SubmittedLevels");
     // 	listFiles("fs");
     //	writeFileLocally("fs", "52d4855727f4030c9139be8a", "test2.zip");
   //     String[] levelIDArray = getConstraintIDs(db, "SubmittedLevels");
    //    for(int index = 0; index < levelIDArray.length; index++)
-       { 
+   //    { 
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
-       }
+    //   }
   //     System.out.println("SaveLevels");
-       listEntries(db, "SubmittedLayouts", map);
-//       System.out.println("SubmittedLayouts");
+      listEntries(db, "SubmittedLevels", map);
+    //    findEntryByID(db, "Level", "5293eedaa8e047a495eaac01");
+   //    addField(db, "Level", map, "version", "v6test");
+  //      System.out.println("SubmittedLayouts");
 //       listEntriesToFile(db, "SubmittedLevels", map, "SubmittedLevels0115.txt");
        
  //      SaveFileInfo(db, "SubmittedLevels", map, "SubmittedLevels0115.txt");
@@ -89,6 +93,45 @@ public class MongoTestBed {
 	}
 	
 	
+	static void dropCollection(DB db, String collectionName)
+	{	
+		DBCollection collection = db.getCollection(collectionName);
+		 try { 
+			 collection.drop();
+            System.out.println("dropping " + collectionName);
+        } catch(Exception e) {
+        	System.out.println(e);
+        }
+	}
+	
+	static void addField(DB db, String collectionName, HashMap<String, String> searchKeys, String newFieldName, String newFieldValue)
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+
+           	obj.put(newFieldName, newFieldValue);
+    		
+           	collection.update(field, obj);
+            System.out.println(obj);
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+	}
+	
 	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys)
 	{
 		BasicDBObject field = new BasicDBObject();
@@ -102,6 +145,7 @@ public class MongoTestBed {
 		DBCursor cursor = null;
 		 try { 
 			 cursor = collection.find(field);
+			 System.out.println(cursor.count());
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
             System.out.println(obj);
@@ -139,7 +183,7 @@ public class MongoTestBed {
 		outputFile.close();
 	}
 	
-	static void SaveFileEntriesToFiles(DB db, String collectionName, HashMap<String, String> searchKeys, String fileName) throws Exception
+	static void SaveFileEntriesToFiles(DB db, String collectionName, HashMap<String, String> searchKeys) throws Exception
 	{
 		BasicDBObject field = new BasicDBObject();
 		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
@@ -158,15 +202,10 @@ public class MongoTestBed {
            	DBObject obj = cursor.next();
      //       out.print(obj.toString() + '\n'); 
  
-           	if(!(obj.containsKey("xmlID") && obj.containsKey("name") && obj.containsKey("constraintsID")))
-           			continue;
-           	
-           	if(!obj.containsKey("player") || obj.get("player").toString().equals("51e5b3460240288229000026"))
-       			continue;
            	
            	String xmlID = obj.get("xmlID").toString();
             String levelName = obj.get("name").toString();
-            
+            System.out.println(levelName);
             int newVal = 1;
             if(nameCount.containsKey(levelName))
             {
@@ -561,6 +600,8 @@ public class MongoTestBed {
 		DBObject foundOne = null;
 		try { 
 			foundOne = collection.findOne(id);
+			System.out.println(foundOne);
+		//	collection.remove(foundOne);
        } finally {
        }
        return foundOne;
@@ -577,6 +618,25 @@ public class MongoTestBed {
 			 cursor = collection.find(field);
 			 if(cursor.hasNext())
 				 obj = cursor.next();
+       } finally {
+       	if(cursor != null)
+       		cursor.close();
+       }
+       return obj;
+	}
+	
+	static public DBObject removeEntry(DB db, String collectionName, String key, String value)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		BasicDBObject field = new BasicDBObject();
+		field.put(key, value);
+		DBCursor cursor = null;
+		DBObject obj = null;
+		try { 
+			 cursor = collection.find(field);
+			 if(cursor.hasNext())
+				 obj = cursor.next();
+			 	collection.remove(obj);
        } finally {
        	if(cursor != null)
        		cursor.close();
@@ -606,8 +666,6 @@ public class MongoTestBed {
 
         fs.remove(id);
 	}
-	
-	
         
  //       db.createCollection("SavedLevels", null);
   //      DBCollection foo = db.getCollection("SubmittedLevels");
