@@ -1,28 +1,27 @@
 package scenes.game.display
 {
-	import constraints.Constraint;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import utils.XObject;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
 	
 	import audio.AudioManager;
 	
+	import constraints.Constraint;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintValue;
+	import constraints.ConstraintVar;
+	
 	import deng.fzip.FZip;
 	
 	import display.ToolTipText;
 	
 	import events.EdgeContainerEvent;
-	import events.WidgetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
@@ -31,6 +30,7 @@ package scenes.game.display
 	import events.MoveEvent;
 	import events.PropertyModeChangeEvent;
 	import events.UndoEvent;
+	import events.WidgetChangeEvent;
 	
 	import graph.BoardNodes;
 	import graph.Edge;
@@ -60,6 +60,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import utils.Base64Encoder;
+	import utils.XObject;
 	import utils.XString;
 	
 	/**
@@ -89,10 +90,9 @@ package scenes.game.display
 		private var m_levelOriginalLayoutObj:Object; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutObjWrapper:Object;
-		private var m_levelAssignmentsObj:Object;
+		public var m_levelAssignmentsObj:Object;
 		private var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
 		private var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
-		public var m_levelAssignmentsObjWrapper:Object;
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
@@ -130,6 +130,9 @@ package scenes.game.display
 		
 		/** Most recent score of the player */
 		private var m_prevScore:int = 0;
+		/** previous - 1 score for player */
+		//prevScore gets updated too quickly, so this shadows and lags behind
+		private var m_oldScore:int = 0;
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
@@ -642,7 +645,6 @@ package scenes.game.display
 		public function updateAssignmentsObj():void
 		{
 			m_levelAssignmentsObj = createAssignmentsObj();
-			m_levelAssignmentsObjWrapper = { "assignments": m_levelAssignmentsObj, "id": original_level_name };
 		}
 		
 		private function createAssignmentsObj():Object
@@ -1462,7 +1464,7 @@ package scenes.game.display
 		public function get currentScore():int { return m_currentScore; }
 		public function get bestScore():int { return m_bestScore; }
 		public function get prevScore():int { return m_prevScore; }
-		
+		public function get oldScore():int { return m_oldScore; }
 		public function resetBestScore():void
 		{
 			m_bestScore = m_currentScore;
@@ -1471,6 +1473,7 @@ package scenes.game.display
 		
 		public function updateScore(recordBestScore:Boolean = false):void
 		{
+			m_oldScore = m_prevScore;
 			m_prevScore = m_currentScore;
 			levelGraph.updateScore();
 			m_currentScore = Math.round(levelGraph.score); // TODO: round or force levelGraph score to be int?
@@ -1478,6 +1481,8 @@ package scenes.game.display
 				m_bestScore = m_currentScore;
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
+				if(m_oldScore != 0)
+					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			m_conflictEdgesDirty = true;
 		}

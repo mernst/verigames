@@ -28,6 +28,8 @@ package networking
 		public var m_score:int;
 		public var m_targetScore:int;
 		
+		public var m_revision:String;
+		
 		public var m_checked:Boolean;
 		public var m_unlocked:Boolean;
 		
@@ -88,6 +90,8 @@ package networking
 			
 			levelObj.m_score = m_score;
 			levelObj.m_targetScore = m_targetScore;
+			
+			levelObj.m_revision = m_revision;
 			
 			levelObj.m_checked = m_checked;
 			levelObj.m_unlocked = m_unlocked;

@@ -5,7 +5,8 @@ import sys
 import pymongo
 import gridfs
 import bson
-import time
+import  datetime, time
+import random
 from pymongo import Connection
 from pymongo import database
 from bson.objectid import ObjectId
@@ -13,6 +14,9 @@ from bson import json_util
 import json
 import base64
 import requests
+import os
+from os import listdir
+from os.path import isfile, join
 
 def getOverallLeaders():
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -294,10 +298,19 @@ def getActiveLevels():
 	db = client.gameapi
 	collection = db.Level
 	concatList = []
-	for level in collection.find():
-		item = json.dumps(level, default=json_util.default)
-		concatList.append(item)
-		concatList.append(',')
+	count = 1
+	#limit number returned to 30
+	currentcount = 0
+	randomstartcount = random.randint(0,30)
+	maxcount = 30 + randomstartcount
+	for level in collection.find({ "submitted": { "$ne": "v6test" }, "version" : "v6test"}):
+		count += 1
+		if count > randomstartcount:
+			item = json.dumps(level, default=json_util.default)
+			concatList.append(item)
+			concatList.append(',')
+			if count > maxcount:
+				break
 	return '///[' + ''.join(concatList).strip(',') + ']'
 
 def getCompletedLevels(playerID):
@@ -372,6 +385,11 @@ def submitLevel(messageData, fileContents):
 	test = fs.put(decoded)
 	messageObj["constraintsID"] = str(test)
 	id = collection.insert(messageObj)
+
+	#mark served level as completed
+	collection = db.Level
+	xmlID = messageObj["xmlID"]
+	collection.update({"xmlID":xmlID}, {"$set": {"submitted": "v6test"}})
 	return '///success'
 
 #pass url to localhost:3000
@@ -391,6 +409,73 @@ def passURLPOST(url, postdata):
 	else:
 		return '///success'
 
+def getLevelDirectoryContents():
+	fileList = ["<ul>"]
+	listing = next(os.walk('/var/www/html/game'))[2]
+	count = 0
+	for file1 in listing:
+		count += 1
+		fileList.append("<li><a href='/game/" + str(file1) + "'>" + str(file1) + "</a></li>")
+
+		if count == 6:
+			fileList.append("<ul>")
+			return ''.join(fileList)
+
+
+	fileList.append("<ul>")
+
+	return ''.join(fileList)
+
+def getActiveLevels2():
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.game2api
+	collection = db.Levels
+	concatList = []
+	for level in collection.find():
+		item = json.dumps(level, default=json_util.default)
+		concatList.append(item)
+		concatList.append(',')
+	return '///[' + ''.join(concatList).strip(',') + ']'
+
+def getFile2(fileID):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.game2api
+	fs = gridfs.GridFS(db)
+	f = fs.get(ObjectId(fileID)).read()
+	encoded = base64.b64encode(f)
+	return encoded
+
+def submitLevel2(messageData, fileContents):
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.game2api
+	fs = gridfs.GridFS(db)
+	messageObj = json.loads(messageData)
+	decoded = base64.b64decode(fileContents)
+	newAssignmentsID = str(fs.put(decoded))
+	messageObj["assignmentsID"] = str(newAssignmentsID )
+	collection = db.Solvers
+	id = collection.insert(messageObj)
+
+	#mark served level as updated if score is higher than current
+	collection = db.Levels
+	levelID = messageObj["levelID"]
+	for level in collection.find({"levelID":levelID}):
+		if int(str(level["current_score"])) < int(messageObj["score"]):
+			currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
+			collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["score"], "revision": messageObj["revision"]}})
+	return '///success' + str(level["score"])
+
+def test():
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.gameapi
+
+	#mark served level as completed
+	collection = db.Level
+	xmlID = "52f3cb1ba8e0d6c8940ca999"
+	obj = collection.find_one({"xmlID":xmlID})
+	collection.update({"xmlID":xmlID}, {"$set": {"submitted": "v6test"}})
+
+	return "food"
 	
 #CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
 if sys.argv[1] == "overallLeaders":
@@ -451,6 +536,19 @@ elif sys.argv[1] == "passURL":
 	print(passURL(sys.argv[2]))
 elif sys.argv[1] == "passURLPOST":
 	print(passURLPOST(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "getFileList":
+	print(getLevelDirectoryContents())
+
+elif sys.argv[1] == "getActiveLevels2":
+	print(getActiveLevels2())
+elif sys.argv[1] == "getFile2":
+	print(getFile2(sys.argv[2]))
+elif sys.argv[1] == "submitLevel2POST":
+	print(submitLevel2(sys.argv[2], sys.argv[3]))
+
+
+elif sys.argv[1] == "test":
+	print(test())
 
 elif sys.argv[1] == "foo":
 	print("bar")

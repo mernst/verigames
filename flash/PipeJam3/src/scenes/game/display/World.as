@@ -382,18 +382,20 @@ package scenes.game.display
 				var outputObj:Object = updateAssignments();
 				active_level.updateLevelObj();
 				
-				var containerObj:Object = { "container": { "version":"1" }};
-				containerObj["container"]["level"] = active_level.levelObj;
-				containerObj["container"]["layout"] = active_level.m_levelLayoutObjWrapper;
-				containerObj["container"]["assignments"] = active_level.m_levelAssignmentsObjWrapper;
-				for (var key:String in outputObj) {
-					containerObj["container"][key] = outputObj[key];
-				}
+			//	var containerObj:Object = { "container": { "version":"1" }};
+			//	containerObj["container"]["level"] = active_level.levelObj;
+			//	containerObj["container"]["layout"] = active_level.m_levelLayoutObjWrapper;
+			//	containerObj["container"]["assignments"] = active_level.m_levelAssignmentsObjWrapper;
+			//	for (var key:String in outputObj) {
+			//		containerObj["container"][key] = outputObj[key];
+			//	}
 				
-				var zip:ByteArray = active_level.zipJsonFile(containerObj, "container");
+				var newAssignments:Object = active_level.m_levelAssignmentsObj;
+				
+				var zip:ByteArray = active_level.zipJsonFile(newAssignments, "assignments");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
-				GameFileHandler.submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
+				GameFileHandler.submitLevel(zipEncodedString, event.type, PipeJamGame.SEPARATE_FILES);	
 				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
@@ -563,9 +565,9 @@ package scenes.game.display
 			if (evt && evt.widgetChanged && evt.widgetChanged.constraintVar) nodeId = evt.widgetChanged.constraintVar.id;
 			level_changed.updateScore(true);
 			gameControlPanel.updateScore(level_changed, false);
+			var oldScore:int = level_changed.prevScore;
+			var newScore:int = level_changed.currentScore;
 			if (evt && !evt.silent) {
-				var oldScore:int = level_changed.prevScore;
-				var newScore:int = level_changed.currentScore;
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
 				if (newScore >= level_changed.getTargetScore()) {
 					edgeSetGraphViewPanel.displayContinueButton(true);
@@ -597,6 +599,7 @@ package scenes.game.display
 				//beat the target score?
 				if(newScore  > level_changed.getTargetScore())
 				{
+					
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
 			}
@@ -799,7 +802,7 @@ package scenes.game.display
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
 							active_level.updateAssignmentsObj();
-							System.setClipboard(JSON.stringify(active_level.m_levelAssignmentsObjWrapper));
+							System.setClipboard(JSON.stringify(active_level.m_levelAssignmentsObj));
 						}
 						break;
 					case 65: //'a' for copy of ALL (world)

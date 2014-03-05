@@ -45,7 +45,7 @@ public class MongoTestBed {
         Mongo mongo = new Mongo( "54.208.82.42" );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
-        String dbName = "gameapi";
+        String dbName = "game2api";
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
@@ -70,7 +70,7 @@ public class MongoTestBed {
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
     //   }
   //     System.out.println("SaveLevels");
-      listEntries(db, "SubmittedLevels", map);
+      listEntriesAndRemove(db, "fs.files", map);
     //    findEntryByID(db, "Level", "5293eedaa8e047a495eaac01");
    //    addField(db, "Level", map, "version", "v6test");
   //      System.out.println("SubmittedLayouts");
