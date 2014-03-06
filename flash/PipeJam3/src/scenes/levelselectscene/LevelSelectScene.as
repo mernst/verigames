@@ -64,6 +64,7 @@ package scenes.levelselectscene
 		protected var numEdgesText:TextFieldWrapper;
 		protected var numConflictsText:TextFieldWrapper;
 		protected var scoreText:TextFieldWrapper;
+		protected var leaderText:TextFieldWrapper;
 		
 		public function LevelSelectScene(game:PipeJamGame)
 		{
@@ -126,7 +127,7 @@ package scenes.levelselectscene
 			
 			saved_levels_button = ButtonFactory.getInstance().createTabButton("Saved", buttonWidth, buttonHeight, 6, 6);
 			saved_levels_button.addEventListener(starling.events.Event.TRIGGERED, onSavedButtonTriggered);
-			addChild(saved_levels_button);
+			//addChild(saved_levels_button);
 			saved_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
 			saved_levels_button.y = buttonY + label.y;
 			
@@ -268,41 +269,47 @@ package scenes.levelselectscene
 				removeChild(numEdgesText);
 				removeChild(numConflictsText);
 				removeChild(scoreText);
+				removeChild(leaderText);
 				
-				if(currentSelectedLevel.hasOwnProperty("metadata"))
+				if(currentSelectedLevel.hasOwnProperty("widgets"))
 				{
-					numNodesText = TextFactory.getInstance().createTextField("Widgets: " + currentSelectedLevel.metadata.properties.visibleboxes, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					numNodesText = TextFactory.getInstance().createTextField("Widgets: " + currentSelectedLevel.widgets, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numNodesText, 0, 1);
 					addChild(numNodesText);
 					numNodesText.x = levelSelectInfoPanel.x + 10;
-					numNodesText.y = nextTextBoxYPos; //line up with list box
+					numNodesText.y = nextTextBoxYPos; 
 					nextTextBoxYPos += 20;
 					
-					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.links, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numEdgesText, 0, 1);
 					addChild(numEdgesText);
 					numEdgesText.x = levelSelectInfoPanel.x + 10;
-					numEdgesText.y = nextTextBoxYPos; //line up with list box
+					numEdgesText.y = nextTextBoxYPos; 
 					nextTextBoxYPos += 20;
 					
-					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numConflictsText, 0, 1);
 					addChild(numConflictsText);
 					numConflictsText.x = levelSelectInfoPanel.x + 10;
-					numConflictsText.y = nextTextBoxYPos; //line up with list box
+					numConflictsText.y = nextTextBoxYPos;
 					nextTextBoxYPos += 20;
 					
-					if(currentSelectedLevel.hasOwnProperty("score"))
-					{
-						scoreText = TextFactory.getInstance().createTextField("Score: " + currentSelectedLevel.score, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
-						TextFactory.getInstance().updateAlign(scoreText, 0, 1);
-						addChild(scoreText);
-						scoreText.x = levelSelectInfoPanel.x + 10;
-						scoreText.y = nextTextBoxYPos; //line up with list box
-						nextTextBoxYPos += 20;
-					}
+					scoreText = TextFactory.getInstance().createTextField("Score: " + currentSelectedLevel.current_score, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					TextFactory.getInstance().updateAlign(scoreText, 0, 1);
+					addChild(scoreText);
+					scoreText.x = levelSelectInfoPanel.x + 10;
+					scoreText.y = nextTextBoxYPos; 
+					nextTextBoxYPos += 20;
+					
+					leaderText = TextFactory.getInstance().createTextField("Leader: " + currentSelectedLevel.leader, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					TextFactory.getInstance().updateAlign(leaderText, 0, 1);
+					addChild(leaderText);
+					leaderText.x = levelSelectInfoPanel.x + 10;
+					leaderText.y = nextTextBoxYPos;
+					nextTextBoxYPos += 20;
 				}
-				if(e && e.data && e.data.hasOwnProperty("tapCount") && e.data.tapCount == 2)
+
+					if(e && e.data && e.data.hasOwnProperty("tapCount") && e.data.tapCount == 2)
 					onSelectButtonTriggered(e);
 			}
 		}

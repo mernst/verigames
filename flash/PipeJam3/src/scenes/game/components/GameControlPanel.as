@@ -183,17 +183,17 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
-			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
-			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
-			m_saveButton.x = width - m_saveButton.width - 16;
-			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
-			addChild(m_saveButton);
-			
-			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8, "Report your score\nto help verify\nthis level");
-			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
-			m_shareButton.x = m_saveButton.x;
-			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
-			addChild(m_shareButton);
+//			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
+//			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
+//			m_saveButton.x = width - m_saveButton.width - 16;
+//			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
+//			addChild(m_saveButton);
+//			
+//			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8, "Report your score\nto help verify\nthis level");
+//			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
+//			m_shareButton.x = m_saveButton.x;
+//			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
+//			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -261,7 +261,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
-			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
+		//	setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -273,8 +273,8 @@ package scenes.game.components
 		
 		private function setSharingButtonVisibility(viz:Boolean):void
 		{
-			m_saveButton.visible = viz;
-			m_shareButton.visible = viz;
+		//	m_saveButton.visible = viz;
+		//	m_shareButton.visible = viz;
 		}
 		
 		/**

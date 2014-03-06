@@ -444,6 +444,7 @@ package networking
 					solutionInfo.playerID =  PlayerValidation.playerID;
 					solutionInfo.levelID =  PipeJamGame.levelInfo.m_levelID;
 					solutionInfo.playerID = PlayerValidation.playerID; 
+					solutionInfo.username = PlayerValidation.playerUserName; 
 					//current time in seconds
 					var currentDate:Date = new Date();
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();

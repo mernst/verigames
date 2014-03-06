@@ -300,6 +300,9 @@ package scenes.game.display
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
+			return;
+			
 			if (!gameControlPanel) return;
 			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
 			var juggler:Juggler = Starling.juggler;

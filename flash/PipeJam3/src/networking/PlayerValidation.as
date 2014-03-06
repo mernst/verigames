@@ -23,16 +23,15 @@ package networking
 	//	Then you have to make sure they are active by activating them
 	public class PlayerValidation
 	{
-		public static var CREATE_PLAYER:int = 0;
-		public static var ACTIVATE_PLAYER:int = 1;
-		public static var VERIFY_SESSION:int = 2;
-		public static var PLAYER_EXISTS:int = 3;
-		public static var GET_ENCODED_COOKIES:int = 4;
+		public static var VERIFY_SESSION:int = 1;
+		public static var GET_ENCODED_COOKIES:int = 2;
+		public static var PLAYER_INFO:int = 3;
 
 		public static var playerLoggedIn:Boolean = false;
 		
 		public static var playerID:String = "";
 		public static var playerIDForTesting:String = "51e5b3460240288229000026"; //hard code one for local testing
+		public static var playerUserName:String = "";
 		
 		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
@@ -63,16 +62,6 @@ package networking
 			validationObject.pipejamCallbackFunction = callback;
 			validationObject.controller.setStatus(GETTING_COOKIE);
 			validationObject.checkForCookie();
-		}
-		
-		//callback function should check PlayerValidation.playerLoggedIn for success or not - only for use when debugging locally
-		static public function validatePlayerIsActive(callback:Function):void
-		{
-			if(validationObject == null)
-				validationObject = new PlayerValidation;
-			
-			validationObject.pipejamCallbackFunction = callback;
-			validationObject.checkPlayerExistence();
 		}
 		
 		//check for session ID cookie, and if found, try to validate it
@@ -124,8 +113,10 @@ package networking
 						}
 						controller.setStatus(ACTIVATING_PLAYER);
 						onValidationSucceeded();
-						//checkPlayerExistence(); no need to check RA
-						return; //wait for callback to continue
+						
+						//get player user name for storing leader info, but don't wait for it
+						getPlayerInfo();
+						return; 
 					}
 				}
 			}
@@ -134,68 +125,23 @@ package networking
 			pipejamCallbackFunction();
 		}
 		
-		public function checkPlayerExistence():void
+		public function getPlayerInfo():void
 		{
-			sendMessage(PLAYER_EXISTS, playerExistsCallback);
+			sendMessage(PLAYER_INFO, playerInfoCallback);
 		}
 		
-		public function playerExistsCallback(result:int, e:flash.events.Event):void
-		{
-			if(e != null)
-			{
-				if(e.target.data.indexOf("<html>") == -1) //if the RA is down, we get a html page telling us something or other
-				{
-					var exists:String = JSON.parse(e.target.data).existsInRepo;
-					if(XString.stringToBool(exists) == false)
-					{
-						//create player, assume it works?
-						sendMessage(CREATE_PLAYER, createPlayerCallback);
-					}
-					else
-					{
-						sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
-					}
-					return;
-				}
-			}
-			//if we make it this far, just exit
-			onValidationFailed();
-			pipejamCallbackFunction();
-
-		}
-		
-		public function createPlayerCallback(result:int, e:flash.events.Event):void
-		{
-			if(e != null)
-			{
-				if(e.target.data.indexOf("<html>") == -1) //if the RA is down, we get a html page telling us something or other
-				{
-					//if we get this far, assume the player got created
-					playerID = JSON.parse(e.target.data).id,
-					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
-					
-					return;
-				}
-			}
-			//if we make it this far, just exit
-			onValidationFailed();
-			pipejamCallbackFunction();
-			
-		}
-		
-		public function activatePlayerCallback(result:int, e:flash.events.Event):void
+		public function playerInfoCallback(result:int, e:flash.events.Event):void
 		{
 			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
-				onValidationSucceeded();
+				var response:String = e.target.data;
+				var jsonResponseObj:Object = JSON.parse(response);
+					
+				if(jsonResponseObj.username != null)
+				{
+					playerUserName = jsonResponseObj.username;				
+				}
 			}
-			else
-			{
-				onValidationFailed();
-			}
-			
-			
-			pipejamCallbackFunction();
 		}
 		
 		public function onValidationSucceeded():void
@@ -213,11 +159,6 @@ package networking
 			TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 		}
 		
-		public function activatePlayer(callback:Function):void
-		{
-			sendMessage(ACTIVATE_PLAYER, callback);
-		}
-		
 		public function sendMessage(type:int, callback:Function):void
 		{
 			var request:String;
@@ -225,17 +166,10 @@ package networking
 			var url:String = null;
 			switch(type)
 			{
-				case CREATE_PLAYER:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+playerID+"/new&method=POST";
-					method = URLRequestMethod.POST; 
-					break;
-				case ACTIVATE_PLAYER:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+playerID+"/activate&method=PUT"; 
-					method = URLRequestMethod.POST; 
-					break;
-				case PLAYER_EXISTS:
-					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/" + playerID + "/exists&method=GET";
+				case PLAYER_INFO:
+					url = "http://api.flowjam.verigames.com/api/users/" + PlayerValidation.playerID;
 					method = URLRequestMethod.GET; 
+					request = "";
 					break;
 				case VERIFY_SESSION:
 					url = "http://flowjam.verigames.com/verifySession";
