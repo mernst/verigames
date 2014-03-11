@@ -4,6 +4,7 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import events.GameComponentEvent;
 	import scenes.game.display.GameComponent;
+	import starling.text.TextField;
 	
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -29,7 +30,7 @@ package scenes.game.display
 		private var m_fontSize:Number;
 		
 		/** Text showing current score on score_pane */
-		private var m_text:TextFieldWrapper;
+		private var m_text:TextField;
 		
 		public function ScoreBlock(_assetName:String, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null, _radius:Number = -1)
 		{
@@ -40,17 +41,20 @@ package scenes.game.display
 			m_height = _height;
 			m_fontSize = _fontSize;
 			m_gameComponent = _gameComponent;
-			if (_radius <= 0) {
-				_radius = Math.min(m_width, m_height) / 5.0;
-			}
+			if (_radius <= 0) _radius = Math.min(m_width, m_height) / 5.0;
 			
 			m_sliceBatch = new NineSliceBatch(m_width + 2 * _radius, m_height + 2 * _radius, _radius, _radius, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", m_assetName);
 			m_sliceBatch.adjustUsedSlices(true, true, false, true, true, false, false, false, false);
 			addChild(m_sliceBatch);
 			
-			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_UBUNTU, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
-			TextFactory.getInstance().updateAlign(m_text, 1, 1);
+			var estWidth:Number = 0.5 * (m_fontSize) * m_score.length;
+			if (estWidth > m_width + _radius) {
+				// Adjust font size if width too large
+				m_fontSize *= (m_width + _radius) / estWidth;
+			}
+			m_text = new TextField(m_width + 2 * _radius, m_height + 2 * _radius, m_score, AssetsFont.FONT_UBUNTU, m_fontSize, 0x0);
 			addChild(m_text);
+			
 			if (m_gameComponent) {
 				addEventListener(TouchEvent.TOUCH, onTouch);
 				this.useHandCursor = true;
@@ -60,8 +64,9 @@ package scenes.game.display
 		
 		override public function dispose():void
 		{
-			disposeChildren();
+			if (m_text) m_text.dispose();
 			m_text = null;
+			disposeChildren();
 			if (hasEventListener(TouchEvent.TOUCH)) {
 				removeEventListener(TouchEvent.TOUCH, onTouch);
 			}
