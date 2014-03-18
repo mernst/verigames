@@ -139,7 +139,7 @@ package networking
 					
 				if(jsonResponseObj.username != null)
 				{
-					playerUserName = jsonResponseObj.username;				
+					playerUserName = jsonResponseObj.username;	
 				}
 			}
 		}
@@ -167,7 +167,7 @@ package networking
 			switch(type)
 			{
 				case PLAYER_INFO:
-					url = "http://api.flowjam.verigames.com/api/users/" + PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + PlayerValidation.playerID +"'";
 					method = URLRequestMethod.GET; 
 					request = "";
 					break;
@@ -183,7 +183,7 @@ package networking
 					break;
 			}
 			
-			NetworkConnection.sendMessage(callback, request, null, url, method);
+			NetworkConnection.sendMessage(callback, null, url, method, request);
 		}
 	}
 }
