@@ -63,15 +63,7 @@ package networking
 		
 		protected static function getAchievements(result:int, e:Event):void
 		{
-			var startIndex:int = e.target.data.indexOf('{');
-			var endIndex:int = e.target.data.lastIndexOf('}');
-			var str:String = e.target.data.substring(startIndex, endIndex + 1);
-			var pattern1:RegExp = /u'/g;
-			str = str.replace(pattern1, '"');
-			var pattern2:RegExp = /'/g;
-			str = str.replace(pattern2, '"');
-
-			var achievementObject:Object = JSON.parse(str);
+			var achievementObject:Object = JSON.parse(e.target.data);
 			currentAchievementList = new Dictionary;
 			for each(var achievement:Object in achievementObject.playerAchievements)
 			{
@@ -123,10 +115,10 @@ package networking
 			switch(type)
 			{
 				case GET_ACHIEVEMENTS:
-					url = NetworkConnection.productionInterop + "?function=passURL&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
 					break;
 				case ADD_ACHIEVEMENT:
-					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/achievement/assign'";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/achievement/assign'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
@@ -141,7 +133,7 @@ package networking
 					break;
 			}
 			
-			NetworkConnection.sendPythonMessage(callback, data, url, URLRequestMethod.POST);
+			NetworkConnection.sendMessage(callback, data, url, URLRequestMethod.POST, "");
 		}
 		
 		//checks to see if we should award an achievement for the type, and if so, award it

@@ -52,27 +52,18 @@ package networking
 		/**
 		 * args:
 		 * callback - completion callback
-		 * request - request to pass to host
 		 * data - any data to send with message
 		 * url - Specific URL to send message to. Defaults to proxy URL if null
 		 * method - type of message (GET, POST, etc)
+		 * request - request to pass to host
 		 * */
-		static public function sendMessage(callback:Function, request:String, data:String = null, url:String = null, method:String = URLRequestMethod.GET):void
+
+		static public function sendMessage(callback:Function, data:Object = null, url:String = null, method:String = URLRequestMethod.GET, request:String = null):void
 		{
-			if(url == null)
-				url = PROXY_URL;
 			
 			var connection:NetworkConnection = new NetworkConnection();
 			connection.m_callback = callback;
 			connection.sendURL(request, data, method, url);
-		}
-		
-		static public function sendPythonMessage(callback:Function, data:Object = null, url:String = null, method:String = URLRequestMethod.GET):void
-		{
-			
-			var connection:NetworkConnection = new NetworkConnection();
-			connection.m_callback = callback;
-			connection.sendURL("", data, method, url);
 		}
 			
 		protected function sendURL(request:String, data:Object, method:String, url:String):void
@@ -149,51 +140,11 @@ package networking
 		
 		private function completeHandler(e:flash.events.Event):void
 		{
-			if(postAlerts)
-				HTTPCookies.displayAlert("complete");
 			try
 			{
 				trace("in complete " + e.target.data);
-				var objString:String = e.target.data;
-				var pythonMessageStart:int = objString.indexOf("///");
-				if(pythonMessageStart != -1)
-				{
-					var message:String = objString.substring(pythonMessageStart+3, objString.length - 1);
-					var vec:Vector.<Object> = new Vector.<Object>;
-					if(message.indexOf("succes") == -1) //We've  removed the final character from the string, so this misspelling maybe accurate
-					{
-						var obj:Object = JSON.parse(message);
-						for each(var entry:Object in obj)
-							vec.push(entry);
-					}
-					
-					if(m_callback != null)
-						m_callback(EVENT_COMPLETE, vec);
-				}
-				else
-				{
-					var messageTypeEnd:int = objString.indexOf("//");
-					if(messageTypeEnd != -1)
-					{
-						var messageType:String = objString.substring(0, messageTypeEnd);
-						var startIndex:int = messageTypeEnd + 2;
-						var objEndIndex:int = findJSONObjectEnd(objString, startIndex);
-						
-						var currentJSONObjects:Vector.<Object> = new Vector.<Object>;
-						while(objEndIndex != -1)
-						{
-							var JSONObjString:String = objString.substring(startIndex, objEndIndex+1);
-							currentJSONObjects.push(JSON.parse(JSONObjString));
-							startIndex = objEndIndex+1;
-							objEndIndex = findJSONObjectEnd(objString, startIndex);
-						}
-						
-						trace("return message " + messageType);
-						m_callback(EVENT_COMPLETE, currentJSONObjects);
-					}
-					else if(m_callback != null)
-						m_callback(EVENT_COMPLETE, e);
-				}
+				if(m_callback != null)
+					m_callback(EVENT_COMPLETE, e);
 			}
 			catch(err:Error)
 			{
