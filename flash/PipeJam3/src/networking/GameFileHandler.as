@@ -436,13 +436,12 @@ package networking
 					solutionInfo.levelID =  PipeJamGame.levelInfo.m_levelID;
 					solutionInfo.playerID = PlayerValidation.playerID; 
 					solutionInfo.username = PlayerValidation.playerUserName; 
-					HTTPCookies.displayAlert(solutionInfo.username);
 					//current time in seconds
 					var currentDate:Date = new Date();
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();
 					solutionInfo.submitted_date = int(dateUTC/1000);
 					data_id = JSON.stringify(solutionInfo);
-					url = NetworkConnection.productionInterop + "?function=submitLevel2POST&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
