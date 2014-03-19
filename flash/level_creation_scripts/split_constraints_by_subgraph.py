@@ -3,7 +3,7 @@ from load_constraints_graph import *
 from operator import itemgetter
 
 def split_constraints_by_subgraph(infilename, outfilename):
-	version, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
+	version, default_var_type, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
 	print 'Splitting into subgraphs...'
 	touched_nodes = {}
 	subgraphs = []
@@ -36,7 +36,7 @@ def split_constraints_by_subgraph(infilename, outfilename):
 	sorted_subgraphs = sorted(subgraphs, key=itemgetter('adjustable_nodes'))
 	# Output graphs
 	# Create subgraphs directory (if none exists)
-	dir = os.path.dirname('%s_subgraphs/' % infilename)
+	dir = os.path.dirname('%s_subgraphs/' % outfilename)
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 	nlevels = len(sorted_subgraphs)
@@ -46,6 +46,7 @@ def split_constraints_by_subgraph(infilename, outfilename):
 		with open('%s/%s.json' % (dir, levelid), 'w') as writeconstr:
 			writeconstr.write('{"id": "%s",\n' % levelid)
 			writeconstr.write('"version": %s,\n' % version)
+			writeconstr.write('"default": %s,\n' % default_var_type)
 			if scoring is not None:
 				writeconstr.write('"scoring": %s,\n' % json.dumps(scoring))
 			writeconstr.write('"variables":{\n')
@@ -100,6 +101,6 @@ if __name__ == "__main__":
 		'\n' % sys.argv[0])
 		quit()
 	infile = sys.argv[1]
-	if len(sys.argv) == 2:
-		outfile = sys.argv[1]
+	if len(sys.argv) == 3:
+		outfile = sys.argv[2]
 	split_constraints_by_subgraph(infile, outfile)
