@@ -49,9 +49,9 @@ public class MongoTestBed {
         db = mongo.getDB( dbName );
         
       HashMap<String, String> map = new HashMap<String, String>();
- //    map.put("version", "v6test"); 
- //    map.put("$oid" , "5293eedaa8e047a495eaac01");
-     //    map.put("name", "EmptyDesert"); 
+ //    map.put("submitted", "v6test"); 
+  //   map.put("fileID" , "531fa29927f40310331e2e75");
+   //      map.put("name", "BlackRiver"); 
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
  //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
@@ -70,7 +70,7 @@ public class MongoTestBed {
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
     //   }
   //     System.out.println("SaveLevels");
-      listEntriesAndRemove(db, "fs.files", map);
+      listEntries(db, "Levels", map);
     //    findEntryByID(db, "Level", "5293eedaa8e047a495eaac01");
    //    addField(db, "Level", map, "version", "v6test");
   //      System.out.println("SubmittedLayouts");
@@ -83,7 +83,7 @@ public class MongoTestBed {
  //      map.put("levelID", "15");
  //     listFilesToFile("fs", "files.txt");
  //     listEntriesToFile(db, "SavedLevels", map, "savedLevels.txt");
-//      downloadSavedLevel(db, "fs", "5266f4b3e4b06170777f9dee", "test.zip");
+  //    downloadSavedLevel(db, "fs", "531f9d29b004421484e55ade", "test.zip");
         // listLog(db);
  //           saveAndCleanLog(db, "1211");
         
@@ -169,12 +169,15 @@ public class MongoTestBed {
 		PrintStream out = new PrintStream(outputFile);
 		DBCollection collection = db.getCollection(collectionName);
 		DBCursor cursor = null;
+		int count = 0;
 		 try { 
 			 cursor = collection.find(field);
 			 while(cursor.hasNext()) {
+				 count++;
            	DBObject obj = cursor.next();
             out.print(obj.toString() + '\n'); 
-            System.out.println(obj);
+            if(count % 100 == 0)
+            	System.out.println(count);
            }
         } finally {
         	if(cursor != null)
@@ -581,11 +584,11 @@ public class MongoTestBed {
 	
 	static public void downloadSavedLevel(DB db, String fsname, String levelID, String outputFileName) throws Exception
 	{
-		DBObject level = findOneEntry(db, "SavedLevels", "levelId", levelID);
+		DBObject level = findOneEntry(db, "Levels", "levelID", levelID);
 		Object obj = null;
 		if(level != null)
 		{
-			obj = level.get("constraintsID");
+			obj = level.get("assignmentsID");
 
 			String objString = obj.toString();
 			writeFileLocally(fsname, objString, outputFileName);

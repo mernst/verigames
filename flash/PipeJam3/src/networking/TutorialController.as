@@ -36,7 +36,7 @@ package networking
 		protected var qidToTutorialDictionary:Dictionary;
 		
 		//lookup by qid, if not null, has been completed
-		public var completedTutorialList:Dictionary;
+		public var completedTutorialDictionary:Dictionary;
 		
 		protected static var tutorialController:TutorialController;
 		
@@ -57,22 +57,23 @@ package networking
 			sendMessage(GET_COMPLETED_TUTORIAL_LEVELS, getTutorialsCompleted);
 		}
 		
-		protected function getTutorialsCompleted(result:int, completedTutorials:Vector.<Object>):void
+		protected function getTutorialsCompleted(result:int, e:flash.events.Event):void
 		{
-			if(completedTutorialList == null)
-				completedTutorialList = new Dictionary;
-			for each(var tutorial:Object in completedTutorials)
-			{
-				completedTutorialList[tutorial.levelID] = tutorial;
-			}
+			if(completedTutorialDictionary == null)
+				completedTutorialDictionary = new Dictionary;
+			
+			var message:String = e.target.data as String;
+			var obj:Object = JSON.parse(message);
+			for each(var entry:Object in obj)
+				completedTutorialDictionary[entry.levelID] = entry;
 			//also check cookies for levels played when not logged in
 			getTutorialsCompletedFromCookieString();
 		}
 		
 		public function getTutorialsCompletedFromCookieString():void
 		{
-			if(completedTutorialList == null)
-				completedTutorialList = new Dictionary;
+			if(completedTutorialDictionary == null)
+				completedTutorialDictionary = new Dictionary;
 			
 			var tutorialsCompleted:String = HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
 			if(tutorialsCompleted != null)
@@ -80,7 +81,7 @@ package networking
 				var tutorialListArray:Array = tutorialsCompleted.split(",");
 				for each(var tutorial:String in tutorialListArray)
 				{
-					completedTutorialList[tutorial] = tutorial;
+					completedTutorialDictionary[tutorial] = tutorial;
 				}
 			}
 			setTutorialObj(tutorialObj);
@@ -93,13 +94,13 @@ package networking
 			if(PipeJam3.RELEASE_BUILD)
 			{
 				if (!PipeJamGame.levelInfo) return;
-				if (!completedTutorialList) completedTutorialList = new Dictionary();
+				if (!completedTutorialDictionary) completedTutorialDictionary = new Dictionary();
 				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
-				if(completedTutorialList[currentLevel] == null)
+				if(completedTutorialDictionary[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
 					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_RaLevelID;
-					completedTutorialList[currentLevel] = newTutorialObj;
+					completedTutorialDictionary[currentLevel] = newTutorialObj;
 					newTutorialObj.post();
 				}
 			}
@@ -123,7 +124,7 @@ package networking
 		
 		public function isTutorialLevelCompleted(tutorialQID:String):Boolean
 		{
-			return (completedTutorialList && (completedTutorialList[tutorialQID] != null));
+			return (completedTutorialDictionary && (completedTutorialDictionary[tutorialQID] != null));
 		}
 
 		
@@ -136,7 +137,7 @@ package networking
 			
 			if(tutorialQIDInt == getFirstTutorialLevel())
 				return true;
-			else if(completedTutorialList && (completedTutorialList[tutorialQID] != null))
+			else if(completedTutorialDictionary && (completedTutorialDictionary[tutorialQID] != null))
 				return true;
 			else
 			{
@@ -192,7 +193,7 @@ package networking
 				if(fromLevelSelectList)
 					return nextQID;
 				
-				if(completedTutorialList[nextQID] == null)
+				if(completedTutorialDictionary[nextQID] == null)
 					return nextQID;
 				
 				nextPosition++;
@@ -222,7 +223,7 @@ package networking
 		
 		public function clearPlayedTutorials():void
 		{
-			completedTutorialList = new Dictionary;
+			completedTutorialDictionary = new Dictionary;
 		}
 		
 		public function resetTutorialStatus():void
@@ -263,16 +264,16 @@ package networking
 				case TUTORIAL_LEVEL_COMPLETE:
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_RaLevelID});
 					var data_id:String = JSON.stringify(messages);
-					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial2&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_COMPLETED_TUTORIAL_LEVELS:
-					url = NetworkConnection.productionInterop + "?function=findPlayedTutorials&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=findPlayedTutorials2&data_id="+PlayerValidation.playerID;
 					method = URLRequestMethod.POST; 
 					break;
 			}
 
-			NetworkConnection.sendPythonMessage(callback, null, url, method);
+			NetworkConnection.sendMessage(callback, null, url, method, "");
 		}
 	}
 }

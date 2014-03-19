@@ -330,7 +330,7 @@ def reportPlayerRating(messageData):
 	collection = db.CompletedLevels
 	messageObj = json.loads(messageData)
 	collection.insert(messageObj)
-	return '///success'
+	return 'success'
 
 def getFile(fileID):
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -390,80 +390,25 @@ def submitLevel(messageData, fileContents):
 	collection = db.Level
 	xmlID = messageObj["xmlID"]
 	collection.update({"xmlID":xmlID}, {"$set": {"submitted": "v6test"}})
-	return '///success'
+	return 'success'
 
 #pass url to localhost:3000
 def passURL(url):
 	resp = requests.get('http://localhost:3000' + url)
 	responseString = resp.json()
 	if len(responseString ) != 0:
-		return responseString 
+		return responseString
 	else:
-		return '///success'
+		return 'success'
 
 def passURLPOST(url, postdata):
 	resp = requests.post('http://localhost:3000' + url, data=postdata, headers = {'content-type': 'application/json'})
 	responseString = resp.json()
+
 	if len(responseString ) != 0:
 		return responseString 
 	else:
-		return '///success'
-
-def getLevelDirectoryContents():
-	fileList = ["<ul>"]
-	listing = next(os.walk('/var/www/html/game'))[2]
-	count = 0
-	for file1 in listing:
-		count += 1
-		fileList.append("<li><a href='/game/" + str(file1) + "'>" + str(file1) + "</a></li>")
-
-		if count == 6:
-			fileList.append("<ul>")
-			return ''.join(fileList)
-
-
-	fileList.append("<ul>")
-
-	return ''.join(fileList)
-
-def getActiveLevels2():
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.game2api
-	collection = db.Levels
-	concatList = []
-	for level in collection.find():
-		item = json.dumps(level, default=json_util.default)
-		concatList.append(item)
-		concatList.append(',')
-	return '///[' + ''.join(concatList).strip(',') + ']'
-
-def getFile2(fileID):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.game2api
-	fs = gridfs.GridFS(db)
-	f = fs.get(ObjectId(fileID)).read()
-	encoded = base64.b64encode(f)
-	return encoded
-
-def submitLevel2(messageData, fileContents):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.game2api
-	fs = gridfs.GridFS(db)
-	messageObj = json.loads(messageData)
-	decoded = base64.b64decode(fileContents)
-	newAssignmentsID = str(fs.put(decoded))
-	messageObj["assignmentsID"] = str(newAssignmentsID )
-	collection = db.Solvers
-	id = collection.insert(messageObj)
-
-	#mark served level as updated if score is higher than current
-	collection = db.Levels
-	levelID = messageObj["levelID"]
-	for level in collection.find({"levelID":levelID}):
-		if int(str(level["current_score"])) < int(messageObj["score"]):
-			currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
-			collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["score"], "revision": messageObj["revision"]}})
-	return '///success' + str(level["score"])
+		return 'success'
 
 def test():
 	client = Connection('api.flowjam.verigames.com', 27017)
@@ -538,14 +483,6 @@ elif sys.argv[1] == "passURLPOST":
 	print(passURLPOST(sys.argv[2], sys.argv[3]))
 elif sys.argv[1] == "getFileList":
 	print(getLevelDirectoryContents())
-
-elif sys.argv[1] == "getActiveLevels2":
-	print(getActiveLevels2())
-elif sys.argv[1] == "getFile2":
-	print(getFile2(sys.argv[2]))
-elif sys.argv[1] == "submitLevel2POST":
-	print(submitLevel2(sys.argv[2], sys.argv[3]))
-
 
 elif sys.argv[1] == "test":
 	print(test())

@@ -182,8 +182,8 @@ package scenes.levelselectscene
 				GameFileHandler.completedLevelVector = null;
 				GameFileHandler.savedMatchArrayObjects = null;
 				GameFileHandler.getLevelMetadata(onRequestLevels);
-				GameFileHandler.getCompletedLevels(onRequestLevels);
-				GameFileHandler.getSavedLevels(onRequestSavedLevels);
+			//	GameFileHandler.getCompletedLevels(onRequestLevels);
+			//	GameFileHandler.getSavedLevels(onRequestSavedLevels);
 			}
 			else
 			{
@@ -353,6 +353,8 @@ package scenes.levelselectscene
 			try{
 				if(result == NetworkConnection.EVENT_COMPLETE)
 				{
+					GameFileHandler.completedLevelVector = new Vector.<Object>;
+					
 					if(GameFileHandler.levelInfoVector != null && GameFileHandler.completedLevelVector != null)
 						onGetLevelMetadataComplete();
 				}

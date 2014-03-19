@@ -341,11 +341,17 @@ package networking
 				m_callback(result, e);
 		}
 		
-		//just pass results on to the real callback
-		public function defaultJSONCallback(result:int, list:Vector.<Object>):void
+		//decode results and pass on
+		public function defaultJSONCallback(result:int, e:flash.events.Event):void
 		{
+			var message:String = e.target.data as String;
+			var vec:Vector.<Object> = new Vector.<Object>;
+			var obj:Object = JSON.parse(message);
+			for each(var entry:Object in obj)
+				vec.push(entry);
+
 			if(m_callback != null)
-				m_callback(result, list);
+				m_callback(result, vec);
 		}
 		
 		public function onRequestSavedLevelsFinished(result:int, layoutObjects:Vector.<Object>):void
@@ -355,9 +361,14 @@ package networking
 		}
 		
 		//called when level metadata is loaded 
-		public function setLevelMetadataFromCurrent(result:int, layoutObjects:Vector.<Object>):void
+		public function setLevelMetadataFromCurrent(result:int, e:flash.events.Event):void
 		{
-			levelInfoVector = layoutObjects;
+			levelInfoVector = new Vector.<Object>();
+			var message:String = e.target.data as String;
+			var obj:Object = JSON.parse(message);
+			for each(var entry:Object in obj)
+				levelInfoVector.push(entry);
+
 			m_callback(result);
 		}
 		
@@ -412,32 +423,12 @@ package networking
 					data_id = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayerRating&data_id='"+data_id+"'";
 					break;
-				case GET_COMPLETED_LEVELS:
-					url = NetworkConnection.productionInterop + "?function=getCompletedLevels&data_id="+PlayerValidation.playerID;
-					break;
 				case GET_ALL_LEVEL_METADATA:
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id="+PlayerValidation.playerID;
 					break;
-				case REQUEST_LAYOUT_LIST:
-					url = NetworkConnection.productionInterop + "?function=getSavedLayouts&data_id="+PipeJamGame.levelInfo.m_levelID + 'L';
-					break;
-				case GET_ALL_SAVED_LEVELS:
-					url = NetworkConnection.productionInterop + "?function=getSavedLevels&data_id="+PlayerValidation.playerID;
-					break;
-				case GET_SAVED_LEVEL:
-					url = NetworkConnection.productionInterop + "?function=getLevel&data_id="+PipeJamGame.levelInfo.m_levelID;
-					break;
-				case SAVE_LAYOUT:
-					messages.push ({'player': PlayerValidation.playerID,'xmlID': PipeJamGame.levelInfo.m_levelID+"L",'name': info});
-					data_id = JSON.stringify(messages);
-					url = NetworkConnection.productionInterop + "?function=saveLayoutPOST&data_id='"+data_id+"'";
-					break;
-				case DELETE_SAVED_LEVEL:
-					url = NetworkConnection.productionInterop + "?function=deleteSavedLevel&data_id="+info;
-					break;
 				case SAVE_LEVEL:
 					var solutionInfo:Object = new Object();
-					solutionInfo.score =  String(PipeJamGame.levelInfo.m_score);
+					solutionInfo.score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.m_revision) + 1);
 					PipeJamGame.levelInfo.m_revision = solutionInfo.revision;
@@ -450,7 +441,7 @@ package networking
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();
 					solutionInfo.submitted_date = int(dateUTC/1000);
 					data_id = JSON.stringify(solutionInfo);
-					url = NetworkConnection.productionInterop + "?function=submitLevel2POST&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
@@ -459,11 +450,12 @@ package networking
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
 					request = "/api/score&method=URL";
-					url = NetworkConnection.productionInterop + "?function=passURLPOST&data_id='/api/score'";
+					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/score'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
-					dataObj.levelId = PipeJamGame.levelInfo.m_RaLevelID;
+					var i:LevelInformation = PipeJamGame.levelInfo;
+					dataObj.levelId = PipeJamGame.levelInfo.m_levelID;
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";
@@ -478,7 +470,7 @@ package networking
 					break;
 			}
 			
-			NetworkConnection.sendPythonMessage(callback, data, url, URLRequestMethod.POST);
+			NetworkConnection.sendMessage(callback, data, url, URLRequestMethod.POST, "");
 		}
 	}
 }

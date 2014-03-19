@@ -131,11 +131,11 @@ package scenes.loadingscreen
 			{
 				return;
 			}
-			else if (timer && !timer.running && tutorialController.completedTutorialList != null) {
+			else if (timer && !timer.running && tutorialController.completedTutorialDictionary != null) {
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, changeScene);
 			}
-			else if (tutorialController.completedTutorialList == null && PlayerValidation.playerLoggedIn)
+			else if (tutorialController.completedTutorialDictionary == null && PlayerValidation.playerLoggedIn)
 			{
 				timer = new Timer(200, 1);
 				timer.addEventListener(TimerEvent.TIMER, changeScene);
@@ -144,7 +144,7 @@ package scenes.loadingscreen
 			}
 			timer == null;
 			
-			if(tutorialController.completedTutorialList != null || PlayerValidation.playerLoggedIn == false)
+			if(tutorialController.completedTutorialDictionary != null || PlayerValidation.playerLoggedIn == false)
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
