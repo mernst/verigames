@@ -19,7 +19,7 @@ def getstaggeredlineheight(lineindex):
 
 # Main method to create layout, assignments files from constraint input json
 def constraints2grid(infilename, outfilename):
-	version, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
+	version, default_var_type, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
 	print 'Creating graphviz file...'
 	# Create graphviz input file
 	graphin =  'digraph G {\n'
@@ -47,12 +47,12 @@ def constraints2grid(infilename, outfilename):
 	graphin += '}'
 	with open(outfilename + '-IN.txt','w') as writegraph:
 		writegraph.write(graphin)
-	print 'Layout with graphviz (sfdp)...'
+	print 'Laying out with graphviz (sfdp)...'
 	# Layout with graphviz
 	with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename)) as sfdpcmd:
 		sfdpcmd.read()
 	# Layout node positions from output
-	print 'Read in graphviz layout...'
+	print 'Reading in graphviz layout...'
 	nodelayout = {}
 	layoutf =  '{\n'
 	layoutf += '"id": "%s",\n' % infilename
@@ -86,7 +86,7 @@ def constraints2grid(infilename, outfilename):
 				#print 'node id:%s x,y: %s,%s' % (id, x, y)
 	layoutf += '\n  },\n' # end vars {}
 	layoutf += '  "constraints": {\n'
-	print 'Calculate final edge layout...'
+	print 'Calculating final edge layout...'
 	# Sort node inputs/outputs according to x positions
 	for nodeid in nodes:
 		node = nodes[nodeid]
@@ -125,12 +125,41 @@ def constraints2grid(infilename, outfilename):
 			layoutf += '    "%s":%s' % (edge.id, json.dumps(edgelayout[edge.id], separators=(',', ':'))) # separators: no whitespace
 	layoutf += '\n  }\n' # end constraints {}
 	layoutf += '}}' # end layout {} file {}
-	print 'Write layout file: %sLayout.json' % outfilename
+	print 'Writing layout file: %sLayout.json' % outfilename
 	with open(outfilename + 'Layout.json','w') as writelayout:
 		writelayout.write(layoutf)
-	print 'Write assignments file: %sAssignments.json' % outfilename
+	# Determine starting score
+	print 'Calculating starting score...'
+	starting_score = 0
+	default_constraint_pts = float(scoring['constraints'])
+	default_var_value = 0
+	if default_var_type == "type:1":
+		default_var_value = 1
+	# Calc nodes scores
+	scored_nodes = {}
+	for node_id in nodes:
+		if scored_nodes.get(node_id, False):
+			continue
+		if nodes[node_id].isconstant:
+			continue # no points for constants
+		node_score = nodes[node_id].get_current_score(graph_var_default=default_var_value, graph_scoring=scoring)
+		starting_score += node_score
+		scored_nodes[node_id] = True
+	# Calc constraints scores
+	scored_edges = {}
+	for edge_id in edges:
+		if scored_edges.get(edge_id, False):
+			continue
+		constraint_score = edges[edge_id].get_current_score(graph_var_default=default_var_value, graph_scoring=scoring)
+		starting_score += constraint_score
+		scored_edges[edge_id] = True
+		if edges[edge_id].equality_constraint_twin is not None:
+			scored_edges[edges[edge_id].equality_constraint_twin.id] = True
+	print 'Starting score: %s' % starting_score
+	print 'Writing assignments file: %sAssignments.json' % outfilename
 	with open(outfilename + 'Assignments.json','w') as writeasg:
 		writeasg.write('{"id": "%s",\n' % infilename)
+		writeasg.write('"starting_score": %s,\n' % starting_score)
 		writeasg.write('"assignments":{\n')
 		firstline = True
 		for varid in assignments:
@@ -140,6 +169,7 @@ def constraints2grid(infilename, outfilename):
 				writeasg.write(',\n')
 			writeasg.write('"%s":%s' % (varid, json.dumps(assignments[varid], separators=(',', ':')))) # separators: no whitespace
 		writeasg.write('}\n}')
+
 ### Command line interface ###
 if __name__ == "__main__":
 	if len(sys.argv) != 2 and len(sys.argv) != 3:
