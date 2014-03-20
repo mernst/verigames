@@ -37,91 +37,12 @@ def reportPlayedTutorial2(messageData):
 	collection.insert(messageObj)
 	return '///success'
 
-def deleteSavedLevel(id):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SavedLevels
-	collection.remove({"_id":ObjectId(id)})
-	return '///success'
-
-def getSavedLevels(playerID):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SavedLevels
-	concatList = []
-	for level in collection.find({"player":playerID}):
-		#print level
-		item = json.dumps(level, default=json_util.default)
-		concatList.append(item)
-		concatList.append(',')
-	return '///-[' + ''.join(concatList).strip(',') + ']'
-
-def reportPlayerRating(messageData):
+def reportPlayerRating2(messageData):
 	client = Connection('api.flowjam.verigames.com', 27017)
 	db = client.gameapi
 	collection = db.CompletedLevels
 	messageObj = json.loads(messageData)
 	collection.insert(messageObj)
-	return 'success'
-
-def getFile(fileID):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	fs = gridfs.GridFS(db)
-	f = fs.get(ObjectId(fileID)).read()
-	encoded = base64.b64encode(f)
-	return encoded
-
-def getSavedLayouts(xmlID):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SubmittedLayouts
-	concatList = []
-	for level in collection.find({"xmlID":xmlID}):
-		item = json.dumps(level, default=json_util.default)
-		concatList.append(item)
-		concatList.append(',')
-	return '///+[' + ''.join(concatList).strip(',') + ']'
-
-def saveLayout(messageData, fileContents):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SubmittedLayouts
-	fs = gridfs.GridFS(db)
-	messageObj = json.loads(messageData)
-	decoded = base64.b64decode(fileContents)
-	test = fs.put(decoded)
-	messageObj[0]["layoutID"] = str(test)
-	collection.insert(messageObj)
-	return 'success' 
-
-def saveLevel(messageData, fileContents):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SavedLevels
-	fs = gridfs.GridFS(db)
-	messageObj = json.loads(messageData)
-	decoded = base64.b64decode(fileContents)
-	test = fs.put(decoded)
-	messageObj["constraintsID"] = str(test)
-	collection.insert(messageObj)
-	return '///success'
-
-def submitLevel(messageData, fileContents):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.gameapi
-	collection = db.SubmittedLevels
-	fs = gridfs.GridFS(db)
-	messageObj = json.loads(messageData)
-	decoded = base64.b64decode(fileContents)
-	test = fs.put(decoded)
-	messageObj["constraintsID"] = str(test)
-	id = collection.insert(messageObj)
-
-	#mark served level as completed
-	collection = db.Level
-	xmlID = messageObj["xmlID"]
-	collection.update({"xmlID":xmlID}, {"$set": {"submitted": "v6test"}})
 	return 'success'
 
 #pass url to localhost:3000
@@ -232,8 +153,8 @@ if sys.argv[1] == "findPlayedTutorials2":
 	print(getPlayedTutorials2(sys.argv[2]))
 elif sys.argv[1] == "reportPlayedTutorial2":
 	print(reportPlayedTutorial2(sys.argv[2]))
-elif sys.argv[1] == "reportPlayerRating":
-	print(reportPlayerRating(sys.argv[2]))
+elif sys.argv[1] == "reportPlayerRating2":
+	print(reportPlayerRating2(sys.argv[2]))
 elif sys.argv[1] == "passURL2":
 	print(passURL2(sys.argv[2]))
 elif sys.argv[1] == "passURLPOST2":

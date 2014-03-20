@@ -9,6 +9,8 @@ package events
 		public static const SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
 		public static const FADE_SCREEN:String = "fade_screen";
 		public static const START_OVER:String = "start_over";
+		public static const GET_RANDOM_LEVEL:String = "get_random_level";
+		public static const GET_SAVED_LEVEL:String = "get_saved_level";
 		
 		public var scene:String;
 		public var menuShowing:Boolean;
