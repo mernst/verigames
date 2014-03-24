@@ -183,6 +183,8 @@
 				// Keep track of old users for "new user" determination
 				prevUsers[uid] = true;
 				continue;
+			} else if (queststarttime && endDate && (queststarttime > endDate)) {
+				continue;
 			}
 			if (!startDate) earliestDate = Math.min(earliestDate, queststarttime);
 			var starthour = 3600 * Math.floor(queststarttime / 3600); // round to nearest hour, queststarttime is in seconds
