@@ -417,9 +417,10 @@ package networking
 		{
 			var obj:Object = JSON.parse(e.target.data);
 			//save new file ID and clear stored updates
-			PipeJam3.m_saveLevelInfo.data.assignmentsID = obj["assignmentsID"];
-			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = new Object();
-			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
+			PipeJam3.m_savedCurrentLevel.data.assignmentsID = obj["assignmentsID"];
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
+			//post a dialog
+		//	World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
 		}
 		
 		public function onDBLevelCreated():void
@@ -461,6 +462,7 @@ package networking
 					solutionInfo.levelID =  PipeJamGame.levelInfo.m_levelID;
 					solutionInfo.playerID = PlayerValidation.playerID; 
 					solutionInfo.username = PlayerValidation.playerUserName; 
+					solutionInfo.hash = PipeJamGame.levelInfo.m_hashArray; 
 					//current time in seconds
 					var currentDate:Date = new Date();
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();

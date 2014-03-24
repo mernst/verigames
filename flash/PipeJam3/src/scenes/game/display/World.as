@@ -385,14 +385,6 @@ package scenes.game.display
 				var outputObj:Object = updateAssignments();
 				active_level.updateLevelObj();
 				
-			//	var containerObj:Object = { "container": { "version":"1" }};
-			//	containerObj["container"]["level"] = active_level.levelObj;
-			//	containerObj["container"]["layout"] = active_level.m_levelLayoutObjWrapper;
-			//	containerObj["container"]["assignments"] = active_level.m_levelAssignmentsObjWrapper;
-			//	for (var key:String in outputObj) {
-			//		containerObj["container"][key] = outputObj[key];
-			//	}
-				
 				var newAssignments:Object = active_level.m_levelAssignmentsObj;
 				
 				var zip:ByteArray = active_level.zipJsonFile(newAssignments, "assignments");

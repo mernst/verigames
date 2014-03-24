@@ -75,7 +75,7 @@ package scenes.splashscreen
 			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
 			const TOP_BUTTON_Y:int = 205;
 			
-			if(PipeJam3.m_saveLevelInfo.data.hasOwnProperty("levelInfoID") && PipeJam3.m_saveLevelInfo.data.levelInfoID != null)
+			if(PipeJam3.m_savedCurrentLevel.data.hasOwnProperty("levelInfoID") && PipeJam3.m_savedCurrentLevel.data.levelInfoID != null)
 			{
 				return_to_last_level_button = ButtonFactory.getInstance().createDefaultButton("Continue", 88, 32);
 				return_to_last_level_button.addEventListener(starling.events.Event.TRIGGERED, onReturnToLastTriggered);

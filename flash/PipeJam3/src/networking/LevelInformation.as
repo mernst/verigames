@@ -43,6 +43,8 @@ package networking
 		public var difficultyRating:Number;		
 		
 		public var shareWithGroup:int;
+		
+		public var m_hashArray:Array;
 
 		public function LevelInformation(levelObj:Object = null)
 		{
@@ -56,7 +58,7 @@ package networking
 						m_id = levelObj._id.$oid;
 				}
 				
-				//steal properties for ourselves...  "Mine all Mine, me precious"
+				//steal properties for ourselves...
 				for(var id:String in levelObj) {
 					var value:Object = levelObj[id];
 					
