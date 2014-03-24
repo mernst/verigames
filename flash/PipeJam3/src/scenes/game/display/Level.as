@@ -184,6 +184,7 @@ package scenes.game.display
 			
 			m_targetScore = _targetScore;
 			targetScoreReached = false;
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -195,6 +196,9 @@ package scenes.game.display
 		
 		private function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
+			//save object and restore at after initial assignments since I don't want these assignments saved
+			var assignmentObj:Object = PipeJam3.m_saveLevelInfo.data.assignmentUpdates;
+			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = null;
 			for (var i:int = 0; i < m_nodeList.length; i++) {
 				var gameNode:GameNode = m_nodeList[i];
 				// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
@@ -209,9 +213,23 @@ package scenes.game.display
 						tutorialManager.onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, true));
 					}
 				}
+				
+				//and then set from local storage, if there
+				if(!updateTutorialManager && assignmentObj && assignmentObj[gameNode.m_id] != null)
+				{
+					var newWidth:String = assignmentObj[gameNode.m_id];
+					var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
+					
+					if (gameNode.isWide() != savedAssignmentIsWide) 
+					{
+						gameNode.handleWidthChange(savedAssignmentIsWide, true);
+					}
+				}
+
 			}
 			if(gameNode) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
 			refreshTroublePoints();	
+			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = assignmentObj;
 		}
 		
 		protected function onAddedToStage(event:Event):void
@@ -800,6 +818,16 @@ package scenes.game.display
 			var constraintVar:ConstraintVar = evt.widgetChanged.constraintVar;
 			constraintVar.setProp(evt.prop, evt.propValue);
 			if (!evt.silent) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.widgetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
+			
+			//save incremental changes so we can update if user quits and restarts
+			if(PipeJam3.m_saveLevelInfo.data.assignmentUpdates) //should only be null when doing assignments from assignments file
+			{
+				var constraintType:String = ConstraintValue.VERBOSE_TYPE_1;
+				//propValue isn't updated yet, so if it's currently wide, we want to save narrow
+				if(evt.propValue)
+					constraintType = ConstraintValue.VERBOSE_TYPE_0;
+				PipeJam3.m_saveLevelInfo.data.assignmentUpdates[evt.widgetChanged.m_id] = constraintType;
+			}
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1481,6 +1509,7 @@ package scenes.game.display
 				m_bestScore = m_currentScore;
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
+				//don't update on loading
 				if(m_oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}

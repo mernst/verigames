@@ -147,7 +147,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			addChild(m_levelNameTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 14, 8, 8, "See other options");
+			m_menuButton = ButtonFactory.getInstance().createButton("New Level", 44, 14, 8, 8, "Start a new level");
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
@@ -182,23 +182,11 @@ package scenes.game.components
 			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
-			
-//			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
-//			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
-//			m_saveButton.x = width - m_saveButton.width - 16;
-//			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
-//			addChild(m_saveButton);
-//			
-//			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8, "Report your score\nto help verify\nthis level");
-//			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
-//			m_shareButton.x = m_saveButton.x;
-//			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
-//			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
 		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
 		}
 		
 		private function onStartOverButtonTriggered():void

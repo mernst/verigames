@@ -1,17 +1,19 @@
 package scenes.splashscreen
 {
+	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.net.URLLoader;
+	import flash.text.TextField;
+	import flash.utils.Timer;
+	
+	import dialogs.SimpleAlertDialog;
+	
 	import display.NineSliceButton;
 	
 	import events.NavigationEvent;
+	import events.ToolTipEvent;
 	
-	import feathers.themes.*;
-	
-	import flash.events.Event;
-	import flash.events.HTTPStatusEvent;
-	import flash.net.*;
-	import flash.text.*;
-	
-	import networking.HTTPCookies;
+	import networking.GameFileHandler;
 	import networking.LevelInformation;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
@@ -21,16 +23,19 @@ package scenes.splashscreen
 	import scenes.game.display.Level;
 	
 	import starling.core.Starling;
-	import starling.display.*;
+	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.text.*;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
 		protected var m_mainMenu:Sprite;
 		
+		//main screen buttons
 		protected var play_button:NineSliceButton;
-		protected var signin_button:NineSliceButton;
+		protected var return_to_last_level_button:NineSliceButton;
+		protected var continue_tutorial_button:NineSliceButton;
+		
+		//These are visible in demo mode only (PipeJam3.RELEASE_BUILD == false)
 		protected var tutorial_button:NineSliceButton;
 		protected var demo_button:NineSliceButton;
 		
@@ -68,24 +73,41 @@ package scenes.splashscreen
 			m_mainMenu = new Sprite();
 			
 			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
+			const TOP_BUTTON_Y:int = 205;
 			
-			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
+			if(PipeJam3.m_saveLevelInfo.data.hasOwnProperty("levelInfoID") && PipeJam3.m_saveLevelInfo.data.levelInfoID != null)
+			{
+				return_to_last_level_button = ButtonFactory.getInstance().createDefaultButton("Continue", 88, 32);
+				return_to_last_level_button.addEventListener(starling.events.Event.TRIGGERED, onReturnToLastTriggered);
+				return_to_last_level_button.x = BUTTON_CENTER_X - return_to_last_level_button.width / 2;
+				return_to_last_level_button.y = TOP_BUTTON_Y;
+				
+				play_button = ButtonFactory.getInstance().createDefaultButton("New", 88, 32);
+			}
+			else
+				play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
-			play_button.y = 230;
+			if(return_to_last_level_button != null)
+				play_button.y = return_to_last_level_button.y + return_to_last_level_button.height + 5;
+			else
+				play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
 			
-			if (!PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT) {
-				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 72, 32);
-				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
-				signin_button.y = play_button.y + play_button.height + 10;
+			if(!isTutorialDone())
+			{
+				continue_tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 88, 32);
+				continue_tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onContinueTutorialTriggered);
+				continue_tutorial_button.x = BUTTON_CENTER_X - continue_tutorial_button.width / 2;
+				continue_tutorial_button.y = play_button.y + play_button.height + 5;
 			}
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
+				if(return_to_last_level_button)
+					m_mainMenu.addChild(return_to_last_level_button);
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT && !DEMO_ONLY)
-					m_mainMenu.addChild(signin_button);
+				if(continue_tutorial_button)
+					m_mainMenu.addChild(continue_tutorial_button);
 			}
 			else if (PipeJam3.TUTORIAL_DEMO)
 			{
@@ -96,8 +118,6 @@ package scenes.splashscreen
 			{
 				if (!DEMO_ONLY) m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT && !DEMO_ONLY)
-					m_mainMenu.addChild(signin_button);
 			}
 			
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
@@ -125,16 +145,39 @@ package scenes.splashscreen
 		
 
 		
-		protected function onSignInButtonTriggered(e:starling.events.Event):void
+		protected function onReturnToLastTriggered(e:starling.events.Event):void
 		{
-			//get client id
-			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest;
-			if(PipeJam3.RELEASE_BUILD == true)
-				myURL = new URLRequest("http://flowjam.verigames.com/login?redirect=http://flowjam.verigames.com/game/FlowJam.html");
+			if(!PlayerValidation.playerLoggedIn)
+			{
+				var dialogText:String = "You must be logged in to continue play.";
+				var dialogWidth:Number = 160;
+				var dialogHeight:Number = 60;
+				var socialText:String = "";
+				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
+				addChild(alert);
+			}
 			else
-				myURL = new URLRequest("http://flowjam.verigames.org/login?redirect=http://flowjam.verigames.org/game/FlowJam.html");
-			navigateToURL(myURL, "_self");
+				getSavedLevel(null);
+		}
+		
+		protected function onPlayButtonTriggered(e:starling.events.Event):void
+		{			
+			if(!PlayerValidation.playerLoggedIn)
+			{
+				var dialogText:String = "You must be logged in to continue play.";
+				var dialogWidth:Number = 160;
+				var dialogHeight:Number = 60;
+				var socialText:String = "";
+				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
+				addChild(alert);
+			}
+			else
+				getNextRandomLevel(null);
+		}
+		
+		protected function onContinueTutorialTriggered(e:starling.events.Event):void
+		{
+			loadTutorial();
 		}
 		
 		private function onExitButtonTriggered():void
@@ -145,14 +188,6 @@ package scenes.splashscreen
 		protected function onActivate(evt:flash.events.Event):void
 		{
 			Starling.current.nativeStage.removeEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var s:String = evt.target as String;
-			var x:int = 4;
-			
-		}
-		
-		protected function onPlayButtonTriggered(e:starling.events.Event):void
-		{			
-			onPlayerActivated(0, null);
 		}
 		
 		protected function onPlayerActivated(result:int, e:flash.events.Event):void
@@ -179,6 +214,28 @@ package scenes.splashscreen
 			else
 				loadTutorial();
 		}
+		
+		protected function getSavedLevel(evt:TimerEvent):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.GET_SAVED_LEVEL));
+		}
+		
+		
+		protected function getNextRandomLevel(evt:TimerEvent):void
+		{
+			//check to see if we have the level list yet, if not, stall
+			if(GameFileHandler.levelInfoVector == null)
+			{
+				var timer:Timer = new Timer(200, 1);
+				timer.addEventListener(TimerEvent.TIMER, getNextRandomLevel);
+				timer.start();
+				return;
+			}
+			
+			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
+		}
+		
+
 		
 		protected function isTutorialDone():Boolean
 		{

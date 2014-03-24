@@ -19,6 +19,8 @@ package networking
 	
 	import utils.Base64Decoder;
 	import utils.Base64Encoder;
+	import utils.XMath;
+	import flash.utils.Dictionary;
 	
 	/** How to use:
 	 * In most cases, there's a static function that will do what you want, and call a callback when done.
@@ -47,7 +49,9 @@ package networking
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 		
-		static public var levelInfoVector:Vector.<Object> = null;
+		static public var levelInfoVector:Vector.<LevelInformation> = null;
+		
+		//not currently used in version 2
 		static public var completedLevelVector:Vector.<Object> = null;
 		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
@@ -95,8 +99,29 @@ package networking
 			fileHandler.sendMessage(DELETE_SAVED_LEVEL, null, _levelIDString);
 		}
 		
+		static public function retrieveLevels():void
+		{
+			GameFileHandler.getLevelMetadata(null);
+		}
 		
+		static public function findLevelObject(id:String):LevelInformation
+		{
+			for each(var level:LevelInformation in levelInfoVector)
+			{
+				if(level.m_id == id)
+				{
+					return level;
+				}
+			}
+			return null;
+		}
 		
+		static public function getRandomLevelObject():LevelInformation
+		{
+			var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
+			return levelInfoVector[randNum];
+		}
+				
 		static public function reportPlayerPreference(preference:String):void
 		{
 			PipeJamGame.levelInfo.preference = preference;
@@ -363,13 +388,17 @@ package networking
 		//called when level metadata is loaded 
 		public function setLevelMetadataFromCurrent(result:int, e:flash.events.Event):void
 		{
-			levelInfoVector = new Vector.<Object>();
+			//don't directly fill levelInfoVector until we are all done
+			levelInfoVector = null;
+			var vector:Vector.<LevelInformation> = new Vector.<LevelInformation>();
 			var message:String = e.target.data as String;
 			var obj:Object = JSON.parse(message);
 			for each(var entry:Object in obj)
-				levelInfoVector.push(entry);
+				vector.push(new LevelInformation(entry));
 
-			m_callback(result);
+			levelInfoVector = vector;
+			if(m_callback != null)
+				m_callback(result);
 		}
 		
 		//called when level metadata is loaded 
@@ -384,12 +413,13 @@ package networking
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
 		}
 		
-		public function onLevelSubmitted(result:int,levelObjects:Vector.<Object>):void
+		public function onLevelSubmitted(result:int, e:flash.events.Event):void
 		{
-			if(m_saveType == MenuEvent.SAVE_LEVEL)
-				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SAVED));
-			else
-				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
+			var obj:Object = JSON.parse(e.target.data);
+			//save new file ID and clear stored updates
+			PipeJam3.m_saveLevelInfo.data.assignmentsID = obj["assignmentsID"];
+			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = new Object();
+			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
 		}
 		
 		public function onDBLevelCreated():void
@@ -402,7 +432,7 @@ package networking
 			}
 		}
 		
-		public function sendMessage(type:int, callback:Function = null, info:String = null, data:String = null):void
+		public function sendMessage(type:int, callback:Function, info:String = null, data:String = null):void
 		{
 			var request:String;
 			var method:String;
@@ -411,20 +441,15 @@ package networking
 			var messages:Array = new Array (); 
 			var data_id:String;
 			
-			if(m_callback == null && m_callback == null)
-				callback = defaultCallback;
-			else if (callback == null)
-				callback = m_callback;
-			
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
-					url = NetworkConnection.productionInterop + "?function=reportPlayerRating&data_id='"+data_id+"'";
+					url = NetworkConnection.productionInterop + "?function=reportPlayerRating2&data_id='"+data_id+"'";
 					break;
 				case GET_ALL_LEVEL_METADATA:
-					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id="+PlayerValidation.playerID;
+					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id=foo";
 					break;
 				case SAVE_LEVEL:
 					var solutionInfo:Object = new Object();

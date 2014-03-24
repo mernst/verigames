@@ -1,17 +1,6 @@
 package  
 {
-	import assets.AssetsFont;
-	import audio.AudioManager;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import server.ReplayController;
-	import system.VerigameServerConstants;
-	
-	import cgs.server.logging.data.QuestData;
-	
 	import com.spikything.utils.MouseWheelTrap;
-	
-	import events.NavigationEvent;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -20,18 +9,34 @@ package
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
+	import flash.net.SharedObject;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.utils.Timer;
+	
+	import assets.AssetsFont;
+	
+	import audio.AudioManager;
+	
+	import cgs.server.logging.data.QuestData;
+	
+	import events.NavigationEvent;
 	
 	import net.hires.debug.Stats;
 	
-	import networking.*;
+	import networking.GameFileHandler;
+	import networking.LevelInformation;
+	import networking.NetworkConnection;
 	
 	import scenes.splashscreen.SplashScreenScene;
 	
 	import server.LoggingServerInterface;
+	import server.ReplayController;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	
+	import system.VerigameServerConstants;
 	
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
@@ -59,6 +64,8 @@ package
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		
+		static public var m_saveLevelInfo:SharedObject;
+
 		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
 		public static var initialLevelDisplay:Boolean = true; 
 		static public var pipeJam3:PipeJam3;
@@ -131,6 +138,10 @@ package
 			var protocolEndIndex:int = fullURL.indexOf('//');
 			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
+			//initialize stuff
+			new NetworkConnection();
+			m_saveLevelInfo = SharedObject.getLocal("FlowJamData");
+			GameFileHandler.retrieveLevels();
 		}
 		
 		

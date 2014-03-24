@@ -1,5 +1,13 @@
 package
 {
+	import flash.external.ExternalInterface;
+	import flash.net.URLVariables;
+	import flash.system.System;
+	import flash.ui.Keyboard;
+	import flash.utils.Dictionary;
+	
+	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
 	
 	import buildInfo.BuildInfo;
@@ -13,28 +21,25 @@ package
 	import display.SoundButton;
 	
 	import events.MenuEvent;
+	import events.NavigationEvent;
 	
 	import feathers.themes.AeonDesktopTheme;
 	
-	import flash.external.ExternalInterface;
-	import flash.system.System;
-	import flash.ui.Keyboard;
-	import starling.events.KeyboardEvent;
-	import assets.AssetsAudio;
-	import audio.AudioManager;
+	import networking.GameFileHandler;
+	import networking.LevelInformation;
+	import networking.PlayerValidation;
+	import networking.TutorialController;
 	
-	import networking.*;
-	
-	import scenes.game.*;
+	import scenes.game.PipeJamGameScene;
+	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.loadingscreen.LoadingScreenScene;
-	import scenes.levelselectscene.*;
-	import scenes.splashscreen.*;
+	import scenes.splashscreen.SplashScreenScene;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 	
 	import utils.XSprite;
-	import flash.net.URLVariables;
 	
 	public class PipeJamGame extends Game
 	{
@@ -93,8 +98,10 @@ package
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
 			
 			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
-		}
-		
+			addEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
+			addEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
+
+		}	
 		
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
@@ -143,6 +150,30 @@ package
 		protected function removedFromStage(event:starling.events.Event):void
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			removeEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
+		}
+		
+		private function onGetSavedLevel(event:NavigationEvent):void
+		{
+			PipeJamGameScene.inTutorial = false;
+			PipeJamGame.levelInfo = GameFileHandler.findLevelObject(PipeJam3.m_saveLevelInfo.data.levelInfoID);
+			//update assignmentsID if needed
+			PipeJamGame.levelInfo.m_assignmentsID = PipeJam3.m_saveLevelInfo.data.assignmentsID;
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			
+		}	
+		
+		protected function onGetRandomLevel(event:NavigationEvent):void
+		{
+			PipeJamGameScene.inTutorial = false;
+			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
+			//save info locally so we can retrieve next run
+			PipeJam3.m_saveLevelInfo.data.levelInfoID = PipeJamGame.levelInfo.m_id;
+			PipeJam3.m_saveLevelInfo.data.levelID = PipeJamGame.levelInfo.m_levelID;
+			PipeJam3.m_saveLevelInfo.data.assignmentsID = PipeJamGame.levelInfo.m_assignmentsID;
+			PipeJam3.m_saveLevelInfo.data.layoutID = PipeJamGame.levelInfo.m_layoutID;
+			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = new Object();
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
