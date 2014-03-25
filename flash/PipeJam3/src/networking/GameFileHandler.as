@@ -49,7 +49,7 @@ package networking
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 		
-		static public var levelInfoVector:Vector.<LevelInformation> = null;
+		static public var levelInfoVector:Vector.<Object> = null;
 		
 		//not currently used in version 2
 		static public var completedLevelVector:Vector.<Object> = null;
@@ -86,7 +86,7 @@ package networking
 		
 		static public function saveLayoutFile(callback:Function, _layoutAsString:String):void
 		{
-			var layoutDescription:String = PipeJamGame.levelInfo.m_layoutName + "::" + PipeJamGame.levelInfo.m_layoutDescription;
+			var layoutDescription:String = PipeJamGame.levelInfo.layoutName + "::" + PipeJamGame.levelInfo.layoutDescription;
 			
 			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
@@ -104,9 +104,9 @@ package networking
 			GameFileHandler.getLevelMetadata(null);
 		}
 		
-		static public function findLevelObject(id:String):LevelInformation
+		static public function findLevelObject(id:String):Object
 		{
-			for each(var level:LevelInformation in levelInfoVector)
+			for each(var level:Object in levelInfoVector)
 			{
 				if(level.m_id == id)
 				{
@@ -116,7 +116,7 @@ package networking
 			return null;
 		}
 		
-		static public function getRandomLevelObject():LevelInformation
+		static public function getRandomLevelObject():Object
 		{
 			var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
 			return levelInfoVector[randNum];
@@ -183,13 +183,13 @@ package networking
 		{
 			var gameFileHandler:GameFileHandler;
 			//do this so I can debug the object...
-			var levelInformation:LevelInformation = PipeJamGame.levelInfo;
+			var levelInformation:Object = PipeJamGame.levelInfo;
 			
 			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
 			var m_id:int = 100000;
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_id && PipeJamGame.levelInfo.m_id.length < 5)
-				m_id = parseInt(PipeJamGame.levelInfo.m_id);
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.id && PipeJamGame.levelInfo.id.length < 5)
+				m_id = parseInt(PipeJamGame.levelInfo.id);
 			if(m_id < 1000) // in the tutorial if a low level id
 			{
 				PipeJamGameScene.inTutorial = true;
@@ -215,35 +215,35 @@ package networking
 				var loadType:int = USE_LOCAL;
 				
 				var fileName:String;
-				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_baseFileName)
-					fileName = PipeJamGame.levelInfo.m_baseFileName;
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.baseFileName)
+					fileName = PipeJamGame.levelInfo.baseFileName;
 				else
 					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
 				
 				
-				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_assignmentsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.assignmentsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = USE_DATABASE;
 					//is this an all in one file?
 					var version:int = 0;
-					if(PipeJamGame.levelInfo.m_version)
-						version = PipeJamGame.levelInfo.m_version;
+					if(PipeJamGame.levelInfo.version)
+						version = PipeJamGame.levelInfo.version;
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
 						gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");
+						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");
 					}
 					else
 					{
-						var levelInfo:LevelInformation = PipeJamGame.levelInfo;
+						var levelInfo:Object = PipeJamGame.levelInfo;
 						// TODO: probably rename from /xml and /constraints to /level and /assignments
-						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
+						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
 						var worldFileHandler:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_levelID+"\"");
+						worldFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
 						var layoutFileHandler:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_layoutID+"\"");
+						layoutFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.layoutID+"\"");
 						var assignmentsFileHandler:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-						assignmentsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.m_assignmentsID+"\"");	
+						assignmentsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");	
 					}
 				}
 				else if(fileName && fileName.length > 0)
@@ -390,11 +390,11 @@ package networking
 		{
 			//don't directly fill levelInfoVector until we are all done
 			levelInfoVector = null;
-			var vector:Vector.<LevelInformation> = new Vector.<LevelInformation>();
+			var vector:Vector.<Object> = new Vector.<Object>();
 			var message:String = e.target.data as String;
 			var obj:Object = JSON.parse(message);
 			for each(var entry:Object in obj)
-				vector.push(new LevelInformation(entry));
+				vector.push(entry);
 
 			levelInfoVector = vector;
 			if(m_callback != null)
@@ -445,7 +445,7 @@ package networking
 			switch(type)
 			{
 				case REPORT_PLAYER_RATING:
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_levelID,'preference': PipeJamGame.levelInfo.preference});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.levelID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayerRating2&data_id='"+data_id+"'";
 					break;
@@ -453,16 +453,14 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id=foo";
 					break;
 				case SAVE_LEVEL:
-					var solutionInfo:Object = new Object();
-					solutionInfo.score =  String(World.m_world.active_level.currentScore);
+					var solutionInfo:Object = PipeJamGame.levelInfo;
+					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
-					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.m_revision) + 1);
-					PipeJamGame.levelInfo.m_revision = solutionInfo.revision;
+					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
 					solutionInfo.playerID =  PlayerValidation.playerID;
-					solutionInfo.levelID =  PipeJamGame.levelInfo.m_levelID;
-					solutionInfo.playerID = PlayerValidation.playerID; 
 					solutionInfo.username = PlayerValidation.playerUserName; 
-					solutionInfo.hash = PipeJamGame.levelInfo.m_hashArray; 
+					
+					PipeJamGame.levelInfo.revision = solutionInfo.revision;
 					//current time in seconds
 					var currentDate:Date = new Date();
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();
@@ -472,8 +470,8 @@ package networking
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					var leaderboardScore:int = 1;
-					var levelScore:int = PipeJamGame.levelInfo.m_score;
-					var targetScore:int = PipeJamGame.levelInfo.m_targetScore;
+					var levelScore:int = PipeJamGame.levelInfo.score;
+					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
 					request = "/api/score&method=URL";
@@ -481,12 +479,12 @@ package networking
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
-					var i:LevelInformation = PipeJamGame.levelInfo;
-					dataObj.levelId = PipeJamGame.levelInfo.m_levelID;
+					var i:Object = PipeJamGame.levelInfo;
+					dataObj.levelId = PipeJamGame.levelInfo.levelID;
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";
-					paramScoreObj.value = PipeJamGame.levelInfo.m_score;
+					paramScoreObj.value = PipeJamGame.levelInfo.score;
 					var paramLeaderScoreObj:Object = new Object;
 					paramLeaderScoreObj.name = "leaderboardScore";
 					paramLeaderScoreObj.value = leaderboardScore;

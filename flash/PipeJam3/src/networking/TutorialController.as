@@ -95,11 +95,11 @@ package networking
 			{
 				if (!PipeJamGame.levelInfo) return;
 				if (!completedTutorialDictionary) completedTutorialDictionary = new Dictionary();
-				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
+				var currentLevel:int = parseInt(PipeJamGame.levelInfo.tutorialLevelID);
 				if(completedTutorialDictionary[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
-					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_RaLevelID;
+					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.tutorialLevelID;
 					completedTutorialDictionary[currentLevel] = newTutorialObj;
 					newTutorialObj.post();
 				}
@@ -174,7 +174,7 @@ package networking
 			var currentLevelQID:int;
 			if (!PipeJamGame.levelInfo) 
 				return 0;
-			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
+			currentLevelQID = parseInt(PipeJamGame.levelInfo.tutorialLevelID);
 			
 			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
 			var currentPosition:int = currentLevel["position"];
@@ -262,7 +262,7 @@ package networking
 			switch(type)
 			{
 				case TUTORIAL_LEVEL_COMPLETE:
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.m_RaLevelID});
+					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.tutorialLevelID});
 					var data_id:String = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayedTutorial2&data_id='"+data_id+"'";
 					method = URLRequestMethod.POST; 

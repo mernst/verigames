@@ -124,8 +124,8 @@ package scenes.game.display
 					targetScore = int(levelAssignmentsObj["targetScore"]);
 				}
 				var levelNameFound:String = levelName;
-				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_name) {
-					levelNameFound = PipeJamGame.levelInfo.m_name;
+				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.name) {
+					levelNameFound = PipeJamGame.levelInfo.name;
 				}
 				if (!m_worldGraphDict.hasOwnProperty(levelName)) {
 					throw new Error("World level found without constriant graph:" + levelName);
@@ -209,28 +209,28 @@ package scenes.game.display
 			trace("Initializing TutorialController...");
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				var obj:LevelInformation = PipeJamGame.levelInfo;
+				var obj:Object = PipeJamGame.levelInfo;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
 				if(!obj)
 				{
-					obj = new LevelInformation();
+					obj = new Object();
 					PipeJamGame.levelInfo = obj;
-					obj.m_RaLevelID = String(tutorialController.getFirstTutorialLevel());
-					if(!tutorialController.isTutorialLevelCompleted(obj.m_RaLevelID))
-						nextLevelQID = parseInt(obj.m_RaLevelID);
+					obj.tutorialLevelID = String(tutorialController.getFirstTutorialLevel());
+					if(!tutorialController.isTutorialLevelCompleted(obj.tutorialLevelID))
+						nextLevelQID = parseInt(obj.tutorialLevelID);
 					else
 						nextLevelQID = tutorialController.getNextUnplayedTutorial();
 				}
 				else
-					nextLevelQID = parseInt(obj.m_RaLevelID);
+					nextLevelQID = parseInt(obj.tutorialLevelID);
 				
 				for each(var level:Level in levels)
 				{
 					if(level.m_levelQID == String(nextLevelQID))
 					{
 						firstLevel = level;
-						obj.m_RaLevelID = String(nextLevelQID);
+						obj.tutorialLevelID = String(nextLevelQID);
 						break;
 					}
 				}
@@ -440,7 +440,7 @@ package scenes.game.display
 		{
 			Achievements.checkAchievements(MenuEvent.LEVEL_SUBMITTED, 0);
 			
-			if(PipeJamGame.levelInfo.m_layoutUpdated)
+			if(PipeJamGame.levelInfo.layoutUpdated)
 				Achievements.checkAchievements(MenuEvent.SET_NEW_LAYOUT, 0);
 		}
 		
@@ -492,7 +492,7 @@ package scenes.game.display
 					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile["id"];
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
-				PipeJamGame.levelInfo.m_layoutUpdated = true;
+				PipeJamGame.levelInfo.layoutUpdated = true;
 			}
 		}
 		
@@ -613,7 +613,7 @@ package scenes.game.display
 		{
 			var level:Level = active_level;
 			if (PipeJamGame.levelInfo != null) {
-				var currentLevelID:String = PipeJamGame.levelInfo.m_RaLevelID;
+				var currentLevelID:String = PipeJamGame.levelInfo.RaLevelID;
 				//find the level with the current ID
 				for each(level in levels)
 				{
@@ -632,7 +632,7 @@ package scenes.game.display
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.m_RaLevelID);
+			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.RaLevelID);
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -665,13 +665,13 @@ package scenes.game.display
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
-					var obj:LevelInformation = PipeJamGame.levelInfo;
-					obj.m_RaLevelID = String(tutorialController.getNextUnplayedTutorial());
+					var obj:Object = PipeJamGame.levelInfo;
+					obj.tutorialLevelID = String(tutorialController.getNextUnplayedTutorial());
 					
 					m_currentLevelNumber = 0;
 					for each(var level:Level in levels)
 					{
-						if(level.m_levelQID == obj.m_RaLevelID)
+						if(level.m_levelQID == obj.tutorialLevelID)
 							break;
 						
 						m_currentLevelNumber++;
@@ -914,7 +914,7 @@ package scenes.game.display
 			if (!isTutorialLevel && (active_level.getTargetScore() == int.MAX_VALUE)) {
 				var newTarget:int = Solver.getInstance().findTargetScore(active_level);
 				active_level.setTargetScore(newTarget);
-				if(PipeJamGame.levelInfo != null) PipeJamGame.levelInfo.m_targetScore = newTarget;
+				if(PipeJamGame.levelInfo != null) PipeJamGame.levelInfo.targetScore = newTarget;
 				active_level.updateScore();
 			}
 			

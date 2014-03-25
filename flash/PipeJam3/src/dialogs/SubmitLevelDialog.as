@@ -15,7 +15,6 @@ package dialogs
 	import flash.text.TextFormat;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
@@ -145,7 +144,7 @@ package dialogs
 			eRating = Math.round(eRating);
 			eRating /= 100;
 			if (PipeJamGame.levelInfo == null) 
-				PipeJamGame.levelInfo = new LevelInformation();
+				PipeJamGame.levelInfo = new Object();
 			PipeJamGame.levelInfo.enjoymentRating = eRating;
 			
 			GameFileHandler.reportPlayerPreference ((int(Math.round(eRating*20))).toString()); //0-100 scale

@@ -23,7 +23,7 @@ def getPlayedTutorials2(playerID):
 	db = client.gameapi
 	collection = db.CompletedTutorials
 	concatList = []
-	for level in collection.find():
+	for level in collection.find({"playerID":playerID}):
 		concatList.append(level)
 
 	item = json.dumps(concatList, default=json_util.default)
@@ -122,18 +122,19 @@ def submitLevel2(messageData, fileContents):
 	messageObj = json.loads(messageData)
 	decoded = base64.b64decode(fileContents)
 	newAssignmentsID = str(fs.put(decoded))
-	messageObj["assignmentsID"] = str(newAssignmentsID )
+	previousAssignmentsID = messageObj["assignmentsID"]
+	messageObj["assignmentsID"] = str(newAssignmentsID)
 	collection = db.Solvers
 	id = collection.insert(messageObj)
-
 	#mark served level as updated if score is higher than current
 	collection = db.Levels
 	levelID = messageObj["levelID"]
-	for level in collection.find({"levelID":levelID}):
+	for level in collection.find({"assignmentsID":previousAssignmentsID}):
 		if int(str(level["current_score"])) < int(messageObj["score"]):
 			currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
 			collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
-	return '///success' + str(level["score"])
+	return '{"assignmentsID":"' + str(newAssignmentsID) + '"}'
+
 
 
 def test():

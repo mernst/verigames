@@ -42,7 +42,6 @@ package scenes.game.display
 	import graph.PropDictionary;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	
@@ -461,7 +460,7 @@ package scenes.game.display
 		{
 			updateLevelObj();
 			
-			var levelObject:LevelInformation = PipeJamGame.levelInfo;
+			var levelObject:Object = PipeJamGame.levelInfo;
 			if(levelObject != null)
 			{
 				m_levelLayoutObjWrapper["id"] = event.data.name;
@@ -668,7 +667,7 @@ package scenes.game.display
 		private function createAssignmentsObj():Object
 		{
 			var hashSize:int = Math.ceil(m_nodeList.length/100);
-			PipeJamGame.levelInfo.m_hashArray = new Array();
+			PipeJamGame.levelInfo.hash = new Array();
 			
 			var assignmentsObj:Object = { "id": original_level_name, "hash": [] ,"assignments": { } };
 			var count:int = 0;
@@ -693,7 +692,7 @@ package scenes.game.display
 					count = 0;
 					//store both in the file and externally
 					assignmentsObj["hash"].push(numWide);
-					PipeJamGame.levelInfo.m_hashArray.push(numWide);
+					PipeJamGame.levelInfo.hash.push(numWide);
 					numWide = 0;
 				}
 			}

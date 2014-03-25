@@ -25,7 +25,6 @@ package
 	import net.hires.debug.Stats;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	import networking.NetworkConnection;
 	
 	import scenes.splashscreen.SplashScreenScene;
@@ -185,7 +184,7 @@ package
 		
 		protected function loadLevel(result:int, objVector:Vector.<Object>):void
 		{
-			PipeJamGame.levelInfo = new LevelInformation(objVector[0]);		
+			PipeJamGame.levelInfo = new objVector[0];		
 			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

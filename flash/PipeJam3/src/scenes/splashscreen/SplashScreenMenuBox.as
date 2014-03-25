@@ -14,7 +14,6 @@ package scenes.splashscreen
 	import events.ToolTipEvent;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
@@ -273,8 +272,8 @@ package scenes.splashscreen
 			PipeJamGameScene.inDemo = true;
 			if(PipeJamGameScene.demoArray.length == fileNumber)
 				fileNumber = 0;
-			PipeJamGame.levelInfo = new LevelInformation;
-			PipeJamGame.levelInfo.m_baseFileName = PipeJamGameScene.demoArray[fileNumber];
+			PipeJamGame.levelInfo = new Object;
+			PipeJamGame.levelInfo.baseFileName = PipeJamGameScene.demoArray[fileNumber];
 			fileNumber++;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}

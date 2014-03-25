@@ -10,9 +10,7 @@ package dialogs
 	import events.MenuEvent;
 	
 	import flash.geom.Rectangle;
-	
-	import networking.LevelInformation;
-	
+		
 	import scenes.BaseComponent;
 	
 	import starling.display.Image;

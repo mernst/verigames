@@ -18,7 +18,6 @@ package scenes.levelselectscene
 	import feathers.controls.List;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	import networking.NetworkConnection;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
@@ -342,7 +341,7 @@ package scenes.levelselectscene
 			if (dataObj) {
 				//	if (dataObj.hasOwnProperty("levelId")) {
 				PipeJamGameScene.inDemo = false;
-				PipeJamGame.levelInfo = new LevelInformation(dataObj);
+				PipeJamGame.levelInfo = new dataObj;
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 				//	}
 			}
@@ -503,7 +502,7 @@ package scenes.levelselectscene
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			PipeJamGame.levelInfo = new LevelInformation(matchArrayMetadata[levelList.selectedIndex]);
+			PipeJamGame.levelInfo = new matchArrayMetadata[levelList.selectedIndex];
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
