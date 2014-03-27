@@ -44,6 +44,7 @@ package display
 		protected var m_globalToPoint:Point;
 		
 		public static const GOLD:uint = 0xFFEC00;
+		public static const RED:uint = 0xFF0000;
 		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
 		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 

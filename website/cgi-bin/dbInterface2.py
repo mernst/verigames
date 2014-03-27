@@ -34,6 +34,9 @@ def reportPlayedTutorial2(messageData):
 	db = client.gameapi
 	collection = db.CompletedTutorials
 	messageObj = json.loads(messageData)
+	del messageObj.id
+	del messageObj._id
+
 	collection.insert(messageObj)
 	return '///success'
 
@@ -45,15 +48,27 @@ def reportPlayerRating2(messageData):
 	collection.insert(messageObj)
 	return 'success'
 
+def getHighScoresForLevel2(levelID):
+	try:
+		client = Connection('api.flowjam.verigames.com', 27017)
+		db = client.game2api
+		#use Levels so we don't get more than 5
+		collection = db.Levels
+		concatList = []
+		for level in collection.find({"levelID":levelID}):
+			concatList.append(level)
+
+		item = json.dumps(concatList, default=json_util.default)
+		return item
+	except:
+		return sys.exc_info()
+
+
 #pass url to localhost:3000
 def passURL2(url):
 	resp = requests.get('http://localhost:3000' + url)
 	responseString = json.dumps(resp.json())
 	try:
-		#responseString turns out to be a python unicode string, and ActionScript doesn't like the embeded 'u's, so we remove them.
-		#responseString = responseString.replace('u\'', "\'")
-		#responseString = responseString.replace("\'", "\"")
-
 		if len(responseString) != 0:
 			return responseString
 		else:
@@ -116,24 +131,36 @@ def getFile2NonEncoded(fileID):
 
 
 def submitLevel2(messageData, fileContents):
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.game2api
-	fs = gridfs.GridFS(db)
-	messageObj = json.loads(messageData)
-	decoded = base64.b64decode(fileContents)
-	newAssignmentsID = str(fs.put(decoded))
-	previousAssignmentsID = messageObj["assignmentsID"]
-	messageObj["assignmentsID"] = str(newAssignmentsID)
-	collection = db.Solvers
-	id = collection.insert(messageObj)
-	#mark served level as updated if score is higher than current
-	collection = db.Levels
-	levelID = messageObj["levelID"]
-	for level in collection.find({"assignmentsID":previousAssignmentsID}):
-		if int(str(level["current_score"])) < int(messageObj["score"]):
-			currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
-			collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
-	return '{"assignmentsID":"' + str(newAssignmentsID) + '"}'
+	try:
+		client = Connection('api.flowjam.verigames.com', 27017)
+		db = client.game2api
+		fs = gridfs.GridFS(db)
+		messageObj = json.loads(messageData)
+		if messageObj.get('id', 0) != 0:
+			del messageObj['id']
+		if messageObj.get('_id', 0) != 0:
+			del messageObj['_id']
+		if messageObj.get('$oid', 0) != 0:
+			del messageObj['$oid']
+
+		decoded = base64.b64decode(fileContents)
+		newAssignmentsID = str(fs.put(decoded))
+		previousAssignmentsID = messageObj["assignmentsID"]
+		messageObj["assignmentsID"] = str(newAssignmentsID)
+		collection = db.Solvers
+		id = collection.insert(messageObj)
+		collection = db.CurrentSolutions
+		collection.insert(messageObj)
+		#mark served level as updated if score is higher than current
+		collection = db.Levels
+		levelID = messageObj["levelID"]
+		for level in collection.find({"assignmentsID":previousAssignmentsID}):
+			if int(str(level["current_score"])) < int(messageObj["current_score"]):
+				currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
+				collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["current_score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
+		return '{"assignmentsID":"' + str(newAssignmentsID) + '"}'
+	except:
+		return sys.exc_info()
 
 
 
@@ -160,7 +187,8 @@ elif sys.argv[1] == "passURL2":
 	print(passURL2(sys.argv[2]))
 elif sys.argv[1] == "passURLPOST2":
 	print(passURLPOST(sys.argv[2], sys.argv[3]))
-
+elif sys.argv[1] == "getHighScoresForLevel2":
+	print(getHighScoresForLevel2(sys.argv[2]))
 elif sys.argv[1] == "getActiveLevels2":
 	print(getActiveLevels2())
 elif sys.argv[1] == "getFile2":

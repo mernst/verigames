@@ -1,38 +1,38 @@
 package scenes.game.components
 {
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import display.TextBubble;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 	import display.BasicButton;
 	import display.NineSliceButton;
 	import display.RecenterButton;
+	import display.TextBubble;
 	import display.ZoomInButton;
 	import display.ZoomOutButton;
 	
 	import events.MenuEvent;
 	import events.NavigationEvent;
 	
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
 	import particle.ErrorParticleSystem;
 	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameNode;
+	import scenes.game.display.World;
 	import scenes.game.display.Level;
-	import scenes.game.PipeJamGameScene;
-		
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
@@ -277,8 +277,6 @@ package scenes.game.components
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
-			if(PipeJamGame.levelInfo != null)
-				PipeJamGame.levelInfo.score = currentScore;
 			
 			// Aim for max score shown to be 2/3 of the width of the scorebar area
 			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / maxScoreShown;
@@ -295,7 +293,7 @@ package scenes.game.components
 			
 			if (targetScore < int.MAX_VALUE) {
 				if (!m_targetScoreLine) {
-					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
+					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.65 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
 				} else {
 					m_targetScoreLine.update(targetScore.toString());
 				}
@@ -310,7 +308,7 @@ package scenes.game.components
 			}
 			
 			if (!m_bestPlayerScoreLine) {
-				m_bestPlayerScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
+				m_bestPlayerScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.35 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
 				m_bestPlayerScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
 				m_bestPlayerScoreLine.useHandCursor = true;
 				m_bestPlayerScoreLine.x = bestScoreX;
@@ -420,6 +418,43 @@ package scenes.game.components
 			} else {
 				// Hover out
 				m_bestPlayerScoreLine.alpha = 0.8;
+			}
+		}
+		
+		private function onTouchHighScore(evt:TouchEvent):void
+		{
+			if (!m_bestScoreLine) return;
+			if (evt.getTouches(m_bestScoreLine, TouchPhase.ENDED).length) {
+				// Clicked, load best score!
+				dispatchEvent(new MenuEvent(MenuEvent.LOAD_HIGH_SCORE));
+			} else if (evt.getTouches(m_bestScoreLine, TouchPhase.HOVER).length) {
+				// Hover over
+				m_bestScoreLine.alpha = 1;
+			} else {
+				// Hover out
+				m_bestScoreLine.alpha = 0.8;
+			}
+		}
+		
+		public function setHighScores(highScoreArray:Array):void
+		{
+			var level:Level = World.m_world.active_level;
+			if(level != null)
+			{
+				var currentScore:int = level.currentScore;
+				var bestScore:int = level.bestScore;
+				var targetScore:int = level.getTargetScore();
+				var maxScoreShown:Number = Math.max(currentScore, bestScore);
+				var score:String =  highScoreArray[0].current_score;
+				
+				if (!m_bestScoreLine) {
+					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.RED, TextBubble.RED, "High Score");
+					m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchHighScore);
+				} else {
+					m_bestScoreLine.update(score);
+				}
+				m_bestScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * parseInt(score) / maxScoreShown;
+				m_scoreBarContainer.addChild(m_bestScoreLine);
 			}
 		}
 	}

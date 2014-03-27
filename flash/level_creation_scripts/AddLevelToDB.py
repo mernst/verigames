@@ -83,6 +83,22 @@ if __name__ == "__main__":
 	infile = sys.argv[1]
 	description_file = sys.argv[2]
 	
+	# there seems to be ownership issues when files added through python can't be deleted from java. so do it here, but really make sure you want to remove everything....
+	'''
+	client = Connection('api.flowjam.verigames.com', 27017)
+	db = client.game2api
+	level_collection = db.Levels
+	level_collection.remove()
+	base_collection = db.BaseLevels
+	base_collection.remove()
+	level_collection = db.ScoredLevels
+	level_collection.remove()
+	base_collection = db.Solvers
+	base_collection.remove()
+
+	quit()
+	'''
+	
 	if os.path.isdir(infile):
 		addDirectoryToDB(infile, description_file)
 	else:

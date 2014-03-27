@@ -193,10 +193,15 @@ package scenes.game.display
 			setNodesFromAssignments(m_levelBestScoreAssignmentsObj, true);
 		}
 		
+		public function loadAssignmentsConfiguration(assignmentsObj:Object):void
+		{
+			setNodesFromAssignments(assignmentsObj);
+		}
+		
 		private function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
-			var assignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
+			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
 			for (var i:int = 0; i < m_nodeList.length; i++) {
 				var gameNode:GameNode = m_nodeList[i];
@@ -214,9 +219,9 @@ package scenes.game.display
 				}
 				
 				//and then set from local storage, if there
-				if(!updateTutorialManager && assignmentObj && assignmentObj[gameNode.m_id] != null)
+				if(!updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
 				{
-					var newWidth:String = assignmentObj[gameNode.m_id];
+					var newWidth:String = savedAssignmentObj[gameNode.m_id];
 					var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
 					
 					if (gameNode.isWide() != savedAssignmentIsWide) 
@@ -228,7 +233,7 @@ package scenes.game.display
 			}
 			if(gameNode) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
 			refreshTroublePoints();	
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = assignmentObj;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = savedAssignmentObj;
 		}
 		
 		protected function onAddedToStage(event:Event):void

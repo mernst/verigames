@@ -1,14 +1,19 @@
 package scenes.game.display
 {
-	import assets.AssetsAudio;
-	import constraints.ConstraintGraph;
-	import events.MiniMapEvent;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.PixelSnapping;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.system.System;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import particle.ErrorParticleSystem;
-	import scenes.game.components.MiniMap;
-	import starling.events.EnterFrameEvent;
+	
+	import assets.AssetsAudio;
 	
 	import audio.AudioManager;
+	
+	import constraints.ConstraintGraph;
 	
 	import dialogs.InGameMenuDialog;
 	import dialogs.SaveDialog;
@@ -20,29 +25,28 @@ package scenes.game.display
 	import display.ToolTipText;
 	
 	import events.ConflictChangeEvent;
-	import events.WidgetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.MenuEvent;
+	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.ToolTipEvent;
 	import events.UndoEvent;
+	import events.WidgetChangeEvent;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.PixelSnapping;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.system.System;
-	import flash.utils.ByteArray;
+	import networking.Achievements;
+	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	import networking.TutorialController;
 	
-	import networking.*;
+	import particle.ErrorParticleSystem;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
+	import scenes.game.components.MiniMap;
 	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
@@ -50,6 +54,7 @@ package scenes.game.display
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.textures.Texture;
@@ -185,6 +190,7 @@ package scenes.game.display
 				gameControlPanel.onZoomReset();
 			}
 			addChild(gameControlPanel);
+			setHighScores();
 			trace("Done initializing GameControlPanel.");
 		}
 		
@@ -266,6 +272,7 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
+			addEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
 			
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
@@ -475,6 +482,18 @@ package scenes.game.display
 		private function loadBestScore(event:MenuEvent):void
 		{
 			if (active_level) active_level.loadBestScoringConfiguration();
+		}
+		
+		private function loadHighScore(event:MenuEvent):void
+		{
+			var highScoreAssignmentsID:String = PipeJamGame.levelInfo.highScores[0].assignmentsID;
+			GameFileHandler.getFileByID(highScoreAssignmentsID, loadAssignmentsFile);
+		}
+		
+		protected function loadAssignmentsFile(assignmentsObject:Object):void
+		{
+			if(active_level)
+				active_level.loadAssignmentsConfiguration(assignmentsObject);
 		}
 		
 		protected function switchToLevelSelect():void
@@ -920,7 +939,7 @@ package scenes.game.display
 			
 			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
 			active_level.resetBestScore();
-			
+			setHighScores();
 			gameControlPanel.newLevelSelected(newLevel);
 			miniMap.isDirty = true;
 		}
@@ -953,6 +972,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
+			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
 			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -1027,5 +1047,9 @@ package scenes.game.display
 			m_activeToolTip = null;
 		}
 		
+		public function setHighScores():void
+		{
+			gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+		}
 	}
 }
