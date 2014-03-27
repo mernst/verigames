@@ -1,5 +1,7 @@
 import json
 
+COLS = ['user_id','levelName','qid','sessionid','session_starttime','starttime','endtime','score','targetscore','actions','host']
+
 def process(filename):
 	all_pageloads = {}
 	user_level_data = []
@@ -24,6 +26,7 @@ def process(filename):
 			levs = userdata.get('levels', [])
 			for level in levs:
 				user_level_info = {}
+				user_level_info['sessionid'] = level.get('sessionid')
 				user_level_info['qid'] = level.get('qid')
 				lev_detail_string = level.get('q_detail', '{}')
 				lev_details = json.loads(lev_detail_string)
@@ -31,28 +34,30 @@ def process(filename):
 				lev_info = lev_details.get('levelInfo', {})
 				user_level_info['score'] = lev_info.get('m_score')
 				user_level_info['targetscore'] = lev_info.get('m_targetScore')
-				user_level_info['sessionid'] = level.get('sessionid')
-				user_level_info['log_q_ts'] = level.get('log_q_ts')
+				user_level_info['starttime'] = level.get('log_q_ts')
 				quest_end = level.get('questend') or {}
 				endtime = quest_end.get('log_q_ts')
 				actions = level.get('actions')
 				if endtime is None:
-					endtime = int(user_level_info['log_q_ts'])
+					endtime = int(user_level_info['starttime'])
 					for action in actions:
 						atime = int(action.get('log_ts', 0))
 						if atime > endtime:
 							endtime = atime
 				user_level_info['endtime'] = endtime
 				user_level_info['actions'] = len(actions)
-				pl_info = all_pageloads.get(user_level_info['sessionid'])
-				if pl_info is None:
+				pl_info = all_pageloads.get(user_level_info['sessionid'], {})
+				if not pl_info:
 					if user_level_info['sessionid'] is not None:
 						print 'No pageload found for sessionid: %s' % user_level_info['sessionid']
-				else:
-					for pl_key in pl_info:
-						user_level_info['pl_%s' % pl_key] = pl_info[pl_key]
-				user_level_data.append(user_level_info)
+				user_level_info['host'] = pl_info.get('referrer_host', '')
+				user_level_info['user_id'] = pl_info.get('uid', '')
+				user_level_info['session_starttime'] = pl_info.get('log_ts', '')
+				# for pl_key in pl_info:
+				# 	user_level_info['pl_%s' % pl_key] = pl_info[pl_key]
+				flat_user_level_data = []
+				for col in COLS:
+					flat_user_level_data.append(user_level_info.get(col, ''))
+				user_level_data.append(flat_user_level_data)
 	with open('new_%s.json' % filename, 'w') as fout:
 		fout.write(json.dumps(user_level_data))
-	
-			
