@@ -270,7 +270,7 @@ package scenes.layoutselectscene
 		
 		private function setNewLayout(byteArray:ByteArray):void
 		{
-			var name:String = PipeJamGame.levelInfo.m_layoutName;
+			var name:String = PipeJamGame.levelInfo.layoutName;
 			var layoutFile:XML = new XML(byteArray);
 			var data:Object = new Object;
 			data.name = name;

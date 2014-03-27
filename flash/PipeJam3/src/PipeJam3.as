@@ -25,7 +25,6 @@ package
 	import net.hires.debug.Stats;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	import networking.NetworkConnection;
 	
 	import scenes.splashscreen.SplashScreenScene;
@@ -64,7 +63,9 @@ package
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		
-		static public var m_saveLevelInfo:SharedObject;
+		//We store 5 pieces of info, the level record ID, the three file IDs, and a dictionary of widget size changes since last save (or load).
+		//This is for restoring game play between sessions.
+		static public var m_savedCurrentLevel:SharedObject;
 
 		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
 		public static var initialLevelDisplay:Boolean = true; 
@@ -140,7 +141,7 @@ package
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
 			//initialize stuff
 			new NetworkConnection();
-			m_saveLevelInfo = SharedObject.getLocal("FlowJamData");
+			m_savedCurrentLevel = SharedObject.getLocal("FlowJamData");
 			GameFileHandler.retrieveLevels();
 		}
 		
@@ -183,7 +184,7 @@ package
 		
 		protected function loadLevel(result:int, objVector:Vector.<Object>):void
 		{
-			PipeJamGame.levelInfo = new LevelInformation(objVector[0]);		
+			PipeJamGame.levelInfo = new objVector[0];		
 			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

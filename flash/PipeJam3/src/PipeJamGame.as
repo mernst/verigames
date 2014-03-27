@@ -14,6 +14,8 @@ package
 	
 	import cgs.Cache.Cache;
 	
+	import dialogs.SimpleAlertDialog;
+	
 	import display.GameObjectBatch;
 	import display.MusicButton;
 	import display.NineSliceBatch;
@@ -26,7 +28,6 @@ package
 	import feathers.themes.AeonDesktopTheme;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
@@ -61,7 +62,7 @@ package
 		private var m_gameObjectBatch:GameObjectBatch;
 		
 		/** this is the main holder of information about the level. */
-		public static var levelInfo:LevelInformation;
+		public static var levelInfo:Object;
 
 		public static var m_pipeJamGame:PipeJamGame;
 		
@@ -156,23 +157,32 @@ package
 		private function onGetSavedLevel(event:NavigationEvent):void
 		{
 			PipeJamGameScene.inTutorial = false;
-			PipeJamGame.levelInfo = GameFileHandler.findLevelObject(PipeJam3.m_saveLevelInfo.data.levelInfoID);
-			//update assignmentsID if needed
-			PipeJamGame.levelInfo.m_assignmentsID = PipeJam3.m_saveLevelInfo.data.assignmentsID;
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			PipeJamGame.levelInfo = GameFileHandler.findLevelObject(PipeJam3.m_savedCurrentLevel.data.levelInfoID);
 			
+			if(levelInfo)
+			{
+				//update assignmentsID if needed
+				PipeJamGame.levelInfo.assignmentsID = PipeJam3.m_savedCurrentLevel.data.assignmentsID;
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			}
+			else //just alert user, and then get random level
+			{
+				var dialogText:String = "Previous level doesn't exist any\n more. Serving a random level.";
+				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, 160, 80, "", onGetRandomLevel, 2);
+				addChild(alert);
+			}			
 		}	
 		
-		protected function onGetRandomLevel(event:NavigationEvent):void
+		protected function onGetRandomLevel(event:NavigationEvent = null):void
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
 			//save info locally so we can retrieve next run
-			PipeJam3.m_saveLevelInfo.data.levelInfoID = PipeJamGame.levelInfo.m_id;
-			PipeJam3.m_saveLevelInfo.data.levelID = PipeJamGame.levelInfo.m_levelID;
-			PipeJam3.m_saveLevelInfo.data.assignmentsID = PipeJamGame.levelInfo.m_assignmentsID;
-			PipeJam3.m_saveLevelInfo.data.layoutID = PipeJamGame.levelInfo.m_layoutID;
-			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = new Object();
+			PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
+			PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
+			PipeJam3.m_savedCurrentLevel.data.assignmentsID = PipeJamGame.levelInfo.assignmentsID;
+			PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

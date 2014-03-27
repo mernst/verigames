@@ -42,7 +42,6 @@ package scenes.game.display
 	import graph.PropDictionary;
 	
 	import networking.GameFileHandler;
-	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	
@@ -197,8 +196,8 @@ package scenes.game.display
 		private function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
-			var assignmentObj:Object = PipeJam3.m_saveLevelInfo.data.assignmentUpdates;
-			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = null;
+			var assignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
 			for (var i:int = 0; i < m_nodeList.length; i++) {
 				var gameNode:GameNode = m_nodeList[i];
 				// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
@@ -229,7 +228,7 @@ package scenes.game.display
 			}
 			if(gameNode) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
 			refreshTroublePoints();	
-			PipeJam3.m_saveLevelInfo.data.assignmentUpdates = assignmentObj;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = assignmentObj;
 		}
 		
 		protected function onAddedToStage(event:Event):void
@@ -461,7 +460,7 @@ package scenes.game.display
 		{
 			updateLevelObj();
 			
-			var levelObject:LevelInformation = PipeJamGame.levelInfo;
+			var levelObject:Object = PipeJamGame.levelInfo;
 			if(levelObject != null)
 			{
 				m_levelLayoutObjWrapper["id"] = event.data.name;
@@ -667,7 +666,12 @@ package scenes.game.display
 		
 		private function createAssignmentsObj():Object
 		{
-			var assignmentsObj:Object = { "id": original_level_name, "assignments": { } };
+			var hashSize:int = Math.ceil(m_nodeList.length/100);
+			PipeJamGame.levelInfo.hash = new Array();
+			
+			var assignmentsObj:Object = { "id": original_level_name, "hash": [] ,"assignments": { } };
+			var count:int = 0;
+			var numWide:int = 0;
 			for each(var node:GameNode in m_nodeList)
 			{
 				if (node.constraintVar.constant) continue;
@@ -676,6 +680,21 @@ package scenes.game.display
 				var keyfors:Array = new Array();
 				for (var i:int = 0; i < node.constraintVar.keyforVals.length; i++) keyfors.push(node.constraintVar.keyforVals[i]);
 				if (keyfors.length > 0) assignmentsObj["assignments"][node.constraintVar.formattedId][ConstraintGraph.KEYFOR_VALUES] = keyfors;
+				
+				var isWide:Boolean = (node.constraintVar.getValue().verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
+				if(isWide)
+					numWide++;
+				
+				count++;
+				
+				if(count == hashSize)
+				{
+					count = 0;
+					//store both in the file and externally
+					assignmentsObj["hash"].push(numWide);
+					PipeJamGame.levelInfo.hash.push(numWide);
+					numWide = 0;
+				}
 			}
 			//for each(var edge:GameEdgeContainer in m_edgeList)
 			//{
@@ -820,13 +839,13 @@ package scenes.game.display
 			if (!evt.silent) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.widgetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
 			
 			//save incremental changes so we can update if user quits and restarts
-			if(PipeJam3.m_saveLevelInfo.data.assignmentUpdates) //should only be null when doing assignments from assignments file
+			if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
 			{
 				var constraintType:String = ConstraintValue.VERBOSE_TYPE_1;
 				//propValue isn't updated yet, so if it's currently wide, we want to save narrow
 				if(evt.propValue)
 					constraintType = ConstraintValue.VERBOSE_TYPE_0;
-				PipeJam3.m_saveLevelInfo.data.assignmentUpdates[evt.widgetChanged.m_id] = constraintType;
+				PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.widgetChanged.m_id] = constraintType;
 			}
 		}
 		

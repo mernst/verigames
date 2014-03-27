@@ -7,7 +7,6 @@ package scenes.layoutselectscene
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import networking.LevelInformation;
 	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
