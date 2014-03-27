@@ -68,6 +68,20 @@
 		});
 	});
 	
+	var COLS = {
+		'user_id': 0,
+		'levelName': 1,
+		'qid': 2,
+		'sessionid': 3,
+		'session_starttime': 4,
+		'starttime': 5,
+		'endtime': 6,
+		'score': 7,
+		'targetscore': 8,
+		'actions': 9,
+		'host': 10
+	};
+
 	var TUTORIALS = [
 		{"name": "IntroWidget", "qid":"1", "targetScore":"400"},
 		{"name": "WidgetPractice", "qid":"2" ,"targetScore":"700"},
@@ -164,9 +178,9 @@
 		var prevUsers = {};
 		for (var line = 0; line < PLAYER_LEVELS.length; line++) {
 			row = PLAYER_LEVELS[line];
-			host = row["pl_referrer_host"];
+			host = row[COLS["host"]];
 			if (!host) continue;
-			uid = row["pl_uid"];
+			uid = row[COLS["user_id"]];
 			var isLoggedIn = uid ? (uid.indexOf("cgs_vg_") == 0) : false;
 			// Hosts
 			if (CSFV_USERS.hasOwnProperty(uid)) continue; // Skip CSFV users
@@ -176,9 +190,9 @@
 			dataDict[dataKey]['hosts'][host]++;
 			var approvedHost = includeHosts.hasOwnProperty(host) ? includeHosts[host] : false;
 			if (!approvedHost) continue; // only use approved hosts
-			var targetScore = parseInt(row["targetscore"]);
-			var score = parseInt(row["score"]);
-			queststarttime = parseInt(row["log_q_ts"]);
+			var targetScore = parseInt(row[COLS["targetscore"]]);
+			var score = parseInt(row[COLS["score"]]);
+			queststarttime = parseInt(row[COLS["starttime"]]);
 			if (queststarttime && startDate && (queststarttime < startDate)) {
 				// Keep track of old users for "new user" determination
 				prevUsers[uid] = true;
@@ -192,10 +206,10 @@
 			if (!dataDict['anon']['hour_user_plays'].hasOwnProperty(starthour)) dataDict['anon']['hour_user_plays'][starthour] = {};
 			if (!dataDict[dataKey]['hour_user_plays'][starthour].hasOwnProperty(uid)) dataDict[dataKey]['hour_user_plays'][starthour][uid] = 0;
 			dataDict[dataKey]['hour_user_plays'][starthour][uid]++;
-			questendtime = parseInt(row["endtime"]);
+			questendtime = parseInt(row[COLS["endtime"]]);
 			if (questendtime && endDate && (questendtime > endDate)) continue;
-			nactions = parseInt(row["actions"]);
-			levelName = newTutorialName(row["levelName"]);
+			nactions = parseInt(row[COLS["actions"]]);
+			levelName = newTutorialName(row[COLS["levelName"]]);
 			if (levelName) {
 				// Dropoff processing
 				if (uid) {
@@ -222,8 +236,8 @@
 				}
 			}
 			// Sessions/day processing
-			sessionstarttime = parseInt(row["pl_log_ts"]);
-			sessionid = row["sessionid"];
+			sessionstarttime = parseInt(row[COLS["session_starttime"]]);
+			sessionid = row[COLS["sessionid"]];
 			if (sessionstarttime && sessionid) {
 				var sessionstartdate = new Date(sessionstarttime * 1000.0);
 				var sessionDateKey = sessionstartdate.toLocaleDateString();
