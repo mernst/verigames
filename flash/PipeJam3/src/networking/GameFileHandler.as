@@ -5,6 +5,7 @@ package networking
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.utils.Dictionary;
 	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
@@ -20,7 +21,6 @@ package networking
 	import utils.Base64Decoder;
 	import utils.Base64Encoder;
 	import utils.XMath;
-	import flash.utils.Dictionary;
 	
 	/** How to use:
 	 * In most cases, there's a static function that will do what you want, and call a callback when done.
@@ -40,7 +40,7 @@ package networking
 		public static var DELETE_SAVED_LEVEL:int = 9;
 		public static var REPORT_PLAYER_RATING:int = 12;
 		public static var REPORT_LEADERBOARD_SCORE:int = 13;
-		
+		public static var GET_HIGH_SCORES_FOR_LEVEL:int = 14;
 		public static var USE_LOCAL:int = 1;
 		public static var USE_DATABASE:int = 2;
 		public static var USE_URL:int = 3;
@@ -93,6 +93,14 @@ package networking
 			fileHandler.sendMessage(SAVE_LAYOUT, callback, encodedLayoutDescription, _layoutAsString);
 		}
 		
+		static public function getHighScoresForLevel(callback:Function, levelID:String):void
+		{
+			
+			var fileHandler:GameFileHandler = new GameFileHandler(callback);
+			fileHandler.sendMessage(GET_HIGH_SCORES_FOR_LEVEL, fileHandler.defaultJSONCallback, null, levelID);
+
+		}
+		
 		static public function deleteSavedLevel(_levelIDString:String):void
 		{
 			var fileHandler:GameFileHandler = new GameFileHandler();
@@ -108,7 +116,7 @@ package networking
 		{
 			for each(var level:Object in levelInfoVector)
 			{
-				if(level.m_id == id)
+				if(level.id == id)
 				{
 					return level;
 				}
@@ -394,7 +402,18 @@ package networking
 			var message:String = e.target.data as String;
 			var obj:Object = JSON.parse(message);
 			for each(var entry:Object in obj)
+			{
+				//swiitching to using actual Mongo objects makes the id field appear different. Fix that...
+				if(!entry.hasOwnProperty("id"))
+				{
+					if(entry.hasOwnProperty("_id"))
+					{
+						if(entry._id.hasOwnProperty("$oid"))
+							entry.id = entry._id.$oid;
+					}
+				}
 				vector.push(entry);
+			}
 
 			levelInfoVector = vector;
 			if(m_callback != null)
@@ -444,6 +463,9 @@ package networking
 			
 			switch(type)
 			{
+				case GET_HIGH_SCORES_FOR_LEVEL:
+					url = NetworkConnection.productionInterop  + "?function=getHighScoresForLevel2&data_id=" + data;
+					break;
 				case REPORT_PLAYER_RATING:
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.levelID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
@@ -459,13 +481,18 @@ package networking
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
 					solutionInfo.playerID =  PlayerValidation.playerID;
 					solutionInfo.username = PlayerValidation.playerUserName; 
-					
+					delete solutionInfo["id"]; //need to remove this or else successive saves won't work
+					delete solutionInfo["_id"]; //need to remove this or else successive saves won't work
 					PipeJamGame.levelInfo.revision = solutionInfo.revision;
 					//current time in seconds
 					var currentDate:Date = new Date();
 					var dateUTC:Number = currentDate.getTime() + currentDate.getTimezoneOffset();
 					solutionInfo.submitted_date = int(dateUTC/1000);
+					//save, delete, stringify, and then restore highscore vector (not really needed, and they might contain an id property)
+					var savedHighScoreArray:Array = solutionInfo.highScores;
+					delete solutionInfo["highScores"];
 					data_id = JSON.stringify(solutionInfo);
+					solutionInfo.highScores = savedHighScoreArray;
 					url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:

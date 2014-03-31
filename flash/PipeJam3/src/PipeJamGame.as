@@ -1,5 +1,6 @@
 package
 {
+	import flash.events.Event;
 	import flash.external.ExternalInterface;
 	import flash.net.URLVariables;
 	import flash.system.System;
@@ -25,13 +26,12 @@ package
 	import events.MenuEvent;
 	import events.NavigationEvent;
 	
-	import feathers.themes.AeonDesktopTheme;
-	
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
 	import scenes.game.PipeJamGameScene;
+	import scenes.game.display.World;
 	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.SplashScreenScene;
@@ -54,7 +54,6 @@ package
 		public static var ALL_IN_ONE:int = 2;
 		
 		public static var theme:PipeJamTheme;
-		public static var theme1:AeonDesktopTheme;
 		
 		private var m_musicButton:MusicButton;
 		private var m_sfxButton:SoundButton;
@@ -164,6 +163,7 @@ package
 				//update assignmentsID if needed
 				PipeJamGame.levelInfo.assignmentsID = PipeJam3.m_savedCurrentLevel.data.assignmentsID;
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 			}
 			else //just alert user, and then get random level
 			{
@@ -177,6 +177,7 @@ package
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
+			GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 			//save info locally so we can retrieve next run
 			PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
 			PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
@@ -184,6 +185,24 @@ package
 			PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+		}
+		
+		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
+		{
+			var highScoreArray:Array = new Array;
+			for each(var level:Object in list)
+			{
+				level.numericScore = int(level.current_score);
+				highScoreArray.push(level);
+			}
+			
+			if(highScoreArray.length > 0)
+				highScoreArray.sortOn("numericScore", Array.DESCENDING | Array.NUMERIC);
+			
+			PipeJamGame.levelInfo.highScores = highScoreArray;
+
+			if(World.m_world)
+				World.m_world.setHighScores();
 		}
 		
 		protected function toggleSoundControl(event:starling.events.Event):void

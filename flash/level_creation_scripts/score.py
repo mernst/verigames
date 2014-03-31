@@ -20,10 +20,22 @@ from os.path import isfile, join
 
 #get all submissions for levelId, sort by score, take top 20, compare, take unique top 5 in distance, store in Levels collection
 def selectLevelVariantsToServe(db, levelID):
+	#??test to see if there are enough recent submissions to make it worthwhile to update
+	#test_collection = db.CurrentSolutions
+	#test_levelList = []
+	#for level in test_collection.find({"levelID":levelID}):
+	#	test_levelList.append(level)
+		
+	#if len(test_levelList) < 5:
+	#	return
+	
+	#if we made it this far, remove to limit redundancy
+	#test_collection.remove({"levelID":levelID})
+	
 	collection = db.Solvers
 	levelList = []
 	for level in collection.find({"levelID":levelID}):
-		if 'hashArray' in level:
+		if 'hash' in level:
 			levelList.append(level)
 			#flag as not duplicate to begin with
 			level["duplicate"] = "none"
@@ -43,7 +55,7 @@ def selectLevelVariantsToServe(db, levelID):
 
 	print numLevelsToScore
 	
-	levelList.sort(key=lambda x: x['score'], reverse=True)
+	levelList.sort(key=lambda x: x['current_score'], reverse=True)
 	scoredLevels = []
 	for i in range(0, numLevelsToScore):
 		scoredLevels.append(levelList[i])
@@ -76,12 +88,13 @@ def selectLevelVariantsToServe(db, levelID):
 	#insert into separate collection for future use?
 	for i in range(0, len(serveList)):
 		levelCollection.insert(serveList[i])	
+		
 	print 'done'
 	
 	
 def compareLevels(level1, level2):
-	levelHash1 = level1["hashArray"]
-	levelHash2 = level2["hashArray"]
+	levelHash1 = level1["hash"]
+	levelHash2 = level2["hash"]
 
 	difference = 0
 	for i in range(1, len(levelHash1)):
@@ -98,8 +111,22 @@ def compareLevels(level1, level2):
 	if "distanceArray" not in level2:
 		level2["distanceArray"] = {}
 
-	level1["distanceArray"][str(level2["_id"])] = difference
-	level2["distanceArray"][str(level1["_id"])] = difference
+	if 'id' in level1:
+		level1ID = str(level1["id"])
+	if '_id' in level1:
+		level1ID = str(level1["_id"])
+		if isinstance(level1["_id"], dict):
+			level1ID = str(level1["_id"]["$oid"])
+		
+	if 'id' in level2:
+		level2ID = str(level2["id"])		
+	if '_id' in level2:
+		level2ID = str(level2["_id"])
+		if isinstance(level2["_id"], dict):
+			level2ID = str(level2["_id"]["$oid"])
+		
+	level1["distanceArray"][level2ID] = difference
+	level2["distanceArray"][level1ID] = difference
 	
 	return difference
 	
@@ -124,6 +151,7 @@ def chooseLevelVariants(levelList):
 client = Connection('api.flowjam.verigames.com', 27017)
 db = client.game2api
 collection = db.BaseLevels
+
 for level in collection.find():
 	print "scoring " + level["levelID"]
 	selectLevelVariantsToServe(db, level["levelID"])
