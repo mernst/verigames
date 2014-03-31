@@ -9,6 +9,11 @@ class Node:
 	def __init__(self, id, isconstant):
 		self.id = id
 		self.isconstant = isconstant
+		self.type_value = None
+		if id[:6] == 'type_0':
+			self.type_value = TYPE_0
+		elif id[:6] == 'type_1':
+			self.type_value = TYPE_1		
 		self.inputs = {}
 		self.outputs = {}
 		self.ninputs = 0
@@ -18,7 +23,6 @@ class Node:
 		self.pt = None
 		self.width = None
 		self.height = NODE_HEIGHT
-		self.type_value = None
 		self.keyfor_value = None
 		self.possible_keyfor = None
 		self.default = None
@@ -107,7 +111,7 @@ class Node:
 		if self._current_score is not None:
 			return self._current_score
 		current_val = self.get_current_value(graph_var_default=graph_var_default)
-		score = 0
+		score = 0.0
 		if self.score is not None and self.score.get('type:%s' % current_val) is not None:
 			score = float(self.score['type:%s' % current_val])
 		elif graph_scoring is not None and graph_scoring.get('variables') is not None and graph_scoring['variables'].get('type:%s' % current_val) is not None:
@@ -137,25 +141,31 @@ class Edge:
 		if self.fromnode is not None and self.tonode is not None:
 			lhs_value = self.fromnode.get_current_value(graph_var_default=graph_var_default)
 			rhs_value = self.tonode.get_current_value(graph_var_default=graph_var_default)
+			print 'lhs=%s rhs=%s' % (lhs_value, rhs_value)
 			if self.equality_constraint_twin is not None:
 				is_satisfied = (lhs_value == rhs_value)
 				self.equality_constraint_twin._currently_satisfied = is_satisfied
 				self.equality_constraint_twin._current_score = None # reset score
 			else: # subtype contraint
 				is_satisfied = (lhs_value <= rhs_value)
+		else:
+			raise Exception('Edge found with missing to/from node, edge: %s to: %s from:%s' % (self, self.fromnode, self.tonode))
 		self._currently_satisfied = is_satisfied
+		print 'satisfied=%s' % self._currently_satisfied
 		return self._currently_satisfied
 
 	def get_current_score(self, graph_var_default=1, graph_scoring=None):
 		if self._current_score is not None:
 			return self._current_score
 		is_satisfied = self.get_currently_satisfied(graph_var_default=graph_var_default)
-		score = 0
+		score = 0.0
 		if is_satisfied:
 			if self.score is not None:
 				score = float(self.score)
+				print 'self.score: %s' % score
 			elif graph_scoring.get('constraints') is not None:
 				score = float(graph_scoring['constraints'])
+				print 'graph score: %s' % score
 		self._current_score = score
 		if self.equality_constraint_twin is not None:
 			self.equality_constraint_twin._current_score = score
@@ -185,7 +195,7 @@ def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 		lhconst = False
 		rhconst = False
 	elif rhname == 'type' and lhname == 'type':
-		return # trivial constraint (either always true or always false) so skip
+		return None # trivial constraint (either always true or always false) so skip
 	else:
 		print 'Warning! Unexpected constraint type (not var/var or var/type) = "%s" / "%s". Ignoring...' % (lhname, rhname)
 		return None
@@ -222,7 +232,7 @@ def load_constraints_graph(infilename):
 	current_asg = None
 	current_score_var_id = None
 	current_var_score_key = None
-	version = None
+	version = 1
 	default_var_type = None
 	scoring = None
 	for prefix, event, value in parser:
@@ -274,8 +284,9 @@ def load_constraints_graph(infilename):
 				if constr_oper == '=':
 					# For equality, add constraint in the other direction as well and associate the two
 					twin_edge = constr2graph(rhname, rhid, lhname, lhid, nodes, edges)
-					new_edge.equality_constraint_twin = twin_edge
-					twin_edge.equality_constraint_twin = new_edge
+					if new_edge is not None and twin_edge is not None:
+						new_edge.equality_constraint_twin = twin_edge
+						twin_edge.equality_constraint_twin = new_edge
 			except Exception as e:
 				print 'Error parsing constraint: %s -> %s' % (value, e)
 				continue
@@ -291,7 +302,7 @@ def load_constraints_graph(infilename):
 		elif (prefix, event) == ('constraints.item.constraint', 'string'):
 			constr2['constr_oper'] = value
 			# TODO: Support "selection_check" (if node) and "enabled_check" (generics) and eventually "map.get"
-			if value != 'subtype' and value != 'equality':
+			if value != 'subtype' and value != 'equality' and value != 'comparable':
 				print 'Warning! Unsupported constraint type found: %s' % value
 		elif (prefix, event) == ('constraints.item', 'end_map'):
 			lhs = constr2.get('lhs')
@@ -314,13 +325,16 @@ def load_constraints_graph(infilename):
 					constr2 = None
 					continue
 				new_edge = constr2graph(lhname, lhid, rhname, rhid, nodes, edges)
-				new_edge.score = score
+				if new_edge is not None:
+					new_edge.score = score
 				if constr_oper == 'equality':
 					# For equality, add constraint in the other direction as well and associate the two
 					twin_edge = constr2graph(rhname, rhid, lhname, lhid, nodes, edges)
-					twin_edge.score = score
-					new_edge.equality_constraint_twin = twin_edge
-					twin_edge.equality_constraint_twin = new_edge
+					if twin_edge is not None:
+						twin_edge.score = score
+						if new_edge is not None:
+							new_edge.equality_constraint_twin = twin_edge
+							twin_edge.equality_constraint_twin = new_edge
 			else:
 				print 'Error parsing constraint: %s %s %s' % (lhs, constr_oper, rhs)
 			constr2 = None

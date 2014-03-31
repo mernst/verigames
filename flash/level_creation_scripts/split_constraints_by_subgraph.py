@@ -46,7 +46,7 @@ def split_constraints_by_subgraph(infilename, outfilename):
 		with open('%s/%s.json' % (dir, levelid), 'w') as writeconstr:
 			writeconstr.write('{"id": "%s",\n' % levelid)
 			writeconstr.write('"version": %s,\n' % version)
-			writeconstr.write('"default": %s,\n' % default_var_type)
+			writeconstr.write('"default": "%s",\n' % default_var_type)
 			if scoring is not None:
 				writeconstr.write('"scoring": %s,\n' % json.dumps(scoring))
 			writeconstr.write('"variables":{\n')
@@ -101,6 +101,6 @@ if __name__ == "__main__":
 		'\n' % sys.argv[0])
 		quit()
 	infile = sys.argv[1]
-	if len(sys.argv) == 3:
-		outfile = sys.argv[2]
+	if len(sys.argv) == 2:
+		outfile = sys.argv[1]
 	split_constraints_by_subgraph(infile, outfile)

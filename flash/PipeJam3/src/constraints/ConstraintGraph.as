@@ -6,9 +6,10 @@ package constraints
 
 	public class ConstraintGraph 
 	{
-		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(0);
+		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(1);
 		
 		private static const VERSION:String = "version";
+		private static const DEFAULT_VAR:String = "default";
 		private static const QID:String = "qid";
 		// Sections:
 		private static const SCORING:String = "scoring";
@@ -28,6 +29,8 @@ package constraints
 		// Constraint side types:
 		private static const VAR:String = "var";
 		private static const TYPE:String = "type";
+		
+		private static const NULL_SCORING:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
 		public var variableDict:Dictionary = new Dictionary();
 		public var constraintsDict:Dictionary = new Dictionary();
@@ -63,12 +66,19 @@ package constraints
 		{
 			var graph:ConstraintGraph = new ConstraintGraph();
 			var ver:String = levelObj[VERSION];
+			var defaultValue:String = levelObj[DEFAULT_VAR];
 			graph.qid = parseInt(levelObj[QID]);
 			switch (ver) {
 				case "1": // Version 1
 					// No "default" specified in json, use game default
-					var graphDefaultVal:ConstraintValue = GAME_DEFAULT_VAR_VALUE;
-					
+					var graphDefaultVal:ConstraintValue;
+					if (defaultValue == ConstraintScoringConfig.TYPE_0_VALUE_KEY) {
+						graphDefaultVal = new ConstraintValue(0);
+					} else if (defaultValue == ConstraintScoringConfig.TYPE_1_VALUE_KEY) {
+						graphDefaultVal = new ConstraintValue(1);
+					} else {
+						graphDefaultVal = GAME_DEFAULT_VAR_VALUE;
+					}
 					// Build Scoring
 					var scoringObj:Object = levelObj[SCORING];
 					var constraintScore:int = scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY];
@@ -112,7 +122,7 @@ package constraints
 							if (keyforValsArr) {
 								for (var j:int = 0; j < keyforValsArr.length; j++) keyforVals.push(keyforValsArr[j]);
 							}
-							var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, mergedVarScoring, possibleKeyfors, keyforVals);
+							var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring, possibleKeyfors, keyforVals);
 							graph.variableDict[formattedId] = newVar;
 						}
 					}
@@ -239,7 +249,7 @@ package constraints
 					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
 				} else if (_type == TYPE) {
 					var constrVal:ConstraintValue = ConstraintValue.fromStr(_type_num);
-					constrVar = new ConstraintVar(fullId, constrVal, constrVal, true, _defaultScoring);
+					constrVar = new ConstraintVar(fullId, constrVal, constrVal, true, NULL_SCORING);
 				} else {
 					throw new Error("Invalid constraint var/type found: ('" + _type + "'). Expecting 'var' or 'type'");
 				}

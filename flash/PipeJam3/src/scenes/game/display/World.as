@@ -119,10 +119,6 @@ package scenes.game.display
 				// if we didn't find the level, assume this is a global constraints file
 				if(levelAssignmentsObj == null) levelAssignmentsObj = m_assignmentsObj;
 				
-				var targetScore:int = int.MAX_VALUE;
-				if ((levelAssignmentsObj["targetScore"] != undefined) && !isNaN(int(levelAssignmentsObj["targetScore"]))) {
-					targetScore = int(levelAssignmentsObj["targetScore"]);
-				}
 				var levelNameFound:String = levelName;
 				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.name) {
 					levelNameFound = PipeJamGame.levelInfo.name;
@@ -131,7 +127,7 @@ package scenes.game.display
 					throw new Error("World level found without constriant graph:" + levelName);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
-				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, targetScore, levelNameFound);
+				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
