@@ -151,6 +151,7 @@ package
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			removeEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
+			removeEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
 		}
 		
 		private function onGetSavedLevel(event:NavigationEvent):void

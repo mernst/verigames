@@ -23,6 +23,7 @@ package events
 		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";
 		public static const LOAD_HIGH_SCORE:String = "LOAD_HIGH_SCORE";
 		public static const TOGGLE_SOUND_CONTROL:String = "toggle_sound_control";
+		public static const SOLVE_SELECTION:String = "SOLVE_SELECTION";
 		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{

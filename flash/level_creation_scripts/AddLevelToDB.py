@@ -91,14 +91,11 @@ if __name__ == "__main__":
 	level_collection.remove()
 	base_collection = db.BaseLevels
 	base_collection.remove()
-	level_collection = db.ScoredLevels
-	level_collection.remove()
-	base_collection = db.Solvers
-	base_collection.remove()
-
-	quit()
+	scored_collection = db.ScoredLevels
+	scored_collection.remove()
+	solved_collection = db.GameSolvedLevels
+	solved_collection.remove()
 	'''
-	
 	if os.path.isdir(infile):
 		addDirectoryToDB(infile, description_file)
 	else:

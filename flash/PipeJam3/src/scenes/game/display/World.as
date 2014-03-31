@@ -282,6 +282,8 @@ package scenes.game.display
 			addEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
+			addEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
+			
 			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
@@ -297,6 +299,13 @@ package scenes.game.display
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			trace("Done initializing event listeners.");
+		}
+		
+		private function onSolveSelection():void
+		{
+			if(active_level)
+				active_level.solveSelection();
+			
 		}
 		
 		private function initMusic():void {
@@ -973,6 +982,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
+			removeEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
 			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);

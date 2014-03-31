@@ -65,6 +65,9 @@ package scenes.game.components
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
+		/** Button to solve the selected nodes */
+		private var m_solveButton:NineSliceButton;
+		
 		/** Button to start the level over */
 		private var m_resetButton:NineSliceButton;
 		
@@ -180,6 +183,12 @@ package scenes.game.components
 			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
+			
+			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
+			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
+			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
+			m_solveButton.y = 25;
+			addChild(m_solveButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -234,6 +243,11 @@ package scenes.game.components
 		{
 			if (m_zoomInButton) m_zoomInButton.enabled = true;
 			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+		}
+		
+		private function onSolveSelection():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
 		}
 		
 		public function removedFromStage(event:Event):void
