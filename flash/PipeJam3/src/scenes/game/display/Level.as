@@ -164,7 +164,7 @@ package scenes.game.display
 		 * @param	_targetScore Score needed to complete level
 		 * @param	_originalLevelName Level name from PL group
 		 */
-		public function Level(_name:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _targetScore:int, _originalLevelName:String)
+		public function Level(_name:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
@@ -185,7 +185,10 @@ package scenes.game.display
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
 			
-			m_targetScore = _targetScore;
+			m_targetScore = int.MAX_VALUE;
+			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
+				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
+			}
 			targetScoreReached = false;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
