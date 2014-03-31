@@ -475,6 +475,9 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id=foo";
 					break;
 				case SAVE_LEVEL:
+					//update number of conflicts in level
+					World.m_world.active_level.getNextConflict(true);
+					
 					var solutionInfo:Object = PipeJamGame.levelInfo;
 					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);

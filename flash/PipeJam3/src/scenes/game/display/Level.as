@@ -378,6 +378,9 @@ package scenes.game.display
 			trace(visibleNodes, visibleLines);
 			
 			setNodesFromAssignments(m_levelAssignmentsObj);
+			//force update of conflict count dictionary, ignore return value
+			getNextConflict(true);
+			
 			initialized = true;
 		}
 		
@@ -1457,6 +1460,9 @@ package scenes.game.display
 				}
 				m_conflictEdgesDirty = false;
 			}
+			//keep track of number of conflicts
+			PipeJamGame.levelInfo.conflicts = m_levelConflictEdges.length;
+			
 			if (m_levelConflictEdges.length == 0) return null;
 			if (forward) {
 				m_currentConflictIndex++;
