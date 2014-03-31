@@ -684,7 +684,12 @@ package scenes.game.display
 			var hashSize:int = Math.ceil(m_nodeList.length/100);
 			PipeJamGame.levelInfo.hash = new Array();
 			
-			var assignmentsObj:Object = { "id": original_level_name, "hash": [] ,"assignments": { } };
+			var assignmentsObj:Object = { "id": original_level_name, 
+									"hash": [], 
+									"target_score": this.m_targetScore,
+									"starting_score": this.m_currentScore,
+									"starting_jams": this.m_levelConflictEdges.length,
+									"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
 			for each(var node:GameNode in m_nodeList)

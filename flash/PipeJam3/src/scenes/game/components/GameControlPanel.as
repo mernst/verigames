@@ -188,7 +188,7 @@ package scenes.game.components
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
 			m_solveButton.y = 25;
-			addChild(m_solveButton);
+		//	addChild(m_solveButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -458,7 +458,7 @@ package scenes.game.components
 				var currentScore:int = level.currentScore;
 				var bestScore:int = level.bestScore;
 				var targetScore:int = level.getTargetScore();
-				var maxScoreShown:Number = Math.max(currentScore, bestScore);
+				var maxScoreShown:Number = Math.max(currentScore, targetScore);
 				var score:String =  highScoreArray[0].current_score;
 				
 				if (!m_bestScoreLine) {
