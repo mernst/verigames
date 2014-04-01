@@ -162,6 +162,7 @@ package
 			if(levelInfo)
 			{
 				//update assignmentsID if needed
+				PipeJamGameScene.levelContinued = true;
 				PipeJamGame.levelInfo.assignmentsID = PipeJam3.m_savedCurrentLevel.data.assignmentsID;
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);

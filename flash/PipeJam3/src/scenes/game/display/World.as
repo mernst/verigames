@@ -636,19 +636,13 @@ package scenes.game.display
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
 			var level:Level = active_level;
-			if (PipeJamGame.levelInfo != null) {
-				var currentLevelID:String = PipeJamGame.levelInfo.RaLevelID;
-				//find the level with the current ID
-				for each(level in levels)
-				{
-					if(level.m_levelQID == currentLevelID)
-						break;
-				}
-			}
+			//forget that which we knew
+			PipeJamGameScene.levelContinued = false;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
 				function():void
 				{
-					selectLevel(level, true);
+					level.loadInitialConfiguration();
 				};
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
@@ -1055,7 +1049,8 @@ package scenes.game.display
 		
 		public function setHighScores():void
 		{
-			gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
+				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
 	}
 }

@@ -25,6 +25,8 @@ package scenes.game
 				
 		static public var inTutorial:Boolean = false;
 		static public var inDemo:Boolean = false;
+		static public var levelContinued:Boolean = false;
+		
 		
 		protected var m_worldObj:Object;
 		protected var m_layoutObj:Object;
