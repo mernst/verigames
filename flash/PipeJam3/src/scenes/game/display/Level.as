@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import scenes.game.PipeJamGameScene;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -200,6 +201,11 @@ package scenes.game.display
 			setNodesFromAssignments(m_levelBestScoreAssignmentsObj, true);
 		}
 		
+		public function loadInitialConfiguration():void
+		{
+			setNodesFromAssignments(m_levelOriginalAssignmentsObj, true);
+		}
+		
 		public function loadAssignmentsConfiguration(assignmentsObj:Object):void
 		{
 			setNodesFromAssignments(assignmentsObj);
@@ -225,8 +231,8 @@ package scenes.game.display
 					}
 				}
 				
-				//and then set from local storage, if there
-				if(!updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
+				//and then set from local storage, if there (but only if we really want it)
+				if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
 				{
 					var newWidth:String = savedAssignmentObj[gameNode.m_id];
 					var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
@@ -1531,6 +1537,30 @@ package scenes.game.display
 			if (m_segmentHovered) m_segmentHovered.onDeleted();
 		}
 		
+		public function onUseSelectionPressed(choice:String):void
+		{
+			var assignmentIsWide:Boolean = false;
+			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
+				assignmentIsWide = true;
+			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
+				assignmentIsWide = false;
+			
+
+			var gameNode:GameNode;	
+			for(var i:int = 0; i<selectedComponents.length; i++)
+			{
+				var component:GameComponent = selectedComponents[i];
+				if(component is GameNode)
+				{
+					gameNode = component as GameNode;
+					gameNode.handleWidthChange(assignmentIsWide, true);
+				}
+			}
+			//update score
+			if(gameNode)
+				onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, false));
+		}
+		
 		public function get currentScore():int { return m_currentScore; }
 		public function get bestScore():int { return m_bestScore; }
 		public function get prevScore():int { return m_prevScore; }
@@ -1642,7 +1672,7 @@ package scenes.game.display
 			
 			if(constraintArray.length > 0)
 			{
-				MaxSatSolver.run_solver(constraintArray, solverCallback);
+	//			MaxSatSolver.run_solver(constraintArray, solverCallback);
 			}
 		}
 		
