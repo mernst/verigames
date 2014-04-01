@@ -215,7 +215,7 @@ package networking
 			{
 				
 				layoutFileLoadedCallback(TutorialController.tutorialLayoutObj);
-				assignmentsFileLoadedCallback(TutorialController.tutorialAssignementsObj);
+				assignmentsFileLoadedCallback(TutorialController.tutorialAssignmentsObj);
 				worldFileLoadedCallback(TutorialController.tutorialObj);
 			}
 			else

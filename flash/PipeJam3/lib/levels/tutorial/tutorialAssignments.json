@@ -1,7 +1,7 @@
 {"levels":[
 {"id": "IntroWidget",
 "qid": 0,
-"targetScore": 50,
+"target_score": 50,
 "assignments":{
 "var:0":{},
 "var:1":{}}
@@ -9,7 +9,7 @@
 ,
 {"id": "WidgetPractice",
 "qid": 1,
-"targetScore": 140,
+"target_score": 140,
 "assignments":{
 "var:0":{},
 "var:1":{},
@@ -19,7 +19,7 @@
 ,
 {"id": "LockedWidget",
 "qid": 2,
-"targetScore": 70,
+"target_score": 70,
 "assignments":{
 "var:4":{},
 "var:0":{},
@@ -30,7 +30,7 @@
 ,
 {"id": "Links",
 "qid": 3,
-"targetScore": 380,
+"target_score": 380,
 "assignments":{
 "var:0":{},
 "var:1":{},
@@ -39,14 +39,14 @@
 ,
 {"id": "Jams",
 "qid": 4,
-"targetScore": 100,
+"target_score": 100,
 "assignments":{
 "var:0":{}}
 }
 ,
 {"id": "Widen",
 "qid": 5,
-"targetScore": 400,
+"target_score": 400,
 "assignments":{
 "var:0":{},
 "var:1":{},
@@ -56,7 +56,7 @@
 ,
 {"id": "Optimize",
 "qid": 6,
-"targetScore": 620,
+"target_score": 620,
 "assignments":{
 "var:0":{},
 "var:1":{},
@@ -66,7 +66,7 @@
 ,
 {"id": "ZoomPan",
 "qid": 7,
-"targetScore": 200,
+"target_score": 200,
 "assignments":{
 "var:0":{},
 "var:1":{}}
@@ -74,7 +74,7 @@
 ,
 {"id": "Layout",
 "qid": 8,
-"targetScore": 50,
+"target_score": 50,
 "assignments":{
 "var:0":{},
 "var:1":{},
@@ -99,7 +99,7 @@
 ,
 {"id": "SkillsA",
 "qid": 11,
-"targetScore": 1300,
+"target_score": 1300,
 "assignments":{
 "var:4":{},
 "var:5":{},
@@ -115,7 +115,7 @@
 ,
 {"id": "SkillsB",
 "qid": 12,
-"targetScore": 3060,
+"target_score": 3060,
 "assignments":{
 "var:16":{},
 "var:17":{},
