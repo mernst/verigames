@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="PipeJam3.as" projectUUID="05fb3f4a-e27e-4abe-81cf-1224996312b0" version="11">
-  <compiler additionalCompilerArguments="-locale en_US" advancedTelemetry="false" autoRSLOrdering="true" copyDependentFiles="true" flexSDK="Flex 4.6.0" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="11.1.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-locale en_US  -swf-version=17" advancedTelemetry="false" autoRSLOrdering="true" copyDependentFiles="true" flexSDK="Flex 4.6.0" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="11.4.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Dynamic-Texture-Atlas-Generator-master/dynamicTextureAtlasGenerator/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Feathers 1.0.1/source"/>
@@ -12,6 +12,7 @@
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Starling-Extension-Graphics-master-606972f814/extension/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Starling-Extension-Particle-System-master-bdfe72d182/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Starling-Framework/starling/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/MaxSatSolver/maxsat_as3/example/lib"/>
     </compilerSourcePath>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
@@ -40,7 +41,8 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/cgs-common/CGSCommon.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/Feathers 1.0.1/swc/feathers.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/MaxSatSolver/maxsat_as3/example/lib/maxsat_manager.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/MaxSatSolver/maxsat_as3/example/lib/maxsat_util.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
