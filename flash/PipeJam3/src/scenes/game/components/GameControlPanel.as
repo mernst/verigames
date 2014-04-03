@@ -184,11 +184,11 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
-/*			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
+			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
 			m_solveButton.y = 25;
-			addChild(m_solveButton);*/
+			addChild(m_solveButton);
 		}
 		
 		private function onMenuButtonTriggered():void

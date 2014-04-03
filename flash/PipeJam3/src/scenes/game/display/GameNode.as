@@ -1,23 +1,30 @@
 package scenes.game.display
 {
-	import constraints.ConstraintValue;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	import starling.display.Quad;
-	import starling.events.Event;
 	
 	import assets.AssetInterface;
+	
+	import constraints.ConstraintValue;
 	import constraints.ConstraintVar;
+	
 	import display.NineSliceBatch;
+	
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
+	
 	import graph.PropDictionary;
+	
+	import starling.display.Quad;
+	import starling.events.Event;
+	import starling.filters.BlurFilter;
 	
 	public class GameNode extends GameNodeBase
 	{
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
+		private var m_highlightRect:Quad;
 		
 		public function GameNode(_layoutObj:Object, _constraintVar:ConstraintVar, _draggable:Boolean = true)
 		{
@@ -105,7 +112,7 @@ package scenes.game.display
 				else
 					_assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
 			}
-			if (isSelected) _assetName += "Select";
+			//if (isSelected) _assetName += "Select";
 			return _assetName;
 		}
 		
@@ -133,6 +140,8 @@ package scenes.game.display
 			}
 			useHandCursor = m_isEditable;
 			
+
+			
 			if (constraintVar) {
 				var i:int = 0;
 				for (var prop:String in constraintVar.getProps().iterProps()) {
@@ -145,6 +154,17 @@ package scenes.game.display
 						i++;
 					}
 				}
+			}
+			
+			if (isSelected)
+			{
+				// Apply the glow filter
+				this.filter = BlurFilter.createGlow();
+			}
+			else
+			{
+				if(this.filter)
+					this.filter.dispose();
 			}
 			
 			super.draw();

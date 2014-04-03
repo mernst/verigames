@@ -1663,8 +1663,6 @@ package scenes.game.display
 						else
 							constraint1Value = nodeIDToConstraintsTwoWayMap[node];
 						
-						trace(1, constraint1Value);
-
 						constraintArray.push(new Array(1, constraint1Value));
 					}
 				}
@@ -1672,12 +1670,12 @@ package scenes.game.display
 			
 			if(constraintArray.length > 0)
 			{
-	//			MaxSatSolver.run_solver(constraintArray, solverCallback);
+				MaxSatSolver.run_solver(constraintArray, solverCallback);
 			}
 		}
 		
 		
-		protected function solverCallback(vars:Vector.<int>):void
+		protected function solverCallback(vars:Array, unsat_weight:int):void
 		{
 			var gameNode:GameNode;
 			var assignmentIsWide:Boolean = false;
