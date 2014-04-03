@@ -2,15 +2,18 @@ package networking
 {	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.TimerEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	
 	import events.MenuEvent;
+	import events.NavigationEvent;
 	
 	import scenes.Scene;
 	import scenes.game.PipeJamGameScene;
@@ -57,6 +60,10 @@ package networking
 		
 		static public var numLevels:int = 10;
 		
+		static protected var m_name:String;
+		static protected var m_loadCallback:Function;
+		
+		
 		protected var m_callback:Function;
 		protected var fzip:FZip;
 		
@@ -75,6 +82,32 @@ package networking
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
 			fileHandler.sendMessage(GET_SAVED_LEVEL, fileHandler.defaultJSONCallback, null, id);
 		}
+		
+		static public function loadLevelInfoFromName(name:String, callback:Function):void
+		{
+			//look up name in metadata list
+			if(levelInfoVector)
+			{
+				PipeJamGame.levelInfo = findLevelObjectByName(name);
+				PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				
+			}
+			else
+			{
+				GameFileHandler.m_name = name;
+				GameFileHandler.m_loadCallback = callback;
+				//set a timer, and try again
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
+				timer.start();
+			}
+		}
+		
+		public static function getLevelCallback(e:TimerEvent = null):void
+		{
+			GameFileHandler.loadLevelInfoFromName(GameFileHandler.m_name, GameFileHandler.m_loadCallback);
+		}
+		
 		
 		static public function getFileByID(id:String, callback:Function):void
 		{
@@ -117,6 +150,19 @@ package networking
 			for each(var level:Object in levelInfoVector)
 			{
 				if(level.id == id)
+				{
+					return level;
+				}
+			}
+			return null;
+		}
+		
+		//names are not guaranteed to be unique
+		static public function findLevelObjectByName(name:String):Object
+		{
+			for each(var level:Object in levelInfoVector)
+			{
+				if(level.name == name)
 				{
 					return level;
 				}
@@ -399,20 +445,23 @@ package networking
 			//don't directly fill levelInfoVector until we are all done
 			levelInfoVector = null;
 			var vector:Vector.<Object> = new Vector.<Object>();
-			var message:String = e.target.data as String;
-			var obj:Object = JSON.parse(message);
-			for each(var entry:Object in obj)
+			if(e && e.target && e.target.data)
 			{
-				//swiitching to using actual Mongo objects makes the id field appear different. Fix that...
-				if(!entry.hasOwnProperty("id"))
+				var message:String = e.target.data as String;
+				var obj:Object = JSON.parse(message);
+				for each(var entry:Object in obj)
 				{
-					if(entry.hasOwnProperty("_id"))
+					//swiitching to using actual Mongo objects makes the id field appear different. Fix that...
+					if(!entry.hasOwnProperty("id"))
 					{
-						if(entry._id.hasOwnProperty("$oid"))
-							entry.id = entry._id.$oid;
+						if(entry.hasOwnProperty("_id"))
+						{
+							if(entry._id.hasOwnProperty("$oid"))
+								entry.id = entry._id.$oid;
+						}
 					}
+					vector.push(entry);
 				}
-				vector.push(entry);
 			}
 
 			levelInfoVector = vector;
@@ -461,12 +510,15 @@ package networking
 			var messages:Array = new Array (); 
 			var data_id:String;
 			
+			
 			switch(type)
 			{
 				case GET_HIGH_SCORES_FOR_LEVEL:
 					url = NetworkConnection.productionInterop  + "?function=getHighScoresForLevel2&data_id=" + data;
 					break;
 				case REPORT_PLAYER_RATING:
+					if(PlayerValidation.playerID == "")
+						return;
 					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.levelID,'preference': PipeJamGame.levelInfo.preference});
 					data_id = JSON.stringify(messages);
 					url = NetworkConnection.productionInterop + "?function=reportPlayerRating2&data_id='"+data_id+"'";
@@ -475,6 +527,8 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id=foo";
 					break;
 				case SAVE_LEVEL:
+					if(PlayerValidation.playerID == "")
+							return;
 					//update number of conflicts in level
 					World.m_world.active_level.getNextConflict(true);
 					
@@ -499,6 +553,8 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
+					if(PlayerValidation.playerID == "")
+						return;
 					var leaderboardScore:int = 1;
 					var levelScore:int = PipeJamGame.levelInfo.score;
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;

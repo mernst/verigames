@@ -113,9 +113,14 @@ package
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
 			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-			if(obj.hasOwnProperty("file"))
+			if(obj.hasOwnProperty("localfile"))
 			{
-				m_fileName = obj["file"];
+				m_fileName = obj["localfile"];
+				PipeJamGame.levelInfo = new Object;
+			}
+			else if(obj.hasOwnProperty("dbfile"))
+			{
+				m_fileName = obj["dbfile"];
 			}
 			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
@@ -124,14 +129,25 @@ package
 				{
 					var params:String = url.substring(paramsStart+1);
 					var vars:URLVariables = new URLVariables(params);
-					m_fileName = vars.file;
+					if(vars.localfile)
+					{
+						m_fileName = vars.localfile;
+						PipeJamGame.levelInfo = new Object;
+					}
+					else if(vars.dbfile)
+					{
+						m_fileName = vars.dbfile;
+					}
 				}
 			}
 			
 			// use file if set in url, else create and show menu screen
 			if(m_fileName)
 			{ 
-				showScene("PipeJamGame");
+				if(PipeJamGame.levelInfo) //local file
+					showScene("PipeJamGame");
+				else
+					loadLevelFromName(m_fileName);
 			}
 			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 				showScene("LoadingScene");
@@ -145,6 +161,18 @@ package
 			addChild(m_sfxButton);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		//load file from db based on level name i.e. L120_V60
+		public function loadLevelFromName(levelName:String):void
+		{
+			GameFileHandler.loadLevelInfoFromName(levelName, loadLevel);
+		}
+		
+		protected function loadLevel(result:int, objVector:Vector.<Object>):void
+		{
+			PipeJamGame.levelInfo = new objVector[0];		
+			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
