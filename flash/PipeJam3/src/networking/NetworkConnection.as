@@ -41,12 +41,6 @@ package networking
 				PROXY_URL = localProxy;
 			else if(PipeJam3.RELEASE_BUILD == false)
 				PROXY_URL = stagingProxy;
-			
-			//if we are debugging this won't work, so just hard code it.
-			if(baseURL.indexOf("http") != -1)
-				productionInterop = baseURL + "/game/interop.php";
-			else
-				productionInterop = "http://flowjam.verigames.com/game/interop.php";
 		}
 		
 		/**

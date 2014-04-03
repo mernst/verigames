@@ -172,12 +172,12 @@ package networking
 					request = "";
 					break;
 				case VERIFY_SESSION:
-					url = "http://flowjam.verigames.com/verifySession";
+					url = NetworkConnection.baseURL + "/verifySession";
 					request = "?cookies="+encodedCookies;
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_ENCODED_COOKIES:
-					url = "http://flowjam.verigames.com/encodeCookies";
+					url = NetworkConnection.baseURL + "/encodeCookies";
 					request = "";
 					method = URLRequestMethod.POST; 
 					break;
