@@ -122,6 +122,12 @@ package
 			{
 				m_fileName = obj["dbfile"];
 			}
+			if(obj.hasOwnProperty("tutorial"))
+			{
+				m_fileName = "tutorial";
+				PipeJamGame.levelInfo = new Object;
+				PipeJamGame.levelInfo.id = obj["tutorial"];
+			}
 			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
@@ -132,11 +138,18 @@ package
 					if(vars.localfile)
 					{
 						m_fileName = vars.localfile;
+						//create this here so we know this is a local file
 						PipeJamGame.levelInfo = new Object;
 					}
 					else if(vars.dbfile)
 					{
 						m_fileName = vars.dbfile;
+					}
+					else if(vars.tutorial)
+					{
+						m_fileName = "tutorial";
+						PipeJamGame.levelInfo = new Object;
+						PipeJamGame.levelInfo.id = vars.tutorial;
 					}
 				}
 			}
