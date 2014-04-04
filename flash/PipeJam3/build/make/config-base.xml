@@ -18,6 +18,7 @@
     <library-path append="true">
       <path-element>../../external/cgs-common/CGSCommon.swc</path-element>
       <path-element>../../external/Feathers 1.0.1/swc/feathers.swc</path-element>
+      <path-element>../../external/MaxSatSolver/maxsat_as3/example/lib/maxsat_manager.swc</path-element>
     </library-path>
     <locale>
        <locale-element>en_US</locale-element>
