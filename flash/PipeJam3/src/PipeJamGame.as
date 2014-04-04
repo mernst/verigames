@@ -149,7 +149,9 @@ package
 					{
 						m_fileName = "tutorial";
 						PipeJamGame.levelInfo = new Object;
-						PipeJamGame.levelInfo.id = vars.tutorial;
+						PipeJamGame.levelInfo.name = "foo";//vars.tutorial;
+						PipeJamGame.levelInfo.id = vars.tutorial; //mark as a tutorial level, but key off name - notice is a string
+						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; //mark as a tutorial level, but key off name - notice is a string
 					}
 				}
 			}

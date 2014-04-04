@@ -129,7 +129,7 @@ package scenes.game.display
 					levelNameFound = PipeJamGame.levelInfo.name;
 				}
 				if (!m_worldGraphDict.hasOwnProperty(levelName)) {
-					throw new Error("World level found without constriant graph:" + levelName);
+					throw new Error("World level found without constraint graph:" + levelName);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
 				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);

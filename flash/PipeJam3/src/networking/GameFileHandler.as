@@ -242,7 +242,7 @@ package networking
 			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
 			var m_id:int = 100000;
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.id && PipeJamGame.levelInfo.id.length < 5)
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.hasOwnProperty("id") && PipeJamGame.levelInfo.id.length < 5)
 				m_id = parseInt(PipeJamGame.levelInfo.id);
 			if(m_id < 1000) // in the tutorial if a low level id
 			{
