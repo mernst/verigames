@@ -439,7 +439,7 @@ package scenes.game.components
 		public function setHighScores(highScoreArray:Array):void
 		{
 			var level:Level = World.m_world.active_level;
-			if(level != null)
+			if(level != null && highScoreArray != null)
 			{
 				var currentScore:int = level.currentScore;
 				var bestScore:int = level.bestScore;
