@@ -54,6 +54,9 @@ package
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
+		
+		public static var PRODUCTION:Boolean = true;
+		public static var INSTALL_DVD:Boolean = false;
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
@@ -139,6 +142,18 @@ package
 			var protocolEndIndex:int = fullURL.indexOf('//');
 			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
+			if(NetworkConnection.baseURL.indexOf("http") != -1)
+			{
+				if(PipeJam3.PRODUCTION == true)
+					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/game/interop.php";
+				else if(PipeJam3.INSTALL_DVD == true)
+					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/flowjam/scripts/interop.php";
+			}
+			else
+			{
+				NetworkConnection.productionInterop = "http://flowjam.verigames.com/game/interop.php";
+				NetworkConnection.baseURL = "http://flowjam.verigames.com";
+			}
 			//initialize stuff
 			new NetworkConnection();
 			m_savedCurrentLevel = SharedObject.getLocal("FlowJamData");

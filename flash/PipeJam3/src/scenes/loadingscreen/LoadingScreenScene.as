@@ -86,7 +86,7 @@ package scenes.loadingscreen
 			loading_button.removeTouchEvent(); //we want a non-responsive button look
 			addChild(loading_button);
 
-			//set max loading time of four seconds
+			//set max loading time of ten seconds
 			timeoutTimer = new Timer(10000, 1);
 			timeoutTimer.addEventListener(TimerEvent.TIMER, playerValidationAttempted);
 			timeoutTimer.start();

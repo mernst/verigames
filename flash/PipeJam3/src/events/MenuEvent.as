@@ -24,6 +24,11 @@ package events
 		public static const LOAD_HIGH_SCORE:String = "LOAD_HIGH_SCORE";
 		public static const TOGGLE_SOUND_CONTROL:String = "toggle_sound_control";
 		
+		public static const SOLVE_SELECTION:String = "SOLVE_SELECTION";
+		public static const MAKE_SELECTION_WIDE:String = "MAKE_SELECTION_WIDE";
+		public static const MAKE_SELECTION_NARROW:String = "MAKE_SELECTION_NARROW";
+
+		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{
 			super(_type, true, _eventData);

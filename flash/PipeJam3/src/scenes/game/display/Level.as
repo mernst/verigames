@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import scenes.game.PipeJamGameScene;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -58,6 +59,8 @@ package scenes.game.display
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	
+	import system.MaxSatSolver;
+	
 	import utils.Base64Encoder;
 	import utils.XObject;
 	import utils.XString;
@@ -78,6 +81,8 @@ package scenes.game.display
 		public var levelGraph:ConstraintGraph;
 		
 		private var selectedComponents:Vector.<GameComponent>;
+		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
+		private var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
 		private var marqueeRect:Shape = new Shape();
 		
@@ -196,6 +201,11 @@ package scenes.game.display
 			setNodesFromAssignments(m_levelBestScoreAssignmentsObj, true);
 		}
 		
+		public function loadInitialConfiguration():void
+		{
+			setNodesFromAssignments(m_levelOriginalAssignmentsObj, true);
+		}
+		
 		public function loadAssignmentsConfiguration(assignmentsObj:Object):void
 		{
 			setNodesFromAssignments(assignmentsObj);
@@ -221,8 +231,8 @@ package scenes.game.display
 					}
 				}
 				
-				//and then set from local storage, if there
-				if(!updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
+				//and then set from local storage, if there (but only if we really want it)
+				if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
 				{
 					var newWidth:String = savedAssignmentObj[gameNode.m_id];
 					var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
@@ -377,6 +387,9 @@ package scenes.game.display
 			trace(visibleNodes, visibleLines);
 			
 			setNodesFromAssignments(m_levelAssignmentsObj);
+			//force update of conflict count dictionary, ignore return value
+			getNextConflict(true);
+			
 			initialized = true;
 		}
 		
@@ -677,7 +690,12 @@ package scenes.game.display
 			var hashSize:int = Math.ceil(m_nodeList.length/100);
 			PipeJamGame.levelInfo.hash = new Array();
 			
-			var assignmentsObj:Object = { "id": original_level_name, "hash": [] ,"assignments": { } };
+			var assignmentsObj:Object = { "id": original_level_name, 
+									"hash": [], 
+									"target_score": this.m_targetScore,
+									"starting_score": this.m_currentScore,
+									"starting_jams": this.m_levelConflictEdges.length,
+									"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
 			for each(var node:GameNode in m_nodeList)
@@ -1456,6 +1474,9 @@ package scenes.game.display
 				}
 				m_conflictEdgesDirty = false;
 			}
+			//keep track of number of conflicts
+			PipeJamGame.levelInfo.conflicts = m_levelConflictEdges.length;
+			
 			if (m_levelConflictEdges.length == 0) return null;
 			if (forward) {
 				m_currentConflictIndex++;
@@ -1516,6 +1537,30 @@ package scenes.game.display
 			if (m_segmentHovered) m_segmentHovered.onDeleted();
 		}
 		
+		public function onUseSelectionPressed(choice:String):void
+		{
+			var assignmentIsWide:Boolean = false;
+			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
+				assignmentIsWide = true;
+			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
+				assignmentIsWide = false;
+			
+
+			var gameNode:GameNode;	
+			for(var i:int = 0; i<selectedComponents.length; i++)
+			{
+				var component:GameComponent = selectedComponents[i];
+				if(component is GameNode)
+				{
+					gameNode = component as GameNode;
+					gameNode.handleWidthChange(assignmentIsWide, true);
+				}
+			}
+			//update score
+			if(gameNode)
+				onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, false));
+		}
+		
 		public function get currentScore():int { return m_currentScore; }
 		public function get bestScore():int { return m_bestScore; }
 		public function get prevScore():int { return m_prevScore; }
@@ -1543,5 +1588,110 @@ package scenes.game.display
 			m_conflictEdgesDirty = true;
 		}
 		
+		public function solveSelection():void
+		{
+			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
+			//assign connected components to component to edge constraint number dict
+			//create three constraints for conflicts and weights
+			//run the solver, passing in the callback function
+			nodeIDToConstraintsTwoWayMap = new Dictionary;
+			var counter:int = 1;
+			var constraintArray:Array = new Array;
+			
+			for(var i:int = 0; i<selectedComponents.length; i++)
+			{
+				var constraint1Value:int = -1;
+				var constraint2Value:int = -1;
+				var component:GameComponent = selectedComponents[i];
+				if(component is GameEdgeContainer)
+				{
+					var edge:GameEdgeContainer = component as GameEdgeContainer;
+					var fromNode:GameNodeBase = edge.m_fromNode;
+					var toNode:GameNodeBase = edge.m_toNode;
+					
+					if(fromNode.m_isEditable)
+					{
+						if(nodeIDToConstraintsTwoWayMap[fromNode.m_id] == null)
+						{
+							nodeIDToConstraintsTwoWayMap[fromNode.m_id] = counter;
+							nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+							constraint1Value = counter;
+							counter++;
+						}
+						else
+							constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.m_id];
+					} 
+					
+					if(toNode.m_isEditable)
+					{
+						if(nodeIDToConstraintsTwoWayMap[toNode.m_id] == null)
+						{
+							nodeIDToConstraintsTwoWayMap[toNode.m_id] = counter;
+							nodeIDToConstraintsTwoWayMap[counter] = toNode;
+							constraint2Value = counter;
+							counter++;
+						}
+						else
+							constraint2Value = nodeIDToConstraintsTwoWayMap[toNode.m_id];
+					}
+					
+					if(fromNode.m_isEditable && toNode.m_isEditable)
+						constraintArray.push(new Array(100, -constraint1Value, constraint2Value));
+					else if(fromNode.m_isEditable && !toNode.m_isEditable)
+					{
+						if(!toNode.m_isWide)
+							constraintArray.push(new Array(100, -constraint1Value));
+					}
+					if(!fromNode.m_isEditable && toNode.m_isEditable)
+					{
+						if(fromNode.m_isWide)
+							constraintArray.push(new Array(100, constraint2Value));
+					}
+				}
+				else if(component is GameNode)
+				{
+					var node:GameNode = component as GameNode;
+					if(node.m_isEditable)
+					{
+						if(nodeIDToConstraintsTwoWayMap[node.m_id] == null)
+						{
+							nodeIDToConstraintsTwoWayMap[node.m_id] = counter;
+							nodeIDToConstraintsTwoWayMap[counter] = node;
+							constraint1Value = counter;
+							counter++;
+						}
+						else
+							constraint1Value = nodeIDToConstraintsTwoWayMap[node];
+						
+						constraintArray.push(new Array(1, constraint1Value));
+					}
+				}
+			}
+			
+			if(constraintArray.length > 0)
+			{
+				MaxSatSolver.run_solver(constraintArray, solverCallback);
+			}
+		}
+		
+		
+		protected function solverCallback(vars:Array, unsat_weight:int):void
+		{
+			var gameNode:GameNode;
+			var assignmentIsWide:Boolean = false;
+			for (var ii:int = 0; ii < vars.length; ++ ii) 
+			{
+				trace((ii+1) + " " + vars[ii]);
+				gameNode = nodeIDToConstraintsTwoWayMap[ii+1];
+				assignmentIsWide = false;
+				if(vars[ii] == 1)
+					assignmentIsWide = true;
+				if(gameNode)
+					gameNode.handleWidthChange(assignmentIsWide, true);
+			}
+			
+			if(gameNode)
+				onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, false));
+		}
 	}
 }

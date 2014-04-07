@@ -3,7 +3,6 @@
 
 import sys
 import pymongo
-import gridfs
 import bson
 import  datetime, time
 import random
@@ -32,7 +31,7 @@ def selectLevelVariantsToServe(db, levelID):
 	#if we made it this far, remove to limit redundancy
 	#test_collection.remove({"levelID":levelID})
 	
-	collection = db.Solvers
+	collection = db.GameSolvedLevels
 	levelList = []
 	for level in collection.find({"levelID":levelID}):
 		if 'hash' in level:

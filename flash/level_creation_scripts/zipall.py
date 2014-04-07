@@ -2,9 +2,11 @@ import sys, os
 
 inputpath = sys.argv[1]
 
-cmd = os.popen('ls %s*.xml' % inputpath)
+cmd = os.popen('ls %s*.json' % inputpath)
 for filename in cmd:
-	fileout = filename.lstrip(inputpath).rstrip('.xml')
-	sys.stdout.write('%s %s' % (inputpath, fileout))
-	os.popen('zip %s.zip %s' % (inputpath, filename))
+	startfilenameindex = filename.rfind('/')
+	endfilenameindex = filename.rfind('.')
+	fileout = filename.strip()[startfilenameindex+1:endfilenameindex]
+	print('%s %s' % (inputpath + '/' + fileout, fileout))
+	os.popen('zip %s.zip %s' % (inputpath + '/' + fileout, filename))
 	

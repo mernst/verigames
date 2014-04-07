@@ -50,8 +50,7 @@ public class MongoTestBed {
         
       HashMap<String, String> map = new HashMap<String, String>();
  //    map.put("submitted", "v6test"); 
-  //   map.put("name" , "L13693_V103");
-  //       map.put("layoutID", "5331fa17b004422bc4df0ae5"); 
+  //   map.put("xmlID" , "5311295aa8e0895f73268f34");
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
  //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
@@ -70,8 +69,8 @@ public class MongoTestBed {
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
     //   }
   //     System.out.println("SaveLevels");
-      listEntries(db, "Levels", map);
-    //    findEntryByID(db, "Level", "5293eedaa8e047a495eaac01");
+      listEntries(db, "GameSolvedLevels", map);
+    //    findEntryByID(db, "Level", "5311295aa8e0895f73268f34");
    //    addField(db, "Level", map, "version", "v6test");
   //      System.out.println("SubmittedLayouts");
 //       listEntriesToFile(db, "SubmittedLevels", map, "SubmittedLevels0115.txt");
@@ -87,8 +86,8 @@ public class MongoTestBed {
       //     DBCollection collection = db.getCollection("scoredLevels");
       //    collection.drop();
       
-        // listLog(db);
- //           saveAndCleanLog(db, "1211");
+   //      listLog(db);
+   //         saveAndCleanLog(db, "0328");
         
        listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
@@ -607,7 +606,6 @@ public class MongoTestBed {
 		try { 
 			foundOne = collection.findOne(id);
 			System.out.println(foundOne);
-		//	collection.remove(foundOne);
        } finally {
        }
        return foundOne;

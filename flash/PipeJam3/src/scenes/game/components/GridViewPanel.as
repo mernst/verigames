@@ -617,6 +617,12 @@ package scenes.game.components
 				case Keyboard.DELETE:
 					if (m_currentLevel) m_currentLevel.onDeletePressed();
 					break;
+				case Keyboard.QUOTE:
+					if (m_currentLevel)
+						if(event.shiftKey)
+							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_WIDE);
+						else
+							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_NARROW);
 			}
 		}
 		

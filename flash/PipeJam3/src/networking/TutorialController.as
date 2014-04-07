@@ -21,7 +21,7 @@ package networking
 		[Embed(source = "../../lib/levels/tutorial/tutorialAssignments.json", mimeType = "application/octet-stream")]
 		static public const tutorialAssignmentsFileClass:Class;
 		static public const tutorialAssignmentsJson:String = new tutorialAssignmentsFileClass();
-		static public const tutorialAssignementsObj:Object = JSON.parse(tutorialAssignmentsJson);
+		static public const tutorialAssignmentsObj:Object = JSON.parse(tutorialAssignmentsJson);
 		
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;

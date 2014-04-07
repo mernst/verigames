@@ -278,6 +278,8 @@ package scenes.game.display
 			addEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
+			addEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
+			
 			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
@@ -293,6 +295,13 @@ package scenes.game.display
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			trace("Done initializing event listeners.");
+		}
+		
+		private function onSolveSelection():void
+		{
+			if(active_level)
+				active_level.solveSelection();
+			
 		}
 		
 		private function initMusic():void {
@@ -627,19 +636,13 @@ package scenes.game.display
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
 			var level:Level = active_level;
-			if (PipeJamGame.levelInfo != null) {
-				var currentLevelID:String = PipeJamGame.levelInfo.RaLevelID;
-				//find the level with the current ID
-				for each(level in levels)
-				{
-					if(level.m_levelQID == currentLevelID)
-						break;
-				}
-			}
+			//forget that which we knew
+			PipeJamGameScene.levelContinued = false;
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
 				function():void
 				{
-					selectLevel(level, true);
+					level.loadInitialConfiguration();
 				};
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
@@ -969,6 +972,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
+			removeEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
 			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -1045,7 +1049,8 @@ package scenes.game.display
 		
 		public function setHighScores():void
 		{
-			gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
+				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
 	}
 }

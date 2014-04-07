@@ -147,7 +147,7 @@ def submitLevel2(messageData, fileContents):
 		newAssignmentsID = str(fs.put(decoded))
 		previousAssignmentsID = messageObj["assignmentsID"]
 		messageObj["assignmentsID"] = str(newAssignmentsID)
-		collection = db.Solvers
+		collection = db.GameSolvedLevels
 		id = collection.insert(messageObj)
 		collection = db.CurrentSolutions
 		collection.insert(messageObj)
