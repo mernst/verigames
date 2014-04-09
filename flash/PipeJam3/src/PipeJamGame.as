@@ -126,7 +126,9 @@ package
 			{
 				m_fileName = "tutorial";
 				PipeJamGame.levelInfo = new Object;
+				PipeJamGame.levelInfo.name = "foo";
 				PipeJamGame.levelInfo.id = obj["tutorial"];
+				PipeJamGame.levelInfo.tutorialLevelID = obj["tutorial"];
 			}
 			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
@@ -149,9 +151,9 @@ package
 					{
 						m_fileName = "tutorial";
 						PipeJamGame.levelInfo = new Object;
-						PipeJamGame.levelInfo.name = "foo";//vars.tutorial;
-						PipeJamGame.levelInfo.id = vars.tutorial; //mark as a tutorial level, but key off name - notice is a string
-						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; //mark as a tutorial level, but key off name - notice is a string
+						PipeJamGame.levelInfo.name = "foo";
+						PipeJamGame.levelInfo.id = vars.tutorial; 
+						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
 					}
 				}
 			}

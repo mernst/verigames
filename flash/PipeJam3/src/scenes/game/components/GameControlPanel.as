@@ -1,5 +1,7 @@
 package scenes.game.components
 {
+	import flash.display.StageDisplayState;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -22,8 +24,8 @@ package scenes.game.components
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.World;
 	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -40,7 +42,7 @@ package scenes.game.components
 	
 	public class GameControlPanel extends BaseComponent
 	{
-		private static const WIDTH:Number = Constants.GameWidth;
+		private static var WIDTH:Number = Constants.GameWidth;
 		public static const HEIGHT:Number = 82 - 20;
 		
 		public static const OVERLAP:Number = 44 - 10;
@@ -81,6 +83,7 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		private var m_recenterButton:BasicButton;
+		private var m_fullScreenButton:BasicButton;
 		
 		private var menuShowing:Boolean = false;
 		
@@ -127,7 +130,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
@@ -181,7 +184,7 @@ package scenes.game.components
 			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_recenterButton);
 			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
-			m_recenterButton.y = m_zoomOutButton.y
+			m_recenterButton.y = m_zoomOutButton.y;
 			addChild(m_recenterButton);
 			
 			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
@@ -189,7 +192,35 @@ package scenes.game.components
 			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
 			m_solveButton.y = 25;
 			addChild(m_solveButton);
+			
+			m_fullScreenButton = new RecenterButton();
+			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_fullScreenButton);
+			m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+			m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
+			addChild(m_fullScreenButton);
+			
+			//fullscreen has to be triggered by a user event, in this case the mouse
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+
 		}
+		
+		protected function triggerFullScreen(event:MouseEvent):void
+		{
+			//trace(event.stageX,2*bounds.right,event.stageY,2*bounds.bottom);
+			if(event.stageX > 2*bounds.right - 50 && event.stageY > 2*bounds.bottom - 50) //just listen for whole corner, right now
+				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
+					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN;
+				else
+					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
+		}
+		
+		//ignore what this does, as I handle it in the above method
+		private function onFullScreenButtonTriggered():void
+		{
+		}
+		
 		
 		private function onMenuButtonTriggered():void
 		{
@@ -252,7 +283,7 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
-			//TODO what? dispose of things?
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
 		}
 		
 		public function newLevelSelected(level:Level):void 
@@ -471,13 +502,38 @@ package scenes.game.components
 				m_scoreBarContainer.addChild(m_bestScoreLine);
 			}
 		}
+		
+		public function adjustSize(newWidth:Number, newHeight:Number):void
+		{
+			//adjust back to standard
+			if(newWidth > 480)
+			{
+				scaleX = 960/newWidth;
+					scaleY = 640/newHeight;
+				x = (parent.bounds.right-width)/2; //center
+				y = parent.bounds.bottom - (72/2);
+			}
+			else
+			{
+				scaleX = scaleY = 1;
+				x = 0;
+				y = newHeight - height + 10; //level name extends up out of the bounds
+			}
+			
+		trace(height, y);
+			
+		}
 	}
 }
 
-import display.ToolTippableSprite;
-import events.ToolTipEvent;
-import scenes.game.components.GameControlPanel;
 import assets.AssetsFont;
+
+import display.ToolTippableSprite;
+
+import events.ToolTipEvent;
+
+import scenes.game.components.GameControlPanel;
+
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -497,7 +553,7 @@ class TargetScoreDisplay extends ToolTippableSprite
 			dottedQ.y = ((dq + 1.0) / 11.0) * GameControlPanel.SCORE_PANEL_AREA.height;
 			addChild(dottedQ);
 		}
-		m_targetScoreTextfield = TextFactory.getInstance().createTextField(score, AssetsFont.FONT_UBUNTU, GameControlPanel.SCORE_PANEL_AREA.width, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, fontColor) as TextFieldHack;
+		m_targetScoreTextfield = TextFactory.getInstance().createTextField(score, AssetsFont.FONT_UBUNTU, GameControlPanel.SCORE_PANEL_AREA.width/2, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, fontColor) as TextFieldHack;
 		m_targetScoreTextfield.x = 2.0;
 		
 		TextFactory.getInstance().updateAlign(m_targetScoreTextfield, 0, 1);

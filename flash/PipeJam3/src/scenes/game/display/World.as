@@ -3,6 +3,10 @@ package scenes.game.display
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.PixelSnapping;
+	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
@@ -10,7 +14,7 @@ package scenes.game.display
 	import flash.utils.Dictionary;
 	
 	import assets.AssetsAudio;
-	
+	import assets.AssetInterface;
 	import audio.AudioManager;
 	
 	import constraints.ConstraintGraph;
@@ -54,10 +58,12 @@ package scenes.game.display
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.textures.Texture;
+	import starling.display.BlendMode;
 	
 	import system.Solver;
 	import system.VerigameServerConstants;
@@ -73,6 +79,8 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
+		protected var m_backgroundLayer:Sprite;
+		protected var m_foregroundLayer:Sprite;
 		
 		protected var shareDialog:SaveDialog;
 		
@@ -148,7 +156,9 @@ package scenes.game.display
 		protected function onAddedToStage(event:Event):void
 		{
 			m_initQueue = new Vector.<Function>();
+			m_initQueue.push(initBackground);
 			m_initQueue.push(initGridViewPanel);
+			m_initQueue.push(initForeground);
 			m_initQueue.push(initGameControlPanel);
 			m_initQueue.push(initMiniMap);
 			m_initQueue.push(initScoring);
@@ -177,7 +187,7 @@ package scenes.game.display
 		private function initGameControlPanel():void {
 			trace("Initializing GameControlPanel...");
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
+			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
@@ -246,6 +256,58 @@ package scenes.game.display
 			trace("Done initializing Level.");
 		}
 		
+		public function initBackground(isWide:Boolean = false, newWidth:Number = 0, newHeight:Number = 0):void
+		{
+			if(m_backgroundLayer == null)
+			{
+				m_backgroundLayer = new Sprite;
+				addChild(m_backgroundLayer);
+			}
+			
+			m_backgroundLayer.removeChildren();
+			var seed:int = 0;
+			if(active_level)
+			{
+				seed = active_level.levelGraph.qid;
+				if (seed < 0) {
+					seed = 0;
+					for (var c:int = 0; c < active_level.level_name.length; c++) {
+						var code:Number = active_level.level_name.charCodeAt(c);
+						if (isNaN(code)) {
+							seed += c;
+						} else {
+							seed += Math.max(Math.round(code), 1);
+						}
+					}
+				}
+			}
+			var backMod:int = 0;//seed % Constants.NUM_BACKGROUNDS;
+			var background:Texture;
+			if(!isWide)
+			{
+				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+			}
+			else
+			{
+				background = AssetInterface.getTexture("Game", "WideBackground" + backMod + "Class");
+			}
+			
+			var m_backgroundImage:Image = new Image(background);
+			if(newWidth != 0)
+				m_backgroundImage.width = newWidth;
+			if(newHeight != 0)
+				m_backgroundImage.height = newHeight;
+			
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);		
+		}
+		
+		public function initForeground(seed:int = 0, isWide:Boolean = false):void
+		{
+			//add border
+			
+		}
+		
 		private function initEventListeners():void {
 			trace("Initializing event listeners...");
 			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
@@ -308,6 +370,25 @@ package scenes.game.display
 			AudioManager.getInstance().reset();
 			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 			trace("Playing music...");
+		}
+		
+		public function changeFullScreen(newWidth:Number, newHeight:Number):void
+		{
+			//backgrounds get scaled by the AssetInterface content scale factor, so change scale before setting a new background
+			if(newWidth > 480)
+			{
+				initBackground(true, newWidth, newHeight);
+				m_backgroundLayer.scaleX /= newWidth/480;
+				m_backgroundLayer.scaleY /= newHeight/320;
+			}
+			else
+			{
+				initBackground(false, newWidth, newHeight);
+				m_backgroundLayer.scaleX = 1;
+				m_backgroundLayer.scaleY = 1;
+			}	
+	//		edgeSetGraphViewPanel.adjustSize(newWidth, newHeight);
+			gameControlPanel.adjustSize(newWidth, newHeight);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void

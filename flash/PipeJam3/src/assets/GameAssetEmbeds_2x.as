@@ -78,6 +78,9 @@ package assets
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground11.jpg")]
 		public static const Background11Class:Class;
 		
+		[Embed(source="../../lib/assets/Backgrounds/WideFlowJamBackground0.jpg")]
+		public static const WideBackground0Class:Class;
+		
 		[Embed(source = "../../lib/assets/BorderVignette.png")]
 		public static const BorderVignetteClass:Class;
 		
