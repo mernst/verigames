@@ -4,7 +4,7 @@ from load_constraints_graph import *
 # Width space given to each incoming/outgoing edge plus 1 unit on each end of a box of padding [][i0][i1]...[in][]
 WIDTHPERPORT = 0.6
 DECIMAL_PLACES = 2 # round all layout values to X decimal places
-
+PAD_FACTOR = 2.0 # sfdp/prism tend to create tight layouts, this will multiply the width and height of the node by X to create more padding around nodes
 class Point:
 	def __init__(self, x, y):
 		self.x = round(float(x), DECIMAL_PLACES)
@@ -233,7 +233,7 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 		# Create graphviz input file
 		graphin =  'digraph G {\n'
 		graphin += '  graph [\n'
-		graphin += '    overlap="scalexy",\n'
+		graphin += '    overlap="prism500",\n'
 		graphin += '    splines="line"\n'
 		graphin += '  ];\n'
 		graphin += '  node [\n'
@@ -247,7 +247,7 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 			node = nodes[nodeid]
 			node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
 			calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
-			graphin += '%s [width=%s,height=%s];\n' % (node.id, node.width, calcheight)
+			graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR*node.width, PAD_FACTOR*calcheight)
 		print 'Adding graphviz edges...'
 		# Edges
 		for edgeid in edges:
@@ -301,6 +301,7 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 			node.sortedges()
 		edgelayout = {}
 		firstline = True
+
 		# Layout edges using node positions (ignore graphviz output)
 		for nodeid in nodes:
 			node = nodes[nodeid]
