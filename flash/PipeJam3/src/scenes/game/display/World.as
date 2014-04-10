@@ -197,6 +197,8 @@ package scenes.game.display
 			}
 			addChild(gameControlPanel);
 			setHighScores();
+			trace(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
+			gameControlPanel.adjustSize(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
 			trace("Done initializing GameControlPanel.");
 		}
 		
@@ -261,7 +263,7 @@ package scenes.game.display
 			if(m_backgroundLayer == null)
 			{
 				m_backgroundLayer = new Sprite;
-				addChild(m_backgroundLayer);
+				addChildAt(m_backgroundLayer, 0);
 			}
 			
 			m_backgroundLayer.removeChildren();
@@ -281,25 +283,30 @@ package scenes.game.display
 					}
 				}
 			}
-			var backMod:int = 0;//seed % Constants.NUM_BACKGROUNDS;
+			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
 			var background:Texture;
-			if(!isWide)
+			var m_backgroundImage:Image;
+			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
 			{
 				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+				m_backgroundImage = new Image(background);
+				m_backgroundImage.width = 480;
+				m_backgroundImage.height = 320;
+
 			}
 			else
 			{
-				background = AssetInterface.getTexture("Game", "WideBackground" + backMod + "Class");
+				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+				m_backgroundImage = new Image(background);
+				if(newWidth != 0)
+					m_backgroundImage.width = newWidth;
+				if(newHeight != 0)
+					m_backgroundImage.height = newHeight;
 			}
 			
-			var m_backgroundImage:Image = new Image(background);
-			if(newWidth != 0)
-				m_backgroundImage.width = newWidth;
-			if(newHeight != 0)
-				m_backgroundImage.height = newHeight;
 			
 			m_backgroundImage.blendMode = BlendMode.NONE;
-			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);		
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);	
 		}
 		
 		public function initForeground(seed:int = 0, isWide:Boolean = false):void
@@ -375,7 +382,7 @@ package scenes.game.display
 		public function changeFullScreen(newWidth:Number, newHeight:Number):void
 		{
 			//backgrounds get scaled by the AssetInterface content scale factor, so change scale before setting a new background
-			if(newWidth > 480)
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN)
 			{
 				initBackground(true, newWidth, newHeight);
 				m_backgroundLayer.scaleX /= newWidth/480;
@@ -387,7 +394,7 @@ package scenes.game.display
 				m_backgroundLayer.scaleX = 1;
 				m_backgroundLayer.scaleY = 1;
 			}	
-	//		edgeSetGraphViewPanel.adjustSize(newWidth, newHeight);
+			edgeSetGraphViewPanel.adjustSize(newWidth, newHeight);
 			gameControlPanel.adjustSize(newWidth, newHeight);
 		}
 		

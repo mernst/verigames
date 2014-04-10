@@ -172,8 +172,13 @@ package networking
 		
 		static public function getRandomLevelObject():Object
 		{
-			var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
-			return levelInfoVector[randNum];
+			if(levelInfoVector != null && levelInfoVector.length >0)
+			{
+				var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
+				return levelInfoVector[randNum];
+			}
+			else
+				return null;
 		}
 				
 		static public function reportPlayerPreference(preference:String):void

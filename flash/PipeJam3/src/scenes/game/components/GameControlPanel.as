@@ -208,8 +208,9 @@ package scenes.game.components
 		
 		protected function triggerFullScreen(event:MouseEvent):void
 		{
-			//trace(event.stageX,2*bounds.right,event.stageY,2*bounds.bottom);
-			if(event.stageX > 2*bounds.right - 50 && event.stageY > 2*bounds.bottom - 50) //just listen for whole corner, right now
+			var testPt:Point = localToGlobal(new Point(m_fullScreenButton.x, m_fullScreenButton.y));
+			if(event.stageX >= 2*testPt.x/scaleX && event.stageX <= 2*testPt.x/scaleX + m_fullScreenButton.width*2
+				&& event.stageY >= 2*testPt.y/scaleY && event.stageY <= 2*testPt.y/scaleY + m_fullScreenButton.height*2)
 				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
 					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN;
 				else
@@ -505,23 +506,25 @@ package scenes.game.components
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{
-			//adjust back to standard
-			if(newWidth > 480)
+			//adjust back to standard?
+			var topLeftScorePanel:Point;
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN)
 			{
 				scaleX = 960/newWidth;
-					scaleY = 640/newHeight;
-				x = (parent.bounds.right-width)/2; //center
-				y = parent.bounds.bottom - (72/2);
+				scaleY = 640/newHeight;
+				x = (480-width)/2; //center
+				y = 320 - 72/2;
+				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
+				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			}
 			else
 			{
 				scaleX = scaleY = 1;
 				x = 0;
-				y = newHeight - height + 10; //level name extends up out of the bounds
-			}
-			
-		trace(height, y);
-			
+				y = 320 - height + 10; //level name extends up out of the bounds
+				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
+				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
+			}			
 		}
 	}
 }

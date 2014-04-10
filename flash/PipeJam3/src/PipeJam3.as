@@ -170,18 +170,9 @@ package
 			//adjust sizes and stuff
 			isFullScreen = !isFullScreen;
 			
-			var newWidth:int;
-			var newHeight:int;
-			if(isFullScreen)
-			{
-				newHeight = Starling.current.nativeStage.fullScreenHeight;
-				newWidth = Starling.current.nativeStage.fullScreenWidth;
-			}
-			else
-			{
-				newHeight = Constants.GameHeight;
-				newWidth = Constants.GameWidth;
-			}	
+			var newWidth:int = Starling.current.nativeStage.fullScreenWidth;
+			var newHeight:int = Starling.current.nativeStage.fullScreenHeight;
+
 			stage.stageWidth = newWidth;
 			stage.stageHeight = newHeight;
 			Starling.current.viewPort = new Rectangle(0,0,stage.stageWidth,stage.stageHeight);
