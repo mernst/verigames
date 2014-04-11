@@ -1559,7 +1559,8 @@ package scenes.game.display
 				if(component is GameNode)
 				{
 					gameNode = component as GameNode;
-					gameNode.handleWidthChange(assignmentIsWide, true);
+					if(gameNode.m_isEditable)
+						gameNode.handleWidthChange(assignmentIsWide, true);
 				}
 			}
 			//update score
