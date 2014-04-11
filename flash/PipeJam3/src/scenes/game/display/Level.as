@@ -1528,6 +1528,12 @@ package scenes.game.display
 			return true;
 		}
 		
+		public function getSolveButtonsAllowed():Boolean
+		{ 
+			if (tutorialManager) return tutorialManager.getSolveButtonsAllowed();
+			return true;
+		}
+		
 		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
 		public function onDeletePressed():void
 		{

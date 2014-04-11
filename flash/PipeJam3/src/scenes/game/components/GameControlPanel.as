@@ -293,7 +293,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
-		//	setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
+			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -303,10 +303,9 @@ package scenes.game.components
 			m_recenterButton.visible = viz;
 		}
 		
-		private function setSharingButtonVisibility(viz:Boolean):void
+		private function setSolveButtonsVisibility(viz:Boolean):void
 		{
-		//	m_saveButton.visible = viz;
-		//	m_shareButton.visible = viz;
+			m_solveButton.visible = viz;
 		}
 		
 		/**
