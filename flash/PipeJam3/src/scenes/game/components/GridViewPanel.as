@@ -116,7 +116,7 @@ package scenes.game.components
 			m_border.touchable = false;
 			addChild(m_border);
 			
-			contentBarrier = new Quad(width,height, 0x0);
+			contentBarrier = new Quad(width,height, 0x00);
 			contentBarrier.alpha = 0.01;
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier,0);
@@ -240,12 +240,11 @@ package scenes.game.components
 		protected var startingPoint:Point;
 		override protected function onTouch(event:TouchEvent):void
 		{
-			//trace("Mode:" + currentMode);
+		//	trace("Mode:" + event.type);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if(currentMode == SELECTING_MODE)
 				{
-					trace("end select");
 					endSelectMode();
 				}
 				else if(currentMode == MOVING_MODE)
@@ -256,12 +255,14 @@ package scenes.game.components
 					currentMode = NORMAL_MODE;
 				else
 				{
-					if (m_currentLevel && event.target == contentBarrier) {
+					if (m_currentLevel && event.target == contentBarrier && World.goingFullScreen == false) {
 						m_currentLevel.unselectAll();
 						var evt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 						m_currentLevel.onPropertyModeChange(evt);
-						onPropertyModeChange(evt);
+				//??		onPropertyModeChange(evt);
 					}
+					else
+						World.goingFullScreen = false;
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.MOVED).length)
@@ -1158,7 +1159,7 @@ package scenes.game.components
 			if(contentBarrier)
 				removeChild(contentBarrier);
 			
-			contentBarrier = new Quad(width,height, 0x0);
+			contentBarrier = new Quad(width,height, 0x00);
 			contentBarrier.alpha = 0.01;
 			contentBarrier.visible = true;
 			addChild(contentBarrier);

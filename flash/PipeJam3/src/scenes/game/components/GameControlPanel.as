@@ -211,10 +211,16 @@ package scenes.game.components
 			var testPt:Point = localToGlobal(new Point(m_fullScreenButton.x, m_fullScreenButton.y));
 			if(event.stageX >= 2*testPt.x/scaleX && event.stageX <= 2*testPt.x/scaleX + m_fullScreenButton.width*2
 				&& event.stageY >= 2*testPt.y/scaleY && event.stageY <= 2*testPt.y/scaleY + m_fullScreenButton.height*2)
-				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
-					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN;
+			{
+				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
+					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 				else
 					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
+			
+				//need to mark that we are doing this, so we don't lose the selection
+				World.goingFullScreen = true;
+			}
+			
 		}
 		
 		//ignore what this does, as I handle it in the above method
@@ -507,7 +513,7 @@ package scenes.game.components
 		{
 			//adjust back to standard?
 			var topLeftScorePanel:Point;
-			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN)
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
 				scaleX = 960/newWidth;
 				scaleY = 640/newHeight;

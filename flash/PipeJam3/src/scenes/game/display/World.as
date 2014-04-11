@@ -104,6 +104,8 @@ package scenes.game.display
 		private var m_layoutObj:Object;
 		private var m_assignmentsObj:Object;
 		
+		static public var goingFullScreen = false;
+		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
 		
@@ -286,7 +288,7 @@ package scenes.game.display
 			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
 			var background:Texture;
 			var m_backgroundImage:Image;
-			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
+			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
 				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
 				m_backgroundImage = new Image(background);
@@ -382,7 +384,7 @@ package scenes.game.display
 		public function changeFullScreen(newWidth:Number, newHeight:Number):void
 		{
 			//backgrounds get scaled by the AssetInterface content scale factor, so change scale before setting a new background
-			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN)
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
 				initBackground(true, newWidth, newHeight);
 				m_backgroundLayer.scaleX /= newWidth/480;
