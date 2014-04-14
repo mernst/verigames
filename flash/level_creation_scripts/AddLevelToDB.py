@@ -45,6 +45,7 @@ def addLevelToDB(infile, description_file):
 		base_collection = db.BaseLevels
 		level_collection = db.Levels
 		
+		levelObj["target_score"] = description.getAttribute("targetscore")
 		levelObj["conflicts"] = description.getAttribute("conflicts")
 		levelObj["widgets"] = description.getAttribute("widgets")
 		levelObj["links"] = description.getAttribute("links")
@@ -84,7 +85,7 @@ if __name__ == "__main__":
 	description_file = sys.argv[2]
 	
 	# there seems to be ownership issues when files added through python can't be deleted from java. so do it here, but really make sure you want to remove everything....
-	
+	'''
 	client = Connection('api.flowjam.verigames.com', 27017)
 	db = client.game2api
 	level_collection = db.Levels
@@ -95,7 +96,7 @@ if __name__ == "__main__":
 	scored_collection.remove()
 	solved_collection = db.GameSolvedLevels
 	solved_collection.remove()
-	
+	'''
 	if os.path.isdir(infile):
 		addDirectoryToDB(infile, description_file)
 	else:
