@@ -1162,7 +1162,7 @@ package scenes.game.components
 			contentBarrier = new Quad(width,height, 0x00);
 			contentBarrier.alpha = 0.01;
 			contentBarrier.visible = true;
-			addChild(contentBarrier);
+			addChildAt(contentBarrier, 0);
 		}
 	}
 }

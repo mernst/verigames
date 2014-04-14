@@ -104,7 +104,7 @@ package scenes.game.display
 		private var m_layoutObj:Object;
 		private var m_assignmentsObj:Object;
 		
-		static public var goingFullScreen = false;
+		static public var goingFullScreen:Boolean = false;
 		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
