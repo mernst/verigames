@@ -131,6 +131,7 @@ package
 				PipeJamGame.levelInfo.name = "foo";
 				PipeJamGame.levelInfo.id = obj["tutorial"];
 				PipeJamGame.levelInfo.tutorialLevelID = obj["tutorial"];
+				TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 			}
 			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
@@ -156,6 +157,7 @@ package
 						PipeJamGame.levelInfo.name = "foo";
 						PipeJamGame.levelInfo.id = vars.tutorial; 
 						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
+						TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 					}
 				}
 			}

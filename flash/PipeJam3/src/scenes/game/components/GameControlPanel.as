@@ -45,7 +45,7 @@ package scenes.game.components
 		private static var WIDTH:Number = Constants.GameWidth;
 		public static const HEIGHT:Number = 82 - 20;
 		
-		public static const OVERLAP:Number = 44 - 10;
+		public static const OVERLAP:Number = 72 - 10;
 		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108, 18, 284 - 10, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
@@ -187,22 +187,25 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y;
 			addChild(m_recenterButton);
 			
-			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
+			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection.\nShift-click or shift-marquee to select.");
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
 			m_solveButton.y = 25;
 			addChild(m_solveButton);
 			
-			m_fullScreenButton = new RecenterButton();
-			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
-			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
-			XSprite.setPivotCenter(m_fullScreenButton);
-			m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
-			m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
-			addChild(m_fullScreenButton);
+			if(0)
+			{
+				m_fullScreenButton = new RecenterButton();
+				m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+				m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
+				XSprite.setPivotCenter(m_fullScreenButton);
+				m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+				m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
+				addChild(m_fullScreenButton);
 			
-			//fullscreen has to be triggered by a user event, in this case the mouse
-			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+				//fullscreen has to be triggered by a user event, in this case the mouse
+				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+			}
 
 		}
 		
@@ -290,6 +293,7 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
+			if(0)
 			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
 		}
 		
