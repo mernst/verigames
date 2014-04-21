@@ -230,6 +230,7 @@ package networking
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
 			fileHandler.saveLevel(saveType);
+			GameFileHandler.reportScore();
 		}	
 		
 		static public function reportScore():void
@@ -561,7 +562,7 @@ package networking
 					if(PlayerValidation.playerID == "")
 						return;
 					var leaderboardScore:int = 1;
-					var levelScore:int = PipeJamGame.levelInfo.score;
+					var levelScore:int = World.m_world.active_level.currentScore;
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
@@ -575,7 +576,7 @@ package networking
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";
-					paramScoreObj.value = PipeJamGame.levelInfo.score;
+					paramScoreObj.value = levelScore;
 					var paramLeaderScoreObj:Object = new Object;
 					paramLeaderScoreObj.name = "leaderboardScore";
 					paramLeaderScoreObj.value = leaderboardScore;

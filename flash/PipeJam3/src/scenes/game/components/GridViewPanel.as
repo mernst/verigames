@@ -713,7 +713,7 @@ package scenes.game.components
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				inactiveContent.addChild(m_tutorialText);
+				addChild(m_tutorialText);
 			}
 			
 			recenter();
@@ -729,7 +729,7 @@ package scenes.game.components
 			var levelTextInfo:TutorialManagerTextInfo = (evt.newTextInfo.length == 1) ? evt.newTextInfo[0] : null;
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				inactiveContent.addChild(m_tutorialText);
+				addChild(m_tutorialText);
 			}
 		}
 		
@@ -742,7 +742,7 @@ package scenes.game.components
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (i = 0; i < toolTips.length; i++) {
 				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
-				inactiveContent.addChild(tip);
+				addChild(tip);
 				m_persistentToolTips.push(tip);
 			}
 		}
@@ -824,9 +824,9 @@ package scenes.game.components
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
-		public function displayContinueButton(permenantly:Boolean = true):void
+		public function displayContinueButton(permanently:Boolean = true):void
 		{
-			if (permenantly) m_continueButtonForced = true;
+			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
