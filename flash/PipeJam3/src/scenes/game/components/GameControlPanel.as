@@ -193,16 +193,19 @@ package scenes.game.components
 			m_solveButton.y = 25;
 			addChild(m_solveButton);
 			
-			m_fullScreenButton = new RecenterButton();
-			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
-			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
-			XSprite.setPivotCenter(m_fullScreenButton);
-			m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
-			m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
-			addChild(m_fullScreenButton);
+			if(0)
+			{
+				m_fullScreenButton = new RecenterButton();
+				m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+				m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
+				XSprite.setPivotCenter(m_fullScreenButton);
+				m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+				m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
+				addChild(m_fullScreenButton);
 			
-			//fullscreen has to be triggered by a user event, in this case the mouse
-			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+				//fullscreen has to be triggered by a user event, in this case the mouse
+				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+			}
 
 		}
 		
@@ -290,6 +293,7 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
+			if(0)
 			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
 		}
 		
