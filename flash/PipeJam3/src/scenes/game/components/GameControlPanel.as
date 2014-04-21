@@ -78,7 +78,7 @@ package scenes.game.components
 		
 		/** Button to share the level */
 		private var m_shareButton:NineSliceButton;
-
+		
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
@@ -193,20 +193,17 @@ package scenes.game.components
 			m_solveButton.y = 25;
 			addChild(m_solveButton);
 			
-			if(0)
-			{
-				m_fullScreenButton = new RecenterButton();
-				m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
-				m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
-				XSprite.setPivotCenter(m_fullScreenButton);
-				m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
-				m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
-				addChild(m_fullScreenButton);
+			m_fullScreenButton = new RecenterButton();
+			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_fullScreenButton);
+			m_fullScreenButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+			m_fullScreenButton.y = m_solveButton.y + m_solveButton.height + 10;
+			addChild(m_fullScreenButton);
 			
-				//fullscreen has to be triggered by a user event, in this case the mouse
-				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
-			}
-
+			//fullscreen has to be triggered by a user event, in this case the mouse
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+			
 		}
 		
 		protected function triggerFullScreen(event:MouseEvent):void
@@ -219,7 +216,7 @@ package scenes.game.components
 					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 				else
 					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
-			
+				
 				//need to mark that we are doing this, so we don't lose the selection
 				World.goingFullScreen = true;
 			}
@@ -241,7 +238,7 @@ package scenes.game.components
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.START_OVER));
 		}
-
+		
 		private function onZoomInButtonTriggered():void
 		{
 			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_IN));
@@ -293,7 +290,6 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
-			if(0)
 			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
 		}
 		
@@ -305,7 +301,7 @@ package scenes.game.components
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
-
+		
 		private function setNavigationButtonVisibility(viz:Boolean):void
 		{
 			m_zoomInButton.visible = viz;
@@ -395,37 +391,37 @@ package scenes.game.components
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   width: newBarWidth
+					transition: Transitions.EASE_OUT,
+					width: newBarWidth
 				});
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: newScoreX
+					transition: Transitions.EASE_OUT,
+					x: newScoreX
 				});
 				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
 				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: bestScoreX
+					transition: Transitions.EASE_OUT,
+					x: bestScoreX
 				});
 			} else if (newBarWidth > m_scoreBar.width) {
 				// If we're growing, flash the difference first then grow
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   delay: FLASHING_ANIM_SEC,
-				   width: newBarWidth
+					transition: Transitions.EASE_OUT,
+					delay: FLASHING_ANIM_SEC,
+					width: newBarWidth
 				});
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   delay: FLASHING_ANIM_SEC,
-				   x: newScoreX
+					transition: Transitions.EASE_OUT,
+					delay: FLASHING_ANIM_SEC,
+					x: newScoreX
 				});
 				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
 				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: bestScoreX
+					transition: Transitions.EASE_OUT,
+					x: bestScoreX
 				});
 			} else {
 				return;
@@ -454,9 +450,9 @@ package scenes.game.components
 				|| ((m_scoreBarContainer.scaleX < 1.0) && (newScaleX > m_scoreBarContainer.scaleX))) {
 				Starling.juggler.removeTweens(m_scoreBarContainer);
 				Starling.juggler.tween(m_scoreTextfield, 1.5, {
-				   transition: Transitions.EASE_OUT,
-				   delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
-				   scaleX: newScaleX
+					transition: Transitions.EASE_OUT,
+					delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
+					scaleX: newScaleX
 				});
 			}
 		}
@@ -544,6 +540,7 @@ import display.ToolTippableSprite;
 
 import events.ToolTipEvent;
 
+import scenes.game.components;
 import scenes.game.components.GameControlPanel;
 
 import starling.display.Quad;
