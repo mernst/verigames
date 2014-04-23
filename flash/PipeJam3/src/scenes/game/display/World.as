@@ -13,8 +13,9 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
-	import assets.AssetsAudio;
 	import assets.AssetInterface;
+	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
 	
 	import constraints.ConstraintGraph;
@@ -25,6 +26,7 @@ package scenes.game.display
 	import dialogs.SubmitLevelDialog;
 	
 	import display.NineSliceBatch;
+	import display.SoundButton;
 	import display.TextBubble;
 	import display.ToolTipText;
 	
@@ -38,6 +40,8 @@ package scenes.game.display
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
+	
+	import graph.PropDictionary;
 	
 	import networking.Achievements;
 	import networking.GameFileHandler;
@@ -55,6 +59,7 @@ package scenes.game.display
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
+	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -63,7 +68,6 @@ package scenes.game.display
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.textures.Texture;
-	import starling.display.BlendMode;
 	
 	import system.Solver;
 	import system.VerigameServerConstants;
@@ -104,7 +108,7 @@ package scenes.game.display
 		private var m_layoutObj:Object;
 		private var m_assignmentsObj:Object;
 		
-		static public var goingFullScreen:Boolean = false;
+		static public var changingFullScreenState:Boolean = false;
 		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
@@ -201,6 +205,9 @@ package scenes.game.display
 			setHighScores();
 			trace(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
 			gameControlPanel.adjustSize(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
+			
+			PipeJamGame.resetSoundButtonParent();
+			
 			trace("Done initializing GameControlPanel.");
 		}
 		
@@ -371,8 +378,26 @@ package scenes.game.display
 		private function onSolveSelection():void
 		{
 			if(active_level)
-				active_level.solveSelection();
+				active_level.solveSelection(solverUpdateCallback, solverDoneCallback);
+		}
+		
+		protected function solverUpdateCallback(vars:Array, unsat_weight:int):void
+		{
+			//start on first update to make sure we are actually solving
+			if(active_level.m_inSolver)
+			{
+				gameControlPanel.startSolveAnimation();
+				if(active_level)
+					active_level.solverUpdate(vars, unsat_weight);
+			}
+		}
+		
+		public function solverDoneCallback(errMsg:String):void
+		{
+			if(active_level)
+				active_level.solverDone(errMsg);
 			
+			gameControlPanel.stopSolveAnimation();
 		}
 		
 		private function initMusic():void {
@@ -672,7 +697,8 @@ package scenes.game.display
 			if (!level_changed) return;
 			var nodeId:String = "";
 			if (evt && evt.widgetChanged && evt.widgetChanged.constraintVar) nodeId = evt.widgetChanged.constraintVar.id;
-			level_changed.updateScore(true);
+			var recordEvent:Boolean = evt ? evt.record : true;
+			level_changed.updateScore(recordEvent);
 			gameControlPanel.updateScore(level_changed, false);
 			var oldScore:int = level_changed.prevScore;
 			var newScore:int = level_changed.currentScore;
@@ -1141,6 +1167,11 @@ package scenes.game.display
 		{
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
 				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+		}
+		
+		public function addSoundButton(m_sfxButton:SoundButton):void
+		{
+			gameControlPanel.addSoundButton(m_sfxButton);
 		}
 	}
 }

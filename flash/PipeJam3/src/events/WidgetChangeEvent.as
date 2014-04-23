@@ -17,8 +17,9 @@ package events
 		public var level:Level;
 		public var silent:Boolean;
 		public var point:Point;
+		public var record:Boolean;
 		
-		public function WidgetChangeEvent(type:String, _widgetChanged:GameNode, _prop:String, _propValue:Boolean, _level:Level = null, _silent:Boolean = false, _point:Point = null) 
+		public function WidgetChangeEvent(type:String, _widgetChanged:GameNode, _prop:String, _propValue:Boolean, _level:Level = null, _silent:Boolean = false, _point:Point = null, _record:Boolean = true) 
 		{
 			super(type, true);
 			widgetChanged = _widgetChanged;
@@ -27,6 +28,7 @@ package events
 			level = _level;
 			silent = _silent;
 			point = _point;
+			record = _record;
 		}
 		
 	}

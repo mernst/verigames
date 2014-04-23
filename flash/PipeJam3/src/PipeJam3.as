@@ -164,7 +164,7 @@ package
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
 		}
-		
+				
 		protected function changeFullScreen(event:flash.events.Event):void
 		{
 			//adjust sizes and stuff
@@ -176,7 +176,7 @@ package
 			stage.stageWidth = newWidth;
 			stage.stageHeight = newHeight;
 			Starling.current.viewPort = new Rectangle(0,0,stage.stageWidth,stage.stageHeight);
-			World.m_world.changeFullScreen(newWidth, newHeight);
+			PipeJamGame.m_pipeJamGame.changeFullScreen(newWidth, newHeight);
 		}
 		
 		private function onContextCreated(event:flash.events.Event):void
