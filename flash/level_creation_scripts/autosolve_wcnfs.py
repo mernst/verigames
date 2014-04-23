@@ -12,14 +12,23 @@ SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 all_assignments = {}
 files = [f for f in os.listdir('.') if os.path.isfile(f)]
+n_autosolve_levels = 0
+n_total_levels = 0
+n_autosolve_nodes = 0
+n_total_nodes = 0
+n_autosolve_constraints = 0
+n_total_constraints = 0
 for fname in files:
 	is_sat = False
 	is_weighted = False
 	if fname[-5:] == '.wcnf':
+		n_total_levels += 1
+		n_autosolve_levels += 1
 		fprefix = fname[:-5]
 		is_sat = True
 		is_weighted = True
 	elif fname[-4:] == '.cnf':
+		n_total_levels += 1
 		fprefix = fname[:-4]
 		is_sat = True
 	if is_sat:
@@ -38,6 +47,16 @@ for fname in files:
 					keys = input_line[7:].strip().split(' ')
 				elif input_line[:9] == 'c offset ':
 					score_offset = float(input_line[9:].strip())
+				elif input_line[:7] == 'p wcnf ':
+					nodes_constraints = input_line[7:].split(' ')
+					n_autosolve_nodes += int(nodes_constraints[0])
+					n_total_nodes += int(nodes_constraints[0])
+					n_autosolve_constraints += int(nodes_constraints[1])
+					n_total_constraints += int(nodes_constraints[1])
+				elif input_line[:7] == 'p cnf ':
+					nodes_constraints = input_line[7:].split(' ')
+					n_total_nodes += int(nodes_constraints[0])
+					n_total_constraints += int(nodes_constraints[1])
 		with os.popen('%s/maxsatz2009 %s.%s' % (SCRIPT_PATH, fprefix, ext)) as sat_cmd:
 			lines = sat_cmd.readlines()
 			max_score = None
@@ -107,3 +126,6 @@ for fname in files:
 			continue
 with open('AllAssignments.json', 'w') as asg_out:
 	asg_out.write(json.dumps(all_assignments))
+print 'Levels: %s autosolved / %s total = %s%' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
+print 'Nodes: %s autosolved / %s total = %s%' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
+print 'constraints: %s autosolved / %s total = %s%' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))

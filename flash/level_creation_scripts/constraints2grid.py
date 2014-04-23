@@ -211,11 +211,8 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 				writeasg.write(',\n')
 			writeasg.write('"%s":%s' % (varid, json.dumps(assignments[varid], separators=(',', ':')))) # separators: no whitespace
 		writeasg.write('}\n}')
-	# Move small graphs or graphs with < 10 variables to auto directory (don't serve to players)
-	auto_dir = os.path.dirname('auto/')
-	if not os.path.exists(auto_dir):
-		os.makedirs(auto_dir)
-	if jams == 0 or n_vars < 10:
+	# Create weighted wcnfs files for graphs with < 100 vars
+	if jams == 0 or n_vars < 100:
 		dimacs_filename = outfilename + '.wcnf'
 		print 'Writing dimacs weighted sat file: %s' % dimacs_filename
 		with open(dimacs_filename,'w') as writesat:
@@ -224,10 +221,6 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 			writesat.write('p wcnf %s %s\n' % (next_weighted_sat_var_index - 1, next_weighted_sat_conjunc_index - 1))
 			for line in weighted_dimacs_lines:
 				writesat.write('%s' % line)
-		print 'Level files moved to autosolve queue: auto/%s*' % infilename
-		os.rename(infilename + '.json', 'auto/%s.json' % infilename)
-		os.rename(asg_filename, 'auto/%s' % asg_filename)
-		os.rename(dimacs_filename, 'auto/%s' % dimacs_filename)
 	else:
 		print 'Creating graphviz file...'
 		# Create graphviz input file
@@ -349,14 +342,6 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 			writesat.write('p cnf %s %s\n' % (next_unweighted_sat_var_index - 1, next_unweighted_sat_conjunc_index - 1))
 			for line in unweighted_dimacs_lines:
 				writesat.write(line)
-		print 'Level files moved to player queue: player/%s*' % infilename
-		player_dir = os.path.dirname('player/')
-		if not os.path.exists(player_dir):
-			os.makedirs(player_dir)
-		os.rename(infilename + '.json', 'player/%s.json' % infilename)
-		os.rename(layout_filename, 'player/%s' % layout_filename)
-		os.rename(asg_filename, 'player/%s' % asg_filename)
-		os.rename(dimacs_filename, 'player/%s' % dimacs_filename)
 	print '------------'
 
 ### Command line interface ###
