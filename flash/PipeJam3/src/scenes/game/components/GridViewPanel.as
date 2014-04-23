@@ -255,14 +255,14 @@ package scenes.game.components
 					currentMode = NORMAL_MODE;
 				else
 				{
-					if (m_currentLevel && event.target == contentBarrier && World.goingFullScreen == false) {
+					if (m_currentLevel && event.target == contentBarrier && World.changingFullScreenState == false) {
 						m_currentLevel.unselectAll();
 						var evt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 						m_currentLevel.onPropertyModeChange(evt);
 				//??		onPropertyModeChange(evt);
 					}
 					else
-						World.goingFullScreen = false;
+						World.changingFullScreenState = false;
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.MOVED).length)
@@ -606,6 +606,11 @@ package scenes.game.components
 						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / content.scaleX;
 						newY = viewRect.y + viewRect.height / 2;
 						moveContent(newX, newY);
+					}
+					break;
+				case Keyboard.C:
+					if (event.ctrlKey) {
+						World.m_world.solverDoneCallback("");
 					}
 					break;
 				case Keyboard.EQUAL:

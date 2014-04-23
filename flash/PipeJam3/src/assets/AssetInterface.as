@@ -115,6 +115,12 @@ package assets
 		public static const PipeJamSubTexture_RecenterButton:String = "RecenterButton";
 		public static const PipeJamSubTexture_RecenterButtonOver:String = "RecenterButtonOver";
 		public static const PipeJamSubTexture_RecenterButtonSelected:String = "RecenterButtonSelected";
+		public static const PipeJamSubTexture_FullscreenButton:String = "FullscreenButton";
+		public static const PipeJamSubTexture_FullscreenButtonOver:String = "FullscreenButtonOver";
+		public static const PipeJamSubTexture_FullscreenButtonSelected:String = "FullscreenButtonSelected";
+		public static const PipeJamSubTexture_SmallscreenButton:String = "SmallscreenButton";
+		public static const PipeJamSubTexture_SmallscreenButtonOver:String = "SmallscreenButtonOver";
+		public static const PipeJamSubTexture_SmallscreenButtonSelected:String = "SmallscreenButtonSelected";
 		public static const PipeJamSubTexture_TextInput:String = "TextInput";
 		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
 		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";

@@ -1,5 +1,6 @@
 package
 {
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
@@ -58,7 +59,7 @@ package
 		public static var theme:PipeJamTheme;
 		
 		private var m_musicButton:MusicButton;
-		private var m_sfxButton:SoundButton;
+		private static var m_sfxButton:SoundButton;
 		
 		private var m_gameObjectBatch:GameObjectBatch;
 		
@@ -331,6 +332,18 @@ package
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
 			}
+		}
+		
+		static public function resetSoundButtonParent():void
+		{
+			if(World.m_world)
+				World.m_world.addSoundButton(m_sfxButton);
+		}
+		
+		public function changeFullScreen(newWidth:int, newHeight:int):void
+		{
+			if(World.m_world)
+				World.m_world.changeFullScreen(newWidth, newHeight);
 		}
 	}
 }
