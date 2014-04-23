@@ -41,11 +41,6 @@ package scenes.game.display
 			super(_constraintVar.id);
 			constraintVar = _constraintVar;
 			m_layoutObj = _layoutObj;
-			boundingBox = findBoundingBox(m_layoutObj);
-			
-			//adjust bounding box by half dimensions since layout is from center of node
-			boundingBox.x -= boundingBox.width/2;
-			boundingBox.y -= boundingBox.height/2;
 			
 			orderedOutgoingEdges = new Vector.<GameEdgeContainer>();
 			orderedIncomingEdges = new Vector.<GameEdgeContainer>();

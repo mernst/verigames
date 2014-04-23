@@ -1,8 +1,10 @@
 package constraints 
 {
+	import constraints.events.VarChangeEvent;
 	import graph.PropDictionary;
+	import starling.events.EventDispatcher;
 	
-	public class ConstraintVar
+	public class ConstraintVar extends EventDispatcher
 	{
 		
 		public var id:String;
@@ -15,7 +17,8 @@ package constraints
 		
 		private var m_props:PropDictionary;
 		private var m_value:ConstraintValue;
-		public var constraint:Constraint;
+		public var lhsConstraints:Vector.<SubtypeConstraint> = new Vector.<SubtypeConstraint>(); // constraints where this var appears on the left hand side (outgoing edge)
+		public var rhsConstraints:Vector.<SubtypeConstraint> = new Vector.<SubtypeConstraint>(); // constraints where this var appears on the right hand side (incoming edge)
 		
 		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig, _possibleKeyfors:Vector.<String> = null, _keyforVals:Vector.<String> = null)
 		{
@@ -53,7 +56,10 @@ package constraints
 					if (keyforVals.indexOf(keyfor) > -1) keyforVals.splice(keyforVals.indexOf(keyfor), 1);
 				}
 			}
-			m_props.setProp(prop, value);
+			if (m_props.hasProp(prop) != value) {
+				m_props.setProp(prop, value);
+				dispatchEvent(new VarChangeEvent(VarChangeEvent.VAR_CHANGED_IN_GRAPH, this, prop, value));
+			}
 		}
 		
 		public function toString():String

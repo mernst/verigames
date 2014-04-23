@@ -13,15 +13,15 @@ package constraints
 		public var lhs:ConstraintVar;
 		public var rhs:ConstraintVar;
 		public var scoring:ConstraintScoringConfig;
+		public var id:String;
 		
 		public function Constraint(_type:String, _lhs:ConstraintVar, _rhs:ConstraintVar, _scoring:ConstraintScoringConfig) 
 		{
 			type = _type;
 			lhs = _lhs;
 			rhs = _rhs;
-			lhs.constraint = this;
-			rhs.constraint = this;
 			scoring = _scoring;
+			id = lhs.id + " -> " + rhs.id;
 		}
 		
 		public function isSatisfied():Boolean

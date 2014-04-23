@@ -17,7 +17,6 @@ package scenes.game.display
 	import constraints.Constraint;
 	import display.NineSliceBatch;
 	import display.TextBubble;
-	import events.ConflictChangeEvent;
 	import events.EdgeContainerEvent;
 	import events.ToolTipEvent;
 	import graph.Edge;

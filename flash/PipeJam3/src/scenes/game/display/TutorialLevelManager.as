@@ -7,8 +7,6 @@ package scenes.game.display
 	import starling.core.Starling;
 	import networking.TutorialController;
 	
-	import events.WidgetChangeEvent;
-	
 	import flash.geom.Point;
 	
 	import starling.display.DisplayObject;
@@ -117,13 +115,13 @@ package scenes.game.display
 			}
 		}
 		
-		public function onWidgetChange(evt:WidgetChangeEvent):void
+		public function onWidgetChange(idChanged:String, propChanged:String, propValue:Boolean):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, widthTxt:String;
 			switch (m_tutorialTag) {
 				case JAMS_TUTORIAL:
-					var jammed:Boolean = (evt.prop == PropDictionary.PROP_NARROW && !evt.propValue);
+					var jammed:Boolean = (propChanged == PropDictionary.PROP_NARROW && !propValue);
 					var jamText:String = "Jam cleared! +" + 100 /* TODO: get from level*/ + " points.";
 					if (jammed) {
 						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
@@ -145,22 +143,22 @@ package scenes.game.display
 					break;
 				case LINKS_TUTORIAL:
 					var edgeId:String;
-					if (evt.widgetChanged.m_id == "var_1") {
+					if (idChanged == "var_1") {
 						edgeId = "var_1 -> type_1__var_1";
-					} else if (evt.widgetChanged.m_id == "var_0") {
+					} else if (idChanged == "var_0") {
 						edgeId = "var_0 -> type_1__var_0";
 					} else {
 						break;
 					}
-					widthTxt = evt.widgetChanged.isWide() ? "Wide Link" : "Narrow Link";
+					widthTxt = !propValue ? "Wide Link" : "Narrow Link";
 					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
 				case WIDEN_TUTORIAL:
-					if (evt.widgetChanged.m_id == "var_0") {
-						if (!evt.widgetChanged.isWide()) {
+					if (idChanged == "var_0") {
+						if (propValue) {
 							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 							tips.push(tip);
 						}

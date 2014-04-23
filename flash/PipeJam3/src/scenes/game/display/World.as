@@ -1,31 +1,29 @@
 package scenes.game.display
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.PixelSnapping;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import starling.animation.Juggler;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
+	import starling.display.DisplayObject;
+	import starling.events.EnterFrameEvent;
+	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 	
 	import assets.AssetsAudio;
-	
 	import audio.AudioManager;
-	
 	import constraints.ConstraintGraph;
-	
+	import constraints.events.ErrorEvent;
 	import dialogs.InGameMenuDialog;
 	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
 	import dialogs.SubmitLevelDialog;
-	
 	import display.NineSliceBatch;
 	import display.TextBubble;
 	import display.ToolTipText;
-	
-	import events.ConflictChangeEvent;
-	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -34,35 +32,16 @@ package scenes.game.display
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
-	
 	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
-	
-	import particle.ErrorParticleSystem;
-	
 	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
-	
-	import starling.animation.Juggler;
-	import starling.animation.Transitions;
-	import starling.core.Starling;
-	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Image;
-	import starling.events.EnterFrameEvent;
-	import starling.events.Event;
-	import starling.events.KeyboardEvent;
-	import starling.textures.Texture;
-	
-	import system.Solver;
+	import scenes.game.PipeJamGameScene;
 	import system.VerigameServerConstants;
-	
-	import utils.XMath;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -151,9 +130,9 @@ package scenes.game.display
 			m_initQueue.push(initGridViewPanel);
 			m_initQueue.push(initGameControlPanel);
 			m_initQueue.push(initMiniMap);
+			m_initQueue.push(initLevel);
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initTutorial);
-			m_initQueue.push(initLevel);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
@@ -288,8 +267,6 @@ package scenes.game.display
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			
-			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
 			
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
@@ -578,38 +555,39 @@ package scenes.game.display
 		public function onWidgetChange(evt:WidgetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
-			if (miniMap && evt && evt.widgetChanged) miniMap.addWidget(evt.widgetChanged); // removes prev widget, adds new colored widget
 			if (!level_changed) return;
-			var nodeId:String = "";
-			if (evt && evt.widgetChanged && evt.widgetChanged.constraintVar) nodeId = evt.widgetChanged.constraintVar.id;
-			level_changed.updateScore(true);
+			if (evt && evt.varChanged) {
+				var nodeLayout:Object = active_level.nodeLayoutObjs[evt.varChanged.id];
+				if (miniMap && nodeLayout) miniMap.addWidget(nodeLayout); // removes prev widget, adds new colored widget
+			} else {
+				if (miniMap) miniMap.isDirty = true;
+			}
 			gameControlPanel.updateScore(level_changed, false);
 			var oldScore:int = level_changed.prevScore;
 			var newScore:int = level_changed.currentScore;
-			if (evt && !evt.silent) {
+			if (evt) {
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
 				if (newScore >= level_changed.getTargetScore()) {
 					edgeSetGraphViewPanel.displayContinueButton(true);
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
 				}
-				if (evt.point) {
-					if (oldScore != newScore) {
-						var thisPt:Point = globalToLocal(evt.point);
-						TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
-					}
+				if (oldScore != newScore && evt.pt != null) {
+					var thisPt:Point = globalToLocal(evt.pt);
+					TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
-					if (evt.widgetChanged && evt.widgetChanged.constraintVar)
-						details[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] = evt.widgetChanged.constraintVar.id;
-					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
-					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
+					if (evt.varChanged) {
+						details[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] = evt.varChanged.id;
+						details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
+						details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
+					}
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, level_changed.getTimeMs());
 				}
 			}
 			
-			if(!PipeJamGameScene.inTutorial && evt && !evt.silent)
+			if(!PipeJamGameScene.inTutorial && evt)
 			{
 				m_numWidgetsClicked++;
 				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
@@ -711,12 +689,24 @@ package scenes.game.display
 		
 		public function onErrorAdded(event:ErrorEvent):void
 		{
-			if (miniMap) miniMap.errorAdded(event.errorParticleSystem);
+			if (active_level) {
+				var edgeLayout:Object = active_level.edgeLayoutObjs[event.constraintError.id];
+				if (!edgeLayout) {
+					throw new Error("No layout found for constraint with error:" + event.constraintError.id);
+				}
+				if (miniMap) miniMap.errorConstraintAdded(edgeLayout);
+			}
 		}
 		
 		public function onErrorRemoved(event:ErrorEvent):void
 		{
-			if (miniMap) miniMap.errorRemoved(event.errorParticleSystem);
+			if (active_level) {
+				var edgeLayout:Object = active_level.edgeLayoutObjs[event.constraintError.id];
+				if (!edgeLayout) {
+					throw new Error("No layout found for constraint with error:" + event.constraintError.id);
+				}
+				if (miniMap) miniMap.errorRemoved(edgeLayout);
+			}
 		}
 		
 		private function onMoveToPointEvent(evt:MoveEvent):void
@@ -883,6 +873,7 @@ package scenes.game.display
 					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
 					//}
 					PipeJam3.logging.logQuestEnd(qid, details);
+					active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
@@ -895,6 +886,8 @@ package scenes.game.display
 			if (restart) {
 				newLevel.restart();
 			} else if (active_level) {
+				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 				active_level.dispose();
 			}
 			
@@ -904,19 +897,30 @@ package scenes.game.display
 			}
 			
 			active_level = newLevel;
-			
-			if (newLevel.tutorialManager) {
-				miniMap.visible = newLevel.tutorialManager.getMiniMapShown();
+			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+				
+			if (active_level.tutorialManager) {
+				miniMap.visible = active_level.tutorialManager.getMiniMapShown();
 			} else {
 				miniMap.visible = true;
 			}
+			if (miniMap) miniMap.setLevel(active_level);
 			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			
-			newLevel.initialize();
-			
+			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
+			active_level.initialize();
+		}
+		
+		private function onLevelLoaded(evt:MenuEvent):void
+		{
+			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
+			trace("onWidgetChange()");
 			onWidgetChange();
-			edgeSetGraphViewPanel.loadLevel(newLevel);
+			trace("edgeSetGraphViewPanel.loadLevel()");
+			edgeSetGraphViewPanel.setupLevel(active_level);
+			edgeSetGraphViewPanel.loadLevel();
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
@@ -924,23 +928,17 @@ package scenes.game.display
 			} else {
 				gameControlPanel.onZoomReset();
 			}
-			newLevel.start();
-			newLevel.updateScore();
-			
-			var startTime:Number = new Date().getTime();
-			var isTutorialLevel:Boolean = (active_level.m_tutorialTag && active_level.m_tutorialTag.length);
-			if (!isTutorialLevel && (active_level.getTargetScore() == int.MAX_VALUE)) {
-				var newTarget:int = Solver.getInstance().findTargetScore(active_level);
-				active_level.setTargetScore(newTarget);
-				if(PipeJamGame.levelInfo != null) PipeJamGame.levelInfo.targetScore = newTarget;
-				active_level.updateScore();
-			}
-			
-			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
+			trace("Level.start()");
+			active_level.start();
+			trace("onScoreChange()");
+			active_level.onScoreChange();
 			active_level.resetBestScore();
 			setHighScores();
-			gameControlPanel.newLevelSelected(newLevel);
+			
+			trace("gameControlPanel.newLevelSelected");
+			gameControlPanel.newLevelSelected(active_level);
 			miniMap.isDirty = true;
+			trace("World.onLevelLoaded complete");
 		}
 		
 		private function onRemovedFromStage():void
