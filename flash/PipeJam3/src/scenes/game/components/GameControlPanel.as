@@ -158,8 +158,8 @@ package scenes.game.components
 			
 			m_newLevelButton = ButtonFactory.getInstance().createButton("New Level", 44, 14, 8, 8, "Start a new level");
 			m_newLevelButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 4;
-			m_newLevelButton.y = HEIGHT/2 - m_newLevelButton.height/2;
+			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 5;
+			m_newLevelButton.y = 25.5;
 			addChild(m_newLevelButton);
 			
 			m_resetButton = ButtonFactory.getInstance().createButton("   Reset\t", 44, 14, 8, 8, "Reset the board to\nits starting condition");
@@ -172,8 +172,8 @@ package scenes.game.components
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = WIDTH - 71;
-			m_zoomInButton.y = 16;
+			m_zoomInButton.x = WIDTH - 92.5;
+			m_zoomInButton.y = 21;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
@@ -216,7 +216,7 @@ package scenes.game.components
 			m_solveButton.y = m_zoomInButton.bounds.bottom + 3;
 			addChild(m_solveButton);
 			
-			busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
+			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
 			
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
 			busyAnimationMovieClip.y = m_solveButton.y;
