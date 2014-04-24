@@ -28,7 +28,8 @@ package scenes
 		protected var m_disposed:Boolean;
 		
 		//initalized in Game
-		static protected var busyAnimationImages:Vector.<Texture> = null;
+		static protected var loadingAnimationImages:Vector.<Texture> = null;
+		static protected var waitAnimationImages:Vector.<Texture> = null;
 		
 		protected var busyAnimationMovieClip:MovieClip;
 		public static const KEYFOR_COLOR:uint = 0xFF00FF;
@@ -150,7 +151,7 @@ package scenes
 		
 		public function startBusyAnimation(animationParent:DisplayObjectContainer = null):MovieClip
 		{
-			busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
+			busyAnimationMovieClip = new MovieClip(loadingAnimationImages, 4);
 			
 			if(!animationParent)
 			{

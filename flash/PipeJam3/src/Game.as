@@ -69,11 +69,15 @@ package
 		   assets.AssetInterface.loadBitmapFont("Game","DesyrelTexture", "DesyrelXml");	
 		   
 		   //load images if we haven't
-		   if(busyAnimationImages == null)
+		   if(loadingAnimationImages == null)
 		   {
-				busyAnimationImages = new Vector.<Texture>();
+				loadingAnimationImages = new Vector.<Texture>();
 				for(var i:int = 1; i<9; i++)
-			   		busyAnimationImages.push(AssetInterface.getTexture("Game", "Loading"+i+"Class"));
+			   		loadingAnimationImages.push(AssetInterface.getTexture("Game", "Loading"+i+"Class"));
+				
+				waitAnimationImages = new Vector.<Texture>();
+				for(var ii:int = 1; ii<9; ii++)
+					waitAnimationImages.push(AssetInterface.getTexture("Game", "Wait"+ii+"Class"));
 		   }
 		}
         

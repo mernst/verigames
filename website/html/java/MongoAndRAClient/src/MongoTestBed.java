@@ -50,7 +50,7 @@ public class MongoTestBed {
         
       HashMap<String, String> map = new HashMap<String, String>();
  //    map.put("submitted", "v6test"); 
-     map.put("serve" , "1");
+     map.put("playerID" , "51e5b3460240288229000026");
      
       //System.out.println(uploadFile("C:\\DemoWorld.gxl", "fs/ostrusted/6"));
  //     removeFile("fs/ostrusted/6", "52ab6b08a8e03bbf0418d1d5");
@@ -69,7 +69,7 @@ public class MongoTestBed {
     //	   writeFileLocally("fs", levelIDArray[index], levelIDArray[index]+".zip");
     //   }
   //     System.out.println("SaveLevels");
-      listEntries(db, "Levels", map);
+      listEntries(db, "GameSolvedLevels", map);
     //    findEntryByID(db, "Level", "5311295aa8e0895f73268f34");
    //    addField(db, "Level", map, "version", "v6test");
   //      System.out.println("SubmittedLayouts");
@@ -150,7 +150,7 @@ public class MongoTestBed {
 			 System.out.println(cursor.count());
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
-   //         System.out.println(obj);
+        //    System.out.println(obj);
            }
         } finally {
         	if(cursor != null)

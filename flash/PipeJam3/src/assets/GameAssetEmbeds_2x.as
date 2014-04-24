@@ -35,6 +35,30 @@ package assets
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
 		public static const Loading8Class:Class;		
 		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait1.png")]
+		public static const Wait1Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait2.png")]
+		public static const Wait2Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait3.png")]
+		public static const Wait3Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait4.png")]
+		public static const Wait4Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait5.png")]
+		public static const Wait5Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait6.png")]
+		public static const Wait6Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait7.png")]
+		public static const Wait7Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait8.png")]
+		public static const Wait8Class:Class;		
+
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
 		public static const PipeJamSpriteSheetPNG:Class;
 		
