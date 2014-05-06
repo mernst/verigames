@@ -146,7 +146,7 @@ package scenes.game.display
 					throw new Error("World level found without constraint graph:" + levelName);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
-				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
+				var my_level:Level = new Level2(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {

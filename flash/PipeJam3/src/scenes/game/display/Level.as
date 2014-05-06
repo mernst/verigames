@@ -80,63 +80,63 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		private var selectedComponents:Vector.<GameComponent>;
+		protected var selectedComponents:Vector.<GameComponent>;
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
-		private var nodeIDToConstraintsTwoWayMap:Dictionary;
+		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
-		private var marqueeRect:Shape = new Shape();
+		protected var marqueeRect:Shape = new Shape();
 		
 		//the level node and decendents
-		private var m_levelLayoutObj:Object;
+		protected var m_levelLayoutObj:Object;
 		public var levelObj:Object;
 		public var m_levelLayoutName:String;
 		public var m_levelQID:String;
-		private var m_levelOriginalLayoutObj:Object; //used for restarting the level
+		protected var m_levelOriginalLayoutObj:Object; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutObjWrapper:Object;
 		public var m_levelAssignmentsObj:Object;
-		private var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
-		private var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
+		protected var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
+		protected var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
-		private var m_layoutFixed:Boolean = false;
+		protected var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
 		
-		private var boxDictionary:Dictionary;
-		private var edgeContainerDictionary:Dictionary;
+		protected var boxDictionary:Dictionary;
+		protected var edgeContainerDictionary:Dictionary;
 		
-		private var m_nodeList:Vector.<GameNode>;
+		protected var m_nodeList:Vector.<GameNode>;
 		public var m_edgeList:Vector.<GameEdgeContainer>;
-		private var m_hidingErrorText:Boolean = false;
-		private var m_segmentHovered:GameEdgeSegment;
+		protected var m_hidingErrorText:Boolean = false;
+		protected var m_segmentHovered:GameEdgeSegment;
 		public var errorList:Dictionary = new Dictionary();
 		
-		private var m_nodesInactiveContainer:Sprite = new Sprite();
-		private var m_errorInactiveContainer:Sprite = new Sprite();
-		private var m_edgesInactiveContainer:Sprite = new Sprite();
-		private var m_plugsInactiveContainer:Sprite = new Sprite();
+		protected var m_nodesInactiveContainer:Sprite = new Sprite();
+		protected var m_errorInactiveContainer:Sprite = new Sprite();
+		protected var m_edgesInactiveContainer:Sprite = new Sprite();
+		protected var m_plugsInactiveContainer:Sprite = new Sprite();
 		public var inactiveLayer:Sprite = new Sprite();
 		
-		private var m_nodesContainer:Sprite = new Sprite();
-		private var m_errorContainer:Sprite = new Sprite();
-		private var m_edgesContainer:Sprite = new Sprite();
-		private var m_plugsContainer:Sprite = new Sprite();
+		protected var m_nodesContainer:Sprite = new Sprite();
+		protected var m_errorContainer:Sprite = new Sprite();
+		protected var m_edgesContainer:Sprite = new Sprite();
+		protected var m_plugsContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle;
-		private var m_backgroundImage:Image;
-		private var m_levelStartTime:Number;
+		protected var m_backgroundImage:Image;
+		protected var m_levelStartTime:Number;
 		
-		private var initialized:Boolean = false;
+		protected var initialized:Boolean = false;
 		
 		/** Current Score of the player */
-		private var m_currentScore:int = 0;
-		private var m_bestScore:int = 0;
+		protected var m_currentScore:int = 0;
+		protected var m_bestScore:int = 0;
 		
 		/** Most recent score of the player */
-		private var m_prevScore:int = 0;
+		protected var m_prevScore:int = 0;
 		/** previous - 1 score for player */
 		//prevScore gets updated too quickly, so this shadows and lags behind
-		private var m_oldScore:int = 0;
+		protected var m_oldScore:int = 0;
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
@@ -146,16 +146,16 @@ package scenes.game.display
 		public var totalMoveDist:Point = new Point();
 		
 		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
-		private var m_currentConflictIndex:int = -1;
-		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
-		private var m_conflictEdgesDirty:Boolean = true;
+		protected var m_currentConflictIndex:int = -1;
+		protected var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+		protected var m_levelConflictEdgeDict:Dictionary = new Dictionary();
+		protected var m_conflictEdgesDirty:Boolean = true;
 		
 		public var m_inSolver:Boolean = false;
 		
-		private static const BG_WIDTH:Number = 256;
-		private static const MIN_BORDER:Number = 1000;
-		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
+		protected static const BG_WIDTH:Number = 256;
+		protected static const MIN_BORDER:Number = 1000;
+		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
@@ -213,7 +213,7 @@ package scenes.game.display
 			setNodesFromAssignments(assignmentsObj);
 		}
 		
-		private function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		protected function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
 			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
@@ -370,6 +370,19 @@ package scenes.game.display
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox);
 			
+			addEventListeners();
+			
+			trace(visibleNodes, visibleLines);
+			
+			setNodesFromAssignments(m_levelAssignmentsObj);
+			//force update of conflict count dictionary, ignore return value
+			getNextConflict(true);
+			
+			initialized = true;
+		}
+		
+		protected function addEventListeners():void
+		{
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
@@ -385,14 +398,6 @@ package scenes.game.display
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
 			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-			
-			trace(visibleNodes, visibleLines);
-			
-			setNodesFromAssignments(m_levelAssignmentsObj);
-			//force update of conflict count dictionary, ignore return value
-			getNextConflict(true);
-			
-			initialized = true;
 		}
 		
 		private function createLine(edgeId:String, edgeLayoutObj:Object):GameEdgeContainer

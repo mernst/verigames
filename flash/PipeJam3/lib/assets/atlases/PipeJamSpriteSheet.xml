@@ -233,7 +233,8 @@
 	<SubTexture name="ZoomOutButton" x="921" y="127" width="30" height="30" />
 	<SubTexture name="ZoomOutButtonOver" x="921" y="159" width="30" height="30" />
 	<SubTexture name="ZoomOutButtonSelected" x="921" y="191" width="30" height="30" />
-	<SubTexture name="rect8611" x="985" y="31" width="30" height="30" />
-	<SubTexture name="rect8613" x="985" y="63" width="30" height="30" />
-	<SubTexture name="rect8615" x="985" y="95" width="30" height="30" />
+	<SubTexture name="DarkBlueCircle" x="2" y="840" width="55" height="55" />
+	<SubTexture name="DarkGrayCircle" x="56" y="840" width="55" height="55" />
+	<SubTexture name="LightBlueCircle" x="2" y="893" width="30" height="30" />
+	<SubTexture name="LightGrayCircle" x="31" y="893" width="30" height="30" />
 </TextureAtlas>
