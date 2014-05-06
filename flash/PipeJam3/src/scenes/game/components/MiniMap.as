@@ -16,7 +16,6 @@ package scenes.game.components
 	import particle.ErrorParticleSystem;
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import starling.animation.Transitions;
 	import starling.core.Starling;

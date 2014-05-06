@@ -1,6 +1,6 @@
 {"id": "LockedWidget",
 "qid": 2,
-"targetScore": 70,
+"target_score": 70,
 "assignments":{
 "var:4":{},
 "var:0":{},

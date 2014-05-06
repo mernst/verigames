@@ -91,7 +91,7 @@ package scenes.game.display
 		{
 			super(_id);
 			draggable = _draggable;
-			edgeArray = _edgeArray;
+			edgeArray = _edgeArray.concat();
 			m_fromNode = fromComponent;
 			m_toNode = toComponent;
 			graphConstraint = _graphConstraint;
@@ -166,6 +166,8 @@ package scenes.game.display
 			var minYedge:Number = Math.min(startPt.y, endPt.y);
 			this.x = minXedge;
 			this.y = minYedge;
+			if (!minXedge && !minYedge)
+				trace("0 0");
 			if(!newEdgeArray) {
 				//adjust by min
 				for(var i0:int = 0; i0<edgeArray.length; i0++)

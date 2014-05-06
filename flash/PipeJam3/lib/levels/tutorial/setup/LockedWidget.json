@@ -1,6 +1,7 @@
 {
   "id": "LockedWidget",
   "qid": 2,
+  "default": "type:1",
   "constraints": [
   ],
   "variables": {

@@ -1,6 +1,7 @@
 {
   "id": "Optimize",
   "qid": 6,
+  "default": "type:1",
   "constraints": [
 	"var:0 <= type:0",
 	"var:0 <= var:2",

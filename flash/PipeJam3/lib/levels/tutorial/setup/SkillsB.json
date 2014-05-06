@@ -1,6 +1,7 @@
 {
   "id": "SkillsB",
   "qid": 12,
+  "default": "type:1",
   "constraints": [
     "type:1 <= var:0",
     "var:0 <= var:4",
@@ -43,18 +44,18 @@
       "default": "type:0"
     },
     "var:2": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":30}
     },
     "var:3": {
       "default": "type:1"
     },
     "var:4": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":40, "type:1":0}
     },
     "var:5": {
-      "default": "type:0",
+      "default": "type:1",
 	  "score": {"type:0":30, "type:1":0}
     },
     "var:6": {
@@ -62,7 +63,7 @@
       "score": {"type:0":0, "type:1":50}
     },
     "var:7": {
-      "default": "type:0",
+      "default": "type:1",
 	  "score": {"type:0":30, "type:1":0}
     },
     "var:8": {
@@ -92,11 +93,11 @@
       "default": "type:0"
     },
     "var:16": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":30}
     },
     "var:17": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":40}
     },
     "var:18": {

@@ -1,6 +1,7 @@
 {
   "id": "WidgetPractice",
   "qid": 1,
+  "default": "type:1",
   "constraints": [
   ],
   "variables": {

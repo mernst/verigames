@@ -1,6 +1,7 @@
 {
   "id": "SkillsA",
   "qid": 11,
+  "default": "type:1",
   "constraints": [
     "type:1 <= var:0",
     "var:0 <= type:0",
@@ -35,18 +36,18 @@
       "default": "type:0"
     },
     "var:5": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":50}
     },
     "var:6": {
       "default": "type:1"
     },
     "var:7": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":50}
     },
     "var:8": {
-      "default": "type:0",
+      "default": "type:1",
       "score": {"type:0":0, "type:1":50}
     },
     "var:9": {

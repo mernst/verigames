@@ -1,6 +1,6 @@
 {"id": "SkillsB",
 "qid": 12,
-"targetScore": 3060,
+"target_score": 3060,
 "assignments":{
 "var:16":{},
 "var:17":{},

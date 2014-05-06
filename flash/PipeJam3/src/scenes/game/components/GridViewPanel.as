@@ -17,6 +17,7 @@ package scenes.game.components
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -168,7 +169,9 @@ package scenes.game.components
 				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + offRight) &&
 				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top + offTop) &&
 				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + offBottom)) {
-				trace("View Space changed! Recalc visible objects");
+				// No need to refresh
+			} else {
+				trace("Viewspace changed, refresh needed");
 			}
 			// Update visible objects
 			//if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
@@ -182,7 +185,8 @@ package scenes.game.components
 			var iters:int = Math.min(NODES_PER_FRAME, m_nodeLayoutQueue.length);
 			for (i = 0; i < iters; i++) {
 				var nodeLayout:Object = m_nodeLayoutQueue.shift();
-				m_currentLevel.createNodeFromJsonObj(nodeLayout);
+				//m_currentLevel.createNodeFromJsonObj(nodeLayout);
+				trace("creating " + nodeLayout.id);
 			}
 			var newNodes:int = i;
 			if (newNodes > 0) trace("created " + newNodes + " GameNodes");
@@ -190,7 +194,7 @@ package scenes.game.components
 			iters = Math.min(Math.min(EDGES_PER_FRAME, NODES_PER_FRAME - i), m_edgeLayoutQueue.length);
 			for (i = 0; i < iters; i++) {
 				var edgeLayout:Object = m_edgeLayoutQueue.shift();
-				m_currentLevel.createEdgeFromJsonObj(edgeLayout);
+				//m_currentLevel.createEdgeFromJsonObj(edgeLayout);
 			}
 			var newEdges:int = i;
 			if (newEdges > 0) trace("created " + newEdges + " GameEdgeContainers");
@@ -199,21 +203,55 @@ package scenes.game.components
 			if ((newEdges > 0 || newNodes > 0) && m_nodeLayoutQueue.length == 0 && m_edgeLayoutQueue.length == 0) {
 				onGameComponentsCreated();
 			}
-			
-			var gameEdges:Dictionary = m_currentLevel.getEdges();
-			for (var edgeId:String in gameEdges) {
-				var gameEdge:GameEdgeContainer = gameEdges[edgeId] as GameEdgeContainer;
-				if (gameEdge.hidden) continue;
-				trace("Edge " + edgeId + " isOnScreen:" + isOnScreen(gameEdge.boundingBox, currentViewRect));
-				gameEdge.visible = true;
+			var redraw:Boolean = false;
+			for (var varId:String in m_currentLevel.nodeLayoutObjs) {
+				var varBB:Rectangle = m_currentLevel.nodeLayoutObjs[varId]["bb"];
+				if (isOnScreen(varBB, currentViewRect)) {
+					if (!m_currentLevel.getNode(varId)) {
+						m_currentLevel.createNodeFromJsonObj(m_currentLevel.nodeLayoutObjs[varId]);
+						trace("made " + varId);
+						redraw = true;
+					}
+				} else {
+					if (m_currentLevel.getNode(varId)) {
+						m_currentLevel.destroyGameNode(varId);
+						trace("destroyed " + varId);
+						redraw = true;
+					}
+				}
 			}
-			const gameNodes:Dictionary = m_currentLevel.getNodes();
-			for (var nodeId:String in gameNodes) {
-				var gameNode:GameNode = gameNodes[nodeId] as GameNode;
-				if (gameNode.hidden) continue;
-				trace("Node " + nodeId + " isOnScreen:" + isOnScreen(gameNode.boundingBox, currentViewRect));
-				gameNode.visible = true;
+			for (var constraintId:String in m_currentLevel.edgeLayoutObjs) {
+				var edgeBB:Rectangle = m_currentLevel.edgeLayoutObjs[constraintId]["bb"];
+				if (isOnScreen(edgeBB, currentViewRect)) {
+					if (!m_currentLevel.getEdgeContainer(constraintId)) {
+						m_currentLevel.createEdgeFromJsonObj(m_currentLevel.edgeLayoutObjs[constraintId]);
+						trace("made " + constraintId);
+						redraw = true;
+					}
+				} else {
+					if (m_currentLevel.getEdgeContainer(constraintId)) {
+						m_currentLevel.destroyGameEdge(constraintId);
+						trace("destroyed " + constraintId);
+						redraw = true;
+					}
+				}
 			}
+			if (redraw) m_currentLevel.draw();
+			System.gc();
+			//
+			//var gameEdges:Dictionary = m_currentLevel.getEdges();
+			//for (var edgeId:String in gameEdges) {
+				//var gameEdge:GameEdgeContainer = gameEdges[edgeId] as GameEdgeContainer;
+				//if(isOnScreen(gameEdge.boundingBox, currentViewRect));
+				//gameEdge.visible = true;
+			//}
+			//const gameNodes:Dictionary = m_currentLevel.getNodes();
+			//for (var nodeId:String in gameNodes) {
+				//var gameNode:GameNode = gameNodes[nodeId] as GameNode;
+				//if (gameNode.hidden) continue;
+				//trace("Node " + nodeId + " isOnScreen:" + isOnScreen(gameNode.boundingBox, currentViewRect));
+				//gameNode.visible = true;
+			//}
 			// Reset total move dist, now that we've updated the visible objects around this view
 			m_currentLevel.totalMoveDist = new Point();
 			m_lastVisibleRefreshViewRect = currentViewRect;

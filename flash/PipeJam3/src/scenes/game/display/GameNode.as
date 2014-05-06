@@ -70,8 +70,8 @@ package scenes.game.display
 				changeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, m_propertyMode, propVal, pt);
 				undoEvent = new UndoEvent(changeEvent, this);
 			}
-			dispatchEvent(undoEvent);
-			dispatchEvent(changeEvent);
+			if (undoEvent) dispatchEvent(undoEvent);
+			if (changeEvent) dispatchEvent(changeEvent);
 		}
 		
 		public function onVarChange(evt:VarChangeEvent):void
@@ -137,8 +137,6 @@ package scenes.game.display
 			}
 			useHandCursor = m_isEditable;
 			
-
-			
 			if (constraintVar) {
 				var i:int = 0;
 				for (var prop:String in constraintVar.getProps().iterProps()) {
@@ -175,6 +173,7 @@ package scenes.game.display
 		override public function dispose():void
 		{
 			if (m_scoreBlock) m_scoreBlock.dispose();
+			if (constraintVar) constraintVar.removeEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onVarChange);
 			super.dispose();
 		}
 		

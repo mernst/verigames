@@ -1,6 +1,7 @@
 {
   "id": "GroupSelect",
   "qid": 9,
+  "default": "type:1",
   "constraints": [
 	"var:0 <= type:1",
 	"var:1 <= type:1",

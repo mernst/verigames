@@ -1,6 +1,7 @@
 {
   "id": "Widen",
   "qid": 5,
+  "default": "type:1",
   "constraints": [
 	"type:1 <= var:0",
 	"var:1 <= var:2",

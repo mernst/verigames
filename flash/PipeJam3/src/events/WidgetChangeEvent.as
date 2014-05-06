@@ -2,7 +2,6 @@ package events
 {
 	import constraints.ConstraintVar;
 	import flash.geom.Point;
-	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	
 	import starling.events.Event;

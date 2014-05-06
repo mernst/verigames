@@ -207,41 +207,40 @@ package scenes.game.display
 		private function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
-			for (var nodeId:String in m_gameNodeDict) {
-				var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				setNodeFromAssignments(gameNode, assignmentsObj, updateTutorialManager);
+			var graphVar:ConstraintVar;
+			for (var varId:String in levelGraph.variableDict) {
+				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
+				setGraphVarFromAssignments(graphVar, assignmentsObj, updateTutorialManager);
 			}
-			if(gameNode) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, gameNode.constraintVar, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, null));
+			if(graphVar) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
 			refreshTroublePoints();
 		}
 		
-		private function setNodeFromAssignments(gameNode:GameNode, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		private function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
 			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
 			// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
-			var assignmentIsWide:Boolean = (gameNode.constraintVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
-			if (assignmentsObj["assignments"].hasOwnProperty(gameNode.constraintVar.formattedId)
-				&& assignmentsObj["assignments"][gameNode.constraintVar.formattedId].hasOwnProperty(ConstraintGraph.TYPE_VALUE)) {
-				assignmentIsWide = (assignmentsObj["assignments"][gameNode.constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] == ConstraintValue.VERBOSE_TYPE_1);
+			var assignmentIsWide:Boolean = (graphVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
+			if (assignmentsObj["assignments"].hasOwnProperty(graphVar.formattedId)
+				&& assignmentsObj["assignments"][graphVar.formattedId].hasOwnProperty(ConstraintGraph.TYPE_VALUE)) {
+				assignmentIsWide = (assignmentsObj["assignments"][graphVar.formattedId][ConstraintGraph.TYPE_VALUE] == ConstraintValue.VERBOSE_TYPE_1);
 			}
-			// zzz check graph vars not nodes
-			if (gameNode.isWide() != assignmentIsWide) {
-				gameNode.handleWidthChange(assignmentIsWide);
+			if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == assignmentIsWide) {
+				graphVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 				if (updateTutorialManager && tutorialManager) {
-					tutorialManager.onWidgetChange(gameNode.m_id, PropDictionary.PROP_NARROW, !assignmentIsWide);
+					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
 				}
 			}
 			
 			//and then set from local storage, if there (but only if we really want it)
-			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
+			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[graphVar.id] != null)
 			{
-				var newWidth:String = savedAssignmentObj[gameNode.m_id];
+				var newWidth:String = savedAssignmentObj[graphVar.id];
 				var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
-				
-				if (gameNode.isWide() != savedAssignmentIsWide) 
+				if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == savedAssignmentIsWide) 
 				{
-					gameNode.handleWidthChange(savedAssignmentIsWide);
+					graphVar.setProp(PropDictionary.PROP_NARROW, !savedAssignmentIsWide);
 				}
 			}
 		}
@@ -383,11 +382,10 @@ package scenes.game.display
 			if (!levelGraph.variableDict.hasOwnProperty(varId)) {
 				throw new Error("Couldn't find edge set for var id: " + varId);
 			}
-			var prevNode:GameNode = m_gameNodeDict[varId] as GameNode;
-			if (prevNode) prevNode.removeFromParent(true);
+			destroyGameNode(varId);
 			var constraintVar:ConstraintVar = levelGraph.variableDict[varId];
 			var gameNode:GameNode = new GameNode(boxLayoutObj, constraintVar, !m_layoutFixed);
-			setNodeFromAssignments(gameNode, m_levelAssignmentsObj, true);
+			setGraphVarFromAssignments(constraintVar, m_levelAssignmentsObj, true);
 			
 			var boxVisible:Boolean = true;
 			if (boxLayoutObj.hasOwnProperty("visible") && (boxLayoutObj["visible"] == "false")) boxVisible = false;
@@ -407,10 +405,9 @@ package scenes.game.display
 		public function createEdgeFromJsonObj(edgeLayoutObj:Object):void
 		{
 			var constraintId:String = edgeLayoutObj["id"];
-			var prevEdge:GameEdgeContainer = edgeLayoutObj["link"];
-			if (prevEdge) prevEdge.removeFromParent(true);
-			var gameEdge:GameEdgeContainer = createLine(constraintId, edgeLayoutObj);
-			edgeLayoutObj["link"] = gameEdge;
+			destroyGameEdge(constraintId);
+			var newGameEdge:GameEdgeContainer = createLine(constraintId, edgeLayoutObj);
+			m_gameEdgeDict[constraintId] = newGameEdge;
 		}
 		
 		private function createLine(edgeId:String, edgeLayoutObj:Object):GameEdgeContainer
@@ -436,10 +433,6 @@ package scenes.game.display
 			var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeId, edgeArray, fromNode, toNode, constraint, !m_layoutFixed);
 			if (!getVisible(edgeLayoutObj)) newGameEdge.hideComponent(true);
 			
-			var oldEdgeContainer:GameEdgeContainer = m_gameEdgeDict[edgeId];
-			if (oldEdgeContainer) oldEdgeContainer.removeFromParent(true);
-			
-			m_gameEdgeDict[edgeId] = newGameEdge;
 			return newGameEdge;
 		}
 		
