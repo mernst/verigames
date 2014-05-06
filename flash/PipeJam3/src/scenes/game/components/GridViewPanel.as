@@ -176,7 +176,7 @@ package scenes.game.components
 				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + offBottom)) {
 				// No need to refresh
 			} else {
-				trace("Viewspace changed, refresh needed");
+				//trace("Viewspace changed, refresh needed");
 			}
 			// Update visible objects
 			//if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
@@ -191,10 +191,10 @@ package scenes.game.components
 			for (i = 0; i < iters; i++) {
 				var nodeLayout:Object = m_nodeLayoutQueue.shift();
 				//m_currentLevel.createNodeFromJsonObj(nodeLayout);
-				trace("creating " + nodeLayout.id);
+				//trace("creating " + nodeLayout.id);
 			}
 			var newNodes:int = i;
-			if (newNodes > 0) trace("created " + newNodes + " GameNodes");
+			//if (newNodes > 0) trace("created " + newNodes + " GameNodes");
 			const EDGES_PER_FRAME:uint = 50;
 			iters = Math.min(Math.min(EDGES_PER_FRAME, NODES_PER_FRAME - i), m_edgeLayoutQueue.length);
 			for (i = 0; i < iters; i++) {
@@ -202,7 +202,7 @@ package scenes.game.components
 				//m_currentLevel.createEdgeFromJsonObj(edgeLayout);
 			}
 			var newEdges:int = i;
-			if (newEdges > 0) trace("created " + newEdges + " GameEdgeContainers");
+			//if (newEdges > 0) trace("created " + newEdges + " GameEdgeContainers");
 			if (newNodes + newEdges > 0) m_currentLevel.draw();
 			
 			if ((newEdges > 0 || newNodes > 0) && m_nodeLayoutQueue.length == 0 && m_edgeLayoutQueue.length == 0) {
@@ -211,32 +211,32 @@ package scenes.game.components
 			var redraw:Boolean = false;
 			for (var varId:String in m_currentLevel.nodeLayoutObjs) {
 				var varBB:Rectangle = m_currentLevel.nodeLayoutObjs[varId]["bb"];
-				if (isOnScreen(varBB, currentViewRect)) {
+				if (PipeJamGameScene.inTutorial || isOnScreen(varBB, currentViewRect)) {
 					if (!m_currentLevel.getNode(varId)) {
 						m_currentLevel.createNodeFromJsonObj(m_currentLevel.nodeLayoutObjs[varId]);
-						trace("made " + varId);
+						//trace("made " + varId);
 						redraw = true;
 					}
 				} else {
 					if (m_currentLevel.getNode(varId)) {
 						m_currentLevel.destroyGameNode(varId);
-						trace("destroyed " + varId);
+						//trace("destroyed " + varId);
 						redraw = true;
 					}
 				}
 			}
 			for (var constraintId:String in m_currentLevel.edgeLayoutObjs) {
 				var edgeBB:Rectangle = m_currentLevel.edgeLayoutObjs[constraintId]["bb"];
-				if (isOnScreen(edgeBB, currentViewRect)) {
+				if (PipeJamGameScene.inTutorial || isOnScreen(edgeBB, currentViewRect)) {
 					if (!m_currentLevel.getEdgeContainer(constraintId)) {
 						m_currentLevel.createEdgeFromJsonObj(m_currentLevel.edgeLayoutObjs[constraintId]);
-						trace("made " + constraintId);
+						//trace("made " + constraintId);
 						redraw = true;
 					}
 				} else {
 					if (m_currentLevel.getEdgeContainer(constraintId)) {
 						m_currentLevel.destroyGameEdge(constraintId);
-						trace("destroyed " + constraintId);
+						//trace("destroyed " + constraintId);
 						redraw = true;
 					}
 				}

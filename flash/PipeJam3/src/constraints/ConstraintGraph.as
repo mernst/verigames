@@ -49,6 +49,7 @@ package constraints
 		{
 			oldScore = prevScore;
 			prevScore = currentScore;
+			trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
@@ -91,7 +92,9 @@ package constraints
 						}
 					}
 					// Offset score by change in bonus and new constraints satisfied/not
+					trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 					currentScore += (newBonus - prevBonus) + (newConstraintPoints - prevConstraintPoints);
+					trace("new currentScore ", currentScore);
 				}
 			} else {
 				currentScore = 0;

@@ -13,9 +13,11 @@ package scenes.game.display
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.textures.Texture;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;

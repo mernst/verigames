@@ -4,6 +4,7 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import starling.display.Sprite;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -161,7 +162,6 @@ package scenes.game.display
 				if(this.filter)
 					this.filter.dispose();
 			}
-			
 			super.draw();
 		}
 		

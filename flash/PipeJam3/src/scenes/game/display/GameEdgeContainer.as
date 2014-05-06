@@ -91,7 +91,11 @@ package scenes.game.display
 		{
 			super(_id);
 			draggable = _draggable;
-			edgeArray = _edgeArray.concat();
+			edgeArray = new Array();
+			for (var i:int = 0; i < _edgeArray.length; i++) {
+				var pt:Point  = _edgeArray[i] as Point;
+				edgeArray.push(pt.clone()); // need to do this to avoid changing the actual points in the original layout
+			}
 			m_fromNode = fromComponent;
 			m_toNode = toComponent;
 			graphConstraint = _graphConstraint;

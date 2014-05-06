@@ -229,7 +229,9 @@ package scenes.game.display
 				assignmentIsWide = (assignmentsObj["assignments"][graphVar.formattedId][ConstraintGraph.TYPE_VALUE] == ConstraintValue.VERBOSE_TYPE_1);
 			}
 			if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == assignmentIsWide) {
-				graphVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
+				levelGraph.updateScore(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
+				//graphVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
+				//levelGraph.updateScore();
 				if (updateTutorialManager && tutorialManager) {
 					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
 				}
@@ -358,14 +360,14 @@ package scenes.game.display
 					createNodeFromJsonObj(nodeLayout);
 					i++;
 				}
-				trace("nodes remaining: " + nodeLayoutObjs.length);
+				//trace("nodes remaining: " + nodeLayoutObjs.length);
 			} else if (edgeLayoutObjs.length > 0) {
 				while (edgeLayoutObjs.length > 0 && i < CALLS_PER_FRAME) {
 					var edgeLayout:Object = edgeLayoutObjs.shift();
 					createEdgeFromJsonObj(edgeLayout);
 					i++;
 				}
-				trace("edges remaining: " + edgeLayoutObjs.length);
+				//trace("edges remaining: " + edgeLayoutObjs.length);
 			} else {
 				loadAssignments(m_levelAssignmentsObj);
 				//force update of conflict count dictionary, ignore return value
@@ -862,6 +864,8 @@ package scenes.game.display
 			//trace("Level: onWidgetChange");
 			if (evt) {
 				levelGraph.updateScore(evt.graphVar.id, evt.prop, evt.newValue);
+				//evt.graphVar.setProp(evt.prop, evt.newValue);
+				//levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
 				//save incremental changes so we can update if user quits and restarts
@@ -1249,7 +1253,7 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			trace("Bounding Box " + m_boundingBox);
+			//trace("Bounding Box " + m_boundingBox);
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
@@ -1273,6 +1277,7 @@ package scenes.game.display
 				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 				edgeCount++;
 			}
+			
 			trace("Nodes " + nodeCount + " Edges " + edgeCount);
 			if (m_backgroundImage) {
 				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
@@ -1703,7 +1708,6 @@ package scenes.game.display
 			}
 		}
 		
-		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var constraintVar:ConstraintVar;
@@ -1727,7 +1731,7 @@ package scenes.game.display
 		{
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
-			this.updateScore(true);
+			levelGraph.updateScore();
 		}
 	}
 }
