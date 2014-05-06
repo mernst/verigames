@@ -14,7 +14,7 @@ package system
 				[10, -1, -2],
 				[10, 3, 4],
 				[10, -3, -4]
-			]);
+			], [],update_callback, done_callback);
 			
 			run_solver([
 				[76222, -1, 2],
@@ -27,7 +27,7 @@ package system
 				[125307, -4, -5],
 				[51429, 5, 6],
 				[51429, -5, -6]
-			]);
+			], [],update_callback, done_callback);
 			
 			run_solver([
 				[20, -1, 10, 3, 4, -5],
@@ -40,18 +40,20 @@ package system
 				[10, -5, 1, 2],
 				[10, -6, 9, 3, 4, -1],
 				[10, -3, 5]
-			]);
+			], [],update_callback, done_callback);
 		}
 		
-		public static function run_solver(clause_arrays:Array, callback:Function = null):void
+		public static function run_solver(clause_arrays:Array, initvars_Array:Array, updatecallback:Function, donecallback:Function):void
 		{
-			if(callback == null)
-				m_mgr.start(clause_arrays, callbackFunction, function(err_msg:String):void { done_callback(err_msg, unsat_best); });
-			else
-				m_mgr.start(clause_arrays, callback, function(err_msg:String):void { done_callback(err_msg, unsat_best); });
+			m_mgr.start(clause_arrays, initvars_Array, updatecallback, donecallback);
 		}
 		
-		private static function callbackFunction(vars:Array, unsat_weight:int):int
+		public static function stop_solver():void
+		{
+			m_mgr.stop();
+		}
+		
+		private static function update_callback(vars:Array, unsat_weight:int):int
 		{
 			trace("Result:");
 			for (var ii:int = 0; ii < vars.length; ++ ii) {
@@ -61,7 +63,7 @@ package system
 		}
 		
 		private static function done_callback(err_msg:String, unsat_best:int):void
-		{
+		{ 
 			if (err_msg) {
 				trace("ERROR:", err_msg);
 			}

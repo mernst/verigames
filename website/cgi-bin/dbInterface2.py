@@ -158,7 +158,7 @@ def submitLevel2(messageData, fileContents):
 			if int(str(level["current_score"])) < int(messageObj["current_score"]):
 				currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
 				collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["current_score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
-		return '{"assignmentsID":"' + str(newAssignmentsID) + '"}'
+		return '{"solvedID":"' + str(id) + '"}'
 	except:
 		return sys.exc_info()
 

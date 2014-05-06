@@ -1,5 +1,9 @@
 package scenes.game.display
 {
+	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
@@ -13,6 +17,7 @@ package scenes.game.display
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
+	import assets.AssetInterface;
 	import assets.AssetsAudio;
 	import audio.AudioManager;
 	import constraints.ConstraintGraph;
@@ -22,6 +27,7 @@ package scenes.game.display
 	import dialogs.SimpleAlertDialog;
 	import dialogs.SubmitLevelDialog;
 	import display.NineSliceBatch;
+	import display.SoundButton;
 	import display.TextBubble;
 	import display.ToolTipText;
 	import events.GameComponentEvent;
@@ -32,6 +38,8 @@ package scenes.game.display
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
+	import graph.PropDictionary;
+	
 	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
@@ -41,6 +49,8 @@ package scenes.game.display
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
 	import scenes.game.PipeJamGameScene;
+	import starling.display.BlendMode;
+	import starling.display.Sprite;
 	import system.VerigameServerConstants;
 	
 	/**
@@ -52,6 +62,8 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
+		protected var m_backgroundLayer:Sprite;
+		protected var m_foregroundLayer:Sprite;
 		
 		protected var shareDialog:SaveDialog;
 		
@@ -74,6 +86,8 @@ package scenes.game.display
 		private var m_worldObj:Object;
 		private var m_layoutObj:Object;
 		private var m_assignmentsObj:Object;
+		
+		static public var changingFullScreenState:Boolean = false;
 		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
@@ -108,7 +122,7 @@ package scenes.game.display
 					levelNameFound = PipeJamGame.levelInfo.name;
 				}
 				if (!m_worldGraphDict.hasOwnProperty(levelName)) {
-					throw new Error("World level found without constriant graph:" + levelName);
+					throw new Error("World level found without constraint graph:" + levelName);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
 				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
@@ -127,7 +141,9 @@ package scenes.game.display
 		protected function onAddedToStage(event:Event):void
 		{
 			m_initQueue = new Vector.<Function>();
+			m_initQueue.push(initBackground);
 			m_initQueue.push(initGridViewPanel);
+			m_initQueue.push(initForeground);
 			m_initQueue.push(initGameControlPanel);
 			m_initQueue.push(initMiniMap);
 			m_initQueue.push(initLevel);
@@ -156,7 +172,7 @@ package scenes.game.display
 		private function initGameControlPanel():void {
 			trace("Initializing GameControlPanel...");
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
+			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
@@ -166,6 +182,11 @@ package scenes.game.display
 			}
 			addChild(gameControlPanel);
 			setHighScores();
+			trace(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
+			gameControlPanel.adjustSize(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
+			
+			PipeJamGame.resetSoundButtonParent();
+			
 			trace("Done initializing GameControlPanel.");
 		}
 		
@@ -225,6 +246,63 @@ package scenes.game.display
 			trace("Done initializing Level.");
 		}
 		
+		public function initBackground(isWide:Boolean = false, newWidth:Number = 0, newHeight:Number = 0):void
+		{
+			if(m_backgroundLayer == null)
+			{
+				m_backgroundLayer = new Sprite;
+				addChildAt(m_backgroundLayer, 0);
+			}
+			
+			m_backgroundLayer.removeChildren();
+			var seed:int = 0;
+			if(active_level)
+			{
+				seed = active_level.levelGraph.qid;
+				if (seed < 0) {
+					seed = 0;
+					for (var c:int = 0; c < active_level.level_name.length; c++) {
+						var code:Number = active_level.level_name.charCodeAt(c);
+						if (isNaN(code)) {
+							seed += c;
+						} else {
+							seed += Math.max(Math.round(code), 1);
+						}
+					}
+				}
+			}
+			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
+			var background:Texture;
+			var m_backgroundImage:Image;
+			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
+			{
+				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+				m_backgroundImage = new Image(background);
+				m_backgroundImage.width = 480;
+				m_backgroundImage.height = 320;
+
+			}
+			else
+			{
+				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+				m_backgroundImage = new Image(background);
+				if(newWidth != 0)
+					m_backgroundImage.width = newWidth;
+				if(newHeight != 0)
+					m_backgroundImage.height = newHeight;
+			}
+			
+			
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);	
+		}
+		
+		public function initForeground(seed:int = 0, isWide:Boolean = false):void
+		{
+			//add border
+			
+		}
+		
 		private function initEventListeners():void {
 			trace("Initializing event listeners...");
 			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
@@ -277,14 +355,51 @@ package scenes.game.display
 		private function onSolveSelection():void
 		{
 			if(active_level)
-				active_level.solveSelection();
+				active_level.solveSelection(solverUpdateCallback, solverDoneCallback);
+		}
+		
+		protected function solverUpdateCallback(vars:Array, unsat_weight:int):void
+		{
+			//start on first update to make sure we are actually solving
+			if(active_level.m_inSolver)
+			{
+				gameControlPanel.startSolveAnimation();
+				if(active_level)
+					active_level.solverUpdate(vars, unsat_weight);
+			}
+		}
+		
+		public function solverDoneCallback(errMsg:String):void
+		{
+			if(active_level)
+				active_level.solverDone(errMsg);
 			
+			gameControlPanel.stopSolveAnimation();
 		}
 		
 		private function initMusic():void {
 			AudioManager.getInstance().reset();
 			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 			trace("Playing music...");
+		}
+		
+		public function changeFullScreen(newWidth:Number, newHeight:Number):void
+		{
+			//backgrounds get scaled by the AssetInterface content scale factor, so change scale before setting a new background
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
+			{
+				initBackground(true, newWidth, newHeight);
+				m_backgroundLayer.scaleX /= newWidth/480;
+				m_backgroundLayer.scaleY /= newHeight/320;
+			}
+			else
+			{
+				initBackground(false, newWidth, newHeight);
+				m_backgroundLayer.scaleX = 1;
+				m_backgroundLayer.scaleY = 1;
+			}	
+			edgeSetGraphViewPanel.adjustSize(newWidth, newHeight);
+			gameControlPanel.adjustSize(newWidth, newHeight);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
@@ -1049,6 +1164,11 @@ package scenes.game.display
 		{
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
 				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+		}
+		
+		public function addSoundButton(m_sfxButton:SoundButton):void
+		{
+			gameControlPanel.addSoundButton(m_sfxButton);
 		}
 	}
 }

@@ -172,8 +172,13 @@ package networking
 		
 		static public function getRandomLevelObject():Object
 		{
-			var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
-			return levelInfoVector[randNum];
+			if(levelInfoVector != null && levelInfoVector.length >0)
+			{
+				var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
+				return levelInfoVector[randNum];
+			}
+			else
+				return null;
 		}
 				
 		static public function reportPlayerPreference(preference:String):void
@@ -225,6 +230,7 @@ package networking
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
 			fileHandler.saveLevel(saveType);
+			GameFileHandler.reportScore();
 		}	
 		
 		static public function reportScore():void
@@ -242,7 +248,7 @@ package networking
 			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
 			var m_id:int = 100000;
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.id && PipeJamGame.levelInfo.id.length < 5)
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.hasOwnProperty("id") && PipeJamGame.levelInfo.id.length < 5)
 				m_id = parseInt(PipeJamGame.levelInfo.id);
 			if(m_id < 1000) // in the tutorial if a low level id
 			{
@@ -556,7 +562,7 @@ package networking
 					if(PlayerValidation.playerID == "")
 						return;
 					var leaderboardScore:int = 1;
-					var levelScore:int = PipeJamGame.levelInfo.score;
+					var levelScore:int = World.m_world.active_level.currentScore;
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
@@ -570,7 +576,7 @@ package networking
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";
-					paramScoreObj.value = PipeJamGame.levelInfo.score;
+					paramScoreObj.value = levelScore;
 					var paramLeaderScoreObj:Object = new Object;
 					paramLeaderScoreObj.name = "leaderboardScore";
 					paramLeaderScoreObj.value = leaderboardScore;

@@ -193,6 +193,15 @@ package scenes.game.display
 			}
 		}
 		
+		public function getSolveButtonsAllowed():Boolean
+		{
+			switch (m_tutorialTag) {
+				default:
+					return false;
+			}
+			return true;
+		}
+		
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {

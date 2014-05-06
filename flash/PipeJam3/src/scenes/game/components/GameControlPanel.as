@@ -1,5 +1,7 @@
 package scenes.game.components
 {
+	import flash.display.StageDisplayState;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -7,8 +9,11 @@ package scenes.game.components
 	import assets.AssetsFont;
 	
 	import display.BasicButton;
+	import display.FullScreenButton;
 	import display.NineSliceButton;
 	import display.RecenterButton;
+	import display.SmallScreenButton;
+	import display.SoundButton;
 	import display.TextBubble;
 	import display.ZoomInButton;
 	import display.ZoomOutButton;
@@ -22,12 +27,14 @@ package scenes.game.components
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.World;
 	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.MovieClip;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -40,10 +47,10 @@ package scenes.game.components
 	
 	public class GameControlPanel extends BaseComponent
 	{
-		private static const WIDTH:Number = Constants.GameWidth;
+		private static var WIDTH:Number = Constants.GameWidth;
 		public static const HEIGHT:Number = 82 - 20;
 		
-		public static const OVERLAP:Number = 44 - 10;
+		public static const OVERLAP:Number = 72 - 10;
 		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108, 18, 284 - 10, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
@@ -63,7 +70,7 @@ package scenes.game.components
 		private var m_levelNameTextfield:TextFieldWrapper;
 		
 		/** Button to bring the up the menu */
-		private var m_menuButton:NineSliceButton;
+		private var m_newLevelButton:NineSliceButton;
 		
 		/** Button to solve the selected nodes */
 		private var m_solveButton:NineSliceButton;
@@ -81,7 +88,8 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		private var m_recenterButton:BasicButton;
-		
+		private var m_fullScreenButton:BasicButton;
+		private var m_smallScreenButton:BasicButton;
 		private var menuShowing:Boolean = false;
 		
 		/** Goes over the scorebar but under the menu, transparent in scorebar area */
@@ -114,7 +122,7 @@ package scenes.game.components
 			m_scorebarForeground.width = WIDTH;
 			m_scorebarForeground.height = HEIGHT;
 			addChild(m_scorebarForeground);
-			
+		
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
@@ -127,7 +135,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
@@ -148,31 +156,31 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			addChild(m_levelNameTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("New Level", 44, 14, 8, 8, "Start a new level");
-			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
-			addChild(m_menuButton);
+			m_newLevelButton = ButtonFactory.getInstance().createButton("New Level", 44, 14, 8, 8, "Start a new level");
+			m_newLevelButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
+			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 5;
+			m_newLevelButton.y = 25.5;
+			addChild(m_newLevelButton);
 			
-			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8, "Reset the board to\nits starting condition");
+			m_resetButton = ButtonFactory.getInstance().createButton("   Reset\t", 44, 14, 8, 8, "Reset the board to\nits starting condition");
 			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
-			m_resetButton.x = m_menuButton.x + (m_menuButton.width - m_resetButton.width);
-			m_resetButton.y = m_menuButton.y + m_menuButton.height + 3;
+			m_resetButton.x = m_newLevelButton.x;
+			m_resetButton.y = m_newLevelButton.y + m_newLevelButton.height + 3;
 			addChild(m_resetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = WIDTH - 61;
-			m_zoomInButton.y = 10;
+			m_zoomInButton.x = WIDTH - 92.5;
+			m_zoomInButton.y = 21;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
 			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
 			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomOutButton);
-			m_zoomOutButton.x = m_zoomInButton.x + m_zoomInButton.width + 4;
+			m_zoomOutButton.x = m_zoomInButton.x + m_zoomInButton.width + 3;
 			m_zoomOutButton.y = m_zoomInButton.y;
 			addChild(m_zoomOutButton);
 			
@@ -180,16 +188,86 @@ package scenes.game.components
 			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
 			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_recenterButton);
-			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
-			m_recenterButton.y = m_zoomOutButton.y
+			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 3;
+			m_recenterButton.y = m_zoomOutButton.y;
 			addChild(m_recenterButton);
 			
-			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", 54, 14, 8, 8, "Autosolve the current selection");
+			m_fullScreenButton = new FullScreenButton();
+			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_fullScreenButton);
+			m_fullScreenButton.x =  m_recenterButton.x + m_recenterButton.width + 3;
+			m_fullScreenButton.y = m_zoomInButton.y;
+			addChild(m_fullScreenButton);
+			
+			m_smallScreenButton = new SmallScreenButton();
+			m_smallScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
+			m_smallScreenButton.scaleX = m_smallScreenButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_smallScreenButton);
+			m_smallScreenButton.x = m_fullScreenButton.x;
+			m_smallScreenButton.y = m_fullScreenButton.y;
+			addChild(m_smallScreenButton);
+			m_smallScreenButton.visible = false;
+			
+			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", (m_recenterButton.x+m_recenterButton.width)-m_zoomInButton.x,
+											14, 8, 8, "Autosolve the current selection.\nShift-click or shift-marquee to select.");
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
-			m_solveButton.x = m_zoomOutButton.x + m_zoomOutButton.width*0.5 - m_solveButton.width*0.5 - 3; //center around zoomOut center
-			m_solveButton.y = 25;
+			m_solveButton.x = m_zoomInButton.bounds.x; //center around zoomOut center
+			m_solveButton.y = m_zoomInButton.bounds.bottom + 3;
 			addChild(m_solveButton);
+			
+			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
+			
+			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
+			busyAnimationMovieClip.y = m_solveButton.y;
+			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height/busyAnimationMovieClip.height;
+			addChild(busyAnimationMovieClip);
+			
+			//fullscreen has to be triggered by a user event, in this case the mouse
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+
 		}
+		
+		public function startSolveAnimation():void
+		{
+			if(!Starling.juggler.contains(this.busyAnimationMovieClip))
+			{
+				Starling.juggler.add(this.busyAnimationMovieClip);
+				trace("start animation");
+			}
+		}
+		
+		public function stopSolveAnimation():void
+		{
+			Starling.juggler.remove(this.busyAnimationMovieClip);
+			trace("stop animation");
+		}
+		
+		protected function triggerFullScreen(event:MouseEvent):void
+		{
+			var testPt:Point = localToGlobal(new Point(m_fullScreenButton.x, m_fullScreenButton.y));
+			if(event.stageX >= 2*testPt.x/scaleX && event.stageX <= 2*testPt.x/scaleX + m_fullScreenButton.width*2
+				&& event.stageY >= 2*testPt.y/scaleY && event.stageY <= 2*testPt.y/scaleY + m_fullScreenButton.height*2)
+			{
+				//need to mark that we are doing this, so we don't lose the selection
+				World.changingFullScreenState = true;
+				
+				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
+				{
+					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				}
+				else
+				{
+					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
+				}
+			}
+		}
+		
+		//ignore what this does, as I handle it in the above method
+		private function onFullScreenButtonTriggered(event:Event):void
+		{
+		}
+		
 		
 		private function onMenuButtonTriggered():void
 		{
@@ -252,7 +330,7 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
-			//TODO what? dispose of things?
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
 		}
 		
 		public function newLevelSelected(level:Level):void 
@@ -261,7 +339,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
-		//	setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
+			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -271,10 +349,9 @@ package scenes.game.components
 			m_recenterButton.visible = viz;
 		}
 		
-		private function setSharingButtonVisibility(viz:Boolean):void
+		private function setSolveButtonsVisibility(viz:Boolean):void
 		{
-		//	m_saveButton.visible = viz;
-		//	m_shareButton.visible = viz;
+			m_solveButton.visible = viz;
 		}
 		
 		/**
@@ -471,13 +548,53 @@ package scenes.game.components
 				m_scoreBarContainer.addChild(m_bestScoreLine);
 			}
 		}
+		
+		public function adjustSize(newWidth:Number, newHeight:Number):void
+		{
+			//adjust back to standard?
+			var topLeftScorePanel:Point;
+			if(Starling.current.nativeStage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
+			{
+				scaleX = 960/newWidth;
+				scaleY = 640/newHeight;
+				x = (480-width)/2; //center
+				y = 320 - 72*scaleY + 10;
+				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
+				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
+				m_fullScreenButton.visible = false;
+				m_smallScreenButton.visible = true;
+			}
+			else
+			{
+				scaleX = scaleY = 1;
+				x = 0;
+				y = 320 - height + 10; //level name extends up out of the bounds
+				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
+				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
+				m_fullScreenButton.visible = true;
+				m_smallScreenButton.visible = false;
+			}			
+		}
+		
+		public function addSoundButton(m_sfxButton:SoundButton):void
+		{
+			m_sfxButton.x = 20;
+			//center in between buttons
+			m_sfxButton.y = (m_newLevelButton.bounds.bottom + m_resetButton.bounds.top)/2 - m_sfxButton.height/2;
+			addChild(m_sfxButton);
+			
+		}
 	}
 }
 
-import display.ToolTippableSprite;
-import events.ToolTipEvent;
-import scenes.game.components.GameControlPanel;
 import assets.AssetsFont;
+
+import display.ToolTippableSprite;
+
+import events.ToolTipEvent;
+
+import scenes.game.components.GameControlPanel;
+
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -497,7 +614,7 @@ class TargetScoreDisplay extends ToolTippableSprite
 			dottedQ.y = ((dq + 1.0) / 11.0) * GameControlPanel.SCORE_PANEL_AREA.height;
 			addChild(dottedQ);
 		}
-		m_targetScoreTextfield = TextFactory.getInstance().createTextField(score, AssetsFont.FONT_UBUNTU, GameControlPanel.SCORE_PANEL_AREA.width, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, fontColor) as TextFieldHack;
+		m_targetScoreTextfield = TextFactory.getInstance().createTextField(score, AssetsFont.FONT_UBUNTU, GameControlPanel.SCORE_PANEL_AREA.width/2, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, fontColor) as TextFieldHack;
 		m_targetScoreTextfield.x = 2.0;
 		
 		TextFactory.getInstance().updateAlign(m_targetScoreTextfield, 0, 1);

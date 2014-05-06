@@ -34,6 +34,7 @@ package
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import scenes.game.display.World;
 	
 	import system.VerigameServerConstants;
 	
@@ -66,6 +67,7 @@ package
 		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
+		protected var isFullScreen:Boolean = false;
 		
 		//We store 5 pieces of info, the level record ID, the three file IDs, and a dictionary of widget size changes since last save (or load).
 		//This is for restoring game play between sessions.
@@ -96,6 +98,7 @@ package
 			if(hasBeenAddedToStage == false)
 			{
 				removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+
 				initialize();
 			}
 		}
@@ -161,9 +164,23 @@ package
 			new NetworkConnection();
 			m_savedCurrentLevel = SharedObject.getLocal("FlowJamData");
 			GameFileHandler.retrieveLevels();
+			
+			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
 		}
-		
-		
+				
+		protected function changeFullScreen(event:flash.events.Event):void
+		{
+			//adjust sizes and stuff
+			isFullScreen = !isFullScreen;
+			
+			var newWidth:int = Starling.current.nativeStage.fullScreenWidth;
+			var newHeight:int = Starling.current.nativeStage.fullScreenHeight;
+
+			stage.stageWidth = newWidth;
+			stage.stageHeight = newHeight;
+			Starling.current.viewPort = new Rectangle(0,0,stage.stageWidth,stage.stageHeight);
+			PipeJamGame.m_pipeJamGame.changeFullScreen(newWidth, newHeight);
+		}
 		
 		private function onContextCreated(event:flash.events.Event):void
 		{

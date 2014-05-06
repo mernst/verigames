@@ -52,6 +52,21 @@ package networking
 			return tutorialController;
 		}
 		
+		
+		public function getTutorialIDFromName(name:String):String
+		{
+			//find first next level to play, then compare with argument
+			var levelFound:Boolean = false;
+			for each(var order:int in tutorialOrderedList)
+			{
+				var nextName:String = orderToTutorialDictionary[order]["name"];
+				
+				if(nextName == name)
+					return orderToTutorialDictionary[order]["qid"];
+			}
+			return "0";
+		}
+		
 		public function getTutorialsCompletedByPlayer():void
 		{
 			sendMessage(GET_COMPLETED_TUTORIAL_LEVELS, getTutorialsCompleted);

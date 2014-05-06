@@ -1,7 +1,6 @@
 package scenes.game.display
 {
 	import constraints.events.VarChangeEvent;
-	import scenes.game.PipeJamGameScene;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -44,6 +43,7 @@ package scenes.game.display
 	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
@@ -143,6 +143,8 @@ package scenes.game.display
 		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
 		private var m_conflictEdgesDirty:Boolean = true;
+		
+		public var m_inSolver:Boolean = false;
 		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
@@ -1544,6 +1546,12 @@ package scenes.game.display
 			return true;
 		}
 		
+		public function getSolveButtonsAllowed():Boolean
+		{ 
+			if (tutorialManager) return tutorialManager.getSolveButtonsAllowed();
+			return true;
+		}
+		
 		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
 		public function onDeletePressed():void
 		{
@@ -1568,7 +1576,7 @@ package scenes.game.display
 				if(component is GameNode)
 				{
 					gameNode = component as GameNode;
-					gameNode.constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
+					if(gameNode.m_isEditable) gameNode.constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 				}
 			}
 			//update score
@@ -1599,7 +1607,7 @@ package scenes.game.display
 			m_conflictEdgesDirty = true;
 		}
 		
-		public function solveSelection():void
+		public function solveSelection(updateCallback:Function, doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
@@ -1608,7 +1616,7 @@ package scenes.game.display
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var counter:int = 1;
 			var constraintArray:Array = new Array;
-			
+			var initvarsArray:Array = new Array;
 			for(var i:int = 0; i<selectedComponents.length; i++)
 			{
 				var constraint1Value:int = -1;
@@ -1681,18 +1689,31 @@ package scenes.game.display
 			
 			if(constraintArray.length > 0)
 			{
-				MaxSatSolver.run_solver(constraintArray, solverCallback);
+				//generate initvars array
+				for(var ii:int = 1;ii<counter;ii++)
+				{
+					var gameNode:GameNode = nodeIDToConstraintsTwoWayMap[ii] as GameNode;
+					if(gameNode.m_isWide)
+						initvarsArray.push(1);
+					else
+						initvarsArray.push(0);
+				}
+				m_inSolver = true;
+				MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
 			}
 		}
 		
 		
-		protected function solverCallback(vars:Array, unsat_weight:int):void
+		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var constraintVar:ConstraintVar;
 			var assignmentIsWide:Boolean = false;
+			
+			if(	m_inSolver == false) //got marked done early
+				return;
+			
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				trace((ii+1) + " " + vars[ii]);
 				constraintVar = nodeIDToConstraintsTwoWayMap[ii+1];
 				assignmentIsWide = false;
 				if(vars[ii] == 1)
@@ -1700,6 +1721,13 @@ package scenes.game.display
 				if(constraintVar) constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 			}
 			onWidgetChange();
+		}
+		
+		public function solverDone(errMsg:String):void
+		{
+			m_inSolver = false;
+			MaxSatSolver.stop_solver();
+			this.updateScore(true);
 		}
 	}
 }

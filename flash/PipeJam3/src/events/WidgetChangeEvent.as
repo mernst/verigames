@@ -15,8 +15,9 @@ package events
 		public var propValue:Boolean;
 		public var level:Level;
 		public var pt:Point;
+		public var record:Boolean;
 		
-		public function WidgetChangeEvent(type:String, _varChanged:ConstraintVar, _prop:String, _propValue:Boolean, _level:Level, _pt:Point) 
+		public function WidgetChangeEvent(type:String, _varChanged:ConstraintVar, _prop:String, _propValue:Boolean, _level:Level, _pt:Point, _record:Boolean = true) 
 		{
 			super(type, true);
 			varChanged = _varChanged;
@@ -24,6 +25,7 @@ package events
 			propValue = _propValue;
 			level = _level;
 			pt = _pt;
+			record = _record;
 		}
 	}
 

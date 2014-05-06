@@ -1,11 +1,14 @@
 package
 {
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.net.URLVariables;
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import assets.AssetsAudio;
 	
@@ -56,7 +59,7 @@ package
 		public static var theme:PipeJamTheme;
 		
 		private var m_musicButton:MusicButton;
-		private var m_sfxButton:SoundButton;
+		private static var m_sfxButton:SoundButton;
 		
 		private var m_gameObjectBatch:GameObjectBatch;
 		
@@ -122,6 +125,15 @@ package
 			{
 				m_fileName = obj["dbfile"];
 			}
+			if(obj.hasOwnProperty("tutorial"))
+			{
+				m_fileName = "tutorial";
+				PipeJamGame.levelInfo = new Object;
+				PipeJamGame.levelInfo.name = "foo";
+				PipeJamGame.levelInfo.id = obj["tutorial"];
+				PipeJamGame.levelInfo.tutorialLevelID = obj["tutorial"];
+				TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
+			}
 			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
@@ -132,11 +144,21 @@ package
 					if(vars.localfile)
 					{
 						m_fileName = vars.localfile;
+						//create this here so we know this is a local file
 						PipeJamGame.levelInfo = new Object;
 					}
 					else if(vars.dbfile)
 					{
 						m_fileName = vars.dbfile;
+					}
+					else if(vars.tutorial)
+					{
+						m_fileName = "tutorial";
+						PipeJamGame.levelInfo = new Object;
+						PipeJamGame.levelInfo.name = "foo";
+						PipeJamGame.levelInfo.id = vars.tutorial; 
+						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
+						TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 					}
 				}
 			}
@@ -207,14 +229,30 @@ package
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
-			GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
-			//save info locally so we can retrieve next run
-			PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
-			PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
-			PipeJam3.m_savedCurrentLevel.data.assignmentsID = PipeJamGame.levelInfo.assignmentsID;
-			PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			if(PipeJamGame.levelInfo == null)
+			{
+				//assume level file is slow loading, and cycle back around after a while.
+				//maybe only happens when debugging locally...
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER, getRandomLevelCallback);
+				timer.start();
+			}
+			else
+			{
+				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
+				//save info locally so we can retrieve next run
+				PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
+				PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
+				PipeJam3.m_savedCurrentLevel.data.assignmentsID = PipeJamGame.levelInfo.assignmentsID;
+				PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
+				PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			}
+		}
+		
+		public function getRandomLevelCallback(e:TimerEvent = null):void
+		{
+			onGetRandomLevel();
 		}
 		
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
@@ -294,6 +332,18 @@ package
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
 			}
+		}
+		
+		static public function resetSoundButtonParent():void
+		{
+			if(World.m_world)
+				World.m_world.addSoundButton(m_sfxButton);
+		}
+		
+		public function changeFullScreen(newWidth:int, newHeight:int):void
+		{
+			if(World.m_world)
+				World.m_world.changeFullScreen(newWidth, newHeight);
 		}
 	}
 }
