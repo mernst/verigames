@@ -179,7 +179,6 @@ package constraints
 							var isConstant:Boolean = false;
 							if (varParamsObj.hasOwnProperty(CONSTANT)) isConstant = XString.stringToBool(varParamsObj[CONSTANT] as String);
 							var typeValStr:String = varParamsObj[TYPE_VALUE];
-							var typeVal:ConstraintValue = ConstraintValue.fromVerboseStr(typeValStr) || graphDefaultVal.clone();
 							var varScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
 							var scoreObj:Object = varParamsObj[SCORE];
 							if (scoreObj) {
@@ -192,6 +191,14 @@ package constraints
 							var defaultValStr:String = varParamsObj[DEFAULT];
 							var defaultVal:ConstraintValue;
 							if (defaultValStr) defaultVal = ConstraintValue.fromVerboseStr(defaultValStr);
+							var typeVal:ConstraintValue;
+							if (typeValStr) {
+								typeVal = ConstraintValue.fromVerboseStr(typeValStr);
+							} else if (defaultVal) {
+								typeVal = defaultVal.clone();
+							} else {
+								typeVal = graphDefaultVal.clone();
+							}
 							var possibleKeyfors:Vector.<String> = new Vector.<String>();
 							var possibleKeyforsArr:Array = varParamsObj[POSSIBLE_KEYFORS];
 							if (possibleKeyforsArr) {

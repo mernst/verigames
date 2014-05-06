@@ -216,6 +216,7 @@ package scenes.game.display
 			}
 			if(graphVar) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
 			refreshTroublePoints();
+			onScoreChange();
 		}
 		
 		private function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
@@ -879,8 +880,6 @@ package scenes.game.display
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
 			onScoreChange(true);
-			//zzzz
-			
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1609,6 +1608,8 @@ package scenes.game.display
 				if(levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
+			if (levelGraph.prevScore != levelGraph.currentScore)
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			m_conflictEdgesDirty = true;
 		}
 		
@@ -1732,6 +1733,7 @@ package scenes.game.display
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
+			onScoreChange(true);
 		}
 	}
 }
