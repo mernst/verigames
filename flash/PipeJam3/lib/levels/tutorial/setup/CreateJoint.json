@@ -1,6 +1,7 @@
 {
   "id": "CreateJoint",
   "qid": 10,
+  "default": "type:1",
   "constraints": [
 	"var:0 <= type:1"
   ],

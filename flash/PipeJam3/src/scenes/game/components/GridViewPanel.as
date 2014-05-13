@@ -24,6 +24,8 @@ package scenes.game.components
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
+	import flash.system.System;
+	import flash.utils.Dictionary;
 	import graph.PropDictionary;
 	
 	import networking.TutorialController;
@@ -78,7 +80,9 @@ package scenes.game.components
 		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
-		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
+		private var m_errorTextBubbles:Dictionary = new Dictionary();
+		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
+		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
 		
 		private var m_lastVisibleRefreshViewRect:Rectangle;
@@ -171,26 +175,105 @@ package scenes.game.components
 				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + offRight) &&
 				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top + offTop) &&
 				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + offBottom)) {
-				return;
+				// No need to refresh
+			} else {
+				//trace("Viewspace changed, refresh needed");
 			}
 			// Update visible objects
 			//if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
 					//" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
 					//" dt:" + int(currentViewRect.top - m_lastVisibleRefreshViewRect.top) +
 					//" db:" + int(currentViewRect.bottom - m_lastVisibleRefreshViewRect.bottom));
-			var i:int;
-			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
-				if (m_currentLevel.m_edgeList[i].hidden) continue;
-				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].boundingBox, currentViewRect);
+			
+			// Create any nodes/edges that need creating
+			const NODES_PER_FRAME:uint = 100;
+			var i:int = 0;
+			var iters:int = Math.min(NODES_PER_FRAME, m_nodeLayoutQueue.length);
+			for (i = 0; i < iters; i++) {
+				var nodeLayout:Object = m_nodeLayoutQueue.shift();
+				//m_currentLevel.createNodeFromJsonObj(nodeLayout);
+				//trace("creating " + nodeLayout.id);
 			}
-			const gameNodes:Vector.<GameNode2> = m_currentLevel.getNodes();
-			for (i = 0; i < gameNodes.length; i++) {
-				if (gameNodes[i].hidden) continue;
-				gameNodes[i].visible = isOnScreen(gameNodes[i].boundingBox, currentViewRect);
+			var newNodes:int = i;
+			//if (newNodes > 0) trace("created " + newNodes + " GameNodes");
+			const EDGES_PER_FRAME:uint = 50;
+			iters = Math.min(Math.min(EDGES_PER_FRAME, NODES_PER_FRAME - i), m_edgeLayoutQueue.length);
+			for (i = 0; i < iters; i++) {
+				var edgeLayout:Object = m_edgeLayoutQueue.shift();
+				//m_currentLevel.createEdgeFromJsonObj(edgeLayout);
+			}
+			var newEdges:int = i;
+			//if (newEdges > 0) trace("created " + newEdges + " GameEdgeContainers");
+			if (newNodes + newEdges > 0) m_currentLevel.draw();
+			
+			var redraw:Boolean = false;
+			for (var varId:String in m_currentLevel.nodeLayoutObjs) {
+				var varBB:Rectangle = m_currentLevel.nodeLayoutObjs[varId]["bb"];
+				if (PipeJamGameScene.inTutorial || isOnScreen(varBB, currentViewRect)) {
+					if (!m_currentLevel.getNode(varId)) {
+						m_currentLevel.createNodeFromJsonObj(m_currentLevel.nodeLayoutObjs[varId]);
+						//trace("made " + varId);
+						redraw = true;
+					}
+				} else {
+					if (m_currentLevel.getNode(varId)) {
+						m_currentLevel.destroyGameNode(varId);
+						//trace("destroyed " + varId);
+						redraw = true;
+					}
+				}
+			}
+			for (var constraintId:String in m_currentLevel.edgeLayoutObjs) {
+				var edgeBB:Rectangle = m_currentLevel.edgeLayoutObjs[constraintId]["bb"];
+				if (PipeJamGameScene.inTutorial || isOnScreen(edgeBB, currentViewRect)) {
+					if (!m_currentLevel.getEdgeContainer(constraintId)) {
+						m_currentLevel.createEdgeFromJsonObj(m_currentLevel.edgeLayoutObjs[constraintId]);
+						//trace("made " + constraintId);
+						redraw = true;
+					}
+				} else {
+					if (m_currentLevel.getEdgeContainer(constraintId)) {
+						m_currentLevel.destroyGameEdge(constraintId);
+						//trace("destroyed " + constraintId);
+						redraw = true;
+					}
+				}
+			}
+			if (redraw) m_currentLevel.draw();
+			System.gc();
+			if ((newEdges > 0 || newNodes > 0) && m_nodeLayoutQueue.length == 0 && m_edgeLayoutQueue.length == 0) {
+				onGameComponentsCreated();
 			}
 			// Reset total move dist, now that we've updated the visible objects around this view
 			m_currentLevel.totalMoveDist = new Point();
 			m_lastVisibleRefreshViewRect = currentViewRect;
+		}
+		
+		private function onGameComponentsCreated():void
+		{
+			var gameEdges:Dictionary = m_currentLevel.getEdges();
+			for (var edgeId:String in gameEdges) {
+				var gameEdge:GameEdgeContainer = gameEdges[edgeId] as GameEdgeContainer;
+				if (!m_errorTextBubbles.hasOwnProperty(edgeId)) {
+					m_errorTextBubbles[edgeId] = gameEdge.errorTextBubbleContainer;
+					errorBubbleContainer.addChild(gameEdge.errorTextBubbleContainer);
+				}
+			}
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (var i:int = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
+			}
+			
+			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
+			if (levelTextInfo) {
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
+				addChild(m_tutorialText);
+			}
+			
+			recenter();
 		}
 		
 		private static function isOnScreen(bb:Rectangle, view:Rectangle):Boolean
@@ -653,7 +736,7 @@ package scenes.game.components
 		
 		private var m_boundingBoxDebug:Quad;
 		private static const DEBUG_BOUNDING_BOX:Boolean = false;
-		public function loadLevel(level:Level):void
+		public function setupLevel(level:Level):void
 		{
 			m_continueButtonForced = false;
 			removeFanfare();
@@ -679,52 +762,53 @@ package scenes.game.components
 				}
 				m_currentLevel = level;
 
-				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
-				m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
-				if (m_currentLevel.tutorialManager) {
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
-					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
-				}
 			}
 			
 			inactiveContent.removeChildren();
 			inactiveContent.addChild(m_currentLevel.inactiveLayer);
 			
 			// Remove old error text containers and place new ones
-			for (var i:int = 0; i < m_errorTextBubbles.length; i++) m_errorTextBubbles[i].removeFromParent();
-			m_errorTextBubbles = new Vector.<Sprite>();
-			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
-				m_errorTextBubbles.push(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
-				errorBubbleContainer.addChild(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+			for (var errorEdgeId:String in m_errorTextBubbles) {
+				var errorSprite:Sprite = m_errorTextBubbles[errorEdgeId];
+				errorSprite.removeFromParent();
 			}
+			m_errorTextBubbles = new Dictionary();
 			
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
 			m_persistentToolTips = new Vector.<ToolTipText>();
 			
-			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
-			for (i = 0; i < toolTips.length; i++) {
-				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
-				addChild(tip);
-				m_persistentToolTips.push(tip);
+			content.addChild(m_currentLevel);
+		}
+		
+		public function loadLevel():void
+		{
+			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+			m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
+			if (m_currentLevel.tutorialManager) {
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 			}
 			
-			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
-			if (levelTextInfo) {
-				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				addChild(m_tutorialText);
+			// Queue all nodes/edges to add (later we can refine to only on-screen
+			for (var nodeId:String in m_currentLevel.nodeLayoutObjs) {
+				var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
+				m_nodeLayoutQueue.push(nodeLayoutObj);
 			}
-			
-			recenter();
+			var edgeId:String;
+			for (edgeId in m_currentLevel.edgeLayoutObjs) {
+				var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
+				m_edgeLayoutQueue.push(edgeLayoutObj);
+			}
 		}
 		
 		public function onTutorialTextChange(evt:TutorialEvent):void
@@ -798,17 +882,16 @@ package scenes.game.components
 				moveContent(localPt.x, localPt.y);
 			} else {
 				// Otherwise center on the first visible box
-				var nodes:Vector.<GameNode2> = m_currentLevel.getNodes();
-				if (nodes.length > 0) {
-					var foundNode:GameNode2 = nodes[0];
-					for (i = 0; i < nodes.length; i++) {
-						if (nodes[i].visible && (nodes[i].alpha > 0) && nodes[i].parent) {
-							foundNode = nodes[i];
-							break;
-						}
+				var nodes:Dictionary = m_currentLevel.getNodes();
+				var foundNode:GameNode;
+				for (var nodeId:String in nodes) {
+					var gameNode:GameNode = nodes[nodeId] as GameNode;
+					if (gameNode.visible && (gameNode.alpha > 0) && gameNode.parent) {
+						foundNode = gameNode;
+						break;
 					}
-					centerOnComponent(foundNode);
 				}
+				if (foundNode) centerOnComponent(foundNode);
 			}
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),

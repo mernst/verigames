@@ -1,6 +1,6 @@
 {"id": "SkillsA",
 "qid": 11,
-"targetScore": 1300,
+"target_score": 1300,
 "assignments":{
 "var:4":{},
 "var:5":{},

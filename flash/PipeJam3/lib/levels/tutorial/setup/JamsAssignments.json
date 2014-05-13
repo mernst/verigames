@@ -1,6 +1,6 @@
 {"id": "Jams",
 "qid": 4,
-"targetScore": 100,  
+"target_score": 100,  
 "assignments":{
 "var:0":{}}
 }

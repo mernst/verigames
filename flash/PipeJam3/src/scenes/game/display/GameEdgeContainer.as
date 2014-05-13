@@ -17,7 +17,6 @@ package scenes.game.display
 	import constraints.Constraint;
 	import display.NineSliceBatch;
 	import display.TextBubble;
-	import events.ConflictChangeEvent;
 	import events.EdgeContainerEvent;
 	import events.ToolTipEvent;
 	import graph.Edge;
@@ -92,7 +91,11 @@ package scenes.game.display
 		{
 			super(_id);
 			draggable = _draggable;
-			edgeArray = _edgeArray;
+			edgeArray = new Array();
+			for (var i:int = 0; i < _edgeArray.length; i++) {
+				var pt:Point  = _edgeArray[i] as Point;
+				edgeArray.push(pt.clone()); // need to do this to avoid changing the actual points in the original layout
+			}
 			m_fromNode = fromComponent;
 			m_toNode = toComponent;
 			graphConstraint = _graphConstraint;
@@ -114,7 +117,7 @@ package scenes.game.display
 			onWidgetChange();
 			
 			m_isDirty = true;
-		//	addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public override function getProps():PropDictionary { return graphConstraint.lhs.getProps(); }
@@ -167,6 +170,8 @@ package scenes.game.display
 			var minYedge:Number = Math.min(startPt.y, endPt.y);
 			this.x = minXedge;
 			this.y = minYedge;
+			if (!minXedge && !minYedge)
+				trace("0 0");
 			if(!newEdgeArray) {
 				//adjust by min
 				for(var i0:int = 0; i0<edgeArray.length; i0++)

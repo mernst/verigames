@@ -1,17 +1,15 @@
 package particle 
 {
 	import flash.utils.Dictionary;
-	import graph.PropDictionary;
 	import starling.display.Quad;
 	import starling.extensions.ColorArgb;
-	
-	import events.ErrorEvent;
-	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.extensions.PDParticleSystem;
 	import starling.textures.Texture;
+	
+	import graph.PropDictionary;
 	
 	public class ErrorParticleSystem extends Sprite 
 	{
@@ -73,7 +71,6 @@ package particle
             
             addChild(mParticleSystem);
             Starling.juggler.add(mParticleSystem);
-			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, this));
         }
 		
 		private function onRemovedFromStage(evt:Event):void
@@ -81,7 +78,6 @@ package particle
 			mParticleSystem.stop();
 			mParticleSystem.removeFromParent();
 			Starling.juggler.remove(mParticleSystem);
-			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, this));
 		}
 	}
 

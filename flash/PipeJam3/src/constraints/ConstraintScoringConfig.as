@@ -19,9 +19,9 @@ package constraints
 			scoringDict[key] = val;
 		}
 		
-		public function getScoringValue(key:String):Number
+		public function getScoringValue(key:String):int
 		{
-			if (scoringDict.hasOwnProperty(key)) return scoringDict[key] as Number;
+			if (scoringDict.hasOwnProperty(key)) return scoringDict[key] as int;
 			return 0;
 		}
 		

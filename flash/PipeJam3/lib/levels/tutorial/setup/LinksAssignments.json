@@ -1,6 +1,6 @@
 {"id": "Links",
 "qid": 3,
-"targetScore": 380,
+"target_score": 380,
 "assignments":{
 "var:0":{},
 "var:1":{},

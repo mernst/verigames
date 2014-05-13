@@ -1,19 +1,21 @@
 package scenes.game.components
 {
 	import assets.AssetInterface;
+	import constraints.Constraint;
+	import constraints.ConstraintVar;
 	import display.BasicButton;
 	import display.MapHideButton;
 	import display.MapShowButton;
-	import display.NineSliceBatch;
 	import display.TextBubble;
 	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import graph.PropDictionary;
 	import particle.ErrorParticleSystem;
 	import scenes.BaseComponent;
-	import scenes.game.display.GameNode;
+	import scenes.game.display.GameComponent;
 	import scenes.game.display.Level;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -46,8 +48,10 @@ package scenes.game.components
 		public static const HIDE_SHOW_BUTTON_LOC:Point = new Point(CLICK_AREA.x + 0.5 * CLICK_AREA.width, CLICK_AREA.bottom + 2);
 		private static const HIDE_SHOW_TIME_SEC:Number = 0.8;
 		
-		protected var errorPairs:Dictionary = new Dictionary();
-		protected var widgetPairs:Dictionary = new Dictionary();
+		private static const MIN_ICON_SIZE:Number = 4;
+		
+		protected var edgeErrorDict:Dictionary = new Dictionary();
+		protected var nodeIconDict:Dictionary = new Dictionary();
 		protected var currentLevel:Level;
 		
 		protected var backgroundImage:Image;
@@ -186,8 +190,12 @@ package scenes.game.components
 			m_contentX = event.contentX;
 			m_contentY = event.contentY;
 			m_contentScale = event.contentScale;
-			currentLevel = event.level;
-			
+			setLevel(event.level);
+		}
+		
+		public function setLevel(level:Level):void
+		{
+			currentLevel = level;
 			drawViewSpaceIndicator();
 		}
 		
@@ -196,16 +204,26 @@ package scenes.game.components
 			if (gameNodeLayer) gameNodeLayer.removeChildren(0, -1, true);
 			if (errorLayer) errorLayer.removeChildren(0, -1, true);
 			if (!currentLevel) return;
-			errorPairs = new Dictionary();
-			for (var errorId:String in currentLevel.errorList) {
-				var error:ErrorParticleSystem = currentLevel.errorList[errorId];
-				errorAdded(error, false);
+			edgeErrorDict = new Dictionary();
+			for (var errorId:String in currentLevel.errorConstraintDict) {
+				var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
+				if (!constraint.isSatisfied() && currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
+					var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
+					errorConstraintAdded(edgeLayout, false);
+				}
 			}
 			errorLayer.flatten();
-			widgetPairs = new Dictionary();
-			var widgets:Vector.<GameNode2> = currentLevel.getNodes();
-			for (var i:int = 0; i < widgets.length; i++) {
-				addWidget(widgets[i], false);
+			for (var id:String in nodeIconDict) (nodeIconDict[id] as Quad).removeFromParent();
+			nodeIconDict = new Dictionary();
+			var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
+			trace("minmap visibleBB:" + visibleBB);
+			for (var nodeId:String in nodeDict) {
+				addWidget(nodeDict[nodeId] as Object, false);
+				if (nodeId == "var_2") {
+					for (var prop:String in nodeDict[nodeId]) {
+						trace("var_2 " + prop + " = " + nodeDict[nodeId][prop]);
+					}
+				}
 			}
 			gameNodeLayer.flatten();
 			drawViewSpaceIndicator();
@@ -278,57 +296,63 @@ package scenes.game.components
 			return levelBB;
 		}
 		
-		public function errorAdded(errorParticle:ErrorParticleSystem, flatten:Boolean = true):void
+		public function errorConstraintAdded(edgeLayout:Object, flatten:Boolean = true):void
 		{
 			if (!errorLayer) return;
-			if (!errorParticle.parent) return;
 			
 			var errImage:Image = new Image(ErrorParticleSystem.errorTexture);
 			errImage.width = errImage.height = 80;
 			errImage.alpha = 0.6;
 			errImage.color = 0xFF0000;
-			var errorPair:ErrorPair = new ErrorPair(errImage, errorParticle);
-			var prevErrorPair:ErrorPair = errorPairs[errorParticle.id];
-			if (prevErrorPair) prevErrorPair.icon.removeFromParent(true);
-			errorPairs[errorParticle.id] = errorPair;
+			var edgeId:String = edgeLayout["id"];
+			var prevErrorImage:Image = edgeErrorDict[edgeId] as Image;
+			if (prevErrorImage) prevErrorImage.removeFromParent(true);
+			edgeErrorDict[edgeId] = errImage;
 			
-			var errPt:Point = level2map(currentLevel.globalToLocal(errorParticle.localToGlobal(new Point())));
+			var bb:Rectangle = edgeLayout["bb"] as Rectangle;
+			if (bb == null) throw new Error("Tried to add edge error to MiniMap but no bounding box found in edge layout information.");
+			var errorLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
+			var errPt:Point = level2map(errorLevelPt);
 			
-			errorPair.icon.x = errPt.x - 0.5 * errorPair.icon.width;
-			errorPair.icon.y = errPt.y - 0.5 * errorPair.icon.height; 
+			errImage.x = errPt.x - 0.5 * errImage.width;
+			errImage.y = errPt.y - 0.5 * errImage.height; 
 			
-			errorLayer.addChild(errorPair.icon);
+			errorLayer.addChild(errImage);
 			if (flatten) errorLayer.flatten();
 		}
 		
-		public function errorRemoved(errorParticle:ErrorParticleSystem):void
+		public function errorRemoved(edgeLayout:Object):void
 		{
-			var errorPair:ErrorPair = errorPairs[errorParticle.id];
-			if (errorPair) {
-				errorPair.icon.removeFromParent(true);
+			var edgeId:String = edgeLayout["id"];
+			var errorImage:Image = edgeErrorDict[edgeId];
+			if (errorImage) {
+				errorImage.removeFromParent(true);
 				errorLayer.flatten();
 			}
-			delete errorPairs[errorParticle.id];
+			delete edgeErrorDict[edgeId];
 		}
 		
-		public function addWidget(widget:GameNode, flatten:Boolean = true):void
+		public function addWidget(widgetLayout:Object, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
-			var widgetTopLeft:Point = level2map(widget.boundingBox.topLeft);
-			var widgetBotRight:Point = level2map(widget.boundingBox.bottomRight);
+			var id:String = widgetLayout["id"];
+			var bb:Rectangle = widgetLayout["bb"] as Rectangle;
+			if (bb == null) throw new Error("Tried to add widget to MiniMap but no bounding box found in layout information.");
+			var widgetTopLeft:Point = level2map(bb.topLeft);
+			var widgetBotRight:Point = level2map(bb.bottomRight);
 			var iconWidth:Number = Math.min(2 / scaleX, widgetBotRight.x - widgetTopLeft.x);
-			var iconHeight:Number = widget.boundingBox.height / 2.0; // keep constant height so widgets always visible
-			var icon:NineSliceBatch = new NineSliceBatch(iconWidth, iconHeight, iconHeight / 3.0, iconHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", widget.assetName);
-			
-			var iconLoc:Point = level2map(currentLevel.globalToLocal(widget.localToGlobal(new Point(0.5 * widget.boundingBox.width, 0.5 * widget.boundingBox.height))));
-			
+			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
+			var constrVar:ConstraintVar = widgetLayout["var"] as ConstraintVar;
+			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
+			var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
+			var widgetLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
+			var iconLoc:Point = level2map(widgetLevelPt);
 			icon.x = iconLoc.x - 0.5 * icon.width;
-			icon.y = iconLoc.y - 0.5 * icon.height; 
-			
-			var prevPair:WidgetPair = widgetPairs[widget.m_id];
-			if (prevPair) prevPair.icon.removeFromParent(true);
-			var widgetPair:WidgetPair = new WidgetPair(icon, widget);
-			widgetPairs[widget.m_id] = widgetPair;
+			icon.y = iconLoc.y - 0.5 * icon.height;
+			//trace("minimap " + id + " bb.topLeft:" + bb.topLeft +" widgetTopLeft:" + widgetTopLeft + " iconLoc:" + iconLoc + " widgetLevelPt:" + widgetLevelPt);
+			var prevIcon:Quad = nodeIconDict[id] as Quad;
+			if (prevIcon) prevIcon.removeFromParent(true);
+			nodeIconDict[id] = icon;
 			
 			gameNodeLayer.addChild(icon);
 			if (flatten) gameNodeLayer.flatten();
@@ -371,34 +395,5 @@ package scenes.game.components
 			var pct:Point = level2pct(pt);
 			return pct2map(pct);
 		}
-	}
-}
-
-
-import particle.ErrorParticleSystem;
-import starling.display.Image;
-internal class ErrorPair
-{
-	public var icon:Image;
-	public var particle:ErrorParticleSystem;
-	
-	public function ErrorPair(_icon:Image, _particle:ErrorParticleSystem)
-	{
-		icon = _icon;
-		particle = _particle;
-	}
-}
-
-import scenes.game.display.GameNode;
-import display.NineSliceBatch;
-internal class WidgetPair
-{
-	public var icon:NineSliceBatch;
-	public var widget:GameNode;
-	
-	public function WidgetPair(_icon:NineSliceBatch, _widget:GameNode)
-	{
-		icon = _icon;
-		widget = _widget;
 	}
 }

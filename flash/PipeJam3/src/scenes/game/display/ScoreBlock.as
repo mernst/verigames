@@ -4,6 +4,7 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import events.GameComponentEvent;
 	import scenes.game.display.GameComponent;
+	import starling.display.Quad;
 	import starling.text.TextField;
 	
 	import starling.events.Event;
@@ -52,14 +53,22 @@ package scenes.game.display
 				// Adjust font size if width too large
 				m_fontSize *= (m_width + _radius) / estWidth;
 			}
-			m_text = new TextField(m_width + 2 * _radius, m_height + 2 * _radius, m_score, AssetsFont.FONT_UBUNTU, m_fontSize, 0x0);
-			addChild(m_text);
+			if (m_score == "1") {
+				// Cheat for now since TextFields are causing resource limits on larger levels
+				var one_quad:Quad = new Quad(4, m_height + 2 * _radius - 16, 0x0);
+				one_quad.x = _radius + 0.5 * m_width - 2;
+				one_quad.y = 8;
+				addChild(one_quad);
+			} else {
+				m_text = new TextField(m_width + 2 * _radius, m_height + 2 * _radius, m_score, AssetsFont.FONT_UBUNTU, m_fontSize, 0x0);
+				addChild(m_text);
+			}
 			
 			if (m_gameComponent) {
 				addEventListener(TouchEvent.TOUCH, onTouch);
 				this.useHandCursor = true;
 			}
-			m_isDirty = true;
+			flatten();
 		}
 		
 		override public function dispose():void

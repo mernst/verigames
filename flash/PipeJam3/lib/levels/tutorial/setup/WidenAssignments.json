@@ -1,6 +1,6 @@
 {"id": "Widen",
 "qid": 5,
-"targetScore": 400,
+"target_score": 400,
 "assignments":{
 "var:0":{},
 "var:1":{},

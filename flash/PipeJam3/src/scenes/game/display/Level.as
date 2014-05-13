@@ -1,16 +1,15 @@
 package scenes.game.display
 {
+	import constraints.events.VarChangeEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import starling.events.EnterFrameEvent;
 	
 	import assets.AssetInterface;
-	import assets.AssetsAudio;
-	
-	import audio.AudioManager;
 	
 	import constraints.Constraint;
 	import constraints.ConstraintGraph;
@@ -22,7 +21,7 @@ package scenes.game.display
 	import display.ToolTipText;
 	
 	import events.EdgeContainerEvent;
-	import events.ErrorEvent;
+	import constraints.events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
@@ -64,8 +63,6 @@ package scenes.game.display
 	import utils.Base64Encoder;
 	import utils.XObject;
 	import utils.XString;
-	import scenes.game.newdisplay.GameNode2;
-	import scenes.game.newdisplay.GameEdge;
 	
 	/**
 	 * Level all game components - widgets and links
@@ -82,63 +79,57 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		protected var selectedComponents:Vector.<GameComponent>;
+		private var selectedComponents:Vector.<GameComponent>;
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
-		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
+		private var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
-		protected var marqueeRect:Shape = new Shape();
+		private var marqueeRect:Shape = new Shape();
 		
 		//the level node and decendents
-		protected var m_levelLayoutObj:Object;
+		private var m_levelLayoutObj:Object;
 		public var levelObj:Object;
 		public var m_levelLayoutName:String;
 		public var m_levelQID:String;
-		protected var m_levelOriginalLayoutObj:Object; //used for restarting the level
+		private var m_levelOriginalLayoutObj:Object; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutObjWrapper:Object;
 		public var m_levelAssignmentsObj:Object;
-		protected var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
-		protected var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
+		private var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
+		private var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
-		protected var m_layoutFixed:Boolean = false;
+		private var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
 		
-		protected var boxDictionary:Dictionary;
-		protected var edgeContainerDictionary:Dictionary;
+		public var nodeLayoutObjs:Dictionary = new Dictionary();
+		public var edgeLayoutObjs:Dictionary = new Dictionary();
 		
-		protected var m_nodeList:Vector.<GameNode2>;
-		public var m_edgeList:Vector.<GameEdge>;
-		protected var m_hidingErrorText:Boolean = false;
-		protected var m_segmentHovered:GameEdgeSegment;
-		public var errorList:Dictionary = new Dictionary();
+		private var m_gameNodeDict:Dictionary = new Dictionary();
+		private var m_gameEdgeDict:Dictionary = new Dictionary();
 		
-		protected var m_nodesInactiveContainer:Sprite = new Sprite();
-		protected var m_errorInactiveContainer:Sprite = new Sprite();
-		protected var m_edgesInactiveContainer:Sprite = new Sprite();
-		protected var m_plugsInactiveContainer:Sprite = new Sprite();
+		private var m_hidingErrorText:Boolean = false;
+		private var m_segmentHovered:GameEdgeSegment;
+		public var errorConstraintDict:Dictionary = new Dictionary();
+		
+		private var m_nodesInactiveContainer:Sprite = new Sprite();
+		private var m_errorInactiveContainer:Sprite = new Sprite();
+		private var m_edgesInactiveContainer:Sprite = new Sprite();
+		private var m_plugsInactiveContainer:Sprite = new Sprite();
 		public var inactiveLayer:Sprite = new Sprite();
 		
-		protected var m_nodesContainer:Sprite = new Sprite();
-		protected var m_errorContainer:Sprite = new Sprite();
-		protected var m_edgesContainer:Sprite = new Sprite();
-		protected var m_plugsContainer:Sprite = new Sprite();
+		private var m_nodesContainer:Sprite = new Sprite();
+		private var m_errorContainer:Sprite = new Sprite();
+		private var m_edgesContainer:Sprite = new Sprite();
+		private var m_plugsContainer:Sprite = new Sprite();
 		
-		public var m_boundingBox:Rectangle;
-		protected var m_backgroundImage:Image;
-		protected var m_levelStartTime:Number;
+		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
+		private var m_backgroundImage:Image;
+		private var m_levelStartTime:Number;
 		
-		protected var initialized:Boolean = false;
+		private var initialized:Boolean = false;
 		
 		/** Current Score of the player */
-		protected var m_currentScore:int = 0;
-		protected var m_bestScore:int = 0;
-		
-		/** Most recent score of the player */
-		protected var m_prevScore:int = 0;
-		/** previous - 1 score for player */
-		//prevScore gets updated too quickly, so this shadows and lags behind
-		protected var m_oldScore:int = 0;
+		private var m_bestScore:int = 0;
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
@@ -148,16 +139,16 @@ package scenes.game.display
 		public var totalMoveDist:Point = new Point();
 		
 		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
-		protected var m_currentConflictIndex:int = -1;
-		protected var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-		protected var m_levelConflictEdgeDict:Dictionary = new Dictionary();
-		protected var m_conflictEdgesDirty:Boolean = true;
+		private var m_currentConflictIndex:int = -1;
+		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
+		private var m_conflictEdgesDirty:Boolean = true;
 		
 		public var m_inSolver:Boolean = false;
 		
-		protected static const BG_WIDTH:Number = 256;
-		protected static const MIN_BORDER:Number = 1000;
-		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
+		private static const BG_WIDTH:Number = 256;
+		private static const MIN_BORDER:Number = 1000;
+		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
@@ -202,55 +193,61 @@ package scenes.game.display
 		
 		public function loadBestScoringConfiguration():void
 		{
-			setNodesFromAssignments(m_levelBestScoreAssignmentsObj, true);
+			loadAssignments(m_levelBestScoreAssignmentsObj, true);
 		}
 		
 		public function loadInitialConfiguration():void
 		{
-			setNodesFromAssignments(m_levelOriginalAssignmentsObj, true);
+			loadAssignments(m_levelOriginalAssignmentsObj, true);
 		}
 		
 		public function loadAssignmentsConfiguration(assignmentsObj:Object):void
 		{
-			setNodesFromAssignments(assignmentsObj);
+			loadAssignments(assignmentsObj);
 		}
 		
-		protected function setNodesFromAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		private function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		{
+			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
+			var graphVar:ConstraintVar;
+			for (var varId:String in levelGraph.variableDict) {
+				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
+				setGraphVarFromAssignments(graphVar, assignmentsObj, updateTutorialManager);
+			}
+			if(graphVar) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
+			refreshTroublePoints();
+			onScoreChange();
+		}
+		
+		private function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
 			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
-			for (var i:int = 0; i < m_nodeList.length; i++) {
-				var gameNode:GameNode = m_nodeList[i];
-				// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
-				var assignmentIsWide:Boolean = (gameNode.constraintVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
-				if (assignmentsObj["assignments"].hasOwnProperty(gameNode.constraintVar.formattedId)
-					&& assignmentsObj["assignments"][gameNode.constraintVar.formattedId].hasOwnProperty(ConstraintGraph.TYPE_VALUE)) {
-					assignmentIsWide = (assignmentsObj["assignments"][gameNode.constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] == ConstraintValue.VERBOSE_TYPE_1);
-				}
-				if (gameNode.isWide() != assignmentIsWide) {
-					gameNode.handleWidthChange(assignmentIsWide, true);
-					if (updateTutorialManager && tutorialManager) {
-						tutorialManager.onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, true));
-					}
-				}
-				
-				//and then set from local storage, if there (but only if we really want it)
-				if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[gameNode.m_id] != null)
-				{
-					var newWidth:String = savedAssignmentObj[gameNode.m_id];
-					var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
-					
-					if (gameNode.isWide() != savedAssignmentIsWide) 
-					{
-						gameNode.handleWidthChange(savedAssignmentIsWide, true);
-					}
-				}
-
+			// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
+			var assignmentIsWide:Boolean = (graphVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
+			if (assignmentsObj["assignments"].hasOwnProperty(graphVar.formattedId)
+				&& assignmentsObj["assignments"][graphVar.formattedId].hasOwnProperty(ConstraintGraph.TYPE_VALUE)) {
+				assignmentIsWide = (assignmentsObj["assignments"][graphVar.formattedId][ConstraintGraph.TYPE_VALUE] == ConstraintValue.VERBOSE_TYPE_1);
 			}
-			if(gameNode) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
-			refreshTroublePoints();	
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = savedAssignmentObj;
+			if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == assignmentIsWide) {
+				levelGraph.updateScore(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
+				//graphVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
+				//levelGraph.updateScore();
+				if (updateTutorialManager && tutorialManager) {
+					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
+				}
+			}
+			
+			//and then set from local storage, if there (but only if we really want it)
+			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[graphVar.id] != null)
+			{
+				var newWidth:String = savedAssignmentObj[graphVar.id];
+				var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
+				if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == savedAssignmentIsWide) 
+				{
+					graphVar.setProp(PropDictionary.PROP_NARROW, !savedAssignmentIsWide);
+				}
+			}
 		}
 		
 		protected function onAddedToStage(event:Event):void
@@ -262,6 +259,12 @@ package scenes.game.display
 				start();
 			}
 			
+			//for (var varId:String in levelGraph.variableDict) {
+				//var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
+				//graphVar.addEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onWidgetChange);
+			//}
+			addEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
+			
 			refreshTroublePoints();
 			flatten();
 			
@@ -272,6 +275,7 @@ package scenes.game.display
 		{
 			if (initialized) return;
 			trace("Level.initialize()...");
+			refreshLevelErrors();
 			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
 				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
@@ -299,92 +303,18 @@ package scenes.game.display
 			if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
 			addChild(m_nodesContainer);
-		//	addChild(m_errorContainer);
+			addChild(m_errorContainer);
 			addChild(m_edgesContainer);
 			addChild(m_plugsContainer);
 			
 			this.alpha = .999;
 
-			m_edgeList = new Vector.<GameEdgeContainer>;
 			selectedComponents = new Vector.<GameComponent>;
 			totalMoveDist = new Point();
 			
-			trace(m_levelLayoutObj["id"]);
-			
-			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = Number.POSITIVE_INFINITY;
-			maxX = maxY = Number.NEGATIVE_INFINITY;
-			
-			//create node for sets
-			m_nodeList = new Vector.<GameNode>(); 
-			boxDictionary = new Dictionary();
-			edgeContainerDictionary = new Dictionary();
-			
-			// Process <box> 's
-			var visibleNodes:int = 0;
-			for (var varId:String in m_levelLayoutObj["layout"]["vars"])
-			{
-				var gameNode:GameNode;
-				var boxLayoutObj:Object = m_levelLayoutObj["layout"]["vars"][varId];
-				if (!levelGraph.variableDict.hasOwnProperty(varId)) {
-					throw new Error("Couldn't find edge set for var id: " + varId);
-				} else {
-					var constraintVar:ConstraintVar = levelGraph.variableDict[varId];
-					gameNode = new GameNode(boxLayoutObj, constraintVar, !m_layoutFixed);
-				}
-				
-				gameNode.addEventListener(WidgetChangeEvent.WIDGET_CHANGED, onWidgetChange);
-				
-				var boxVisible:Boolean = true;
-				if (boxLayoutObj.hasOwnProperty("visible") && (boxLayoutObj["visible"] == "false")) boxVisible = false;
-				if (boxVisible) {
-					visibleNodes++;
-					minX = Math.min(minX, gameNode.boundingBox.left);
-					minY = Math.min(minY, gameNode.boundingBox.top);
-					maxX = Math.max(maxX, gameNode.boundingBox.right);
-					maxY = Math.max(maxY, gameNode.boundingBox.bottom);
-				} else {
-					gameNode.hideComponent(true);
-					boxLayoutObj["visible"] = "false";
-				}
-				m_nodeList.push(gameNode);
-				boxDictionary[varId] = gameNode;
-			}
-			trace("gamenodeset count = " + m_nodeList.length);
-			
-			// Process <line> 's
-			var visibleLines:int = 0;
-			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"])
-			{
-				var edgeLayoutObj:Object = m_levelLayoutObj["layout"]["constraints"][constraintId];
-				var gameEdge:GameEdgeContainer = createLine(constraintId, edgeLayoutObj);
-				if (!gameEdge.hidden) {
-					var boundingBox:Rectangle = gameEdge.boundingBox;
-					visibleLines++;
-					minX = Math.min(minX, boundingBox.x);
-					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
-					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
-				}
-			}
-			
-			//set bounds based on largest x, y found in boxes, joints, edges
-			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			loadLayout();
 			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox);
 			
-			addEventListeners();
-			
-			trace(visibleNodes, visibleLines);
-			
-			setNodesFromAssignments(m_levelAssignmentsObj);
-			//force update of conflict count dictionary, ignore return value
-			getNextConflict(true);
-			
-			initialized = true;
-		}
-		
-		protected function addEventListeners():void
-		{
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
@@ -398,52 +328,207 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
-			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			
+			//addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+			//setNodesFromAssignments(m_levelAssignmentsObj);
+			//force update of conflict count dictionary, ignore return value
+			//getNextConflict(true);
+			initialized = true;
+			trace("Level edges and nodes all created.");
+			// When level loaded, don't need this event listener anymore
+			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
+		}
+		
+		public function refreshLevelErrors():void
+		{
+			errorConstraintDict = new Dictionary();
+			for (var constriantId:String in levelGraph.constraintsDict) {
+				var constraint:Constraint = levelGraph.constraintsDict[constriantId] as Constraint;
+				if (!constraint.isSatisfied()) errorConstraintDict[constriantId] = constraint;
+			}
+		}
+		
+		private function onEnterFrame(evt:EnterFrameEvent):void
+		{
+			// For initialization
+			const CALLS_PER_FRAME:int = 200;
+			var i:int = 0;
+			if (nodeLayoutObjs.length > 0) {
+				while (nodeLayoutObjs.length > 0 && i < CALLS_PER_FRAME) {
+					var nodeLayout:Object = nodeLayoutObjs.shift();
+					createNodeFromJsonObj(nodeLayout);
+					i++;
+				}
+				//trace("nodes remaining: " + nodeLayoutObjs.length);
+			} else if (edgeLayoutObjs.length > 0) {
+				while (edgeLayoutObjs.length > 0 && i < CALLS_PER_FRAME) {
+					var edgeLayout:Object = edgeLayoutObjs.shift();
+					createEdgeFromJsonObj(edgeLayout);
+					i++;
+				}
+				//trace("edges remaining: " + edgeLayoutObjs.length);
+			} else {
+				loadAssignments(m_levelAssignmentsObj);
+				//force update of conflict count dictionary, ignore return value
+				getNextConflict(true);
+				initialized = true;
+				trace("Level edges and nodes all created.");
+				// When level loaded, don't need this event listener anymore
+				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+				dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
+			}
+		}
+		
+		public function createNodeFromJsonObj(boxLayoutObj:Object):void
+		{
+			var varId:String = boxLayoutObj["id"];
+			if (!levelGraph.variableDict.hasOwnProperty(varId)) {
+				throw new Error("Couldn't find edge set for var id: " + varId);
+			}
+			destroyGameNode(varId);
+			var constraintVar:ConstraintVar = levelGraph.variableDict[varId];
+			var gameNode:GameNode = new GameNode(boxLayoutObj, constraintVar, !m_layoutFixed);
+			setGraphVarFromAssignments(constraintVar, m_levelAssignmentsObj, true);
+			
+			var boxVisible:Boolean = true;
+			if (boxLayoutObj.hasOwnProperty("visible") && (boxLayoutObj["visible"] == "false")) boxVisible = false;
+			if (!boxVisible) {
+				gameNode.hideComponent(true);
+				boxLayoutObj["visible"] = "false";
+			}
+			m_gameNodeDict[varId] = gameNode;
+		}
+		
+		public function destroyGameNode(nodeId:String):void {
+			var gameNode:GameNode = m_gameNodeDict[nodeId];
+			if (gameNode) gameNode.removeFromParent(true);
+			delete m_gameNodeDict[nodeId];
+		}
+		
+		public function createEdgeFromJsonObj(edgeLayoutObj:Object):void
+		{
+			var constraintId:String = edgeLayoutObj["id"];
+			destroyGameEdge(constraintId);
+			var newGameEdge:GameEdgeContainer = createLine(constraintId, edgeLayoutObj);
+			m_gameEdgeDict[constraintId] = newGameEdge;
 		}
 		
 		private function createLine(edgeId:String, edgeLayoutObj:Object):GameEdgeContainer
 		{
-			var pattern:RegExp = /(.*) -> (.*)/i;
-			var result:Object = pattern.exec(edgeId);
-			if (result == null) throw new Error("Invalid constraint layout string found: " + edgeId);
-			if (result.length != 3) throw new Error("Invalid constraint layout string found: " + edgeId);
-			var edgeFromVarId:String = result[1];
-			var edgeToVarId:String = result[2];
-			if (!boxDictionary.hasOwnProperty(edgeFromVarId)) throw new Error("From var not found in boxDictionary:" + edgeFromVarId);
-			if (!boxDictionary.hasOwnProperty(edgeToVarId)) throw new Error("To var not found in boxDictionary:" + edgeToVarId);
-			var fromNode:GameNode = boxDictionary[edgeFromVarId] as GameNode;
-			var toNode:GameNode = boxDictionary[edgeToVarId] as GameNode;
+			var edgeFromVarId:String = edgeLayoutObj["from_var_id"];
+			var edgeToVarId:String = edgeLayoutObj["to_var_id"];
+			if (!m_gameNodeDict.hasOwnProperty(edgeFromVarId)) {
+				var fromNodeLayout:Object = nodeLayoutObjs[edgeFromVarId];
+				if (!fromNodeLayout) throw new Error("Edge layout found with no from node layout, edge: " + edgeId + " node:" + edgeFromVarId);
+				createNodeFromJsonObj(fromNodeLayout);
+			}
+			if (!m_gameNodeDict.hasOwnProperty(edgeToVarId)) {
+				var toNodeLayout:Object = nodeLayoutObjs[edgeToVarId];
+				if (!toNodeLayout) throw new Error("Edge layout found with no to node layout, edge: " + edgeId + " node:" + edgeToVarId);
+				createNodeFromJsonObj(toNodeLayout);
+			}
+			var fromNode:GameNode = m_gameNodeDict[edgeFromVarId] as GameNode;
+			var toNode:GameNode = m_gameNodeDict[edgeToVarId] as GameNode;
 			if (!levelGraph.constraintsDict.hasOwnProperty(edgeId)) throw new Error("Edge not found in levelGraph.constraintsDict:" + edgeId);
 			var constraint:Constraint = levelGraph.constraintsDict[edgeId];
-			
-			//create edge array
-			var edgeArray:Array = new Array();
-			var ptsArr:Array = edgeLayoutObj["pts"] as Array;
-			if (!ptsArr) throw new Error("No layout pts found for edge:" + edgeId);
-			if (ptsArr.length < 4) throw new Error("Not enough points found in layout for edge:" + edgeId);
-			for (var i:int = 0; i < ptsArr.length; i++) {
-				var ptx:Number = Number(ptsArr[i]["x"]);
-				var pty:Number = Number(ptsArr[i]["y"]);
-				var pt:Point = new Point(ptx * Constants.GAME_SCALE, pty * Constants.GAME_SCALE);
-				edgeArray.push(pt);
-			}
+			var edgeArray:Array = edgeLayoutObj["edge_array"];
 			
 			var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeId, edgeArray, fromNode, toNode, constraint, !m_layoutFixed);
 			if (!getVisible(edgeLayoutObj)) newGameEdge.hideComponent(true);
 			
-			m_edgeList.push(newGameEdge);
-			
-			if (edgeContainerDictionary.hasOwnProperty(edgeId) && (edgeContainerDictionary[edgeId] is GameEdgeContainer)) {
-				var oldEdgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeId] as GameEdgeContainer;
-				if (m_edgeList.indexOf(oldEdgeContainer) > -1) {
-					m_edgeList.splice(m_edgeList.indexOf(oldEdgeContainer), 1);
-				}
-				oldEdgeContainer.removeFromParent(true);
-			}
-			
-			edgeContainerDictionary[edgeId] = newGameEdge;
 			return newGameEdge;
+		}
+		
+		public function destroyGameEdge(edgeId:String):void {
+			var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId];
+			if (gameEdge) gameEdge.removeFromParent(true);
+			delete m_gameEdgeDict[edgeId];
+		}
+		
+		private function loadLayout():void
+		{
+			nodeLayoutObjs = new Dictionary();
+			edgeLayoutObjs = new Dictionary();
+			
+			var minX:Number, minY:Number, maxX:Number, maxY:Number;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
+			
+			// Process layout nodes (vars)
+			var visibleNodes:int = 0;
+			var n:uint = 0;
+			for (var varId:String in m_levelLayoutObj["layout"]["vars"])
+			{
+				var boxLayoutObj:Object = m_levelLayoutObj["layout"]["vars"][varId];
+				var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
+				if (graphVar == null) {
+					trace("Warning: layout var found with no corresponding contraints var:" + varId);
+					continue;
+				}
+				boxLayoutObj["id"] = varId;
+				boxLayoutObj["var"] = graphVar;
+				var nodeX:Number = Number(boxLayoutObj["x"]) * Constants.GAME_SCALE;
+				var nodeY:Number = Number(boxLayoutObj["y"]) * Constants.GAME_SCALE;
+				var nodeWidth:Number = Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
+				var nodeHeight:Number = Number(boxLayoutObj["h"]) * Constants.GAME_SCALE;
+				var nodeBoundingBox:Rectangle = new Rectangle(nodeX - 0.5 * nodeWidth, nodeY - 0.5 * nodeHeight, nodeWidth, nodeHeight);
+				minX = Math.min(minX, nodeBoundingBox.left);
+				minY = Math.min(minY, nodeBoundingBox.top);
+				maxX = Math.max(maxX, nodeBoundingBox.right);
+				maxY = Math.max(maxY, nodeBoundingBox.bottom);
+				boxLayoutObj["bb"] = nodeBoundingBox;
+				nodeLayoutObjs[varId] = boxLayoutObj;
+				n++;
+			}
+			trace("node count = " + n);
+			
+			// Process layout edges (constraints)
+			var visibleLines:int = 0;
+			n = 0;
+			var pattern:RegExp = /(.*) -> (.*)/i;
+			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"])
+			{
+				var edgeLayoutObj:Object = m_levelLayoutObj["layout"]["constraints"][constraintId];
+				edgeLayoutObj["id"] = constraintId;
+				var result:Object = pattern.exec(constraintId);
+				if (result == null) throw new Error("Invalid constraint layout string found: " + constraintId);
+				if (result.length != 3) throw new Error("Invalid constraint layout string found: " + constraintId);
+				var graphConstraint:Constraint = levelGraph.constraintsDict[constraintId] as Constraint;
+				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
+				edgeLayoutObj["constraint"] = graphConstraint;
+				edgeLayoutObj["from_var_id"] = result[1];
+				edgeLayoutObj["to_var_id"] = result[2];
+				//create edge array
+				var edgeArray:Array = new Array();
+				var ptsArr:Array = edgeLayoutObj["pts"] as Array;
+				if (!ptsArr) throw new Error("No layout pts found for edge:" + constraintId);
+				if (ptsArr.length < 4) throw new Error("Not enough points found in layout for edge:" + constraintId);
+				var edgeXMin:Number, edgeXMax:Number, edgeYMin:Number, edgeYMax:Number;
+				edgeXMin = edgeYMin = Number.POSITIVE_INFINITY;
+				edgeXMax = edgeYMax = Number.NEGATIVE_INFINITY;
+				for (var i:int = 0; i < ptsArr.length; i++) {
+					var ptx:Number = Number(ptsArr[i]["x"]) * Constants.GAME_SCALE;
+					var pty:Number = Number(ptsArr[i]["y"]) * Constants.GAME_SCALE;
+					edgeXMin = Math.min(edgeXMin, ptx);
+					edgeYMin = Math.min(edgeYMin, pty);
+					edgeXMax = Math.max(edgeXMax, ptx);
+					edgeYMax = Math.max(edgeYMax, pty);
+					var pt:Point = new Point(ptx, pty);
+					edgeArray.push(pt);
+				}
+				minX = Math.min(minX, edgeXMin);
+				minY = Math.min(minY, edgeYMin);
+				maxX = Math.max(maxX, edgeXMax);
+				maxY = Math.max(maxY, edgeYMax);
+				edgeLayoutObj["edge_array"] = edgeArray;
+				edgeLayoutObj["bb"] = new Rectangle(edgeXMin, edgeYMin, edgeXMax - edgeXMin, edgeYMax - edgeYMin);
+				edgeLayoutObjs[constraintId] = edgeLayoutObj;
+				n++;
+			}
+			trace("edge count = " + n);
+			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
 		public function start():void
@@ -457,12 +542,12 @@ package scenes.game.display
 			draw();
 			
 			//now that everything is attached and added to parents, update port position indexes, for both nodes and joints
-			for each(var nodeElem:GameNodeBase in m_nodeList)
-			{
-				nodeElem.updatePortIndexes();
+			for (var nodeId:String in m_gameNodeDict) {
+				var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
+				gameNode.updatePortIndexes();
 			}
-			
-			m_bestScore = m_currentScore;
+			levelGraph.resetScoring();
+			m_bestScore = levelGraph.currentScore;
 			flatten();
 			trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
@@ -481,7 +566,7 @@ package scenes.game.display
 			dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutObj);
 			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			setNodesFromAssignments(m_levelAssignmentsObj);
+			loadAssignments(m_levelAssignmentsObj);
 			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
@@ -548,91 +633,7 @@ package scenes.game.display
 			m_levelLayoutName = name;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutObj["levels"]) m_levelLayoutObj = m_levelLayoutObj["levels"][0];
-			
-			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = Number.POSITIVE_INFINITY;
-			maxX = maxY = Number.NEGATIVE_INFINITY;
-			
-			for (var varId:String in m_levelLayoutObj["layout"]["vars"]) {
-				if (!boxDictionary.hasOwnProperty(varId)) {
-					trace("Warning! Layout varId not found in boxDictionary:" + varId);
-					continue;
-				}
-				var gameNode:GameNode = boxDictionary[varId] as GameNode;
-				if (!useExistingLines) {
-					gameNode.removeEdges();
-				}
-				var nodex:Number = Number(m_levelLayoutObj["layout"]["vars"][varId]["x"]);
-				var nodey:Number = Number(m_levelLayoutObj["layout"]["vars"][varId]["y"]);
-				var nodew:Number = Number(m_levelLayoutObj["layout"]["vars"][varId]["w"]);
-				var nodeh:Number = Number(m_levelLayoutObj["layout"]["vars"][varId]["h"]);
-				if (isNaN(nodex) || isNaN(nodey) || isNaN(nodew) || isNaN(nodew)) {
-					trace("Warning! Bad layout found for varId:" + varId + " x,y,w,h: " + nodex + "," + nodey + "," + nodew + "," + nodeh);
-					continue;
-				}
-				gameNode.width = nodew * Constants.GAME_SCALE;
-				gameNode.height = nodeh * Constants.GAME_SCALE;
-				gameNode.boundingBox.x = nodex * Constants.GAME_SCALE - gameNode.boundingBox.width/2;
-				gameNode.boundingBox.y = nodey * Constants.GAME_SCALE - gameNode.boundingBox.height/2;
-				
-				gameNode.hideComponent(!getVisible(m_levelLayoutObj["layout"]["vars"][varId]));
-				if (!gameNode.hidden) {
-					minX = Math.min(minX, gameNode.boundingBox.left);
-					minY = Math.min(minY, gameNode.boundingBox.top);
-					maxX = Math.max(maxX, gameNode.boundingBox.right);
-					maxY = Math.max(maxY, gameNode.boundingBox.bottom);
-				}
-			}
-			
-			if(useExistingLines == false)
-			{
-				//delete all existing edges, and recreate
-				for each(var existingEdge:GameEdgeContainer  in m_edgeList) {
-					existingEdge.removeFromParent(true);
-				}
-				edgeContainerDictionary = new Dictionary();
-				m_edgeList = new Vector.<GameEdgeContainer>;
-			}
-			
-			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"]) {
-				var prevEdgeContainer:GameEdgeContainer = edgeContainerDictionary[constraintId];
-				var boundingBox:Rectangle;
-				if(useExistingLines == false && prevEdgeContainer == null)
-				{
-					var newEdgeContainter:GameEdgeContainer = createLine(constraintId, m_levelLayoutObj["layout"]["constraints"][constraintId]);
-					if(newEdgeContainter.boundingBox)
-					{
-						minX = Math.min(minX, newEdgeContainter.boundingBox.left);
-						minY = Math.min(minY, newEdgeContainter.boundingBox.top);
-						maxX = Math.max(maxX, newEdgeContainter.boundingBox.right);
-						maxY = Math.max(maxY, newEdgeContainter.boundingBox.bottom);
-					}
-				}
-				else if(prevEdgeContainer)
-				{
-					//create edge array
-					var edgeArray:Array = new Array();
-					var ptsArr:Array = newLayoutObj["layout"]["constraints"][constraintId]["pts"] as Array;
-					if (!ptsArr) throw new Error("No layout pts found for edge:" + constraintId);
-					if (ptsArr.length < 4) throw new Error("Not enough points found in layout for edge:" + constraintId);
-					for (var i:int = 0; i < ptsArr.length; i++) {
-						var ptx:Number = Number(ptsArr[i]["x"]);
-						var pty:Number = Number(ptsArr[i]["y"]);
-						var pt:Point = new Point(ptx * Constants.GAME_SCALE, pty * Constants.GAME_SCALE);
-						edgeArray.push(pt);
-					}
-					prevEdgeContainer.edgeArray = edgeArray;
-					prevEdgeContainer.setupPoints();
-					if (!prevEdgeContainer.hideSegments) {
-						minX = Math.min(minX, prevEdgeContainer.boundingBox.left);
-						minY = Math.min(minY, prevEdgeContainer.boundingBox.top);
-						maxX = Math.max(maxX, prevEdgeContainer.boundingBox.right);
-						maxY = Math.max(maxY, prevEdgeContainer.boundingBox.bottom);
-					}
-					prevEdgeContainer.buildLine();
-				}
-			}
-			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			loadLayout();
 			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox);
 			draw();
 		}
@@ -642,30 +643,36 @@ package scenes.game.display
 		// class dependency and have World -> Level, not World <-> Level
 		public function updateLayoutObj(world:World, includeThumbnail:Boolean = false):void
 		{
+			m_levelLayoutObjWrapper = new Object();
+			m_levelLayoutObjWrapper["layout"] = new Object();
+			m_levelLayoutObjWrapper["layout"]["vars"] = new Object();
 			for (var varId:String in m_levelLayoutObj["layout"]["vars"]) {
-				if (!boxDictionary.hasOwnProperty(varId)) {
+				m_levelLayoutObjWrapper["layout"]["vars"][varId] = new Object();
+				if (!m_gameNodeDict.hasOwnProperty(varId)) {
 					trace("Warning! Layout varid where no gameNode exists in boxDictionary varId:" + varId);
 					continue;
 				}
-				var gameNode:GameNode = boxDictionary[varId] as GameNode;
+				var gameNode:GameNode = m_gameNodeDict[varId] as GameNode;
 				var currentLayoutX:Number = (gameNode.x + /*m_boundingBox.x*/ + gameNode.boundingBox.width/2) / Constants.GAME_SCALE;
-				m_levelLayoutObj["layout"]["vars"][varId]["x"] = currentLayoutX.toFixed(2);
+				m_levelLayoutObjWrapper["layout"]["vars"][varId]["x"] = currentLayoutX.toFixed(2);
 				var currentLayoutY:Number = (gameNode.y + /*m_boundingBox.y*/ + gameNode.boundingBox.height/2) / Constants.GAME_SCALE;
-				m_levelLayoutObj["layout"]["vars"][varId]["y"] = currentLayoutY.toFixed(2);
+				m_levelLayoutObjWrapper["layout"]["vars"][varId]["y"] = currentLayoutY.toFixed(2);
 				if (gameNode.hidden) {
-					m_levelLayoutObj["layout"]["vars"][varId]["visible"] = "false";
+					m_levelLayoutObjWrapper["layout"]["vars"][varId]["visible"] = "false";
 				} else {
-					delete m_levelLayoutObj["layout"]["vars"][varId]["visible"];
+					delete m_levelLayoutObjWrapper["layout"]["vars"][varId]["visible"];
 				}
 			}
+			m_levelLayoutObjWrapper["layout"]["constraints"] = new Object();
 			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"]) {
-				if (!edgeContainerDictionary.hasOwnProperty(constraintId)) {
+				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId] = new Object();
+				if (!m_gameEdgeDict.hasOwnProperty(constraintId)) {
 					trace("Warning! Layout constraint found with no corresponding game edgeContainer found: " + constraintId);
 					continue;
 				}
-				var edgeContainer:GameEdgeContainer = edgeContainerDictionary[constraintId] as GameEdgeContainer;
-				m_levelLayoutObj["layout"]["constraints"][constraintId]["visible"] = (!edgeContainer.hidden).toString();
-				m_levelLayoutObj["layout"]["constraints"][constraintId]["pts"] = new Array();
+				var edgeContainer:GameEdgeContainer = m_gameEdgeDict[constraintId] as GameEdgeContainer;
+				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["visible"] = (!edgeContainer.hidden).toString();
+				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["pts"] = new Array();
 				
 				if(edgeContainer.m_jointPoints.length != GameEdgeContainer.NUM_JOINTS)
 					trace("Wrong number of joint points " + constraintId);
@@ -674,11 +681,10 @@ package scenes.game.display
 					var pt:Point = edgeContainer.m_jointPoints[i];
 					currentLayoutX = (pt.x + edgeContainer.x) / Constants.GAME_SCALE;
 					currentLayoutY = (pt.y + edgeContainer.y) / Constants.GAME_SCALE;
-					(m_levelLayoutObj["layout"]["constraints"][constraintId]["pts"] as Array).push( { "x": currentLayoutX.toFixed(2), "y": currentLayoutY.toFixed(2) } );
+					(m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["pts"] as Array).push( { "x": currentLayoutX.toFixed(2), "y": currentLayoutY.toFixed(2) } );
 				}
 			}
 			
-			m_levelLayoutObjWrapper = XObject.clone(m_levelLayoutObj);
 			if(includeThumbnail)
 			{
 				var byteArray:ByteArray = world.getThumbnail(300, 300);
@@ -696,19 +702,22 @@ package scenes.game.display
 		
 		private function createAssignmentsObj():Object
 		{
-			var hashSize:int = Math.ceil(m_nodeList.length/100);
+			var hashSize:int = 0;
+			var nodeId:String;
+			for (nodeId in m_gameNodeDict) hashSize++;
+			
 			PipeJamGame.levelInfo.hash = new Array();
 			
 			var assignmentsObj:Object = { "id": original_level_name, 
 									"hash": [], 
 									"target_score": this.m_targetScore,
-									"starting_score": this.m_currentScore,
+									"starting_score": this.levelGraph.currentScore,
 									"starting_jams": this.m_levelConflictEdges.length,
 									"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
-			for each(var node:GameNode in m_nodeList)
-			{
+			for (nodeId in m_gameNodeDict) {
+				var node:GameNode = m_gameNodeDict[nodeId] as GameNode;
 				if (node.constraintVar.constant) continue;
 				if (!assignmentsObj["assignments"].hasOwnProperty(node.constraintVar.formattedId)) assignmentsObj["assignments"][node.constraintVar.formattedId] = { };
 				assignmentsObj["assignments"][node.constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] = node.constraintVar.getValue().verboseStrVal;
@@ -731,10 +740,6 @@ package scenes.game.display
 					numWide = 0;
 				}
 			}
-			//for each(var edge:GameEdgeContainer in m_edgeList)
-			//{
-				// We were outputting editable, hasJam, id, etc but doesn't seem necessary
-			//}
 			return assignmentsObj;
 		}
 		
@@ -748,17 +753,16 @@ package scenes.game.display
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
-			for each(var gameNodeSet:GameNode in m_nodeList) {
+			for (var nodeId:String in m_gameNodeDict) {
+				var gameNodeSet:GameNode = m_gameNodeDict[nodeId] as GameNode;
 				gameNodeSet.removeFromParent(true);
-				gameNodeSet.removeEventListener(WidgetChangeEvent.WIDGET_CHANGED, onWidgetChange);
 			}
-			m_nodeList = new Vector.<GameNode>();
-			boxDictionary = new Dictionary();
-			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
+			m_gameNodeDict = new Dictionary();
+			for (var edgeId:String in m_gameEdgeDict) {
+				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
 				gameEdge.removeFromParent(true);
 			}
-			m_edgeList = new Vector.<GameEdgeContainer>();
-			edgeContainerDictionary = null;
+			m_gameEdgeDict = new Dictionary();
 			
 			if (m_nodesContainer) {
 				while (m_nodesContainer.numChildren > 0) m_nodesContainer.getChildAt(0).removeFromParent(true);
@@ -784,7 +788,7 @@ package scenes.game.display
 			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
-			//removeEventListener(WidgetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange); // do these per-box
+			removeEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
@@ -792,8 +796,8 @@ package scenes.game.display
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			removeEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
-			removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			super.dispose();
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
@@ -856,52 +860,49 @@ package scenes.game.display
 		}
 		
 		//assume this only generates on toggle width events
-		public function onWidgetChange(evt:WidgetChangeEvent):void
+		private function onWidgetChange(evt:VarChangeEvent = null):void
 		{
 			//trace("Level: onWidgetChange");
-			if (!evt.silent) {
-				if (tutorialManager) tutorialManager.onWidgetChange(evt);
-				if (!evt.propValue) {
-					// Wide
-					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
-				} else {
-					// Narrow
-					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+			if (evt) {
+				levelGraph.updateScore(evt.graphVar.id, evt.prop, evt.newValue);
+				//evt.graphVar.setProp(evt.prop, evt.newValue);
+				//levelGraph.updateScore();
+				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue);
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
+				//save incremental changes so we can update if user quits and restarts
+				if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
+				{
+					var constraintType:String = evt.newValue ? ConstraintValue.VERBOSE_TYPE_0 : ConstraintValue.VERBOSE_TYPE_1;
+					PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.graphVar.id] = constraintType;
 				}
+			} else {
+				levelGraph.updateScore();
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			var constraintVar:ConstraintVar = evt.widgetChanged.constraintVar;
-			constraintVar.setProp(evt.prop, evt.propValue);
-			if (!evt.silent) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.widgetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
-			
-			//save incremental changes so we can update if user quits and restarts
-			if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
-			{
-				var constraintType:String = ConstraintValue.VERBOSE_TYPE_1;
-				//propValue isn't updated yet, so if it's currently wide, we want to save narrow
-				if(evt.propValue)
-					constraintType = ConstraintValue.VERBOSE_TYPE_0;
-				PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.widgetChanged.m_id] = constraintType;
-			}
+			onScoreChange(true);
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		public function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
-			var i:int;
+			var i:int, nodeId:String, gameNode:GameNode, edgeId:String, gameEdge:GameEdgeContainer;
 			if (evt.prop == PropDictionary.PROP_NARROW) {
 				m_propertyMode = PropDictionary.PROP_NARROW;
-				for (i = 0; i < m_edgeList.length; i++) {
-					m_edgeList[i].setPropertyMode(m_propertyMode);
-					activate(m_edgeList[i]);
+				for (edgeId in m_gameEdgeDict) {
+					gameEdge = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+					gameEdge.setPropertyMode(m_propertyMode);
+					activate(gameEdge);
 				}
-				for (i = 0; i < m_nodeList.length; i++) {
-					m_nodeList[i].setPropertyMode(m_propertyMode);
-					activate(m_nodeList[i]);
+				for (nodeId in m_gameNodeDict) {
+					gameNode = m_gameNodeDict[nodeId] as GameNode;
+					gameNode.setPropertyMode(m_propertyMode);
+					activate(gameNode);
 				}
 			} else {
 				m_propertyMode = evt.prop;
 				var edgesToActivate:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-				for (i = 0; i < m_nodeList.length; i++) {
+				for (nodeId in m_gameNodeDict) {
+					gameNode = m_gameNodeDict[nodeId] as GameNode;
 					// TODO: broken
 					//if (m_nodeList[i] is GameMapGetJoint) {
 						//var mapget:GameMapGetJoint = m_nodeList[i] as GameMapGetJoint;
@@ -911,22 +912,24 @@ package scenes.game.display
 							//continue;
 						//}
 					//}
-					m_nodeList[i].setPropertyMode(m_propertyMode);
-					deactivate(m_nodeList[i]);
+					gameNode.setPropertyMode(m_propertyMode);
+					deactivate(gameNode);
 				}
 				var gameNodesToActivate:Vector.<GameNode> = new Vector.<GameNode>();
-				for (i = 0; i < m_edgeList.length; i++) {
-					m_edgeList[i].setPropertyMode(m_propertyMode);
-					if (edgesToActivate.indexOf(m_edgeList[i]) > -1) {
-						gameNodesToActivate.push(m_edgeList[i].m_fromNode);
+				for (edgeId in m_gameEdgeDict) {
+					gameEdge = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+					gameEdge.setPropertyMode(m_propertyMode);
+					if (edgesToActivate.indexOf(gameEdge) > -1) {
+						gameNodesToActivate.push(gameEdge.m_fromNode);
 					} else {
-						deactivate(m_edgeList[i]);
+						deactivate(gameEdge);
 					}
 				}
-				for (i = 0; i < m_nodeList.length; i++) {
-					m_nodeList[i].setPropertyMode(m_propertyMode);
-					if (gameNodesToActivate.indexOf(m_nodeList[i]) == -1) {
-						deactivate(m_nodeList[i]);
+				for (nodeId in m_gameNodeDict) {
+					gameNode = m_gameNodeDict[nodeId] as GameNode;	
+					gameNode.setPropertyMode(m_propertyMode);
+					if (gameNodesToActivate.indexOf(gameNode) == -1) {
+						deactivate(gameNode);
 					}
 				}
 			}
@@ -959,8 +962,9 @@ package scenes.game.display
 		
 		private function refreshTroublePoints():void
 		{
-			for (var i:int = 0; i < m_edgeList.length; i++) {
-				m_edgeList[i].refreshConflicts();
+			for (var edgeId:String in m_gameEdgeDict) {
+				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+				gameEdge.refreshConflicts();
 			}
 		}
 		
@@ -1078,18 +1082,20 @@ package scenes.game.display
 			var i:int;
 			if (evt.component is GameNodeBase) {
 				// If moved node, check those bounds - otherwise assume they're unchanged
-				for (i = 0; i < m_nodeList.length; i++) {
-					minX = Math.min(minX, m_nodeList[i].boundingBox.left);
-					minY = Math.min(minY, m_nodeList[i].boundingBox.top);
-					maxX = Math.max(maxX, m_nodeList[i].boundingBox.right);
-					maxY = Math.max(maxY, m_nodeList[i].boundingBox.bottom);
+				for (var nodeId:String in m_gameNodeDict) {
+					var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
+					minX = Math.min(minX, gameNode.boundingBox.left);
+					minY = Math.min(minY, gameNode.boundingBox.top);
+					maxX = Math.max(maxX, gameNode.boundingBox.right);
+					maxY = Math.max(maxY, gameNode.boundingBox.bottom);
 				}
 			}
-			for (i = 0; i < m_edgeList.length; i++) {
-				minX = Math.min(minX, m_edgeList[i].boundingBox.left);
-				minY = Math.min(minY, m_edgeList[i].boundingBox.top);
-				maxX = Math.max(maxX, m_edgeList[i].boundingBox.right);
-				maxY = Math.max(maxY, m_edgeList[i].boundingBox.bottom);
+			for (var edgeId:String in m_gameEdgeDict) {
+				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+				minX = Math.min(minX, gameEdge.boundingBox.left);
+				minY = Math.min(minY, gameEdge.boundingBox.top);
+				maxX = Math.max(maxX, gameEdge.boundingBox.right);
+				maxY = Math.max(maxY, gameEdge.boundingBox.bottom);
 			}
 			var oldBB:Rectangle = m_boundingBox.clone();
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -1103,12 +1109,12 @@ package scenes.game.display
 		
 		private function onErrorAdded(evt:ErrorEvent):void
 		{
-			errorList[evt.errorParticleSystem.id] = evt.errorParticleSystem;
+			errorConstraintDict[evt.constraintError.id] = evt.constraintError;
 		}
 		
 		private function onErrorRemoved(evt:ErrorEvent):void
 		{
-			delete errorList[evt.errorParticleSystem.id];
+			delete errorConstraintDict[evt.constraintError.id];
 		}
 		
 		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void
@@ -1246,29 +1252,31 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			trace("Bounding Box " + m_boundingBox);
+			//trace("Bounding Box " + m_boundingBox);
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
 			var nodeCount:int = 0;
-			for each(var gameNode:GameNode in m_nodeList)
-			{
+			for (var nodeId:String in m_gameNodeDict) {
+				var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
+				gameNode.x = gameNode.boundingBox.x;
+				gameNode.y = gameNode.boundingBox.y;
+				gameNode.m_isDirty = true;
 				m_nodesContainer.addChild(gameNode);
 				nodeCount++;
 			}
 			
 			var edgeCount:int = 0;
-			for each(var gameEdge:GameEdge in m_edgeList)
-			{
+			for (var edgeId:String in m_gameEdgeDict) {
+				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
 				gameEdge.m_isDirty = true;
-				//gameEdge.visible = false; // zzz
 				m_edgesContainer.addChild(gameEdge);
-
-			//	m_errorContainer.addChild(gameEdge.errorContainer);
+				m_errorContainer.addChild(gameEdge.errorContainer);
 				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
 				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 				edgeCount++;
 			}
+			
 			trace("Nodes " + nodeCount + " Edges " + edgeCount);
 			if (m_backgroundImage) {
 				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
@@ -1316,9 +1324,9 @@ package scenes.game.display
 				var newSelectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
 				var newUnselectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
 				
-				for each(var node:GameNode in m_nodeList)
-				{
-					handleSelection(node, newSelectedComponents, newUnselectedComponents);
+				for (var nodeId:String in m_gameNodeDict) {
+					var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
+					handleSelection(gameNode, newSelectedComponents, newUnselectedComponents);
 				}
 				removeChild(marqueeRect);
 				
@@ -1359,8 +1367,8 @@ package scenes.game.display
 		public function toggleUneditableStrings():void
 		{
 			var visitedNodes:Dictionary = new Dictionary;
-			for each(var node:GameNode in m_nodeList)
-			{
+			for (var nodeId:String in m_gameNodeDict) {
+				var node:GameNode = m_gameNodeDict[nodeId] as GameNode;
 				if(visitedNodes[node.m_id] == null)
 				{
 					visitedNodes[node.m_id] = node;
@@ -1386,27 +1394,32 @@ package scenes.game.display
 					}
 				}
 			}
-		}	
+		}
 		
 		public function getNode(_id:String):GameNode
 		{
-			if (boxDictionary.hasOwnProperty(_id) && (boxDictionary[_id] is GameNode)) {
-				return (boxDictionary[_id] as GameNode);
+			if (m_gameNodeDict.hasOwnProperty(_id) && (m_gameNodeDict[_id] is GameNode)) {
+				return (m_gameNodeDict[_id] as GameNode);
 			}
 			return null;
 		}
+		
+		public function getEdges():Dictionary
+		{
+			return m_gameEdgeDict;
+ 		}
 		
 		public function getEdgeContainer(_id:String):GameEdgeContainer
 		{
-			if (edgeContainerDictionary.hasOwnProperty(_id) && (edgeContainerDictionary[_id] is GameEdgeContainer)) {
-				return (edgeContainerDictionary[_id] as GameEdgeContainer);
+			if (m_gameEdgeDict.hasOwnProperty(_id) && (m_gameEdgeDict[_id] is GameEdgeContainer)) {
+				return (m_gameEdgeDict[_id] as GameEdgeContainer);
 			}
 			return null;
 		}
 		
-		public function getNodes():Vector.<GameNode2>
+		public function getNodes():Dictionary
 		{
-			return m_nodeList;
+			return m_gameNodeDict;
 		}
 		
 		public function getLevelTextInfo():TutorialManagerTextInfo
@@ -1432,13 +1445,14 @@ package scenes.game.display
 		public function getTimeMs():Number
 		{
 			return new Date().time - m_levelStartTime;
-		}	
+		}
 		
 		public function hideErrorText():void
 		{
 			if (!m_hidingErrorText) {
-				for (var i:int = 0; i < m_edgeList.length; i++) {
-					m_edgeList[i].hideErrorText();
+				for (var edgeId:String in m_gameEdgeDict) {
+					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+					gameEdge.hideErrorText();
 				}
 				m_hidingErrorText = true;
 			}
@@ -1447,8 +1461,9 @@ package scenes.game.display
 		public function showErrorText():void
 		{
 			if (m_hidingErrorText) {
-				for (var i:int = 0; i < m_edgeList.length; i++) {
-					m_edgeList[i].showErrorText();
+				for (var edgeId:String in m_gameEdgeDict) {
+					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+					gameEdge.showErrorText();
 				}
 				m_hidingErrorText = false;
 			}
@@ -1462,19 +1477,20 @@ package scenes.game.display
 		public function getNextConflict(forward:Boolean):DisplayObject
 		{
 			if (m_conflictEdgesDirty) {
-				for (var i:int = 0; i < m_edgeList.length; i++) {
-					if (m_edgeList[i].hasError()) {
-						if (!m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+				for (var edgeId:String in m_gameEdgeDict) {
+					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+					if (gameEdge.hasError()) {
+						if (!m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
 							// Add to list/dict if not on there already
-							if (m_levelConflictEdges.indexOf(m_edgeList[i]) == -1) m_levelConflictEdges.push(m_edgeList[i]);
-							m_levelConflictEdgeDict[m_edgeList[i].m_id] = true;
+							if (m_levelConflictEdges.indexOf(gameEdge) == -1) m_levelConflictEdges.push(gameEdge);
+							m_levelConflictEdgeDict[gameEdge.m_id] = true;
 						}
 					} else {
-						if (m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+						if (m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
 							// Remove from edge conflict list/dict if on it
-							var delindx:int = m_levelConflictEdges.indexOf(m_edgeList[i]);
+							var delindx:int = m_levelConflictEdges.indexOf(gameEdge);
 							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
-							delete m_levelConflictEdgeDict[m_edgeList[i].m_id];
+							delete m_levelConflictEdgeDict[gameEdge.m_id];
 						}
 					}
 				}
@@ -1503,12 +1519,12 @@ package scenes.game.display
 			return; // uncomment when more testing performed
 			// Active layers
 			m_nodesContainer.flatten();
-	//		m_errorContainer.flatten();// Can't flatten due to animations
+			//m_errorContainer.flatten();// Can't flatten due to animations
 			m_edgesContainer.flatten();
 			m_plugsContainer.flatten();
 			// Inactive layers
 			m_nodesInactiveContainer.flatten();
-	//		m_errorInactiveContainer.flatten();// Can't flatten due to animations
+			//m_errorInactiveContainer.flatten();// Can't flatten due to animations
 			m_edgesInactiveContainer.flatten();
 			m_plugsInactiveContainer.flatten();
 		}
@@ -1557,7 +1573,6 @@ package scenes.game.display
 			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
 				assignmentIsWide = false;
 			
-
 			var gameNode:GameNode;	
 			for(var i:int = 0; i<selectedComponents.length; i++)
 			{
@@ -1565,39 +1580,36 @@ package scenes.game.display
 				if(component is GameNode)
 				{
 					gameNode = component as GameNode;
-					if(gameNode.m_isEditable)
-						gameNode.handleWidthChange(assignmentIsWide, true);
+					if(gameNode.m_isEditable) gameNode.constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 				}
 			}
 			//update score
-			if(gameNode)
-				onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, false));
+			onWidgetChange();
 		}
 		
-		public function get currentScore():int { return m_currentScore; }
+		public function get currentScore():int { return levelGraph.currentScore; }
 		public function get bestScore():int { return m_bestScore; }
-		public function get prevScore():int { return m_prevScore; }
-		public function get oldScore():int { return m_oldScore; }
+		public function get prevScore():int { return levelGraph.prevScore; }
+		public function get oldScore():int { return levelGraph.oldScore; }
+		
 		public function resetBestScore():void
 		{
-			m_bestScore = m_currentScore;
+			m_bestScore = levelGraph.currentScore;
 			m_levelBestScoreAssignmentsObj = XObject.clone(m_levelAssignmentsObj);
 		}
 		
-		public function updateScore(recordBestScore:Boolean = false):void
+		public function onScoreChange(recordBestScore:Boolean = false):void
 		{
-			m_oldScore = m_prevScore;
-			m_prevScore = m_currentScore;
-			levelGraph.updateScore();
-			m_currentScore = Math.round(levelGraph.score); // TODO: round or force levelGraph score to be int?
-			if (recordBestScore && (m_currentScore > m_bestScore)) {
-				m_bestScore = m_currentScore;
+			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
+				m_bestScore = levelGraph.currentScore;
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(m_oldScore != 0 && !m_inSolver)
+				if(levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
+			if (levelGraph.prevScore != levelGraph.currentScore)
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			m_conflictEdgesDirty = true;
 		}
 		
@@ -1627,7 +1639,7 @@ package scenes.game.display
 						if(nodeIDToConstraintsTwoWayMap[fromNode.m_id] == null)
 						{
 							nodeIDToConstraintsTwoWayMap[fromNode.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+							nodeIDToConstraintsTwoWayMap[counter] = fromNode.constraintVar;
 							constraint1Value = counter;
 							counter++;
 						}
@@ -1640,7 +1652,7 @@ package scenes.game.display
 						if(nodeIDToConstraintsTwoWayMap[toNode.m_id] == null)
 						{
 							nodeIDToConstraintsTwoWayMap[toNode.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = toNode;
+							nodeIDToConstraintsTwoWayMap[counter] = toNode.constraintVar;
 							constraint2Value = counter;
 							counter++;
 						}
@@ -1669,12 +1681,12 @@ package scenes.game.display
 						if(nodeIDToConstraintsTwoWayMap[node.m_id] == null)
 						{
 							nodeIDToConstraintsTwoWayMap[node.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = node;
+							nodeIDToConstraintsTwoWayMap[counter] = node.constraintVar;
 							constraint1Value = counter;
 							counter++;
 						}
 						else
-							constraint1Value = nodeIDToConstraintsTwoWayMap[node];
+							constraint1Value = nodeIDToConstraintsTwoWayMap[node.m_id];
 						
 						constraintArray.push(new Array(1, constraint1Value));
 					}
@@ -1697,10 +1709,9 @@ package scenes.game.display
 			}
 		}
 		
-		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var gameNode:GameNode;
+			var constraintVar:ConstraintVar;
 			var assignmentIsWide:Boolean = false;
 			
 			if(	m_inSolver == false) //got marked done early
@@ -1708,32 +1719,21 @@ package scenes.game.display
 			
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				gameNode = nodeIDToConstraintsTwoWayMap[ii+1];
+				constraintVar = nodeIDToConstraintsTwoWayMap[ii+1];
 				assignmentIsWide = false;
 				if(vars[ii] == 1)
 					assignmentIsWide = true;
-				if(gameNode)
-					gameNode.handleWidthChange(assignmentIsWide, true);
+				if(constraintVar) constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 			}
-			if(gameNode)
-				onWidgetChange(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !assignmentIsWide, this, false, null, false));
+			onWidgetChange();
 		}
 		
 		public function solverDone(errMsg:String):void
 		{
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
-			this.updateScore(true);
-		}
-		
-		public function onViewSpaceChanged(event:MiniMapEvent):void
-		{
-
-		}
-		
-		public function adjustSize(newWidth:Number, newHeight:Number):void
-		{
-
+			levelGraph.updateScore();
+			onScoreChange(true);
 		}
 	}
 }

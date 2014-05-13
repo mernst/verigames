@@ -1,10 +1,12 @@
 package constraints 
 {
+	import constraints.events.ErrorEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
+	import starling.events.EventDispatcher;
 	import utils.XString;
 
-	public class ConstraintGraph 
+	public class ConstraintGraph extends EventDispatcher
 	{
 		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(1);
 		
@@ -34,26 +36,104 @@ package constraints
 		
 		public var variableDict:Dictionary = new Dictionary();
 		public var constraintsDict:Dictionary = new Dictionary();
+		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
-		public var score:Number;
+		public var currentScore:int = 0;
+		public var prevScore:int = 0;
+		public var oldScore:int = 0;
+		
 		public var qid:int = -1;
 		
-		public function updateScore():void
+		public function updateScore(varIdChanged:String = null, propChanged:String = null, newPropValue:Boolean = false):void
 		{
-			score = 0;
-			for (var varId:String in variableDict) {
-				var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
-				if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
-					// If there is a bonus for the current value of thisVar, add to score
-					score += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+			oldScore = prevScore;
+			prevScore = currentScore;
+			trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
+			var constraintId:String;
+			var lhsConstraint:Constraint, rhsConstraint:Constraint;
+			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
+			var newSatisfiedConstraints:Dictionary = new Dictionary();
+			if (varIdChanged != null && propChanged != null) {
+				var varChanged:ConstraintVar = variableDict[varIdChanged] as ConstraintVar;
+				if (varChanged.getValue() != null && varChanged.scoringConfig != null) {
+					var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
+					var prevConstraintPoints:int = 0;
+					// Recalc incoming/outgoing constraints
+					var i:int;
+					for (i = 0; i < varChanged.lhsConstraints.length; i++) {
+						lhsConstraint = varChanged.lhsConstraints[i];
+						if (lhsConstraint.isSatisfied()) prevConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+					}
+					for (i = 0; i < varChanged.rhsConstraints.length; i++) {
+						rhsConstraint = varChanged.rhsConstraints[i];
+						if (rhsConstraint.isSatisfied()) prevConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+					}
+					// Recalc incoming/outgoing constraints
+					varChanged.setProp(propChanged, newPropValue);
+					var newBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
+					var newConstraintPoints:int = 0;
+					for (i = 0; i < varChanged.lhsConstraints.length; i++) {
+						lhsConstraint = varChanged.lhsConstraints[i];
+						if (lhsConstraint.isSatisfied()) {
+							newConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+							newSatisfiedConstraints[lhsConstraint.id] = lhsConstraint;
+						} else {
+							newUnsatisfiedConstraints[lhsConstraint.id] = lhsConstraint;
+						}
+					}
+					for (i = 0; i < varChanged.rhsConstraints.length; i++) {
+						rhsConstraint = varChanged.rhsConstraints[i];
+						if (rhsConstraint.isSatisfied()) {
+							newConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+							newSatisfiedConstraints[rhsConstraint.id] = rhsConstraint;
+						} else {
+							newUnsatisfiedConstraints[rhsConstraint.id] = rhsConstraint;
+						}
+					}
+					// Offset score by change in bonus and new constraints satisfied/not
+					trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+					currentScore += (newBonus - prevBonus) + (newConstraintPoints - prevConstraintPoints);
+					trace("new currentScore ", currentScore);
+				}
+			} else {
+				currentScore = 0;
+				for (var varId:String in variableDict) {
+					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
+					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
+						// If there is a bonus for the current value of thisVar, add to score
+						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+					}
+				}
+				for (constraintId in constraintsDict) {
+					var thisConstr:Constraint = constraintsDict[constraintId] as Constraint;
+					if (thisConstr.isSatisfied()) {
+						currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+						newSatisfiedConstraints[constraintId] = thisConstr;
+					} else {
+						newUnsatisfiedConstraints[constraintId] = thisConstr;
+					}
 				}
 			}
-			for (var constraintId:String in constraintsDict) {
-				var thisConstr:Constraint = constraintsDict[constraintId] as Constraint;
-				score += thisConstr.isSatisfied() ? graphScoringConfig.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY) : 0;
+			for (constraintId in newSatisfiedConstraints) {
+				if (unsatisfiedConstraintDict.hasOwnProperty(constraintId)) {
+					delete unsatisfiedConstraintDict[constraintId];
+					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints[constraintId]));
+				}
 			}
-			trace("Score: " + score);
+			for (constraintId in newUnsatisfiedConstraints) {
+				if (!unsatisfiedConstraintDict.hasOwnProperty(constraintId)) {
+					unsatisfiedConstraintDict[constraintId] = newUnsatisfiedConstraints[constraintId];
+					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints[constraintId]));
+				}
+			}
+			trace("Score: " + currentScore);
+		}
+		
+		public function resetScoring():void
+		{
+			updateScore();
+			oldScore = prevScore = currentScore;
 		}
 		
 		public static function fromString(_json:String):ConstraintGraph
@@ -99,7 +179,6 @@ package constraints
 							var isConstant:Boolean = false;
 							if (varParamsObj.hasOwnProperty(CONSTANT)) isConstant = XString.stringToBool(varParamsObj[CONSTANT] as String);
 							var typeValStr:String = varParamsObj[TYPE_VALUE];
-							var typeVal:ConstraintValue = ConstraintValue.fromVerboseStr(typeValStr) || graphDefaultVal.clone();
 							var varScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
 							var scoreObj:Object = varParamsObj[SCORE];
 							if (scoreObj) {
@@ -112,6 +191,14 @@ package constraints
 							var defaultValStr:String = varParamsObj[DEFAULT];
 							var defaultVal:ConstraintValue;
 							if (defaultValStr) defaultVal = ConstraintValue.fromVerboseStr(defaultValStr);
+							var typeVal:ConstraintValue;
+							if (typeValStr) {
+								typeVal = ConstraintValue.fromVerboseStr(typeValStr);
+							} else if (defaultVal) {
+								typeVal = defaultVal.clone();
+							} else {
+								typeVal = graphDefaultVal.clone();
+							}
 							var possibleKeyfors:Vector.<String> = new Vector.<String>();
 							var possibleKeyforsArr:Array = varParamsObj[POSSIBLE_KEYFORS];
 							if (possibleKeyforsArr) {
@@ -143,10 +230,10 @@ package constraints
 							// Scoring: take same scoring for now, any conflict on EITHER subtype constraint will cause -100 (or whatever conflict penalty is for the equality constrtaint)
 							var constr1:SubtypeConstraint = new SubtypeConstraint(newConstraint.lhs, newConstraint.rhs, newConstraint.scoring);
 							var constr2:SubtypeConstraint = new SubtypeConstraint(newConstraint.rhs, newConstraint.lhs, newConstraint.scoring);
-							graph.constraintsDict[constr1.lhs.id + " -> " + constr1.rhs.id] = constr1;
-							graph.constraintsDict[constr2.lhs.id + " -> " + constr2.rhs.id] = constr2;
+							graph.constraintsDict[constr1.id] = constr1;
+							graph.constraintsDict[constr2.id] = constr2;
 						} else if (newConstraint is SubtypeConstraint) {
-							graph.constraintsDict[newConstraint.lhs.id + " -> " + newConstraint.rhs.id] = newConstraint;
+							graph.constraintsDict[newConstraint.id] = newConstraint;
 						}
 					}
 					

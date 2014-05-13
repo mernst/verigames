@@ -23,6 +23,7 @@ package events
 		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";
 		public static const LOAD_HIGH_SCORE:String = "LOAD_HIGH_SCORE";
 		public static const TOGGLE_SOUND_CONTROL:String = "toggle_sound_control";
+		public static const LEVEL_LOADED:String = "level_loaded";
 		
 		public static const SOLVE_SELECTION:String = "SOLVE_SELECTION";
 		public static const MAKE_SELECTION_WIDE:String = "MAKE_SELECTION_WIDE";

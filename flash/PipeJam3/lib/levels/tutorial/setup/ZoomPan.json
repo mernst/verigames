@@ -1,6 +1,7 @@
 {
   "id": "ZoomPan",
   "qid": 7,
+  "default": "type:1",
   "constraints": [
 	"var:0 <= type:0",
 	"type:1 <= var:1"

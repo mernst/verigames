@@ -1,6 +1,7 @@
 {
   "id": "Layout",
   "qid": 8,
+  "default": "type:1",
   "constraints": [
   ],
   "variables": {

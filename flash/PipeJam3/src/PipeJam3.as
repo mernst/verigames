@@ -55,6 +55,7 @@ package
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
+		public static var SHOW_PERFORMANCE_STATS:Boolean = true;
 		
 		public static var PRODUCTION:Boolean = true;
 		public static var INSTALL_DVD:Boolean = false;
@@ -113,8 +114,10 @@ package
 			Starling.multitouchEnabled = false; // useful on mobile devices
 			Starling.handleLostContext = true; // deactivate on mobile devices (to save memory)
 			
-			var stats:Stats = new Stats;
-			stage.addChild(stats);
+			if (SHOW_PERFORMANCE_STATS) {
+				var stats:Stats = new Stats;
+				stage.addChild(stats);
+			}
 			
 			//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
 			mStarling = new Starling(PipeJamGame, stage);

@@ -1,6 +1,7 @@
 {
   "id": "Links",
   "qid": 3,
+  "default": "type:1",
   "constraints": [
 	{
       "lhs": "var:0",

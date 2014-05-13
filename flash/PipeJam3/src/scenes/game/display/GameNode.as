@@ -1,18 +1,22 @@
 package scenes.game.display
 {
+	import audio.AudioManager;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import starling.display.Sprite;
 	
 	import assets.AssetInterface;
+	import assets.AssetsAudio;
 	
 	import constraints.ConstraintValue;
 	import constraints.ConstraintVar;
+	import constraints.events.VarChangeEvent;
 	
 	import display.NineSliceBatch;
 	
 	import events.ToolTipEvent;
 	import events.UndoEvent;
-	import events.WidgetChangeEvent;
 	
 	import graph.PropDictionary;
 	
@@ -31,6 +35,7 @@ package scenes.game.display
 		public function GameNode(_layoutObj:Object, _constraintVar:ConstraintVar, _draggable:Boolean = true)
 		{
 			super(_layoutObj, _constraintVar);
+			boundingBox = (m_layoutObj["bb"] as Rectangle).clone();
 			draggable = _draggable;
 			
 			shapeWidth = boundingBox.width;
@@ -39,56 +44,49 @@ package scenes.game.display
 			m_isEditable = !constraintVar.constant;
 			m_isWide = !constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			
-	//		draw();
+			constraintVar.addEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onVarChange);
+			
+			draw();
 		}
 		
 		public override function onClicked(pt:Point):void
 		{
-			var eventToUndo:WidgetChangeEvent,  eventToDispatch:UndoEvent;
+			var changeEvent:VarChangeEvent,  undoEvent:UndoEvent;
 			if (m_propertyMode == PropDictionary.PROP_NARROW) {
 				if(m_isEditable) {
 					var newIsWide:Boolean = !m_isWide;
-					handleWidthChange(newIsWide, false, pt);
+					//constraintVar.setProp(m_propertyMode, !newIsWide);
 					//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
-					eventToUndo = new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide);
-					eventToDispatch = new UndoEvent(eventToUndo, this);
-					dispatchEvent(eventToDispatch);
+					changeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, PropDictionary.PROP_NARROW, !newIsWide, pt);
+					undoEvent = new UndoEvent(changeEvent, this);
+					if (newIsWide) {
+						// Wide
+						AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+					} else {
+						// Narrow
+						AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+					}
 				}
 			} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
 				var propVal:Boolean = constraintVar.getProps().hasProp(m_propertyMode);
-				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, this, m_propertyMode, !propVal, null, false, pt));
-				eventToUndo = new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, this, m_propertyMode, !propVal);
-				eventToDispatch = new UndoEvent(eventToUndo, this);
-				dispatchEvent(eventToDispatch);
-				m_isDirty = true;
+				//constraintVar.setProp(m_propertyMode, propVal);
+				changeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, m_propertyMode, propVal, pt);
+				undoEvent = new UndoEvent(changeEvent, this);
 			}
+			if (undoEvent) dispatchEvent(undoEvent);
+			if (changeEvent) dispatchEvent(changeEvent);
 		}
 		
-		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		public function onVarChange(evt:VarChangeEvent):void
 		{
-			if (undoEvent is WidgetChangeEvent) {
-				var evt:WidgetChangeEvent = undoEvent as WidgetChangeEvent;
-				if (evt.prop == PropDictionary.PROP_NARROW) {
-					// This is a confusing double negative, if narrow is TRUE then isWide = false, but negate for undo
-					handleWidthChange(isUndo ? evt.propValue : !evt.propValue);
-				} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
-					dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, this, m_propertyMode, isUndo ? !evt.propValue : evt.propValue, null, false, null));
-					m_isDirty = true;
-				}
-			} else {
-				m_isDirty = true;
-			}
+			handleWidthChange(!constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW));
 		}
 		
-		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false, pt:Point = null):void
+		public function handleWidthChange(newIsWide:Boolean):void
 		{
 			var redraw:Boolean = (m_isWide != newIsWide);
 			m_isWide = newIsWide;
 			m_isDirty = redraw;
-			// Need to dispatch AFTER setting width, this will trigger the score update
-			// (we don't want to update the score with old values, we only know they're old
-			// if we properly mark them dirty first)
-			dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide, null, silent, pt));
 			for each (var iedge:GameEdgeContainer in orderedIncomingEdges) {
 				iedge.onWidgetChange(this);
 			}
@@ -141,8 +139,6 @@ package scenes.game.display
 			}
 			useHandCursor = m_isEditable;
 			
-
-			
 			if (constraintVar) {
 				var i:int = 0;
 				for (var prop:String in constraintVar.getProps().iterProps()) {
@@ -167,13 +163,19 @@ package scenes.game.display
 				if(this.filter)
 					this.filter.dispose();
 			}
-			
 			super.draw();
 		}
 		
 		override public function isWide():Boolean
 		{
 			return m_isWide;
+		}
+		
+		override public function dispose():void
+		{
+			if (m_scoreBlock) m_scoreBlock.dispose();
+			if (constraintVar) constraintVar.removeEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onVarChange);
+			super.dispose();
 		}
 		
 		override protected function getToolTipEvent():ToolTipEvent

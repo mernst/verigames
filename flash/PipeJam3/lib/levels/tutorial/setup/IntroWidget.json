@@ -1,6 +1,7 @@
 {
   "id": "IntroWidget",
   "qid": 0,
+  "default": "type:1",
   "constraints": [
   ],
   "variables": {

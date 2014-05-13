@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import constraints.ConstraintVar;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 	import starling.events.Event;
@@ -7,7 +8,6 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	import cgs.server.logging.actions.ClientAction;
-	import events.WidgetChangeEvent;
 	import server.ReplayController;
 	import system.VerigameServerConstants;
 	import utils.XString;
@@ -65,13 +65,12 @@ package scenes.game.display
 				newPropValue = XString.stringToBool(action.detailObject[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] as String);
 			}
 			if (varId && propChanged) {
-				var gameNode:GameNode = active_level.getNode(varId);
-				if (!gameNode) {
-					PipeJam3.showReplayText("Replay action failed: Game node not found: " + varId);
+				var constraintVar:ConstraintVar = active_level.levelGraph.variableDict[varId];
+				if (!constraintVar) {
+					PipeJam3.showReplayText("Replay action failed: ConstraintVar not found: " + varId);
 					return;
 				}
-				var eventToPerform:WidgetChangeEvent = new WidgetChangeEvent(WidgetChangeEvent.WIDGET_CHANGED, gameNode, propChanged, newPropValue);
-				gameNode.handleUndoEvent(eventToPerform, isUndo);
+				constraintVar.setProp(propChanged, newPropValue);
 				PipeJam3.showReplayText("performed: " + varId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : ""));
 			} else {
 				PipeJam3.showReplayText("Replay action failed, varId: " + varId + " propChanged: " + propChanged);

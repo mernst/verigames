@@ -22,9 +22,6 @@ package scenes
 	{	
 		private var mClipRect:Rectangle;
 		
-		private var m_texture:Texture;
-		private var m_image:Image;
-		
 		protected var m_disposed:Boolean;
 		
 		//initalized in Game
@@ -52,10 +49,6 @@ package scenes
 			}
 			m_disposed = true;
 			disposeChildren();
-			if(m_texture)
-				m_texture.dispose();
-			if(m_image)
-				m_image.dispose();
 			super.dispose();
 		}
 		
@@ -117,31 +110,8 @@ package scenes
 		//it adds a 'transparent' image of the specified size (you can make it non-transparent by changing the alpha value.)
 		public function setPosition(_x:Number, _y:Number, _width:Number, _height:Number, _alpha:Number = 0.0, _color:Number = 0x000000):void
 		{
-			
-			var shape:flash.display.Sprite = new flash.display.Sprite();
-			shape.graphics.beginFill(_color,_alpha);
-			shape.graphics.drawRect(0,0,_width, _height); 
-			shape.graphics.endFill();
-			var bmd:BitmapData = new BitmapData(_width, _height, true, 0x000000);
-			bmd.draw(shape);
-			m_texture = Texture.fromBitmapData(bmd);
-			bmd.dispose();
-			m_image = new Image(m_texture);
-			this.addChildAt(m_image, 0);
-			
 			this.x = _x;
 			this.y = _y;
-		}
-		
-		public static function findBoundingBox(layoutObj:Object):Rectangle
-		{			
-			var bb:Rectangle = new Rectangle;
-			bb.x = Number(layoutObj["x"]) * Constants.GAME_SCALE;
-			bb.y = Number(layoutObj["y"]) * Constants.GAME_SCALE;
-			bb.width = Number(layoutObj["w"]) * Constants.GAME_SCALE;
-			bb.height = Number(layoutObj["h"]) * Constants.GAME_SCALE;
-			
-			return bb;
 		}
 		
 		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
