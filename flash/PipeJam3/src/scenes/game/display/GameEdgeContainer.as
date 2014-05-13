@@ -114,7 +114,7 @@ package scenes.game.display
 			onWidgetChange();
 			
 			m_isDirty = true;
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		//	addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public override function getProps():PropDictionary { return graphConstraint.lhs.getProps(); }

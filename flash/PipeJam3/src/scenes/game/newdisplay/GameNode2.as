@@ -2,6 +2,7 @@ package scenes.game.newdisplay
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.geom.Point;
 	
 	import assets.AssetInterface;
@@ -28,10 +29,7 @@ package scenes.game.newdisplay
 	{
 
 		public var currentColor:int;
-		
-		protected var mAtlas:TextureAtlas;
-		
-		protected var skin:GameNode2Skin;
+		public var skin:GameNode2Skin;
 		
 		public function GameNode2(_layoutObj:Object, _constraintVar:ConstraintVar, _draggable:Boolean = true)
 		{
@@ -43,11 +41,7 @@ package scenes.game.newdisplay
 		
 		private function onAddedToStage(evt:Event):void
 		{
-			x = boundingBox.x;
-			y = boundingBox.y;
-			
-			var q:Quad = new Quad(200, 200);
-			addChild(q);
+			m_isDirty = true;
 		}
 		
 		public function setSkin(_skin:GameNode2Skin):void
@@ -56,19 +50,20 @@ package scenes.game.newdisplay
 		}
 		override public function draw():void
 		{
-			
-			
 			if(!skin)
-			{
-				skin = new GameNode2Skin();
-				addChild(skin);
-			}
+				return;
 			
 			currentColor = skin.draw(m_isWide, m_isEditable);
-
+			addChild(skin);
 			
-		//	skin.x = boundingBox.x + boundingBox.width/2 - skin.width/2;
-		//	skin.y = boundingBox.y + boundingBox.height/2 - skin.height/2;
+			//center the skin in this component
+			skin.x = width/2 - skin.width/2;
+			skin.y = height/2 - skin.height/2;
+			
+			//center this component on existing bounding box
+			x = boundingBox.x - bounds.width/2;
+			y = boundingBox.y - bounds.height/2;
+
 			
 			for each(var oedge1:GameEdge in this.orderedOutgoingEdges)
 			{
@@ -78,9 +73,7 @@ package scenes.game.newdisplay
 			{
 				iedge1.draw();
 			}
-//			var quad:Quad = new Quad(shapeHeight, shapeHeight);
-//			quad.x = (boundingBox.width-shapeHeight)/2;
-//			addChild(quad);
+
 //			var textField:TextField = 
 //				new TextField(100, 20, constraintVar.id, "Arial", 12, 0xffff00);
 //			addChild(textField);

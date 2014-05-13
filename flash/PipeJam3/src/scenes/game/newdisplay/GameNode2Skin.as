@@ -1,38 +1,23 @@
 package scenes.game.newdisplay
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.geom.Point;
-	
 	import assets.AssetInterface;
 	
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
-	
-	import display.NineSliceBatch;
-	
-	import graph.PropDictionary;
-	
-	import scenes.game.newdisplay.*;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.ScoreBlock;
-	
+
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.events.Event;
-	import starling.filters.BlurFilter;
-	import starling.text.TextField;
 	import starling.textures.TextureAtlas;
+	import flash.utils.Dictionary;
 	
 	public class GameNode2Skin extends Sprite
 	{
-		
+		static protected var availableGameNodeSkins:Vector.<GameNode2Skin>;
+		static protected var activeGameNodeSkins:Dictionary;
+
 		public var currentColor:int;
 		
 		static protected var mAtlas:TextureAtlas;		
-		static protected var wideSkin:Image;
-		static protected var isInitialized:Boolean;
+		protected var skin:Image;
+		protected var isInitialized:Boolean;
 		
 		public var isWide:Boolean;
 		public var isEditable:Boolean;
@@ -42,54 +27,105 @@ package scenes.game.newdisplay
 		static public const wideColor:int = 0x14662F;
 		static public const narrowColor:int = 0xABFFF2;
 
+		var id:int;
 		
-		public function GameNode2Skin()
+		static public function InitializeSkins():void
 		{
+			//generate skins
+			availableGameNodeSkins = new Vector.<GameNode2Skin>;
+			activeGameNodeSkins = new Dictionary();
 			
-			if(!isInitialized)
+			for(var numSkin:int = 0; numSkin < 5000; numSkin++)
 			{
-				if(!mAtlas)
-					mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				
-				wideSkin = new Image(mAtlas.getTexture("DarkBlueCircle"));
-
-				isInitialized = true;
+				availableGameNodeSkins.push(new GameNode2Skin(numSkin));
 			}
 		}
 		
-		public function draw(_isWide:Boolean, _isEditable:Boolean):int
+		static public function getNextSkin():GameNode2Skin
 		{
-			isWide = _isWide;
-			isEditable = _isEditable;
-
+			var nextSkin:GameNode2Skin;
+			if(availableGameNodeSkins.length > 0)
+				nextSkin = availableGameNodeSkins.pop();
+			else
+				nextSkin = new GameNode2Skin(5001);
 			
-			var img:Image = wideSkin;
+			activeGameNodeSkins[nextSkin.id] = nextSkin;
+//			
+//			var skinCount:int = countKeys(activeGameNodeSkins);
+//			if(skinCount % 100 == 0)
+//				trace("skin count ", skinCount);
+			
+			return nextSkin;
+		}
+		
+		public static function countKeys(myDictionary:flash.utils.Dictionary):int 
+		{
+			var n:int = 0;
+			for (var key:* in myDictionary) {
+				n++;
+			}
+			return n;
+		}
+		
+		public function GameNode2Skin(numSkin:int)
+		{
+			id = numSkin;
+			
+			if(!mAtlas)
+				mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+		}
+		
+		public function setSkin(_isWide:Boolean, _isEditable:Boolean):void
+		{
+			if(skin && isWide == _isWide && isEditable == _isEditable)
+				return;
+			else
+			{
+				isWide = _isWide;
+				isEditable = _isEditable;
+			}
+			
+			if(skin)
+			{
+				skin.removeFromParent(true);
+			}
 			
 			if(isWide && !this.isEditable)
 			{
-				img = wideSkin;
+				skin = new Image(mAtlas.getTexture("DarkGrayCircle"));
 				currentColor = wideColor;
 			}
 			else if(!isWide && !this.isEditable)
 			{
-				img = wideSkin;
-				
+				skin = new Image(mAtlas.getTexture("LightGrayCircle"));
 				currentColor = narrowColor;
 			}
 			else if(isWide && this.isEditable)
 			{
-				img = wideSkin;
-				
+				skin = new Image(mAtlas.getTexture("DarkBlueCircle"));
 				currentColor = wideColor;
 			}
-			else if(!isWide && this.isEditable)
+			else if(!isWide && !this.isEditable)
 			{
-				img = wideSkin;
-				
+				skin = new Image(mAtlas.getTexture("LightBlueCircle"));
 				currentColor = narrowColor;
 			}
 			
-			addChild(img);
+			skin.scaleX = 20*skin.scaleX/skin.width;
+			skin.scaleY = 20*skin.scaleY/skin.height;
+			
+			addChild(skin);
+		}
+		
+		public function disableSkin():void
+		{
+			availableGameNodeSkins.push(this);
+			delete activeGameNodeSkins[id];
+		}
+		
+		public function draw(_isWide:Boolean, _isEditable:Boolean):int
+		{
+			setSkin(_isWide, _isEditable);
 			
 			return currentColor;
 		}

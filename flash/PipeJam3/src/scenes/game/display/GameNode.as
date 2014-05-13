@@ -19,6 +19,8 @@ package scenes.game.display
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
+	import starling.textures.TextureAtlas;
+	import starling.display.Image;
 	
 	public class GameNode extends GameNodeBase
 	{
@@ -37,7 +39,7 @@ package scenes.game.display
 			m_isEditable = !constraintVar.constant;
 			m_isWide = !constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			
-			draw();
+	//		draw();
 		}
 		
 		public override function onClicked(pt:Point):void
@@ -121,10 +123,9 @@ package scenes.game.display
 			if (costume) {
 				costume.removeFromParent(true);
 			}
-			
 			costume = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
 			addChild(costume);
-			
+
 			var wideScore:Number = constraintVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
 			var narrowScore:Number = constraintVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink

@@ -28,6 +28,7 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import utils.XMath;
+	import scenes.game.newdisplay.GameNode2;
 	
 	public class MiniMap extends BaseComponent
 	{
@@ -202,7 +203,7 @@ package scenes.game.components
 			}
 			errorLayer.flatten();
 			widgetPairs = new Dictionary();
-			var widgets:Vector.<GameNode> = currentLevel.getNodes();
+			var widgets:Vector.<GameNode2> = currentLevel.getNodes();
 			for (var i:int = 0; i < widgets.length; i++) {
 				addWidget(widgets[i], false);
 			}

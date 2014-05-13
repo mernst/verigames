@@ -64,6 +64,8 @@ package scenes.game.display
 	import utils.Base64Encoder;
 	import utils.XObject;
 	import utils.XString;
+	import scenes.game.newdisplay.GameNode2;
+	import scenes.game.newdisplay.GameEdge;
 	
 	/**
 	 * Level all game components - widgets and links
@@ -105,8 +107,8 @@ package scenes.game.display
 		protected var boxDictionary:Dictionary;
 		protected var edgeContainerDictionary:Dictionary;
 		
-		protected var m_nodeList:Vector.<GameNode>;
-		public var m_edgeList:Vector.<GameEdgeContainer>;
+		protected var m_nodeList:Vector.<GameNode2>;
+		public var m_edgeList:Vector.<GameEdge>;
 		protected var m_hidingErrorText:Boolean = false;
 		protected var m_segmentHovered:GameEdgeSegment;
 		public var errorList:Dictionary = new Dictionary();
@@ -297,7 +299,7 @@ package scenes.game.display
 			if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
 			addChild(m_nodesContainer);
-			addChild(m_errorContainer);
+		//	addChild(m_errorContainer);
 			addChild(m_edgesContainer);
 			addChild(m_plugsContainer);
 			
@@ -1251,21 +1253,18 @@ package scenes.game.display
 			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.boundingBox.x;
-				gameNode.y = gameNode.boundingBox.y;
-				gameNode.m_isDirty = true;
-				//gameNode.visible = false; // zzz
 				m_nodesContainer.addChild(gameNode);
 				nodeCount++;
 			}
 			
 			var edgeCount:int = 0;
-			for each(var gameEdge:GameEdgeContainer in m_edgeList)
+			for each(var gameEdge:GameEdge in m_edgeList)
 			{
 				gameEdge.m_isDirty = true;
 				//gameEdge.visible = false; // zzz
 				m_edgesContainer.addChild(gameEdge);
-				m_errorContainer.addChild(gameEdge.errorContainer);
+
+			//	m_errorContainer.addChild(gameEdge.errorContainer);
 				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
 				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 				edgeCount++;
@@ -1405,7 +1404,7 @@ package scenes.game.display
 			return null;
 		}
 		
-		public function getNodes():Vector.<GameNode>
+		public function getNodes():Vector.<GameNode2>
 		{
 			return m_nodeList;
 		}
@@ -1504,12 +1503,12 @@ package scenes.game.display
 			return; // uncomment when more testing performed
 			// Active layers
 			m_nodesContainer.flatten();
-			//m_errorContainer.flatten();// Can't flatten due to animations
+	//		m_errorContainer.flatten();// Can't flatten due to animations
 			m_edgesContainer.flatten();
 			m_plugsContainer.flatten();
 			// Inactive layers
 			m_nodesInactiveContainer.flatten();
-			//m_errorInactiveContainer.flatten();// Can't flatten due to animations
+	//		m_errorInactiveContainer.flatten();// Can't flatten due to animations
 			m_edgesInactiveContainer.flatten();
 			m_plugsInactiveContainer.flatten();
 		}
@@ -1725,6 +1724,16 @@ package scenes.game.display
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			this.updateScore(true);
+		}
+		
+		public function onViewSpaceChanged(event:MiniMapEvent):void
+		{
+
+		}
+		
+		public function adjustSize(newWidth:Number, newHeight:Number):void
+		{
+
 		}
 	}
 }

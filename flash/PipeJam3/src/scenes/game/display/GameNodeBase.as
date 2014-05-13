@@ -44,8 +44,8 @@ package scenes.game.display
 			boundingBox = findBoundingBox(m_layoutObj);
 			
 			//adjust bounding box by half dimensions since layout is from center of node
-			boundingBox.x -= boundingBox.width/2;
-			boundingBox.y -= boundingBox.height/2;
+		//	boundingBox.x -= boundingBox.width/2;
+		//	boundingBox.y -= boundingBox.height/2;
 			
 			orderedOutgoingEdges = new Vector.<GameEdgeContainer>();
 			orderedIncomingEdges = new Vector.<GameEdgeContainer>();

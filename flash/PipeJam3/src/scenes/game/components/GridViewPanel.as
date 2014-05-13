@@ -39,6 +39,7 @@ package scenes.game.components
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
+	import scenes.game.newdisplay.GameNode2;
 	
 	import starling.animation.DelayedCall;
 	import starling.animation.Transitions;
@@ -182,7 +183,7 @@ package scenes.game.components
 				if (m_currentLevel.m_edgeList[i].hidden) continue;
 				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].boundingBox, currentViewRect);
 			}
-			const gameNodes:Vector.<GameNode> = m_currentLevel.getNodes();
+			const gameNodes:Vector.<GameNode2> = m_currentLevel.getNodes();
 			for (i = 0; i < gameNodes.length; i++) {
 				if (gameNodes[i].hidden) continue;
 				gameNodes[i].visible = isOnScreen(gameNodes[i].boundingBox, currentViewRect);
@@ -297,6 +298,8 @@ package scenes.game.components
 						// one finger touching -> move
 						if (touches[0].target == contentBarrier)
 						{
+							var loc:Point = touches[0].getLocation(m_currentLevel);
+					//		trace(loc.x, loc.y);
 							if (getPanZoomAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
@@ -795,9 +798,9 @@ package scenes.game.components
 				moveContent(localPt.x, localPt.y);
 			} else {
 				// Otherwise center on the first visible box
-				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
+				var nodes:Vector.<GameNode2> = m_currentLevel.getNodes();
 				if (nodes.length > 0) {
-					var foundNode:GameNode = nodes[0];
+					var foundNode:GameNode2 = nodes[0];
 					for (i = 0; i < nodes.length; i++) {
 						if (nodes[i].visible && (nodes[i].alpha > 0) && nodes[i].parent) {
 							foundNode = nodes[i];

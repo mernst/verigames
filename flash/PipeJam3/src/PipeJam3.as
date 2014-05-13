@@ -50,7 +50,7 @@ package
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOGGING_ON:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
@@ -114,7 +114,7 @@ package
 			Starling.handleLostContext = true; // deactivate on mobile devices (to save memory)
 			
 			var stats:Stats = new Stats;
-			//		stage.addChild(stats);
+			stage.addChild(stats);
 			
 			//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
 			mStarling = new Starling(PipeJamGame, stage);

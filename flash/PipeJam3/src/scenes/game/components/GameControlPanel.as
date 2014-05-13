@@ -107,6 +107,8 @@ package scenes.game.components
 		/** Display the current best score for this level */
 		private var m_bestScoreLine:TargetScoreDisplay;
 		
+		protected var m_currentLevel:Level;
+		
 		public function GameControlPanel()
 		{
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
@@ -336,6 +338,8 @@ package scenes.game.components
 		
 		public function newLevelSelected(level:Level):void 
 		{
+			m_currentLevel = level;
+			
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
@@ -575,6 +579,9 @@ package scenes.game.components
 				m_fullScreenButton.visible = true;
 				m_smallScreenButton.visible = false;
 			}			
+			
+			if(m_currentLevel)
+				m_currentLevel.adjustSize(newWidth, newHeight);
 		}
 		
 		public function addSoundButton(m_sfxButton:SoundButton):void
@@ -594,7 +601,7 @@ import display.ToolTippableSprite;
 
 import events.ToolTipEvent;
 
-import scenes.game.components;
+import scenes.game.components.*;
 import scenes.game.components.GameControlPanel;
 
 import starling.display.Quad;

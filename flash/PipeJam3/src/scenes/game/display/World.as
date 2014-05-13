@@ -688,6 +688,7 @@ package scenes.game.display
 		public function onViewspaceChanged(event:MiniMapEvent):void
 		{
 			miniMap.onViewspaceChanged(event);
+			this.active_level.onViewSpaceChanged(event);
 		}
 		
 		public function onWidgetChange(evt:WidgetChangeEvent = null):void
