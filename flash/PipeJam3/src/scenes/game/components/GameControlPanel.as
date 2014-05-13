@@ -221,7 +221,6 @@ package scenes.game.components
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
 			busyAnimationMovieClip.y = m_solveButton.y;
 			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height/busyAnimationMovieClip.height;
-			addChild(busyAnimationMovieClip);
 			
 			//fullscreen has to be triggered by a user event, in this case the mouse
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
@@ -232,6 +231,7 @@ package scenes.game.components
 		{
 			if(!Starling.juggler.contains(this.busyAnimationMovieClip))
 			{
+				if (busyAnimationMovieClip) addChild(busyAnimationMovieClip);
 				Starling.juggler.add(this.busyAnimationMovieClip);
 				trace("start animation");
 			}
@@ -240,6 +240,7 @@ package scenes.game.components
 		public function stopSolveAnimation():void
 		{
 			Starling.juggler.remove(this.busyAnimationMovieClip);
+			if (busyAnimationMovieClip) busyAnimationMovieClip.removeFromParent();
 			trace("stop animation");
 		}
 		

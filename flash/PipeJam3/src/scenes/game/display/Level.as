@@ -1698,8 +1698,8 @@ package scenes.game.display
 				//generate initvars array
 				for(var ii:int = 1;ii<counter;ii++)
 				{
-					var gameNode:GameNode = nodeIDToConstraintsTwoWayMap[ii] as GameNode;
-					if(gameNode.m_isWide)
+					var constraintVar:ConstraintVar = nodeIDToConstraintsTwoWayMap[ii] as ConstraintVar;
+					if(!constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW))
 						initvarsArray.push(1);
 					else
 						initvarsArray.push(0);
@@ -1719,7 +1719,7 @@ package scenes.game.display
 			
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				constraintVar = nodeIDToConstraintsTwoWayMap[ii+1];
+				constraintVar = nodeIDToConstraintsTwoWayMap[ii+1] as ConstraintVar;
 				assignmentIsWide = false;
 				if(vars[ii] == 1)
 					assignmentIsWide = true;
