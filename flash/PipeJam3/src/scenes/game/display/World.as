@@ -732,6 +732,7 @@ package scenes.game.display
 		{
 			var level:Level = active_level;
 			//forget that which we knew
+			level.restart();
 			PipeJamGameScene.levelContinued = false;
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
@@ -995,7 +996,9 @@ package scenes.game.display
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
 				if (PipeJamGame.levelInfo) {
-					details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
+					var jsonString:String = JSON.stringify(PipeJamGame.levelInfo);
+					var newObject:Object =  JSON.parse(jsonString);
+					details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = newObject;
 				}
 				qid = (newLevel.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelGraph.qid;
 				PipeJam3.logging.logQuestStart(qid, details);

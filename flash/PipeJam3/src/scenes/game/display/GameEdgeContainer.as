@@ -13,6 +13,7 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import flash.errors.ScriptTimeoutError;
+	import utils.XObject;
 	
 	import constraints.Constraint;
 	import display.NineSliceBatch;
@@ -91,11 +92,7 @@ package scenes.game.display
 		{
 			super(_id);
 			draggable = _draggable;
-			edgeArray = new Array();
-			for (var i:int = 0; i < _edgeArray.length; i++) {
-				var pt:Point  = _edgeArray[i] as Point;
-				edgeArray.push(pt.clone()); // need to do this to avoid changing the actual points in the original layout
-			}
+			edgeArray = XObject.clonePointArray(_edgeArray);
 			m_fromNode = fromComponent;
 			m_toNode = toComponent;
 			graphConstraint = _graphConstraint;
@@ -170,8 +167,6 @@ package scenes.game.display
 			var minYedge:Number = Math.min(startPt.y, endPt.y);
 			this.x = minXedge;
 			this.y = minYedge;
-			if (!minXedge && !minYedge)
-				trace("0 0");
 			if(!newEdgeArray) {
 				//adjust by min
 				for(var i0:int = 0; i0<edgeArray.length; i0++)
@@ -304,7 +299,8 @@ package scenes.game.display
 			removeEventListener(EdgeContainerEvent.SAVE_CURRENT_LOCATION, onSaveLocation);
 			removeEventListener(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, onRestoreLocation);
 			removeEventListener(EdgeContainerEvent.INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
-			
+			if (errorTextBubble) errorTextBubble.removeFromParent(true);
+			if (errorTextBubbleContainer) errorTextBubbleContainer.removeFromParent(true);
 			if (errorContainer) errorContainer.removeFromParent(true);
 			if (m_errorParticleSystem) m_errorParticleSystem.removeFromParent(true);
 			m_errorParticleSystem = null;

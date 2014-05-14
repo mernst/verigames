@@ -47,6 +47,15 @@ package scenes.game.display
 			draw();
 		}
 		
+		public function updateLayout(newLayoutObj:Object):void
+		{
+			m_layoutObj = newLayoutObj;
+			boundingBox = (m_layoutObj["bb"] as Rectangle).clone();
+			this.x = boundingBox.x;
+			this.y = boundingBox.y;
+			m_isDirty = true;
+		}
+		
 		public override function onClicked(pt:Point):void
 		{
 			var changeEvent:VarChangeEvent,  undoEvent:UndoEvent;

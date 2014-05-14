@@ -168,11 +168,11 @@ package scenes.game.display
 			levelGraph = _levelGraph;
 			levelObj = _levelObj;
 			m_levelLayoutObj = XObject.clone(_levelLayoutObj);
-			m_levelOriginalLayoutObj = _levelLayoutObj;// XObject.clone(_levelLayoutObj);
+			m_levelOriginalLayoutObj = XObject.clone(_levelLayoutObj);
 			m_levelLayoutName = _levelLayoutObj["id"];
 			m_levelQID = _levelLayoutObj["qid"];
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
-			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
+			m_levelOriginalAssignmentsObj = XObject.clone(_levelAssignmentsObj);
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
@@ -480,6 +480,10 @@ package scenes.game.display
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
 				boxLayoutObj["bb"] = nodeBoundingBox;
 				nodeLayoutObjs[varId] = boxLayoutObj;
+				if (m_gameNodeDict.hasOwnProperty(varId)) {
+					// If node exists, update its position
+					(m_gameNodeDict[varId] as GameNode).updateLayout(boxLayoutObj);
+				}
 				n++;
 			}
 			trace("node count = " + n);
@@ -525,6 +529,7 @@ package scenes.game.display
 				edgeLayoutObj["edge_array"] = edgeArray;
 				edgeLayoutObj["bb"] = new Rectangle(edgeXMin, edgeYMin, edgeXMax - edgeXMin, edgeYMax - edgeYMin);
 				edgeLayoutObjs[constraintId] = edgeLayoutObj;
+				if (m_gameEdgeDict.hasOwnProperty(constraintId)) createEdgeFromJsonObj(edgeLayoutObj);
 				n++;
 			}
 			trace("edge count = " + n);
@@ -676,7 +681,7 @@ package scenes.game.display
 				
 				if(edgeContainer.m_jointPoints.length != GameEdgeContainer.NUM_JOINTS)
 					trace("Wrong number of joint points " + constraintId);
-				for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
+				for(var i:int = 0; i< edgeContainer.m_jointPoints.length; i++)
 				{
 					var pt:Point = edgeContainer.m_jointPoints[i];
 					currentLayoutX = (pt.x + edgeContainer.x) / Constants.GAME_SCALE;
