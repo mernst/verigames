@@ -566,9 +566,9 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.startLevel();
 				m_levelStartTime = new Date().time;
 			}
-			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
-			onPropertyModeChange(propChangeEvt);
-			dispatchEvent(propChangeEvt);
+			//var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+			//onPropertyModeChange(propChangeEvt);
+			//dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutObj);
 			//m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
 			//loadAssignments(m_levelAssignmentsObj);
