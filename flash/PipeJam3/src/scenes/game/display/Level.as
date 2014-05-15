@@ -570,8 +570,9 @@ package scenes.game.display
 			onPropertyModeChange(propChangeEvt);
 			dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutObj);
-			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			loadAssignments(m_levelAssignmentsObj);
+			//m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
+			//loadAssignments(m_levelAssignmentsObj);
+			loadInitialConfiguration();
 			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutObj["id"]);
 		}

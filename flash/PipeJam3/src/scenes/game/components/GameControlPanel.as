@@ -156,7 +156,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			addChild(m_levelNameTextfield);
 			
-			m_newLevelButton = ButtonFactory.getInstance().createButton("New Level", 44, 14, 8, 8, "Start a new level");
+			m_newLevelButton = ButtonFactory.getInstance().createButton(PipeJam3.TUTORIAL_DEMO ? "Level Select" : "New Level", 44, 14, 8, 8, "Start a new level");
 			m_newLevelButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 5;
 			m_newLevelButton.y = 25.5;
@@ -272,7 +272,11 @@ package scenes.game.components
 		
 		private function onMenuButtonTriggered():void
 		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
+			if (PipeJam3.TUTORIAL_DEMO) {
+				dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			} else {
+				dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
+			}
 		}
 		
 		private function onStartOverButtonTriggered():void

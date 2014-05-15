@@ -276,12 +276,16 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
+				case LOCKED_TUTORIAL:
+					return new Point(0, -5);// move up by 5px (pan down)
 				case LINKS_TUTORIAL:
-					return new Point(15, -4);//move right 15px (pan left)
+					return new Point(15, -10);//move right 15px (pan left) and up (pan down) 10px
+				case JAMS_TUTORIAL:
+					return new Point(0, -5);// move up by 5px (pan down)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
 				case OPTIMIZE_TUTORIAL:
-					return new Point(0, -5);// move up by 5px (pan down)
+					return new Point(0, -10);// move up by 10px (pan down)
 				case ZOOM_PAN_TUTORIAL:
 					return new Point( -10, 10);// move left 10px, down 10px
 				case LAYOUT_TUTORIAL:
@@ -289,7 +293,7 @@ package scenes.game.display
 				case GROUP_SELECT_TUTORIAL:
 					return new Point(0, 25);// move down by 25px
 				case SKILLS_A_TUTORIAL:
-					return new Point(0, -8);// move up by 8px
+					return new Point(0, -15);// move up by 15px
 				case SKILLS_B_TUTORIAL:
 					return new Point(75, 75);// pan left 75 px, up by 75px
 			}

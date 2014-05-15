@@ -912,7 +912,7 @@ package scenes.game.components
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
-		public function displayContinueButton(permanently:Boolean = true):void
+		public function displayContinueButton(permanently:Boolean = false):void
 		{
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
@@ -988,7 +988,7 @@ package scenes.game.components
 			}
 		}
 		
-		private function removeFanfare():void
+		public function removeFanfare():void
 		{
 			if (m_stopFanfareDelayedCall) Starling.juggler.remove(m_stopFanfareDelayedCall);
 			for (var i:int = 0; i < m_fanfare.length; i++) {
@@ -1002,8 +1002,9 @@ package scenes.game.components
 			}
 		}
 		
-		public function hideContinueButton():void
+		public function hideContinueButton(forceOff:Boolean = false):void
 		{
+			if (forceOff) m_continueButtonForced = false;
 			if (continueButton && !m_continueButtonForced) {
 				continueButton.removeFromParent();
 			}

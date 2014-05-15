@@ -339,11 +339,13 @@ package scenes.levelselectscene
 				PipeJamGameScene.inTutorial = false;
 			
 			if (dataObj) {
-				//	if (dataObj.hasOwnProperty("levelId")) {
-				PipeJamGameScene.inDemo = false;
-				PipeJamGame.levelInfo = new dataObj;
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-				//	}
+				if (dataObj.hasOwnProperty("levelId") && PipeJamGameScene.inTutorial) {
+					//PipeJamGameScene.inDemo = false;
+					PipeJamGame.levelInfo.name = dataObj.name;
+					PipeJamGame.levelInfo.id = dataObj.levelId;
+					PipeJamGame.levelInfo.tutorialLevelID = dataObj.levelId;
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				}
 			}
 		}
 		

@@ -148,9 +148,9 @@ package scenes.game.display
 			m_initQueue.push(initForeground);
 			m_initQueue.push(initGameControlPanel);
 			m_initQueue.push(initMiniMap);
+			m_initQueue.push(initTutorial);
 			m_initQueue.push(initLevel);
 			m_initQueue.push(initScoring);
-			m_initQueue.push(initTutorial);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
@@ -732,13 +732,16 @@ package scenes.game.display
 		{
 			var level:Level = active_level;
 			//forget that which we knew
-			level.restart();
 			PipeJamGameScene.levelContinued = false;
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
 				function():void
 				{
-					level.loadInitialConfiguration();
+					if (edgeSetGraphViewPanel) {
+						edgeSetGraphViewPanel.removeFanfare();
+						edgeSetGraphViewPanel.hideContinueButton(true);
+					}
+					level.restart();
 				};
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
@@ -1004,6 +1007,7 @@ package scenes.game.display
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
 			if (restart) {
+				if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.hideContinueButton();
 				newLevel.restart();
 			} else if (active_level) {
 				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
