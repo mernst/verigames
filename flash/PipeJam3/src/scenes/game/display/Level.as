@@ -1205,7 +1205,7 @@ package scenes.game.display
 			}
 			totalMoveDist.x += delta.x;
 			totalMoveDist.y += delta.y;
-			trace(totalMoveDist);
+			//trace(totalMoveDist);
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.ERRORS_MOVED));
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
@@ -1242,7 +1242,7 @@ package scenes.game.display
 				} else {
 					delta = new Point(-moveEvt.delta.x, -moveEvt.delta.y);
 				}
-				trace("isUndo:" + isUndo + " delta:" + delta);
+				//trace("isUndo:" + isUndo + " delta:" + delta);
 				//not added as a temp selection, so move separately
 				if (moveEvt.component)
 					moveEvt.component.componentMoved(delta);
@@ -1611,7 +1611,7 @@ package scenes.game.display
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0)
+				if(!m_tutorialTag && levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			if (levelGraph.prevScore != levelGraph.currentScore)

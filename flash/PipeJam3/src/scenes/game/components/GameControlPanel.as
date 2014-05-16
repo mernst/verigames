@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import flash.display.StageDisplayState;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -149,11 +150,12 @@ package scenes.game.components
 			shadowOverlay.touchable = false;
 			m_scorePanel.addChild(shadowOverlay);
 			
-			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, WIDTH - 2, 10, 10, GameComponent.WIDE_COLOR);
+			const LEVEL_TEXT_WIDTH:Number = 100.0;
+			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, GameComponent.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;
-			m_levelNameTextfield.x = 0;
+			m_levelNameTextfield.x = WIDTH - LEVEL_TEXT_WIDTH - 10;
 			m_levelNameTextfield.y = -10;
-			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			addChild(m_levelNameTextfield);
 			
 			m_newLevelButton = ButtonFactory.getInstance().createButton(PipeJam3.TUTORIAL_DEMO ? "Level Select" : "New Level", 44, 14, 8, 8, "Start a new level");
@@ -192,8 +194,10 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y;
 			addChild(m_recenterButton);
 			
+			// Note: this button is for display only, we listen for native touch events below on the stage and
+			// see whether this button was clicked because Flash requires native MouseEvents to trigger fullScreen
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, checkForTriggerFullScreen);
 			m_fullScreenButton = new FullScreenButton();
-			m_fullScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
 			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_fullScreenButton);
 			m_fullScreenButton.x =  m_recenterButton.x + m_recenterButton.width + 3;
@@ -221,10 +225,6 @@ package scenes.game.components
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
 			busyAnimationMovieClip.y = m_solveButton.y;
 			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height/busyAnimationMovieClip.height;
-			
-			//fullscreen has to be triggered by a user event, in this case the mouse
-			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
-
 		}
 		
 		public function startSolveAnimation():void
@@ -244,11 +244,33 @@ package scenes.game.components
 			trace("stop animation");
 		}
 		
-		protected function triggerFullScreen(event:MouseEvent):void
+		protected function checkForTriggerFullScreen(event:MouseEvent):void
 		{
-			var testPt:Point = localToGlobal(new Point(m_fullScreenButton.x, m_fullScreenButton.y));
-			if(event.stageX >= 2*testPt.x/scaleX && event.stageX <= 2*testPt.x/scaleX + m_fullScreenButton.width*2
-				&& event.stageY >= 2*testPt.y/scaleY && event.stageY <= 2*testPt.y/scaleY + m_fullScreenButton.height*2)
+			if (!m_fullScreenButton) return;
+			if (!m_fullScreenButton.parent) return;
+			var buttonTopLeft:Point = m_fullScreenButton.parent.localToGlobal(new Point(m_fullScreenButton.x - 0.5 * m_fullScreenButton.width, m_fullScreenButton.y - 0.5 * m_fullScreenButton.height));
+			var buttonBottomRight:Point = m_fullScreenButton.parent.localToGlobal(new Point(m_fullScreenButton.x + 0.5 * m_fullScreenButton.width, m_fullScreenButton.y + 0.5 * m_fullScreenButton.height));
+			// Need to use viewport to convert to native stage
+			if (ExternalInterface.available) {
+				ExternalInterface.call("console.log", "buttonTopLeft:" + buttonTopLeft);
+				ExternalInterface.call("console.log", "buttonBottomRight:" + buttonBottomRight);
+				ExternalInterface.call("console.log", "Starling.contentScaleFactor:" + Starling.contentScaleFactor);
+				ExternalInterface.call("console.log", "Starling.current.viewPort:" + Starling.current.viewPort);
+				ExternalInterface.call("console.log", "event.stageX,Y:" + event.stageX + ", " + event.stageY);
+			}
+			buttonTopLeft.x *= Starling.contentScaleFactor;
+			buttonBottomRight.x *= Starling.contentScaleFactor;
+			buttonTopLeft.y *= Starling.contentScaleFactor;
+			buttonBottomRight.y *= Starling.contentScaleFactor;
+			buttonTopLeft.x += Starling.current.viewPort.x;
+			buttonBottomRight.x += Starling.current.viewPort.x;
+			buttonTopLeft.y += Starling.current.viewPort.y;
+			buttonBottomRight.y += Starling.current.viewPort.y;
+			if (ExternalInterface.available) {
+				ExternalInterface.call("console.log", "adjbuttonTopLeft:" + buttonTopLeft);
+				ExternalInterface.call("console.log", "adjbuttonBottomRight:" + buttonBottomRight);
+			}
+			if (event.stageX >= buttonTopLeft.x && event.stageX <= buttonBottomRight.x && event.stageY >= buttonTopLeft.y && event.stageY <= buttonBottomRight.y)
 			{
 				//need to mark that we are doing this, so we don't lose the selection
 				World.changingFullScreenState = true;
@@ -335,14 +357,14 @@ package scenes.game.components
 		
 		public function removedFromStage(event:Event):void
 		{
-			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, triggerFullScreen);
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, checkForTriggerFullScreen);
 		}
 		
 		public function newLevelSelected(level:Level):void 
 		{
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
-			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
