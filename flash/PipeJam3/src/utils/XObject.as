@@ -22,7 +22,7 @@ package utils
 		
 		public static function clonePointArray(arrToClone:Array):Array
 		{
-			var newArray = new Array(arrToClone.length);
+			var newArray:Array = new Array(arrToClone.length);
 			for (var i:int = 0; i < arrToClone.length; i++) {
 				var pt:Point  = arrToClone[i] as Point;
 				newArray[i] = pt.clone(); // need to clone to avoid referencing the actual points in the array

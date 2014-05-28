@@ -39,6 +39,7 @@ package constraints
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
+		public var startingScore:int = NaN;
 		public var currentScore:int = 0;
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
@@ -127,6 +128,7 @@ package constraints
 					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints[constraintId]));
 				}
 			}
+			if (isNaN(startingScore)) startingScore = currentScore;
 			trace("Score: " + currentScore);
 		}
 		

@@ -553,6 +553,7 @@ package scenes.game.display
 			}
 			levelGraph.resetScoring();
 			m_bestScore = levelGraph.currentScore;
+			levelGraph.startingScore = levelGraph.currentScore;
 			flatten();
 			trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
@@ -885,7 +886,7 @@ package scenes.game.display
 				levelGraph.updateScore();
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			onScoreChange(true);
+			onScoreChange(true, false);
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1595,6 +1596,7 @@ package scenes.game.display
 		
 		public function get currentScore():int { return levelGraph.currentScore; }
 		public function get bestScore():int { return m_bestScore; }
+		public function get startingScore():int { return levelGraph.startingScore; }
 		public function get prevScore():int { return levelGraph.prevScore; }
 		public function get oldScore():int { return levelGraph.oldScore; }
 		
@@ -1604,7 +1606,7 @@ package scenes.game.display
 			m_levelBestScoreAssignmentsObj = XObject.clone(m_levelAssignmentsObj);
 		}
 		
-		public function onScoreChange(recordBestScore:Boolean = false):void
+		public function onScoreChange(recordBestScore:Boolean = false, logChange:Boolean = true):void
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
@@ -1614,7 +1616,7 @@ package scenes.game.display
 				if(!m_tutorialTag && levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
-			if (levelGraph.prevScore != levelGraph.currentScore)
+			if (logChange && levelGraph.prevScore != levelGraph.currentScore)
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			m_conflictEdgesDirty = true;
 		}
@@ -1739,7 +1741,7 @@ package scenes.game.display
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
-			onScoreChange(true);
+			onScoreChange(true); // TODO: need to log the widget changes here
 		}
 	}
 }
