@@ -18,6 +18,7 @@ class Node:
 		self.outputs = {}
 		self.ninputs = 0
 		self.noutputs = 0
+		self.grouped_nodes = {} # if this node is a group, member nodes are stored here
 		self.sortedinputs = None
 		self.sortedoutputs = None
 		self.pt = None
@@ -56,6 +57,11 @@ class Node:
 			var_obj["score"] = self.score
 		return var_obj
 	
+	def outputvarsimple(self):
+		if self.isconstant:
+			return self.type_value
+		return self.id.replace('_', ':')
+
 	def sortedges(self):
 		sortedin = []
 		for edgeid in self.inputs:
@@ -99,7 +105,7 @@ class Node:
 			current_val = 1
 		elif self.id[:6] == 'type_0':
 			current_val = 0
-		elif self.id[:4] == 'var_' and self.default is not None:
+		elif (self.id[:4] == 'var_' or self.id[:4] == 'grp_') and self.default is not None:
 			if self.default == TYPE_0:
 				current_val = 0
 			elif self.default == TYPE_1:
@@ -141,7 +147,7 @@ class Edge:
 		if self.fromnode is not None and self.tonode is not None:
 			lhs_value = self.fromnode.get_current_value(graph_var_default=graph_var_default)
 			rhs_value = self.tonode.get_current_value(graph_var_default=graph_var_default)
-			print 'lhs=%s rhs=%s' % (lhs_value, rhs_value)
+			#print 'lhs=%s rhs=%s' % (lhs_value, rhs_value)
 			if self.equality_constraint_twin is not None:
 				is_satisfied = (lhs_value == rhs_value)
 				self.equality_constraint_twin._currently_satisfied = is_satisfied
@@ -151,7 +157,7 @@ class Edge:
 		else:
 			raise Exception('Edge found with missing to/from node, edge: %s to: %s from:%s' % (self, self.fromnode, self.tonode))
 		self._currently_satisfied = is_satisfied
-		print 'satisfied=%s' % self._currently_satisfied
+		#print 'satisfied=%s' % self._currently_satisfied
 		return self._currently_satisfied
 
 	def get_current_score(self, graph_var_default=1, graph_scoring=None):
@@ -162,10 +168,10 @@ class Edge:
 		if is_satisfied:
 			if self.score is not None:
 				score = float(self.score)
-				print 'self.score: %s' % score
+				#print 'self.score: %s' % score
 			elif graph_scoring.get('constraints') is not None:
 				score = float(graph_scoring['constraints'])
-				print 'graph score: %s' % score
+				#print 'graph score: %s' % score
 		self._current_score = score
 		if self.equality_constraint_twin is not None:
 			self.equality_constraint_twin._current_score = score
@@ -177,19 +183,19 @@ class Edge:
 def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 	lhconst = True
 	rhconst = True
-	if lhname == 'var' and rhname == 'type':
+	if (lhname == 'var' or lhname == 'grp') and rhname == 'type':
 		if rhid == '1':
 			return None# var <= 1 is trivial (always true) so skip this constraint
 		lhs = '%s_%s' % (lhname, lhid)
 		lhconst = False
 		rhs = '%s_%s__%s' % (rhname, rhid, lhs)
-	elif rhname == 'var' and lhname == 'type':
+	elif (rhname == 'var' or rhname == 'grp') and lhname == 'type':
 		if lhid == '0':
 			return None# 0 <= var is trivial (always true) so skip this constraint
 		rhs = '%s_%s' % (rhname, rhid)
 		rhconst = False
 		lhs = '%s_%s__%s' % (lhname, lhid, rhs)
-	elif lhname == 'var' and rhname == 'var':
+	elif (lhname == 'var' or lhname == 'grp') and (rhname == 'var' or rhname == 'grp'):
 		lhs = '%s_%s' % (lhname, lhid)
 		rhs = '%s_%s' % (rhname, rhid)
 		lhconst = False
@@ -197,7 +203,7 @@ def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 	elif rhname == 'type' and lhname == 'type':
 		return None # trivial constraint (either always true or always false) so skip
 	else:
-		print 'Warning! Unexpected constraint type (not var/var or var/type) = "%s" / "%s". Ignoring...' % (lhname, rhname)
+		print 'Warning! Unexpected constraint type (not var/grp <> var/grp or var/grp <> type) = "%s" / "%s". Ignoring...' % (lhname, rhname)
 		return None
 	# Get (or create) nodes
 	fromnode = nodedict.get(lhs)
@@ -221,15 +227,17 @@ def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 	return edge
 
 def load_constraints_graph(infilename):
-	regex1 = re.compile("(var|type):(.*) ?(<|=)= ?(var|type):(.*)", re.IGNORECASE)
-	regex2 = re.compile("(var|type):(.*)", re.IGNORECASE)
+	regex1 = re.compile("(var|grp|type):(.*) ?(<|=)= ?(var|grp|type):(.*)", re.IGNORECASE)
+	regex2 = re.compile("(var|grp|type):(.*)", re.IGNORECASE)
 	nodes = {}
 	edges = {}
+	groups = {}
 	assignments = {}
 	parser = ijson.parse(open(infilename + '.json', 'r'))
 	current_var_id = None
 	current_var = None
 	current_asg = None
+	current_grp = None
 	current_score_var_id = None
 	current_var_score_key = None
 	version = 1
@@ -244,6 +252,22 @@ def load_constraints_graph(infilename):
 		# Graph default var type
 		elif (prefix, event) == ('default', 'string'):
 			default_var_type = value
+		# Groups
+		elif (prefix, event) == ('groups', 'start_map'):
+			current_grp = None
+		elif (prefix, event) == ('groups', 'map_key'):
+			current_grp = value
+		elif current_grp is not None:
+			if (prefix, event) == ('groups.%s' % current_grp, 'start_array'):
+				if groups.get(current_grp) is not None:
+					print 'Warning: multiple group definitions found for "%s"' % current_grp
+				groups[current_grp] = []
+			elif (prefix, event) == ('groups.%s.item' % current_grp, 'string'):
+				groups[current_grp].append(value)
+			elif (prefix, event) == ('groups.%s' % current_grp, 'end_array'):
+				current_grp = None
+		elif (prefix, event) == ('groups', 'end_map'):
+			current_grp = None
 		# Scoring
 		elif (prefix, event) == ('scoring', 'start_map'):
 			if scoring is not None:
@@ -428,7 +452,7 @@ def load_constraints_graph(infilename):
 		formattedid = '%s_%s' % (parts[0], parts[1])
 		if formattedid in nodes:
 			continue
-		isconst = (parts[0].lower() != 'var')
+		isconst = (parts[0].lower() != 'var') and (parts[0].lower() != 'grp')
 		nodes[formattedid] = Node(formattedid, isconst)
 	# Determine a graph default if none based on scoring, or simply pick one
 	if default_var_type is None:
@@ -440,4 +464,4 @@ def load_constraints_graph(infilename):
 				default_var_type = TYPE_0
 			elif type1_score > type0_score:
 				default_var_type = TYPE_1
-	return version, default_var_type, scoring, nodes, edges, assignments
+	return version, default_var_type, scoring, nodes, edges, groups, assignments

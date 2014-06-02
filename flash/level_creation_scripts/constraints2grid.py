@@ -43,7 +43,7 @@ def get_bonus(var_scoring, graph_scoring=None):
 
 # Main method to create layout, assignments files from constraint input json
 def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
-	version, default_var_type, scoring, nodes, edges, assignments = load_constraints_graph(infilename)
+	version, default_var_type, scoring, nodes, edges, groups, assignments = load_constraints_graph(infilename)
 	if scoring is None:
 		scoring = {}
 	n_vars = 0
@@ -355,6 +355,8 @@ if __name__ == "__main__":
 		'\n' % sys.argv[0])
 		quit()
 	infile = sys.argv[1]
-	if len(sys.argv) == 2:
+	if len(sys.argv) < 3:
 		outfile = sys.argv[1]
+	else:
+		outfile = sys.argv[2]
 	constraints2grid(infile, outfile)

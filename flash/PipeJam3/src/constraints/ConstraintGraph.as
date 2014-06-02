@@ -15,6 +15,7 @@ package constraints
 		private static const QID:String = "qid";
 		// Sections:
 		private static const SCORING:String = "scoring";
+		private static const GROUPS:String = "groups";
 		private static const VARIABLES:String = "variables";
 		private static const CONSTRAINTS:String = "constraints";
 		// Constraint fields:
@@ -31,6 +32,7 @@ package constraints
 		// Constraint side types:
 		private static const VAR:String = "var";
 		private static const TYPE:String = "type";
+		private static const GRP:String = "grp";
 		
 		private static const NULL_SCORING:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
@@ -161,6 +163,7 @@ package constraints
 					}
 					// Build Scoring
 					var scoringObj:Object = levelObj[SCORING];
+					var groupsObj:Object = levelObj[GROUPS];
 					var constraintScore:int = scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY];
 					var variableScoreObj:Object = scoringObj[VARIABLES];
 					var type0Score:int = variableScoreObj[ConstraintScoringConfig.TYPE_0_VALUE_KEY];
@@ -248,7 +251,7 @@ package constraints
 		
 		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
 		{
-			var pattern:RegExp = /(var|type):(.*) (<|=)= (var|type):(.*)/i;
+			var pattern:RegExp = /(var|type|grp):(.*) (<|=)= (var|type|grp):(.*)/i;
 			var result:Object = pattern.exec(_str);
 			if (result == null) throw new Error("Invalid constraint string found: " + _str);
 			if (result.length != 6) throw new Error("Invalid constraint string found: " + _str);
@@ -262,8 +265,12 @@ package constraints
 			var rsuffix:String = "";
 			if (lhsType == VAR && rhsType == TYPE) {
 				rsuffix = "__" + VAR + "_" + lhsId;
+			} else if (lhsType == GRP && rhsType == TYPE) {
+				rsuffix = "__" + GRP + "_" + lhsId;
 			} else if (rhsType == VAR && lhsType == TYPE) {
 				lsuffix = "__" + VAR + "_" + rhsId;
+			} else if (rhsType == GRP && lhsType == TYPE) {
+				lsuffix = "__" + GRP + "_" + rhsId;
 			} else if (rhsType == TYPE && lhsType == TYPE) {
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}
@@ -291,7 +298,7 @@ package constraints
 			var type:String = _constraintJson[CONSTRAINT];
 			var lhsStr:String = _constraintJson[LHS];
 			var rhsStr:String = _constraintJson[RHS];
-			var pattern:RegExp = /(var|type):(.*)/i;
+			var pattern:RegExp = /(var|type|grp):(.*)/i;
 			var lhsResult:Object = pattern.exec(lhsStr);
 			var rhsResult:Object = pattern.exec(rhsStr);
 			if (!lhsResult || !rhsResult) throw new Error("Error parsing constraint json for lhs:'" + lhsStr + "' rhs:'" + rhsStr + "'");
@@ -301,8 +308,12 @@ package constraints
 			var rsuffix:String = "";
 			if ((lhsResult[1] as String) == VAR && (rhsResult[1] as String) == TYPE) {
 				rsuffix = "__" + VAR + "_" + (lhsResult[2] as String);
+			} else if ((lhsResult[1] as String) == GRP && (rhsResult[1] as String) == TYPE) {
+				rsuffix = "__" + GRP + "_" + (lhsResult[2] as String);
 			} else if ((rhsResult[1] as String) == VAR && (lhsResult[1] as String) == TYPE) {
 				lsuffix = "__" + VAR + "_" + (rhsResult[2] as String);
+			} else if ((rhsResult[1] as String) == GRP && (lhsResult[1] as String) == TYPE) {
+				lsuffix = "__" + GRP + "_" + (rhsResult[2] as String);
 			} else if ((lhsResult[1] as String) == TYPE && (rhsResult[1] as String) == TYPE) {
 				//trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_constraintJson));
 			}
@@ -333,6 +344,8 @@ package constraints
 				constrVar = _variableDictionary[fullId] as ConstraintVar;
 			} else {
 				if (_type == VAR) {
+					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
+				} else if (_type == GRP) {
 					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
 				} else if (_type == TYPE) {
 					var constrVal:ConstraintValue = ConstraintValue.fromStr(_type_num);
