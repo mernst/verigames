@@ -44,8 +44,9 @@ package system
 		public static const ACTION_PARAMETER_STAMP_DICTIONARY:String   = "stampDict";
 		// UI action fields
 		public static const ACTION_PARAMETER_LAYOUT_NAME:String        = "layoutName";
+		public static const ACTION_PARAMETER_START_SCORE:String        = "start_score";
 		public static const ACTION_PARAMETER_SCORE:String              = "score";
-		
+		public static const ACTION_PARAMETER_SCORE_CHANGE:String       = "score_chg";
 		public static const ACTION_VALUE_EDGE_WIDTH_WIDE:String        = "w";
 		public static const ACTION_VALUE_EDGE_WIDTH_NARROW:String      = "n";
 	}
