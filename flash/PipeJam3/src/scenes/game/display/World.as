@@ -743,11 +743,13 @@ package scenes.game.display
 			var callback:Function =
 				function():void
 				{
-					if (edgeSetGraphViewPanel) {
-						edgeSetGraphViewPanel.removeFanfare();
-						edgeSetGraphViewPanel.hideContinueButton(true);
-					}
 					level.restart();
+					if (edgeSetGraphViewPanel) {
+						edgeSetGraphViewPanel.setupLevel(active_level);
+						edgeSetGraphViewPanel.onGameComponentsCreated();
+						//edgeSetGraphViewPanel.removeFanfare();
+						//edgeSetGraphViewPanel.hideContinueButton(true);
+					}
 				};
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));

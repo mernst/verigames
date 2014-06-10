@@ -248,7 +248,7 @@ package scenes.game.components
 			m_lastVisibleRefreshViewRect = currentViewRect;
 		}
 		
-		private function onGameComponentsCreated():void
+		public function onGameComponentsCreated():void
 		{
 			var gameEdges:Dictionary = m_currentLevel.getEdges();
 			for (var edgeId:String in gameEdges) {
