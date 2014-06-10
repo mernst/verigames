@@ -79,7 +79,7 @@ package scenes.game.display
 		
 		public function previewAction(action:ClientAction, isUndo:Boolean = false):void
 		{
-			if (!action.detailObject) return;
+	/*		if (!action.detailObject) return;
 			if (!active_level) return;
 			if (!edgeSetGraphViewPanel) return;
 			var edgeSetId:String, propChanged:String, newPropValue:Boolean;
@@ -102,7 +102,7 @@ package scenes.game.display
 				PipeJam3.showReplayText("Preview: " + edgeSetId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : ""));
 			} else {
 				PipeJam3.showReplayText("Replay action preview failed, edgeSetId: " + edgeSetId + " propChanged: " + propChanged);
-			}
+			}*/
 		}
 	}
 }

@@ -26,7 +26,6 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
 	
@@ -247,6 +246,7 @@ package scenes.game.components
 		
 		protected function triggerFullScreen(event:MouseEvent):void
 		{
+			var foo:starling.display.DisplayObjectContainer;
 			var testPt:Point = localToGlobal(new Point(m_fullScreenButton.x, m_fullScreenButton.y));
 			if(event.stageX >= 2*testPt.x/scaleX && event.stageX <= 2*testPt.x/scaleX + m_fullScreenButton.width*2
 				&& event.stageY >= 2*testPt.y/scaleY && event.stageY <= 2*testPt.y/scaleY + m_fullScreenButton.height*2)

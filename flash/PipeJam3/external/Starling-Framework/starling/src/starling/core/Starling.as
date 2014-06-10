@@ -357,11 +357,16 @@ package starling.core
          *  and processes touches. */
         public function advanceTime(passedTime:Number):void
         {
+//			var time1:Number = new Date().getTime();
             makeCurrent();
-            
+//			var time2:Number = new Date().getTime();
             mTouchProcessor.advanceTime(passedTime);
+//			var time3:Number = new Date().getTime();
             mStage.advanceTime(passedTime);
+//			var time4:Number = new Date().getTime();
             mJuggler.advanceTime(passedTime);
+//			var time5:Number = new Date().getTime();
+//			trace("time", time2-time1, time3-time1, time4-time1, time5-time1);
         }
         
         /** Renders the complete display list. Before rendering, the context is cleared; afterwards,
@@ -370,7 +375,8 @@ package starling.core
         {
             if (!contextValid)
                 return;
-            
+//			var time:Number = new Date().getTime();
+
             makeCurrent();
             updateViewPort();
             updateNativeOverlay();
@@ -391,7 +397,8 @@ package starling.core
                 mViewPort.y < 0 ? -mViewPort.y / scaleY : 0.0,
                 mClippedViewPort.width  / scaleX, 
                 mClippedViewPort.height / scaleY);
-            
+//			var time1:Number = new Date().getTime();
+//			trace('Render time1', time1 - time);
             mStage.render(mSupport, 1.0);
             mSupport.finishQuadBatch();
             
@@ -400,6 +407,9 @@ package starling.core
             
             if (!mShareContext)
                 mContext.present();
+//			var time2:Number = new Date().getTime();
+//		trace('Render time2', time2 - time);
+
         }
         
         private function updateViewPort(updateAliasing:Boolean=false):void
@@ -517,7 +527,7 @@ package starling.core
                 initialize();
             }
         }
-        
+  //       var time:Number = 0;
         private function onEnterFrame(event:Event):void
         {
             // On mobile, the native display list is only updated on stage3D draw calls. 
@@ -528,7 +538,10 @@ package starling.core
                 if (mStarted) nextFrame();
                 else          render();
             }
-        }
+//			var time1:Number = new Date().getTime();
+//			trace("frame",time1 - time);
+// 			time = time1;
+       }
         
         private function onKey(event:KeyboardEvent):void
         {

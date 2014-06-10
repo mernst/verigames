@@ -4,7 +4,6 @@ package display
 	import starling.display.Image;
 	import starling.textures.TextureAtlas;
 	import starling.display.Sprite;
-	import scenes.BaseComponent;
 	
 	public class NineSliceBatch extends Sprite 
 	{

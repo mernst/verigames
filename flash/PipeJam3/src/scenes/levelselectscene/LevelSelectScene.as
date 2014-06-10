@@ -14,9 +14,7 @@ package scenes.levelselectscene
 	import events.MenuEvent;
 	import events.MouseWheelEvent;
 	import events.NavigationEvent;
-	
-	import feathers.controls.List;
-	
+		
 	import networking.GameFileHandler;
 	import networking.NetworkConnection;
 	import networking.PlayerValidation;
@@ -39,7 +37,6 @@ package scenes.levelselectscene
 		protected var levelSelectBackground:NineSliceBatch;
 		protected var levelSelectInfoPanel:NineSliceBatch;
 		
-		protected var levelList:List = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
 		protected var savedLevelsArrayMetadata:Array = null;
@@ -502,9 +499,7 @@ package scenes.levelselectscene
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			PipeJamGame.levelInfo = new matchArrayMetadata[levelList.selectedIndex];
-			
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+	
 		}
 		
 		public function setNewLevelInfo(_newLevelInfo:Array):void

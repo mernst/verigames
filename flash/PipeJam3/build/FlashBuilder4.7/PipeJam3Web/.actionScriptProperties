@@ -3,7 +3,6 @@
   <compiler additionalCompilerArguments="-locale en_US  -swf-version=17" advancedTelemetry="false" autoRSLOrdering="true" copyDependentFiles="true" flexSDK="Flex 4.6.0" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Dynamic-Texture-Atlas-Generator-master/dynamicTextureAtlasGenerator/src"/>
-      <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Feathers 1.0.1/source"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/FZip"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Hi-ReS-Stats-master/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/MochiAPI_v4_1_2"/>

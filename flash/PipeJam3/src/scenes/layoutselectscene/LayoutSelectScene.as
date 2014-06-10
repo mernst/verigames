@@ -10,9 +10,7 @@ package scenes.layoutselectscene
 	
 	import events.MenuEvent;
 	import events.NavigationEvent;
-	
-	import feathers.controls.List;
-	
+		
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.PixelSnapping;
@@ -42,8 +40,6 @@ package scenes.layoutselectscene
 		protected var levelSelectBackground:NineSliceBatch;
 		protected var levelSelectInfoPanel:NineSliceBatch;
 		
-		protected var levelList:List = null;
-
 		
 		protected var tutorial_levels_button:NineSliceToggleButton;
 		protected var new_levels_button:NineSliceToggleButton;
@@ -77,71 +73,11 @@ package scenes.layoutselectscene
 		
 		protected override function addedToStage(event:starling.events.Event):void
 		{
-			super.addedToStage(event);
-			
-			background = new Image(AssetInterface.getTexture("Game", "Background0Class"));
-			background.scaleX = stage.stageWidth/background.width;
-			background.scaleY = stage.stageHeight/background.height;
-			background.blendMode = BlendMode.NONE;
-			addChild(background);
-			
-			var levelSelectWidth:Number = 305;
-			var levelSelectHeight:Number =  300;
-			levelSelectBackground = new NineSliceBatch(levelSelectWidth, levelSelectHeight, levelSelectWidth /6.0, levelSelectHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
-			levelSelectBackground.x = 10;
-			levelSelectBackground.y = 10;
-			addChild(levelSelectBackground);
-			
-			//select side widgets
-			var buttonPadding:int = 7;
-			var buttonWidth:Number = (levelSelectWidth - 2*buttonPadding)/3 - buttonPadding;
-			var buttonHeight:Number = 25;
-			var buttonY:Number = 30;
-			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Layout", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0xFFFFFF);
-			TextFactory.getInstance().updateAlign(label, 1, 1);
-			addChild(label);
-			label.x = (levelSelectWidth - label.width)/2 + levelSelectBackground.x;
-			label.y = 10;
-			
-			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 50, 18);
-			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
-			addChild(select_button);
-			select_button.x = levelSelectWidth-50-buttonPadding;
-			select_button.y = levelSelectHeight - select_button.height - 6;	
-			
-			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 50, 18);
-			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
-			addChild(cancel_button);
-			cancel_button.x = select_button.x - cancel_button.width - buttonPadding;
-			cancel_button.y = select_button.y;
-			
-			allLayoutslListBox = new SelectLayoutList(levelSelectWidth - 3*buttonPadding, 198);
-			allLayoutslListBox.y = buttonY + label.y + buttonHeight + buttonPadding;
-			allLayoutslListBox.x = (levelSelectWidth - allLayoutslListBox.width)/2+levelSelectBackground.x;
-			addChild(allLayoutslListBox);
-			
-			labelHeight = buttonY + label.y;
-			
-			drawInfoPanel();
-
-			initialize();
 		}
 		
 		protected function drawInfoPanel():void
 		{
-			var levelSelectInfoWidth:Number = 150;
-			var levelSelectInfoHeight:Number =  300;
-			levelSelectInfoPanel = new NineSliceBatch(levelSelectInfoWidth, levelSelectInfoHeight, levelSelectInfoWidth /6.0, levelSelectInfoHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
-			levelSelectInfoPanel.x = width - levelSelectInfoWidth - 10;
-			levelSelectInfoPanel.y = 10;
-			addChild(levelSelectInfoPanel);
-			
-			infoLabel = TextFactory.getInstance().createTextField("Layout Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0xFFFFFF);
-			TextFactory.getInstance().updateAlign(infoLabel, 1, 1);
-			addChild(infoLabel);
-			infoLabel.x = (levelSelectInfoWidth - infoLabel.width)/2 + levelSelectInfoPanel.x;
-			infoLabel.y = labelHeight;
+	
 		}
 		
 		protected  override function removedFromStage(event:Event):void

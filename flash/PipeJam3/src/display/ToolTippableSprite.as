@@ -29,7 +29,7 @@ package display
 				var touch:Touch = event.getTouches(this, TouchPhase.HOVER)[0];
 				m_hoverPointGlobal = new Point(touch.globalX, touch.globalY);
 				if (!m_hoverTimer) {
-					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 1);
+					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 0);
 					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
 					m_hoverTimer.start();
 				}

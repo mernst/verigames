@@ -1,7 +1,6 @@
 package scenes.game.display 
 {
 	import display.NineSliceBatch;
-	import events.EdgeContainerEvent;
 	import events.TutorialEvent;
 	import graph.PropDictionary;
 	import starling.core.Starling;
@@ -84,37 +83,6 @@ package scenes.game.display
 			m_levelStarted = false;
 		}
 		
-		public function onSegmentMoved(event:EdgeContainerEvent, textPointingAtSegment:Boolean = false):void
-		{
-			switch (m_tutorialTag) {
-				case CREATE_JOINT_TUTORIAL:
-					if (!m_levelFinished && textPointingAtSegment) {
-						m_levelFinished = true;
-						Starling.juggler.delayCall(function():void {
-							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
-						}, 0.5);
-					}
-				break;
-			}
-		}
-		
-		public function onJointCreated(event:EdgeContainerEvent):void
-		{
-			switch (m_tutorialTag) {
-				case CREATE_JOINT_TUTORIAL:
-					var toPos:String = (event.segment.m_endPt.y != 0) ? NineSliceBatch.LEFT : NineSliceBatch.TOP;
-					m_currentTutorialText = new TutorialManagerTextInfo(
-						"Drag the new Link segment",
-						null,
-						pointToEdgeSegment(event.container.m_id, event.segmentIndex),
-						toPos, NineSliceBatch.CENTER);
-					var txtVec:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
-					txtVec.push(m_currentTutorialText);
-					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, txtVec));
-					break;
-			}
-		}
-		
 		public function onWidgetChange(idChanged:String, propChanged:String, propValue:Boolean):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
@@ -169,7 +137,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
+	/*	public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			switch (m_tutorialTag) {
@@ -192,7 +160,7 @@ package scenes.game.display
 					break;
 			}
 		}
-		
+		*/
 		public function getSolveButtonsAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
@@ -205,14 +173,14 @@ package scenes.game.display
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-					return false;
+//		//		case WIDGET_TUTORIAL:
+//		//		case WIDGET_PRACTICE_TUTORIAL:
+//				case LOCKED_TUTORIAL:
+//				case LINKS_TUTORIAL:
+//				case JAMS_TUTORIAL:
+//				case WIDEN_TUTORIAL:
+//				case OPTIMIZE_TUTORIAL:
+//					return false;
 			}
 			return true;
 		}
@@ -220,19 +188,19 @@ package scenes.game.display
 		public function getMiniMapShown():Boolean
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-				case LAYOUT_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
-				case CREATE_JOINT_TUTORIAL:
-				case SKILLS_A_TUTORIAL:
-					return false;
+//	//			case WIDGET_TUTORIAL:
+//	//			case WIDGET_PRACTICE_TUTORIAL:
+//				case LOCKED_TUTORIAL:
+//				case LINKS_TUTORIAL:
+//				case JAMS_TUTORIAL:
+//				case WIDEN_TUTORIAL:
+//				case OPTIMIZE_TUTORIAL:
+//				case ZOOM_PAN_TUTORIAL:
+//				case LAYOUT_TUTORIAL:
+//				case GROUP_SELECT_TUTORIAL:
+//				case CREATE_JOINT_TUTORIAL:
+//				case SKILLS_A_TUTORIAL:
+//					return false;
 			}
 			return true;
 		}
@@ -240,15 +208,15 @@ package scenes.game.display
 		public function getLayoutFixed():Boolean
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-					return true;
+//	//			case WIDGET_TUTORIAL:
+//	//			case WIDGET_PRACTICE_TUTORIAL:
+//				case LOCKED_TUTORIAL:
+//	//			case LINKS_TUTORIAL:
+//				case JAMS_TUTORIAL:
+//				case WIDEN_TUTORIAL:
+//				case OPTIMIZE_TUTORIAL:
+//				case ZOOM_PAN_TUTORIAL:
+//					return true;
 			}
 			return false;
 		}
@@ -298,45 +266,45 @@ package scenes.game.display
 		
 		private function pointToNode(name:String):Function
 		{
-			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
+			return null;//function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
 		}
 		
 		private function pointToEdge(name:String):Function
 		{
-			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+			return null;//function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
 		}
 		
 		private function pointToEdgeSegment(edgeName:String, segmentIndex:int):Function
 		{
-			return function(currentLevel:Level):DisplayObject {
-				var container:GameEdgeContainer = currentLevel.getEdgeContainer(edgeName);
-				if (container != null) return container.getSegment(segmentIndex);
-				return null;
-			};
+			return null;//function(currentLevel:Level):DisplayObject {
+		//		var container:GameEdgeContainer = currentLevel.getEdgeContainer(edgeName);
+		//		if (container != null) return container.getSegment(segmentIndex);
+		//		return null;
+		//	};
 		}
 		
 		private function pointToPassage(name:String):Function
 		{
-			return function(currentLevel:Level):DisplayObject {
-				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-				if (edge && edge.innerFromBoxSegment) {
-					return edge.innerFromBoxSegment;
-				} else {
-					return null;
-				}
-			};
+			return null;//function(currentLevel:Level):DisplayObject {
+		//		var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+		//		if (edge && edge.innerFromBoxSegment) {
+		//			return edge.innerFromBoxSegment;
+		//		} else {
+		//			return null;
+		//		}
+		//	};
 		}
 		
 		private function pointToClash(name:String):Function
 		{
-			return function(currentLevel:Level):DisplayObject {
-				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-				if (edge && edge.errorContainer) {
-					return edge.errorContainer;
-				} else {
-					return null;
-				}
-			};
+			return null;//function(currentLevel:Level):DisplayObject {
+		//		var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+		//		if (edge && edge.errorContainer) {
+		//			return edge.errorContainer;
+		//		} else {
+		//			return null;
+		//		}
+		//	};
 		}
 		
 		public function getPersistentToolTipsInfo():Vector.<TutorialManagerTextInfo>

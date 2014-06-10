@@ -1,8 +1,8 @@
 package scenes.game.display
 {
-	import assets.AssetsFont;
-	
 	import flash.geom.Point;
+	
+	import assets.AssetsFont;
 	
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
@@ -21,13 +21,24 @@ package scenes.game.display
 			addChild(textField);
 		}
 		
-		public static function popupText(container:DisplayObjectContainer, pos:Point, str:String, color:uint):void
+		public static function popupText(container:DisplayObjectContainer, _pos:Point, str:String, color:uint):void
 		{
 			var text:TextPopup = new TextPopup(str, color);
+			var pos:Point = container.globalToLocal(_pos);
 			text.x = pos.x;
 			text.y = pos.y - 8;
 			
 			container.addChild(text);
+			
+			//find current scale, and reverse it
+			var totalScale:Number = 1;
+			var currentItem:DisplayObjectContainer = container;
+			while(currentItem != null)
+			{
+				totalScale *= currentItem.scaleX;
+				currentItem = currentItem.parent;
+			}
+			text.scaleX = text.scaleY = 1/totalScale;
 			
 			Starling.juggler.tween(text, 1.5, {y:pos.y - 20, alpha:0.2, onComplete:function():void { text.removeFromParent(); }});
 		}

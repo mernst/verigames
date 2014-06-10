@@ -23,6 +23,8 @@ package net.hires.debug {
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.utils.getTimer;	
+	
+	import scenes.game.display.World;
 
 	public class Stats extends Sprite {	
 
@@ -57,7 +59,7 @@ package net.hires.debug {
 			
 			mem_max = 0;
 
-			xml = <xml><fps>FPS:</fps><ms>MS:</ms><mem>MEM:</mem><memMax>MAX:</memMax></xml>;
+			xml = <xml><fps>FPS:</fps><ms>MS:</ms><loadTime>LTime:</loadTime><mem>MEM:</mem><memMax>MAX:</memMax></xml>;
 		
 			style = new StyleSheet();
 			style.setStyle('xml', {fontSize:'9px', fontFamily:'_sans', leading:'-2px'});
@@ -65,7 +67,7 @@ package net.hires.debug {
 			style.setStyle('ms', {color: hex2css(colors.ms)});
 			style.setStyle('mem', {color: hex2css(colors.mem)});
 			style.setStyle('memMax', {color: hex2css(colors.memmax)});
-			
+			style.setStyle('loadTime', {color: hex2css(colors.memmax)});
 			text = new TextField();
 			text.width = WIDTH;
 			text.height = 50;
@@ -117,7 +119,6 @@ package net.hires.debug {
 			timer = getTimer();
 			
 			if( timer - 1000 > ms_prev ) {
-				
 				ms_prev = timer;
 				mem = Number((System.totalMemory * 0.000000954).toFixed(3));
 				mem_max = mem_max > mem ? mem_max : mem;
@@ -136,7 +137,8 @@ package net.hires.debug {
 				
 				xml.fps = "FPS: " + fps + " / " + stage.frameRate; 
 				xml.mem = "MEM: " + mem;
-				xml.memMax = "MAX: " + mem_max;			
+				xml.memMax = "MAX: " + mem_max;	
+				xml.loadTime = "LTime: " + World.loadTime;	
 				
 				fps = 0;
 				

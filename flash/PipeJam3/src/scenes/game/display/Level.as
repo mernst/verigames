@@ -1,13 +1,10 @@
 package scenes.game.display
 {
-	import constraints.events.VarChangeEvent;
-	import flash.events.TimerEvent;
+	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import flash.utils.Timer;
-	import starling.events.EnterFrameEvent;
 	
 	import assets.AssetInterface;
 	
@@ -15,29 +12,19 @@ package scenes.game.display
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintValue;
 	import constraints.ConstraintVar;
+	import constraints.events.ErrorEvent;
+	import constraints.events.VarChangeEvent;
 	
 	import deng.fzip.FZip;
 	
-	import display.ToolTipText;
-	
-	import events.EdgeContainerEvent;
-	import constraints.events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
-	import events.MoveEvent;
 	import events.PropertyModeChangeEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
 	
-	import graph.BoardNodes;
-	import graph.Edge;
-	import graph.EdgeSetRef;
-	import graph.LevelNodes;
-	import graph.Node;
-	import graph.NodeTypes;
-	import graph.Port;
 	import graph.PropDictionary;
 	
 	import networking.GameFileHandler;
@@ -48,14 +35,13 @@ package scenes.game.display
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.Shape;
 	import starling.display.Sprite;
+	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
@@ -79,76 +65,89 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		private var selectedComponents:Vector.<GameComponent>;
+		protected var selectedComponents:Vector.<GameComponent>;
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
-		private var nodeIDToConstraintsTwoWayMap:Dictionary;
+		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
-		private var marqueeRect:Shape = new Shape();
+		protected var marqueeRect:Shape = new Shape();
 		
 		//the level node and decendents
-		private var m_levelLayoutObj:Object;
+		protected var m_levelLayoutObj:Object;
 		public var levelObj:Object;
 		public var m_levelLayoutName:String;
 		public var m_levelQID:String;
-		private var m_levelOriginalLayoutObj:Object; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutObjWrapper:Object;
 		public var m_levelAssignmentsObj:Object;
-		private var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
-		private var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
+		protected var m_levelOriginalAssignmentsObj:Object; //used for restarting the level
+		protected var m_levelBestScoreAssignmentsObj:Object; //best configuration so far
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
-		private var m_layoutFixed:Boolean = false;
+		protected var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
+		
+		protected var boxDictionary:Dictionary;
+		protected var edgeContainerDictionary:Dictionary;
 		
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
 		
-		private var m_gameNodeDict:Dictionary = new Dictionary();
-		private var m_gameEdgeDict:Dictionary = new Dictionary();
+		protected var m_gameNodeDict:Dictionary = new Dictionary();
+		protected var m_gameEdgeDict:Dictionary = new Dictionary();
 		
-		private var m_hidingErrorText:Boolean = false;
-		private var m_segmentHovered:GameEdgeSegment;
+//		protected var m_nodeList:Vector.<GameNode2>;
+//		public var m_edgeList:Vector.<GameEdge>;
+		
+		protected var m_hidingErrorText:Boolean = false;
+//		protected var m_segmentHovered:GameEdgeSegment;
 		public var errorConstraintDict:Dictionary = new Dictionary();
 		
-		private var m_nodesInactiveContainer:Sprite = new Sprite();
-		private var m_errorInactiveContainer:Sprite = new Sprite();
-		private var m_edgesInactiveContainer:Sprite = new Sprite();
-		private var m_plugsInactiveContainer:Sprite = new Sprite();
+		protected var m_nodesInactiveContainer:Sprite = new Sprite();
+		protected var m_errorInactiveContainer:Sprite = new Sprite();
+		protected var m_edgesInactiveContainer:Sprite = new Sprite();
+		protected var m_plugsInactiveContainer:Sprite = new Sprite();
 		public var inactiveLayer:Sprite = new Sprite();
 		
-		private var m_nodesContainer:Sprite = new Sprite();
-		private var m_errorContainer:Sprite = new Sprite();
-		private var m_edgesContainer:Sprite = new Sprite();
-		private var m_plugsContainer:Sprite = new Sprite();
+		protected var m_nodesContainer:Sprite = new Sprite();
+		protected var m_errorContainer:Sprite = new Sprite();
+		protected var m_edgesContainer:Sprite = new Sprite();
+		protected var m_plugsContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
-		private var m_backgroundImage:Image;
-		private var m_levelStartTime:Number;
+		protected var m_backgroundImage:Image;
+		protected var m_levelStartTime:Number;
 		
-		private var initialized:Boolean = false;
+		protected var initialized:Boolean = false;
 		
 		/** Current Score of the player */
-		private var m_bestScore:int = 0;
+		protected var m_bestScore:int = 0;
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
 		public var original_level_name:String;
 		
+		protected var gridSystemDict:Dictionary;
+		
+		static public var gridSize:int = 500;
+		
+		public var currentGridDict:Dictionary;
+		public var selectedNodeConstraintDict:Dictionary;
+
+		
 		/** Tracks total distance components have been dragged since last visibile calculation */
 		public var totalMoveDist:Point = new Point();
 		
 		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
-		private var m_currentConflictIndex:int = -1;
-		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
-		private var m_conflictEdgesDirty:Boolean = true;
+		protected var m_currentConflictIndex:int = -1;
+//		protected var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+		protected var m_levelConflictEdgeDict:Dictionary = new Dictionary();
+		protected var m_conflictEdgesDirty:Boolean = true;
 		
 		public var m_inSolver:Boolean = false;
 		
-		private static const BG_WIDTH:Number = 256;
-		private static const MIN_BORDER:Number = 1000;
-		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
+		protected static const BG_WIDTH:Number = 256;
+		protected static const MIN_BORDER:Number = 1000;
+		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
@@ -167,8 +166,7 @@ package scenes.game.display
 			original_level_name = _originalLevelName;
 			levelGraph = _levelGraph;
 			levelObj = _levelObj;
-			m_levelLayoutObj = XObject.clone(_levelLayoutObj);
-			m_levelOriginalLayoutObj = _levelLayoutObj;// XObject.clone(_levelLayoutObj);
+			m_levelLayoutObj = _levelLayoutObj;
 			m_levelLayoutName = _levelLayoutObj["id"];
 			m_levelQID = _levelLayoutObj["qid"];
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
@@ -186,9 +184,16 @@ package scenes.game.display
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
 			}
 			targetScoreReached = false;
+			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
+			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
+			gridSystemDict = new Dictionary;
+			currentGridDict = new Dictionary;
+			NodeSkin.InitializeSkins();
+			
+			selectedNodeConstraintDict = new Dictionary;
+			
+			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
 		public function loadBestScoringConfiguration():void
@@ -206,7 +211,7 @@ package scenes.game.display
 			loadAssignments(assignmentsObj);
 		}
 		
-		private function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		protected function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
 			var graphVar:ConstraintVar;
@@ -219,7 +224,7 @@ package scenes.game.display
 			onScoreChange();
 		}
 		
-		private function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		protected function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
 			//save object and restore at after initial assignments since I don't want these assignments saved
 			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
@@ -250,9 +255,9 @@ package scenes.game.display
 			}
 		}
 		
-		protected function onAddedToStage(event:Event):void
+		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			if (m_disposed) {
 				restart(); // undo progress if left the level and coming back
 			} else {
@@ -264,9 +269,9 @@ package scenes.game.display
 				//graphVar.addEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onWidgetChange);
 			//}
 			addEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
-			
-			refreshTroublePoints();
-			flatten();
+//			
+//			refreshTroublePoints();
+//			flatten();
 			
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
@@ -275,6 +280,7 @@ package scenes.game.display
 		{
 			if (initialized) return;
 			trace("Level.initialize()...");
+			var time1:Number = new Date().getTime();
 			refreshLevelErrors();
 			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
@@ -302,43 +308,36 @@ package scenes.game.display
 			if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
 			if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
+			addChild(m_edgesContainer);
 			addChild(m_nodesContainer);
 			addChild(m_errorContainer);
-			addChild(m_edgesContainer);
 			addChild(m_plugsContainer);
-			
+			trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
 
 			selectedComponents = new Vector.<GameComponent>;
 			totalMoveDist = new Point();
-			
 			loadLayout();
-			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox);
 			
-			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
-			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
-			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
-			addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
-			addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
+			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox, "load layout time", new Date().getTime()-time1);
+			
 			//addEventListener(WidgetChangeEvent.WIDGET_CHANGED, onEdgeSetChange); // do these per-box
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
 			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
-			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
-			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
-			//addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			//setNodesFromAssignments(m_levelAssignmentsObj);
 			//force update of conflict count dictionary, ignore return value
-			//getNextConflict(true);
+			getNextConflict(true);
 			initialized = true;
 			trace("Level edges and nodes all created.");
 			// When level loaded, don't need this event listener anymore
 			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
+			trace("load level time2", new Date().getTime()-time1);
 		}
 		
 		public function refreshLevelErrors():void
@@ -350,104 +349,67 @@ package scenes.game.display
 			}
 		}
 		
-		private function onEnterFrame(evt:EnterFrameEvent):void
+		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
-			// For initialization
-			const CALLS_PER_FRAME:int = 200;
-			var i:int = 0;
-			if (nodeLayoutObjs.length > 0) {
-				while (nodeLayoutObjs.length > 0 && i < CALLS_PER_FRAME) {
-					var nodeLayout:Object = nodeLayoutObjs.shift();
-					createNodeFromJsonObj(nodeLayout);
-					i++;
+			//clean up the old dictionary disposing of what's left
+			for each(var gridSquare:GridSquare in currentGridDict)
+			{
+				gridSquare.draw();
+			}
+		}
+		
+		//called on when GridViewPanel content is moving
+		public function updateLevelDisplay(viewRect:Rectangle):void
+		{
+			var leftGridNumber:int = Math.floor(viewRect.left/gridSize);
+			var rightGridNumber:int = Math.floor(viewRect.right/gridSize);
+			var topGridNumber:int = Math.floor(viewRect.top/gridSize);
+			var bottomGridNumber:int = Math.floor(viewRect.bottom/gridSize);
+			var newCurrentGridDict:Dictionary = new Dictionary;
+			
+			//create a new dictionary of current grid squares, removing those from the old dict
+			for(var i:int = leftGridNumber; i<rightGridNumber+1; i++)
+				for(var j:int = topGridNumber; j<bottomGridNumber+1; j++)
+				{
+					var gridName:String = i+"_"+j;
+					if(gridSystemDict[gridName] != null)
+					{
+						gridSystemDict[gridName].activate();
+						newCurrentGridDict[gridName] = gridSystemDict[gridName];
+						delete currentGridDict[gridName];
+					}
 				}
-				//trace("nodes remaining: " + nodeLayoutObjs.length);
-			} else if (edgeLayoutObjs.length > 0) {
-				while (edgeLayoutObjs.length > 0 && i < CALLS_PER_FRAME) {
-					var edgeLayout:Object = edgeLayoutObjs.shift();
-					createEdgeFromJsonObj(edgeLayout);
-					i++;
+			
+			//clean up the old dictionary disposing of what's left
+			for each(var gridSquare:GridSquare in currentGridDict)
+			{
+				//these we need to check the bounding box to see if it overlaps with the view rect,
+				//if it does, keep it around, else destroy it
+				if(gridSquare.intersects(viewRect))
+				{
+					gridSquare.activate();
+					newCurrentGridDict[gridSquare.id] = gridSystemDict[gridSquare.id];
+					delete currentGridDict[gridSquare.id];
 				}
-				//trace("edges remaining: " + edgeLayoutObjs.length);
-			} else {
-				loadAssignments(m_levelAssignmentsObj);
-				//force update of conflict count dictionary, ignore return value
-				getNextConflict(true);
-				initialized = true;
-				trace("Level edges and nodes all created.");
-				// When level loaded, don't need this event listener anymore
-				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
-				dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
+				else
+				{
+					gridSquare.removeFromParent(true);
+				}
 			}
-		}
-		
-		public function createNodeFromJsonObj(boxLayoutObj:Object):void
-		{
-			var varId:String = boxLayoutObj["id"];
-			if (!levelGraph.variableDict.hasOwnProperty(varId)) {
-				throw new Error("Couldn't find edge set for var id: " + varId);
-			}
-			destroyGameNode(varId);
-			var constraintVar:ConstraintVar = levelGraph.variableDict[varId];
-			var gameNode:GameNode = new GameNode(boxLayoutObj, constraintVar, !m_layoutFixed);
-			setGraphVarFromAssignments(constraintVar, m_levelAssignmentsObj, true);
 			
-			var boxVisible:Boolean = true;
-			if (boxLayoutObj.hasOwnProperty("visible") && (boxLayoutObj["visible"] == "false")) boxVisible = false;
-			if (!boxVisible) {
-				gameNode.hideComponent(true);
-				boxLayoutObj["visible"] = "false";
-			}
-			m_gameNodeDict[varId] = gameNode;
+			currentGridDict = newCurrentGridDict;
+			onScoreChange();
 		}
 		
-		public function destroyGameNode(nodeId:String):void {
-			var gameNode:GameNode = m_gameNodeDict[nodeId];
-			if (gameNode) gameNode.removeFromParent(true);
-			delete m_gameNodeDict[nodeId];
-		}
-		
-		public function createEdgeFromJsonObj(edgeLayoutObj:Object):void
+		public function draw():void
 		{
-			var constraintId:String = edgeLayoutObj["id"];
-			destroyGameEdge(constraintId);
-			var newGameEdge:GameEdgeContainer = createLine(constraintId, edgeLayoutObj);
-			m_gameEdgeDict[constraintId] = newGameEdge;
-		}
-		
-		private function createLine(edgeId:String, edgeLayoutObj:Object):GameEdgeContainer
-		{
-			var edgeFromVarId:String = edgeLayoutObj["from_var_id"];
-			var edgeToVarId:String = edgeLayoutObj["to_var_id"];
-			if (!m_gameNodeDict.hasOwnProperty(edgeFromVarId)) {
-				var fromNodeLayout:Object = nodeLayoutObjs[edgeFromVarId];
-				if (!fromNodeLayout) throw new Error("Edge layout found with no from node layout, edge: " + edgeId + " node:" + edgeFromVarId);
-				createNodeFromJsonObj(fromNodeLayout);
+			for each(var gridSquare:GridSquare in currentGridDict)
+			{
+				gridSquare.draw();
 			}
-			if (!m_gameNodeDict.hasOwnProperty(edgeToVarId)) {
-				var toNodeLayout:Object = nodeLayoutObjs[edgeToVarId];
-				if (!toNodeLayout) throw new Error("Edge layout found with no to node layout, edge: " + edgeId + " node:" + edgeToVarId);
-				createNodeFromJsonObj(toNodeLayout);
-			}
-			var fromNode:GameNode = m_gameNodeDict[edgeFromVarId] as GameNode;
-			var toNode:GameNode = m_gameNodeDict[edgeToVarId] as GameNode;
-			if (!levelGraph.constraintsDict.hasOwnProperty(edgeId)) throw new Error("Edge not found in levelGraph.constraintsDict:" + edgeId);
-			var constraint:Constraint = levelGraph.constraintsDict[edgeId];
-			var edgeArray:Array = edgeLayoutObj["edge_array"];
-			
-			var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeId, edgeArray, fromNode, toNode, constraint, !m_layoutFixed);
-			if (!getVisible(edgeLayoutObj)) newGameEdge.hideComponent(true);
-			
-			return newGameEdge;
 		}
 		
-		public function destroyGameEdge(edgeId:String):void {
-			var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId];
-			if (gameEdge) gameEdge.removeFromParent(true);
-			delete m_gameEdgeDict[edgeId];
-		}
-		
-		private function loadLayout():void
+		protected function loadLayout():void
 		{
 			nodeLayoutObjs = new Dictionary();
 			edgeLayoutObjs = new Dictionary();
@@ -471,15 +433,33 @@ package scenes.game.display
 				boxLayoutObj["var"] = graphVar;
 				var nodeX:Number = Number(boxLayoutObj["x"]) * Constants.GAME_SCALE;
 				var nodeY:Number = Number(boxLayoutObj["y"]) * Constants.GAME_SCALE;
-				var nodeWidth:Number = Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
-				var nodeHeight:Number = Number(boxLayoutObj["h"]) * Constants.GAME_SCALE;
-				var nodeBoundingBox:Rectangle = new Rectangle(nodeX - 0.5 * nodeWidth, nodeY - 0.5 * nodeHeight, nodeWidth, nodeHeight);
+				
+				
+				var nodeWidth:Number = 1;//Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
+				var nodeHeight:Number = 1;//Number(boxLayoutObj["h"]) * Constants.GAME_SCALE;
+				//Center node at nodeX, nodeY, which means our bounding rectangle needs to be adjusted by .5*width and height
+				var nodeBoundingBox:Rectangle = new Rectangle(nodeX - GridSquare.SKIN_DIAMETER*.5, nodeY - GridSquare.SKIN_DIAMETER*.5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
 				minX = Math.min(minX, nodeBoundingBox.left);
 				minY = Math.min(minY, nodeBoundingBox.top);
 				maxX = Math.max(maxX, nodeBoundingBox.right);
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
 				boxLayoutObj["bb"] = nodeBoundingBox;
+				boxLayoutObj["connectedEdges"] = new Array;
 				nodeLayoutObjs[varId] = boxLayoutObj;
+				
+				var xArrayPos:int = Math.floor(nodeBoundingBox.x/gridSize);
+				var yArrayPos:int = Math.floor(nodeBoundingBox.y/gridSize);
+				
+				var nodeGridName:String = xArrayPos + "_" + yArrayPos;
+				var grid:GridSquare = gridSystemDict[nodeGridName];
+				if(grid == null)
+				{
+					grid = new GridSquare(xArrayPos, yArrayPos, gridSize, gridSize);
+					gridSystemDict[nodeGridName] = grid;
+				}
+				
+				grid.addNode(boxLayoutObj);
+				
 				n++;
 			}
 			trace("node count = " + n);
@@ -487,43 +467,23 @@ package scenes.game.display
 			// Process layout edges (constraints)
 			var visibleLines:int = 0;
 			n = 0;
-			var pattern:RegExp = /(.*) -> (.*)/i;
-			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"])
+			var constraintLength:int = m_levelLayoutObj["layout"]["constraints"].length;
+			for(var constraintNum:int = 0; constraintNum<constraintLength; constraintNum++)
 			{
-				var edgeLayoutObj:Object = m_levelLayoutObj["layout"]["constraints"][constraintId];
+				var constraintId:String = m_levelLayoutObj["layout"]["constraints"][constraintNum];
+				var edgeLayoutObj:Object = new Object;
 				edgeLayoutObj["id"] = constraintId;
-				var result:Object = pattern.exec(constraintId);
+				var result:Object = constraintId.split(" ");
 				if (result == null) throw new Error("Invalid constraint layout string found: " + constraintId);
 				if (result.length != 3) throw new Error("Invalid constraint layout string found: " + constraintId);
 				var graphConstraint:Constraint = levelGraph.constraintsDict[constraintId] as Constraint;
 				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
 				edgeLayoutObj["constraint"] = graphConstraint;
-				edgeLayoutObj["from_var_id"] = result[1];
+				edgeLayoutObj["from_var_id"] = result[0];
+				nodeLayoutObjs[result[0]]["connectedEdges"].push(constraintId);
 				edgeLayoutObj["to_var_id"] = result[2];
-				//create edge array
-				var edgeArray:Array = new Array();
-				var ptsArr:Array = edgeLayoutObj["pts"] as Array;
-				if (!ptsArr) throw new Error("No layout pts found for edge:" + constraintId);
-				if (ptsArr.length < 4) throw new Error("Not enough points found in layout for edge:" + constraintId);
-				var edgeXMin:Number, edgeXMax:Number, edgeYMin:Number, edgeYMax:Number;
-				edgeXMin = edgeYMin = Number.POSITIVE_INFINITY;
-				edgeXMax = edgeYMax = Number.NEGATIVE_INFINITY;
-				for (var i:int = 0; i < ptsArr.length; i++) {
-					var ptx:Number = Number(ptsArr[i]["x"]) * Constants.GAME_SCALE;
-					var pty:Number = Number(ptsArr[i]["y"]) * Constants.GAME_SCALE;
-					edgeXMin = Math.min(edgeXMin, ptx);
-					edgeYMin = Math.min(edgeYMin, pty);
-					edgeXMax = Math.max(edgeXMax, ptx);
-					edgeYMax = Math.max(edgeYMax, pty);
-					var pt:Point = new Point(ptx, pty);
-					edgeArray.push(pt);
-				}
-				minX = Math.min(minX, edgeXMin);
-				minY = Math.min(minY, edgeYMin);
-				maxX = Math.max(maxX, edgeXMax);
-				maxY = Math.max(maxY, edgeYMax);
-				edgeLayoutObj["edge_array"] = edgeArray;
-				edgeLayoutObj["bb"] = new Rectangle(edgeXMin, edgeYMin, edgeXMax - edgeXMin, edgeYMax - edgeYMin);
+				nodeLayoutObjs[result[2]]["connectedEdges"].push(constraintId);
+				
 				edgeLayoutObjs[constraintId] = edgeLayoutObj;
 				n++;
 			}
@@ -531,21 +491,31 @@ package scenes.game.display
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
+		public function addChildToNodeLevel(child:Sprite):void
+		{
+			m_nodesContainer.addChild(child);
+			//uncomment to add quad as background to each gridSquare for debugging
+			//			var color:int = Math.round(0xffffff * Math.random());
+			//			var q:Quad = new Quad(gridSize, gridSize, color);
+			//			q.x = child.x;
+			//			q.y = child.y;
+			//			addChildAt(q,0);
+		}
+		
+		public function addChildToEdgeLevel(child:Sprite):void
+		{
+			m_edgesContainer.addChild(child);
+		}
+		
+		
 		public function start():void
 		{
-			m_segmentHovered = null;
 			initialize();
 			
 			m_disposed = false;
 			m_levelStartTime = new Date().time;
 			if (tutorialManager) tutorialManager.startLevel();
-			draw();
 			
-			//now that everything is attached and added to parents, update port position indexes, for both nodes and joints
-			for (var nodeId:String in m_gameNodeDict) {
-				var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				gameNode.updatePortIndexes();
-			}
 			levelGraph.resetScoring();
 			m_bestScore = levelGraph.currentScore;
 			flatten();
@@ -554,7 +524,6 @@ package scenes.game.display
 		
 		public function restart():void
 		{
-			m_segmentHovered = null;
 			if (!initialized) {
 				start();
 			} else {
@@ -564,7 +533,6 @@ package scenes.game.display
 			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 			onPropertyModeChange(propChangeEvt);
 			dispatchEvent(propChangeEvt);
-			setNewLayout(null, m_levelOriginalLayoutObj);
 			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
 			loadAssignments(m_levelAssignmentsObj);
 			targetScoreReached = false;
@@ -618,80 +586,13 @@ package scenes.game.display
 			while(worldParent && !(worldParent is World))
 				worldParent = worldParent.parent;
 			
-			updateLayoutObj(worldParent as World, true);
 			updateAssignmentsObj();
 		}
 		
-		protected function onRemovedFromStage(event:Event):void
+		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
+			trace("REMOVED!")
 			//disposeChildren();
-		}
-		
-		public function setNewLayout(name:String, newLayoutObj:Object, useExistingLines:Boolean = false):void
-		{
-			m_levelLayoutObj = XObject.clone(newLayoutObj);
-			m_levelLayoutName = name;
-			//we might have ended up with a 'world', just grab the first level
-			if(m_levelLayoutObj["levels"]) m_levelLayoutObj = m_levelLayoutObj["levels"][0];
-			loadLayout();
-			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox);
-			draw();
-		}
-		
-		//update current layout info based on node/edge position
-		// TODO: We don't want Level to depend on World, let's avoid circular 
-		// class dependency and have World -> Level, not World <-> Level
-		public function updateLayoutObj(world:World, includeThumbnail:Boolean = false):void
-		{
-			m_levelLayoutObjWrapper = new Object();
-			m_levelLayoutObjWrapper["layout"] = new Object();
-			m_levelLayoutObjWrapper["layout"]["vars"] = new Object();
-			for (var varId:String in m_levelLayoutObj["layout"]["vars"]) {
-				m_levelLayoutObjWrapper["layout"]["vars"][varId] = new Object();
-				if (!m_gameNodeDict.hasOwnProperty(varId)) {
-					trace("Warning! Layout varid where no gameNode exists in boxDictionary varId:" + varId);
-					continue;
-				}
-				var gameNode:GameNode = m_gameNodeDict[varId] as GameNode;
-				var currentLayoutX:Number = (gameNode.x + /*m_boundingBox.x*/ + gameNode.boundingBox.width/2) / Constants.GAME_SCALE;
-				m_levelLayoutObjWrapper["layout"]["vars"][varId]["x"] = currentLayoutX.toFixed(2);
-				var currentLayoutY:Number = (gameNode.y + /*m_boundingBox.y*/ + gameNode.boundingBox.height/2) / Constants.GAME_SCALE;
-				m_levelLayoutObjWrapper["layout"]["vars"][varId]["y"] = currentLayoutY.toFixed(2);
-				if (gameNode.hidden) {
-					m_levelLayoutObjWrapper["layout"]["vars"][varId]["visible"] = "false";
-				} else {
-					delete m_levelLayoutObjWrapper["layout"]["vars"][varId]["visible"];
-				}
-			}
-			m_levelLayoutObjWrapper["layout"]["constraints"] = new Object();
-			for (var constraintId:String in m_levelLayoutObj["layout"]["constraints"]) {
-				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId] = new Object();
-				if (!m_gameEdgeDict.hasOwnProperty(constraintId)) {
-					trace("Warning! Layout constraint found with no corresponding game edgeContainer found: " + constraintId);
-					continue;
-				}
-				var edgeContainer:GameEdgeContainer = m_gameEdgeDict[constraintId] as GameEdgeContainer;
-				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["visible"] = (!edgeContainer.hidden).toString();
-				m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["pts"] = new Array();
-				
-				if(edgeContainer.m_jointPoints.length != GameEdgeContainer.NUM_JOINTS)
-					trace("Wrong number of joint points " + constraintId);
-				for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
-				{
-					var pt:Point = edgeContainer.m_jointPoints[i];
-					currentLayoutX = (pt.x + edgeContainer.x) / Constants.GAME_SCALE;
-					currentLayoutY = (pt.y + edgeContainer.y) / Constants.GAME_SCALE;
-					(m_levelLayoutObjWrapper["layout"]["constraints"][constraintId]["pts"] as Array).push( { "x": currentLayoutX.toFixed(2), "y": currentLayoutY.toFixed(2) } );
-				}
-			}
-			
-			if(includeThumbnail)
-			{
-				var byteArray:ByteArray = world.getThumbnail(300, 300);
-				var enc:Base64Encoder = new Base64Encoder();
-				enc.encodeBytes(byteArray);
-				m_levelLayoutObjWrapper["thumb"] = enc.toString();
-			}
 		}
 		
 		//update current constraint info based on node constraints
@@ -700,7 +601,7 @@ package scenes.game.display
 			m_levelAssignmentsObj = createAssignmentsObj();
 		}
 		
-		private function createAssignmentsObj():Object
+		protected function createAssignmentsObj():Object
 		{
 			var hashSize:int = 0;
 			var nodeId:String;
@@ -712,11 +613,11 @@ package scenes.game.display
 									"hash": [], 
 									"target_score": this.m_targetScore,
 									"starting_score": this.levelGraph.currentScore,
-									"starting_jams": this.m_levelConflictEdges.length,
+		//							"starting_jams": this.m_levelConflictEdges.length,
 									"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
-			for (nodeId in m_gameNodeDict) {
+	/*		for (nodeId in m_gameNodeDict) {
 				var node:GameNode = m_gameNodeDict[nodeId] as GameNode;
 				if (node.constraintVar.constant) continue;
 				if (!assignmentsObj["assignments"].hasOwnProperty(node.constraintVar.formattedId)) assignmentsObj["assignments"][node.constraintVar.formattedId] = { };
@@ -739,7 +640,7 @@ package scenes.game.display
 					PipeJamGame.levelInfo.hash.push(numWide);
 					numWide = 0;
 				}
-			}
+			}*/
 			return assignmentsObj;
 		}
 		
@@ -753,15 +654,6 @@ package scenes.game.display
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
-			for (var nodeId:String in m_gameNodeDict) {
-				var gameNodeSet:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				gameNodeSet.removeFromParent(true);
-			}
-			m_gameNodeDict = new Dictionary();
-			for (var edgeId:String in m_gameEdgeDict) {
-				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-				gameEdge.removeFromParent(true);
-			}
 			m_gameEdgeDict = new Dictionary();
 			
 			if (m_nodesContainer) {
@@ -783,24 +675,15 @@ package scenes.game.display
 			
 			disposeChildren();
 			
-			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
-			removeEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
-			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
-			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
-			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
 			removeEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
 			removeEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
-			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
-			removeEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
 			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-			super.dispose();
-			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
+			super.dispose();		
 		}
 		
 		override protected function onTouch(event:TouchEvent):void
@@ -815,52 +698,8 @@ package scenes.game.display
 			}
 		}
 		
-		private function onSegmentMoved(event:EdgeContainerEvent):void
-		{
-			var newLeft:Number = m_boundingBox.left;
-			var newRight:Number = m_boundingBox.right;
-			var newTop:Number = m_boundingBox.top;
-			var newBottom:Number = m_boundingBox.bottom;
-			if (event.container != null) {
-				newLeft = Math.min(newLeft, event.container.boundingBox.left);
-				newRight = Math.max(newRight, event.container.boundingBox.right);
-				newTop = Math.min(newTop, event.container.boundingBox.top);
-				newBottom = Math.max(newBottom, event.container.boundingBox.bottom);
-				m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
-			}
-			if (tutorialManager != null) {
-				var pointingAt:Boolean = false;
-				if ((tutorialManager.getTextInfo() != null) && (tutorialManager.getTextInfo().pointAtFn != null)) {
-					var pointAtObject:DisplayObject = tutorialManager.getTextInfo().pointAtFn(this);
-					if (pointAtObject == event.segment) pointingAt = true;
-				}
-				tutorialManager.onSegmentMoved(event, pointingAt);
-			}
-		}
-		
-		private function onSegmentDeleted(event:EdgeContainerEvent):void
-		{
-			// TODO: notify tutorial manager
-		}
-		
-		private function onHoverOver(event:EdgeContainerEvent):void
-		{
-			m_segmentHovered = event.segment;
-		}
-		
-		private function onHoverOut(event:EdgeContainerEvent):void
-		{
-			m_segmentHovered = null;
-		}
-		
-		//called when a segment is double-clicked on
-		private function onCreateJoint(event:EdgeContainerEvent):void
-		{
-			if (tutorialManager && (event.container != null)) tutorialManager.onJointCreated(event);
-		}
-		
 		//assume this only generates on toggle width events
-		private function onWidgetChange(evt:VarChangeEvent = null):void
+		protected function onWidgetChange(evt:VarChangeEvent = null):void
 		{
 			//trace("Level: onWidgetChange");
 			if (evt) {
@@ -875,6 +714,7 @@ package scenes.game.display
 					var constraintType:String = evt.newValue ? ConstraintValue.VERBOSE_TYPE_0 : ConstraintValue.VERBOSE_TYPE_1;
 					PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.graphVar.id] = constraintType;
 				}
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			} else {
 				levelGraph.updateScore();
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
@@ -882,10 +722,10 @@ package scenes.game.display
 			onScoreChange(true);
 		}
 		
-		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
+		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		public function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
-			var i:int, nodeId:String, gameNode:GameNode, edgeId:String, gameEdge:GameEdgeContainer;
+		/*	var i:int, nodeId:String, gameNode:GameNode, edgeId:String, gameEdge:GameEdgeContainer;
 			if (evt.prop == PropDictionary.PROP_NARROW) {
 				m_propertyMode = PropDictionary.PROP_NARROW;
 				for (edgeId in m_gameEdgeDict) {
@@ -933,105 +773,24 @@ package scenes.game.display
 					}
 				}
 			}
-			flatten();
+			flatten();*/
 		}
 		
-		private function activate(comp:GameComponent):void
+		protected function refreshTroublePoints():void
 		{
-			if (comp is GameEdgeContainer) {
-				var edge:GameEdgeContainer = comp as GameEdgeContainer;
-				m_edgesContainer.addChild(edge);
-				if (edge.socket) m_plugsContainer.addChild(edge.socket);
-				if (edge.plug)   m_plugsContainer.addChild(edge.plug);
-			} else if (comp is GameNode) {
-				m_nodesContainer.addChild(comp);
-			}
-		}
-		
-		private function deactivate(comp:GameComponent):void
-		{
-			if (comp is GameEdgeContainer) {
-				var edge:GameEdgeContainer = comp as GameEdgeContainer;
-				m_edgesInactiveContainer.addChild(edge);
-				if (edge.socket) m_plugsInactiveContainer.addChild(edge.socket);
-				if (edge.plug)   m_plugsInactiveContainer.addChild(edge.plug);
-			} else if (comp is GameNode) {
-				m_nodesInactiveContainer.addChild(comp);
-			}
-		}
-		
-		private function refreshTroublePoints():void
-		{
-			for (var edgeId:String in m_gameEdgeDict) {
-				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-				gameEdge.refreshConflicts();
-			}
+	//		for (var edgeId:String in m_gameEdgeDict) {
+	//			var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+	//			gameEdge.refreshConflicts();
+	//		}
 		}
 		
 		//data object should be in final selected/unselected state
-		private function componentSelectionChanged(component:GameComponent, selected:Boolean):void
+		protected function componentSelectionChanged(component:GameComponent, selected:Boolean):void
 		{
-			if(selected)
-			{
-				if(selectedComponents.indexOf(component) == -1)
-					selectedComponents.push(component);
-				//push any connecting edges that have both connected nodes selected
-				if (component is GameNodeBase) {
-					for each(var edge:GameEdgeContainer in (component as GameNodeBase).orderedIncomingEdges)
-					{
-						var fromComponent:GameNodeBase = edge.m_fromNode;
-						if(selectedComponents.indexOf(fromComponent) != -1)
-						{
-							if(selectedComponents.indexOf(edge) == -1)
-							{
-								selectedComponents.push(edge);
-							}
-							edge.componentSelected(true);
-						}
-					}
-					for each(var edge1:GameEdgeContainer in (component as GameNodeBase).orderedOutgoingEdges)
-					{
-						var toComponent:GameNodeBase = edge1.m_toNode;
-						if(selectedComponents.indexOf(toComponent) != -1)
-						{
-							if(selectedComponents.indexOf(edge1) == -1)
-							{
-								selectedComponents.push(edge1);
-							}
-							edge1.componentSelected(true);
-						}
-					}
-				}
-			}
-			else
-			{
-				var index:int = selectedComponents.indexOf(component);
-				if(index != -1)
-					selectedComponents.splice(index, 1);
-				if (component is GameNodeBase) {
-					for each(var edge2:GameEdgeContainer in (component as GameNodeBase).orderedIncomingEdges)
-					{
-						if(selectedComponents.indexOf(edge2) != -1)
-						{
-							var edgeIndex:int = selectedComponents.indexOf(edge2);
-							selectedComponents.splice(edgeIndex, 1);
-							edge2.componentSelected(false);
-						}
-					}
-					for each(var edge3:GameEdgeContainer in (component as GameNodeBase).orderedOutgoingEdges)
-					{
-						if(selectedComponents.indexOf(edge3) != -1)
-						{
-							var edgeIndex1:int = selectedComponents.indexOf(edge3);
-							selectedComponents.splice(edgeIndex1, 1);
-							edge3.componentSelected(false);
-						}
-					}
-				}
-			}
+		
 		}
 		
-		private function onComponentSelection(evt:GameComponentEvent):void
+		protected function onComponentSelection(evt:GameComponentEvent):void
 		{
 			var component:GameComponent = evt.component;
 			if(component)
@@ -1039,10 +798,9 @@ package scenes.game.display
 			
 			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
 			selectionChangedComponents.push(component);
-			addSelectionUndoEvent(selectionChangedComponents, true);
 		}
 		
-		private function onComponentUnselection(evt:GameComponentEvent):void
+		protected function onComponentUnselection(evt:GameComponentEvent):void
 		{
 			var component:GameComponent = evt.component;
 			if(component)
@@ -1050,373 +808,44 @@ package scenes.game.display
 			
 			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
 			selectionChangedComponents.push(component);
-			addSelectionUndoEvent(selectionChangedComponents, false);
 		}
 		
-		private function onGroupSelection(evt:GroupSelectionEvent):void
+		protected function onGroupSelection(evt:GroupSelectionEvent):void
 		{
 			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
 			for each (var comp:GameComponent in selectionChangedComponents) {
 				comp.componentSelected(true);
 				componentSelectionChanged(comp, true);
 			}
-			addSelectionUndoEvent(evt.selection.concat(), true, true);
 		}
 		
-		private function onGroupUnselection(evt:GroupSelectionEvent):void
+		protected function onGroupUnselection(evt:GroupSelectionEvent):void
 		{
 			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
 			for each (var comp:GameComponent in selectionChangedComponents) {
 				comp.componentSelected(false);
 				componentSelectionChanged(comp, false);
 			}
-			addSelectionUndoEvent(evt.selection.concat(), false);
 		}
 		
-		private function onFinishedMoving(evt:MoveEvent):void
-		{
-			// Recalc bounds
-			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = Number.POSITIVE_INFINITY;
-			maxX = maxY = Number.NEGATIVE_INFINITY;
-			var i:int;
-			if (evt.component is GameNodeBase) {
-				// If moved node, check those bounds - otherwise assume they're unchanged
-				for (var nodeId:String in m_gameNodeDict) {
-					var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
-					minX = Math.min(minX, gameNode.boundingBox.left);
-					minY = Math.min(minY, gameNode.boundingBox.top);
-					maxX = Math.max(maxX, gameNode.boundingBox.right);
-					maxY = Math.max(maxY, gameNode.boundingBox.bottom);
-				}
-			}
-			for (var edgeId:String in m_gameEdgeDict) {
-				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-				minX = Math.min(minX, gameEdge.boundingBox.left);
-				minY = Math.min(minY, gameEdge.boundingBox.top);
-				maxX = Math.max(maxX, gameEdge.boundingBox.right);
-				maxY = Math.max(maxY, gameEdge.boundingBox.bottom);
-			}
-			var oldBB:Rectangle = m_boundingBox.clone();
-			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-			if (oldBB.x != m_boundingBox.x ||
-			    oldBB.y != m_boundingBox.y ||
-				oldBB.width != m_boundingBox.width ||
-				oldBB.height != m_boundingBox.height) {
-					dispatchEvent(new MiniMapEvent(MiniMapEvent.LEVEL_RESIZED));
-			}
-		}
-		
-		private function onErrorAdded(evt:ErrorEvent):void
+		protected function onErrorAdded(evt:ErrorEvent):void
 		{
 			errorConstraintDict[evt.constraintError.id] = evt.constraintError;
 		}
 		
-		private function onErrorRemoved(evt:ErrorEvent):void
+		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
 			delete errorConstraintDict[evt.constraintError.id];
 		}
 		
-		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void
-		{
-			if (selection.length == 0) {
-				return;
-			}
-			var component:GameComponent = selection[0];
-			var eventToUndo:Event;
-			if (selected) {
-				eventToUndo = new GroupSelectionEvent(GroupSelectionEvent.GROUP_SELECTED, component, selection);
-			} else {
-				eventToUndo = new GroupSelectionEvent(GroupSelectionEvent.GROUP_UNSELECTED, component, selection);
-			}
-			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
-			eventToDispatch.addToLast = addToLast;
-			dispatchEvent(eventToDispatch);
-		}
 		
-		public function unselectAll(addEventToLast:Boolean = false):void
-		{
-			//make a copy of the selected list for the undo event
-			var currentSelection:Vector.<GameComponent> = selectedComponents.concat();
-			totalMoveDist = new Point();
-			selectedComponents = new Vector.<GameComponent>();
-			
-			for each(var comp:GameComponent in currentSelection)
-			{
-				comp.componentSelected(false);
-				componentSelectionChanged(comp, false);
-			}
-			
-			if(currentSelection.length)
-			{
-				addSelectionUndoEvent(currentSelection, false, addEventToLast);
-			}
-		}
-		
-		private function onMoveEvent(evt:MoveEvent):void
-		{
-			var delta:Point = evt.delta;
-			var newLeft:Number = m_boundingBox.left;
-			var newRight:Number = m_boundingBox.right;
-			var newTop:Number = m_boundingBox.top;
-			var newBottom:Number = m_boundingBox.bottom;
-			var movedNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			//if component isn't in the currently selected group, unselect everything, and then move component
-			if(selectedComponents.indexOf(evt.component) == -1)
-			{
-				unselectAll();
-				evt.component.componentMoved(delta);
-				newLeft = Math.min(newLeft, evt.component.boundingBox.left);
-				newRight = Math.max(newRight, evt.component.boundingBox.left);
-				newTop = Math.min(newTop, evt.component.boundingBox.top);
-				newBottom = Math.max(newBottom, evt.component.boundingBox.bottom);
-				if (tutorialManager && (evt.component is GameNode)) {
-					movedNodes.push(evt.component as GameNode);
-					tutorialManager.onGameNodeMoved(movedNodes);
-				}
-			}
-			else
-			{
-				//if (selectedComponents.length == 0) {
-				//	totalMoveDist = new Point();
-				//	return;
-				//}
-				var movedGameNode:Boolean = false;
-				for each(var component:GameComponent in selectedComponents)
-				{
-					component.componentMoved(delta);
-					newLeft = Math.min(newLeft, component.boundingBox.left);
-					newRight = Math.max(newRight, component.boundingBox.left);
-					newTop = Math.min(newTop, component.boundingBox.top);
-					newBottom = Math.max(newBottom, component.boundingBox.bottom);
-
-					if (component is GameNode) {
-						movedNodes.push(component as GameNode);
-						movedGameNode = true;
-					}
-				}
-				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(movedNodes);
-			}
-			totalMoveDist.x += delta.x;
-			totalMoveDist.y += delta.y;
-			trace(totalMoveDist);
-			dispatchEvent(new MiniMapEvent(MiniMapEvent.ERRORS_MOVED));
-			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
-		}
-		
-		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
-		{
-			if (undoEvent is GroupSelectionEvent) //individual selections come through here also
-			{
-				var groupEvt:GroupSelectionEvent = undoEvent as GroupSelectionEvent;
-				if (groupEvt.selection)
-				{
-					for each(var selectedComp:GameComponent in groupEvt.selection)
-					{
-						if(selectedComp is GameNodeBase)
-						{
-							var performSelection:Boolean;
-							if (undoEvent.type == GroupSelectionEvent.GROUP_SELECTED) {
-								performSelection = !isUndo; // select if redo, unselect if undo
-							} else {
-								performSelection = isUndo; // unselect if redo, select if undo
-							}
-							selectedComp.componentSelected(performSelection);
-							componentSelectionChanged(selectedComp as GameNodeBase, performSelection);
-						}
-					}
-				}
-			}
-			else if (undoEvent is MoveEvent)
-			{
-				var moveEvt:MoveEvent = undoEvent as MoveEvent;
-				var delta:Point;
-				if (!isUndo) {
-					delta = moveEvt.delta.clone();
-				} else {
-					delta = new Point(-moveEvt.delta.x, -moveEvt.delta.y);
-				}
-				trace("isUndo:" + isUndo + " delta:" + delta);
-				//not added as a temp selection, so move separately
-				if (moveEvt.component)
-					moveEvt.component.componentMoved(delta);
-				for each(var selectedComponent:GameComponent in selectedComponents)
-				{
-					if (moveEvt.component != selectedComponent)
-						selectedComponent.componentMoved(delta);
-				}
-			}
-		}
-		
-		//to be called once to set everything up 
-		//to move/update objects use update events
-		public function draw():void
-		{
-			//trace("Bounding Box " + m_boundingBox);
-			var maxX:Number = Number.NEGATIVE_INFINITY;
-			var maxY:Number = Number.NEGATIVE_INFINITY;
-			
-			var nodeCount:int = 0;
-			for (var nodeId:String in m_gameNodeDict) {
-				var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				gameNode.x = gameNode.boundingBox.x;
-				gameNode.y = gameNode.boundingBox.y;
-				gameNode.m_isDirty = true;
-				m_nodesContainer.addChild(gameNode);
-				nodeCount++;
-			}
-			
-			var edgeCount:int = 0;
-			for (var edgeId:String in m_gameEdgeDict) {
-				var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-				gameEdge.m_isDirty = true;
-				m_edgesContainer.addChild(gameEdge);
-				m_errorContainer.addChild(gameEdge.errorContainer);
-				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
-				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
-				edgeCount++;
-			}
-			
-			trace("Nodes " + nodeCount + " Edges " + edgeCount);
-			if (m_backgroundImage) {
-				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
-				m_backgroundImage.x = m_backgroundImage.y = - MIN_BORDER - 0.5 * Math.max(m_boundingBox.x, m_boundingBox.y);
-				var texturesToRepeat:Number = (50.0 / Constants.GAME_SCALE) * (m_backgroundImage.width / BG_WIDTH);
-				m_backgroundImage.setTexCoords(1, new Point(texturesToRepeat, 0.0));
-				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
-				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
-			}
-			flatten();
-		}
-		
-		private static function getVisible(_layoutObj:Object, _defaultValue:Boolean = true):Boolean
+		protected static function getVisible(_layoutObj:Object, _defaultValue:Boolean = true):Boolean
 		{
 			var value:String = _layoutObj["visible"];
 			if (!value) return _defaultValue;
 			return XString.stringToBool(value);
 		}
-		
-		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
-		{
-			if (m_layoutFixed) return;
-			
-			if(startingPoint != null)
-			{
-				marqueeRect.removeChildren();
-				//scale line size
-				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
-				marqueeRect.graphics.lineStyle(lineSize, 0xffffff);
-				marqueeRect.graphics.moveTo(0,0);
-				var pt1:Point = globalToLocal(startingPoint);
-				var pt2:Point = globalToLocal(currentPoint);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, 0);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, 0);
-				marqueeRect.x = pt1.x;
-				marqueeRect.y = pt1.y;
-				//do here to make sure we are on top
-				addChild(marqueeRect);
-				flatten();
-			}
-			else
-			{
-				var newSelectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
-				var newUnselectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
-				
-				for (var nodeId:String in m_gameNodeDict) {
-					var gameNode:GameNode = m_gameNodeDict[nodeId] as GameNode;
-					handleSelection(gameNode, newSelectedComponents, newUnselectedComponents);
-				}
-				removeChild(marqueeRect);
-				
-				addSelectionUndoEvent(newSelectedComponents, true);
-				addSelectionUndoEvent(newUnselectedComponents, false, true);
-			}
-		}
-		
-		protected function handleSelection(node:GameNodeBase, newSelectedComponents:Vector.<GameComponent>, newUnselectedComponents:Vector.<GameComponent>):void
-		{
-			var bottomRight:Point = globalToLocal(node.bounds.bottomRight);
-			var topLeft:Point = globalToLocal(node.bounds.topLeft);
-			var topRight:Point = globalToLocal(new Point(node.bounds.right, node.bounds.top));
-			var bottomLeft:Point = globalToLocal(new Point(node.bounds.left, node.bounds.bottom));
-			var mbottomLeft:Point = globalToLocal(new Point(marqueeRect.x, marqueeRect.y));
-			
-			if((marqueeRect.bounds.left < node.bounds.left && marqueeRect.bounds.right > node.bounds.left) || 
-				(marqueeRect.bounds.left < node.bounds.right && marqueeRect.bounds.right > node.bounds.right))
-			{
-				if((marqueeRect.bounds.top < node.bounds.bottom && marqueeRect.bounds.bottom > node.bounds.bottom) || 
-					(marqueeRect.bounds.top < node.bounds.top && marqueeRect.bounds.bottom > node.bounds.top))
-				{
-					node.componentSelected(!node.isSelected);
-					if (node.isSelected) {
-						if ((selectedComponents.indexOf(node) == -1) && (newSelectedComponents.indexOf(node) == -1)) {
-							newSelectedComponents.push(node);
-						}
-					} else {
-						if ((selectedComponents.indexOf(node) > -1) && (newUnselectedComponents.indexOf(node) == -1)) {
-							newUnselectedComponents.push(node);
-						}
-					}
-					componentSelectionChanged(node, node.isSelected);
-				}
-			}
-		}
-		
-		public function toggleUneditableStrings():void
-		{
-			var visitedNodes:Dictionary = new Dictionary;
-			for (var nodeId:String in m_gameNodeDict) {
-				var node:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				if(visitedNodes[node.m_id] == null)
-				{
-					visitedNodes[node.m_id] = node;
-					var groupDictionary:Dictionary = new Dictionary;
-					node.findGroup(groupDictionary);
-					//check for an editable node
-					var uneditable:Boolean = true;
-					for each(var comp:GameComponent in groupDictionary)
-					{
-						if(comp.m_isEditable)
-						{
-							uneditable = false;
-							break;
-						}
-					}
-					if(uneditable)
-					{
-						for each(var comp1:GameComponent in groupDictionary)
-						{
-							comp1.hideComponent(comp.visible);
-							visitedNodes[comp1.m_id] = comp1;
-						}
-					}
-				}
-			}
-		}
-		
-		public function getNode(_id:String):GameNode
-		{
-			if (m_gameNodeDict.hasOwnProperty(_id) && (m_gameNodeDict[_id] is GameNode)) {
-				return (m_gameNodeDict[_id] as GameNode);
-			}
-			return null;
-		}
-		
-		public function getEdges():Dictionary
-		{
-			return m_gameEdgeDict;
- 		}
-		
-		public function getEdgeContainer(_id:String):GameEdgeContainer
-		{
-			if (m_gameEdgeDict.hasOwnProperty(_id) && (m_gameEdgeDict[_id] is GameEdgeContainer)) {
-				return (m_gameEdgeDict[_id] as GameEdgeContainer);
-			}
-			return null;
-		}
-		
+
 		public function getNodes():Dictionary
 		{
 			return m_gameNodeDict;
@@ -1449,24 +878,24 @@ package scenes.game.display
 		
 		public function hideErrorText():void
 		{
-			if (!m_hidingErrorText) {
-				for (var edgeId:String in m_gameEdgeDict) {
-					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-					gameEdge.hideErrorText();
-				}
-				m_hidingErrorText = true;
-			}
+//			if (!m_hidingErrorText) {
+//				for (var edgeId:String in m_gameEdgeDict) {
+//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+//					gameEdge.hideErrorText();
+//				}
+//				m_hidingErrorText = true;
+//			}
 		}
 		
 		public function showErrorText():void
 		{
-			if (m_hidingErrorText) {
-				for (var edgeId:String in m_gameEdgeDict) {
-					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-					gameEdge.showErrorText();
-				}
-				m_hidingErrorText = false;
-			}
+//			if (m_hidingErrorText) {
+//				for (var edgeId:String in m_gameEdgeDict) {
+//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+//					gameEdge.showErrorText();
+//				}
+//				m_hidingErrorText = false;
+//			}
 		}
 		
 		/**
@@ -1476,41 +905,42 @@ package scenes.game.display
 		 */
 		public function getNextConflict(forward:Boolean):DisplayObject
 		{
-			if (m_conflictEdgesDirty) {
-				for (var edgeId:String in m_gameEdgeDict) {
-					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-					if (gameEdge.hasError()) {
-						if (!m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
-							// Add to list/dict if not on there already
-							if (m_levelConflictEdges.indexOf(gameEdge) == -1) m_levelConflictEdges.push(gameEdge);
-							m_levelConflictEdgeDict[gameEdge.m_id] = true;
-						}
-					} else {
-						if (m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
-							// Remove from edge conflict list/dict if on it
-							var delindx:int = m_levelConflictEdges.indexOf(gameEdge);
-							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
-							delete m_levelConflictEdgeDict[gameEdge.m_id];
-						}
-					}
-				}
-				m_conflictEdgesDirty = false;
-			}
-			//keep track of number of conflicts
-			PipeJamGame.levelInfo.conflicts = m_levelConflictEdges.length;
-			
-			if (m_levelConflictEdges.length == 0) return null;
-			if (forward) {
-				m_currentConflictIndex++;
-			} else {
-				m_currentConflictIndex--;
-			}
-			if (m_currentConflictIndex >= m_levelConflictEdges.length) {
-				m_currentConflictIndex = 0;
-			} else if (m_currentConflictIndex < 0) {
-				m_currentConflictIndex = m_levelConflictEdges.length - 1;
-			}
-			return m_levelConflictEdges[m_currentConflictIndex].errorContainer;
+//			if (m_conflictEdgesDirty) {
+//				for (var edgeId:String in m_gameEdgeDict) {
+//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+//					if (gameEdge.hasError()) {
+//						if (!m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
+//							// Add to list/dict if not on there already
+//							if (m_levelConflictEdges.indexOf(gameEdge) == -1) m_levelConflictEdges.push(gameEdge);
+//							m_levelConflictEdgeDict[gameEdge.m_id] = true;
+//						}
+//					} else {
+//						if (m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
+//							// Remove from edge conflict list/dict if on it
+//							var delindx:int = m_levelConflictEdges.indexOf(gameEdge);
+//							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
+//							delete m_levelConflictEdgeDict[gameEdge.m_id];
+//						}
+//					}
+//				}
+//				m_conflictEdgesDirty = false;
+//			}
+//			//keep track of number of conflicts
+//			PipeJamGame.levelInfo.conflicts = m_levelConflictEdges.length;
+//			
+//			if (m_levelConflictEdges.length == 0) return null;
+//			if (forward) {
+//				m_currentConflictIndex++;
+//			} else {
+//				m_currentConflictIndex--;
+//			}
+//			if (m_currentConflictIndex >= m_levelConflictEdges.length) {
+//				m_currentConflictIndex = 0;
+//			} else if (m_currentConflictIndex < 0) {
+//				m_currentConflictIndex = m_levelConflictEdges.length - 1;
+//			}
+//			return m_levelConflictEdges[m_currentConflictIndex].errorContainer;
+			return null;
 		}
 		
 		//can't flatten errorContainer as particle system is unsupported display object
@@ -1559,33 +989,9 @@ package scenes.game.display
 		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
 		public function onDeletePressed():void
 		{
-			// Only delete if layout moves are allowed
-			if (tutorialManager && tutorialManager.getLayoutFixed()) return;
-			if (!SEGMENT_DELETION_ENABLED) return;
-			if (m_segmentHovered) m_segmentHovered.onDeleted();
+
 		}
 		
-		public function onUseSelectionPressed(choice:String):void
-		{
-			var assignmentIsWide:Boolean = false;
-			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
-				assignmentIsWide = true;
-			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
-				assignmentIsWide = false;
-			
-			var gameNode:GameNode;	
-			for(var i:int = 0; i<selectedComponents.length; i++)
-			{
-				var component:GameComponent = selectedComponents[i];
-				if(component is GameNode)
-				{
-					gameNode = component as GameNode;
-					if(gameNode.m_isEditable) gameNode.constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
-				}
-			}
-			//update score
-			onWidgetChange();
-		}
 		
 		public function get currentScore():int { return levelGraph.currentScore; }
 		public function get bestScore():int { return m_bestScore; }
@@ -1613,6 +1019,77 @@ package scenes.game.display
 			m_conflictEdgesDirty = true;
 		}
 		
+		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
+		{
+			var gridSquare:GridSquare;
+			if(startingPoint != null)
+			{
+				marqueeRect.removeChildren();
+				//scale line size
+				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
+				marqueeRect.graphics.lineStyle(lineSize, 0xffffff);
+				marqueeRect.graphics.moveTo(0,0);
+				var pt1:Point = globalToLocal(startingPoint);
+				var pt2:Point = globalToLocal(currentPoint);
+				marqueeRect.graphics.lineTo(pt2.x-pt1.x, 0);
+				marqueeRect.graphics.lineTo(pt2.x-pt1.x, pt2.y-pt1.y);
+				marqueeRect.graphics.lineTo(0, pt2.y-pt1.y);
+				marqueeRect.graphics.lineTo(0, 0);
+				marqueeRect.x = pt1.x;
+				marqueeRect.y = pt1.y;
+				//do here to make sure we are on top
+				addChild(marqueeRect);
+				if(marqueeRect.height > 0 && marqueeRect.width > 0)
+				{
+					for each(gridSquare in currentGridDict)
+					{
+						gridSquare.handleSelection(marqueeRect.bounds, selectedNodeConstraintDict);
+					}
+				}
+			}
+			else
+			{		
+				removeChild(marqueeRect);	
+				for each(gridSquare in currentGridDict)
+				{
+					gridSquare.visited = false;
+				}
+			}
+		}
+		
+		public function unselectAll(addEventToLast:Boolean = false):void
+		{
+			for each(var gridSquare:GridSquare in currentGridDict)
+			{
+				gridSquare.unselectAll();
+			}
+			
+			selectedNodeConstraintDict = new Dictionary; 
+		}
+		
+		public function onUseSelectionPressed(choice:String):void
+		{
+			var assignmentIsWide:Boolean = false;
+			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
+				assignmentIsWide = true;
+			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
+				assignmentIsWide = false;
+			
+			//need to update nodes first...
+			var gridSquare:GridSquare;
+			for each(gridSquare in gridSystemDict)
+			{
+				gridSquare.updateSelectedNodesAssignment(assignmentIsWide);
+			}
+			//...and then redraw edges based on those changes
+			for each(gridSquare in gridSystemDict)
+			{
+				gridSquare.updateSelectedEdges();
+			}
+			//update score
+			onWidgetChange();
+		}
+		
 		public function solveSelection(updateCallback:Function, doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1620,89 +1097,103 @@ package scenes.game.display
 			//create three constraints for conflicts and weights
 			//run the solver, passing in the callback function
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
+			var storedConstraints:Dictionary = new Dictionary;
 			var counter:int = 1;
 			var constraintArray:Array = new Array;
 			var initvarsArray:Array = new Array;
-			for(var i:int = 0; i<selectedComponents.length; i++)
+			//loop through each object
+			for each(var node:Object in selectedNodeConstraintDict)
 			{
-				var constraint1Value:int = -1;
-				var constraint2Value:int = -1;
-				var component:GameComponent = selectedComponents[i];
-				if(component is GameEdgeContainer)
+				//loop through each edge, checking far end for existence in dict
+				for each(var gameEdgeID:String in node.connectedEdges)
 				{
-					var edge:GameEdgeContainer = component as GameEdgeContainer;
-					var fromNode:GameNodeBase = edge.m_fromNode;
-					var toNode:GameNodeBase = edge.m_toNode;
+					var constraint1Value:int = -1;
+					var constraint2Value:int = -1;
+					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					var toNodeID:String = edgeObj["to_var_id"];
+					var toNode:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+					var fromNodeID:String = edgeObj["from_var_id"];
+					var fromNode:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 					
-					if(fromNode.m_isEditable)
-					{
-						if(nodeIDToConstraintsTwoWayMap[fromNode.m_id] == null)
-						{
-							nodeIDToConstraintsTwoWayMap[fromNode.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = fromNode.constraintVar;
-							constraint1Value = counter;
-							counter++;
-						}
-						else
-							constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.m_id];
-					} 
+					//figure out which is the other node
+					var nodeToCheck:Object = toNode;
+					if(toNode == node)
+						nodeToCheck = fromNode;
 					
-					if(toNode.m_isEditable)
+					if(selectedNodeConstraintDict[nodeToCheck.id] != null)
 					{
-						if(nodeIDToConstraintsTwoWayMap[toNode.m_id] == null)
+						//found an edge with both end nodes selected
+						if(fromNode.isEditable)
 						{
-							nodeIDToConstraintsTwoWayMap[toNode.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = toNode.constraintVar;
-							constraint2Value = counter;
-							counter++;
-						}
-						else
-							constraint2Value = nodeIDToConstraintsTwoWayMap[toNode.m_id];
-					}
-					
-					if(fromNode.m_isEditable && toNode.m_isEditable)
-						constraintArray.push(new Array(100, -constraint1Value, constraint2Value));
-					else if(fromNode.m_isEditable && !toNode.m_isEditable)
-					{
-						if(!toNode.m_isWide)
-							constraintArray.push(new Array(100, -constraint1Value));
-					}
-					if(!fromNode.m_isEditable && toNode.m_isEditable)
-					{
-						if(fromNode.m_isWide)
-							constraintArray.push(new Array(100, constraint2Value));
-					}
-				}
-				else if(component is GameNode)
-				{
-					var node:GameNode = component as GameNode;
-					if(node.m_isEditable)
-					{
-						if(nodeIDToConstraintsTwoWayMap[node.m_id] == null)
-						{
-							nodeIDToConstraintsTwoWayMap[node.m_id] = counter;
-							nodeIDToConstraintsTwoWayMap[counter] = node.constraintVar;
-							constraint1Value = counter;
-							counter++;
-						}
-						else
-							constraint1Value = nodeIDToConstraintsTwoWayMap[node.m_id];
+							if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+								constraint1Value = counter;
+								counter++;
+							}
+							else
+								constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
+						} 
 						
-						constraintArray.push(new Array(1, constraint1Value));
+						if(toNode.isEditable)
+						{
+							if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = toNode;
+								constraint2Value = counter;
+								counter++;
+							}
+							else
+								constraint2Value = nodeIDToConstraintsTwoWayMap[toNode.id];
+						}
+						
+						var constraint:String = constraint1Value+"_"+constraint2Value;
+						//check for duplicates
+						if(storedConstraints[constraint] == null)
+						{
+							storedConstraints[constraint] = constraint;
+							
+							if(fromNode.isEditable && toNode.isEditable)
+								constraintArray.push(new Array(100, -constraint1Value, constraint2Value));
+							else if(fromNode.isEditable && !toNode.isEditable)
+							{
+								if(toNode.isNarrow)
+									constraintArray.push(new Array(100, -constraint1Value));
+							}
+							if(!fromNode.isEditable && toNode.isEditable)
+							{
+								if(!fromNode.isNarrow)
+									constraintArray.push(new Array(100, constraint2Value));
+							}
+							
+							if(toNode.isEditable && storedConstraints[constraint1Value] != toNode)
+							{
+								constraintArray.push(new Array(1, constraint1Value));
+								storedConstraints[constraint1Value] = toNode;
+							}
+							if(fromNode.isEditable && storedConstraints[constraint2Value] != fromNode)
+							{
+								constraintArray.push(new Array(1, constraint2Value));
+								storedConstraints[constraint2Value] = fromNode;
+							}
+						}
 					}
 				}
 			}
+			
 			
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
 				for(var ii:int = 1;ii<counter;ii++)
 				{
-					var gameNode:GameNode = nodeIDToConstraintsTwoWayMap[ii] as GameNode;
-					if(gameNode.m_isWide)
-						initvarsArray.push(1);
-					else
+					var gameNode:Object = nodeIDToConstraintsTwoWayMap[ii];
+					if(gameNode.isNarrow)
 						initvarsArray.push(0);
+					else
+						initvarsArray.push(1);
 				}
 				m_inSolver = true;
 				MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
@@ -1711,7 +1202,6 @@ package scenes.game.display
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var constraintVar:ConstraintVar;
 			var assignmentIsWide:Boolean = false;
 			
 			if(	m_inSolver == false) //got marked done early
@@ -1719,11 +1209,15 @@ package scenes.game.display
 			
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				constraintVar = nodeIDToConstraintsTwoWayMap[ii+1];
-				assignmentIsWide = false;
+				var node:Object = nodeIDToConstraintsTwoWayMap[ii+1];
+				var constraintVar:ConstraintVar = node["var"];
+				var parentGridSquare:GridSquare = node.parentGrid;
+				parentGridSquare.setNodeDirty(node, true);
+				node.isNarrow = true;
 				if(vars[ii] == 1)
-					assignmentIsWide = true;
-				if(constraintVar) constraintVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
+					node.isNarrow = false;
+				if(constraintVar) 
+					constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
 			}
 			onWidgetChange();
 		}
@@ -1734,6 +1228,16 @@ package scenes.game.display
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
+		}
+		
+		public function onViewSpaceChanged(event:MiniMapEvent):void
+		{
+			
+		}
+		
+		public function adjustSize(newWidth:Number, newHeight:Number):void
+		{
+			
 		}
 	}
 }

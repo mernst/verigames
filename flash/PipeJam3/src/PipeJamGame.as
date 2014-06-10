@@ -23,7 +23,6 @@ package
 	import display.GameObjectBatch;
 	import display.MusicButton;
 	import display.NineSliceBatch;
-	import display.PipeJamTheme;
 	import display.SoundButton;
 	
 	import events.MenuEvent;
@@ -55,9 +54,7 @@ package
 				
 		public static var SEPARATE_FILES:int = 1;
 		public static var ALL_IN_ONE:int = 2;
-		
-		public static var theme:PipeJamTheme;
-		
+				
 		private var m_musicButton:MusicButton;
 		private static var m_sfxButton:SoundButton;
 		
@@ -108,10 +105,7 @@ package
 		
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
-		{			
-			theme = new PipeJamTheme( this.stage );
-			//	theme1 = new AeonDesktopTheme( this.stage );
-			
+		{						
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			

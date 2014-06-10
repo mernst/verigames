@@ -2,13 +2,16 @@ package scenes.game
 {
 	import flash.events.Event;
 	import flash.utils.Dictionary;
-	import starling.display.*;
-	import starling.events.Event;
 	
-	import networking.*;
+	import networking.GameFileHandler;
+	
+	import scenes.Scene;
 	import scenes.game.display.ReplayWorld;
 	import scenes.game.display.World;
-	import scenes.Scene;
+	
+	import starling.display.Button;
+	import starling.events.Event;
+	
 	import state.ParseConstraintGraphState;
 	
 	public class PipeJamGameScene extends Scene
@@ -18,7 +21,7 @@ package scenes.game
 		//takes a partial path to the files, using the base file name. -.json, -Layout.json and -Constraints.json will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../SampleWorlds/L21374_V102"//L21414_V17680
+			"../SampleWorlds/L21414_V17680"//L21414_V17680,L10823_V16,L21373_V101s,L13076_V4
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
@@ -41,6 +44,8 @@ package scenes.game
 		private var active_world:World;
 		private var m_worldGraphDict:Dictionary
 		
+		public static var startLoadTime:Number;
+		
 		public function PipeJamGameScene(game:PipeJamGame)
 		{
 			super(game);
@@ -50,6 +55,7 @@ package scenes.game
 		{
 			super.addedToStage(event);
 			m_layoutLoaded = m_worldLoaded = m_assignmentsLoaded = false;
+			startLoadTime = new Date().getTime();
 			GameFileHandler.loadGameFiles(onWorldLoaded, onLayoutLoaded, onConstraintsLoaded);
 		}
 		
@@ -113,7 +119,6 @@ package scenes.game
 		{
 			if(m_layoutLoaded && m_worldLoaded && m_assignmentsLoaded)
 			{
-				trace("everything loaded");
 				parseJson();
 			}
 		}
@@ -132,6 +137,7 @@ package scenes.game
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
 			}
 			addChild(active_world);
+			trace("Load Time", new Date().getTime() - startLoadTime);
 		}
 	}
 }
