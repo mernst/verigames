@@ -503,6 +503,7 @@ package scenes.game.display
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
 					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
 					details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
@@ -703,6 +704,7 @@ package scenes.game.display
 						details[VerigameServerConstants.ACTION_PARAMETER_SCORE_CHANGE] = newScore - oldScore;
 						details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
 						details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
+						details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
 					}
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, level_changed.getTimeMs());
 				}
@@ -987,7 +989,6 @@ package scenes.game.display
 			if (!newLevel) {
 				return;
 			}
-			
 			if (PipeJam3.logging) {
 				var details:Object, qid:int;
 				if (active_level) {
@@ -995,6 +996,7 @@ package scenes.game.display
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
 					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
 					details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
 					qid = (active_level.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelGraph.qid;
 					//if (PipeJamGame.levelInfo) {
 					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
@@ -1004,6 +1006,9 @@ package scenes.game.display
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
+				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = newLevel.currentScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = newLevel.startingScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = newLevel.m_targetScore;
 				if (PipeJamGame.levelInfo) {
 					var jsonString:String = JSON.stringify(PipeJamGame.levelInfo);
 					var newObject:Object =  JSON.parse(jsonString);
