@@ -70,6 +70,10 @@ def optimize_graph(infilename, outfilename):
 						to_group.grouped_nodes[grouped_node_id] = from_group.grouped_nodes[grouped_node_id]
 						node2group[grouped_node_id] = to_group
 					from_group.grouped_nodes = {}
+					group.ninputs = 0
+					group.inputs = {}
+					for input_id in from_group.inputs:
+						group.addinput(from_group.inputs[input_id]) # this will also update the edge to reference this group node
 					if groups.get(from_group.id) is not None:
 						del groups[from_group.id]
 				n_edges_reduced += 1
