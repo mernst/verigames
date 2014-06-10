@@ -31,9 +31,11 @@
   <!-- Build options -->
   <build>
     <option accessible="False" />
+    <option advancedTelemetry="False" />
     <option allowSourcePathOverlap="False" />
     <option benchmark="False" />
     <option es="False" />
+    <option inline="False" />
     <option locale="" />
     <option loadConfig="" />
     <option optimize="True" />
@@ -64,6 +66,9 @@
     <element path="lib\assets\" />
     <element path="external\cgs-common\CGSCommon.swc" />
     <element path="external\Feathers 1.0.1\swc\feathers.swc" />
+    <element path="external\MaxSatSolver\maxsat_as3\example\lib\maxsat_manager.swc" />
+    <element path="external\MaxSatSolver\maxsat_as3\example\lib\maxsat_util.swc" />
+    <element path="external\MaxSatSolver\maxsat_as3\example\lib\maxsat_worker.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -87,7 +92,7 @@
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand>python script/prebuild.py</preBuildCommand>
@@ -97,6 +102,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="ExternalPlayer" />
+    <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->
   <storage />

@@ -170,7 +170,7 @@ package scenes.game.display
 			m_levelLayoutName = _levelLayoutObj["id"];
 			m_levelQID = _levelLayoutObj["qid"];
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
-			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
+			m_levelOriginalAssignmentsObj = XObject.clone(_levelAssignmentsObj);
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
@@ -485,6 +485,7 @@ package scenes.game.display
 				nodeLayoutObjs[result[2]]["connectedEdges"].push(constraintId);
 				
 				edgeLayoutObjs[constraintId] = edgeLayoutObj;
+				if (m_gameEdgeDict.hasOwnProperty(constraintId)) createEdgeFromJsonObj(edgeLayoutObj);
 				n++;
 			}
 			trace("edge count = " + n);
@@ -518,6 +519,7 @@ package scenes.game.display
 			
 			levelGraph.resetScoring();
 			m_bestScore = levelGraph.currentScore;
+			levelGraph.startingScore = levelGraph.currentScore;
 			flatten();
 			trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
@@ -530,11 +532,12 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.startLevel();
 				m_levelStartTime = new Date().time;
 			}
-			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
-			onPropertyModeChange(propChangeEvt);
-			dispatchEvent(propChangeEvt);
-			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			loadAssignments(m_levelAssignmentsObj);
+			//var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+			//onPropertyModeChange(propChangeEvt);
+			//dispatchEvent(propChangeEvt);
+			//m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
+			//loadAssignments(m_levelAssignmentsObj);
+			loadInitialConfiguration();
 			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
@@ -719,7 +722,7 @@ package scenes.game.display
 				levelGraph.updateScore();
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			onScoreChange(true);
+			onScoreChange(true, false);
 		}
 		
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -995,6 +998,7 @@ package scenes.game.display
 		
 		public function get currentScore():int { return levelGraph.currentScore; }
 		public function get bestScore():int { return m_bestScore; }
+		public function get startingScore():int { return levelGraph.startingScore; }
 		public function get prevScore():int { return levelGraph.prevScore; }
 		public function get oldScore():int { return levelGraph.oldScore; }
 		
@@ -1004,17 +1008,17 @@ package scenes.game.display
 			m_levelBestScoreAssignmentsObj = XObject.clone(m_levelAssignmentsObj);
 		}
 		
-		public function onScoreChange(recordBestScore:Boolean = false):void
+		public function onScoreChange(recordBestScore:Boolean = false, logChange:Boolean = true):void
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0)
+				if(!m_tutorialTag && levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
-			if (levelGraph.prevScore != levelGraph.currentScore)
+			if (logChange && levelGraph.prevScore != levelGraph.currentScore)
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			m_conflictEdgesDirty = true;
 		}
@@ -1227,7 +1231,7 @@ package scenes.game.display
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
-			onScoreChange(true);
+			onScoreChange(true); // TODO: need to log the widget changes here
 		}
 		
 		public function onViewSpaceChanged(event:MiniMapEvent):void
