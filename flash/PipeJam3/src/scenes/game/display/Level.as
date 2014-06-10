@@ -85,7 +85,6 @@ package scenes.game.display
 		public var tutorialManager:TutorialLevelManager;
 		protected var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
-		
 		protected var boxDictionary:Dictionary;
 		protected var edgeContainerDictionary:Dictionary;
 		
@@ -170,7 +169,7 @@ package scenes.game.display
 			m_levelLayoutName = _levelLayoutObj["id"];
 			m_levelQID = _levelLayoutObj["qid"];
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
-			m_levelOriginalAssignmentsObj = XObject.clone(_levelAssignmentsObj);
+			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
@@ -485,7 +484,6 @@ package scenes.game.display
 				nodeLayoutObjs[result[2]]["connectedEdges"].push(constraintId);
 				
 				edgeLayoutObjs[constraintId] = edgeLayoutObj;
-				if (m_gameEdgeDict.hasOwnProperty(constraintId)) createEdgeFromJsonObj(edgeLayoutObj);
 				n++;
 			}
 			trace("edge count = " + n);
@@ -532,12 +530,11 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.startLevel();
 				m_levelStartTime = new Date().time;
 			}
-			//var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
-			//onPropertyModeChange(propChangeEvt);
-			//dispatchEvent(propChangeEvt);
-			//m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			//loadAssignments(m_levelAssignmentsObj);
-			loadInitialConfiguration();
+			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+			onPropertyModeChange(propChangeEvt);
+			dispatchEvent(propChangeEvt);
+			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
+			loadAssignments(m_levelAssignmentsObj);
 			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
@@ -722,7 +719,7 @@ package scenes.game.display
 				levelGraph.updateScore();
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			onScoreChange(true, false);
+			onScoreChange(true);
 		}
 		
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1008,17 +1005,17 @@ package scenes.game.display
 			m_levelBestScoreAssignmentsObj = XObject.clone(m_levelAssignmentsObj);
 		}
 		
-		public function onScoreChange(recordBestScore:Boolean = false, logChange:Boolean = true):void
+		public function onScoreChange(recordBestScore:Boolean = false):void
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(!m_tutorialTag && levelGraph.oldScore != 0)
+				if(levelGraph.oldScore != 0)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
-			if (logChange && levelGraph.prevScore != levelGraph.currentScore)
+			if (levelGraph.prevScore != levelGraph.currentScore)
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			m_conflictEdgesDirty = true;
 		}
@@ -1231,7 +1228,7 @@ package scenes.game.display
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
-			onScoreChange(true); // TODO: need to log the widget changes here
+			onScoreChange(true);
 		}
 		
 		public function onViewSpaceChanged(event:MiniMapEvent):void
