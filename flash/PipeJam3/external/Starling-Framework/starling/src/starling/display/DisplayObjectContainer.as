@@ -343,7 +343,7 @@ package starling.display
                 }
             }
         }
-        
+       public  var previousTime:Number = 0;
         /** Dispatches an event on all children (recursively). The event must not bubble. */
         public function broadcastEvent(event:Event):void
         {
@@ -354,7 +354,7 @@ package starling.display
             // Thus, we collect them in a list and iterate over that list instead.
             // And since another listener could call this method internally, we have to take 
             // care that the static helper vector does not get currupted.
-            
+ //           var time:Number = new Date().getTime();
             var fromIndex:int = sBroadcastListeners.length;
             getChildEventListeners(this, event.type, sBroadcastListeners);
             var toIndex:int = sBroadcastListeners.length;
@@ -363,6 +363,9 @@ package starling.display
                 sBroadcastListeners[i].dispatchEvent(event);
             
             sBroadcastListeners.length = fromIndex;
+//			var time1:Number = new Date().getTime();
+//			trace('Update time', time1 - time, time1-previousTime, event.type);
+//			previousTime = time1;
         }
         
         /** Dispatches an event with the given parameters on all children (recursively). 

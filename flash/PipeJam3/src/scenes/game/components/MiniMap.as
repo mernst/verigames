@@ -1,22 +1,29 @@
 package scenes.game.components
 {
+	import flash.display.BitmapData;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
+	
 	import assets.AssetInterface;
+	
 	import constraints.Constraint;
 	import constraints.ConstraintVar;
+	
 	import display.BasicButton;
 	import display.MapHideButton;
 	import display.MapShowButton;
 	import display.TextBubble;
+	
 	import events.MiniMapEvent;
 	import events.MoveEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
+	
 	import graph.PropDictionary;
-	import particle.ErrorParticleSystem;
+		
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.Level;
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -29,6 +36,7 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	
 	import utils.XMath;
 	
 	public class MiniMap extends BaseComponent
@@ -49,10 +57,8 @@ package scenes.game.components
 		
 		private static const MIN_ICON_SIZE:Number = 4;
 		
-		protected var edgeErrorDict:Dictionary = new Dictionary();
-		protected var nodeIconDict:Dictionary = new Dictionary();
+		protected var nodeErrorDict:Dictionary = new Dictionary();
 		protected var currentLevel:Level;
-		
 		protected var backgroundImage:Image;
 		protected var gameNodeLayer:Sprite;
 		protected var errorLayer:Sprite;
@@ -71,6 +77,12 @@ package scenes.game.components
 		private var m_contentY:Number;
 		private var m_contentScale:Number;
 		public var isDirty:Boolean;
+		public var imageIsDirty:Boolean;
+		protected var nodeBitmapData:BitmapData;
+		protected var bitmapImage:Image;
+		protected var wideColor:int;
+		protected var narrowColor:int;
+		protected var errorColor:int = 0xFFFF0000;
 		
 		public function MiniMap()
 		{
@@ -92,7 +104,7 @@ package scenes.game.components
 			addChild(errorLayer);
 			viewRectLayer = new Sprite();
 			addChild(viewRectLayer);
-			m_clickPane = new Quad(CLICK_AREA.width / scaleX, CLICK_AREA.height / scaleY);
+			m_clickPane = new Quad(112/*CLICK_AREA.width*/ / scaleX, CLICK_AREA.height / scaleY);
 			m_clickPane.alpha = 0;
 			m_clickPane.x = CLICK_AREA.x / scaleX;
 			m_clickPane.y = CLICK_AREA.y / scaleY;
@@ -106,7 +118,11 @@ package scenes.game.components
 			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
 			addChild(m_showButton);
 			
+			wideColor = 0xFF000000 ^ GameComponent.WIDE_COLOR;
+			narrowColor = 0xFF000000 ^ GameComponent.NARROW_COLOR;
+			
 			isDirty = true;
+			imageIsDirty = true;
 		}
 		
 		public function hideMap(evt:Event):void
@@ -129,6 +145,7 @@ package scenes.game.components
 			m_hidden = true;
 		}
 		
+		
 		public function showMap(evt:Event):void
 		{
 			if (m_showing) return;
@@ -140,6 +157,7 @@ package scenes.game.components
 			Starling.juggler.removeTweens(this);
 			m_hiding = false;
 			m_showing = true;
+
 			Starling.juggler.tween(this, HIDE_SHOW_TIME_SEC, { y:SHOWN_Y, transition: Transitions.EASE_OUT, onComplete:onShowComplete } );
 		}
 		
@@ -149,6 +167,12 @@ package scenes.game.components
 			m_hidden = false;
 		}
 		
+		public function centerMap():void
+		{
+			showMap(null);
+			var levPct:Point = new Point(.5,.5);
+			dispatchEvent(new MoveEvent(MoveEvent.MOVE_TO_POINT, null, levPct, null));
+		}
 		public function addedToStage(event:starling.events.Event):void
 		{				
 			if (m_clickPane) m_clickPane.addEventListener(TouchEvent.TOUCH, onTouch);
@@ -176,7 +200,6 @@ package scenes.game.components
 			{
 				var mapPoint:Point = touches[0].getLocation(this);
 				var levPct:Point = map2pct(mapPoint);
-				trace("levPct:" + levPct);
 				// clamp to 0->1
 				levPct.x = XMath.clamp(levPct.x, 0.0, 1.0);
 				levPct.y = XMath.clamp(levPct.y, 0.0, 1.0);
@@ -200,31 +223,33 @@ package scenes.game.components
 		
 		private function draw():void
 		{
-			if (gameNodeLayer) gameNodeLayer.removeChildren(0, -1, true);
-			if (errorLayer) errorLayer.removeChildren(0, -1, true);
 			if (!currentLevel) return;
-			edgeErrorDict = new Dictionary();
-			for (var errorId:String in currentLevel.errorConstraintDict) {
-				var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
-				if (!constraint.isSatisfied() && currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
-					var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
-					errorConstraintAdded(edgeLayout, false);
-				}
-			}
-			errorLayer.flatten();
-			for (var id:String in nodeIconDict) (nodeIconDict[id] as Quad).removeFromParent();
-			nodeIconDict = new Dictionary();
-			var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
-			trace("minmap visibleBB:" + visibleBB);
-			for (var nodeId:String in nodeDict) {
-				addWidget(nodeDict[nodeId] as Object, false);
-				if (nodeId == "var_2") {
-					for (var prop:String in nodeDict[nodeId]) {
-						trace("var_2 " + prop + " = " + nodeDict[nodeId][prop]);
+			
+			if(imageIsDirty)
+			{
+				imageIsDirty = false;
+				removeChild(bitmapImage, true);
+				
+				nodeErrorDict = new Dictionary();
+				for (var errorId:String in currentLevel.errorConstraintDict) {
+					var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
+					if (!constraint.isSatisfied() && currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
+						var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
+						//mark the 'to' node to the error dict as the spot of the error
+						nodeErrorDict[edgeLayout["to_var_id"]] = edgeLayout;
 					}
 				}
+				var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
+				nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
+	
+				for (var nodeId:String in nodeDict) {
+					addWidget(nodeDict[nodeId] as Object, false);
+				}
+				var bitmapTexture:Texture = Texture.fromBitmapData(nodeBitmapData);
+				bitmapImage = new Image(bitmapTexture);
+				addChildAt(bitmapImage, 1);
+				
 			}
-			gameNodeLayer.flatten();
 			drawViewSpaceIndicator();
 			isDirty = false;
 		}
@@ -288,47 +313,49 @@ package scenes.game.components
 			m_viewSpaceQuads[4].alpha = m_viewSpaceQuads[5].alpha = m_viewSpaceQuads[6].alpha = m_viewSpaceQuads[7].alpha = 0.5;
 		}
 		
+		private var savedBB:Rectangle;
 		private function get visibleBB():Rectangle
 		{
+			if(savedBB == null || savedBB.width != currentLevel.m_boundingBox.width)
+			{
+				trace('BB', currentLevel.m_boundingBox.width, currentLevel.m_boundingBox.height);
+				savedBB = currentLevel.m_boundingBox.clone();
+			}
 			var levelBB:Rectangle = currentLevel ? currentLevel.m_boundingBox.clone() : new Rectangle();
-			levelBB.inflate(0.5 * GridViewPanel.WIDTH / GridViewPanel.MIN_SCALE, 0.5 * GridViewPanel.HEIGHT / GridViewPanel.MIN_SCALE);
+			levelBB.inflate(0.1 * GridViewPanel.WIDTH / GridViewPanel.MIN_SCALE, 0.1 * GridViewPanel.HEIGHT / GridViewPanel.MIN_SCALE);
 			return levelBB;
 		}
 		
 		public function errorConstraintAdded(edgeLayout:Object, flatten:Boolean = true):void
 		{
-			if (!errorLayer) return;
-			
-			var errImage:Image = new Image(ErrorParticleSystem.errorTexture);
-			errImage.width = errImage.height = 80;
-			errImage.alpha = 0.6;
-			errImage.color = 0xFF0000;
-			var edgeId:String = edgeLayout["id"];
-			var prevErrorImage:Image = edgeErrorDict[edgeId] as Image;
-			if (prevErrorImage) prevErrorImage.removeFromParent(true);
-			edgeErrorDict[edgeId] = errImage;
-			
-			var bb:Rectangle = edgeLayout["bb"] as Rectangle;
-			if (bb == null) throw new Error("Tried to add edge error to MiniMap but no bounding box found in edge layout information.");
-			var errorLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
-			var errPt:Point = level2map(errorLevelPt);
-			
-			errImage.x = errPt.x - 0.5 * errImage.width;
-			errImage.y = errPt.y - 0.5 * errImage.height; 
-			
-			errorLayer.addChild(errImage);
-			if (flatten) errorLayer.flatten();
+//			if (!errorLayer) return;
+//			
+//			var errImage:Image = new Image(ErrorParticleSystem.errorTexture);
+//			errImage.width = errImage.height = 80;
+//			errImage.alpha = 0.6;
+//			errImage.color = 0xFF0000;
+//			var edgeId:String = edgeLayout["id"];
+//			var prevErrorImage:Image = edgeErrorDict[edgeId] as Image;
+//			if (prevErrorImage) prevErrorImage.removeFromParent(true);
+//			edgeErrorDict[edgeId] = errImage;
+//			
+//			var bb:Rectangle = edgeLayout["bb"] as Rectangle;
+//			if (bb == null) throw new Error("Tried to add edge error to MiniMap but no bounding box found in edge layout information.");
+//			var errorLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
+//			var errPt:Point = level2map(errorLevelPt);
+//			
+//			errImage.x = errPt.x - 0.5 * errImage.width;
+//			errImage.y = errPt.y - 0.5 * errImage.height; 
+//			
+//			errorLayer.addChild(errImage);
+//			if (flatten) errorLayer.flatten();
 		}
 		
 		public function errorRemoved(edgeLayout:Object):void
 		{
 			var edgeId:String = edgeLayout["id"];
-			var errorImage:Image = edgeErrorDict[edgeId];
-			if (errorImage) {
-				errorImage.removeFromParent(true);
-				errorLayer.flatten();
-			}
-			delete edgeErrorDict[edgeId];
+			var toNode:String = edgeLayout["to_var_id"];
+			delete nodeErrorDict[toNode];
 		}
 		
 		public function addWidget(widgetLayout:Object, flatten:Boolean = true):void
@@ -337,24 +364,33 @@ package scenes.game.components
 			var id:String = widgetLayout["id"];
 			var bb:Rectangle = widgetLayout["bb"] as Rectangle;
 			if (bb == null) throw new Error("Tried to add widget to MiniMap but no bounding box found in layout information.");
-			var widgetTopLeft:Point = level2map(bb.topLeft);
-			var widgetBotRight:Point = level2map(bb.bottomRight);
-			var iconWidth:Number = Math.min(2 / scaleX, widgetBotRight.x - widgetTopLeft.x);
+			
+			var levelPctLeftX:Number = (bb.topLeft.x - visibleBB.x) / visibleBB.width;
+			var mapLeftX:Number = levelPctLeftX * (VIEW_AREA.width / scaleX) + VIEW_AREA.x / scaleX;
+			
+			var levelPctRightX:Number = (bb.bottomRight.x - visibleBB.x) / visibleBB.width;
+			var mapRightX:Number = levelPctRightX * (VIEW_AREA.width / scaleX) + VIEW_AREA.x / scaleX;
+			
+			var iconWidth:Number = Math.min(2 / scaleX, mapRightX - mapLeftX);
 			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
 			var constrVar:ConstraintVar = widgetLayout["var"] as ConstraintVar;
 			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-			var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
+			//var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
+			
 			var widgetLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
 			var iconLoc:Point = level2map(widgetLevelPt);
-			icon.x = iconLoc.x - 0.5 * icon.width;
-			icon.y = iconLoc.y - 0.5 * icon.height;
-			//trace("minimap " + id + " bb.topLeft:" + bb.topLeft +" widgetTopLeft:" + widgetTopLeft + " iconLoc:" + iconLoc + " widgetLevelPt:" + widgetLevelPt);
-			var prevIcon:Quad = nodeIconDict[id] as Quad;
-			if (prevIcon) prevIcon.removeFromParent(true);
-			nodeIconDict[id] = icon;
+			var color:int = wideColor;
+			if(nodeErrorDict[id] != null)
+				color = errorColor;
+			else if(isNarrow)
+				color = narrowColor;
 			
-			gameNodeLayer.addChild(icon);
-			if (flatten) gameNodeLayer.flatten();
+			//set the 2x2 square
+			var size:int = 2;
+
+			for(var i:int = iconLoc.x; i<iconLoc.x+size; i++)
+				for(var j:int = iconLoc.y; j<iconLoc.y+size; j++)
+					nodeBitmapData.setPixel32(i,j, color);
 		}
 		
 		private function level2pct(pt:Point):Point

@@ -218,14 +218,13 @@ package constraints
 							graph.variableDict[formattedId] = newVar;
 						}
 					}
-					
 					// Build constraints (and add any uninitialized variables to graph.variableDict)
 					var constraintsArr:Array = levelObj[CONSTRAINTS];
 					for (var c:int = 0; c < constraintsArr.length; c++) {
 						var newConstraint:Constraint;
 						if (getQualifiedClassName(constraintsArr[c]) == "String") {
 							// process as String, i.e. "var:1 <= var:2"
-							newConstraint = parseConstraintString(constraintsArr[c] as String, graph.variableDict, graphDefaultVal, graph.graphScoringConfig.clone());
+							newConstraint = parseConstraintString(constraintsArr[c] as String, graph.variableDict, graphDefaultVal, graph.graphScoringConfig);
 						} else {
 							// process as json object i.e. {"rhs": "type:1", "constraint": "subtype", "lhs": "var:9"}
 							newConstraint = parseConstraintJson(constraintsArr[c] as Object, graph.variableDict, graphDefaultVal, graph.graphScoringConfig.clone());
@@ -241,13 +240,11 @@ package constraints
 							graph.constraintsDict[newConstraint.id] = newConstraint;
 						}
 					}
-					
 					break;
 				default:
 					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + ver);
 					break;
 			}
-			graph.updateScore();
 			return graph;
 		}
 		
@@ -283,10 +280,10 @@ package constraints
 			var newConstraint:Constraint;
 			switch (constType) {
 				case "<":
-					newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring.clone());
+					newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring);
 					break;
 				case "=":
-					newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring.clone());
+					newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring);
 					break;
 				default:
 					throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
@@ -320,16 +317,16 @@ package constraints
 				//trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_constraintJson));
 			}
 			
-			var lhs:ConstraintVar = parseConstraintSide(lhsResult[1] as String, lhsResult[2] as String, lsuffix, _variableDictionary, _defaultVal, _defaultScoring.clone());
-			var rhs:ConstraintVar = parseConstraintSide(rhsResult[1] as String, rhsResult[2] as String, rsuffix, _variableDictionary, _defaultVal, _defaultScoring.clone());
+			var lhs:ConstraintVar = parseConstraintSide(lhsResult[1] as String, lhsResult[2] as String, lsuffix, _variableDictionary, _defaultVal, _defaultScoring);
+			var rhs:ConstraintVar = parseConstraintSide(rhsResult[1] as String, rhsResult[2] as String, rsuffix, _variableDictionary, _defaultVal, _defaultScoring);
 			
 			var newConstraint:Constraint;
 			switch (type) {
 				case Constraint.SUBTYPE:
-					newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring.clone());
+					newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring);
 					break;
 				case Constraint.EQUALITY:
-					newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring.clone());
+					newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring);
 					break;
 				default:
 					throw new Error("Invalid constraint type found ('"+type+"') in parseConstraintJson()");

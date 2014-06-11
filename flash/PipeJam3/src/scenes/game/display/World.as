@@ -1,37 +1,30 @@
 package scenes.game.display
 {
-	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
-	import flash.display.StageScaleMode;
-	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import starling.animation.Juggler;
-	import starling.animation.Transitions;
-	import starling.core.Starling;
-	import starling.display.DisplayObject;
-	import starling.display.Image;
-	import starling.events.EnterFrameEvent;
-	import starling.events.Event;
-	import starling.events.KeyboardEvent;
-	import starling.textures.Texture;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
+	
 	import constraints.ConstraintGraph;
 	import constraints.events.ErrorEvent;
+	
 	import dialogs.InGameMenuDialog;
 	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
 	import dialogs.SubmitLevelDialog;
+	
 	import display.NineSliceBatch;
 	import display.SoundButton;
 	import display.TextBubble;
 	import display.ToolTipText;
+	
 	import events.GameComponentEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -40,19 +33,31 @@ package scenes.game.display
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
-	import graph.PropDictionary;
 	
 	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
+	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
-	import scenes.game.PipeJamGameScene;
+	
+	import starling.animation.Juggler;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.BlendMode;
+	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.events.EnterFrameEvent;
+	import starling.events.Event;
+	import starling.events.KeyboardEvent;
+	import starling.textures.Texture;
+	
 	import system.VerigameServerConstants;
 	
 	/**
@@ -109,7 +114,6 @@ package scenes.game.display
 			
 			var allLevels:Array = m_worldObj["levels"];
 			if (!allLevels) allLevels = [m_worldObj];
-			trace("Creating World...");
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
 				var levelObj:Object = allLevels[level_index];
@@ -142,6 +146,7 @@ package scenes.game.display
 		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
 		protected function onAddedToStage(event:Event):void
 		{
+			trace("Start Init Time", new Date().getTime() - PipeJamGameScene.startLoadTime);
 			m_initQueue = new Vector.<Function>();
 			m_initQueue.push(initBackground);
 			m_initQueue.push(initGridViewPanel);
@@ -156,11 +161,22 @@ package scenes.game.display
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
+		//used by stats, so leave public
+		public static var loadTime:Number;
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
-			if (m_initQueue.length > 0) {
+			if(miniMap && m_initQueue.length == 0)
+			{
+				miniMap.centerMap();
+				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+				loadTime = new Date().getTime() - PipeJamGameScene.startLoadTime;
+				trace("Complete Time", loadTime);
+			}
+			else if (m_initQueue.length > 0) {
+				var time1:Number = new Date().getTime();
 				var func:Function = m_initQueue.shift();
 				func.call();
+				trace("init", new Date().getTime() - time1);
 			}
 		}
 		
@@ -205,12 +221,14 @@ package scenes.game.display
 		
 		private function initScoring():void {
 			trace("Initializing score...");
+			var time1:Number = new Date().getTime();
 			onWidgetChange(); //update score
-			trace("Done initializing score.");
+			trace("Done initializing score.", new Date().getTime()-time1);
 		}
 		
 		private function initTutorial():void {
 			trace("Initializing TutorialController...");
+			var time1:Number = new Date().getTime();
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				var obj:Object = PipeJamGame.levelInfo;
@@ -239,13 +257,14 @@ package scenes.game.display
 					}
 				}
 			}
-			trace("Done initializing TutorialController.");
+			trace("Done initializing TutorialController.", new Date().getTime()-time1);
 		}
 		
 		private function initLevel():void {
 			trace("Initializing Level...");
+			var time1:Number = new Date().getTime();
 			selectLevel(firstLevel);
-			trace("Done initializing Level.");
+			trace("Done initializing Level.", new Date().getTime()-time1);
 		}
 		
 		public function initBackground(isWide:Boolean = false, newWidth:Number = 0, newHeight:Number = 0):void
@@ -329,7 +348,6 @@ package scenes.game.display
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			addEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
 			
-			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			addEventListener(MenuEvent.RECENTER, onRecenter);
@@ -602,20 +620,6 @@ package scenes.game.display
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
-		public function setNewLayout(event:MenuEvent):void
-		{
-			if(active_level != null && event.data.layoutFile) {
-				active_level.setNewLayout(event.data.name, event.data.layoutFile, true);
-				if (PipeJam3.logging) {
-					var details:Object = new Object();
-					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile["id"];
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
-				}
-				PipeJamGame.levelInfo.layoutUpdated = true;
-			}
-		}
-		
 		public function updateAssignments(currentLevelOnly:Boolean = false):Object
 		{
 			// TODO: think about this more, when do we update WORLD assignments? Real-time or in this method?
@@ -679,7 +683,11 @@ package scenes.game.display
 				var nodeLayout:Object = active_level.nodeLayoutObjs[evt.varChanged.id];
 				if (miniMap && nodeLayout) miniMap.addWidget(nodeLayout); // removes prev widget, adds new colored widget
 			} else {
-				if (miniMap) miniMap.isDirty = true;
+				if (miniMap)
+				{
+					miniMap.isDirty = true;
+					miniMap.imageIsDirty = true;
+				}
 			}
 			gameControlPanel.updateScore(level_changed, false);
 			var oldScore:int = level_changed.prevScore;
@@ -693,7 +701,7 @@ package scenes.game.display
 				}
 				if (oldScore != newScore && evt.pt != null) {
 					var thisPt:Point = globalToLocal(evt.pt);
-					TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+					TextPopup.popupText(evt.target as DisplayObjectContainer, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
@@ -913,14 +921,9 @@ package scenes.game.display
 						}
 						break;
 					}
-					case 72: //'h' for hide
-						if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
-							active_level.toggleUneditableStrings();
-						break;
 					case 76: //'l' for copy layout
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
-							active_level.updateLayoutObj(this);
 							System.setClipboard(JSON.stringify(active_level.m_levelLayoutObjWrapper));
 						}
 						break;
@@ -1053,8 +1056,8 @@ package scenes.game.display
 		private function onLevelLoaded(evt:MenuEvent):void
 		{
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
-			trace("onWidgetChange()");
-			onWidgetChange();
+			//called later by initScoring
+			//onWidgetChange();
 			trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			edgeSetGraphViewPanel.loadLevel();
@@ -1080,7 +1083,6 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
-			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			AudioManager.getInstance().reset();
 			
 			if (m_activeToolTip) {
@@ -1109,7 +1111,6 @@ package scenes.game.display
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
 			removeEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
 			
-			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);

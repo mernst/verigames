@@ -71,11 +71,6 @@
 			<locationURI>ROOT/external/pixelmask-master-2e968c9fd2/src</locationURI>
 		</link>
 		<link>
-			<name>[source path] source</name>
-			<type>2</type>
-			<locationURI>ROOT/external/Feathers%201.0.1/source</locationURI>
-		</link>
-		<link>
 			<name>[source path] starling-src</name>
 			<type>2</type>
 			<locationURI>ROOT/external/Starling-Framework/starling/src</locationURI>

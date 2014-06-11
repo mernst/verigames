@@ -128,7 +128,7 @@ package starling.events
                 // we can enumerate directly over the vector, because:
                 // when somebody modifies the list while we're looping, "addEventListener" is not
                 // problematic, and "removeEventListener" will create a new Vector, anyway.
-                
+	//			var time:Number = new Date().getTime();
                 for (var i:int=0; i<numListeners; ++i)
                 {
                     var listener:Function = listeners[i] as Function;
@@ -141,6 +141,9 @@ package starling.events
                     if (event.stopsImmediatePropagation)
                         return true;
                 }
+				var time1:Number = new Date().getTime();
+	//			if(time1-time != 0)
+	//				trace('Listener time', time1 - time);
                 
                 return event.stopsPropagation;
             }

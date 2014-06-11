@@ -7,9 +7,7 @@ package dialogs
 	import display.NineSliceButton;
 	
 	import events.MenuEvent;
-	
-	import feathers.controls.Label;
-	
+		
 	import flash.display.DisplayObject;
 	import flash.geom.Point;
 	import flash.text.TextFormat;

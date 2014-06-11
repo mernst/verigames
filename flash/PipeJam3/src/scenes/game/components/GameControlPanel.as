@@ -27,7 +27,6 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
 	
@@ -84,7 +83,7 @@ package scenes.game.components
 		
 		/** Button to share the level */
 		private var m_shareButton:NineSliceButton;
-
+		
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
@@ -107,6 +106,8 @@ package scenes.game.components
 		
 		/** Display the current best score for this level */
 		private var m_bestScoreLine:TargetScoreDisplay;
+		
+		protected var m_currentLevel:Level;
 		
 		public function GameControlPanel()
 		{
@@ -282,6 +283,7 @@ package scenes.game.components
 				else
 				{
 					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
+				
 				}
 			}
 		}
@@ -305,7 +307,7 @@ package scenes.game.components
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.START_OVER));
 		}
-
+		
 		private function onZoomInButtonTriggered():void
 		{
 			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_IN));
@@ -362,13 +364,15 @@ package scenes.game.components
 		
 		public function newLevelSelected(level:Level):void 
 		{
+			m_currentLevel = level;
+			
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
-
+		
 		private function setNavigationButtonVisibility(viz:Boolean):void
 		{
 			m_zoomInButton.visible = viz;
@@ -458,37 +462,37 @@ package scenes.game.components
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   width: newBarWidth
+					transition: Transitions.EASE_OUT,
+					width: newBarWidth
 				});
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: newScoreX
+					transition: Transitions.EASE_OUT,
+					x: newScoreX
 				});
 				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
 				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: bestScoreX
+					transition: Transitions.EASE_OUT,
+					x: bestScoreX
 				});
 			} else if (newBarWidth > m_scoreBar.width) {
 				// If we're growing, flash the difference first then grow
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   delay: FLASHING_ANIM_SEC,
-				   width: newBarWidth
+					transition: Transitions.EASE_OUT,
+					delay: FLASHING_ANIM_SEC,
+					width: newBarWidth
 				});
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   delay: FLASHING_ANIM_SEC,
-				   x: newScoreX
+					transition: Transitions.EASE_OUT,
+					delay: FLASHING_ANIM_SEC,
+					x: newScoreX
 				});
 				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
 				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
-				   transition: Transitions.EASE_OUT,
-				   x: bestScoreX
+					transition: Transitions.EASE_OUT,
+					x: bestScoreX
 				});
 			} else {
 				return;
@@ -517,9 +521,9 @@ package scenes.game.components
 				|| ((m_scoreBarContainer.scaleX < 1.0) && (newScaleX > m_scoreBarContainer.scaleX))) {
 				Starling.juggler.removeTweens(m_scoreBarContainer);
 				Starling.juggler.tween(m_scoreTextfield, 1.5, {
-				   transition: Transitions.EASE_OUT,
-				   delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
-				   scaleX: newScaleX
+					transition: Transitions.EASE_OUT,
+					delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
+					scaleX: newScaleX
 				});
 			}
 		}
@@ -601,6 +605,9 @@ package scenes.game.components
 				m_fullScreenButton.visible = true;
 				m_smallScreenButton.visible = false;
 			}			
+			
+			if(m_currentLevel)
+				m_currentLevel.adjustSize(newWidth, newHeight);
 		}
 		
 		public function addSoundButton(m_sfxButton:SoundButton):void
@@ -620,6 +627,7 @@ import display.ToolTippableSprite;
 
 import events.ToolTipEvent;
 
+import scenes.game.components.*;
 import scenes.game.components.GameControlPanel;
 
 import starling.display.Quad;
