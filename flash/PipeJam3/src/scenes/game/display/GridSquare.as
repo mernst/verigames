@@ -72,8 +72,18 @@ package scenes.game.display
 				var node:Object = findNodeAtPoint(loc);
 				if(node)
 				{
-					var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
-					onClicked(node, globPt);
+					if(!event.shiftKey)
+					{
+						var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
+						onClicked(node, globPt);
+					}
+					else
+					{
+						if(!node.isSelected)
+							selectNode(node, World.m_world.active_level.selectedNodeConstraintDict);
+						else
+							unselectNode(node, World.m_world.active_level.selectedNodeConstraintDict);
+					}
 				}
 			}
 		}
@@ -322,11 +332,12 @@ package scenes.game.display
 				if(hasError)
 					toColor = 0xff0000;
 			
-	
+				edge.edgeSprite.parent.unflatten();
 				edge.edgeSprite.setVertexColor(0, fromColor);
 				edge.edgeSprite.setVertexColor(1, toColor);
 				edge.edgeSprite.setVertexColor(2, fromColor);
 				edge.edgeSprite.setVertexColor(3, toColor);
+				edge.edgeSprite.parent.flatten();
 			}				
 			edge.isDirty = false;
 
@@ -444,8 +455,8 @@ package scenes.game.display
 					{
 						var node:Object = nodeList[i];
 						var skin:NodeSkin = node.skin;
-						var selectNode:Boolean = false;
-						var unselectNode:Boolean = false;
+						var makeNodeSelected:Boolean = false;
+						var makeNodeUnselected:Boolean = false;
 						
 						if(skin && marqueeRect.containsRect(skin.bounds))
 						{
@@ -453,7 +464,7 @@ package scenes.game.display
 							{
 								if(node.startingSelectionState == false)
 								{
-									selectNode = true;		
+									makeNodeSelected = true;		
 									node.on = true;
 								}
 							}
@@ -461,7 +472,7 @@ package scenes.game.display
 							{
 								if(node.startingSelectionState == true)
 								{
-									unselectNode = true;	
+									makeNodeUnselected = true;	
 								}
 							}
 						}
@@ -471,45 +482,53 @@ package scenes.game.display
 							{
 								if(node.startingSelectionState == true)
 								{
-									selectNode = true;	
+									makeNodeSelected = true;	
 								}
 							}
 							else
 							{
 								if(node.startingSelectionState == false)
 								{
-									unselectNode = true;	
+									makeNodeUnselected = true;	
 
 								}
 							}
 						}
 						
-						if(selectNode)
+						if(makeNodeSelected)
 						{
-							node.isSelected = true;
-							setNodeDirty(node, false);
-							gridHasSelection = true;
-							selectedSkins.push(skin);	
-							trace("selecting", node.gridID, node.id);
-							trace(selectedSkins.length);
-							selectedNodeConstraintDict[node.id] = node;
+							selectNode(node, selectedNodeConstraintDict);
 						}
-						else if(unselectNode)
+						else if(makeNodeUnselected)
 						{
-							node.isSelected = false;
-							setNodeDirty(node, false);
-							var index:int = selectedSkins.indexOf(skin);
-							selectedSkins.splice(index, 1);	
-							if(selectedSkins.length == 0)
-								gridHasSelection = false;
-							trace("unselecting", node.gridID, node.id);
-							trace(selectedSkins.length);
-							delete selectedNodeConstraintDict[node.id];
+							unselectNode(node, selectedNodeConstraintDict);
 
 						}
 					}
 				}
 			}
+		}
+		
+		public function selectNode(node:Object, selectedNodeConstraintDict:Dictionary):void
+		{
+			node.isSelected = true;
+			setNodeDirty(node, false);
+			gridHasSelection = true;
+			selectedSkins.push(node.skin);	
+			selectedNodeConstraintDict[node.id] = node;
+						
+		}
+		
+		public function unselectNode(node:Object, selectedNodeConstraintDict:Dictionary):void
+		{
+			node.isSelected = false;
+			setNodeDirty(node, false);
+			var index:int = selectedSkins.indexOf(node.skin);
+			selectedSkins.splice(index, 1);	
+			if(selectedSkins.length == 0)
+				gridHasSelection = false;
+			delete selectedNodeConstraintDict[node.id];
+
 		}
 		
 		public function markVisited():void
@@ -522,17 +541,14 @@ package scenes.game.display
 			if(gridHasSelection)
 			{
 				nodeDrawingBoard.unflatten();
-				trace(selectedSkins.length);
 				for(var i:int = 0; i< selectedSkins.length; i++)
 				{
 					var skin:NodeSkin = selectedSkins[i];
 					skin.associatedNode.isSelected = false;
-					trace("unselecting", skin.associatedNode.gridID, skin.associatedNode.id);
 					setNodeDirty(skin.associatedNode, false);
 				}
 				nodeDrawingBoard.flatten();
 				selectedSkins = new Vector.<NodeSkin>;
-				trace("zeroed",selectedSkins.length);
 				gridHasSelection = false;
 			}
 			
