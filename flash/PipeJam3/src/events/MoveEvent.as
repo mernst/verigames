@@ -3,23 +3,26 @@ package events
 	import flash.geom.Point;
 	
 	import starling.events.Event;
-	import scenes.game.display.GameComponent;
 	
-	public class MoveEvent extends GameComponentEvent
+	public class MoveEvent extends Event
 	{
 		public static const MOVE_EVENT:String = "move_event";
 		public static const FINISHED_MOVING:String = "FINISHED_MOVING";
 		public static const MOUSE_DRAG:String = "mouse_drag";
 		public static const MOVE_TO_POINT:String = "move_to_point";
+		public static var CENTER_ON_COMPONENT:String = "center_on_component";
 		
 		public var startLoc:Point
 		public var endLoc:Point;
 		private var m_delta:Point;
 		
-		public function MoveEvent(_type:String, _component:GameComponent, _startLoc:Point = null, _endLoc:Point = null)
+		public var component:Object;
+		
+		public function MoveEvent(_type:String, _component:Object, _startLoc:Point = null, _endLoc:Point = null)
 		{
-			super(_type, _component);
+			super(_type, true);
 			
+			component = _component;
 			startLoc = _startLoc;
 			endLoc = _endLoc;
 		}

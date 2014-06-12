@@ -21,7 +21,7 @@ package scenes.game.components
 	import graph.PropDictionary;
 		
 	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
+	import scenes.game.display.NodeSkin;
 	import scenes.game.display.Level;
 	
 	import starling.animation.Transitions;
@@ -38,6 +38,7 @@ package scenes.game.components
 	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
+	import scenes.game.display.Node;
 	
 	public class MiniMap extends BaseComponent
 	{
@@ -118,8 +119,8 @@ package scenes.game.components
 			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
 			addChild(m_showButton);
 			
-			wideColor = 0xFF000000 ^ GameComponent.WIDE_COLOR;
-			narrowColor = 0xFF000000 ^ GameComponent.NARROW_COLOR;
+			wideColor = 0xFF000000 ^ NodeSkin.WIDE_COLOR;
+			narrowColor = 0xFF000000 ^ NodeSkin.NARROW_COLOR;
 			
 			isDirty = true;
 			imageIsDirty = true;
@@ -229,7 +230,7 @@ package scenes.game.components
 			{
 				imageIsDirty = false;
 				removeChild(bitmapImage, true);
-				
+				bitmapImage.dispose();
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.errorConstraintDict) {
 					var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
@@ -243,12 +244,14 @@ package scenes.game.components
 				nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
 	
 				for (var nodeId:String in nodeDict) {
-					addWidget(nodeDict[nodeId] as Object, false);
+					addWidget(nodeDict[nodeId], false);
 				}
 				var bitmapTexture:Texture = Texture.fromBitmapData(nodeBitmapData);
 				bitmapImage = new Image(bitmapTexture);
 				addChildAt(bitmapImage, 1);
 				
+				bitmapTexture.dispose();
+				nodeBitmapData.dispose();
 			}
 			drawViewSpaceIndicator();
 			isDirty = false;
@@ -358,7 +361,7 @@ package scenes.game.components
 			delete nodeErrorDict[toNode];
 		}
 		
-		public function addWidget(widgetLayout:Object, flatten:Boolean = true):void
+		public function addWidget(widgetLayout:Node, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
 			var id:String = widgetLayout["id"];
@@ -373,7 +376,7 @@ package scenes.game.components
 			
 			var iconWidth:Number = Math.min(2 / scaleX, mapRightX - mapLeftX);
 			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
-			var constrVar:ConstraintVar = widgetLayout["var"] as ConstraintVar;
+			var constrVar:ConstraintVar = widgetLayout["graphVar"] as ConstraintVar;
 			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			//var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
 			

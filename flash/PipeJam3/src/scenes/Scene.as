@@ -1,9 +1,9 @@
 package scenes
 {
 	import audio.AudioManager;
-    import starling.display.Sprite;
+    import scenes.BaseComponent;
     import starling.events.Event;
-    
+	
     public class Scene extends BaseComponent
     {	
 		public static var m_gameSystem:Game;

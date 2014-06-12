@@ -31,10 +31,10 @@ package scenes.game.display
 		protected var textureImage:Image;
 		protected var isInitialized:Boolean;
 				
-		static public const wideLockedColor:int = 0x30302D;
-		static public const narrowLockedColor:int = 0xA3A097;
-		static public const wideColor:int = 0x0B80FF;
-		static public const narrowColor:int = 0xABFFF2;
+		static public const WIDE_LOCKED_COLOR:int = 0x30302D;
+		static public const NARROW_LOCKED_COLOR:int = 0xA3A097;
+		static public const WIDE_COLOR:int = 0x0B80FF;
+		static public const NARROW_COLOR:int = 0xABFFF2;
 
 		public var id:int;
 		public static var numSkins:int = 5000;
@@ -71,19 +71,19 @@ package scenes.game.display
 		{
 			if(!node.isNarrow && !node.isEditable)
 			{
-				return wideLockedColor;
+				return WIDE_LOCKED_COLOR;
 			}
 			else if(node.isNarrow && !node.isEditable)
 			{
-				return narrowLockedColor;
+				return NARROW_LOCKED_COLOR;
 			}
 			else if(!node.isNarrow && node.isEditable)
 			{
-				return wideColor;
+				return WIDE_COLOR;
 			}
 			else
 			{
-				return narrowColor;
+				return NARROW_COLOR;
 			}
 		}
 		
@@ -138,9 +138,6 @@ package scenes.game.display
 			textureImage.scaleY = 20*textureImage.scaleY/textureImage.height;
 			
 			addChild(textureImage);
-			//remove and readd to force update
-//			if(parent)
-//				parent.addChild(this);
 				
 			if(associatedNode.isSelected)
 			{
@@ -174,17 +171,6 @@ package scenes.game.display
 		{
 			associatedNode = _associatedNode;
 			
-		}
-		
-		public function updateSelectionAssignment(_isWide:Boolean):void
-		{
-			if(associatedNode.isEditable)
-			{
-				associatedNode.isNarrow = !_isWide;
-				associatedNode.isDirty = true;
-				var constraintVar:ConstraintVar = World.m_world.active_level.levelGraph.variableDict[associatedNode.id];
-				constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
-			}
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package events
 {
 	import flash.geom.Point;
-	import scenes.game.display.GameComponent;
 	import starling.display.Sprite;
 	
 	import starling.events.Event;

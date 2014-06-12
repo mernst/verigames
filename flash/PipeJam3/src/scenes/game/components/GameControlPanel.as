@@ -24,9 +24,8 @@ package scenes.game.components
 	
 	import particle.ErrorParticleSystem;
 	
-	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
-	import scenes.game.display.GameComponent;
+	import scenes.game.display.NodeSkin;
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
 	
@@ -44,6 +43,7 @@ package scenes.game.components
 	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
+	import scenes.BaseComponent;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -137,7 +137,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, BaseComponent.SCORE_COLOR);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
@@ -152,7 +152,7 @@ package scenes.game.components
 			m_scorePanel.addChild(shadowOverlay);
 			
 			const LEVEL_TEXT_WIDTH:Number = 100.0;
-			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, GameComponent.WIDE_COLOR);
+			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, NodeSkin.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;
 			m_levelNameTextfield.x = WIDTH - LEVEL_TEXT_WIDTH - 10;
 			m_levelNameTextfield.y = -10;
@@ -405,9 +405,9 @@ package scenes.game.components
 			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / maxScoreShown;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
-				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
-				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
-				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
+				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, NodeSkin.NARROW_COLOR);
+				m_scoreBar.setVertexColor(2, NodeSkin.WIDE_COLOR);
+				m_scoreBar.setVertexColor(3, NodeSkin.WIDE_COLOR);
 				m_scoreBar.y = SCORE_PANEL_AREA.height / 6.0;
 				m_scoreTextfield.x = newScoreX;
 			}
@@ -430,7 +430,7 @@ package scenes.game.components
 			}
 			
 			if (!m_bestPlayerScoreLine) {
-				m_bestPlayerScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.35 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
+				m_bestPlayerScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.35 * GameControlPanel.SCORE_PANEL_AREA.height, NodeSkin.WIDE_COLOR, NodeSkin.WIDE_COLOR, "Best Score\nClick to Load");
 				m_bestPlayerScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
 				m_bestPlayerScoreLine.useHandCursor = true;
 				m_bestPlayerScoreLine.x = bestScoreX;
