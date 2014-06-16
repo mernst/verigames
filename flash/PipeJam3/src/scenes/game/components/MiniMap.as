@@ -229,8 +229,7 @@ package scenes.game.components
 			if(imageIsDirty)
 			{
 				imageIsDirty = false;
-				removeChild(bitmapImage, true);
-				bitmapImage.dispose();
+				if (bitmapImage) bitmapImage.removeFromParent(true);
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.errorConstraintDict) {
 					var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
