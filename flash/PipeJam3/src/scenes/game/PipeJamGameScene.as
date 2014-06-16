@@ -21,7 +21,7 @@ package scenes.game
 		//takes a partial path to the files, using the base file name. -.json, -Layout.json and -Constraints.json will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../SampleWorlds/L21414_V17680"//L21414_V17680,L10823_V16,L21373_V101s,L13076_V4
+			"../SampleWorlds/L13076_V4"//L21414_V17680,L10823_V16,L21373_V101s,L13076_V4
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

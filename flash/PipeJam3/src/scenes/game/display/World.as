@@ -25,7 +25,8 @@ package scenes.game.display
 	import display.TextBubble;
 	import display.ToolTipText;
 	
-	import events.GameComponentEvent;
+	import events.SelectionEvent;
+	import events.MoveEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
 	import events.MoveEvent;
@@ -328,7 +329,7 @@ package scenes.game.display
 			trace("Initializing event listeners...");
 			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
-			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
@@ -680,7 +681,7 @@ package scenes.game.display
 			var level_changed:Level = evt ? evt.level : active_level;
 			if (!level_changed) return;
 			if (evt && evt.varChanged) {
-				var nodeLayout:Object = active_level.nodeLayoutObjs[evt.varChanged.id];
+				var nodeLayout:Node = active_level.nodeLayoutObjs[evt.varChanged.id];
 				if (miniMap && nodeLayout) miniMap.addWidget(nodeLayout); // removes prev widget, adds new colored widget
 			} else {
 				if (miniMap)
@@ -733,9 +734,9 @@ package scenes.game.display
 			}
 		}
 		
-		private function onCenterOnComponentEvent(evt:GameComponentEvent):void
+		private function onCenterOnComponentEvent(evt:MoveEvent):void
 		{
-			var component:GameComponent = evt.component;
+			var component:Object = evt.component;
 			if(component)
 			{
 				edgeSetGraphViewPanel.centerOnComponent(component);
@@ -1092,7 +1093,7 @@ package scenes.game.display
 			
 			removeEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			
-			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			removeEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);

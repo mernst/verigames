@@ -30,7 +30,8 @@ package scenes
 		
 		protected var busyAnimationMovieClip:MovieClip;
 		public static const KEYFOR_COLOR:uint = 0xFF00FF;
-		
+		public static const SCORE_COLOR:uint = 0x0;
+
 		//useful for debugging resource issues
 		public static var nextIndex:int = 0;
 		public var objectIndex:int;

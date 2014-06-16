@@ -14,6 +14,8 @@ package scenes.game.display
 	import constraints.ConstraintVar;
 	import constraints.events.VarChangeEvent;
 	
+	import events.MoveEvent;
+	import events.SelectionEvent;
 	import events.UndoEvent;
 	
 	import graph.PropDictionary;
@@ -33,7 +35,7 @@ package scenes.game.display
 		protected var edgeDrawingBoard:Sprite;
 		protected var nodeList:Array;
 		protected var edgeList:Array;
-		protected var gridHasSelection:Boolean = false;
+		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
 		public var isDirty:Boolean = true;
 		protected var isActivated:Boolean = false;
@@ -46,9 +48,6 @@ package scenes.game.display
 		protected var componentXDisplacement:Number;
 		protected var componentYDisplacement:Number;
 		
-		protected var selectedSkins:Vector.<NodeSkin>;
-
-		
 		static public const SKIN_DIAMETER:Number = 20;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
@@ -60,7 +59,6 @@ package scenes.game.display
 			componentYDisplacement = gridYOffset*Level.gridSize;
 			nodeList = new Array;
 			edgeList = new Array;
-			selectedSkins = new Vector.<NodeSkin>;
 		}
 		
 		protected function onTouch(event:TouchEvent):void
@@ -72,8 +70,25 @@ package scenes.game.display
 				var node:Object = findNodeAtPoint(loc);
 				if(node)
 				{
-					var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
-					onClicked(node, globPt);
+					if(!event.shiftKey)
+					{
+						var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
+						onClicked(node, globPt);
+					}
+					else
+					{
+						if(!event.ctrlKey)
+						{
+							if(!node.isSelected)
+								node.selectNode(World.m_world.active_level.selectedNodes);
+							else
+								node.unselectNode(World.m_world.active_level.selectedNodes);
+						}
+						else
+						{
+							nodeDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, node));
+						}
+					}
 				}
 			}
 		}
@@ -96,12 +111,12 @@ package scenes.game.display
 		public function onClicked(node:Object, loc:Point):void
 		{
 			var changeEvent:VarChangeEvent,  undoEvent:UndoEvent;
-			var constraintVar:ConstraintVar = node["var"];
+			var constraintVar:ConstraintVar = node["graphVar"];
 			if(!constraintVar.constant)
 			{
 				node.isNarrow = !node.isNarrow;
 				isDirty = true;
-				setNodeDirty(node, true);
+				node.setNodeDirty(true);
 			}
 		//	var propVal:Boolean = constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 		//	if (propVal) {
@@ -122,40 +137,25 @@ package scenes.game.display
 			if (changeEvent) nodeDrawingBoard.dispatchEvent(changeEvent);
 		}
 		
-		public function setNodeDirty(node:Object, dirtyEdges:Boolean = false):void
+		public function addNode(node:Node):void
 		{
-			//set self dirty also
-			isDirty = true;
-			node.isDirty = true;
-			if(dirtyEdges)
-			{
-				for each(var gameEdgeID:String in node.connectedEdges)
-				{
-					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					edgeObj.isDirty = true;
-				}
-			}
-		}
-		
-		public function addNode(boxLayoutObj:Object):void
-		{
-			nodeList.push(boxLayoutObj);
-			boxLayoutObj.parentGrid = this;
+			nodeList.push(node);
+			node.parentGrid = this;
 			
 			//calculate center point
-			var xCenter:Number = boxLayoutObj.bb.x+boxLayoutObj.bb.width*.5;
-			var yCenter:Number = boxLayoutObj.bb.y+boxLayoutObj.bb.height*.5;
-			boxLayoutObj.centerPoint = new Point(xCenter, yCenter);
-			var constraintVar:ConstraintVar = boxLayoutObj["var"];
-			boxLayoutObj.isNarrow = constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-			boxLayoutObj.isEditable = !constraintVar.constant;
-			boxLayoutObj.skin = null;
-			boxLayoutObj.isDirty = true;
-			boxLayoutObj.gridID = id;
-			boxLayoutObj.isSelected = false;
-			boxLayoutObj.startingSelectionState = false;
+			var xCenter:Number = node.bb.x+node.bb.width*.5;
+			var yCenter:Number = node.bb.y+node.bb.height*.5;
+			node.centerPoint = new Point(xCenter, yCenter);
+			var constraintVar:ConstraintVar = node.graphVar;
+			node.isNarrow = constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
+			node.isEditable = !constraintVar.constant;
+			node.skin = null;
+			node.isDirty = true;
+			node.gridID = id;
+			node.isSelected = false;
+			node.startingSelectionState = false;
 
-			updateNode(boxLayoutObj);
+			updateNode(node);
 			
 		}
 
@@ -268,7 +268,7 @@ package scenes.game.display
 			skin.x = node.bb.x - componentXDisplacement;
 			skin.y = node.bb.y - componentYDisplacement;
 			
-			setNodeDirty(node, true);
+			node.setNodeDirty(true);
 		}
 		
 		protected function createEdges(node:Object):void
@@ -322,11 +322,12 @@ package scenes.game.display
 				if(hasError)
 					toColor = 0xff0000;
 			
-	
+				edge.edgeSprite.parent.unflatten();
 				edge.edgeSprite.setVertexColor(0, fromColor);
 				edge.edgeSprite.setVertexColor(1, toColor);
 				edge.edgeSprite.setVertexColor(2, fromColor);
 				edge.edgeSprite.setVertexColor(3, toColor);
+				edge.edgeSprite.parent.flatten();
 			}				
 			edge.isDirty = false;
 
@@ -422,7 +423,7 @@ package scenes.game.display
 			isActivated = false;
 		}
 		
-		public function handleSelection(marqueeRect:Rectangle, selectedNodeConstraintDict:Dictionary):void
+		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
 		{
 			if(marqueeRect.intersects(nodeDrawingBoard.bounds))
 			{
@@ -444,8 +445,8 @@ package scenes.game.display
 					{
 						var node:Object = nodeList[i];
 						var skin:NodeSkin = node.skin;
-						var selectNode:Boolean = false;
-						var unselectNode:Boolean = false;
+						var makeNodeSelected:Boolean = false;
+						var makeNodeUnselected:Boolean = false;
 						
 						if(skin && marqueeRect.containsRect(skin.bounds))
 						{
@@ -453,15 +454,14 @@ package scenes.game.display
 							{
 								if(node.startingSelectionState == false)
 								{
-									selectNode = true;		
-									node.on = true;
+									makeNodeSelected = true;		
 								}
 							}
 							else
 							{
 								if(node.startingSelectionState == true)
 								{
-									unselectNode = true;	
+									makeNodeUnselected = true;	
 								}
 							}
 						}
@@ -471,46 +471,34 @@ package scenes.game.display
 							{
 								if(node.startingSelectionState == true)
 								{
-									selectNode = true;	
+									makeNodeSelected = true;	
 								}
 							}
 							else
 							{
 								if(node.startingSelectionState == false)
 								{
-									unselectNode = true;	
+									makeNodeUnselected = true;	
 
 								}
 							}
 						}
 						
-						if(selectNode)
+						if(makeNodeSelected)
 						{
-							node.isSelected = true;
-							setNodeDirty(node, false);
-							gridHasSelection = true;
-							selectedSkins.push(skin);	
-							trace("selecting", node.gridID, node.id);
-							trace(selectedSkins.length);
-							selectedNodeConstraintDict[node.id] = node;
+							node.selectNode(selectedNodes);
 						}
-						else if(unselectNode)
+						else if(makeNodeUnselected)
 						{
-							node.isSelected = false;
-							setNodeDirty(node, false);
-							var index:int = selectedSkins.indexOf(skin);
-							selectedSkins.splice(index, 1);	
-							if(selectedSkins.length == 0)
-								gridHasSelection = false;
-							trace("unselecting", node.gridID, node.id);
-							trace(selectedSkins.length);
-							delete selectedNodeConstraintDict[node.id];
+							node.unselectNode(selectedNodes);
 
 						}
 					}
 				}
 			}
 		}
+		
+
 		
 		public function markVisited():void
 		{
@@ -519,53 +507,53 @@ package scenes.game.display
 		
 		public function unselectAll():void
 		{
-			if(gridHasSelection)
+			if(NumNodesSelected)
 			{
 				nodeDrawingBoard.unflatten();
-				trace(selectedSkins.length);
-				for(var i:int = 0; i< selectedSkins.length; i++)
+				for(var i:int = 0; i< nodeList.length; i++)
 				{
-					var skin:NodeSkin = selectedSkins[i];
-					skin.associatedNode.isSelected = false;
-					trace("unselecting", skin.associatedNode.gridID, skin.associatedNode.id);
-					setNodeDirty(skin.associatedNode, false);
+					var node:Object = nodeList[i];
+					if(node.isSelected == true)
+					{
+						node.isSelected = false;
+						node.setNodeDirty(false);
+					}
 				}
 				nodeDrawingBoard.flatten();
-				selectedSkins = new Vector.<NodeSkin>;
-				trace("zeroed",selectedSkins.length);
-				gridHasSelection = false;
+				NumNodesSelected = 0;
 			}
 			
 		}
 		
 		public function updateSelectedNodesAssignment(assignmentIsWide:Boolean):void
 		{
-			if(gridHasSelection)
+			if(NumNodesSelected)
 			{
 				if(nodeDrawingBoard)
 					nodeDrawingBoard.unflatten();
-				for(var index:int = 0; index<selectedSkins.length; index++)
+				for(var index:int = 0; index<nodeList.length; index++)
 				{
-					var skin:NodeSkin = selectedSkins[index];
-					skin.updateSelectionAssignment(assignmentIsWide);
+					var node:Object = nodeList[index];
+					if(node.isSelected)
+						node.updateSelectionAssignment(assignmentIsWide, World.m_world.active_level.levelGraph);
 				}
-				if(selectedSkins.length)
-					isDirty = true;
+				isDirty = true;
 				if(nodeDrawingBoard)
 					nodeDrawingBoard.flatten();
 			}
 		}
 		
+
 		public function updateSelectedEdges():void
 		{
-			if(gridHasSelection)
+			if(NumNodesSelected)
 			{
 				if(edgeDrawingBoard)
 					edgeDrawingBoard.unflatten();
-				for(var index:int = 0; index<selectedSkins.length; index++)
+				for(var index:int = 0; index<nodeList.length; index++)
 				{
-					var skin:NodeSkin = selectedSkins[index];
-					for each(var gameEdgeID:String in skin.associatedNode.connectedEdges)
+					var node:Object = nodeList[index];
+					for each(var gameEdgeID:String in node.connectedEdges)
 					{
 						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						updateEdge(edgeObj);

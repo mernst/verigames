@@ -17,12 +17,10 @@ package scenes.game.display
 	
 	import deng.fzip.FZip;
 	
-	import events.GameComponentEvent;
-	import events.GroupSelectionEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
 	import events.PropertyModeChangeEvent;
-	import events.UndoEvent;
+	import events.SelectionEvent;
 	import events.WidgetChangeEvent;
 	
 	import graph.PropDictionary;
@@ -55,7 +53,6 @@ package scenes.game.display
 	 */
 	public class Level extends BaseComponent
 	{
-		
 		/** True to allow user to navigate to any level regardless of whether levels below it are solved for debugging */
 		public static var UNLOCK_ALL_LEVELS_FOR_DEBUG:Boolean = false;
 		
@@ -65,7 +62,7 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		protected var selectedComponents:Vector.<GameComponent>;
+		public var selectedNodes:Dictionary;
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
 		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
@@ -130,8 +127,9 @@ package scenes.game.display
 		static public var gridSize:int = 500;
 		
 		public var currentGridDict:Dictionary;
-		public var selectedNodeConstraintDict:Dictionary;
-
+		
+		protected var currentSelectionProcessCount:int;
+		
 		
 		/** Tracks total distance components have been dragged since last visibile calculation */
 		public var totalMoveDist:Point = new Point();
@@ -190,7 +188,7 @@ package scenes.game.display
 			currentGridDict = new Dictionary;
 			NodeSkin.InitializeSkins();
 			
-			selectedNodeConstraintDict = new Dictionary;
+			selectedNodes = new Dictionary;
 			
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
@@ -314,7 +312,6 @@ package scenes.game.display
 			trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
 
-			selectedComponents = new Vector.<GameComponent>;
 			totalMoveDist = new Point();
 			loadLayout();
 			
@@ -322,10 +319,10 @@ package scenes.game.display
 			
 			//addEventListener(WidgetChangeEvent.WIDGET_CHANGED, onEdgeSetChange); // do these per-box
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
-			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
-			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
-			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
+			addEventListener(SelectionEvent.COMPONENT_SELECTED, onComponentSelection);
+			addEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentUnselection);
+			addEventListener(SelectionEvent.GROUP_SELECTED, onGroupSelection);
+			addEventListener(SelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
@@ -397,7 +394,6 @@ package scenes.game.display
 			}
 			
 			currentGridDict = newCurrentGridDict;
-			onScoreChange();
 		}
 		
 		public function draw():void
@@ -422,16 +418,16 @@ package scenes.game.display
 			var n:uint = 0;
 			for (var varId:String in m_levelLayoutObj["layout"]["vars"])
 			{
-				var boxLayoutObj:Object = m_levelLayoutObj["layout"]["vars"][varId];
+				var node:Node = new Node(m_levelLayoutObj["layout"]["vars"][varId]);
 				var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
 				if (graphVar == null) {
 					trace("Warning: layout var found with no corresponding contraints var:" + varId);
 					continue;
 				}
-				boxLayoutObj["id"] = varId;
-				boxLayoutObj["var"] = graphVar;
-				var nodeX:Number = Number(boxLayoutObj["x"]) * Constants.GAME_SCALE;
-				var nodeY:Number = Number(boxLayoutObj["y"]) * Constants.GAME_SCALE;
+				node.id = varId;
+				node["graphVar"] = graphVar;
+				var nodeX:Number = Number(node["x"]) * Constants.GAME_SCALE;
+				var nodeY:Number = Number(node["y"]) * Constants.GAME_SCALE;
 				
 				
 				var nodeWidth:Number = 1;//Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
@@ -442,9 +438,9 @@ package scenes.game.display
 				minY = Math.min(minY, nodeBoundingBox.top);
 				maxX = Math.max(maxX, nodeBoundingBox.right);
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
-				boxLayoutObj["bb"] = nodeBoundingBox;
-				boxLayoutObj["connectedEdges"] = new Array;
-				nodeLayoutObjs[varId] = boxLayoutObj;
+				node["bb"] = nodeBoundingBox;
+				node["connectedEdges"] = new Array;
+				nodeLayoutObjs[varId] = node;
 				
 				var xArrayPos:int = Math.floor(nodeBoundingBox.x/gridSize);
 				var yArrayPos:int = Math.floor(nodeBoundingBox.y/gridSize);
@@ -457,7 +453,7 @@ package scenes.game.display
 					gridSystemDict[nodeGridName] = grid;
 				}
 				
-				grid.addNode(boxLayoutObj);
+				grid.addNode(node);
 				
 				n++;
 			}
@@ -677,10 +673,10 @@ package scenes.game.display
 			
 			removeEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
-			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
-			removeEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
-			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
+			removeEventListener(SelectionEvent.COMPONENT_SELECTED, onComponentSelection);
+			removeEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentSelection);
+			removeEventListener(SelectionEvent.GROUP_SELECTED, onGroupSelection);
+			removeEventListener(SelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			if (levelGraph) levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			super.dispose();		
@@ -785,44 +781,75 @@ package scenes.game.display
 		}
 		
 		//data object should be in final selected/unselected state
-		protected function componentSelectionChanged(component:GameComponent, selected:Boolean):void
+		protected function componentSelectionChanged(component:Object, selected:Boolean):void
 		{
 		
 		}
 		
-		protected function onComponentSelection(evt:GameComponentEvent):void
+		protected function onComponentSelection(evt:SelectionEvent):void
 		{
-			var component:GameComponent = evt.component;
+			var component:Object = evt.component;
 			if(component)
 				componentSelectionChanged(component, true);
 			
-			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
+			var selectionChangedComponents:Vector.<Object> = new Vector.<Object>();
 			selectionChangedComponents.push(component);
 		}
 		
-		protected function onComponentUnselection(evt:GameComponentEvent):void
+		protected function onComponentUnselection(evt:SelectionEvent):void
 		{
-			var component:GameComponent = evt.component;
+			var component:Object = evt.component;
 			if(component)
 				componentSelectionChanged(component, false);
 			
-			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
+			var selectionChangedComponents:Vector.<Object> = new Vector.<Object>();
 			selectionChangedComponents.push(component);
 		}
 		
-		protected function onGroupSelection(evt:GroupSelectionEvent):void
+		//used when ctrl-shift clicking a node, selects x nearest neighbors. 
+		protected function onGroupSelection(evt:SelectionEvent):void
 		{
-			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
-			for each (var comp:GameComponent in selectionChangedComponents) {
-				comp.componentSelected(true);
-				componentSelectionChanged(comp, true);
+			var node:Node = evt.component as Node;
+			
+			currentSelectionProcessCount = 1;
+			var nextToVisitArray:Array = new Array;
+			selectSurroundingNodes(node, nextToVisitArray);
+			for each(var nextNode:Node in nextToVisitArray)
+			{
+				selectSurroundingNodes(nextNode, nextToVisitArray);
+				if(currentSelectionProcessCount > 1000)
+					break;
+				currentSelectionProcessCount++;
 			}
 		}
 		
-		protected function onGroupUnselection(evt:GroupSelectionEvent):void
+		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array):void
 		{
-			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
-			for each (var comp:GameComponent in selectionChangedComponents) {
+			node.selectNode(selectedNodes);
+			
+			for each(var gameEdgeID:Object in node.connectedEdges)
+			{
+				//need to check if the other end is on screen, and if it is, pass this edge off to that node
+				var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
+				var toNodeID:String = edgeObj["to_var_id"];
+				var toNodeObj:Object = nodeLayoutObjs[toNodeID];
+				var fromNodeID:String = edgeObj["from_var_id"];
+				var fromNodeObj:Object = nodeLayoutObjs[fromNodeID];
+				
+				var otherNode:Object = toNodeObj;
+				if(toNodeObj == this)
+					otherNode = fromNodeObj;
+				if(selectedNodes[otherNode.id] == null)
+				{
+					nextToVisitArray.push(otherNode);
+				}
+			}
+		}
+		
+		protected function onGroupUnselection(evt:SelectionEvent):void
+		{
+			var selectionChangedComponents:Vector.<Object> = evt.selection.concat();
+			for each (var comp:Object in selectionChangedComponents) {
 				comp.componentSelected(false);
 				componentSelectionChanged(comp, false);
 			}
@@ -1044,7 +1071,7 @@ package scenes.game.display
 				{
 					for each(gridSquare in currentGridDict)
 					{
-						gridSquare.handleSelection(marqueeRect.bounds, selectedNodeConstraintDict);
+						gridSquare.handleSelection(marqueeRect.bounds, selectedNodes);
 					}
 				}
 			}
@@ -1060,12 +1087,12 @@ package scenes.game.display
 		
 		public function unselectAll(addEventToLast:Boolean = false):void
 		{
-			for each(var gridSquare:GridSquare in currentGridDict)
+			for each(var node:Node in selectedNodes)
 			{
-				gridSquare.unselectAll();
+				node.unselectNode(selectedNodes);
 			}
 			
-			selectedNodeConstraintDict = new Dictionary; 
+			selectedNodes = new Dictionary; 
 		}
 		
 		public function onUseSelectionPressed(choice:String):void
@@ -1103,7 +1130,7 @@ package scenes.game.display
 			var constraintArray:Array = new Array;
 			var initvarsArray:Array = new Array;
 			//loop through each object
-			for each(var node:Object in selectedNodeConstraintDict)
+			for each(var node:Object in selectedNodes)
 			{
 				//loop through each edge, checking far end for existence in dict
 				for each(var gameEdgeID:String in node.connectedEdges)
@@ -1121,7 +1148,7 @@ package scenes.game.display
 					if(toNode == node)
 						nodeToCheck = fromNode;
 					
-					if(selectedNodeConstraintDict[nodeToCheck.id] != null)
+					if(selectedNodes[nodeToCheck.id] != null)
 					{
 						//found an edge with both end nodes selected
 						if(fromNode.isEditable)
@@ -1211,9 +1238,9 @@ package scenes.game.display
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
 				var node:Object = nodeIDToConstraintsTwoWayMap[ii+1];
-				var constraintVar:ConstraintVar = node["var"];
+				var constraintVar:ConstraintVar = node["graphVar"];
 				var parentGridSquare:GridSquare = node.parentGrid;
-				parentGridSquare.setNodeDirty(node, true);
+				node.setNodeDirty(true);
 				node.isNarrow = true;
 				if(vars[ii] == 1)
 					node.isNarrow = false;

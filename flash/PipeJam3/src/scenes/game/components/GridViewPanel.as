@@ -1026,7 +1026,7 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		public function centerOnComponent(component:DisplayObject):void
+		public function centerOnComponent(component:Object):void
 		{
 			startingPoint = new Point(content.x, content.y);
 			
