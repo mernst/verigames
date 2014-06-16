@@ -249,8 +249,8 @@ package scenes.game.components
 				bitmapImage = new Image(bitmapTexture);
 				addChildAt(bitmapImage, 1);
 				
-				bitmapTexture.dispose();
-				nodeBitmapData.dispose();
+				//bitmapTexture.dispose();
+				//nodeBitmapData.dispose();
 			}
 			drawViewSpaceIndicator();
 			isDirty = false;
