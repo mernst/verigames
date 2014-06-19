@@ -76,11 +76,12 @@ package networking
 		{
 			if(completedTutorialDictionary == null)
 				completedTutorialDictionary = new Dictionary;
-			
-			var message:String = e.target.data as String;
-			var obj:Object = JSON.parse(message);
-			for each(var entry:Object in obj)
-				completedTutorialDictionary[entry.levelID] = entry;
+			if (e && e.target && e.target.data) {
+				var message:String = e.target.data as String;
+				var obj:Object = JSON.parse(message);
+				for each(var entry:Object in obj)
+					completedTutorialDictionary[entry.levelID] = entry;
+			}
 			//also check cookies for levels played when not logged in
 			getTutorialsCompletedFromCookieString();
 		}

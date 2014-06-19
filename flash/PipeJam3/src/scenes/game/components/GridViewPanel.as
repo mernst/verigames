@@ -227,7 +227,7 @@ package scenes.game.components
 //			m_lastVisibleRefreshViewRect = currentViewRect;
 		}
 		
-		private function onGameComponentsCreated():void
+		public function onGameComponentsCreated():void
 		{
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (var i:int = 0; i < toolTips.length; i++) {
