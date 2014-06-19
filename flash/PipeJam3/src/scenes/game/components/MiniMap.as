@@ -81,6 +81,7 @@ package scenes.game.components
 		public var imageIsDirty:Boolean;
 		protected var nodeBitmapData:BitmapData;
 		protected var bitmapImage:Image;
+		protected var bitmapTexture:Texture;
 		protected var wideColor:int;
 		protected var narrowColor:int;
 		protected var errorColor:int = 0xFFFF0000;
@@ -192,6 +193,12 @@ package scenes.game.components
 			if (viewRectLayer) viewRectLayer.removeChildren(0, -1, true);
 			if (m_clickPane) m_clickPane.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+			
+			if(nodeBitmapData)
+			{
+				nodeBitmapData.dispose();
+				nodeBitmapData = null;
+			}
 		}
 		
 		override protected function onTouch(event:TouchEvent):void
@@ -233,6 +240,7 @@ package scenes.game.components
 				{
 					removeChild(bitmapImage, true);
 					bitmapImage.dispose();
+					bitmapTexture.dispose();
 				}
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.errorConstraintDict) {
@@ -244,17 +252,19 @@ package scenes.game.components
 					}
 				}
 				var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
-				nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
+			//	if(nodeBitmapData == null)
+				{
+					nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
+				}
 	
 				for (var nodeId:String in nodeDict) {
 					addWidget(nodeDict[nodeId], false);
 				}
-				var bitmapTexture:Texture = Texture.fromBitmapData(nodeBitmapData);
+				
+				bitmapTexture = Texture.fromBitmapData(nodeBitmapData);
 				bitmapImage = new Image(bitmapTexture);
 				addChildAt(bitmapImage, 1);
 				
-				bitmapTexture.dispose();
-				nodeBitmapData.dispose();
 			}
 			drawViewSpaceIndicator();
 			isDirty = false;
@@ -364,11 +374,11 @@ package scenes.game.components
 			delete nodeErrorDict[toNode];
 		}
 		
-		public function addWidget(widgetLayout:Node, flatten:Boolean = true):void
+		public function addWidget(node:Node, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
-			var id:String = widgetLayout["id"];
-			var bb:Rectangle = widgetLayout["bb"] as Rectangle;
+			var id:String = node["id"];
+			var bb:Rectangle = node["bb"] as Rectangle;
 			if (bb == null) throw new Error("Tried to add widget to MiniMap but no bounding box found in layout information.");
 			
 			var levelPctLeftX:Number = (bb.topLeft.x - visibleBB.x) / visibleBB.width;
@@ -379,7 +389,7 @@ package scenes.game.components
 			
 			var iconWidth:Number = Math.min(2 / scaleX, mapRightX - mapLeftX);
 			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
-			var constrVar:ConstraintVar = widgetLayout["graphVar"] as ConstraintVar;
+			var constrVar:ConstraintVar = node["graphVar"] as ConstraintVar;
 			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			//var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
 			
@@ -390,6 +400,9 @@ package scenes.game.components
 				color = errorColor;
 			else if(isNarrow)
 				color = narrowColor;
+			
+			if(node.isLocked)
+				color = NodeSkin.LOCKED_COLOR;
 			
 			//set the 2x2 square
 			var size:int = 2;

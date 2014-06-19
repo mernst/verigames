@@ -72,8 +72,11 @@ package scenes.game.display
 				{
 					if(!event.shiftKey)
 					{
-						var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
-						onClicked(node, globPt);
+						if(!node.isLocked)
+						{
+							var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
+							onClicked(node, globPt);
+						}
 					}
 					else
 					{
@@ -534,7 +537,7 @@ package scenes.game.display
 				for(var index:int = 0; index<nodeList.length; index++)
 				{
 					var node:Object = nodeList[index];
-					if(node.isSelected)
+					if(node.isSelected && !node.isLocked)
 						node.updateSelectionAssignment(assignmentIsWide, World.m_world.active_level.levelGraph);
 				}
 				isDirty = true;

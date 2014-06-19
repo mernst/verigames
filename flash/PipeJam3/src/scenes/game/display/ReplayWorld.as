@@ -22,7 +22,7 @@ package scenes.game.display
 			//this.touchable = false;// disable user interaction
 		}
 		
-		override protected function onAddedToStage(event:Event):void
+		override protected function onAddedToStage(event:starling.events.Event):void
 		{
 			super.onAddedToStage(event);
 			AudioManager.getInstance().reset(); // no replay music

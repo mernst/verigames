@@ -115,7 +115,7 @@ package scenes
 			this.y = _y;
 		}
 		
-		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		public function handleUndoEvent(undoEvent:starling.events.Event, isUndo:Boolean = true):void
 		{
 			
 		}

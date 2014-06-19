@@ -1,9 +1,13 @@
 package scenes.game.display
 {
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	import flash.display.StageDisplayState;
+	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
+	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
@@ -25,12 +29,11 @@ package scenes.game.display
 	import display.TextBubble;
 	import display.ToolTipText;
 	
-	import events.SelectionEvent;
-	import events.MoveEvent;
 	import events.MenuEvent;
 	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
+	import events.SelectionEvent;
 	import events.ToolTipEvent;
 	import events.UndoEvent;
 	import events.WidgetChangeEvent;
@@ -140,12 +143,15 @@ package scenes.game.display
 				}
 			}
 			trace("Done creating World...");
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
+			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
+			addEventListener(flash.events.Event.PASTE, onPasteConstraints);	
 		}
 		
+		
+		
 		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
-		protected function onAddedToStage(event:Event):void
+		protected function onAddedToStage(event:starling.events.Event):void
 		{
 			trace("Start Init Time", new Date().getTime() - PipeJamGameScene.startLoadTime);
 			m_initQueue = new Vector.<Function>();
@@ -680,16 +686,13 @@ package scenes.game.display
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
 			if (!level_changed) return;
-			if (evt && evt.varChanged) {
-				var nodeLayout:Node = active_level.nodeLayoutObjs[evt.varChanged.id];
-				if (miniMap && nodeLayout) miniMap.addWidget(nodeLayout); // removes prev widget, adds new colored widget
-			} else {
-				if (miniMap)
-				{
-					miniMap.isDirty = true;
-					miniMap.imageIsDirty = true;
-				}
+
+			if (miniMap)
+			{
+				miniMap.isDirty = true;
+				miniMap.imageIsDirty = true;
 			}
+			
 			gameControlPanel.updateScore(level_changed, false);
 			var oldScore:int = level_changed.prevScore;
 			var newScore:int = level_changed.currentScore;
@@ -728,7 +731,6 @@ package scenes.game.display
 				//beat the target score?
 				if(newScore  > level_changed.getTargetScore())
 				{
-					
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
 			}
@@ -939,6 +941,9 @@ package scenes.game.display
 							System.setClipboard(JSON.stringify(active_level.m_levelAssignmentsObj));
 						}
 						break;
+//					case Keyboard.V: //PASTE Events are the only way to get clipboard data
+//						onPasteConstraints(null);
+//						break;
 					case 65: //'a' for copy of ALL (world)
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
@@ -957,6 +962,18 @@ package scenes.game.display
 			}
 		}
 		
+		private function onPasteConstraints(event:flash.events.Event):void
+		{
+			if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+			{
+				if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
+				{ 
+					var text:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String; 
+					active_level.loadAssignmentsConfiguration(JSON.parse(text));
+				}
+			}
+		}
+		
 		public function getThumbnail(_maxwidth:Number, _maxheight:Number):ByteArray
 		{
 			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
@@ -967,7 +984,7 @@ package scenes.game.display
 			//added newest at the end, so start at the end
 			for(var i:int = event.eventsToUndo.length-1; i>=0; i--)
 			{
-				var eventObj:Event = event.eventsToUndo[i];
+				var eventObj:starling.events.Event = event.eventsToUndo[i];
 				handleUndoRedoEventObject(eventObj, isUndo, event.levelEvent, event.component);
 			}
 			if(isUndo)
@@ -976,7 +993,7 @@ package scenes.game.display
 				undoStack.push(event);
 		}
 		
-		protected function handleUndoRedoEventObject(evt:Event, isUndo:Boolean, levelEvent:Boolean, component:BaseComponent):void
+		protected function handleUndoRedoEventObject(evt:starling.events.Event, isUndo:Boolean, levelEvent:Boolean, component:BaseComponent):void
 		{
 			if (active_level && levelEvent)
 			{

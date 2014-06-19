@@ -1,7 +1,11 @@
 package scenes.game.components
 {
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.ContextMenuEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -55,6 +59,7 @@ package scenes.game.components
 	import starling.textures.Texture;
 	
 	import utils.XMath;
+	import flash.ui.ContextMenu;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -121,16 +126,17 @@ package scenes.game.components
 			addChildAt(contentBarrier,0);
 
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		private function onAddedToStage():void
 		{
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+				
 			//create a clip rect for the window
 			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
 			
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			if (!PipeJam3.REPLAY_DQID) {
@@ -138,6 +144,18 @@ package scenes.game.components
 				stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			
+			var myContextMenu:ContextMenu = new ContextMenu();
+			myContextMenu.clipboardMenu = true;
+			myContextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
+			PipeJam3.pipeJam3.contextMenu = myContextMenu;
+			PipeJam3.pipeJam3.contextMenu.addEventListener(flash.events.Event.PASTE, onPasteConstraints);
+		}
+		
+		protected function menuSelectHandler(event:flash.events.Event):void
+		{
+			PipeJam3.pipeJam3.contextMenu.clipboardItems.paste = true;
+			
 		}
 		private var count:int = 0;
 		private var oldViewRect:Rectangle;
@@ -281,7 +299,7 @@ package scenes.game.components
 			{
 				var startPoint:Point = startingPoint.clone();
 				var endPoint:Point = new Point(content.x, content.y);
-				var eventToUndo:Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+				var eventToUndo:starling.events.Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
 				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
 				eventToDispatch.addToSimilar = true;
 				dispatchEvent(eventToDispatch);
@@ -678,6 +696,16 @@ package scenes.game.components
 						World.m_world.solverDoneCallback("");
 					}
 					break;
+				case Keyboard.L:
+					if (m_currentLevel) {
+						m_currentLevel.lockSelection();
+					}
+					break;
+				case Keyboard.U:
+					if (m_currentLevel) {
+						m_currentLevel.unlockSelection();
+					}
+					break;
 				case Keyboard.EQUAL:
 				case Keyboard.NUMPAD_ADD:
 					zoomInDiscrete();
@@ -698,6 +726,18 @@ package scenes.game.components
 							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_WIDE);
 						else
 							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_NARROW);
+			}
+		}
+		
+		private function onPasteConstraints(event:flash.events.Event):void
+		{
+			if(this.m_currentLevel != null && !PipeJam3.RELEASE_BUILD)
+			{
+				if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
+				{ 
+					var text:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String; 
+					m_currentLevel.loadAssignmentsConfiguration(JSON.parse(text));
+				}
 			}
 		}
 		
@@ -899,7 +939,7 @@ package scenes.game.components
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
-				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
+				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
 				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
 			}
@@ -992,7 +1032,7 @@ package scenes.game.components
 			}
 		}
 		
-		private function onNextLevelButtonTriggered(evt:Event):void
+		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
@@ -1102,7 +1142,7 @@ package scenes.game.components
 			Starling.juggler.tween(m_spotlight, timeSec, { delay:0, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
 		}
 		
-		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		public override function handleUndoEvent(undoEvent:starling.events.Event, isUndo:Boolean = true):void
 		{
 			if(undoEvent is MouseWheelEvent)
 			{
