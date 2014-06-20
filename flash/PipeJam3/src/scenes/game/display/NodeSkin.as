@@ -4,17 +4,14 @@ package scenes.game.display
 	import flash.utils.Dictionary;
 	
 	import assets.AssetInterface;
-	
-	import constraints.ConstraintVar;
-	
-	import graph.PropDictionary;
-	
+		
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import starling.display.Quad;
 	
 	public class NodeSkin extends Sprite
 	{
@@ -31,15 +28,21 @@ package scenes.game.display
 		static protected var DarkBlueOutline:Texture;
 		static protected var LightBlueOutline:Texture;
 		
+		protected var lockedIcon:Image;
+		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
 		protected var outlineTextureImage:Image;
 		protected var isInitialized:Boolean;
 				
-		static public const WIDE_LOCKED_COLOR:int = 0x30302D;
-		static public const NARROW_LOCKED_COLOR:int = 0xA3A097;
+		static protected var levelAtlas:TextureAtlas;
+		
+		static public const WIDE_NONEDITABLE_COLOR:int = 0x30302D;
+		static public const NARROW_NONEDITABLE_COLOR:int = 0xA3A097;
 		static public const WIDE_COLOR:int = 0x0B80FF;
 		static public const NARROW_COLOR:int = 0xABFFF2;
 
+		static public const LOCKED_COLOR:int = 0x00FF00;
+		
 		public var id:int;
 		public static var numSkins:int = 5000;
 		
@@ -53,6 +56,8 @@ package scenes.game.display
 			{
 				availableGameNodeSkins.push(new NodeSkin(numSkin));
 			}
+			
+			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 		}
 		
 		static public function getNextSkin():NodeSkin
@@ -75,11 +80,11 @@ package scenes.game.display
 		{
 			if(!node.isNarrow && !node.isEditable)
 			{
-				return WIDE_LOCKED_COLOR;
+				return WIDE_NONEDITABLE_COLOR;
 			}
 			else if(node.isNarrow && !node.isEditable)
 			{
-				return NARROW_LOCKED_COLOR;
+				return NARROW_NONEDITABLE_COLOR;
 			}
 			else if(!node.isNarrow && node.isEditable)
 			{
@@ -178,6 +183,22 @@ package scenes.game.display
 					this.filter.dispose();
 					this.filter = null;
 				}
+			}
+			
+			if(associatedNode.isLocked)
+			{
+				lockedQuad = new Quad(20,20, LOCKED_COLOR);
+				addChild(lockedQuad);
+				if(!lockedIcon)
+					lockedIcon = new Image(levelAtlas.getTexture("DocumentIconLocked"));
+				lockedIcon.width = lockedIcon.height = 8;
+				lockedIcon.x = lockedIcon.y = 12;
+				addChild(lockedIcon);
+			}
+			else if(lockedIcon)
+			{
+				removeChild(lockedIcon);
+				removeChild(lockedQuad);
 			}
 		}
 		

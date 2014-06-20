@@ -45,7 +45,12 @@ package system
 		
 		public static function run_solver(clause_arrays:Array, initvars_Array:Array, updatecallback:Function, donecallback:Function):void
 		{
-			m_mgr.start(clause_arrays, initvars_Array, updatecallback, donecallback);
+			try
+			{
+				m_mgr.start(clause_arrays, initvars_Array, updatecallback, donecallback);
+			} catch (e:Error) {
+			trace(e.message);
+			}
 		}
 		
 		public static function stop_solver():void

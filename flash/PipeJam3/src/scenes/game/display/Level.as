@@ -1,10 +1,14 @@
 package scenes.game.display
 {
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import assets.AssetInterface;
 	
@@ -26,6 +30,9 @@ package scenes.game.display
 	import graph.PropDictionary;
 	
 	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	
+	import org.osmf.events.TimeEvent;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -43,6 +50,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
+	import system.MiniMaxSatSolver;
 	
 	import utils.Base64Encoder;
 	import utils.XObject;
@@ -87,13 +95,7 @@ package scenes.game.display
 		
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
-		
-		protected var m_gameNodeDict:Dictionary = new Dictionary();
-		protected var m_gameEdgeDict:Dictionary = new Dictionary();
-		
-//		protected var m_nodeList:Vector.<GameNode2>;
-//		public var m_edgeList:Vector.<GameEdge>;
-		
+				
 		protected var m_hidingErrorText:Boolean = false;
 //		protected var m_segmentHovered:GameEdgeSegment;
 		public var errorConstraintDict:Dictionary = new Dictionary();
@@ -125,7 +127,7 @@ package scenes.game.display
 		protected var gridSystemDict:Dictionary;
 		
 		static public var gridSize:int = 500;
-		
+		static public var NUM_NODES_TO_SELECT:int = 300;
 		public var currentGridDict:Dictionary;
 		
 		protected var currentSelectionProcessCount:int;
@@ -187,9 +189,7 @@ package scenes.game.display
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
 			NodeSkin.InitializeSkins();
-			
 			selectedNodes = new Dictionary;
-			
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -326,7 +326,7 @@ package scenes.game.display
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
-			//setNodesFromAssignments(m_levelAssignmentsObj);
+			loadInitialConfiguration();
 			//force update of conflict count dictionary, ignore return value
 			getNextConflict(true);
 			initialized = true;
@@ -344,7 +344,6 @@ package scenes.game.display
 				if (!constraint.isSatisfied()) errorConstraintDict[constriantId] = constraint;
 			}
 		}
-		
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			//clean up the old dictionary disposing of what's left
@@ -601,7 +600,7 @@ package scenes.game.display
 		{
 			var hashSize:int = 0;
 			var nodeId:String;
-			for (nodeId in m_gameNodeDict) hashSize++;
+			for (nodeId in nodeLayoutObjs) hashSize++;
 			
 			PipeJamGame.levelInfo.hash = new Array();
 			
@@ -613,16 +612,17 @@ package scenes.game.display
 									"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
-	/*		for (nodeId in m_gameNodeDict) {
-				var node:GameNode = m_gameNodeDict[nodeId] as GameNode;
-				if (node.constraintVar.constant) continue;
-				if (!assignmentsObj["assignments"].hasOwnProperty(node.constraintVar.formattedId)) assignmentsObj["assignments"][node.constraintVar.formattedId] = { };
-				assignmentsObj["assignments"][node.constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] = node.constraintVar.getValue().verboseStrVal;
+			for (nodeId in nodeLayoutObjs) {
+				var node:Node = nodeLayoutObjs[nodeId];
+				var constraintVar:ConstraintVar = levelGraph.variableDict[nodeId];
+				if (constraintVar.constant) continue;
+				if (!assignmentsObj["assignments"].hasOwnProperty(constraintVar.formattedId)) assignmentsObj["assignments"][constraintVar.formattedId] = { };
+				assignmentsObj["assignments"][constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] = constraintVar.getValue().verboseStrVal;
 				var keyfors:Array = new Array();
-				for (var i:int = 0; i < node.constraintVar.keyforVals.length; i++) keyfors.push(node.constraintVar.keyforVals[i]);
-				if (keyfors.length > 0) assignmentsObj["assignments"][node.constraintVar.formattedId][ConstraintGraph.KEYFOR_VALUES] = keyfors;
+				for (var i:int = 0; i < constraintVar.keyforVals.length; i++) keyfors.push(constraintVar.keyforVals[i]);
+				if (keyfors.length > 0) assignmentsObj["assignments"][constraintVar.formattedId][ConstraintGraph.KEYFOR_VALUES] = keyfors;
 				
-				var isWide:Boolean = (node.constraintVar.getValue().verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
+				var isWide:Boolean = (constraintVar.getValue().verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
 				if(isWide)
 					numWide++;
 				
@@ -636,7 +636,7 @@ package scenes.game.display
 					PipeJamGame.levelInfo.hash.push(numWide);
 					numWide = 0;
 				}
-			}*/
+			}
 			return assignmentsObj;
 		}
 		
@@ -650,7 +650,7 @@ package scenes.game.display
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
-			m_gameEdgeDict = new Dictionary();
+			nodeLayoutObjs = new Dictionary();
 			
 			if (m_nodesContainer) {
 				while (m_nodesContainer.numChildren > 0) m_nodesContainer.getChildAt(0).removeFromParent(true);
@@ -817,7 +817,7 @@ package scenes.game.display
 			for each(var nextNode:Node in nextToVisitArray)
 			{
 				selectSurroundingNodes(nextNode, nextToVisitArray);
-				if(currentSelectionProcessCount > 1000)
+				if(currentSelectionProcessCount > NUM_NODES_TO_SELECT)
 					break;
 				currentSelectionProcessCount++;
 			}
@@ -827,23 +827,25 @@ package scenes.game.display
 		{
 			node.selectNode(selectedNodes);
 			
-			for each(var gameEdgeID:String in node.connectedEdgeIds)
-			{
-				//need to check if the other end is on screen, and if it is, pass this edge off to that node
-				var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
-				var toNodeID:String = edgeObj["to_var_id"];
-				var toNodeObj:Object = nodeLayoutObjs[toNodeID];
-				var fromNodeID:String = edgeObj["from_var_id"];
-				var fromNodeObj:Object = nodeLayoutObjs[fromNodeID];
-				
-				var otherNode:Object = toNodeObj;
-				if(toNodeObj == this)
-					otherNode = fromNodeObj;
-				if(selectedNodes[otherNode.id] == null)
+			//include locked nodes, but not their children
+			if(!node.isLocked)
+				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
-					nextToVisitArray.push(otherNode);
+					//need to check if the other end is on screen, and if it is, pass this edge off to that node
+					var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
+					var toNodeID:String = edgeObj["to_var_id"];
+					var toNodeObj:Object = nodeLayoutObjs[toNodeID];
+					var fromNodeID:String = edgeObj["from_var_id"];
+					var fromNodeObj:Object = nodeLayoutObjs[fromNodeID];
+					
+					var otherNode:Object = toNodeObj;
+					if(toNodeObj == node)
+						otherNode = fromNodeObj;
+					if(selectedNodes[otherNode.id] == null)
+					{
+						nextToVisitArray.push(otherNode);
+					}
 				}
-			}
 		}
 		
 		protected function onGroupUnselection(evt:SelectionEvent):void
@@ -875,7 +877,7 @@ package scenes.game.display
 
 		public function getNodes():Dictionary
 		{
-			return m_gameNodeDict;
+			return nodeLayoutObjs;
 		}
 		
 		public function getLevelTextInfo():TutorialManagerTextInfo
@@ -1039,7 +1041,7 @@ package scenes.game.display
 				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0)
+				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			if (levelGraph.prevScore != levelGraph.currentScore)
@@ -1118,6 +1120,47 @@ package scenes.game.display
 			onWidgetChange();
 		}
 		
+		public function solverTimerCallback(evt:TimerEvent):void
+		{
+			solveSelection(solverUpdate, solverDone);
+		}
+		
+		public function solverLoopTimerCallback(evt:TimerEvent):void
+		{
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				node.unused = true;
+			}
+			solveSelection(solverUpdate, solverDone);
+		}
+		
+		public var loopcount:int = 0;
+		public var looptimer:Timer;
+		
+		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
+		public function solveSelection1(updateCallback:Function, doneCallback:Function):void
+		{
+			//loop through all nodes, finding ones with conflicts
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				if(node.hasError() && node.unused)
+				{
+					node.unused = false;
+					trace(node.id);
+					onGroupSelection(new SelectionEvent("foo", node));
+					solveSelection1(updateCallback, doneCallback);
+					unselectAll();
+					return;
+				}
+			}
+			
+			// if we make it this far start over
+			trace("new loop", loopcount);
+			looptimer = new Timer(1000, 1);
+			looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+			looptimer.start();
+		}
+		
 		public function solveSelection(updateCallback:Function, doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1151,7 +1194,7 @@ package scenes.game.display
 					if(selectedNodes[nodeToCheck.id] != null)
 					{
 						//found an edge with both end nodes selected
-						if(fromNode.isEditable)
+						if(fromNode.isEditable && !fromNode.isLocked)
 						{
 							if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
 							{
@@ -1164,7 +1207,7 @@ package scenes.game.display
 								constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
 						} 
 						
-						if(toNode.isEditable)
+						if(toNode.isEditable && !toNode.isLocked)
 						{
 							if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
 							{
@@ -1183,25 +1226,25 @@ package scenes.game.display
 						{
 							storedConstraints[constraint] = constraint;
 							
-							if(fromNode.isEditable && toNode.isEditable)
+							if(fromNode.isEditable && toNode.isEditable && !fromNode.isLocked && !toNode.isLocked)
 								constraintArray.push(new Array(100, -constraint1Value, constraint2Value));
-							else if(fromNode.isEditable && !toNode.isEditable)
+							else if(fromNode.isEditable && !fromNode.isLocked && (!toNode.isEditable || toNode.isLocked))
 							{
 								if(toNode.isNarrow)
 									constraintArray.push(new Array(100, -constraint1Value));
 							}
-							if(!fromNode.isEditable && toNode.isEditable)
+							if((!fromNode.isEditable  || fromNode.isLocked) && toNode.isEditable && !toNode.isLocked)
 							{
 								if(!fromNode.isNarrow)
 									constraintArray.push(new Array(100, constraint2Value));
 							}
 							
-							if(toNode.isEditable && storedConstraints[constraint1Value] != toNode)
+							if(toNode.isEditable && !toNode.isLocked && storedConstraints[constraint1Value] != toNode)
 							{
 								constraintArray.push(new Array(1, constraint1Value));
 								storedConstraints[constraint1Value] = toNode;
 							}
-							if(fromNode.isEditable && storedConstraints[constraint2Value] != fromNode)
+							if(fromNode.isEditable && !fromNode.isLocked && storedConstraints[constraint2Value] != fromNode)
 							{
 								constraintArray.push(new Array(1, constraint2Value));
 								storedConstraints[constraint2Value] = fromNode;
@@ -1211,7 +1254,7 @@ package scenes.game.display
 				}
 			}
 			
-			
+			trace("constraintArray.length", constraintArray.length);
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1230,32 +1273,53 @@ package scenes.game.display
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var assignmentIsWide:Boolean = false;
+			var nodeUpdated:Boolean = false;
 			
 			if(	m_inSolver == false) //got marked done early
 				return;
 			
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				var node:Object = nodeIDToConstraintsTwoWayMap[ii+1];
-				var constraintVar:ConstraintVar = node["graphVar"];
-				var parentGridSquare:GridSquare = node.parentGrid;
-				node.setNodeDirty(true);
-				node.isNarrow = true;
-				if(vars[ii] == 1)
-					node.isNarrow = false;
-				if(constraintVar) 
-					constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
+				if(!node.isLocked)
+				{
+					var constraintVar:ConstraintVar = node["graphVar"];
+					var parentGridSquare:GridSquare = node.parentGrid;
+					node.setNodeDirty(true);
+					node.isNarrow = true;
+					if(vars[ii] == 1)
+						node.isNarrow = false;
+					if(constraintVar) 
+						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+					nodeUpdated = true; 
+				}
 			}
-			onWidgetChange();
+			if(nodeUpdated)
+				onWidgetChange();
 		}
 		
+		public var count:int = 3000;
+		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
+			System.gc();
+			
+			//reset to best score, which might be current score
+			loadBestScoringConfiguration();
+			
+			//do it again
+			if(count < 3000)
+			{
+				count++;
+				trace("count", count);
+				timer = new Timer(1000, 1);
+				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
+				timer.start();
+			}
 		}
 		
 		public function onViewSpaceChanged(event:MiniMapEvent):void
@@ -1265,6 +1329,24 @@ package scenes.game.display
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{
+			
+		}
+		
+		public function lockSelection():void
+		{
+			for each(var node:Node in selectedNodes)
+			{
+				node.lockNode();
+			}
+			
+		}
+		
+		public function unlockSelection():void
+		{
+			for each(var node:Node in selectedNodes)
+			{
+				node.unlockNode();
+			}
 			
 		}
 	}

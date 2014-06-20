@@ -48,11 +48,14 @@ package constraints
 		
 		public var qid:int = -1;
 		
+		static protected var updateCount:int = 0;
+		
 		public function updateScore(varIdChanged:String = null, propChanged:String = null, newPropValue:Boolean = false):void
 		{
 			oldScore = prevScore;
 			prevScore = currentScore;
-			trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
+//			if(updateCount++ % 200 == 0)
+//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
@@ -95,9 +98,9 @@ package constraints
 						}
 					}
 					// Offset score by change in bonus and new constraints satisfied/not
-					trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+//					trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 					currentScore += (newBonus - prevBonus) + (newConstraintPoints - prevConstraintPoints);
-					trace("new currentScore ", currentScore);
+//					trace("new currentScore ", currentScore);
 				}
 			} else {
 				currentScore = 0;
@@ -131,7 +134,8 @@ package constraints
 				}
 			}
 			if (isNaN(startingScore)) startingScore = currentScore;
-			trace("Score: " + currentScore);
+			if(updateCount++ % 200 == 0)
+				trace("Score: " + currentScore);
 		}
 		
 		public function resetScoring():void
