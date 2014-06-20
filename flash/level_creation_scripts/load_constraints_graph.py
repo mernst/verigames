@@ -37,12 +37,24 @@ class Node:
 			self.inputs[edge.id] = edge
 			edge.tonode = self
 	
+	def removeinput(self, edge):
+		if self.inputs.get(edge.id) is not None:
+			self.ninputs -= 1
+			del self.inputs[edge.id]
+			edge.tonode = None
+
 	def addoutput(self, edge):
 		if self.outputs.get(edge.id) is None:
 			self.noutputs += 1
 			self.outputs[edge.id] = edge
 			edge.fromnode = self
-	
+
+	def removeoutput(self, edge):
+		if self.outputs.get(edge.id) is not None:
+			self.noutputs -= 1
+			del self.outputs[edge.id]
+			edge.tonode = None
+
 	def outputvar(self):
 		var_obj = {}
 		if self.type_value is not None:

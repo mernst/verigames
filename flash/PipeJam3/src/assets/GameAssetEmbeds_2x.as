@@ -77,6 +77,9 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamLevelSelectSpriteSheetXML:Class;
 		
+		[Embed(source = "../../lib/assets/Backgrounds/FlowJamGraphsBackground.jpg")]
+		public static const GraphsBackgroundClass:Class;
+		
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground0.jpg")]
 		public static const Background0Class:Class;
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground1.jpg")]

@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import constraints.ConstraintValue;
 	import flash.utils.Dictionary;
 	
 	import assets.AssetInterface;
@@ -20,15 +21,18 @@ package scenes.game.display
 		static protected var availableGameNodeSkins:Vector.<NodeSkin>;
 		static protected var activeGameNodeSkins:Dictionary;
 		
-		public var associatedNode:Object;
+		public var associatedNode:Node;
 		
 		static protected var mAtlas:TextureAtlas;	
 		static protected var DarkGrayCircle:Texture;
 		static protected var LightGrayCircle:Texture;
 		static protected var DarkBlueCircle:Texture;
 		static protected var LightBlueCircle:Texture;
+		static protected var DarkBlueOutline:Texture;
+		static protected var LightBlueOutline:Texture;
 		
 		protected var textureImage:Image;
+		protected var outlineTextureImage:Image;
 		protected var isInitialized:Boolean;
 				
 		static public const WIDE_LOCKED_COLOR:int = 0x30302D;
@@ -103,10 +107,12 @@ package scenes.game.display
 			if(!mAtlas)
 			{
 				mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				DarkGrayCircle = mAtlas.getTexture("DarkGrayCircle");
-				LightGrayCircle = mAtlas.getTexture("LightGrayCircle");
-				DarkBlueCircle = mAtlas.getTexture("DarkBlueCircle");
-				LightBlueCircle = mAtlas.getTexture("LightBlueCircle");
+				DarkGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkStart);
+				LightGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayLightStart);
+				DarkBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkStart);
+				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightStart);
+				DarkBlueOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
+				LightBlueOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
 			}
 		}
 		
@@ -115,6 +121,12 @@ package scenes.game.display
 			if(textureImage)
 			{
 				removeChild(textureImage, true);
+			}
+			
+			if (outlineTextureImage)
+			{
+				removeChild(outlineTextureImage, true);
+				outlineTextureImage = null;
 			}
 			
 			if(!associatedNode.isNarrow && !associatedNode.isEditable)
@@ -138,7 +150,21 @@ package scenes.game.display
 			textureImage.scaleY = 20*textureImage.scaleY/textureImage.height;
 			
 			addChild(textureImage);
-				
+			
+			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
+			var narrowScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
+			if (wideScore > narrowScore && associatedNode.isNarrow) {
+				outlineTextureImage = new Image(DarkBlueOutline);
+			} else if (narrowScore > wideScore && !associatedNode.isNarrow) {
+				outlineTextureImage = new Image(LightBlueOutline);
+			}
+			if (outlineTextureImage)
+			{
+				outlineTextureImage.scaleX = 20*outlineTextureImage.scaleX/outlineTextureImage.width;
+				outlineTextureImage.scaleY = 20 * outlineTextureImage.scaleY / outlineTextureImage.height;
+				addChild(outlineTextureImage);
+			}
+			
 			if(associatedNode.isSelected)
 			{
 				// Apply the glow filter if not already there
@@ -167,7 +193,7 @@ package scenes.game.display
 			return super.removeChild(_child, dispose);
 		}
 		
-		public function setNode(_associatedNode:Object):void
+		public function setNode(_associatedNode:Node):void
 		{
 			associatedNode = _associatedNode;
 			

@@ -33,7 +33,7 @@ package scenes.game.display
 		
 		protected var nodeDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
-		protected var nodeList:Array;
+		protected var nodeList:Vector.<Node>;
 		protected var edgeList:Array;
 		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
@@ -57,7 +57,7 @@ package scenes.game.display
 			gridYOffset = y;
 			componentXDisplacement = gridXOffset*Level.gridSize;
 			componentYDisplacement = gridYOffset*Level.gridSize;
-			nodeList = new Array;
+			nodeList = new Vector.<Node>();
 			edgeList = new Array;
 		}
 		
@@ -67,7 +67,7 @@ package scenes.game.display
 			{
 				var touches:Vector.<Touch> = event.getTouches(nodeDrawingBoard, TouchPhase.ENDED);
 				var loc:Point = touches[0].getLocation(nodeDrawingBoard);
-				var node:Object = findNodeAtPoint(loc);
+				var node:Node = findNodeAtPoint(loc);
 				if(node)
 				{
 					if(!event.shiftKey)
@@ -93,9 +93,9 @@ package scenes.game.display
 			}
 		}
 		
-		public function findNodeAtPoint(pt:Point):Object
+		public function findNodeAtPoint(pt:Point):Node
 		{
-			for each(var node:Object in nodeList)
+			for each(var node:Node in nodeList)
 			{
 				if(pt.x < node.bb.left - componentXDisplacement - .5*SKIN_DIAMETER) continue;
 				if(pt.x > node.bb.right - componentXDisplacement + .5*SKIN_DIAMETER) continue;
@@ -108,7 +108,7 @@ package scenes.game.display
 			return null;
 		}
 		
-		public function onClicked(node:Object, loc:Point):void
+		public function onClicked(node:Node, loc:Point):void
 		{
 			var changeEvent:VarChangeEvent,  undoEvent:UndoEvent;
 			var constraintVar:ConstraintVar = node["graphVar"];
@@ -180,7 +180,7 @@ package scenes.game.display
 
 				edgeList = new Array;
 
-				for each(var node:Object in nodeList)
+				for each(var node:Node in nodeList)
 				{											
 					if(!node.skin)
 						updateNode(node);
@@ -207,7 +207,7 @@ package scenes.game.display
 				return;
 			nodeDrawingBoard.unflatten();
 			edgeDrawingBoard.unflatten();
-			for each(var node:Object in nodeList)
+			for each(var node:Node in nodeList)
 			{
 				if(node.isDirty)
 				{
@@ -215,7 +215,7 @@ package scenes.game.display
 					if(node.skin.parent == null)
 						nodeDrawingBoard.addChild(node.skin);
 
-					for each(var gameEdgeID:String in node.connectedEdges)
+					for each(var gameEdgeID:String in node.connectedEdgeIds)
 					{
 						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						if(edgeObj.edgeSprite && edgeObj.isDirty) //needs to be created  before here if we want it
@@ -257,7 +257,7 @@ package scenes.game.display
 			isDirty = false;
 		}
 		
-		protected function updateNode(node:Object):void
+		protected function updateNode(node:Node):void
 		{
 			
 			var skin:NodeSkin = NodeSkin.getNextSkin();
@@ -271,9 +271,9 @@ package scenes.game.display
 			node.setNodeDirty(true);
 		}
 		
-		protected function createEdges(node:Object):void
+		protected function createEdges(node:Node):void
 		{
-			for each(var gameEdgeID:String in node.connectedEdges)
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
 			{
 				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 				edgeList.push(edgeObj);
@@ -285,22 +285,18 @@ package scenes.game.display
 		}
 		private function createEdge(edge:Object):void
 		{
-			 var toNodeID:String = edge["to_var_id"];
-			 var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-			 var fromNodeID:String = edge["from_var_id"];
-			 var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-			 
-			 if(fromNodeObj == toNodeObj)
-				 return;
-			 
-			 var hasError:Boolean = false;
-			 if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
-					 hasError = true;
+			var toNodeID:String = edge["to_var_id"];
+			var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+			var fromNodeID:String = edge["from_var_id"];
+			var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 
-			 edge.edgeSprite = drawLine(fromNodeObj, toNodeObj, hasError);
-			 edge.parentXOffset = gridXOffset;
-			 edge.parentYOffset = gridYOffset;
-			 edge.isDirty = true;
+			if(fromNodeObj == toNodeObj)
+			return;
+
+			edge.edgeSprite = drawLine(fromNodeObj, toNodeObj);
+			edge.parentXOffset = gridXOffset;
+			edge.parentYOffset = gridYOffset;
+			edge.isDirty = true;
 		}
 		
 		private function updateEdge(edge:Object):void
@@ -311,33 +307,17 @@ package scenes.game.display
 				var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
 				var fromNodeID:String = edge["from_var_id"];
 				var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-				
-				var hasError:Boolean = false;
-				if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
-					hasError = true;
-				
-				var fromColor:int = NodeSkin.getColor(fromNodeObj);
-				var toColor:int =  NodeSkin.getColor(toNodeObj);
-				
-				if(hasError)
-					toColor = 0xff0000;
 			
 				edge.edgeSprite.parent.unflatten();
-				edge.edgeSprite.setVertexColor(0, fromColor);
-				edge.edgeSprite.setVertexColor(1, toColor);
-				edge.edgeSprite.setVertexColor(2, fromColor);
-				edge.edgeSprite.setVertexColor(3, toColor);
+				setupLine(fromNodeObj, toNodeObj, edge.edgeSprite);
 				edge.edgeSprite.parent.flatten();
-			}				
+			}
 			edge.isDirty = false;
-
 		}
 		
 		//need to keep track of lines
-		public function drawLine(fromNodeObj:Object, toNodeObj:Object, hasError:Boolean):Quad
+		public function drawLine(fromNodeObj:Object, toNodeObj:Object):Quad
 		{
-			var height:Number = 1;
-			
 			var p1:Point = fromNodeObj.centerPoint;
 			var p2:Point = toNodeObj.centerPoint;
 			//a^2 + b^2 = c^2
@@ -346,18 +326,9 @@ package scenes.game.display
 			var hyp:Number = Math.sqrt(a+b);
 			
 			//draw the quad flat, rotate later
-			var lineQuad:Quad = new Quad(hyp, height);
-			var fromColor:int = NodeSkin.getColor(fromNodeObj);
-			var toColor:int = NodeSkin.getColor(toNodeObj);
+			var lineQuad:Quad = new Quad(hyp, 5);
 			
-			if(hasError)
-				toColor = 0xff0000;
-			
-			lineQuad.setVertexColor(0, fromColor);
-			lineQuad.setVertexColor(1, toColor);
-			lineQuad.setVertexColor(2, fromColor);
-			lineQuad.setVertexColor(3, toColor);
-			
+			setupLine(fromNodeObj, toNodeObj, lineQuad);
 			
 			//get theta
 			//Sin(x) = opp/hyp
@@ -382,13 +353,39 @@ package scenes.game.display
 			return lineQuad;
 		}
 		
+		private function setupLine(fromNodeObj:Object, toNodeObj:Object, lineQuad:Quad):void
+		{
+			var fromColor:int = NodeSkin.getColor(fromNodeObj);
+			var toColor:int = fromColor;
+			
+			if (!fromNodeObj.isNarrow && toNodeObj.isNarrow)
+			{
+				toColor = 0xff0000;
+				lineQuad.setVertexAlpha(0, 1);
+				lineQuad.setVertexAlpha(1, 0.6);
+				lineQuad.setVertexAlpha(2, 1);
+				lineQuad.setVertexAlpha(3, 0.6);
+			}
+			else
+			{
+				lineQuad.setVertexAlpha(0, fromNodeObj.isNarrow ? 0 : 1);
+				lineQuad.setVertexAlpha(1, toNodeObj.isNarrow ? 0 : 0.1);
+				lineQuad.setVertexAlpha(2, 1);
+				lineQuad.setVertexAlpha(3, 0.1);
+			}
+			lineQuad.setVertexColor(0, fromColor);
+			lineQuad.setVertexColor(1, toColor);
+			lineQuad.setVertexColor(2, fromColor);
+			lineQuad.setVertexColor(3, toColor);
+		}
+		
 		public function removeFromParent(dispose:Boolean):void
 		{
 			for(var i:int = nodeDrawingBoard.numChildren-1; i>=0; i--)
 			{
 				var skin:NodeSkin = nodeDrawingBoard.getChildAt(i) as NodeSkin;
-				var node:Object = skin.associatedNode;
-				for each(var gameEdgeID:String in node.connectedEdges)
+				var node:Node = skin.associatedNode;
+				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
 					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 					if(edgeObj.edgeSprite)
@@ -434,7 +431,7 @@ package scenes.game.display
 					//record the current selection state of all nodes
 					for(var ii:int = 0; ii< nodeList.length; ii++)
 					{
-						var node1:Object = nodeList[ii];
+						var node1:Node = nodeList[ii];
 						node1.startingSelectionState = node1.isSelected;
 					}
 					visited = true;
@@ -443,7 +440,7 @@ package scenes.game.display
 				{
 					for(var i:int = 0; i< nodeList.length; i++)
 					{
-						var node:Object = nodeList[i];
+						var node:Node = nodeList[i];
 						var skin:NodeSkin = node.skin;
 						var makeNodeSelected:Boolean = false;
 						var makeNodeUnselected:Boolean = false;
@@ -512,7 +509,7 @@ package scenes.game.display
 				nodeDrawingBoard.unflatten();
 				for(var i:int = 0; i< nodeList.length; i++)
 				{
-					var node:Object = nodeList[i];
+					var node:Node = nodeList[i];
 					if(node.isSelected == true)
 					{
 						node.isSelected = false;
@@ -533,7 +530,7 @@ package scenes.game.display
 					nodeDrawingBoard.unflatten();
 				for(var index:int = 0; index<nodeList.length; index++)
 				{
-					var node:Object = nodeList[index];
+					var node:Node = nodeList[index];
 					if(node.isSelected)
 						node.updateSelectionAssignment(assignmentIsWide, World.m_world.active_level.levelGraph);
 				}
@@ -552,8 +549,8 @@ package scenes.game.display
 					edgeDrawingBoard.unflatten();
 				for(var index:int = 0; index<nodeList.length; index++)
 				{
-					var node:Object = nodeList[index];
-					for each(var gameEdgeID:String in node.connectedEdges)
+					var node:Node = nodeList[index];
+					for each(var gameEdgeID:String in node.connectedEdgeIds)
 					{
 						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						updateEdge(edgeObj);

@@ -75,6 +75,8 @@ package assets
 		public static const PipeJamSubTexture_BlueLightBoxSelectPrefix:String = "BlueLightBoxSelect";
 		public static const PipeJamSubTexture_BlueLightStart:String = "BlueLightStart";
 		public static const PipeJamSubTexture_BlueLightEnd:String = "BlueLightEnd";
+		public static const PipeJamSubTexture_BlueLightOutline:String = "BlueLightOutline";
+		public static const PipeJamSubTexture_BlueDarkOutline:String = "BlueDarkOutline";
 		public static const PipeJamSubTexture_BlueLightPlug:String = "BlueLightPlug";
 		public static const PipeJamSubTexture_BlueLightJoint:String = "BlueLightJoint";
 		public static const PipeJamSubTexture_BlueLightSegmentPrefix:String = "BlueLightSegment";

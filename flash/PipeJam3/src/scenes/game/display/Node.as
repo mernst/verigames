@@ -35,7 +35,7 @@ package scenes.game.display
 		public var gridID:String;
 		public var parentGrid:GridSquare;
 		
-		public var connectedEdges:Array;
+		public var connectedEdgeIds:Vector.<String>;
 		
 		public function Node(_layoutObject:Object)
 		{
@@ -68,7 +68,7 @@ package scenes.game.display
 			isDirty = true;
 			if(dirtyEdges)
 			{
-				for each(var gameEdgeID:String in connectedEdges)
+				for each(var gameEdgeID:String in connectedEdgeIds)
 				{
 					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 					edgeObj.isDirty = true;

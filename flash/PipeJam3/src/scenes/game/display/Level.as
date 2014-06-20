@@ -438,8 +438,8 @@ package scenes.game.display
 				minY = Math.min(minY, nodeBoundingBox.top);
 				maxX = Math.max(maxX, nodeBoundingBox.right);
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
-				node["bb"] = nodeBoundingBox;
-				node["connectedEdges"] = new Array;
+				node.bb = nodeBoundingBox;
+				node.connectedEdgeIds = new Vector.<String>();
 				nodeLayoutObjs[varId] = node;
 				
 				var xArrayPos:int = Math.floor(nodeBoundingBox.x/gridSize);
@@ -475,9 +475,9 @@ package scenes.game.display
 				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
 				edgeLayoutObj["constraint"] = graphConstraint;
 				edgeLayoutObj["from_var_id"] = result[0];
-				nodeLayoutObjs[result[0]]["connectedEdges"].push(constraintId);
+				nodeLayoutObjs[result[0]]["connectedEdgeIds"].push(constraintId);
 				edgeLayoutObj["to_var_id"] = result[2];
-				nodeLayoutObjs[result[2]]["connectedEdges"].push(constraintId);
+				nodeLayoutObjs[result[2]]["connectedEdgeIds"].push(constraintId);
 				
 				edgeLayoutObjs[constraintId] = edgeLayoutObj;
 				n++;
@@ -827,7 +827,7 @@ package scenes.game.display
 		{
 			node.selectNode(selectedNodes);
 			
-			for each(var gameEdgeID:Object in node.connectedEdges)
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
 			{
 				//need to check if the other end is on screen, and if it is, pass this edge off to that node
 				var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
@@ -1130,10 +1130,10 @@ package scenes.game.display
 			var constraintArray:Array = new Array;
 			var initvarsArray:Array = new Array;
 			//loop through each object
-			for each(var node:Object in selectedNodes)
+			for each(var node:Node in selectedNodes)
 			{
 				//loop through each edge, checking far end for existence in dict
-				for each(var gameEdgeID:String in node.connectedEdges)
+				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
 					var constraint1Value:int = -1;
 					var constraint2Value:int = -1;
