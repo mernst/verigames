@@ -50,7 +50,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
-	import system.MiniMaxSatSolver;
+	//import system.MiniMaxSatSolver;
 	
 	import utils.Base64Encoder;
 	import utils.XObject;

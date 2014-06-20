@@ -112,7 +112,7 @@ package scenes.game.display
 		//looks at each edge, and if there's a conflict, returns true
 		public function hasError():Boolean
 		{
-			for each(var gameEdgeID:String in connectedEdges)
+			for each(var gameEdgeID:String in connectedEdgeIds)
 			{
 				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 				var toNodeID:String = edgeObj["to_var_id"];
