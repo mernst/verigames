@@ -36,7 +36,7 @@ package scenes.game.display
 		public var gridID:String;
 		public var parentGrid:GridSquare;
 		
-		public var connectedEdges:Array;
+		public var connectedEdgeIds:Vector.<String>;
 		public var unused:Boolean;
 		
 		public function Node(_layoutObject:Object)
@@ -90,7 +90,7 @@ package scenes.game.display
 			isDirty = true;
 			if(dirtyEdges)
 			{
-				for each(var gameEdgeID:String in connectedEdges)
+				for each(var gameEdgeID:String in connectedEdgeIds)
 				{
 					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 					edgeObj.isDirty = true;
@@ -112,7 +112,7 @@ package scenes.game.display
 		//looks at each edge, and if there's a conflict, returns true
 		public function hasError():Boolean
 		{
-			for each(var gameEdgeID:String in connectedEdges)
+			for each(var gameEdgeID:String in connectedEdgeIds)
 			{
 				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 				var toNodeID:String = edgeObj["to_var_id"];

@@ -286,46 +286,14 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 						print 'Error parsing graphviz output node line: %s -> %s' % (line, e)
 					#print 'node id:%s x,y: %s,%s' % (id, x, y)
 		layoutf += '\n  },\n' # end vars {}
-		layoutf += '  "constraints": {\n'
-		print 'Calculating final edge layout...'
-		# Sort node inputs/outputs according to x positions
-		for nodeid in nodes:
-			node = nodes[nodeid]
-			node.sortedges()
-		edgelayout = {}
+		layoutf += '  "constraints": [\n'
 		firstline = True
-
-		# Layout edges using node positions (ignore graphviz output)
-		for nodeid in nodes:
-			node = nodes[nodeid]
-			alledges = node.sortedinputs + node.sortedoutputs# [1,2,3] + [4,5,6] = [1,2,3,4,5,6]
-			for edge in alledges:
-				if edgelayout.get(edge.id) is not None:
-					# Already laid out, continue
-					continue
-				edge.pts = []
-				startx = getportx(edge.fromnode, edge.fromport)
-				starty = edge.fromnode.pt.y + 0.5 * edge.fromnode.height
-				endx = getportx(edge.tonode, edge.toport)
-				endy = edge.tonode.pt.y - 0.5 * edge.tonode.height
-				edge.pts.append(Point(startx, starty))
-				dy = getstaggeredlineheight(edge.fromport)
-				edge.pts.append(Point(startx, starty + dy))
-				edge.pts.append(Point(0.5 * (startx + endx), starty + dy))
-				dy = getstaggeredlineheight(edge.toport)
-				edge.pts.append(Point(0.5 * (startx + endx), endy - dy))
-				edge.pts.append(Point(endx, endy - dy))
-				edge.pts.append(Point(endx, endy))
-				ptsjson = []
-				for pt in edge.pts:
-					ptsjson.append({"x":pt.x,"y":pt.y})
-				edgelayout[edge.id] = {"pts": ptsjson}
-				if firstline:
-					firstline = False
-				else:
-					layoutf += ',\n'
-				layoutf += '    "%s":%s' % (edge.id, json.dumps(edgelayout[edge.id], separators=(',', ':'))) # separators: no whitespace
-		layoutf += '\n  }\n' # end constraints {}
+		for edge_id in edges:
+			if not firstline:
+				layoutf += ','
+			layoutf += '"%s"' % edges[edge_id].id
+			firstline = False
+		layoutf += '\n  ]\n' # end constraints 
 		layoutf += '}}' # end layout {} file {}
 		layout_filename = outfilename + 'Layout.json'
 		if remove_graphviz_files:

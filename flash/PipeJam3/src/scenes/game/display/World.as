@@ -300,20 +300,16 @@ package scenes.game.display
 				}
 			}
 			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
-			var background:Texture;
-			var m_backgroundImage:Image;
+			var background:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundClass");
+			var m_backgroundImage:Image = new Image(background);
 			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
-				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
-				m_backgroundImage = new Image(background);
 				m_backgroundImage.width = 480;
 				m_backgroundImage.height = 320;
 
 			}
 			else
 			{
-				background = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
-				m_backgroundImage = new Image(background);
 				if(newWidth != 0)
 					m_backgroundImage.width = newWidth;
 				if(newHeight != 0)
