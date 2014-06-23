@@ -19,10 +19,11 @@ package scenes.game.components
 	import events.MoveEvent;
 	
 	import graph.PropDictionary;
-		
+	
 	import scenes.BaseComponent;
-	import scenes.game.display.NodeSkin;
 	import scenes.game.display.Level;
+	import scenes.game.display.Node;
+	import scenes.game.display.NodeSkin;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -38,7 +39,6 @@ package scenes.game.components
 	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
-	import scenes.game.display.Node;
 	
 	public class MiniMap extends BaseComponent
 	{
@@ -252,17 +252,31 @@ package scenes.game.components
 					}
 				}
 				var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
-			//	if(nodeBitmapData == null)
-				{
-					nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
-				}
-	
-				for (var nodeId:String in nodeDict) {
-					addWidget(nodeDict[nodeId], false);
-				}
 				
-				bitmapTexture = Texture.fromBitmapData(nodeBitmapData);
-				bitmapImage = new Image(bitmapTexture);
+				var dataNotValid:Boolean = true;
+			//	while(dataNotValid)
+				{
+					//if we are updating this after sleeping we crash on null object error. Try to recover.
+					try
+					{
+						if(nodeBitmapData == null)
+						{
+							nodeBitmapData = new BitmapData(width/scaleX, height/scaleY, true, 0x00000000);
+						}
+			
+						for (var nodeId:String in nodeDict) {
+							addWidget(nodeDict[nodeId], false);
+						}
+						
+						bitmapTexture = Texture.fromBitmapData(nodeBitmapData);
+						bitmapImage = new Image(bitmapTexture);
+						dataNotValid = false;
+					}
+					catch(e:Error)
+					{
+						trace("Caught updating error");
+					}
+				}
 				addChildAt(bitmapImage, 1);
 				
 			}
