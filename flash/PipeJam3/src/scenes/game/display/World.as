@@ -754,8 +754,6 @@ package scenes.game.display
 					if (edgeSetGraphViewPanel) {
 						edgeSetGraphViewPanel.setupLevel(active_level);
 						edgeSetGraphViewPanel.onGameComponentsCreated();
-						//edgeSetGraphViewPanel.removeFanfare();
-						//edgeSetGraphViewPanel.hideContinueButton(true);
 					}
 				};
 			

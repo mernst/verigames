@@ -286,6 +286,7 @@ package scenes.game.display
 				}
 			}
 		}
+		
 		private function createEdge(edge:Object):void
 		{
 			var toNodeID:String = edge["to_var_id"];
@@ -293,9 +294,8 @@ package scenes.game.display
 			var fromNodeID:String = edge["from_var_id"];
 			var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 
-			if(fromNodeObj == toNodeObj)
-			return;
-
+			if(fromNodeObj == toNodeObj) return;
+			
 			edge.edgeSprite = drawLine(fromNodeObj, toNodeObj);
 			edge.parentXOffset = gridXOffset;
 			edge.parentYOffset = gridYOffset;

@@ -1,7 +1,6 @@
 {
-    "qid": 3, 
-    "target_score": 303, 
-    "id": "Links", 
+    "qid": 9, 
+    "id": "GroupSelect", 
     "assignments": {
         "var:0": {}, 
         "var:1": {}, 

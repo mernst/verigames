@@ -7,13 +7,7 @@ FILES = [
 	'Links',
 	'Jams',
 	'Widen',
-	'Optimize',
 	'ZoomPan',
-	'Layout',
-	'GroupSelect',
-	'CreateJoint',
-	'SkillsA',
-	'SkillsB',
 ]
 
 def combineLevels(files):

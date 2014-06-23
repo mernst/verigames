@@ -13,6 +13,7 @@ package scenes.game.components
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import scenes.game.display.Node;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -242,7 +243,9 @@ package scenes.game.components
 				addChild(m_tutorialText);
 			}
 			
-	//		recenter();
+			recenter();
+			var currentViewRect:Rectangle = getViewInContentSpace();
+			m_currentLevel.updateLevelDisplay(currentViewRect);
 			
 			if (DEBUG_BOUNDING_BOX) {
 				if (!m_boundingBoxDebug) {
@@ -529,10 +532,10 @@ package scenes.game.components
 				return false;
 			
 			//if we fit inside the current view, don't scale any more
-			var levelBounds:Rectangle = m_currentLevel.m_boundingBox;
-			if(newScaleX < oldScaleX && levelBounds.width*content.scaleX < clipRect.width 
-					&& levelBounds.height*content.scaleY < clipRect.height - 90)
-				return false;
+			//var levelBounds:Rectangle = m_currentLevel.m_boundingBox;
+			//if(newScaleX < oldScaleX && levelBounds.width*content.scaleX < clipRect.width 
+					//&& levelBounds.height*content.scaleY < clipRect.height - 90)
+				//return false;
 			
 			//if one of these got capped, scale the other proportionally
 			if(newScaleX == MAX_SCALE || newScaleY == MAX_SCALE)
@@ -560,11 +563,11 @@ package scenes.game.components
 			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
 			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
 			
-//			content.x -= dX * content.scaleX;
-//			content.y -= dY * content.scaleY;
-//			inactiveContent.x = content.x;
-//			inactiveContent.y = content.y;
-			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			content.x -= dX * content.scaleX;
+			content.y -= dY * content.scaleY;
+			inactiveContent.x = content.x;
+			inactiveContent.y = content.y;
+			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 			
 			return true;
 		}
@@ -819,15 +822,16 @@ package scenes.game.components
 			}
 			
 			// Queue all nodes/edges to add (later we can refine to only on-screen
-			for (var nodeId:String in m_currentLevel.nodeLayoutObjs) {
-				var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
-				m_nodeLayoutQueue.push(nodeLayoutObj);
-			}
-			var edgeId:String;
-			for (edgeId in m_currentLevel.edgeLayoutObjs) {
-				var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
-				m_edgeLayoutQueue.push(edgeLayoutObj);
-			}
+			//for (var nodeId:String in m_currentLevel.nodeLayoutObjs) {
+				//var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
+				//m_nodeLayoutQueue.push(nodeLayoutObj);
+			//}
+			//var edgeId:String;
+			//for (edgeId in m_currentLevel.edgeLayoutObjs) {
+				//var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
+				//m_edgeLayoutQueue.push(edgeLayoutObj);
+			//}
+			onGameComponentsCreated();
 		}
 		
 		public function onTutorialTextChange(evt:TutorialEvent):void
@@ -899,18 +903,19 @@ package scenes.game.components
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
+				trace("center to: " + localPt);
 			} else {
 				// Otherwise center on the first visible box
-			/*	var nodes:Dictionary = m_currentLevel.getNodes();
-				var foundNode:GameNode;
+				var nodes:Dictionary = m_currentLevel.getNodes();
+				var foundNode:Node;
 				for (var nodeId:String in nodes) {
-					var gameNode:GameNode = nodes[nodeId] as GameNode;
-					if (gameNode.visible && (gameNode.alpha > 0) && gameNode.parent) {
+					var gameNode:Node = nodes[nodeId] as Node;
+					if (gameNode.isEditable) {
 						foundNode = gameNode;
 						break;
 					}
 				}
-				if (foundNode) centerOnComponent(foundNode);*/
+				if (foundNode) centerOnComponent(foundNode.skin);
 			}
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),

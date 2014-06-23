@@ -9,6 +9,7 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import starling.display.Quad;
 	
 	import assets.AssetInterface;
 	
@@ -1159,6 +1160,18 @@ package scenes.game.display
 			looptimer = new Timer(1000, 1);
 			looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
 			looptimer.start();
+		}
+		
+		public function getEdgeContainer(edgeId:String):DisplayObject
+		{
+			var edgeObj:Object = edgeLayoutObjs[edgeId];
+			return edgeObj ? edgeObj.edgeSprite : null;
+		}
+		
+		public function getNode(nodeId:String):Node
+		{
+			var node:Node = nodeLayoutObjs[nodeId];
+			return node;
 		}
 		
 		public function solveSelection(updateCallback:Function, doneCallback:Function):void
