@@ -21,15 +21,14 @@ package scenes.game.display
 		public static const LINKS_TUTORIAL:String = "links";
 		public static const JAMS_TUTORIAL:String = "jams";
 		public static const WIDEN_TUTORIAL:String = "widen";
-		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
-		public static const LAYOUT_TUTORIAL:String = "layout";
-		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
-		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
 		public static const SKILLS_B_TUTORIAL:String = "skillsb";
 		// Not currently used:
-		public static const COLOR_TUTORIAL:String = "color";
+		public static const OPTIMIZE_TUTORIAL:String = "optimize";
+		public static const LAYOUT_TUTORIAL:String = "layout";
+		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
+		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
 		
 		private var m_tutorialTag:String;
 		private var m_levelStarted:Boolean = false;
@@ -137,7 +136,7 @@ package scenes.game.display
 			}
 		}
 		
-	/*	public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
+		public function onGameNodeMoved(updatedGameNodes:Vector.<Node>):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			switch (m_tutorialTag) {
@@ -151,7 +150,7 @@ package scenes.game.display
 					break;
 				case LAYOUT_TUTORIAL:
 					for (var i:int = 0; i < updatedGameNodes.length; i++) {
-						if (updatedGameNodes[i].m_id == "var_3") {
+						if (updatedGameNodes[i].id == "var_3") {
 							m_currentToolTipsText = tips;
 							dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 							break;
@@ -160,7 +159,7 @@ package scenes.game.display
 					break;
 			}
 		}
-		*/
+		
 		public function getSolveButtonsAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
@@ -173,14 +172,16 @@ package scenes.game.display
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
-//		//		case WIDGET_TUTORIAL:
-//		//		case WIDGET_PRACTICE_TUTORIAL:
-//				case LOCKED_TUTORIAL:
-//				case LINKS_TUTORIAL:
-//				case JAMS_TUTORIAL:
-//				case WIDEN_TUTORIAL:
-//				case OPTIMIZE_TUTORIAL:
-//					return false;
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case JAMS_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+					return false;
+				case ZOOM_PAN_TUTORIAL:
+					return true;
 			}
 			return true;
 		}
@@ -188,19 +189,19 @@ package scenes.game.display
 		public function getMiniMapShown():Boolean
 		{
 			switch (m_tutorialTag) {
-//	//			case WIDGET_TUTORIAL:
-//	//			case WIDGET_PRACTICE_TUTORIAL:
-//				case LOCKED_TUTORIAL:
-//				case LINKS_TUTORIAL:
-//				case JAMS_TUTORIAL:
-//				case WIDEN_TUTORIAL:
-//				case OPTIMIZE_TUTORIAL:
-//				case ZOOM_PAN_TUTORIAL:
-//				case LAYOUT_TUTORIAL:
-//				case GROUP_SELECT_TUTORIAL:
-//				case CREATE_JOINT_TUTORIAL:
-//				case SKILLS_A_TUTORIAL:
-//					return false;
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case JAMS_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+					return false;
 			}
 			return true;
 		}
@@ -208,35 +209,33 @@ package scenes.game.display
 		public function getLayoutFixed():Boolean
 		{
 			switch (m_tutorialTag) {
-//	//			case WIDGET_TUTORIAL:
-//	//			case WIDGET_PRACTICE_TUTORIAL:
-//				case LOCKED_TUTORIAL:
-//	//			case LINKS_TUTORIAL:
-//				case JAMS_TUTORIAL:
-//				case WIDEN_TUTORIAL:
-//				case OPTIMIZE_TUTORIAL:
-//				case ZOOM_PAN_TUTORIAL:
-//					return true;
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case JAMS_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+					return true;
 			}
-			return false;
+			return true;
 		}
 		
 		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case LOCKED_TUTORIAL:
+					return 1.0;
+				case LINKS_TUTORIAL:
+					return 0.8;
 				case JAMS_TUTORIAL:
-					return 1.1;
-				case OPTIMIZE_TUTORIAL:
-					return 1.35;
+				case WIDEN_TUTORIAL:
+					return 1.0;
 				case ZOOM_PAN_TUTORIAL:
-					return 3.0;
-				case LAYOUT_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
-					return 0.6;
-				case SKILLS_A_TUTORIAL:
-					return 1.4;
-				case SKILLS_B_TUTORIAL:
-					return 3.0;
+					return 6.0;
 			}
 			return 1.0;
 		}
@@ -245,70 +244,55 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case LOCKED_TUTORIAL:
-					return new Point(0, -5);// move up by 5px (pan down)
+					return new Point(0, -15);// move up by 15px (pan down)
 				case LINKS_TUTORIAL:
-					return new Point(15, -10);//move right 15px (pan left) and up (pan down) 10px
-				case JAMS_TUTORIAL:
-					return new Point(0, -5);// move up by 5px (pan down)
-				case WIDEN_TUTORIAL:
-					return new Point(0, -10);// move up by 10px
-				case OPTIMIZE_TUTORIAL:
-					return new Point(0, -10);// move up by 10px (pan down)
+					return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
 				case ZOOM_PAN_TUTORIAL:
-					return new Point( -10, 10);// move left 10px, down 10px
-				case LAYOUT_TUTORIAL:
-					return new Point(0, 5);// move down by 5px (pan up)
-				case GROUP_SELECT_TUTORIAL:
-					return new Point(0, 25);// move down by 25px
-				case SKILLS_A_TUTORIAL:
-					return new Point(0, -15);// move up by 15px
-				case SKILLS_B_TUTORIAL:
-					return new Point(75, 75);// pan left 75 px, up by 75px
+					return new Point(-200, 100);// move left , up
 			}
 			return new Point();
 		}
 		
 		private function pointToNode(name:String):Function
 		{
-			return null;//function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name).skin; };
 		}
 		
 		private function pointToEdge(name:String):Function
 		{
-			return null;//function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+			return function(currentLevel:Level):DisplayObject
+			{
+				return currentLevel.getEdgeContainer(name);
+			};
 		}
 		
 		private function pointToEdgeSegment(edgeName:String, segmentIndex:int):Function
 		{
-			return null;//function(currentLevel:Level):DisplayObject {
-		//		var container:GameEdgeContainer = currentLevel.getEdgeContainer(edgeName);
-		//		if (container != null) return container.getSegment(segmentIndex);
-		//		return null;
-		//	};
+			return function(currentLevel:Level):DisplayObject {
+				var container:DisplayObject = currentLevel.getEdgeContainer(edgeName);
+				if (container != null) return container.getSegment(segmentIndex);
+				return null;
+			};
 		}
 		
 		private function pointToPassage(name:String):Function
 		{
-			return null;//function(currentLevel:Level):DisplayObject {
-		//		var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-		//		if (edge && edge.innerFromBoxSegment) {
-		//			return edge.innerFromBoxSegment;
-		//		} else {
-		//			return null;
-		//		}
-		//	};
+			return function(currentLevel:Level):DisplayObject {
+				var edge:DisplayObject = currentLevel.getEdgeContainer(name);
+				if (edge && edge.innerFromBoxSegment) {
+					return edge.innerFromBoxSegment;
+				} else {
+					return null;
+				}
+			};
 		}
 		
 		private function pointToClash(name:String):Function
 		{
-			return null;//function(currentLevel:Level):DisplayObject {
-		//		var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-		//		if (edge && edge.errorContainer) {
-		//			return edge.errorContainer;
-		//		} else {
-		//			return null;
-		//		}
-		//	};
+			return function(currentLevel:Level):DisplayObject {
+				var edge:DisplayObject = currentLevel.getEdgeContainer(name);
+				return edge; // TODO: bottom of edge
+			};
 		}
 		
 		public function getPersistentToolTipsInfo():Vector.<TutorialManagerTextInfo>
@@ -358,9 +342,9 @@ package scenes.game.display
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click on WIDGETS to change their color.\n" +
-						"Make them a solid color to get points!",
+						"Get 1 point for matching a widget to its outline color!",
 						null,
-						pointToNode("IntroWidget2"),
+						pointToNode("var_1"),
 						NineSliceBatch.TOP, null);
 				case WIDGET_PRACTICE_TUTORIAL:
 					return new TutorialManagerTextInfo(
@@ -373,7 +357,7 @@ package scenes.game.display
 						"Gray Widgets are locked.\n" +
 						"Their colors can't be changed.",
 						null,
-						pointToNode("LockedWidget2"),
+						pointToNode("var_0"),
 						NineSliceBatch.TOP, null);
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
@@ -383,7 +367,7 @@ package scenes.game.display
 						"Widgets create wide\n" +
 						"Links.",
 						null,
-						pointToEdge("e1__OUT__"),
+						pointToEdge("var_0 -> type_1__var_0"),
 						NineSliceBatch.LEFT, null);
 				case JAMS_TUTORIAL:
 					return new TutorialManagerTextInfo(
@@ -400,13 +384,6 @@ package scenes.game.display
 						null,
 						null,
 						null, null);*/
-				case OPTIMIZE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Sometimes the best score still has Jams.\n" +
-						"Try different configurations to improve your score!",
-						null,
-						null,
-						NineSliceBatch.BOTTOM_LEFT, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"       Larger levels require navigation:      \n" +
@@ -416,6 +393,14 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
+				// The following are not currently in use:
+				case OPTIMIZE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Sometimes the best score still has Jams.\n" +
+						"Try different configurations to improve your score!",
+						null,
+						null,
+						NineSliceBatch.BOTTOM_LEFT, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"The LAYOUT can be changed to help visualize the\n" +
@@ -450,15 +435,6 @@ package scenes.game.display
 						null,
 						null,
 						NineSliceBatch.TOP_LEFT, null);
-				// The following are not currently in use:
-				case COLOR_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Some Widgets want to be a certain color. Match\n" +
-						"the Widgets to the color squares to collect\n" +
-						"bonus points.",
-						null,
-						null,
-						null, null);
 			}
 			return null;
 		}

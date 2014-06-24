@@ -9,7 +9,7 @@
     <movie width="960" />
     <movie height="640" />
     <movie version="11" />
-    <movie minorVersion="1" />
+    <movie minorVersion="4" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
     <movie preferredSDK="Flex 4.6.0, AIR 3.5;4.6.0, 3.5;" />

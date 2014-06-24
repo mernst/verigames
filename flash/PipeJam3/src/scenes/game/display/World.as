@@ -174,7 +174,7 @@ package scenes.game.display
 		{
 			if(miniMap && m_initQueue.length == 0)
 			{
-				miniMap.centerMap();
+				//miniMap.centerMap();
 				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				loadTime = new Date().getTime() - PipeJamGameScene.startLoadTime;
 				trace("Complete Time", loadTime);
@@ -759,8 +759,6 @@ package scenes.game.display
 					if (edgeSetGraphViewPanel) {
 						edgeSetGraphViewPanel.setupLevel(active_level);
 						edgeSetGraphViewPanel.onGameComponentsCreated();
-						//edgeSetGraphViewPanel.removeFanfare();
-						//edgeSetGraphViewPanel.hideContinueButton(true);
 					}
 				};
 			
@@ -1062,6 +1060,8 @@ package scenes.game.display
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			//called later by initScoring
 			//onWidgetChange();
+			trace("Level.initialize()");
+			active_level.initialize();
 			trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			edgeSetGraphViewPanel.loadLevel();

@@ -1,7 +1,7 @@
 {
-    "qid": 2, 
-    "target_score": 3, 
-    "id": "LockedWidget", 
+    "qid": 8, 
+    "target_score": 50, 
+    "id": "Layout", 
     "assignments": {
         "var:4": {}, 
         "var:0": {}, 

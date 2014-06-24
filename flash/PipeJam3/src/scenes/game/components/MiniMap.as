@@ -5,26 +5,8 @@ package scenes.game.components
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
-	import assets.AssetInterface;
-	
-	import constraints.Constraint;
-	import constraints.ConstraintVar;
-	
-	import display.BasicButton;
-	import display.MapHideButton;
-	import display.MapShowButton;
-	import display.TextBubble;
-	
-	import events.MiniMapEvent;
-	import events.MoveEvent;
-	
-	import graph.PropDictionary;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
 	import scenes.game.display.Node;
 	import scenes.game.display.NodeSkin;
-	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -38,6 +20,19 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
+	import assets.AssetInterface;
+	import constraints.Constraint;
+	import constraints.ConstraintVar;
+	import display.BasicButton;
+	import display.MapHideButton;
+	import display.MapShowButton;
+	import display.TextBubble;
+	import events.MiniMapEvent;
+	import events.MoveEvent;
+	import graph.PropDictionary;
+	import scenes.BaseComponent;
+	import scenes.game.display.Level;
+	import scenes.game.display.NodeSkin;
 	import utils.XMath;
 	
 	public class MiniMap extends BaseComponent

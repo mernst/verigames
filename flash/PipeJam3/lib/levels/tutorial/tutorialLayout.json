@@ -1,92 +1,208 @@
 {"levels":[
 {
-"id": "IntroWidget",
-"tutorial": "widget",
-"qid": 0,
-"layout":{"constraints":[],"vars":{"var_0":{"x":"28.4","y":"16.4"},"var_1":{"x":"6.1","y":"6.0"}}}
+    "qid": 0,
+    "layout": {
+        "vars": {
+            "var_1": {
+                "y": "6.0",
+                "x": "6.1"
+            },
+            "var_0": {
+                "y": "12.4",
+                "x": "12.4"
+            }
+        },
+        "constraints": []
+    },
+    "id": "IntroWidget",
+    "tutorial": "widget"
 }
 ,
 {
-"id": "WidgetPractice",
-"tutorial": "widgetpractice",
-"qid": 1,
-"layout":{"constraints":[],"vars":{"var_3":{"x":"3.7","y":"6.3"},"var_2":{"x":"7.3","y":"24.1"},"var_0":{"x":"38.0","y":"24.1"},"var_1":{"x":"50.8","y":"5.9"}}}
+    "qid": 1,
+    "layout": {
+        "vars": {
+            "var_3": {
+                "y": "6",
+                "x": "3"
+            },
+            "var_2": {
+                "y": "12",
+                "x": "3"
+            },
+            "var_1": {
+                "y": "6",
+                "x": "16"
+            },
+            "var_0": {
+                "y": "12",
+                "x": "16"
+            }
+        },
+        "constraints": []
+    },
+    "id": "WidgetPractice",
+    "tutorial": "widgetpractice"
 }
 ,
 {
-"id": "LockedWidget",
-"qid": 2,
-"tutorial": "locked",
-"layout":{"constraints":[],"vars":{"var_3":{"x":"11.3","y":"46.7"},"var_0":{"x":"9.3","y":"6.6"},"var_4":{"x":"53.1","y":"6.0"},"var_1":{"x":"53.0","y":"47.3"},"var_2":{"x":"32.5","y":"26.8"}}}
+    "qid": 2,
+    "layout": {
+        "vars": {
+            "var_4": {
+                "y": "0",
+                "x": "12"
+            },
+            "var_3": {
+                "y": "12",
+                "x": "0"
+            },
+            "var_2": {
+                "y": "6",
+                "x": "6"
+            },
+            "var_1": {
+                "y": "12",
+                "x": "12"
+            },
+            "var_0": {
+                "y": "0",
+                "x": "0"
+            }
+        },
+        "constraints": []
+    },
+    "id": "LockedWidget",
+    "tutorial": "locked"
 }
 ,
 {
-"id": "Links",
-"qid": 3,
-"tutorial": "links",
-"layout":{"constraints":["var_1 -> type_1__var_1"],"vars":{"type_0__var_2":{"x":"102.0","y":"7.4"},"var_0":{"x":"25.7","y":"5.1"},"type_1__var_1":{"x":"67.1","y":"53.3"},"var_2":{"x":"120.7","y":"62.2"},"var_1":{"x":"67.3","y":"12.5"},"type_1__var_0":{"x":"15.5","y":"62.2"}}}
+    "qid": 3,
+    "layout": {
+        "vars": {
+            "type_0__var_2": {
+                "y": "0",
+                "x": "28"
+            },
+            "type_1__var_1": {
+                "y": "12",
+                "x": "16"
+            },
+            "type_1__var_0": {
+                "y": "16",
+                "x": "0"
+            },
+            "var_2": {
+                "y": "16",
+                "x": "32"
+            },
+            "var_1": {
+                "y": "4",
+                "x": "16"
+            },
+            "var_0": {
+                "y": "0",
+                "x": "4"
+            }
+        },
+        "constraints": [
+            "var_0 -> type_1__var_0",
+            "var_1 -> type_1__var_1",
+            "type_0__var_2 -> var_2"
+        ]
+    },
+    "id": "Links",
+    "tutorial": "links"
 }
 ,
 {
-"id": "Jams",
-"qid": 4,
-"tutorial": "jams",
-"layout":{"constraints":["var_0 -> type_0__var_0"],"vars":{"var_0":{"x":"46.5","y":"-8.9"},"type_0__var_0":{"x":"46.5","y":"27.0"}}}
+    "qid": 4,
+    "layout": {
+        "vars": {
+            "type_0__var_0": {
+                "y": "16",
+                "x": "0"
+            },
+            "var_0": {
+                "y": "0",
+                "x": "0"
+            }
+        },
+        "constraints": [
+            "var_0 -> type_0__var_0"
+        ]
+    },
+    "id": "Jams",
+    "tutorial": "jams"
 }
 ,
 {
-"id": "Widen",
-"qid": 5,
-"tutorial": "widen",
-"layout":{"constraints":["type_1__var_3 -> var_3","var_3 -> type_1__var_3","type_1__var_0 -> var_0","var_1 -> var_2"],"vars":{"var_3":{"x":"105.5","y":"30.0"},"var_1":{"x":"23.7","y":"30.5"},"var_0":{"x":"63.6","y":"63.2"},"var_2":{"x":"23.5","y":"63.9"},"type_1__var_0":{"x":"63.5","y":"29.8"},"type_1__var_3":{"x":"106.1","y":"62.7"}}}
+    "qid": 5,
+    "layout": {
+        "vars": {
+            "type_1__var_0": {
+                "y": "0",
+                "x": "16"
+            },
+            "type_1__var_3": {
+                "y": "12",
+                "x": "32"
+            },
+            "var_3": {
+                "y": "0",
+                "x": "32"
+            },
+            "var_2": {
+                "y": "12",
+                "x": "0"
+            },
+            "var_1": {
+                "y": "0",
+                "x": "0"
+            },
+            "var_0": {
+                "y": "12",
+                "x": "16"
+            }
+        },
+        "constraints": [
+            "type_1__var_3 -> var_3",
+            "var_3 -> type_1__var_3",
+            "type_1__var_0 -> var_0",
+            "var_1 -> var_2"
+        ]
+    },
+    "id": "Widen",
+    "tutorial": "widen"
 }
 ,
 {
-"id": "Optimize",
-"qid": 6,
-"tutorial": "optimize",
-"layout":{"constraints":["var_3 -> var_2"],"vars":{"type_0__var_3":{"x":"113.0","y":"82.9"},"type_0__var_0":{"x":"58.0","y":"35.1"},"var_0":{"x":"80.2","y":"9.5"},"var_1":{"x":"120.2","y":"33.1"},"var_3":{"x":"103.9","y":"55.0"},"var_2":{"x":"89.0","y":"34.2"}}}
-}
-,
-{
-"id": "ZoomPan",
-"qid": 7,
-"tutorial": "zoompan",
-"layout":{"constraints":["type_1__var_1 -> var_1"],"vars":{"type_1__var_1":{"x":"72.1","y":"38.1"},"var_0":{"x":"-1.9","y":"-2.7"},"type_0__var_0":{"x":"40.6","y":"49.7"},"var_1":{"x":"72.0","y":"105.1"}}}
-}
-,
-{
-"id": "Layout",
-"qid": 8,
-"tutorial": "layout",
-"layout":{"constraints":[],"vars":{"var_2":{"x":"10.3","y":"30.4"},"var_3":{"x":"10.7","y":"27.7"},"var_4":{"x":"9.1","y":"27.8"},"var_0":{"x":"9.0","y":"27.7"},"var_1":{"x":"12.7","y":"27.7"}}}
-}
-,
-{
-"id": "GroupSelect",
-"qid": 9,
-"tutorial": "groupselect",
-"layout":{"constraints":["var_2 -> type_1__var_2","var_0 -> type_1__var_0","var_1 -> type_1__var_1"],"vars":{"type_1__var_1":{"x":"34.9","y":"-3.3"},"var_1":{"x":"132.8","y":"16.1"},"type_1__var_0":{"x":"12.3","y":"8.4"},"var_2":{"x":"87.2","y":"15.7"},"var_0":{"x":"110.2","y":"15.7"},"type_1__var_2":{"x":"-10.5","y":"19.3"}}}
-}
-,
-{
-"id": "CreateJoint",
-"qid": 10,
-"tutorial": "createjoint",
-"layout":{"constraints":["var_0 -> type_1__var_0"],"vars":{"var_0":{"x":"33.9","y":"-12.8"},"type_1__var_0":{"x":"58.2","y":"25.9"}}}
-}
-,
-{
-"id": "SkillsA",
-"qid": 11,
-"tutorial": "skillsa",
-"layout":{"constraints":["var_9 -> type_0__var_9","var_1 -> var_2","var_5 -> var_8","var_7 -> var_8","var_3 -> var_4","var_0 -> type_0__var_0","var_8 -> var_0","var_8 -> var_9","type_1__var_0 -> var_0","type_1__var_8 -> var_8","var_5 -> var_6","var_0 -> var_3","var_2 -> var_3"],"vars":{"var_4":{"x":"64.4","y":"136.6"},"var_3":{"x":"58.5","y":"108.5"},"var_9":{"x":"108.6","y":"64.5"},"var_8":{"x":"72.3","y":"36.3"},"type_1__var_8":{"x":"23.9","y":"4.8"},"var_0":{"x":"80.9","y":"79.8"},"var_6":{"x":"111.4","y":"32.6"},"var_2":{"x":"39.5","y":"80.9"},"type_0__var_9":{"x":"111.5","y":"92.7"},"type_0__var_0":{"x":"90.2","y":"124.0"},"var_5":{"x":"74.9","y":"1.1"},"type_1__var_0":{"x":"64.0","y":"58.4"},"var_1":{"x":"36.6","y":"57.0"},"var_7":{"x":"48.3","y":"-0.4"}}}
-}
-,
-{
-"id": "SkillsB",
-"qid": 12,
-"tutorial": "skillsb",
-"layout":{"constraints":["var_13 -> var_14"],"vars":{"var_11":{"x":"277.1","y":"-18.7"},"type_1__var_1":{"x":"99.6","y":"-120.9"},"var_7":{"x":"212.4","y":"-73.1"},"var_1":{"x":"102.2","y":"-97.7"},"var_5":{"x":"182.3","y":"-72.8"},"var_18":{"x":"328.4","y":"59.0"},"type_0__var_4":{"x":"168.6","y":"-21.3"},"var_8":{"x":"227.5","y":"-46.5"},"type_1__var_0":{"x":"156.6","y":"-92.9"},"type_1__var_7":{"x":"219.9","y":"-97.2"},"var_21":{"x":"240.3","y":"74.3"},"type_1__var_19":{"x":"212.1","y":"-0.6"},"var_6":{"x":"194.3","y":"-97.7"},"type_0__var_17":{"x":"254.8","y":"8.1"},"var_3":{"x":"118.6","y":"-75.9"},"var_9":{"x":"209.0","y":"-17.6"},"var_12":{"x":"286.3","y":"9.2"},"type_0__var_14":{"x":"350.3","y":"142.4"},"var_10":{"x":"277.0","y":"-49.4"},"var_13":{"x":"326.9","y":"83.2"},"var_19":{"x":"218.9","y":"21.6"},"var_14":{"x":"344.4","y":"109.2"},"var_2":{"x":"128.9","y":"-97.8"},"var_16":{"x":"329.9","y":"30.4"},"var_0":{"x":"153.0","y":"-72.7"},"type_0__var_3":{"x":"122.5","y":"-43.2"},"var_20":{"x":"227.4","y":"49.7"},"var_15":{"x":"327.1","y":"5.6"},"type_1__var_10":{"x":"270.8","y":"-70.2"},"var_4":{"x":"159.5","y":"-44.6"},"var_17":{"x":"236.7","y":"-18.6"}}}
+    "qid": 7,
+    "layout": {
+        "vars": {
+            "type_1__var_1": {
+                "y": "40",
+                "x": "60"
+            },
+            "var_1": {
+                "y": "120",
+                "x": "20"
+            },
+            "type_0__var_0": {
+                "y": "49.7",
+                "x": "40.6"
+            },
+            "var_0": {
+                "y": "-2.7",
+                "x": "-1.9"
+            }
+        },
+        "constraints": [
+            "type_1__var_1 -> var_1",
+            "var_0 -> type_0__var_0"
+        ]
+    },
+    "id": "ZoomPan",
+    "tutorial": "zoompan"
 }
 ]}

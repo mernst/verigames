@@ -1,6 +1,26 @@
 {
-"id": "WidgetPractice",
-"tutorial": "widgetpractice",
-"qid": 1,
-"layout":{"constraints":{},"vars":{"var_3":{"x":"-0.37","h":1,"y":"-0.63","w":1.8},"var_2":{"x":"0.73","h":1,"y":"2.41","w":1.8},"var_0":{"x":"3.80","h":1,"y":"2.41","w":1.8},"var_1":{"x":"5.08","h":1,"y":"-0.59","w":1.8}}}
+    "qid": 1, 
+    "layout": {
+        "vars": {
+            "var_3": {
+                "y": "6", 
+                "x": "3"
+            }, 
+            "var_2": {
+                "y": "12", 
+                "x": "3"
+            }, 
+            "var_1": {
+                "y": "6", 
+                "x": "16"
+            }, 
+            "var_0": {
+                "y": "12", 
+                "x": "16"
+            }
+        }, 
+        "constraints": []
+    }, 
+    "id": "WidgetPractice", 
+    "tutorial": "widgetpractice"
 }

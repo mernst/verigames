@@ -105,7 +105,7 @@ package scenes.game.display
 				isNarrow = !_isWide;
 				isDirty = true;
 				var constraintVar:ConstraintVar = levelGraph.variableDict[id];
-				constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
+				if (constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW) == _isWide) constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
 			}
 		}
 		
