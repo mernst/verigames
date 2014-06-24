@@ -174,7 +174,7 @@ package scenes.game.display
 			{
 				// Apply the glow filter if not already there
 				if(!this.filter)
-					this.filter = BlurFilter.createGlow();
+					this.filter = BlurFilter.createGlow(0xff00ff);
 			}
 			else
 			{
