@@ -26,9 +26,9 @@ package events
 		public static const LEVEL_LOADED:String = "level_loaded";
 		
 		public static const SOLVE_SELECTION:String = "SOLVE_SELECTION";
+		public static const STOP_SOLVER:String = "STOP_SOLVER";
 		public static const MAKE_SELECTION_WIDE:String = "MAKE_SELECTION_WIDE";
 		public static const MAKE_SELECTION_NARROW:String = "MAKE_SELECTION_NARROW";
-
 		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{

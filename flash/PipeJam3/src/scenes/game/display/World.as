@@ -359,7 +359,7 @@ package scenes.game.display
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			addEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
-			
+			addEventListener(MenuEvent.STOP_SOLVER, onStopSolving);
 			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
@@ -390,6 +390,11 @@ package scenes.game.display
 				if(active_level)
 					active_level.solverUpdate(vars, unsat_weight);
 			}
+		}
+		
+		private function onStopSolving():void
+		{
+			solverDoneCallback("");
 		}
 		
 		public function solverDoneCallback(errMsg:String):void
