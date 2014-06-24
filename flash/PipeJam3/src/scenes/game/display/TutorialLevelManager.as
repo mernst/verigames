@@ -170,7 +170,7 @@ package scenes.game.display
 		}
 		
 		public function getPanZoomAllowed():Boolean
-		{return true;
+		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
@@ -180,6 +180,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 					return false;
+				case ZOOM_PAN_TUTORIAL:
+					return true;
 			}
 			return true;
 		}
@@ -217,7 +219,7 @@ package scenes.game.display
 				case ZOOM_PAN_TUTORIAL:
 					return true;
 			}
-			return false;
+			return true;
 		}
 		
 		public function getStartScaleFactor():Number
@@ -233,7 +235,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					return 1.0;
 				case ZOOM_PAN_TUTORIAL:
-					return 10.0;
+					return 6.0;
 			}
 			return 1.0;
 		}
@@ -245,10 +247,8 @@ package scenes.game.display
 					return new Point(0, -15);// move up by 15px (pan down)
 				case LINKS_TUTORIAL:
 					return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
-				case WIDEN_TUTORIAL:
-					return new Point(60, 0);// move right by 60px
 				case ZOOM_PAN_TUTORIAL:
-					return new Point(60, -80);// move left 80px, up 80px
+					return new Point(-200, 100);// move left , up
 			}
 			return new Point();
 		}
@@ -260,7 +260,10 @@ package scenes.game.display
 		
 		private function pointToEdge(name:String):Function
 		{
-			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+			return function(currentLevel:Level):DisplayObject
+			{
+				return currentLevel.getEdgeContainer(name);
+			};
 		}
 		
 		private function pointToEdgeSegment(edgeName:String, segmentIndex:int):Function

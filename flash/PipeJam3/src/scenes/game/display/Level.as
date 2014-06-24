@@ -240,6 +240,11 @@ package scenes.game.display
 					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
 				}
 			}
+			var gameNode:Node = nodeLayoutObjs[graphVar.id] as Node;
+			if (gameNode && gameNode.isNarrow == assignmentIsWide) {
+				gameNode.isNarrow = !assignmentIsWide;
+				gameNode.setNodeDirty(true);
+			}
 			
 			//and then set from local storage, if there (but only if we really want it)
 			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[graphVar.id] != null)
@@ -355,12 +360,12 @@ package scenes.game.display
 		}
 		
 		//called on when GridViewPanel content is moving
-		public function updateLevelDisplay(viewRect:Rectangle):void
+		public function updateLevelDisplay(viewRect:Rectangle = null):void
 		{
-			var leftGridNumber:int = Math.floor(viewRect.left/gridSize);
-			var rightGridNumber:int = Math.floor(viewRect.right/gridSize);
-			var topGridNumber:int = Math.floor(viewRect.top/gridSize);
-			var bottomGridNumber:int = Math.floor(viewRect.bottom/gridSize);
+			var leftGridNumber:int = Math.floor(viewRect ? viewRect.left/gridSize : -1);
+			var rightGridNumber:int = Math.floor(viewRect ? viewRect.right/gridSize : gridSize);
+			var topGridNumber:int = Math.floor(viewRect ? viewRect.top/gridSize : -1);
+			var bottomGridNumber:int = Math.floor(viewRect ? viewRect.bottom/gridSize : gridSize);
 			var newCurrentGridDict:Dictionary = new Dictionary;
 			
 			//create a new dictionary of current grid squares, removing those from the old dict
@@ -381,7 +386,7 @@ package scenes.game.display
 			{
 				//these we need to check the bounding box to see if it overlaps with the view rect,
 				//if it does, keep it around, else destroy it
-				if(gridSquare.intersects(viewRect))
+				if(viewRect == null || gridSquare.intersects(viewRect))
 				{
 					gridSquare.activate();
 					newCurrentGridDict[gridSquare.id] = gridSystemDict[gridSquare.id];
@@ -505,6 +510,8 @@ package scenes.game.display
 		
 		public function start():void
 		{
+			// create all nodes, edges for tutorials so that the tutorial indicators/arrows have something to point at
+			if (tutorialManager) updateLevelDisplay();
 			initialize();
 			
 			m_disposed = false;

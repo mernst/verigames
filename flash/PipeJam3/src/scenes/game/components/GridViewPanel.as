@@ -275,11 +275,11 @@ package scenes.game.components
 		
 		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
-			if (evt.prop == PropDictionary.PROP_NARROW) {
-				contentBarrier.visible = false;
-			} else {
-				contentBarrier.visible = true;
-			}
+			//if (evt.prop == PropDictionary.PROP_NARROW) {
+				//contentBarrier.visible = false;
+			//} else {
+				//contentBarrier.visible = true;
+			//}
 		}
 		
 		private function endSelectMode():void
@@ -558,7 +558,8 @@ package scenes.game.components
 			onContentScaleChanged(oldScale);
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
-			
+			trace(origViewCoords, " origViewCoords");
+			trace(newViewCoords, " newViewCoords");
 			// Adjust so that original centered point is still in the middle
 			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
 			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
@@ -897,7 +898,7 @@ package scenes.game.components
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
 			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
-			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * VIEW_HEIGHT)) {
+			if ((m_currentLevel && m_currentLevel.tutorialManager) || ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * VIEW_HEIGHT))) {
 				// If about the size of the window, just center the level
 				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				globPt = m_currentLevel.localToGlobal(centerPt);
@@ -910,7 +911,7 @@ package scenes.game.components
 				var foundNode:Node;
 				for (var nodeId:String in nodes) {
 					var gameNode:Node = nodes[nodeId] as Node;
-					if (gameNode.isEditable) {
+					if (gameNode && gameNode.isEditable && gameNode.skin) {
 						foundNode = gameNode;
 						break;
 					}
@@ -920,10 +921,15 @@ package scenes.game.components
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
+			trace(newScale, " <-- newScale");
+			trace(m_currentLevel.m_boundingBox, " <-- m_currentLevel.m_boundingBox");
+			trace(content.scaleX, content.scaleY, " <-- content.scaleX,Y");
+			trace(content.x, content.y, " <-- pre scale");
 			scaleContent(newScale, newScale);
-			
+			trace(content.x, content.y, " <-- pre move");
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
+				trace(startPtOffset, " <-- startPtOffset");
 				content.x += startPtOffset.x * content.scaleX;
 				content.y += startPtOffset.y * content.scaleY;
 				inactiveContent.x = content.x;
@@ -931,7 +937,7 @@ package scenes.game.components
 				newScale = m_currentLevel.tutorialManager.getStartScaleFactor();
 				scaleContent(newScale, newScale);
 			}
-			
+			trace(content.x, content.y, " <-- after move");
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
