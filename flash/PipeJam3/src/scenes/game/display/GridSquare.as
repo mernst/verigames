@@ -5,16 +5,12 @@ package scenes.game.display
 	import flash.utils.Dictionary;
 	
 	import assets.AssetsAudio;
-	import assets.AssetsFont;
 	
 	import audio.AudioManager;
-	
-	import constraints.Constraint;
-	import constraints.ConstraintGraph;
+
 	import constraints.ConstraintVar;
 	import constraints.events.VarChangeEvent;
 	
-	import events.MoveEvent;
 	import events.SelectionEvent;
 	import events.UndoEvent;
 	
@@ -176,13 +172,10 @@ package scenes.game.display
 					edgeDrawingBoard.removeFromParent(true);
 				nodeDrawingBoard = new Sprite;
 				edgeDrawingBoard = new Sprite;
-		//		nodeDrawingBoard.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
-		//		nodeDrawingBoard.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onAddedToStage); 
 				
 				nodeDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
 
 				edgeList = new Array;
-
 				for each(var node:Node in nodeList)
 				{											
 					if(!node.skin)
@@ -289,9 +282,9 @@ package scenes.game.display
 		private function createEdge(edge:Object):void
 		{
 			var toNodeID:String = edge["to_var_id"];
-			var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+			var toNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[toNodeID];
 			var fromNodeID:String = edge["from_var_id"];
-			var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+			var fromNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 
 			if(fromNodeObj == toNodeObj)
 			return;
@@ -307,19 +300,19 @@ package scenes.game.display
 			if(edge.edgeSprite)
 			{	
 				var toNodeID:String = edge["to_var_id"];
-				var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+				var toNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[toNodeID];
 				var fromNodeID:String = edge["from_var_id"];
-				var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+				var fromNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 			
 				edge.edgeSprite.parent.unflatten();
-				setupLine(fromNodeObj, toNodeObj, edge.edgeSprite);
+				setupLine(fromNodeObj, toNodeObj, edge.edgeSprite, true);
 				edge.edgeSprite.parent.flatten();
 			}
 			edge.isDirty = false;
 		}
 		
 		//need to keep track of lines
-		public function drawLine(fromNodeObj:Object, toNodeObj:Object):Quad
+		public function drawLine(fromNodeObj:Node, toNodeObj:Node):Quad
 		{
 			var p1:Point = fromNodeObj.centerPoint;
 			var p2:Point = toNodeObj.centerPoint;
@@ -329,10 +322,16 @@ package scenes.game.display
 			var hyp:Number = Math.sqrt(a+b);
 			
 			//draw the quad flat, rotate later
-			var lineQuad:Quad = new Quad(hyp, 5);
+			var lineQuad:Quad = new Triangle(hyp, 5);
+			setupLine(fromNodeObj, toNodeObj, lineQuad, true);
+			rotateLine(p1, p2, hyp, lineQuad);
 			
-			setupLine(fromNodeObj, toNodeObj, lineQuad);
-			
+			edgeDrawingBoard.addChild(lineQuad);
+			return lineQuad;
+		}
+		
+		protected function rotateLine(p1:Point, p2:Point, hyp:Number, line:Quad):void
+		{
 			//get theta
 			//Sin(x) = opp/hyp
 			var theta:Number = Math.asin( (p2.y-p1.y) / hyp );  // radians
@@ -344,42 +343,31 @@ package scenes.game.display
 				theta = (Math.PI/2) + ((Math.PI/2) - theta);
 			else if(dX>0 && dY>0) // Q3
 				theta = -Math.PI - theta;
-			lineQuad.y = 1;
-			lineQuad.rotation = theta;
+			else if(dX > 0 && dY == 0)
+				theta = -Math.PI;
 			
-			lineQuad.x = -lineQuad.bounds.left + Math.min(p1.x, p2.x) - componentXDisplacement;
-			lineQuad.y = -lineQuad.bounds.top + Math.min(p1.y, p2.y) -  componentYDisplacement;
-			var levelBB:Rectangle = World.m_world.active_level.m_boundingBox;
-
-			edgeDrawingBoard.addChild(lineQuad);
-
-			return lineQuad;
+			line.y = 1;
+			line.rotation = theta;
+			line.x = -line.bounds.left + Math.min(p1.x, p2.x) - componentXDisplacement;
+			line.y = -line.bounds.top + Math.min(p1.y, p2.y) -  componentYDisplacement;
 		}
 		
-		private function setupLine(fromNodeObj:Object, toNodeObj:Object, lineQuad:Quad):void
+		private function setupLine(fromNodeObj:Node, toNodeObj:Node, lineQuad:Quad, line1:Boolean):void
 		{
+			var p1:Point = fromNodeObj.centerPoint;
+			var p2:Point = toNodeObj.centerPoint;
 			var fromColor:int = NodeSkin.getColor(fromNodeObj);
-			var toColor:int = fromColor;
+			var toColor:int = NodeSkin.getColor(toNodeObj);
 			
-			if (!fromNodeObj.isNarrow && toNodeObj.isNarrow)
-			{
+			if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
 				toColor = 0xff0000;
-				lineQuad.setVertexAlpha(0, 1);
-				lineQuad.setVertexAlpha(1, 0.6);
-				lineQuad.setVertexAlpha(2, 1);
-				lineQuad.setVertexAlpha(3, 0.6);
-			}
-			else
-			{
-				lineQuad.setVertexAlpha(0, fromNodeObj.isNarrow ? 0 : 1);
-				lineQuad.setVertexAlpha(1, toNodeObj.isNarrow ? 0 : 0.1);
-				lineQuad.setVertexAlpha(2, 1);
-				lineQuad.setVertexAlpha(3, 0.1);
-			}
+			
+			
 			lineQuad.setVertexColor(0, fromColor);
 			lineQuad.setVertexColor(1, toColor);
 			lineQuad.setVertexColor(2, fromColor);
-			lineQuad.setVertexColor(3, toColor);
+			lineQuad.setVertexColor(3, fromColor);
+
 		}
 		
 		public function removeFromParent(dispose:Boolean):void
