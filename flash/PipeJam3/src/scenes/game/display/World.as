@@ -178,6 +178,10 @@ package scenes.game.display
 				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				loadTime = new Date().getTime() - PipeJamGameScene.startLoadTime;
 				trace("Complete Time", loadTime);
+				if(!active_level.tutorialManager)
+				{
+					miniMap.centerMap();
+				}
 			}
 			else if (m_initQueue.length > 0) {
 				var time1:Number = new Date().getTime();
@@ -1082,6 +1086,7 @@ package scenes.game.display
 			trace("gameControlPanel.newLevelSelected");
 			gameControlPanel.newLevelSelected(active_level);
 			miniMap.isDirty = true;
+
 			trace("World.onLevelLoaded complete");
 		}
 		
