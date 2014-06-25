@@ -1076,7 +1076,7 @@ package scenes.game.display
 				marqueeRect.removeChildren();
 				//scale line size
 				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
-				marqueeRect.graphics.lineStyle(lineSize, 0xffffff);
+				marqueeRect.graphics.lineStyle(lineSize, 0x000000);
 				marqueeRect.graphics.moveTo(0,0);
 				var pt1:Point = globalToLocal(startingPoint);
 				var pt2:Point = globalToLocal(currentPoint);

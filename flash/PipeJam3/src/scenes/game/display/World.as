@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
+	import flash.display.Sprite;
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -73,8 +74,8 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
-		protected var m_backgroundLayer:Sprite;
-		protected var m_foregroundLayer:Sprite;
+		protected var m_backgroundLayer:starling.display.Sprite;
+		protected var m_foregroundLayer:starling.display.Sprite;
 		
 		protected var shareDialog:SaveDialog;
 		
@@ -145,7 +146,6 @@ package scenes.game.display
 			trace("Done creating World...");
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
-			addEventListener(flash.events.Event.PASTE, onPasteConstraints);	
 		}
 		
 		
@@ -278,7 +278,7 @@ package scenes.game.display
 		{
 			if(m_backgroundLayer == null)
 			{
-				m_backgroundLayer = new Sprite;
+				m_backgroundLayer = new starling.display.Sprite;
 				addChildAt(m_backgroundLayer, 0);
 			}
 			
@@ -359,7 +359,7 @@ package scenes.game.display
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			addEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
-			
+			addEventListener(MenuEvent.STOP_SOLVER, onStopSolving);
 			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
@@ -390,6 +390,11 @@ package scenes.game.display
 				if(active_level)
 					active_level.solverUpdate(vars, unsat_weight);
 			}
+		}
+		
+		private function onStopSolving():void
+		{
+			solverDoneCallback("");
 		}
 		
 		public function solverDoneCallback(errMsg:String):void
@@ -937,9 +942,6 @@ package scenes.game.display
 							System.setClipboard(JSON.stringify(active_level.m_levelAssignmentsObj));
 						}
 						break;
-//					case Keyboard.V: //PASTE Events are the only way to get clipboard data
-//						onPasteConstraints(null);
-//						break;
 					case 65: //'a' for copy of ALL (world)
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
@@ -954,18 +956,6 @@ package scenes.game.display
 							System.setClipboard(JSON.stringify(levelObj));
 						}
 						break;
-				}
-			}
-		}
-		
-		private function onPasteConstraints(event:flash.events.Event):void
-		{
-			if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
-			{
-				if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
-				{ 
-					var text:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String; 
-					active_level.loadAssignmentsConfiguration(JSON.parse(text));
 				}
 			}
 		}

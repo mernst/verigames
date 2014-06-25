@@ -150,7 +150,6 @@ package scenes.game.components
 			myContextMenu.clipboardMenu = true;
 			myContextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
 			PipeJam3.pipeJam3.contextMenu = myContextMenu;
-			PipeJam3.pipeJam3.contextMenu.addEventListener(flash.events.Event.PASTE, onPasteConstraints);
 		}
 		
 		protected function menuSelectHandler(event:flash.events.Event):void
@@ -730,18 +729,6 @@ package scenes.game.components
 							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_WIDE);
 						else
 							m_currentLevel.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_NARROW);
-			}
-		}
-		
-		private function onPasteConstraints(event:flash.events.Event):void
-		{
-			if(this.m_currentLevel != null && !PipeJam3.RELEASE_BUILD)
-			{
-				if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
-				{ 
-					var text:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String; 
-					m_currentLevel.loadAssignmentsConfiguration(JSON.parse(text));
-				}
 			}
 		}
 		

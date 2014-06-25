@@ -24,12 +24,14 @@ package scenes.game.components
 	
 	import particle.ErrorParticleSystem;
 	
+	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
-	import scenes.game.display.NodeSkin;
 	import scenes.game.display.Level;
+	import scenes.game.display.NodeSkin;
 	import scenes.game.display.World;
 	
 	import starling.animation.Transitions;
+	import starling.animation.Tween;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -39,11 +41,11 @@ package scenes.game.components
 	import starling.events.Event;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.filters.*;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
-	import scenes.BaseComponent;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -228,21 +230,41 @@ package scenes.game.components
 			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height/busyAnimationMovieClip.height;
 		}
 		
+		public var inSolver:Boolean = false;
+		var q:Quad;
 		public function startSolveAnimation():void
 		{
-			if(!Starling.juggler.contains(this.busyAnimationMovieClip))
+			if(!inSolver)
 			{
-				if (busyAnimationMovieClip) addChild(busyAnimationMovieClip);
-				Starling.juggler.add(this.busyAnimationMovieClip);
 				trace("start animation");
+				inSolver = true;
+				 q = new Quad(m_solveButton.width, m_solveButton.height);
+				m_solveButton.addChild(q);
+				addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				m_solveButton.setButtonText("Stop Solver");
 			}
+			
+		}
+		
+		public var vertexNum:int = 0;
+		protected function onEnterFrame(evt:Event):void
+		{
+			trace("onenter");
+			var color:int = q.getVertexColor(vertexNum) + 0x222222;
+			q.setVertexColor(vertexNum, color);
+			
+			vertexNum = (vertexNum + 1) % 4;
 		}
 		
 		public function stopSolveAnimation():void
 		{
-			Starling.juggler.remove(this.busyAnimationMovieClip);
-			if (busyAnimationMovieClip) busyAnimationMovieClip.removeFromParent();
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		//	Starling.juggler.remove(this.busyAnimationMovieClip);
+			//if (busyAnimationMovieClip) busyAnimationMovieClip.removeFromParent();
 			trace("stop animation");
+			inSolver = false;
+			m_solveButton.setButtonText("Solve Selection");
+			m_solveButton.removeChild(q);
 		}
 		
 		protected function checkForTriggerFullScreen(event:MouseEvent):void
@@ -354,7 +376,10 @@ package scenes.game.components
 		
 		private function onSolveSelection():void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
+			if(!m_currentLevel.m_inSolver)
+				dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
+			else
+				dispatchEvent(new MenuEvent(MenuEvent.STOP_SOLVER));
 		}
 		
 		public function removedFromStage(event:Event):void
@@ -627,7 +652,6 @@ import display.ToolTippableSprite;
 
 import events.ToolTipEvent;
 
-import scenes.game.components.*;
 import scenes.game.components.GameControlPanel;
 
 import starling.display.Quad;
