@@ -821,17 +821,18 @@ package scenes.game.display
 			
 			currentSelectionProcessCount = 1;
 			var nextToVisitArray:Array = new Array;
-			selectSurroundingNodes(node, nextToVisitArray);
+			var previouslyCheckedNodes:Dictionary = new Dictionary;
+			selectSurroundingNodes(node, nextToVisitArray, previouslyCheckedNodes);
 			for each(var nextNode:Node in nextToVisitArray)
 			{
-				selectSurroundingNodes(nextNode, nextToVisitArray);
+				selectSurroundingNodes(nextNode, nextToVisitArray, previouslyCheckedNodes);
 				if(currentSelectionProcessCount > NUM_NODES_TO_SELECT)
 					break;
 				currentSelectionProcessCount++;
 			}
 		}
 		
-		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array):void
+		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array, previouslyCheckedNodes:Dictionary):void
 		{
 			node.selectNode(selectedNodes);
 			
@@ -851,7 +852,11 @@ package scenes.game.display
 						otherNode = fromNodeObj;
 					if(selectedNodes[otherNode.id] == null)
 					{
-						nextToVisitArray.push(otherNode);
+						if(previouslyCheckedNodes[otherNode.id] == null)
+						{
+							nextToVisitArray.push(otherNode);
+							previouslyCheckedNodes[otherNode.id] = otherNode;
+						}
 					}
 				}
 		}
