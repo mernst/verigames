@@ -143,23 +143,7 @@ package scenes.game.display
 		public function addNode(node:Node):void
 		{
 			nodeList.push(node);
-			node.parentGrid = this;
-			
-			//calculate center point
-			var xCenter:Number = node.bb.x+node.bb.width*.5;
-			var yCenter:Number = node.bb.y+node.bb.height*.5;
-			node.centerPoint = new Point(xCenter, yCenter);
-			var constraintVar:ConstraintVar = node.graphVar;
-			node.isNarrow = constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-			node.isEditable = !constraintVar.constant;
-			node.skin = null;
-			node.isDirty = true;
-			node.gridID = id;
-			node.isSelected = false;
-			node.startingSelectionState = false;
-
-			updateNode(node);
-			
+			updateNodeSkin(node);
 		}
 
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -186,7 +170,7 @@ package scenes.game.display
 				for each(var node:Node in nodeList)
 				{											
 					if(!node.skin)
-						updateNode(node);
+						updateNodeSkin(node);
 					
 					createEdges(node);
 				}
@@ -260,8 +244,12 @@ package scenes.game.display
 			isDirty = false;
 		}
 		
-		protected function updateNode(node:Node):void
+		protected function updateNodeSkin(node:Node):void
 		{
+			if (node.skin) {
+				node.skin.removeFromParent();
+				node.skin.disableSkin();
+			}
 			
 			var skin:NodeSkin = NodeSkin.getNextSkin();
 			skin.setNode(node);
@@ -382,41 +370,45 @@ package scenes.game.display
 			lineQuad.setVertexColor(3, toColor);
 		}
 		
-		public function removeFromParent(dispose:Boolean):void
+		public function removeNode(node:Node, dispose:Boolean = false):void
 		{
-			for(var i:int = nodeDrawingBoard.numChildren-1; i>=0; i--)
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
 			{
-				var skin:NodeSkin = nodeDrawingBoard.getChildAt(i) as NodeSkin;
-				var node:Node = skin.associatedNode;
-				for each(var gameEdgeID:String in node.connectedEdgeIds)
+				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				if(edgeObj && edgeObj.edgeSprite)
 				{
-					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					if(edgeObj.edgeSprite)
+					//need to check if the other end is on screen, and if it is, pass this edge off to that node
+					var toNodeID:String = edgeObj["to_var_id"];
+					var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+					var fromNodeID:String = edgeObj["from_var_id"];
+					var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+					
+					var otherNode:Object = toNodeObj;
+					if(toNodeObj == node)
+						otherNode = fromNodeObj;
+					
+					edgeObj.edgeSprite.removeFromParent(dispose);
+					edgeObj.edgeSprite = null;
+					
+					if(otherNode && otherNode.skin && otherNode.skin.parent && otherNode.skin.parent != nodeDrawingBoard)
 					{
-						//need to check if the other end is on screen, and if it is, pass this edge off to that node
-						var toNodeID:String = edgeObj["to_var_id"];
-						var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-						var fromNodeID:String = edgeObj["from_var_id"];
-						var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-						
-						var otherNode:Object = toNodeObj;
-						if(toNodeObj == node)
-							otherNode = fromNodeObj;
-						
-						edgeObj.edgeSprite.removeFromParent(dispose);
-						edgeObj.edgeSprite = null;
-							
-						if(otherNode.skin && otherNode.skin.parent && otherNode.skin.parent != nodeDrawingBoard)
-						{
-							//destroy edge and recreate
-							otherNode.parentGrid.createEdges(otherNode);
-							otherNode.parentGrid.isDirty = true;
-							otherNode.isDirty = true;
-						}
+						//destroy edge and recreate
+						otherNode.parentGrid.createEdges(otherNode);
+						otherNode.parentGrid.isDirty = true;
+						otherNode.isDirty = true;
 					}
 				}
-				skin.disableSkin();
-				skin.removeFromParent();
+			}
+			if (node.skin) {
+				node.skin.removeFromParent();
+				node.skin.disableSkin();
+			}
+		}
+		
+		public function removeFromParent(dispose:Boolean):void
+		{
+			for each (var node:Node in nodeList) {
+				removeNode(node, dispose);
 			}
 			nodeDrawingBoard.removeFromParent(dispose);
 			edgeDrawingBoard.removeFromParent(dispose);
@@ -497,8 +489,6 @@ package scenes.game.display
 				}
 			}
 		}
-		
-
 		
 		public function markVisited():void
 		{

@@ -23,28 +23,39 @@ package scenes.game.display
 		public var bb:Rectangle;
 		public var centerPoint:Point;
 		
-		public var isSelected:Boolean;
+		public var isSelected:Boolean = false;
 		public var isEditable:Boolean;
 		public var isNarrow:Boolean;
-		public var isLocked:Boolean;
-		public var isDirty:Boolean;
+		public var isLocked:Boolean = false;
+		public var isDirty:Boolean = false;
 		
-		public var startingSelectionState:Boolean;
+		public var startingSelectionState:Boolean = false;
 		
 		public var skin:NodeSkin;
 		
-		public var gridID:String;
 		public var parentGrid:GridSquare;
 		
-		public var connectedEdgeIds:Vector.<String>;
-		public var unused:Boolean;
+		public var connectedEdgeIds:Vector.<String> = new Vector.<String>();
+		public var unused:Boolean = true;
 		
-		public function Node(_layoutObject:Object)
+		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
 		{
 			layoutObject = _layoutObject;
+			id = _id;
+			bb = _bb;
+			graphVar = _graphVar;
+			parentGrid = _parentGrid;
+			
 			x = layoutObject["x"];
 			y = layoutObject["y"];
-			unused = true;
+			//calculate center point
+			var xCenter:Number = bb.x + bb.width * .5;
+			var yCenter:Number = bb.y + bb.height * .5;
+			centerPoint = new Point(xCenter, yCenter);
+			isNarrow = graphVar.getProps().hasProp(PropDictionary.PROP_NARROW);
+			isEditable = !graphVar.constant;
+			
+			isDirty = true;
 		}
 		
 		public function selectNode(selectedNodes:Dictionary):void
