@@ -41,6 +41,9 @@ package scenes.game.display
 		static public const WIDE_COLOR:int = 0x0B80FF;
 		static public const NARROW_COLOR:int = 0xABFFF2;
 
+		static public const WIDE_COLOR_COMPLEMENT:int = 0x0B90FF;
+		static public const NARROW_COLOR_COMPLEMENT:int = 0x89DDD0;
+		
 		static public const LOCKED_COLOR:int = 0x00FF00;
 		
 		public var id:int;
@@ -94,6 +97,14 @@ package scenes.game.display
 			{
 				return NARROW_COLOR;
 			}
+		}
+		
+		static public function getComplementColor(node:Object):int
+		{
+			if(!node.isNarrow)
+				return WIDE_COLOR_COMPLEMENT;
+			else
+				return NARROW_COLOR_COMPLEMENT;
 		}
 		
 		public static function countKeys(myDictionary:flash.utils.Dictionary):int 

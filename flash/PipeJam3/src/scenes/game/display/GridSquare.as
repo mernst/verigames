@@ -7,7 +7,7 @@ package scenes.game.display
 	import assets.AssetsAudio;
 	
 	import audio.AudioManager;
-
+	
 	import constraints.ConstraintVar;
 	import constraints.events.VarChangeEvent;
 	
@@ -358,15 +358,16 @@ package scenes.game.display
 			var p2:Point = toNodeObj.centerPoint;
 			var fromColor:int = NodeSkin.getColor(fromNodeObj);
 			var toColor:int = NodeSkin.getColor(toNodeObj);
+			var fromColorComplement:int = NodeSkin.getComplementColor(toNodeObj);
 			
 			if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
 				toColor = 0xff0000;
 			
 			
-			lineQuad.setVertexColor(0, fromColor);
+			lineQuad.setVertexColor(0, fromColorComplement);
 			lineQuad.setVertexColor(1, toColor);
 			lineQuad.setVertexColor(2, fromColor);
-			lineQuad.setVertexColor(3, fromColor);
+			lineQuad.setVertexColor(3, fromColorComplement);
 
 		}
 		
