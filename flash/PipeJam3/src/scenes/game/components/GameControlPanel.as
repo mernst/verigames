@@ -231,40 +231,22 @@ package scenes.game.components
 		}
 		
 		public var inSolver:Boolean = false;
-		var q:Quad;
 		public function startSolveAnimation():void
 		{
 			if(!inSolver)
 			{
 				trace("start animation");
 				inSolver = true;
-				 q = new Quad(m_solveButton.width, m_solveButton.height);
-				m_solveButton.addChild(q);
-				addEventListener(Event.ENTER_FRAME, onEnterFrame);
-				m_solveButton.setButtonText("Stop Solver");
+				m_solveButton.setButtonText("Running...");
 			}
 			
 		}
 		
-		public var vertexNum:int = 0;
-		protected function onEnterFrame(evt:Event):void
-		{
-			trace("onenter");
-			var color:int = q.getVertexColor(vertexNum) + 0x222222;
-			q.setVertexColor(vertexNum, color);
-			
-			vertexNum = (vertexNum + 1) % 4;
-		}
-		
 		public function stopSolveAnimation():void
 		{
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		//	Starling.juggler.remove(this.busyAnimationMovieClip);
-			//if (busyAnimationMovieClip) busyAnimationMovieClip.removeFromParent();
 			trace("stop animation");
 			inSolver = false;
 			m_solveButton.setButtonText("Solve Selection");
-			m_solveButton.removeChild(q);
 		}
 		
 		protected function checkForTriggerFullScreen(event:MouseEvent):void

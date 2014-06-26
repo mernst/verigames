@@ -1267,7 +1267,6 @@ package scenes.game.components
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{
-			//Should I actually use the function parameters here somewhere??
 			clipRect = new Rectangle(x, y, newWidth, newHeight);
 		
 			if(contentBarrier)

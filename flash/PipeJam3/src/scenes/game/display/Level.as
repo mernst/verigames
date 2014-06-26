@@ -9,7 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import starling.display.Quad;
 	
 	import assets.AssetInterface;
 	
@@ -41,6 +40,7 @@ package scenes.game.display
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Shape;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
@@ -48,10 +48,10 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
-	//import system.MiniMaxSatSolver;
 	
 	import utils.Base64Encoder;
 	import utils.XObject;
@@ -1185,18 +1185,25 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
-		
-		public function solveSelection(updateCallback:Function, doneCallback:Function):void
+
+		public var constraintArray:Array;
+		public var initvarsArray:Array;
+		public var updateCallback:Function;
+		public var doneCallback:Function;
+		public function solveSelection(_updateCallback:Function, _doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
 			//create three constraints for conflicts and weights
-			//run the solver, passing in the callback function
+			//run the solver, passing in the callback function		
+			updateCallback = _updateCallback;
+			doneCallback = _doneCallback;
+			
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var storedConstraints:Dictionary = new Dictionary;
 			var counter:int = 1;
-			var constraintArray:Array = new Array;
-			var initvarsArray:Array = new Array;
+			constraintArray = new Array;
+			initvarsArray = new Array;
 			//loop through each object
 			for each(var node:Node in selectedNodes)
 			{
@@ -1291,9 +1298,19 @@ package scenes.game.display
 					else
 						initvarsArray.push(1);
 				}
-				m_inSolver = true;
-				MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
+				//build in a delay to allow UI to change
+				World.m_world.showSolverState(true);
+				timer = new Timer(500,1);
+				timer.addEventListener(TimerEvent.TIMER, solverStartCallback);
+				timer.start();
+				
 			}
+		}
+		
+		public function solverStartCallback(evt:TimerEvent):void
+		{
+			m_inSolver = true;
+			MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
 		}
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
@@ -1327,6 +1344,7 @@ package scenes.game.display
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
+			World.m_world.showSolverState(false);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
