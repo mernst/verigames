@@ -1093,8 +1093,6 @@ package scenes.game.display
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			//called later by initScoring
 			//onWidgetChange();
-			trace("Level.initialize()");
-			active_level.initialize();
 			trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			edgeSetGraphViewPanel.loadLevel();

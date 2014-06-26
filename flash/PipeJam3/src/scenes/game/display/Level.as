@@ -185,7 +185,6 @@ package scenes.game.display
 			}
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
-			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
@@ -260,6 +259,7 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			if (m_disposed) {
 				restart(); // undo progress if left the level and coming back
@@ -339,7 +339,8 @@ package scenes.game.display
 			trace("Level edges and nodes all created.");
 			// When level loaded, don't need this event listener anymore
 			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
-			trace("load level time2", new Date().getTime()-time1);
+			trace("load level time2", new Date().getTime() - time1);
+			m_disposed = false;
 		}
 		
 		public function refreshLevelErrors():void
@@ -423,16 +424,14 @@ package scenes.game.display
 			var n:uint = 0;
 			for (var varId:String in m_levelLayoutObj["layout"]["vars"])
 			{
-				var node:Node = new Node(m_levelLayoutObj["layout"]["vars"][varId]);
+				var thisNodeLayout:Object = m_levelLayoutObj["layout"]["vars"][varId];
 				var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
 				if (graphVar == null) {
 					trace("Warning: layout var found with no corresponding contraints var:" + varId);
 					continue;
 				}
-				node.id = varId;
-				node["graphVar"] = graphVar;
-				var nodeX:Number = Number(node["x"]) * Constants.GAME_SCALE;
-				var nodeY:Number = Number(node["y"]) * Constants.GAME_SCALE;
+				var nodeX:Number = Number(thisNodeLayout["x"]) * Constants.GAME_SCALE;
+				var nodeY:Number = Number(thisNodeLayout["y"]) * Constants.GAME_SCALE;
 				
 				
 				var nodeWidth:Number = 1;//Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
@@ -443,9 +442,6 @@ package scenes.game.display
 				minY = Math.min(minY, nodeBoundingBox.top);
 				maxX = Math.max(maxX, nodeBoundingBox.right);
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
-				node.bb = nodeBoundingBox;
-				node.connectedEdgeIds = new Vector.<String>();
-				nodeLayoutObjs[varId] = node;
 				
 				var xArrayPos:int = Math.floor(nodeBoundingBox.x/gridSize);
 				var yArrayPos:int = Math.floor(nodeBoundingBox.y/gridSize);
@@ -458,6 +454,12 @@ package scenes.game.display
 					gridSystemDict[nodeGridName] = grid;
 				}
 				
+				if (nodeLayoutObjs.hasOwnProperty(varId)) {
+					var prevNode:Node = nodeLayoutObjs[varId] as Node;
+					prevNode.parentGrid.removeNode(prevNode);
+				}
+				var node:Node = new Node(m_levelLayoutObj["layout"]["vars"][varId], varId, nodeBoundingBox, graphVar, grid);
+				nodeLayoutObjs[varId] = node;
 				grid.addNode(node);
 				
 				n++;
@@ -514,7 +516,6 @@ package scenes.game.display
 			if (tutorialManager) updateLevelDisplay();
 			initialize();
 			
-			m_disposed = false;
 			m_levelStartTime = new Date().time;
 			if (tutorialManager) tutorialManager.startLevel();
 			
@@ -530,7 +531,10 @@ package scenes.game.display
 			if (!initialized) {
 				start();
 			} else {
-				if (tutorialManager) tutorialManager.startLevel();
+				if (tutorialManager) {
+					updateLevelDisplay(); // create any uncreated/disposed nodes
+					tutorialManager.startLevel();
+				}
 				m_levelStartTime = new Date().time;
 			}
 			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
@@ -538,6 +542,7 @@ package scenes.game.display
 			dispatchEvent(propChangeEvt);
 			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
 			loadAssignments(m_levelAssignmentsObj);
+			
 			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
@@ -594,7 +599,8 @@ package scenes.game.display
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
-			trace("REMOVED!")
+			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
+			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			//disposeChildren();
 		}
 		
@@ -675,6 +681,11 @@ package scenes.game.display
 			if (m_plugsContainer) {
 				while (m_plugsContainer.numChildren > 0) m_plugsContainer.getChildAt(0).removeFromParent(true);
 				m_plugsContainer.removeFromParent(true);
+			}
+			
+			for each(var gridSquare:GridSquare in currentGridDict)
+			{
+				gridSquare.removeFromParent(true);
 			}
 			
 			disposeChildren();
