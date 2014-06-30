@@ -127,8 +127,12 @@ package scenes.game.display
 		
 		protected var gridSystemDict:Dictionary;
 		
-		static public var gridSize:int = 500;
+		static public var GRID_SIZE:int = 500;
 		static public var NUM_NODES_TO_SELECT:int = 300;
+		
+		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
+		static public var NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
+		
 		public var currentGridDict:Dictionary;
 		
 		protected var currentSelectionProcessCount:int;
@@ -363,10 +367,10 @@ package scenes.game.display
 		//called on when GridViewPanel content is moving
 		public function updateLevelDisplay(viewRect:Rectangle = null):void
 		{
-			var leftGridNumber:int = Math.floor(viewRect ? viewRect.left/gridSize : -1);
-			var rightGridNumber:int = Math.floor(viewRect ? viewRect.right/gridSize : gridSize);
-			var topGridNumber:int = Math.floor(viewRect ? viewRect.top/gridSize : -1);
-			var bottomGridNumber:int = Math.floor(viewRect ? viewRect.bottom/gridSize : gridSize);
+			var leftGridNumber:int = Math.floor(viewRect ? viewRect.left/GRID_SIZE : -1);
+			var rightGridNumber:int = Math.floor(viewRect ? viewRect.right/GRID_SIZE : GRID_SIZE);
+			var topGridNumber:int = Math.floor(viewRect ? viewRect.top/GRID_SIZE : -1);
+			var bottomGridNumber:int = Math.floor(viewRect ? viewRect.bottom/GRID_SIZE : GRID_SIZE);
 			var newCurrentGridDict:Dictionary = new Dictionary;
 			
 			//create a new dictionary of current grid squares, removing those from the old dict
@@ -443,14 +447,14 @@ package scenes.game.display
 				maxX = Math.max(maxX, nodeBoundingBox.right);
 				maxY = Math.max(maxY, nodeBoundingBox.bottom);
 				
-				var xArrayPos:int = Math.floor(nodeBoundingBox.x/gridSize);
-				var yArrayPos:int = Math.floor(nodeBoundingBox.y/gridSize);
+				var xArrayPos:int = Math.floor(nodeBoundingBox.x/GRID_SIZE);
+				var yArrayPos:int = Math.floor(nodeBoundingBox.y/GRID_SIZE);
 				
 				var nodeGridName:String = xArrayPos + "_" + yArrayPos;
 				var grid:GridSquare = gridSystemDict[nodeGridName];
 				if(grid == null)
 				{
-					grid = new GridSquare(xArrayPos, yArrayPos, gridSize, gridSize);
+					grid = new GridSquare(xArrayPos, yArrayPos, GRID_SIZE, GRID_SIZE);
 					gridSystemDict[nodeGridName] = grid;
 				}
 				
@@ -1234,7 +1238,65 @@ package scenes.game.display
 					if(toNode == node)
 						nodeToCheck = fromNode;
 					
-					if(selectedNodes[nodeToCheck.id] != null)
+					//if far end of this edge isn't in selected nodes, then add a constraint acting like it's fixed
+					//this will help the solver return only better scores.
+					if(selectedNodes[nodeToCheck.id] == null)
+					{
+						//deal with constraints to/from unselected nodes
+						if(nodeToCheck == fromNode)
+						{
+							if(!fromNode.isNarrow)
+							{
+								if(toNode.isEditable && !toNode.isLocked)
+								{
+									if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
+									{
+										nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
+										nodeIDToConstraintsTwoWayMap[counter] = toNode;
+										constraint1Value = counter;
+										counter++;
+									}
+									else
+										constraint1Value = nodeIDToConstraintsTwoWayMap[toNode.id];
+									
+									var constraint1:String = constraint1Value+"_"+constraint2Value;
+									//check for duplicates
+									if(storedConstraints[constraint1] == null)
+									{
+										storedConstraints[constraint1] = constraint1;
+										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint1Value));
+									}
+								}
+							}
+						}
+						else
+						{
+							if(toNode.isNarrow)
+							{
+								if(fromNode.isEditable && !fromNode.isLocked)
+								{
+									if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
+									{
+										nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+										nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+										constraint1Value = counter;
+										counter++;
+									}
+									else
+										constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
+									
+									var constraint2:String = constraint1Value+"_"+constraint2Value;
+									//check for duplicates
+									if(storedConstraints[constraint2] == null)
+									{
+										storedConstraints[constraint2] = constraint2;
+										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
+									}
+								}
+							}
+						}
+					}
+					else
 					{
 						//found an edge with both end nodes selected
 						if(fromNode.isEditable && !fromNode.isLocked)
@@ -1270,26 +1332,28 @@ package scenes.game.display
 							storedConstraints[constraint] = constraint;
 							
 							if(fromNode.isEditable && toNode.isEditable && !fromNode.isLocked && !toNode.isLocked)
-								constraintArray.push(new Array(100, -constraint1Value, constraint2Value));
+							{
+								constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value, constraint2Value));
+							}
 							else if(fromNode.isEditable && !fromNode.isLocked && (!toNode.isEditable || toNode.isLocked))
 							{
 								if(toNode.isNarrow)
-									constraintArray.push(new Array(100, -constraint1Value));
+									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
 							}
-							if((!fromNode.isEditable  || fromNode.isLocked) && toNode.isEditable && !toNode.isLocked)
+							else if((!fromNode.isEditable || fromNode.isLocked) && toNode.isEditable && !toNode.isLocked)
 							{
 								if(!fromNode.isNarrow)
-									constraintArray.push(new Array(100, constraint2Value));
+									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint2Value));
 							}
 							
 							if(toNode.isEditable && !toNode.isLocked && storedConstraints[constraint1Value] != toNode)
 							{
-								constraintArray.push(new Array(1, constraint1Value));
+								constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
 								storedConstraints[constraint1Value] = toNode;
 							}
 							if(fromNode.isEditable && !fromNode.isLocked && storedConstraints[constraint2Value] != fromNode)
 							{
-								constraintArray.push(new Array(1, constraint2Value));
+								constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
 								storedConstraints[constraint2Value] = fromNode;
 							}
 						}
@@ -1327,10 +1391,11 @@ package scenes.game.display
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var nodeUpdated:Boolean = false;
-			
+			trace("update");
 			if(	m_inSolver == false) //got marked done early
 				return;
 			
+			trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
@@ -1355,14 +1420,13 @@ package scenes.game.display
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
-			World.m_world.showSolverState(false);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
 			
-			//reset to best score, which might be current score
+			//reset to score before solver ran, which might be current score
 			loadBestScoringConfiguration();
 			
 			//do it again

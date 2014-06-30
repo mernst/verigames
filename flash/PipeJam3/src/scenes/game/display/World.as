@@ -57,6 +57,7 @@ package scenes.game.display
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
@@ -205,13 +206,13 @@ package scenes.game.display
 		{
 			if(running)
 			{
-				edgeSetGraphViewPanel.filter = new ColorMatrixFilter;
-				(edgeSetGraphViewPanel.filter as ColorMatrixFilter).adjustHue(.22);
+	//			edgeSetGraphViewPanel.filter = new ColorMatrixFilter;
+	//			(edgeSetGraphViewPanel.filter as ColorMatrixFilter).adjustHue(.22);
 				gameControlPanel.startSolveAnimation();
 			}
 			else
 			{
-				edgeSetGraphViewPanel.filter = null;
+	//			edgeSetGraphViewPanel.filter = null;
 				gameControlPanel.stopSolveAnimation();
 			}
 		}
@@ -403,22 +404,32 @@ package scenes.game.display
 		{
 			if(active_level)
 			{
-				var borderTexture:Texture = AssetInterface.getTexture("Game", "Wait1Class");
-				solvingImage = new Image(borderTexture);
-				solvingImage.alpha = .6;
-				solvingImage.scaleX = solvingImage.scaleY = 4;
-				solvingImage.x = 240 - solvingImage.width/2;
-				solvingImage.y = 110;
-				addChild(solvingImage);
+				waitIconDisplayed = false;
+
 				active_level.solveSelection(solverUpdateCallback, solverDoneCallback);
 			}
 		}
 		
+		protected var waitIconDisplayed:Boolean;
 		protected function solverUpdateCallback(vars:Array, unsat_weight:int):void
 		{
 			//start on first update to make sure we are actually solving
 			if(active_level.m_inSolver)
 			{
+				if(waitIconDisplayed == false)
+				{
+					busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
+					addChild(busyAnimationMovieClip);
+					Starling.juggler.add(this.busyAnimationMovieClip);
+					waitIconDisplayed = true;
+//					var borderTexture:Texture = AssetInterface.getTexture("Game", "Wait1Class");
+//					solvingImage = new Image(borderTexture);
+//					solvingImage.alpha = .6;
+					busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = 4;
+					busyAnimationMovieClip.x = 240 - busyAnimationMovieClip.width/2;
+					busyAnimationMovieClip.y = 110;
+//					addChild(solvingImage);
+				}
 				if(active_level)
 					active_level.solverUpdate(vars, unsat_weight);
 			}
@@ -434,8 +445,18 @@ package scenes.game.display
 		{
 			if(active_level)
 				active_level.solverDone(errMsg);
-			removeChild(solvingImage);
-			gameControlPanel.stopSolveAnimation();
+			if(waitIconDisplayed)
+				removeChild(solvingImage);
+			if(busyAnimationMovieClip)
+			{
+				removeChild(busyAnimationMovieClip);
+				Starling.juggler.remove(this.busyAnimationMovieClip);
+				
+				busyAnimationMovieClip.dispose();
+				busyAnimationMovieClip = null;
+			}
+			
+			showSolverState(false);
 		}
 		
 		private function initMusic():void {
