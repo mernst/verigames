@@ -75,4 +75,41 @@
         "var:1": {}
     }
 }
+,
+{"id": "L13601",
+"qid": 13601,
+"target_score":3321.0,
+"assignments":{
+}
+}
+,
+{"id": "L13635",
+"qid": 13635,
+"target_score":7210.0,
+"assignments":{
+}
+}
+,
+{"id": "L13663",
+"qid": 13663,
+"target_score":7939.0,
+"assignments":{
+}
+}
+,
+{"id": "L13722",
+"qid": 13722,
+"target_score":81425.0,
+"assignments":{
+}
+}
+,
+{"id": "L13727",
+"qid": 13727,
+"target_score":1011400.0,
+"starting_score": 0.0,
+"starting_jams": 1325,
+"assignments":{
+}
+}
 ]}

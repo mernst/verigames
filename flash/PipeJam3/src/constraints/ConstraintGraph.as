@@ -170,8 +170,8 @@ package constraints
 					// Build Scoring
 					var scoringObj:Object = levelObj[SCORING];
 					var groupsObj:Object = levelObj[GROUPS];
-					var constraintScore:int = scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY];
-					var variableScoreObj:Object = scoringObj[VARIABLES];
+					var constraintScore:int = scoringObj ? scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY] : 100;
+					var variableScoreObj:Object = scoringObj ? scoringObj[VARIABLES] : {"type:0": 0, "type:1": 1};
 					var type0Score:int = variableScoreObj[ConstraintScoringConfig.TYPE_0_VALUE_KEY];
 					var type1Score:int = variableScoreObj[ConstraintScoringConfig.TYPE_1_VALUE_KEY];
 					graph.graphScoringConfig.updateScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY, constraintScore);

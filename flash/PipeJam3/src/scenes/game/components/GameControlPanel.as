@@ -249,7 +249,6 @@ package scenes.game.components
 		public var vertexNum:int = 0;
 		protected function onEnterFrame(evt:Event):void
 		{
-			trace("onenter");
 			var color:int = q.getVertexColor(vertexNum) + 0x222222;
 			q.setVertexColor(vertexNum, color);
 			

@@ -8,6 +8,11 @@ FILES = [
 	'Jams',
 	'Widen',
 	'ZoomPan',
+	'L13601',
+	'L13635',
+	'L13663',
+	'L13722',
+	'L13727',
 ]
 
 def combineLevels(files):

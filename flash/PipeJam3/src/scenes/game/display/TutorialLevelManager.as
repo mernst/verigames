@@ -22,13 +22,19 @@ package scenes.game.display
 		public static const JAMS_TUTORIAL:String = "jams";
 		public static const WIDEN_TUTORIAL:String = "widen";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
-		public static const SKILLS_A_TUTORIAL:String = "skillsa";
-		public static const SKILLS_B_TUTORIAL:String = "skillsb";
+		public static const L13601_TUTORIAL:String = "L13601";
+		public static const L13635_TUTORIAL:String = "L13635";
+		public static const L13663_TUTORIAL:String = "L13663";
+		public static const L13722_TUTORIAL:String = "L13722";
+		public static const L13727_TUTORIAL:String = "L13727";
+		
 		// Not currently used:
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
 		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
+		public static const SKILLS_A_TUTORIAL:String = "skillsa";
+		public static const SKILLS_B_TUTORIAL:String = "skillsb";
 		
 		private var m_tutorialTag:String;
 		private var m_levelStarted:Boolean = false;
@@ -47,8 +53,14 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 				case JAMS_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
+				case L13601_TUTORIAL:
+				case L13635_TUTORIAL:
+				case L13663_TUTORIAL:
+				case L13722_TUTORIAL:
+				case L13727_TUTORIAL:
+				// No longer used:
+				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
@@ -321,6 +333,7 @@ package scenes.game.display
 					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
+				// Not used
 				case LAYOUT_TUTORIAL:
 					tip = new TutorialManagerTextInfo(
 						"Widgets can be dragged to\n" +
@@ -393,6 +406,27 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
+				case L13601_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Here's a level generated from code!\n" +
+						"Try using the map in the top right\n" +
+						"        to navigate around.       ",
+						null,
+						null,
+						null, null);
+				case L13635_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"For larger levels we provide an autosolver.\n" + 
+						"Select a group of nodes by holding Shift and\n" +
+						"dragging the mouse or clicking on individual\n" +
+						"     nodes, then press \"Solve Selection\".   \n",
+						null,
+						null,
+						null, null);
+				case L13663_TUTORIAL:
+				case L13722_TUTORIAL:
+				case L13727_TUTORIAL:
+					break;
 				// The following are not currently in use:
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
