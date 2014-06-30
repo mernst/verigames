@@ -61,6 +61,7 @@ package scenes.game.display
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
 	
 	import system.VerigameServerConstants;
@@ -98,6 +99,8 @@ package scenes.game.display
 		private var m_worldObj:Object;
 		private var m_layoutObj:Object;
 		private var m_assignmentsObj:Object;
+		
+		protected var solvingImage:Image;
 		
 		static public var changingFullScreenState:Boolean = false;
 		
@@ -172,12 +175,15 @@ package scenes.game.display
 		public static var loadTime:Number;
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
-			if(miniMap && m_initQueue.length == 0)
+			if(m_initQueue.length == 0)
 			{
-				//miniMap.centerMap();
 				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				loadTime = new Date().getTime() - PipeJamGameScene.startLoadTime;
 				trace("Complete Time", loadTime);
+				if(miniMap && !active_level.tutorialManager)
+				{
+					miniMap.centerMap();
+				}
 			}
 			else if (m_initQueue.length > 0) {
 				var time1:Number = new Date().getTime();
@@ -192,6 +198,22 @@ package scenes.game.display
 			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
 			trace("Done initializing GridViewPanel.");
+			
+		}
+		
+		public function showSolverState(running:Boolean):void
+		{
+			if(running)
+			{
+				edgeSetGraphViewPanel.filter = new ColorMatrixFilter;
+				(edgeSetGraphViewPanel.filter as ColorMatrixFilter).adjustHue(.22);
+				gameControlPanel.startSolveAnimation();
+			}
+			else
+			{
+				edgeSetGraphViewPanel.filter = null;
+				gameControlPanel.stopSolveAnimation();
+			}
 		}
 		
 		private function initGameControlPanel():void {
@@ -302,6 +324,8 @@ package scenes.game.display
 			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
 			var background:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundClass");
 			var m_backgroundImage:Image = new Image(background);
+			
+			
 			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
 				m_backgroundImage.width = 480;
@@ -378,7 +402,16 @@ package scenes.game.display
 		private function onSolveSelection():void
 		{
 			if(active_level)
+			{
+				var borderTexture:Texture = AssetInterface.getTexture("Game", "Wait1Class");
+				solvingImage = new Image(borderTexture);
+				solvingImage.alpha = .6;
+				solvingImage.scaleX = solvingImage.scaleY = 4;
+				solvingImage.x = 240 - solvingImage.width/2;
+				solvingImage.y = 110;
+				addChild(solvingImage);
 				active_level.solveSelection(solverUpdateCallback, solverDoneCallback);
+			}
 		}
 		
 		protected function solverUpdateCallback(vars:Array, unsat_weight:int):void
@@ -386,7 +419,6 @@ package scenes.game.display
 			//start on first update to make sure we are actually solving
 			if(active_level.m_inSolver)
 			{
-				gameControlPanel.startSolveAnimation();
 				if(active_level)
 					active_level.solverUpdate(vars, unsat_weight);
 			}
@@ -394,6 +426,7 @@ package scenes.game.display
 		
 		private function onStopSolving():void
 		{
+			
 			solverDoneCallback("");
 		}
 		
@@ -401,7 +434,7 @@ package scenes.game.display
 		{
 			if(active_level)
 				active_level.solverDone(errMsg);
-			
+			removeChild(solvingImage);
 			gameControlPanel.stopSolveAnimation();
 		}
 		
@@ -1080,6 +1113,7 @@ package scenes.game.display
 			trace("gameControlPanel.newLevelSelected");
 			gameControlPanel.newLevelSelected(active_level);
 			miniMap.isDirty = true;
+
 			trace("World.onLevelLoaded complete");
 		}
 		
