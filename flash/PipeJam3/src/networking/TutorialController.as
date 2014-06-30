@@ -44,6 +44,11 @@ package networking
 		
 		protected var levelCompletedQID:String;
 		
+		public function TutorialController()
+		{
+			setTutorialObj(tutorialObj);
+		}
+		
 		static public function getTutorialController():TutorialController
 		{
 			if(tutorialController == null)
@@ -100,7 +105,7 @@ package networking
 					completedTutorialDictionary[tutorial] = tutorial;
 				}
 			}
-			setTutorialObj(tutorialObj);
+			//setTutorialObj(tutorialObj);
 			
 			LoadingScreenScene.getLoadingScreenScene().changeScene();
 		}

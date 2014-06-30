@@ -228,7 +228,10 @@ package scenes.game.display
 			} else {
 				gameControlPanel.onZoomReset();
 			}
+			gameControlPanel.setNavigationButtonVisibility(false);
+			gameControlPanel.setSolveButtonsVisibility(false);
 			addChild(gameControlPanel);
+			
 			setHighScores();
 			trace(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
 			gameControlPanel.adjustSize(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
@@ -1104,7 +1107,10 @@ package scenes.game.display
 			if (miniMap) miniMap.setLevel(active_level);
 			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-			
+			if (gameControlPanel) {
+				gameControlPanel.setNavigationButtonVisibility(active_level.getPanZoomAllowed());
+				gameControlPanel.setSolveButtonsVisibility(active_level.getSolveButtonsAllowed());
+			}
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
 		}

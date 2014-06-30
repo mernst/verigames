@@ -113,26 +113,18 @@ package scenes.game.components
 		
 		public function GameControlPanel()
 		{
-			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
-		}
-		
-		public function addedToStage(event:Event):void
-		{
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
 			m_scorebarForeground = new Image(foregroundTexture);
 			m_scorebarForeground.touchable = false;
 			m_scorebarForeground.width = WIDTH;
 			m_scorebarForeground.height = HEIGHT;
-			addChild(m_scorebarForeground);
-		
+			
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
 			var quad:Quad = new Quad(SCORE_PANEL_AREA.width + 10, SCORE_PANEL_AREA.height, 0x231F20);
 			m_scorePanel.addChild(quad);
-			addChildAt(m_scorePanel, 0);
 			
 			m_scoreBarContainer = new Sprite();
 			m_scorePanel.addChild(m_scoreBarContainer);
@@ -159,19 +151,16 @@ package scenes.game.components
 			m_levelNameTextfield.x = WIDTH - LEVEL_TEXT_WIDTH - 10;
 			m_levelNameTextfield.y = -10;
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
-			addChild(m_levelNameTextfield);
 			
 			m_newLevelButton = ButtonFactory.getInstance().createButton(PipeJam3.TUTORIAL_DEMO ? "Level Select" : "New Level", 44, 14, 8, 8, "Start a new level");
 			m_newLevelButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 5;
 			m_newLevelButton.y = 25.5;
-			addChild(m_newLevelButton);
 			
 			m_resetButton = ButtonFactory.getInstance().createButton("   Reset\t", 44, 14, 8, 8, "Reset the board to\nits starting condition");
 			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
 			m_resetButton.x = m_newLevelButton.x;
 			m_resetButton.y = m_newLevelButton.y + m_newLevelButton.height + 3;
-			addChild(m_resetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
@@ -179,7 +168,6 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_zoomInButton);
 			m_zoomInButton.x = WIDTH - 92.5;
 			m_zoomInButton.y = 21;
-			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
 			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
@@ -187,7 +175,6 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_zoomOutButton);
 			m_zoomOutButton.x = m_zoomInButton.x + m_zoomInButton.width + 3;
 			m_zoomOutButton.y = m_zoomInButton.y;
-			addChild(m_zoomOutButton);
 			
 			m_recenterButton = new RecenterButton();
 			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
@@ -195,7 +182,6 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_recenterButton);
 			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 3;
 			m_recenterButton.y = m_zoomOutButton.y;
-			addChild(m_recenterButton);
 			
 			// Note: this button is for display only, we listen for native touch events below on the stage and
 			// see whether this button was clicked because Flash requires native MouseEvents to trigger fullScreen
@@ -205,7 +191,6 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_fullScreenButton);
 			m_fullScreenButton.x =  m_recenterButton.x + m_recenterButton.width + 3;
 			m_fullScreenButton.y = m_zoomInButton.y;
-			addChild(m_fullScreenButton);
 			
 			m_smallScreenButton = new SmallScreenButton();
 			m_smallScreenButton.addEventListener(Event.TRIGGERED, onFullScreenButtonTriggered);
@@ -213,7 +198,6 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_smallScreenButton);
 			m_smallScreenButton.x = m_fullScreenButton.x;
 			m_smallScreenButton.y = m_fullScreenButton.y;
-			addChild(m_smallScreenButton);
 			m_smallScreenButton.visible = false;
 			
 			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", (m_recenterButton.x+m_recenterButton.width)-m_zoomInButton.x,
@@ -221,13 +205,29 @@ package scenes.game.components
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomInButton.bounds.x; //center around zoomOut center
 			m_solveButton.y = m_zoomInButton.bounds.bottom + 3;
-			addChild(m_solveButton);
 			
 			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
-			
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
 			busyAnimationMovieClip.y = m_solveButton.y;
-			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height/busyAnimationMovieClip.height;
+			busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = m_solveButton.height / busyAnimationMovieClip.height;
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
+		}
+		
+		public function addedToStage(event:Event):void
+		{
+			addChild(m_scorebarForeground);
+			addChildAt(m_scorePanel, 0);
+			addChild(m_levelNameTextfield);
+			addChild(m_newLevelButton);
+			addChild(m_resetButton);
+			addChild(m_zoomInButton);
+			addChild(m_zoomOutButton);
+			addChild(m_recenterButton);
+			addChild(m_fullScreenButton);
+			addChild(m_smallScreenButton);
+			addChild(m_solveButton);
 		}
 		
 		public var inSolver:Boolean = false;
@@ -372,7 +372,6 @@ package scenes.game.components
 		public function newLevelSelected(level:Level):void 
 		{
 			m_currentLevel = level;
-			
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
@@ -380,14 +379,14 @@ package scenes.game.components
 			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
 		}
 		
-		private function setNavigationButtonVisibility(viz:Boolean):void
+		public function setNavigationButtonVisibility(viz:Boolean):void
 		{
 			m_zoomInButton.visible = viz;
 			m_zoomOutButton.visible = viz;
 			m_recenterButton.visible = viz;
 		}
 		
-		private function setSolveButtonsVisibility(viz:Boolean):void
+		public function setSolveButtonsVisibility(viz:Boolean):void
 		{
 			m_solveButton.visible = viz;
 		}

@@ -100,6 +100,7 @@ package scenes.game.components
 			errorLayer = new Sprite();
 			addChild(errorLayer);
 			viewRectLayer = new Sprite();
+			viewRectLayer.visible = false;
 			addChild(viewRectLayer);
 			m_clickPane = new Quad(112/*CLICK_AREA.width*/ / scaleX, CLICK_AREA.height / scaleY);
 			m_clickPane.alpha = 0;
@@ -140,6 +141,7 @@ package scenes.game.components
 		{
 			m_hiding = false;
 			m_hidden = true;
+			viewRectLayer.visible = false;
 		}
 		
 		
@@ -162,6 +164,7 @@ package scenes.game.components
 		{
 			m_showing = false;
 			m_hidden = false;
+			viewRectLayer.visible = true;
 		}
 		
 		public function centerMap():void

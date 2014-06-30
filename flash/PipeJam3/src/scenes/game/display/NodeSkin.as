@@ -162,9 +162,7 @@ package scenes.game.display
 				textureImage = new Image(LightBlueCircle);
 			}
 			
-			textureImage.scaleX = 20*textureImage.scaleX/textureImage.width;
-			textureImage.scaleY = 20*textureImage.scaleY/textureImage.height;
-			
+			textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
 			addChild(textureImage);
 			
 			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
@@ -176,8 +174,7 @@ package scenes.game.display
 			}
 			if (outlineTextureImage)
 			{
-				outlineTextureImage.scaleX = 20*outlineTextureImage.scaleX/outlineTextureImage.width;
-				outlineTextureImage.scaleY = 20 * outlineTextureImage.scaleY / outlineTextureImage.height;
+				outlineTextureImage.width = outlineTextureImage.height = (associatedNode.isNarrow ? 14 : 20);
 				addChild(outlineTextureImage);
 			}
 			
@@ -228,7 +225,6 @@ package scenes.game.display
 		public function setNode(_associatedNode:Node):void
 		{
 			associatedNode = _associatedNode;
-			
 		}
 	}
 }

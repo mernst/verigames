@@ -81,7 +81,7 @@ package scenes.splashscreen
 				return_to_last_level_button.x = BUTTON_CENTER_X - return_to_last_level_button.width / 2;
 				return_to_last_level_button.y = TOP_BUTTON_Y;
 				
-				play_button = ButtonFactory.getInstance().createDefaultButton("New", 88, 32);
+				play_button = ButtonFactory.getInstance().createDefaultButton(PipeJam3.TUTORIAL_DEMO ? "Play" : "New", 88, 32);
 			}
 			else
 				play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);

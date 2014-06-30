@@ -194,7 +194,9 @@ package scenes.game.display
 					node.skin.draw();
 					if(node.skin.parent == null)
 						nodeDrawingBoard.addChild(node.skin);
-
+					node.skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * node.skin.width;
+					node.skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * node.skin.height;
+					
 					for each(var gameEdgeID:String in node.connectedEdgeIds)
 					{
 						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
@@ -213,7 +215,7 @@ package scenes.game.display
 									var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
 									var fromNodeID:String = edgeObj["from_var_id"];
 							 		var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-	
+									
 									edgeObj.edgeSprite.x += currentXOffset*Level.GRID_SIZE;
 									edgeObj.edgeSprite.x -= componentXDisplacement;
 									edgeObj.edgeSprite.y += currentYOffset*Level.GRID_SIZE;
@@ -247,10 +249,10 @@ package scenes.game.display
 			var skin:NodeSkin = NodeSkin.getNextSkin();
 			skin.setNode(node);
 			node.skin = skin;
-			skin.width = skin.height = SKIN_DIAMETER;			
+			skin.draw();
 
-			skin.x = node.bb.x - componentXDisplacement;
-			skin.y = node.bb.y - componentYDisplacement;
+			skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * skin.width;
+			skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * skin.height;
 			
 			node.setNodeDirty(true);
 		}
@@ -342,8 +344,6 @@ package scenes.game.display
 		
 		private function setupLine(fromNodeObj:Node, toNodeObj:Node, lineQuad:Quad, line1:Boolean):void
 		{
-			var p1:Point = fromNodeObj.centerPoint;
-			var p2:Point = toNodeObj.centerPoint;
 			var fromColor:int = NodeSkin.getColor(fromNodeObj);
 			var toColor:int = NodeSkin.getColor(toNodeObj);
 			var fromColorComplement:int = NodeSkin.getComplementColor(toNodeObj);
@@ -351,12 +351,10 @@ package scenes.game.display
 			if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
 				toColor = 0xff0000;
 			
-			
 			lineQuad.setVertexColor(0, fromColorComplement);
 			lineQuad.setVertexColor(1, toColor);
 			lineQuad.setVertexColor(2, fromColor);
 			lineQuad.setVertexColor(3, fromColorComplement);
-
 		}
 		
 		public function removeNode(node:Node, dispose:Boolean = false):void
