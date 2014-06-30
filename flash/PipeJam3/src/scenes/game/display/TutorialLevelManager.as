@@ -175,6 +175,11 @@ package scenes.game.display
 		public function getSolveButtonsAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
+				case L13635_TUTORIAL:
+				case L13663_TUTORIAL:
+				case L13722_TUTORIAL:
+				case L13727_TUTORIAL:
+					return true;
 				default:
 					return false;
 			}
@@ -209,6 +214,9 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
+				case L13601_TUTORIAL:
+				case L13635_TUTORIAL:
+				case L13663_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
@@ -248,6 +256,9 @@ package scenes.game.display
 					return 1.0;
 				case ZOOM_PAN_TUTORIAL:
 					return 6.0;
+				case L13722_TUTORIAL:
+				case L13727_TUTORIAL:
+					return 8.0;
 			}
 			return 1.0;
 		}
@@ -408,9 +419,7 @@ package scenes.game.display
 						null, null);
 				case L13601_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Here's a level generated from code!\n" +
-						"Try using the map in the top right\n" +
-						"        to navigate around.       ",
+						"Now try a level generated from real code!",
 						null,
 						null,
 						null, null);
@@ -424,7 +433,14 @@ package scenes.game.display
 						null,
 						null, null);
 				case L13663_TUTORIAL:
+					break;
 				case L13722_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Try using the map in the top right\n" +
+						"        to navigate around.       ",
+						null,
+						null,
+						null, null);
 				case L13727_TUTORIAL:
 					break;
 				// The following are not currently in use:
