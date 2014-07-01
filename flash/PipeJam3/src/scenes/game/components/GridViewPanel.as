@@ -66,7 +66,7 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static var WIDTH:Number = Constants.GameWidth;
-		public static var HEIGHT:Number = Constants.GameHeight;
+		public static var HEIGHT:Number = Constants.GameHeight - GameControlPanel.HEIGHT + 10;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;
@@ -908,15 +908,9 @@ package scenes.game.components
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
-			trace(newScale, " <-- newScale");
-			trace(m_currentLevel.m_boundingBox, " <-- m_currentLevel.m_boundingBox");
-			trace(content.scaleX, content.scaleY, " <-- content.scaleX,Y");
-			trace(content.x, content.y, " <-- pre scale");
 			scaleContent(newScale, newScale);
-			trace(content.x, content.y, " <-- pre move");
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
-				trace(startPtOffset, " <-- startPtOffset");
 				content.x += startPtOffset.x * content.scaleX;
 				content.y += startPtOffset.y * content.scaleY;
 				inactiveContent.x = content.x;
@@ -924,7 +918,6 @@ package scenes.game.components
 				newScale = m_currentLevel.tutorialManager.getStartScaleFactor();
 				scaleContent(newScale, newScale);
 			}
-			trace(content.x, content.y, " <-- after move");
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		

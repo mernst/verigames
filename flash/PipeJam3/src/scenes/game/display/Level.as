@@ -313,6 +313,8 @@ package scenes.game.display
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
 			addChild(m_edgesContainer);
 			addChild(m_nodesContainer);
+			//addChild(m_edgesContainer);
+			
 			addChild(m_errorContainer);
 			addChild(m_plugsContainer);
 			trace("load level time1", new Date().getTime()-time1);

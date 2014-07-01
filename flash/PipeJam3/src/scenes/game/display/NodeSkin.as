@@ -25,15 +25,14 @@ package scenes.game.display
 		static protected var LightGrayCircle:Texture;
 		static protected var DarkBlueCircle:Texture;
 		static protected var LightBlueCircle:Texture;
-		static protected var DarkBlueOutline:Texture;
-		static protected var LightBlueOutline:Texture;
+		static protected var DarkBlueCircleWithOutline:Texture;
+		static protected var LightBlueCircleWithOutline:Texture;
 		
 		protected var lockedIcon:Image;
 		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
-		protected var outlineTextureImage:Image;
 		protected var isInitialized:Boolean;
-				
+		
 		static protected var levelAtlas:TextureAtlas;
 		
 		static public const WIDE_NONEDITABLE_COLOR:int = 0x30302D;
@@ -127,8 +126,8 @@ package scenes.game.display
 				LightGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayLightStart);
 				DarkBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkStart);
 				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightStart);
-				DarkBlueOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
-				LightBlueOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
+				DarkBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
+				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
 			}
 		}
 		
@@ -139,13 +138,17 @@ package scenes.game.display
 				removeChild(textureImage, true);
 			}
 			
-			if (outlineTextureImage)
+			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
+			var narrowScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
+			if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
 			{
-				removeChild(outlineTextureImage, true);
-				outlineTextureImage = null;
+				textureImage = new Image(DarkBlueCircleWithOutline);
 			}
-			
-			if(!associatedNode.isNarrow && !associatedNode.isEditable)
+			else if (narrowScore > wideScore && !associatedNode.isNarrow && associatedNode.isEditable)
+			{
+				textureImage = new Image(LightBlueCircleWithOutline);
+			}
+			else if(!associatedNode.isNarrow && !associatedNode.isEditable)
 			{
 				textureImage = new Image(DarkGrayCircle);
 			}
@@ -164,19 +167,6 @@ package scenes.game.display
 			
 			textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
 			addChild(textureImage);
-			
-			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
-			var narrowScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
-			if (wideScore > narrowScore && associatedNode.isNarrow) {
-				outlineTextureImage = new Image(DarkBlueOutline);
-			} else if (narrowScore > wideScore && !associatedNode.isNarrow) {
-				outlineTextureImage = new Image(LightBlueOutline);
-			}
-			if (outlineTextureImage)
-			{
-				outlineTextureImage.width = outlineTextureImage.height = (associatedNode.isNarrow ? 14 : 20);
-				addChild(outlineTextureImage);
-			}
 			
 			if(associatedNode.isSelected)
 			{

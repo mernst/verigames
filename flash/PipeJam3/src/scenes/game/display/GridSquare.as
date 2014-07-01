@@ -293,14 +293,14 @@ package scenes.game.display
 				var toNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[toNodeID];
 				var fromNodeID:String = edge["from_var_id"];
 				var fromNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-			
+				
 				edge.edgeSprite.parent.unflatten();
 				setupLine(fromNodeObj, toNodeObj, edge.edgeSprite, true);
 				edge.edgeSprite.parent.flatten();
 			}
 			edge.isDirty = false;
 		}
-		
+		public static const LINE_THICKNESS:Number = 5;
 		//need to keep track of lines
 		public function drawLine(fromNodeObj:Node, toNodeObj:Node):Quad
 		{
@@ -312,7 +312,7 @@ package scenes.game.display
 			var hyp:Number = Math.sqrt(a+b);
 			
 			//draw the quad flat, rotate later
-			var lineQuad:Quad = new Triangle(hyp, 5);
+			var lineQuad:Quad = new Triangle(hyp, LINE_THICKNESS);
 			setupLine(fromNodeObj, toNodeObj, lineQuad, true);
 			rotateLine(p1, p2, hyp, lineQuad);
 			
@@ -336,10 +336,13 @@ package scenes.game.display
 			else if(dX > 0 && dY == 0)
 				theta = -Math.PI;
 			
-			line.y = 1;
 			line.rotation = theta;
-			line.x = -line.bounds.left + Math.min(p1.x, p2.x) - componentXDisplacement;
-			line.y = -line.bounds.top + Math.min(p1.y, p2.y) -  componentYDisplacement;
+			var centerDx:Number = 0;// - 0.5 * Math.sin(theta) * LINE_THICKNESS;
+			var centerDy:Number = 0;// - 0.5 * Math.cos(theta) * LINE_THICKNESS;
+			
+			line.x = -line.bounds.left + Math.min(p1.x, p2.x) - componentXDisplacement + centerDx;
+			line.y = -line.bounds.top + Math.min(p1.y, p2.y) -  componentYDisplacement + centerDy;
+			trace(centerDx, centerDy, theta, dX, dY, " <-- Line made");
 		}
 		
 		private function setupLine(fromNodeObj:Node, toNodeObj:Node, lineQuad:Quad, line1:Boolean):void
