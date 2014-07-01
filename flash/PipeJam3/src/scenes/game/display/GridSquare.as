@@ -51,8 +51,8 @@ package scenes.game.display
 			id = x+"_"+y;
 			gridXOffset = x;
 			gridYOffset = y;
-			componentXDisplacement = gridXOffset*Level.gridSize;
-			componentYDisplacement = gridYOffset*Level.gridSize;
+			componentXDisplacement = gridXOffset*Level.GRID_SIZE;
+			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
 			nodeList = new Vector.<Node>();
 			edgeList = new Array;
 		}
@@ -216,9 +216,9 @@ package scenes.game.display
 									var fromNodeID:String = edgeObj["from_var_id"];
 							 		var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 									
-									edgeObj.edgeSprite.x += currentXOffset*Level.gridSize;
+									edgeObj.edgeSprite.x += currentXOffset*Level.GRID_SIZE;
 									edgeObj.edgeSprite.x -= componentXDisplacement;
-									edgeObj.edgeSprite.y += currentYOffset*Level.gridSize;
+									edgeObj.edgeSprite.y += currentYOffset*Level.GRID_SIZE;
 									edgeObj.edgeSprite.y -= componentYDisplacement;
 									edgeDrawingBoard.addChild(edgeObj.edgeSprite);
 									edgeObj.parentXOffset = gridXOffset;
