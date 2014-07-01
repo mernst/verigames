@@ -1259,13 +1259,7 @@ package scenes.game.display
 									else
 										constraint1Value = nodeIDToConstraintsTwoWayMap[toNode.id];
 									
-									var constraint1:String = constraint1Value+"_"+constraint2Value;
-									//check for duplicates
-									if(storedConstraints[constraint1] == null)
-									{
-										storedConstraints[constraint1] = constraint1;
-										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint1Value));
-									}
+									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint1Value));
 								}
 							}
 						}
@@ -1285,13 +1279,7 @@ package scenes.game.display
 									else
 										constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
 									
-									var constraint2:String = constraint1Value+"_"+constraint2Value;
-									//check for duplicates
-									if(storedConstraints[constraint2] == null)
-									{
-										storedConstraints[constraint2] = constraint2;
-										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
-									}
+									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
 								}
 							}
 						}
@@ -1325,12 +1313,12 @@ package scenes.game.display
 								constraint2Value = nodeIDToConstraintsTwoWayMap[toNode.id];
 						}
 						
-						var constraint:String = constraint1Value+"_"+constraint2Value;
-						//check for duplicates
+						var constraint:String = constraint1Value+"_"+constraint2Value; 
+												
+						//check for duplicates						
 						if(storedConstraints[constraint] == null)
 						{
 							storedConstraints[constraint] = constraint;
-							
 							if(fromNode.isEditable && toNode.isEditable && !fromNode.isLocked && !toNode.isLocked)
 							{
 								constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value, constraint2Value));
@@ -1345,17 +1333,24 @@ package scenes.game.display
 								if(!fromNode.isNarrow)
 									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint2Value));
 							}
-							
-							if(toNode.isEditable && !toNode.isLocked && storedConstraints[constraint1Value] != toNode)
-							{
-								constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
-								storedConstraints[constraint1Value] = toNode;
-							}
-							if(fromNode.isEditable && !fromNode.isLocked && storedConstraints[constraint2Value] != fromNode)
-							{
-								constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
-								storedConstraints[constraint2Value] = fromNode;
-							}
+						}
+					}
+					
+					//do this once for all selected nodes
+					if(toNode.isEditable && !toNode.isLocked && constraint1Value != -1)
+					{
+						if(storedConstraints[constraint1Value] == null)
+						{
+							constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
+							storedConstraints[constraint1Value] = toNode;
+						}
+					}
+					if(fromNode.isEditable && !fromNode.isLocked && constraint2Value != -1)
+					{
+						if(storedConstraints[constraint2Value] == null)
+						{
+							constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
+							storedConstraints[constraint2Value] = fromNode;
 						}
 					}
 				}
@@ -1391,7 +1386,7 @@ package scenes.game.display
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var nodeUpdated:Boolean = false;
-			trace("update");
+			trace("update", unsat_weight);
 			if(	m_inSolver == false) //got marked done early
 				return;
 			
@@ -1420,6 +1415,7 @@ package scenes.game.display
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
+			trace(errMsg);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
@@ -1427,7 +1423,7 @@ package scenes.game.display
 			System.gc();
 			
 			//reset to score before solver ran, which might be current score
-			loadBestScoringConfiguration();
+		//	loadBestScoringConfiguration();
 			
 			//do it again
 			if(count < 3000)
