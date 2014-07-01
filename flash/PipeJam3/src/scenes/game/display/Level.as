@@ -1247,19 +1247,21 @@ package scenes.game.display
 						//deal with constraints to/from unselected nodes
 						if(nodeToCheck == fromNode)
 						{
+							if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = toNode;
+								constraint1Value = counter;
+								counter++;
+							}
+							else
+								constraint1Value = nodeIDToConstraintsTwoWayMap[toNode.id];
+							
 							if(!fromNode.isNarrow)
 							{
 								if(toNode.isEditable && !toNode.isLocked)
 								{
-									if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
-									{
-										nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
-										nodeIDToConstraintsTwoWayMap[counter] = toNode;
-										constraint1Value = counter;
-										counter++;
-									}
-									else
-										constraint1Value = nodeIDToConstraintsTwoWayMap[toNode.id];
+
 									
 									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint1Value));
 								}
@@ -1267,19 +1269,23 @@ package scenes.game.display
 						}
 						else
 						{
+							if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+								constraint1Value = counter;
+								counter++;
+							}
+							else
+								constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
+						
 							if(toNode.isNarrow)
 							{
+
+								
 								if(fromNode.isEditable && !fromNode.isLocked)
 								{
-									if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
-									{
-										nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
-										nodeIDToConstraintsTwoWayMap[counter] = fromNode;
-										constraint1Value = counter;
-										counter++;
-									}
-									else
-										constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
+
 									
 									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
 								}
