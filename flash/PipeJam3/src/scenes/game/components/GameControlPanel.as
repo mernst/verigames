@@ -50,11 +50,10 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static var WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 82 - 20;
+		public static const HEIGHT:Number = 60;// 82 - 20;
 		
-		public static const OVERLAP:Number = 72 - 10;
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108, 18, 284 - 10, 34);
-		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
+		public static const OVERLAP:Number = 2;// 72 - 10;
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(83, 3, 364, 30);//108, 18, 284 - 10, 34);
 		
 		/** Graphical object showing user's score */
 		private var m_scorePanel:BaseComponent;
@@ -139,23 +138,23 @@ package scenes.game.components
 			m_scorePanel.addChild(m_scoreTextfield);
 			
 			// Top shadow over score panel
-			var shadowOverlay:Quad = new Quad(SCORE_PANEL_AREA.width, 10, 0x0);
+			var shadowOverlay:Quad = new Quad(SCORE_PANEL_AREA.width + 10, 6, 0x0);
 			shadowOverlay.setVertexAlpha(2, 0);
 			shadowOverlay.setVertexAlpha(3, 0);
 			shadowOverlay.touchable = false;
 			m_scorePanel.addChild(shadowOverlay);
 			
-			const LEVEL_TEXT_WIDTH:Number = 100.0;
+			const LEVEL_TEXT_WIDTH:Number = 200.0;
 			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, NodeSkin.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;
-			m_levelNameTextfield.x = WIDTH - LEVEL_TEXT_WIDTH - 10;
-			m_levelNameTextfield.y = -10;
+			m_levelNameTextfield.x = 0.4 * WIDTH - 0.5 * LEVEL_TEXT_WIDTH;
+			m_levelNameTextfield.y = 36;
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			
 			m_newLevelButton = ButtonFactory.getInstance().createButton(PipeJam3.TUTORIAL_DEMO ? "Level Select" : "New Level", 44, 14, 8, 8, "Start a new level");
 			m_newLevelButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_newLevelButton.x = (SCORE_PANEL_AREA.x - m_newLevelButton.width) / 2 + 5;
-			m_newLevelButton.y = 25.5;
+			m_newLevelButton.y = 10;
 			
 			m_resetButton = ButtonFactory.getInstance().createButton("   Reset\t", 44, 14, 8, 8, "Reset the board to\nits starting condition");
 			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
@@ -167,7 +166,7 @@ package scenes.game.components
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
 			m_zoomInButton.x = WIDTH - 92.5;
-			m_zoomInButton.y = 21;
+			m_zoomInButton.y = 36;
 			
 			m_zoomOutButton = new ZoomOutButton();
 			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
@@ -203,8 +202,8 @@ package scenes.game.components
 			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", (m_recenterButton.x+m_recenterButton.width)-m_zoomInButton.x,
 											14, 8, 8, "Autosolve the current selection.\nShift-click or shift-marquee to select.");
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
-			m_solveButton.x = m_zoomInButton.bounds.x; //center around zoomOut center
-			m_solveButton.y = m_zoomInButton.bounds.bottom + 3;
+			m_solveButton.x = m_zoomInButton.x - m_solveButton.width - 10;
+			m_solveButton.y = m_zoomInButton.y - 3;
 			
 			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
@@ -618,7 +617,7 @@ package scenes.game.components
 		
 		public function addSoundButton(m_sfxButton:SoundButton):void
 		{
-			m_sfxButton.x = 20;
+			m_sfxButton.x = 8;
 			//center in between buttons
 			m_sfxButton.y = (m_newLevelButton.bounds.bottom + m_resetButton.bounds.top)/2 - m_sfxButton.height/2;
 			addChild(m_sfxButton);

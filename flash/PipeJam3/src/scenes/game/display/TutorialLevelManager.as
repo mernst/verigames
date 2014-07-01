@@ -266,12 +266,26 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+					return new Point(0, 15);
+				case WIDGET_PRACTICE_TUTORIAL:
+					return new Point(0, 5);
 				case LOCKED_TUTORIAL:
-					return new Point(0, -15);// move up by 15px (pan down)
+					return new Point(0, 10);
 				case LINKS_TUTORIAL:
 					return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
+				case JAMS_TUTORIAL:
+					return new Point(0, 15);
+				case WIDEN_TUTORIAL:
+					return new Point();
 				case ZOOM_PAN_TUTORIAL:
-					return new Point(-200, 100);// move left , up
+					return new Point( -200, 100);// move left , up
+				case L13601_TUTORIAL:
+				case L13635_TUTORIAL:
+				case L13663_TUTORIAL:
+				case L13722_TUTORIAL:
+				case L13727_TUTORIAL:
+					return new Point();
 			}
 			return new Point();
 		}
@@ -378,7 +392,7 @@ package scenes.game.display
 						null, null);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Gray Widgets are locked.\n" +
+						"Transparent Widgets are locked.\n" +
 						"Their colors can't be changed.",
 						null,
 						pointToNode("var_0"),
@@ -412,8 +426,8 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"       Larger levels require navigation:      \n" +
 						" Drag the background to move around the level.\n" +
-						"      Use the +/- keys to zoom in and out.    \n" +
-						"Navigate between jams using Tab and Shift+Tab.",
+						"      Use the +/- keys to zoom in and out.    "/*\n" +
+						"Navigate between jams using Tab and Shift+Tab."*/,
 						null,
 						null,
 						null, null);

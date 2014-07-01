@@ -86,17 +86,17 @@
 	<SubTexture name="DocumentIconTop" x="146" y="610" width="92" height="16" />
 	<SubTexture name="DocumentIconTopLeft" x="130" y="610" width="16" height="16" />
 	<SubTexture name="DocumentIconTopRight" x="238" y="610" width="16" height="16" />
-	<SubTexture name="LevelSelectWindow" x="0" y="0" width="610" height="590" />
+	<SubTexture name="LevelSelectWindow" x="0" y="0" width="607" height="590" />
 	<SubTexture name="LevelSelectWindowBar" x="2" y="868" width="590" height="67" />
-	<SubTexture name="LevelSelectWindowBottom" x="64" y="521" width="486" height="69" />
+	<SubTexture name="LevelSelectWindowBottom" x="64" y="521" width="477" height="69" />
 	<SubTexture name="LevelSelectWindowBottomLeft" x="0" y="521" width="64" height="69" />
-	<SubTexture name="LevelSelectWindowBottomRight" x="546" y="521" width="64" height="69" />
-	<SubTexture name="LevelSelectWindowCenter" x="64" y="95" width="486" height="427" />
+	<SubTexture name="LevelSelectWindowBottomRight" x="543" y="521" width="64" height="69" />
+	<SubTexture name="LevelSelectWindowCenter" x="64" y="95" width="477" height="427" />
 	<SubTexture name="LevelSelectWindowLeft" x="0" y="95" width="64" height="427" />
-	<SubTexture name="LevelSelectWindowRight" x="546" y="95" width="64" height="427" />
-	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="486" height="95" />
+	<SubTexture name="LevelSelectWindowRight" x="543" y="95" width="64" height="427" />
+	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="477" height="95" />
 	<SubTexture name="LevelSelectWindowTopLeft" x="0" y="0" width="64" height="95" />
-	<SubTexture name="LevelSelectWindowTopRight" x="546" y="0" width="64" height="95" />
+	<SubTexture name="LevelSelectWindowTopRight" x="543" y="0" width="64" height="95" />
 	<SubTexture name="MapMaximized" x="719" y="722" width="280" height="268" />
 	<SubTexture name="MapMinimized" x="425" y="946" width="280" height="62" />
 	<SubTexture name="MaximizeButton" x="883" y="601" width="30" height="30" />
@@ -157,4 +157,13 @@
 	<SubTexture name="TabInactiveTop" x="572" y="656" width="91" height="28" />
 	<SubTexture name="TabInactiveTopLeft" x="522" y="656" width="50" height="28" />
 	<SubTexture name="TabInactiveTopRight" x="664" y="656" width="50" height="28" />
+	<SubTexture name="rect8836" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8838" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8840" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8842" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8844" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8846" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8848" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8850" x="836" y="816" width="50" height="6" />
+	<SubTexture name="rect8852" x="836" y="816" width="50" height="6" />
 </TextureAtlas>
