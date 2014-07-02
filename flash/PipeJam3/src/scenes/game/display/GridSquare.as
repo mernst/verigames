@@ -314,13 +314,16 @@ package scenes.game.display
 			//draw the quad flat, rotate later
 			var lineQuad:Quad = new Triangle(hyp, LINE_THICKNESS);
 			setupLine(fromNodeObj, toNodeObj, lineQuad, true);
-			rotateLine(p1, p2, hyp, lineQuad);
+			//trace("drawing Line from ", fromNodeObj.id, " -> ", toNodeObj.id);
+			var otherEdgeId:String = toNodeObj.id + " -> " + fromNodeObj.id;
+			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];
+			rotateLine(p1, p2, hyp, lineQuad, otherEdgeObj);
 			
 			edgeDrawingBoard.addChild(lineQuad);
 			return lineQuad;
 		}
 		
-		protected function rotateLine(p1:Point, p2:Point, hyp:Number, line:Quad):void
+		protected function rotateLine(p1:Point, p2:Point, hyp:Number, line:Quad, offsetDoubleLine:Boolean):void
 		{
 			//get theta
 			//Sin(x) = opp/hyp
@@ -329,20 +332,41 @@ package scenes.game.display
 			var dX:Number = p1.x - p2.x;
 			var dY:Number = p1.y - p2.y;
 			
-			if(dX>0 && dY<0) // Q2
-				theta = (Math.PI/2) + ((Math.PI/2) - theta);
-			else if(dX>0 && dY>0) // Q3
+			var centerDx:Number = 0;
+			var centerDy:Number = 0;
+			if (dX <= 0 && dY < 0) { // Q4
+				// theta = theta
+				centerDx = -0.5 * LINE_THICKNESS * Math.sin(theta);
+				centerDy = -0.5 * LINE_THICKNESS * Math.cos(theta);
+			} else if (dX > 0 && dY <= 0) { // Q3
+				if (dY == 0) { // -180
+					theta = -Math.PI;
+				} else {
+					theta = (Math.PI / 2) + ((Math.PI / 2) - theta);
+				}
+				centerDy = 0.5 * LINE_THICKNESS * Math.cos(theta);
+			} else if (dX >= 0 && dY > 0) { // Q2
 				theta = -Math.PI - theta;
-			else if(dX > 0 && dY == 0)
-				theta = -Math.PI;
-			
+				if (dX == 0) {
+					centerDx = -0.5 * LINE_THICKNESS;
+				}
+			} else { // Q1
+				centerDx = 0.5 * LINE_THICKNESS * Math.sin(theta);
+				if (dY == 0) {
+					centerDy = -0.5 * LINE_THICKNESS * Math.cos(theta);
+				}
+			}
 			line.rotation = theta;
-			var centerDx:Number = 0;// - 0.5 * Math.sin(theta) * LINE_THICKNESS;
-			var centerDy:Number = 0;// - 0.5 * Math.cos(theta) * LINE_THICKNESS;
+			
+			if (offsetDoubleLine) {
+				centerDx += 1.5 * Math.sin(theta);
+				centerDy += 1.5 * Math.cos(theta);;
+			}
 			
 			line.x = -line.bounds.left + Math.min(p1.x, p2.x) - componentXDisplacement + centerDx;
 			line.y = -line.bounds.top + Math.min(p1.y, p2.y) -  componentYDisplacement + centerDy;
-			trace(centerDx, centerDy, theta, dX, dY, " <-- Line made");
+			
+			//trace(centerDx, centerDy, theta, dX, dY, " <-- Line made");
 		}
 		
 		private function setupLine(fromNodeObj:Node, toNodeObj:Node, lineQuad:Quad, line1:Boolean):void
