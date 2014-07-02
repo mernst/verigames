@@ -53,11 +53,11 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOGGING_ON:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
-		public static var TUTORIAL_DEMO:Boolean = false;
+		public static var TUTORIAL_DEMO:Boolean = true;
 		public static var USE_LOCAL_PROXY:Boolean = false;
-		public static var SHOW_PERFORMANCE_STATS:Boolean = true;
+		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
-		public static var PRODUCTION:Boolean = true;
+		public static var PRODUCTION:Boolean = false;
 		public static var INSTALL_DVD:Boolean = false;
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
