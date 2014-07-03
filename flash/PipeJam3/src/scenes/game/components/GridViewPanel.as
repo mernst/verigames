@@ -116,8 +116,9 @@ package scenes.game.components
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
-			m_border.width = WIDTH;
-			m_border.height = HEIGHT;
+			m_border.width = WIDTH + 10;
+			m_border.height = HEIGHT + 10;
+			m_border.x = m_border.y = -5;
 			m_border.touchable = false;
 			addChild(m_border);
 			
@@ -557,8 +558,6 @@ package scenes.game.components
 			onContentScaleChanged(oldScale);
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
-			trace(origViewCoords, " origViewCoords");
-			trace(newViewCoords, " newViewCoords");
 			// Adjust so that original centered point is still in the middle
 			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
 			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
@@ -567,7 +566,7 @@ package scenes.game.components
 			content.y -= dY * content.scaleY;
 			inactiveContent.x = content.x;
 			inactiveContent.y = content.y;
-			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 			
 			return true;
 		}
@@ -891,7 +890,7 @@ package scenes.game.components
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
-				trace("center to: " + localPt);
+				//trace("center to: " + localPt);
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Dictionary = m_currentLevel.getNodes();
