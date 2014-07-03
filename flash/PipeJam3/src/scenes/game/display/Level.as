@@ -533,6 +533,7 @@ package scenes.game.display
 		
 		public function restart():void
 		{
+			unselectAll();
 			if (!initialized) {
 				start();
 			} else {
