@@ -156,7 +156,7 @@ package scenes.game.display
 					edgeDrawingBoard.removeFromParent(true);
 				nodeDrawingBoard = new Sprite;
 				edgeDrawingBoard = new Sprite;
-				
+								
 				nodeDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
 
 				edgeList = new Array;
@@ -319,6 +319,8 @@ package scenes.game.display
 			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];
 			rotateLine(p1, p2, hyp, lineQuad, otherEdgeObj);
 			
+			if(edgeDrawingBoard == null)
+				edgeDrawingBoard = new Sprite;
 			edgeDrawingBoard.addChild(lineQuad);
 			return lineQuad;
 		}
@@ -404,7 +406,8 @@ package scenes.game.display
 					edgeObj.edgeSprite.removeFromParent(dispose);
 					edgeObj.edgeSprite = null;
 					
-					if(otherNode && otherNode.skin && otherNode.skin.parent && otherNode.skin.parent != nodeDrawingBoard)
+					//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
+					if(otherNode && otherNode.skin && otherNode.skin.parent != nodeDrawingBoard)
 					{
 						//destroy edge and recreate
 						otherNode.parentGrid.createEdges(otherNode);

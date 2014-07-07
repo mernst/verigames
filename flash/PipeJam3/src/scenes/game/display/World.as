@@ -757,6 +757,8 @@ package scenes.game.display
 			if (evt) {
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
 				if (newScore >= level_changed.getTargetScore()) {
+					if(active_level.m_inSolver)
+						solverDoneCallback("");
 					edgeSetGraphViewPanel.displayContinueButton(true);
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
