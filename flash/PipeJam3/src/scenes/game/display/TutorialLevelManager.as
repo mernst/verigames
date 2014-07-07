@@ -380,7 +380,7 @@ package scenes.game.display
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click on WIDGETS to change their color.\n" +
-						"Get 1 point for matching a widget to its outline color!",
+						"Get 1 point for matching a Widget to its outline color!",
 						null,
 						pointToNode("var_1"),
 						NineSliceBatch.TOP, null);
@@ -410,7 +410,7 @@ package scenes.game.display
 				case JAMS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"JAMS happen when wide Links enter\n" +
-						"narrow Widgets. This Jam penalizes\n" +
+						"narrow Widgets. Each Jam penalizes\n" +
 						"your score by " + 100 /* TODO: get from level*/ + " points.",
 						null,
 						pointToClash("var_0 -> type_0__var_0"),
@@ -426,7 +426,7 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"       Larger levels require navigation:      \n" +
 						" Drag the background to move around the level.\n" +
-						"      Use the +/- keys to zoom in and out.    "/*\n" +
+						"      Use the +/- buttons to zoom in and out.    "/*\n" +
 						"Navigate between jams using Tab and Shift+Tab."*/,
 						null,
 						null,
@@ -440,9 +440,9 @@ package scenes.game.display
 				case L13635_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"For larger levels we provide an autosolver.\n" + 
-						"Select a group of nodes by holding Shift and\n" +
+						"Select a group of Widgets by holding Shift and\n" +
 						"dragging the mouse or clicking on individual\n" +
-						"     nodes, then press \"Solve Selection\".   \n",
+						"     Widgets, then press \"Solve Selection\".   \n",
 						null,
 						null,
 						null, null);

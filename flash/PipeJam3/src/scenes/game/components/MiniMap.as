@@ -241,9 +241,9 @@ package scenes.game.components
 					bitmapTexture.dispose();
 				}
 				nodeErrorDict = new Dictionary();
-				for (var errorId:String in currentLevel.errorConstraintDict) {
-					var constraint:Constraint = currentLevel.errorConstraintDict[errorId];
-					if (!constraint.isSatisfied() && currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
+				for (var errorId:String in currentLevel.levelGraph.unsatisfiedConstraintDict) {
+					var constraint:Constraint = currentLevel.levelGraph.constraintsDict[errorId];
+					if (currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
 						var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
 						//mark the 'to' node to the error dict as the spot of the error
 						nodeErrorDict[edgeLayout["to_var_id"]] = edgeLayout;

@@ -98,8 +98,6 @@ package scenes.game.display
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
 				
 		protected var m_hidingErrorText:Boolean = false;
-//		protected var m_segmentHovered:GameEdgeSegment;
-		public var errorConstraintDict:Dictionary = new Dictionary();
 		
 		protected var m_nodesInactiveContainer:Sprite = new Sprite();
 		protected var m_errorInactiveContainer:Sprite = new Sprite();
@@ -141,11 +139,8 @@ package scenes.game.display
 		/** Tracks total distance components have been dragged since last visibile calculation */
 		public var totalMoveDist:Point = new Point();
 		
-		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
-		protected var m_currentConflictIndex:int = -1;
-//		protected var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-		protected var m_levelConflictEdgeDict:Dictionary = new Dictionary();
-		protected var m_conflictEdgesDirty:Boolean = true;
+		// The following is used for conflict scrolling purposes: (tracking list of current conflicts)
+		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
 		
@@ -288,7 +283,6 @@ package scenes.game.display
 			if (initialized) return;
 			trace("Level.initialize()...");
 			var time1:Number = new Date().getTime();
-			refreshLevelErrors();
 			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
 				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
@@ -348,14 +342,6 @@ package scenes.game.display
 			m_disposed = false;
 		}
 		
-		public function refreshLevelErrors():void
-		{
-			errorConstraintDict = new Dictionary();
-			for (var constriantId:String in levelGraph.constraintsDict) {
-				var constraint:Constraint = levelGraph.constraintsDict[constriantId] as Constraint;
-				if (!constraint.isSatisfied()) errorConstraintDict[constriantId] = constraint;
-			}
-		}
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			//clean up the old dictionary disposing of what's left
@@ -520,7 +506,7 @@ package scenes.game.display
 			// create all nodes, edges for tutorials so that the tutorial indicators/arrows have something to point at
 			if (tutorialManager) updateLevelDisplay();
 			initialize();
-			
+			m_currentConflictIndex = 0;
 			m_levelStartTime = new Date().time;
 			if (tutorialManager) tutorialManager.startLevel();
 			
@@ -542,6 +528,7 @@ package scenes.game.display
 					tutorialManager.startLevel();
 				}
 				m_levelStartTime = new Date().time;
+				m_currentConflictIndex = 0;
 			}
 			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 			onPropertyModeChange(propChangeEvt);
@@ -889,12 +876,12 @@ package scenes.game.display
 		
 		protected function onErrorAdded(evt:ErrorEvent):void
 		{
-			errorConstraintDict[evt.constraintError.id] = evt.constraintError;
+			
 		}
 		
 		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
-			delete errorConstraintDict[evt.constraintError.id];
+			
 		}
 		
 		
@@ -964,41 +951,29 @@ package scenes.game.display
 		 */
 		public function getNextConflict(forward:Boolean):DisplayObject
 		{
-//			if (m_conflictEdgesDirty) {
-//				for (var edgeId:String in m_gameEdgeDict) {
-//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-//					if (gameEdge.hasError()) {
-//						if (!m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
-//							// Add to list/dict if not on there already
-//							if (m_levelConflictEdges.indexOf(gameEdge) == -1) m_levelConflictEdges.push(gameEdge);
-//							m_levelConflictEdgeDict[gameEdge.m_id] = true;
-//						}
-//					} else {
-//						if (m_levelConflictEdgeDict.hasOwnProperty(gameEdge.m_id)) {
-//							// Remove from edge conflict list/dict if on it
-//							var delindx:int = m_levelConflictEdges.indexOf(gameEdge);
-//							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
-//							delete m_levelConflictEdgeDict[gameEdge.m_id];
-//						}
-//					}
-//				}
-//				m_conflictEdgesDirty = false;
-//			}
-//			//keep track of number of conflicts
-//			PipeJamGame.levelInfo.conflicts = m_levelConflictEdges.length;
-//			
-//			if (m_levelConflictEdges.length == 0) return null;
-//			if (forward) {
-//				m_currentConflictIndex++;
-//			} else {
-//				m_currentConflictIndex--;
-//			}
-//			if (m_currentConflictIndex >= m_levelConflictEdges.length) {
-//				m_currentConflictIndex = 0;
-//			} else if (m_currentConflictIndex < 0) {
-//				m_currentConflictIndex = m_levelConflictEdges.length - 1;
-//			}
-//			return m_levelConflictEdges[m_currentConflictIndex].errorContainer;
+			var i:int = 0;
+			if (m_currentConflictIndex < 0) m_currentConflictIndex = 0;
+			var firstEdge:DisplayObject;
+			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
+				if (i == m_currentConflictIndex) {
+					var edge:DisplayObject = getEdgeContainer(edgeId);
+					if (edge) {
+						m_currentConflictIndex++;
+						return edge;
+					} else {
+						trace("getEdgeContainer(", edgeId, ") returned null");
+					}
+				} else if (i == 0) {
+					firstEdge = getEdgeContainer(edgeId);
+				} else if (!firstEdge) {
+					firstEdge = getEdgeContainer(edgeId);
+				}
+				i++;
+			}
+			if (firstEdge) { // if no edge returned yet, assuming we've gone over the # of edges, return the first one and reset the counter
+				m_currentConflictIndex = 1;
+				return firstEdge;
+			}
 			return null;
 		}
 		
@@ -1076,7 +1051,6 @@ package scenes.game.display
 			}
 			if (levelGraph.prevScore != levelGraph.currentScore)
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
-			m_conflictEdgesDirty = true;
 		}
 		
 		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
