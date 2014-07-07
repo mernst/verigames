@@ -239,6 +239,11 @@ package scenes.game.components
 					removeChild(bitmapImage, true);
 					bitmapImage.dispose();
 					bitmapTexture.dispose();
+					if(nodeBitmapData)
+					{
+						nodeBitmapData.dispose();
+						nodeBitmapData = null;
+					}
 				}
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.errorConstraintDict) {

@@ -1100,7 +1100,12 @@ package scenes.game.display
 			active_level = newLevel;
 			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-				
+			
+			if(miniMap)
+			{
+				miniMap.imageIsDirty = true;
+			}
+			
 			if (active_level.tutorialManager) {
 				miniMap.visible = active_level.tutorialManager.getMiniMapShown();
 			} else {
