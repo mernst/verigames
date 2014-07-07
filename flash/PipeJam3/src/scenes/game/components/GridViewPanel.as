@@ -1,5 +1,6 @@
 package scenes.game.components
 {
+	import display.TextBubble;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.BitmapData;
@@ -116,8 +117,9 @@ package scenes.game.components
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
-			m_border.width = WIDTH;
-			m_border.height = HEIGHT;
+			m_border.width = WIDTH + 10;
+			m_border.height = HEIGHT + 10;
+			m_border.x = m_border.y = -5;
 			m_border.touchable = false;
 			addChild(m_border);
 			
@@ -557,8 +559,6 @@ package scenes.game.components
 			onContentScaleChanged(oldScale);
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
-			trace(origViewCoords, " origViewCoords");
-			trace(newViewCoords, " newViewCoords");
 			// Adjust so that original centered point is still in the middle
 			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
 			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
@@ -567,7 +567,7 @@ package scenes.game.components
 			content.y -= dY * content.scaleY;
 			inactiveContent.x = content.x;
 			inactiveContent.y = content.y;
-			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 			
 			return true;
 		}
@@ -891,7 +891,7 @@ package scenes.game.components
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
-				trace("center to: " + localPt);
+				//trace("center to: " + localPt);
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Dictionary = m_currentLevel.getNodes();
@@ -962,7 +962,7 @@ package scenes.game.components
 				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = PipeJamGameScene.inTutorial ? 2.0 : 0.0;
 				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
 				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, 0xFFEC00);
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, TextBubble.BROWN);
 				if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				m_fanfareTextContainer.alpha = 1;

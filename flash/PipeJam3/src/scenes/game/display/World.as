@@ -765,7 +765,7 @@ package scenes.game.display
 				}
 				if (oldScore != newScore && evt.pt != null) {
 					var thisPt:Point = globalToLocal(evt.pt);
-					TextPopup.popupText(evt.target as DisplayObjectContainer, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+					TextPopup.popupText(evt.target as DisplayObjectContainer, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x008000 : 0x800000);
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
@@ -888,22 +888,14 @@ package scenes.game.display
 		public function onErrorAdded(event:ErrorEvent):void
 		{
 			if (active_level) {
-				var edgeLayout:Object = active_level.edgeLayoutObjs[event.constraintError.id];
-				if (!edgeLayout) {
-					throw new Error("No layout found for constraint with error:" + event.constraintError.id);
-				}
-				if (miniMap) miniMap.errorConstraintAdded(edgeLayout);
+				//if (miniMap) miniMap.errorConstraintAdded(edgeLayout);
 			}
 		}
 		
 		public function onErrorRemoved(event:ErrorEvent):void
 		{
 			if (active_level) {
-				var edgeLayout:Object = active_level.edgeLayoutObjs[event.constraintError.id];
-				if (!edgeLayout) {
-					throw new Error("No layout found for constraint with error:" + event.constraintError.id);
-				}
-				if (miniMap) miniMap.errorRemoved(edgeLayout);
+				//if (miniMap) miniMap.errorRemoved(edgeLayout);
 			}
 		}
 		
