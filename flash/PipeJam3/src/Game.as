@@ -35,8 +35,6 @@ package
 		private var m_blackFadeScreen:Quad;
 		
 		private static const FADE_TIME:Number = 0.5;
-		public static const START_BUSY_ANIMATION:String = "startBusyAnimation";
-		public static const STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
 		
 		public static const SUPPRESS_TRACE_STATEMENTS:Boolean = true;
 		
@@ -59,8 +57,8 @@ package
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
-			addEventListener(START_BUSY_ANIMATION, onStartBusyAnimation);
-			addEventListener(STOP_BUSY_ANIMATION, onStopBusyAnimation);
+			addEventListener(Constants.START_BUSY_ANIMATION, onStartBusyAnimation);
+			addEventListener(Constants.STOP_BUSY_ANIMATION, onStopBusyAnimation);
         }
 		
 		protected function prepareAssets():void

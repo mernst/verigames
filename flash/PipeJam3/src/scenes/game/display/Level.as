@@ -275,7 +275,7 @@ package scenes.game.display
 //			refreshTroublePoints();
 //			flatten();
 			
-			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION,true));
 		}
 		
 		public function initialize():void

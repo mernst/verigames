@@ -7,16 +7,6 @@ package display
 	
 	public class NineSliceBatch extends Sprite 
 	{
-		public static const TOP_LEFT:String = "TopLeft";
-		public static const TOP:String = "Top";
-		public static const TOP_RIGHT:String = "TopRight";
-		public static const LEFT:String = "Left";
-		public static const CENTER:String = "Center";
-		public static const RIGHT:String = "Right";
-		public static const BOTTOM_LEFT:String = "BottomLeft";
-		public static const BOTTOM:String = "Bottom";
-		public static const BOTTOM_RIGHT:String = "BottomRight";
-		
 		protected var mWidth:Number;
 		protected var mHeight:Number;
 		protected var mCx:Number;
@@ -53,15 +43,15 @@ package display
 			
 			mAtlas = AssetInterface.getTextureAtlas(_atlasFile, _atlasImgName, _atlasXMLName);
 			
-			mTopLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + TOP_LEFT));
-			mTop = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + TOP));
-			mTopRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + TOP_RIGHT));
-			mLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + LEFT));
-			mCenter = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + CENTER));
-			mRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + RIGHT));
-			mBottomLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + BOTTOM_LEFT));
-			mBottom = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + BOTTOM));
-			mBottomRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + BOTTOM_RIGHT));
+			mTopLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.TOP_LEFT));
+			mTop = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.TOP));
+			mTopRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.TOP_RIGHT));
+			mLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.LEFT));
+			mCenter = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.CENTER));
+			mRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.RIGHT));
+			mBottomLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.BOTTOM_LEFT));
+			mBottom = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.BOTTOM));
+			mBottomRight = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.BOTTOM_RIGHT));
 			
 			updateX();
 			updateY();

@@ -245,7 +245,7 @@ package networking
 			//do this so I can debug the object...
 			var levelInformation:Object = PipeJamGame.levelInfo;
 			
-			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
+			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Constants.START_BUSY_ANIMATION,true));
 			
 			var m_id:int = 100000;
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.hasOwnProperty("id") && PipeJamGame.levelInfo.id.length < 5)

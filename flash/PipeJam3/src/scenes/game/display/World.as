@@ -25,7 +25,6 @@ package scenes.game.display
 	import dialogs.SimpleAlertDialog;
 	import dialogs.SubmitLevelDialog;
 	
-	import display.NineSliceBatch;
 	import display.SoundButton;
 	import display.TextBubble;
 	import display.ToolTipText;
@@ -1220,18 +1219,18 @@ package scenes.game.display
 				function pointAt(lev:Level):DisplayObject {
 					return evt.component;
 				}
-				var pointFrom:String = NineSliceBatch.TOP_LEFT;
+				var pointFrom:String = Constants.TOP_LEFT;
 				var onTop:Boolean = evt.point.y < 80;
 				var onLeft:Boolean = evt.point.x < 80;
 				if (onTop && onLeft) {
 					// If in top left corner, move to bottom right
-					pointFrom = NineSliceBatch.BOTTOM_RIGHT;
+					pointFrom = Constants.BOTTOM_RIGHT;
 				} else if (onLeft) {
 					// If on left, move to top right
-					pointFrom = NineSliceBatch.TOP_RIGHT;
+					pointFrom = Constants.TOP_RIGHT;
 				} else if (onTop) {
 					// If on top, move to bottom left
-					pointFrom = NineSliceBatch.BOTTOM_LEFT;
+					pointFrom = Constants.BOTTOM_LEFT;
 				}
 				m_activeToolTip = new ToolTipText(evt.text, active_level, false, pointAt, pointFrom);
 				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());

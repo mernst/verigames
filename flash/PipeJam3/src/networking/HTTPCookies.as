@@ -4,8 +4,6 @@ package networking
 	
 	public class HTTPCookies
 	{
-		public static const TUTORIALS_COMPLETED:String = "tutorialLevelCompleted";
-		
 		public static function getCookie(key:String):*
 		{
 			if (!ExternalInterface.available) {

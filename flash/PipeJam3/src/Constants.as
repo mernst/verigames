@@ -25,5 +25,23 @@ package
 		
 		public static const CACHE_MUTE_MUSIC:String = "muteMusic";
 		public static const CACHE_MUTE_SFX:String = "muteSfx";
+		
+		public static const GOLD:uint = 0xFFEC00;
+		public static const BROWN:uint = 0x624202;
+		public static const RED:uint = 0xFF0000;
+		
+		//Nine slice
+		public static const TOP_LEFT:String = "TopLeft";
+		public static const TOP:String = "Top";
+		public static const TOP_RIGHT:String = "TopRight";
+		public static const LEFT:String = "Left";
+		public static const CENTER:String = "Center";
+		public static const RIGHT:String = "Right";
+		public static const BOTTOM_LEFT:String = "BottomLeft";
+		public static const BOTTOM:String = "Bottom";
+		public static const BOTTOM_RIGHT:String = "BottomRight";
+		
+		public static const START_BUSY_ANIMATION:String = "startBusyAnimation";
+		public static const STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
     }
 }

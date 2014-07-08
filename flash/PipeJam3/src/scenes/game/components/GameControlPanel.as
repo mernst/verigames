@@ -15,7 +15,6 @@ package scenes.game.components
 	import display.RecenterButton;
 	import display.SmallScreenButton;
 	import display.SoundButton;
-	import display.TextBubble;
 	import display.ZoomInButton;
 	import display.ZoomOutButton;
 	
@@ -130,7 +129,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, BaseComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width/10, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, 0x0);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
@@ -224,8 +223,8 @@ package scenes.game.components
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 			addChild(m_recenterButton);
-			addChild(m_fullScreenButton);
-			addChild(m_smallScreenButton);
+			//addChild(m_fullScreenButton);
+			//addChild(m_smallScreenButton);
 			addChild(m_solveButton);
 		}
 		
@@ -420,7 +419,7 @@ package scenes.game.components
 			
 			if (targetScore < int.MAX_VALUE) {
 				if (!m_targetScoreLine) {
-					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.65 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
+					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.65 * GameControlPanel.SCORE_PANEL_AREA.height, Constants.GOLD, Constants.GOLD, "Target Score");
 				} else {
 					m_targetScoreLine.update(targetScore.toString());
 				}
@@ -575,7 +574,7 @@ package scenes.game.components
 				var score:String =  highScoreArray[0].current_score;
 				
 				if (!m_bestScoreLine) {
-					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.RED, TextBubble.RED, "High Score");
+					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, Constants.RED, Constants.RED, "High Score");
 					m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchHighScore);
 				} else {
 					m_bestScoreLine.update(score);

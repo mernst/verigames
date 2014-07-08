@@ -12,7 +12,7 @@ package display
 		private static const OUTLINE_CLR:uint = 0x0;
 		private static const OUTLINE_WEIGHT:Number = 2;
 		
-		public function ToolTipText(text:String, level:Level, persistent:Boolean, pointAtFunction:Function, pointFrom:String = NineSliceBatch.TOP_LEFT, pointTo:String = NineSliceBatch.CENTER)
+		public function ToolTipText(text:String, level:Level, persistent:Boolean, pointAtFunction:Function, pointFrom:String = Constants.TOP_LEFT, pointTo:String = Constants.CENTER)
 		{
 			var fontSz:uint = persistent ? PERSISTENT_FONT_SZ : ACTIVE_FONT_SZ;
 			var textColor:uint = persistent ? 0x0 : 0xFFFFFF;

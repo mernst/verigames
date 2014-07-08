@@ -44,6 +44,7 @@ package scenes.game.display
 		protected var componentXDisplacement:Number;
 		protected var componentYDisplacement:Number;
 		
+		private static const LINE_THICKNESS:Number = 5;
 		static public const SKIN_DIAMETER:Number = 20;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
@@ -300,7 +301,7 @@ package scenes.game.display
 			}
 			edge.isDirty = false;
 		}
-		public static const LINE_THICKNESS:Number = 5;
+		
 		//need to keep track of lines
 		public function drawLine(fromNodeObj:Node, toNodeObj:Node):Quad
 		{

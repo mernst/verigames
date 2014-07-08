@@ -170,7 +170,7 @@ package dialogs
 			onBackToGameButtonTriggered();//close menu
 			if(PipeJamGame.levelInfo != null)
 			{
-				dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
+				dispatchEvent(new Event(Constants.START_BUSY_ANIMATION,true));
 				GameFileHandler.getLayoutList(onRequestLayoutList);
 			}
 			else
@@ -179,7 +179,7 @@ package dialogs
 		
 		protected function onRequestLayoutList(result:int, layoutList:Vector.<Object>):void
 		{
-			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
+			dispatchEvent(new Event(Constants.STOP_BUSY_ANIMATION,true));
 			var layoutSelectScene:LayoutSelectScene = new LayoutSelectScene(Scene.m_gameSystem as PipeJamGame);
 			layoutSelectScene.setLayouts(layoutList);
 			parent.addChild(layoutSelectScene);

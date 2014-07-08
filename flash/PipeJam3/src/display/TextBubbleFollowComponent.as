@@ -16,12 +16,12 @@ package display
 		
 		public function TextBubbleFollowComponent(_pointAtFn:Function, _level:Level, _text:String, 
 		                                          _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
-												  _pointFrom:String = NineSliceBatch.BOTTOM_LEFT,
-												  _pointTo:String = NineSliceBatch.BOTTOM_LEFT, 
+												  _pointFrom:String = Constants.BOTTOM_LEFT,
+												  _pointTo:String = Constants.BOTTOM_LEFT, 
 												  _size:Point = null, _arrowSz:Number = 10, 
 												  _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5,
 												  _inset:Number = 3, _showBox:Boolean = true, 
-												  _arrowColor:uint = BROWN, _outlineWeight:Number = 0, 
+												  _arrowColor:uint = Constants.BROWN, _outlineWeight:Number = 0, 
 												  _outlineColor:uint=0x0)
 		{
 			m_pointAtFn = _pointAtFn;

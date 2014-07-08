@@ -26,7 +26,6 @@ package scenes.game.components
 	import display.BasicButton;
 	import display.MapHideButton;
 	import display.MapShowButton;
-	import display.TextBubble;
 	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import graph.PropDictionary;
@@ -294,7 +293,7 @@ package scenes.game.components
 				if (m_viewSpaceQuads == null) {
 					m_viewSpaceQuads = new Vector.<Quad>();
 					for (var i:int = 0; i < 8; i++) {
-						var myq:Quad = new Quad(1, 1, TextBubble.GOLD);
+						var myq:Quad = new Quad(1, 1, Constants.GOLD);
 						m_viewSpaceQuads.push(myq);
 						m_viewSpaceIndicator.addChild(myq);
 					}

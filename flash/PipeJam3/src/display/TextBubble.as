@@ -43,17 +43,13 @@ package display
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
 		protected var m_globalToPoint:Point;
 		
-		public static const GOLD:uint = 0xFFEC00;
-		public static const BROWN:uint = 0x624202;
-		public static const RED:uint = 0xFF0000;
-		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
 		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 
-								   _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, 
-								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
+								   _pointFrom:String = Constants.BOTTOM_LEFT, 
+								   _pointTo:String = Constants.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:uint = BROWN, _outlineWeight:Number = 0,
+								   _showBox:Boolean = true, _arrowColor:uint = Constants.BROWN, _outlineWeight:Number = 0,
 								   _outlineColor:uint = 0x0)
 		{
 			m_fontSize = _fontSize;
@@ -142,42 +138,42 @@ package display
 				var offset:Point = new Point();
 				
 				switch (m_pointFrom) {
-					case NineSliceBatch.TOP_LEFT:
+					case Constants.TOP_LEFT:
 						offset.x = -1;
 						offset.y = -1;
 						break;
 					
-					case NineSliceBatch.BOTTOM_RIGHT:
+					case Constants.BOTTOM_RIGHT:
 						offset.x = 1;
 						offset.y = 1;
 						break;
 					
-					case NineSliceBatch.TOP_RIGHT:
+					case Constants.TOP_RIGHT:
 						offset.x = 1;
 						offset.y = -1;
 						break;
 					
-					case NineSliceBatch.BOTTOM_LEFT:
+					case Constants.BOTTOM_LEFT:
 						offset.x = -1;
 						offset.y = 1;
 						break;
 					
-					case NineSliceBatch.LEFT:
+					case Constants.LEFT:
 						offset.x = -1;
 						offset.y = 0;
 						break;
 					
-					case NineSliceBatch.RIGHT:
+					case Constants.RIGHT:
 						offset.x = 1;
 						offset.y = 0;
 						break;
 					
-					case NineSliceBatch.BOTTOM:
+					case Constants.BOTTOM:
 						offset.x = 0;
 						offset.y = 1;
 						break;
 					
-					case NineSliceBatch.TOP:
+					case Constants.TOP:
 					default:
 						offset.x = 0;
 						offset.y = -1;
@@ -185,39 +181,39 @@ package display
 				}
 				
 				switch (m_pointTo ? m_pointTo : m_pointFrom) {
-					case NineSliceBatch.CENTER:
+					case Constants.CENTER:
 						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), 0.5 * (m_pointAt.bounds.top + m_pointAt.bounds.bottom));
 						break;
 					
-					case NineSliceBatch.TOP_LEFT:
+					case Constants.TOP_LEFT:
 						pt = m_pointAt.bounds.topLeft;
 						break;
 					
-					case NineSliceBatch.BOTTOM_RIGHT:
+					case Constants.BOTTOM_RIGHT:
 						pt = m_pointAt.bounds.bottomRight;
 						break;
 					
-					case NineSliceBatch.TOP_RIGHT:
+					case Constants.TOP_RIGHT:
 						pt = new Point(m_pointAt.bounds.right, m_pointAt.bounds.top);
 						break;
 					
-					case NineSliceBatch.BOTTOM_LEFT:
+					case Constants.BOTTOM_LEFT:
 						pt = new Point(m_pointAt.bounds.left, m_pointAt.bounds.bottom);
 						break;
 					
-					case NineSliceBatch.LEFT:
+					case Constants.LEFT:
 						pt = new Point(m_pointAt.bounds.left, 0.5 * (m_pointAt.bounds.bottom + m_pointAt.bounds.top));
 						break;
 					
-					case NineSliceBatch.RIGHT:
+					case Constants.RIGHT:
 						pt = new Point(m_pointAt.bounds.right, 0.5 * (m_pointAt.bounds.bottom + m_pointAt.bounds.top));
 						break;
 					
-					case NineSliceBatch.BOTTOM:
+					case Constants.BOTTOM:
 						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), m_pointAt.bounds.bottom);
 						break;
 					
-					case NineSliceBatch.TOP:
+					case Constants.TOP:
 					default:
 						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), m_pointAt.bounds.top);
 						break;
@@ -248,31 +244,31 @@ package display
 				var newX:Number = Constants.GameWidth / 2;
 				var newY:Number = height / 2 - m_paddingSz + m_inset;
 				switch (m_pointFrom) {
-					case NineSliceBatch.CENTER:
+					case Constants.CENTER:
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
-					case NineSliceBatch.TOP_LEFT:
+					case Constants.TOP_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
 						break;
-					case NineSliceBatch.TOP_RIGHT:
+					case Constants.TOP_RIGHT:
 						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
 						break;
-					case NineSliceBatch.LEFT:
+					case Constants.LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
-					case NineSliceBatch.RIGHT:
+					case Constants.RIGHT:
 						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
-					case NineSliceBatch.BOTTOM:
+					case Constants.BOTTOM:
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
-					case NineSliceBatch.BOTTOM_LEFT:
+					case Constants.BOTTOM_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
-					case NineSliceBatch.BOTTOM_RIGHT:
+					case Constants.BOTTOM_RIGHT:
 						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;

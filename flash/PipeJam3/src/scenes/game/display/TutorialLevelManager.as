@@ -1,6 +1,5 @@
 package scenes.game.display 
 {
-	import display.NineSliceBatch;
 	import events.TutorialEvent;
 	import graph.PropDictionary;
 	import starling.core.Starling;
@@ -15,26 +14,26 @@ package scenes.game.display
 	public class TutorialLevelManager extends EventDispatcher
 	{
 		// This is the order the tutorials appers in:
-		public static const WIDGET_TUTORIAL:String = "widget";
-		public static const WIDGET_PRACTICE_TUTORIAL:String = "widgetpractice";
-		public static const LOCKED_TUTORIAL:String = "locked";
-		public static const LINKS_TUTORIAL:String = "links";
-		public static const JAMS_TUTORIAL:String = "jams";
-		public static const WIDEN_TUTORIAL:String = "widen";
-		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
-		public static const L13601_TUTORIAL:String = "L13601";
-		public static const L13635_TUTORIAL:String = "L13635";
-		public static const L13663_TUTORIAL:String = "L13663";
-		public static const L13722_TUTORIAL:String = "L13722";
-		public static const L13727_TUTORIAL:String = "L13727";
+		private static const WIDGET_TUTORIAL:String = "widget";
+		private static const WIDGET_PRACTICE_TUTORIAL:String = "widgetpractice";
+		private static const LOCKED_TUTORIAL:String = "locked";
+		private static const LINKS_TUTORIAL:String = "links";
+		private static const JAMS_TUTORIAL:String = "jams";
+		private static const WIDEN_TUTORIAL:String = "widen";
+		private static const ZOOM_PAN_TUTORIAL:String = "zoompan";
+		private static const L13601_TUTORIAL:String = "L13601";
+		private static const L13635_TUTORIAL:String = "L13635";
+		private static const L13663_TUTORIAL:String = "L13663";
+		private static const L13722_TUTORIAL:String = "L13722";
+		private static const L13727_TUTORIAL:String = "L13727";
 		
 		// Not currently used:
-		public static const OPTIMIZE_TUTORIAL:String = "optimize";
-		public static const LAYOUT_TUTORIAL:String = "layout";
-		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
-		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
-		public static const SKILLS_A_TUTORIAL:String = "skillsa";
-		public static const SKILLS_B_TUTORIAL:String = "skillsb";
+		private static const OPTIMIZE_TUTORIAL:String = "optimize";
+		private static const LAYOUT_TUTORIAL:String = "layout";
+		private static const GROUP_SELECT_TUTORIAL:String = "groupselect";
+		private static const CREATE_JOINT_TUTORIAL:String = "createjoint";
+		private static const SKILLS_A_TUTORIAL:String = "skillsa";
+		private static const SKILLS_B_TUTORIAL:String = "skillsb";
 		
 		private var m_tutorialTag:String;
 		private var m_levelStarted:Boolean = false;
@@ -103,7 +102,7 @@ package scenes.game.display
 					var jammed:Boolean = (propChanged == PropDictionary.PROP_NARROW && !propValue);
 					var jamText:String = "Jam cleared! +" + 100 /* TODO: get from level*/ + " points.";
 					if (jammed) {
-						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
 						tips.push(tip);
 						jamText = "JAMS happen when wide Links enter\n" +
 						"narrow Widgets. This Jam penalizes\n" +
@@ -115,7 +114,7 @@ package scenes.game.display
 						jamText,
 						null,
 						pointToClash("var_0 -> type_0__var_0"),
-						NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
+						Constants.TOP_RIGHT, Constants.TOP);
 					var txtVec:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 					txtVec.push(m_currentTutorialText);
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, txtVec));
@@ -130,7 +129,7 @@ package scenes.game.display
 						break;
 					}
 					widthTxt = !propValue ? "Wide Link" : "Narrow Link";
-					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), Constants.BOTTOM_RIGHT, Constants.RIGHT);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
@@ -138,7 +137,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					if (idChanged == "var_0") {
 						if (propValue) {
-							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
 							tips.push(tip);
 						}
 						m_currentToolTipsText = tips;
@@ -339,23 +338,23 @@ package scenes.game.display
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
 				case LOCKED_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("var_0"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("var_0"), Constants.BOTTOM, Constants.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("var_1"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("var_1"), Constants.BOTTOM, Constants.CENTER);
 					tips.push(tip);
 					break;
 				case JAMS_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
 					tips.push(tip);
 					break;
 				case LINKS_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("var_0 -> type_1__var_0"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("var_0 -> type_1__var_0"), Constants.BOTTOM_RIGHT, Constants.RIGHT);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("var_1 -> type_1__var_1"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("var_1 -> type_1__var_1"), Constants.BOTTOM_RIGHT, Constants.RIGHT);
 					tips.push(tip);
 					break;
 				case WIDEN_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
 					tips.push(tip);
 					break;
 				// Not used
@@ -366,7 +365,7 @@ package scenes.game.display
 						"Separate the Widgets.",
 						null,
 						pointToNode("var_3"),
-						NineSliceBatch.BOTTOM_LEFT, null);
+						Constants.BOTTOM_LEFT, null);
 					tips.push(tip);
 					break;
 			}
@@ -383,7 +382,7 @@ package scenes.game.display
 						"Get 1 point for matching a Widget to its outline color!",
 						null,
 						pointToNode("var_1"),
-						NineSliceBatch.TOP, null);
+						Constants.TOP, null);
 				case WIDGET_PRACTICE_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Practice clicking on Widgets and matching colors.\n",
@@ -396,7 +395,7 @@ package scenes.game.display
 						"Their colors can't be changed.",
 						null,
 						pointToNode("var_0"),
-						NineSliceBatch.TOP, null);
+						Constants.TOP, null);
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets are connected\n" +
@@ -406,7 +405,7 @@ package scenes.game.display
 						"Links.",
 						null,
 						pointToEdge("var_0 -> type_1__var_0"),
-						NineSliceBatch.LEFT, null);
+						Constants.LEFT, null);
 				case JAMS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"JAMS happen when wide Links enter\n" +
@@ -414,7 +413,7 @@ package scenes.game.display
 						"your score by " + 100 /* TODO: get from level*/ + " points.",
 						null,
 						pointToClash("var_0 -> type_0__var_0"),
-						NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
+						Constants.TOP_RIGHT, Constants.TOP);
 				case WIDEN_TUTORIAL:
 					return null;/* new TutorialManagerTextInfo(
 						"Click the widgets to widen their links\n" +
@@ -464,7 +463,7 @@ package scenes.game.display
 						"Try different configurations to improve your score!",
 						null,
 						null,
-						NineSliceBatch.BOTTOM_LEFT, null);
+						Constants.BOTTOM_LEFT, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"The LAYOUT can be changed to help visualize the\n" +
@@ -492,13 +491,13 @@ package scenes.game.display
 						"Use the skills\nyou've learned to\nsolve a bigger\nchallenge!",
 						null,
 						null,
-						NineSliceBatch.TOP_LEFT, null);
+						Constants.TOP_LEFT, null);
 				case SKILLS_B_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Good work!\nTry using the map\nin the top right\nto navigate this\nlarger level.",
 						null,
 						null,
-						NineSliceBatch.TOP_LEFT, null);
+						Constants.TOP_LEFT, null);
 			}
 			return null;
 		}
