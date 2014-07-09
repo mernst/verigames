@@ -425,8 +425,8 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"       Larger levels require navigation:      \n" +
 						" Drag the background to move around the level.\n" +
-						"      Use the +/- buttons to zoom in and out.    "/*\n" +
-						"Navigate between jams using Tab and Shift+Tab."*/,
+						"      Use the +/- buttons to zoom in and out. \n" +
+						"Navigate between jams using Tab and Shift+Tab.",
 						null,
 						null,
 						null, null);

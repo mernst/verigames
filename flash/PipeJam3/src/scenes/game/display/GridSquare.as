@@ -303,10 +303,10 @@ package scenes.game.display
 		}
 		
 		//need to keep track of lines
-		public function drawLine(fromNodeObj:Node, toNodeObj:Node):Quad
+		public function drawLine(fromNode:Node, toNode:Node):Quad
 		{
-			var p1:Point = fromNodeObj.centerPoint;
-			var p2:Point = toNodeObj.centerPoint;
+			var p1:Point = fromNode.centerPoint;
+			var p2:Point = toNode.centerPoint;
 			//a^2 + b^2 = c^2
 			var a:Number = (p2.x - p1.x) * (p2.x - p1.x);
 			var b:Number = (p2.y - p1.y) * (p2.y - p1.y);
@@ -314,9 +314,9 @@ package scenes.game.display
 			
 			//draw the quad flat, rotate later
 			var lineQuad:Quad = new Triangle(hyp, LINE_THICKNESS);
-			setupLine(fromNodeObj, toNodeObj, lineQuad, true);
+			setupLine(fromNode, toNode, lineQuad, true);
 			//trace("drawing Line from ", fromNodeObj.id, " -> ", toNodeObj.id);
-			var otherEdgeId:String = toNodeObj.id + " -> " + fromNodeObj.id;
+			var otherEdgeId:String = toNode.id + " -> " + fromNode.id;
 			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];
 			rotateLine(p1, p2, hyp, lineQuad, otherEdgeObj);
 			

@@ -96,7 +96,7 @@ package scenes.game.display
 		
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
-				
+		
 		protected var m_hidingErrorText:Boolean = false;
 		
 		protected var m_nodesInactiveContainer:Sprite = new Sprite();
@@ -332,8 +332,6 @@ package scenes.game.display
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
 			loadInitialConfiguration();
-			//force update of conflict count dictionary, ignore return value
-			getNextConflict(true);
 			initialized = true;
 			trace("Level edges and nodes all created.");
 			// When level loaded, don't need this event listener anymore
@@ -949,30 +947,48 @@ package scenes.game.display
 		 * @param	forward True to scroll forward, false to scroll backwards
 		 * @return Conflict DisplayObject (if any exist)
 		 */
-		public function getNextConflict(forward:Boolean):DisplayObject
+		public function getNextConflictLocation(forward:Boolean):Point
 		{
 			var i:int = 0;
-			if (m_currentConflictIndex < 0) m_currentConflictIndex = 0;
-			var firstEdge:DisplayObject;
+			var conflictIndex:int = m_currentConflictIndex + (forward ? 1 : -1);
+			trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
+			var firstConflictLoc:Point;
+			var lastConflictLoc:Point;
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
-				if (i == m_currentConflictIndex) {
-					var edge:DisplayObject = getEdgeContainer(edgeId);
-					if (edge) {
-						m_currentConflictIndex++;
-						return edge;
-					} else {
-						trace("getEdgeContainer(", edgeId, ") returned null");
-					}
+				var edgeLayout:Object = edgeLayoutObjs[edgeId];
+				if (!edgeLayout) {
+					trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
+					continue;
+				}
+				var edgeNode:Node = nodeLayoutObjs[edgeLayout["to_var_id"]];
+				if (!edgeNode) {
+					trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
+					continue;
+				}
+				if (!edgeNode.isEditable && nodeLayoutObjs[edgeLayout["from_var_id"]]) {
+					edgeNode = nodeLayoutObjs[edgeLayout["from_var_id"]];
+				}
+				var conflictLoc:Point = edgeNode.centerPoint.clone();
+				if (i == conflictIndex) {
+					m_currentConflictIndex = i;
+					return conflictLoc;
 				} else if (i == 0) {
-					firstEdge = getEdgeContainer(edgeId);
-				} else if (!firstEdge) {
-					firstEdge = getEdgeContainer(edgeId);
+					trace("2 edge = ", edgeId);
+					firstConflictLoc = conflictLoc;
+				} else if (!firstConflictLoc) {
+					trace("3 edge = ", edgeId);
+					firstConflictLoc = conflictLoc;
 				}
 				i++;
+				lastConflictLoc = conflictLoc;
 			}
-			if (firstEdge) { // if no edge returned yet, assuming we've gone over the # of edges, return the first one and reset the counter
-				m_currentConflictIndex = 1;
-				return firstEdge;
+			if (lastConflictLoc && conflictIndex < 0) {
+				m_currentConflictIndex = i - 1;
+				return lastConflictLoc;
+			}
+			if (firstConflictLoc) {
+				m_currentConflictIndex = 0;
+				return firstConflictLoc;
 			}
 			return null;
 		}

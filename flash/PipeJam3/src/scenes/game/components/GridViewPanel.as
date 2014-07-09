@@ -649,8 +649,8 @@ package scenes.game.components
 			{
 				case Keyboard.TAB:
 					if (getPanZoomAllowed() && m_currentLevel) {
-						var conflict:DisplayObject = m_currentLevel.getNextConflict(!event.shiftKey);
-						if (conflict) centerOnComponent(conflict);
+						var conflictLoc:Point = m_currentLevel.getNextConflictLocation(!event.shiftKey);
+						if (conflictLoc != null) moveContent(conflictLoc.x, conflictLoc.y);
 					}
 					break;
 				case Keyboard.UP:

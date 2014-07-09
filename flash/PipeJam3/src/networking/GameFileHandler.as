@@ -535,9 +535,6 @@ package networking
 				case SAVE_LEVEL:
 					if(PlayerValidation.playerID == "")
 							return;
-					//update number of conflicts in level
-					World.m_world.active_level.getNextConflict(true);
-					
 					var solutionInfo:Object = PipeJamGame.levelInfo;
 					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
