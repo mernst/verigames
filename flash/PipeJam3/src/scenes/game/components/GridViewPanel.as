@@ -884,7 +884,7 @@ package scenes.game.components
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
 			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
-			if ((m_currentLevel && m_currentLevel.tutorialManager) || ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * VIEW_HEIGHT))) {
+			if ((m_currentLevel.m_boundingBox.width < MAX_SCALE * WIDTH) || (m_currentLevel.m_boundingBox.height < MAX_SCALE * VIEW_HEIGHT)) {
 				// If about the size of the window, just center the level
 				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				globPt = m_currentLevel.localToGlobal(centerPt);
@@ -902,7 +902,7 @@ package scenes.game.components
 						break;
 					}
 				}
-				if (foundNode) centerOnComponent(foundNode.skin);
+				if (foundNode) moveContent(foundNode.centerPoint.x, foundNode.centerPoint.y);
 			}
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
