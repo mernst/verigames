@@ -61,17 +61,18 @@ package scenes.game.display
 		public function selectNode(selectedNodes:Dictionary):void
 		{
 			isSelected = true;
-			setNodeDirty(false);
+			if (skin) skin.draw(); //setNodeDirty(false);
+			parentGrid.isDirty = (skin != null);
 			parentGrid.NumNodesSelected++;
 			selectedNodes[id] = this;
-			
 		}
 		
 		public function unselectNode(selectedNodes:Dictionary):void
 		{
 			isSelected = false;
 			parentGrid.NumNodesSelected--;
-			setNodeDirty(false);
+			if (skin) skin.draw(); //setNodeDirty(false);
+			parentGrid.isDirty = (skin != null);
 			delete selectedNodes[id];
 		}
 		

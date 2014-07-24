@@ -435,74 +435,35 @@ package scenes.game.display
 		
 		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
 		{
-			if(marqueeRect.intersects(nodeDrawingBoard.bounds))
+			if(true)//marqueeRect.intersects(nodeDrawingBoard.bounds))
 			{
-				//adjust rectangle
-				marqueeRect.offset(-componentXDisplacement, -componentYDisplacement);
 				if(visited == false)
 				{
 					//record the current selection state of all nodes
 					for(var ii:int = 0; ii< nodeList.length; ii++)
 					{
 						var node1:Node = nodeList[ii];
-						node1.startingSelectionState = node1.isSelected;
+						var nodeSelected:Boolean = node1.isSelected ? true : false
+						node1.startingSelectionState = nodeSelected;
 					}
 					visited = true;
 				}
 				else
 				{
-					for(var i:int = 0; i< nodeList.length; i++)
+					for(var i:int = 0; i < nodeList.length; i++)
 					{
 						var node:Node = nodeList[i];
 						var skin:NodeSkin = node.skin;
-						var makeNodeSelected:Boolean = false;
-						var makeNodeUnselected:Boolean = false;
-						
-						if(skin && marqueeRect.containsRect(skin.bounds))
-						{
-							if(node.isSelected == false)
-							{
-								if(node.startingSelectionState == false)
-								{
-									makeNodeSelected = true;		
-								}
-							}
-							else
-							{
-								if(node.startingSelectionState == true)
-								{
-									makeNodeUnselected = true;	
-								}
-							}
+						if (!skin) continue;
+						if (node.centerPoint.x < marqueeRect.left ||
+							node.centerPoint.x > marqueeRect.right ||
+							node.centerPoint.y < marqueeRect.top ||
+							node.centerPoint.y > marqueeRect.bottom) {
+							// If out of rect (most likely scenario) unselect if selected
+							if (node.startingSelectionState) node.unselectNode(selectedNodes);
+							continue;
 						}
-						else
-						{
-							if(node.isSelected == false)
-							{
-								if(node.startingSelectionState == true)
-								{
-									makeNodeSelected = true;	
-								}
-							}
-							else
-							{
-								if(node.startingSelectionState == false)
-								{
-									makeNodeUnselected = true;	
-
-								}
-							}
-						}
-						
-						if(makeNodeSelected)
-						{
-							node.selectNode(selectedNodes);
-						}
-						else if(makeNodeUnselected)
-						{
-							node.unselectNode(selectedNodes);
-
-						}
+						if (!node.startingSelectionState) node.selectNode(selectedNodes);
 					}
 				}
 			}

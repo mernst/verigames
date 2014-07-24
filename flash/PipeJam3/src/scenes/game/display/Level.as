@@ -76,6 +76,7 @@ package scenes.game.display
 		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
 		protected var marqueeRect:Shape = new Shape();
+		protected var m_marqueeChanged:Boolean = false;
 		
 		//the level node and decendents
 		protected var m_levelLayoutObj:Object;
@@ -189,7 +190,6 @@ package scenes.game.display
 			currentGridDict = new Dictionary;
 			NodeSkin.InitializeSkins();
 			selectedNodes = new Dictionary;
-			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
 		public function loadBestScoringConfiguration():void
@@ -260,6 +260,7 @@ package scenes.game.display
 		{
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			if (m_disposed) {
 				restart(); // undo progress if left the level and coming back
 			} else {
@@ -281,7 +282,7 @@ package scenes.game.display
 		public function initialize():void
 		{
 			if (initialized) return;
-			trace("Level.initialize()...");
+			//trace("Level.initialize()...");
 			var time1:Number = new Date().getTime();
 			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
@@ -314,13 +315,13 @@ package scenes.game.display
 			
 			addChild(m_errorContainer);
 			addChild(m_plugsContainer);
-			trace("load level time1", new Date().getTime()-time1);
+			//trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
 
 			totalMoveDist = new Point();
 			loadLayout();
 			
-			trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox, "load layout time", new Date().getTime()-time1);
+			//trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox, "load layout time", new Date().getTime()-time1);
 			
 			//addEventListener(WidgetChangeEvent.WIDGET_CHANGED, onEdgeSetChange); // do these per-box
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
@@ -333,19 +334,31 @@ package scenes.game.display
 			
 			loadInitialConfiguration();
 			initialized = true;
-			trace("Level edges and nodes all created.");
+			//trace("Level edges and nodes all created.");
 			// When level loaded, don't need this event listener anymore
 			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
-			trace("load level time2", new Date().getTime() - time1);
+			//trace("load level time2", new Date().getTime() - time1);
 			m_disposed = false;
 		}
 		
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
-			//clean up the old dictionary disposing of what's left
-			for each(var gridSquare:GridSquare in currentGridDict)
-			{
-				gridSquare.draw();
+			var gridSquare:GridSquare;
+			if (m_marqueeChanged) {
+				m_marqueeChanged = false;
+				if(marqueeRect.height > 0 && marqueeRect.width > 0)
+				{
+					for each(gridSquare in currentGridDict)
+					{
+						gridSquare.handleSelection(marqueeRect.bounds, selectedNodes);
+					}
+				}
+			} else {
+				//clean up the old dictionary disposing of what's left
+				for each(gridSquare in currentGridDict)
+				{
+					gridSquare.draw();
+				}
 			}
 		}
 		
@@ -421,7 +434,6 @@ package scenes.game.display
 				}
 				var nodeX:Number = Number(thisNodeLayout["x"]) * Constants.GAME_SCALE;
 				var nodeY:Number = Number(thisNodeLayout["y"]) * Constants.GAME_SCALE;
-				
 				
 				var nodeWidth:Number = 1;//Number(boxLayoutObj["w"]) * Constants.GAME_SCALE;
 				var nodeHeight:Number = 1;//Number(boxLayoutObj["h"]) * Constants.GAME_SCALE;
@@ -590,8 +602,9 @@ package scenes.game.display
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
+			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
-			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
+			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			//disposeChildren();
 		}
 		
@@ -1089,13 +1102,7 @@ package scenes.game.display
 				marqueeRect.y = pt1.y;
 				//do here to make sure we are on top
 				addChild(marqueeRect);
-				if(marqueeRect.height > 0 && marqueeRect.width > 0)
-				{
-					for each(gridSquare in currentGridDict)
-					{
-						gridSquare.handleSelection(marqueeRect.bounds, selectedNodes);
-					}
-				}
+				m_marqueeChanged = true;
 			}
 			else
 			{		

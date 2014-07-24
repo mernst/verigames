@@ -85,6 +85,10 @@ package scenes.game.components
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
+		private var m_selectionUpdated:Boolean = false;
+		private var m_startingTouchPoint:Point;
+		private var m_currentTouchPoint:Point;
+		
 		private var m_lastVisibleRefreshViewRect:Rectangle;
 		
 		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
@@ -131,6 +135,7 @@ package scenes.game.components
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
+		
 		private function onAddedToStage():void
 		{
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
@@ -210,8 +215,13 @@ package scenes.game.components
 //			{
 //				oldViewRect = currentViewRect;		
 //			}
-
-			m_currentLevel.draw();
+			
+			if (m_selectionUpdated) {
+				m_selectionUpdated = false;
+				var globalStartingPt:Point = localToGlobal(m_startingTouchPoint);
+				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
+				m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
+			}
 			
 			if(endingMoveMode) //force gc after dragging
 			{
@@ -292,15 +302,15 @@ package scenes.game.components
 		
 		private function beginMoveMode():void
 		{
-			startingPoint = new Point(content.x, content.y);
+			m_startingTouchPoint = new Point(content.x, content.y);
 		}
 		
 		private function endMoveMode():void
 		{
 			//did we really move?
-			if(content.x != startingPoint.x || content.y != startingPoint.y)
+			if(content.x != m_startingTouchPoint.x || content.y != m_startingTouchPoint.y)
 			{
-				var startPoint:Point = startingPoint.clone();
+				var startPoint:Point = m_startingTouchPoint.clone();
 				var endPoint:Point = new Point(content.x, content.y);
 				var eventToUndo:starling.events.Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
 				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
@@ -310,7 +320,6 @@ package scenes.game.components
 			}
 		}
 		
-		protected var startingPoint:Point;
 		override protected function onTouch(event:TouchEvent):void
 		{
 		//	trace("Mode:" + event.type);
@@ -347,15 +356,10 @@ package scenes.game.components
 					{
 						if (currentMode == MOVING_MODE) endMoveMode();
 						currentMode = SELECTING_MODE;
-						startingPoint = touches[0].getPreviousLocation(this);
+						m_startingTouchPoint = touches[0].getPreviousLocation(this);
 					}
-					if(m_currentLevel)
-					{
-						var currentPoint:Point = touches[0].getLocation(this);
-						var globalStartingPt:Point = localToGlobal(startingPoint);
-						var globalCurrentPt:Point = localToGlobal(currentPoint);
-						m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
-					}
+					m_currentTouchPoint = touches[0].getLocation(this);
+					m_selectionUpdated = true;
 				}
 				else
 				{
@@ -1058,14 +1062,14 @@ package scenes.game.components
 		 */
 		public function centerOnComponent(component:Object):void
 		{
-			startingPoint = new Point(content.x, content.y);
+			m_startingTouchPoint = new Point(content.x, content.y);
 			
 			var centerPt:Point = new Point(component.width / 2, component.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
 			moveContent(localPt.x, localPt.y);
 			
-			var startPoint:Point = startingPoint.clone();
+			var startPoint:Point = m_startingTouchPoint.clone();
 			var endPoint:Point = new Point(content.x, content.y);
 			var eventToUndo:MoveEvent = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
 			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
@@ -1108,7 +1112,7 @@ package scenes.game.components
 		public function spotlightComponent(component:DisplayObject, timeSec:Number = 3.0, widthScale:Number = 1.75, heightScale:Number = 1.75):void
 		{
 			if (!m_currentLevel) return;
-			startingPoint = new Point(content.x, content.y);
+			m_startingTouchPoint = new Point(content.x, content.y);
 			var bounds:Rectangle = component.getBounds(component);
 			var centerPt:Point = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
