@@ -163,53 +163,6 @@ package scenes.game.components
 		private function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			if (!m_currentLevel) return;
-//			var time:Number = new Date().getTime();
-	//		trace("start");
-//			var currentViewRect:Rectangle = getViewInContentSpace();
-//			var movingSelectedComponents:Boolean = ((currentMode == MOVING_MODE) && ((m_currentLevel.totalMoveDist.x != 0) || (m_currentLevel.totalMoveDist.y != 0)));
-//			var offLeft:Number = -VISIBLE_BUFFER_PIXELS;
-//			var offRight:Number = VISIBLE_BUFFER_PIXELS;
-//			var offTop:Number = -VISIBLE_BUFFER_PIXELS;
-//			var offBottom:Number = VISIBLE_BUFFER_PIXELS;
-//			if (movingSelectedComponents) {
-//				// Take account the distance we've dragged objects, if we may have
-//				// dragged them into the current viewspace, recompute the visibility
-//				if (m_currentLevel.totalMoveDist.x > 0) {
-//					offLeft += m_currentLevel.totalMoveDist.x;
-//				} else {
-//					offRight += m_currentLevel.totalMoveDist.x;
-//				}
-//				if (m_currentLevel.totalMoveDist.y > 0) {
-//					offTop += m_currentLevel.totalMoveDist.y;
-//				} else {
-//					offBottom += m_currentLevel.totalMoveDist.y;
-//				}
-//			}
-			
-//			// Create any nodes/edges that need creating
-//			const NODES_PER_FRAME:uint = 100;
-//			var i:int = 0;
-//			var iters:int = Math.min(NODES_PER_FRAME, m_nodeLayoutQueue.length);
-//			for (i = 0; i < iters; i++) {
-//				var nodeLayout:Object = m_nodeLayoutQueue.shift();
-//			}
-//			var newNodes:int = i;
-//			const EDGES_PER_FRAME:uint = 50;
-//			iters = Math.min(Math.min(EDGES_PER_FRAME, NODES_PER_FRAME - i), m_edgeLayoutQueue.length);
-//			for (i = 0; i < iters; i++) {
-//				var edgeLayout:Object = m_edgeLayoutQueue.shift();
-//			}
-//			var newEdges:int = i;
-//			
-//			if(oldViewRect != null && oldViewRect.x == currentViewRect.x && oldViewRect.y == currentViewRect.y && 
-//				oldViewRect.width == currentViewRect.width && oldViewRect.height == currentViewRect.height)
-//			{
-//				return;
-//			}
-//			else
-//			{
-//				oldViewRect = currentViewRect;		
-//			}
 
 			m_currentLevel.draw();
 			
@@ -219,13 +172,6 @@ package scenes.game.components
 				endingMoveMode = false;
 			}
 			count++;
-//			trace("total", new Date().getTime() - time);
-//			if ((newEdges > 0 || newNodes > 0) && m_nodeLayoutQueue.length == 0 && m_edgeLayoutQueue.length == 0) {
-//				onGameComponentsCreated();
-//			}
-			// Reset total move dist, now that we've updated the visible objects around this view
-//			m_currentLevel.totalMoveDist = new Point();
-//			m_lastVisibleRefreshViewRect = currentViewRect;
 		}
 		
 		public function onGameComponentsCreated():void
