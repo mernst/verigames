@@ -572,6 +572,8 @@ package scenes.game.components
 			inactiveContent.y = content.y;
 			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 			
+			if (m_currentLevel) m_currentLevel.handleScaleChange(content.scaleX, content.scaleY);
+			
 			return true;
 		}
 		

@@ -61,6 +61,7 @@ package
 		private var m_gameObjectBatch:GameObjectBatch;
 		
 		/** this is the main holder of information about the level. */
+		// TODO: Pass this information to children as needed (not as static public var), create a well defined class for properties contained rather than a generic Object
 		public static var levelInfo:Object;
 
 		public static var m_pipeJamGame:PipeJamGame;

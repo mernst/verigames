@@ -250,6 +250,7 @@ def load_constraints_graph(infilename):
 	current_var = None
 	current_asg = None
 	current_grp = None
+	current_grp_formatted = None
 	current_score_var_id = None
 	current_var_score_key = None
 	version = 1
@@ -267,19 +268,23 @@ def load_constraints_graph(infilename):
 		# Groups
 		elif (prefix, event) == ('groups', 'start_map'):
 			current_grp = None
+			current_grp_formatted = None
 		elif (prefix, event) == ('groups', 'map_key'):
 			current_grp = value
+			current_grp_formatted = value.replace(':','_')
 		elif current_grp is not None:
 			if (prefix, event) == ('groups.%s' % current_grp, 'start_array'):
-				if groups.get(current_grp) is not None:
-					print 'Warning: multiple group definitions found for "%s"' % current_grp
-				groups[current_grp] = []
+				if groups.get(current_grp_formatted) is not None:
+					print 'Warning: multiple group definitions found for "%s"' % current_grp_formatted
+				groups[current_grp_formatted] = []
 			elif (prefix, event) == ('groups.%s.item' % current_grp, 'string'):
-				groups[current_grp].append(value)
+				groups[current_grp_formatted].append(value.replace(':','_'))
 			elif (prefix, event) == ('groups.%s' % current_grp, 'end_array'):
 				current_grp = None
+				current_grp_formatted = None
 		elif (prefix, event) == ('groups', 'end_map'):
 			current_grp = None
+			current_grp_formatted = None
 		# Scoring
 		elif (prefix, event) == ('scoring', 'start_map'):
 			if scoring is not None:
@@ -383,9 +388,8 @@ def load_constraints_graph(infilename):
 			current_var_id = None
 			current_var = None
 		elif (prefix, event) == ('variables', 'map_key'):
-			parts = value.split(':')
 			current_var_id = value
-			formatted_var_id = '%s_%s' % (parts[0], parts[1])
+			formatted_var_id = value.replace(':','_')
 			current_var = nodes.get(formatted_var_id)
 			if current_var is None:
 				current_var = Node(formatted_var_id)
@@ -460,8 +464,7 @@ def load_constraints_graph(infilename):
 		# End assignments processing
 	# if there are assignments (vars) that weren't involved in constraints, include them now
 	for asgid in assignments:
-		parts = asgid.split(':')
-		formattedid = '%s_%s' % (parts[0], parts[1])
+		formattedid = asgid.replace(':', '_')
 		if formattedid in nodes:
 			continue
 		isconst = (parts[0].lower() != 'var') and (parts[0].lower() != 'grp')

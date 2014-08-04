@@ -28,8 +28,10 @@ package scenes.game.display
 		public var id:String;
 		
 		protected var nodeDrawingBoard:Sprite;
+		protected var groupDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
 		protected var nodeList:Vector.<Node>;
+		protected var groupList:Vector.<NodeGroup>;
 		protected var edgeList:Array;
 		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
@@ -41,11 +43,13 @@ package scenes.game.display
 		
 		public var m_errorProps:PropDictionary;
 		
-		protected var componentXDisplacement:Number;
-		protected var componentYDisplacement:Number;
+		public var componentXDisplacement:Number;
+		public var componentYDisplacement:Number;
 		
 		private static const LINE_THICKNESS:Number = 5;
 		static public const SKIN_DIAMETER:Number = 20;
+		
+		private var m_bb:Rectangle;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
 		{
@@ -55,45 +59,82 @@ package scenes.game.display
 			componentXDisplacement = gridXOffset*Level.GRID_SIZE;
 			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
 			nodeList = new Vector.<Node>();
+			groupList = new Vector.<NodeGroup>();
 			edgeList = new Array;
 		}
 		
 		protected function onTouch(event:TouchEvent):void
 		{
-			if(event.getTouches(nodeDrawingBoard, TouchPhase.ENDED).length)
+			var touchedDrawingBoard:Sprite;
+			if (event.getTouches(nodeDrawingBoard, TouchPhase.ENDED).length) {
+				touchedDrawingBoard = nodeDrawingBoard;
+			} else if (event.getTouches(groupDrawingBoard, TouchPhase.ENDED).length) {
+				touchedDrawingBoard = groupDrawingBoard;
+			} else {
+				return;
+			}
+			var touches:Vector.<Touch> = event.getTouches(touchedDrawingBoard, TouchPhase.ENDED);
+			var loc:Point = touches[0].getLocation(touchedDrawingBoard);
+			var gridChild:GridChild = findNodeAtPoint(loc);
+			if(gridChild)
 			{
-				var touches:Vector.<Touch> = event.getTouches(nodeDrawingBoard, TouchPhase.ENDED);
-				var loc:Point = touches[0].getLocation(nodeDrawingBoard);
-				var node:Node = findNodeAtPoint(loc);
-				if(node)
+				if(!event.shiftKey)
 				{
-					if(!event.shiftKey)
+					if(!gridChild.isLocked)
 					{
-						if(!node.isLocked)
-						{
-							var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
-							onClicked(node, globPt);
+						var globPt:Point = touchedDrawingBoard.localToGlobal(loc);
+						var node:Node;
+						if (gridChild is Node) {
+							node = gridChild as Node;
+							onClicked(node, !node.isNarrow, true, globPt);
+							if (node.isEditable && !node.graphVar.constant) {
+								if (!node.isNarrow) {
+									// Wide
+									AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+								} else {
+									// Narrow
+									AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+								}
+							}
+						} else if (gridChild is NodeGroup) {
+							var nodeGroup:NodeGroup = gridChild as NodeGroup;
+							nodeGroup.isNarrow = !nodeGroup.isNarrow;
+							nodeGroup.setDirty(true);
+							if (!nodeGroup.isNarrow) {
+								// Wide (after it will be changed)
+								AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+							} else {
+								// Narrow
+								AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+							}
+							for each (node in nodeGroup.nodeDict)
+							{
+								onClicked(node, nodeGroup.isNarrow, false);
+							}
+							nodeGroup.calculateNodeInfo();
+							var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, null, PropDictionary.PROP_NARROW, nodeGroup.isNarrow, null);
+							nodeDrawingBoard.dispatchEvent(changeEvent);
 						}
+					}
+				}
+				else
+				{
+					if(!event.ctrlKey)
+					{
+						if(!gridChild.isSelected)
+							gridChild.select(World.m_world.active_level.selectedNodes);
+						else
+							gridChild.unselect(World.m_world.active_level.selectedNodes);
 					}
 					else
 					{
-						if(!event.ctrlKey)
-						{
-							if(!node.isSelected)
-								node.selectNode(World.m_world.active_level.selectedNodes);
-							else
-								node.unselectNode(World.m_world.active_level.selectedNodes);
-						}
-						else
-						{
-							nodeDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, node));
-						}
+						touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
 					}
 				}
 			}
 		}
 		
-		public function findNodeAtPoint(pt:Point):Node
+		private function findNodeAtPoint(pt:Point):GridChild
 		{
 			for each(var node:Node in nodeList)
 			{
@@ -101,48 +142,70 @@ package scenes.game.display
 				if(pt.x > node.bb.right - componentXDisplacement + .5*SKIN_DIAMETER) continue;
 				if(pt.y < node.bb.top - componentYDisplacement - .5*SKIN_DIAMETER) continue;
 				if(pt.y > node.bb.bottom - componentYDisplacement + .5*SKIN_DIAMETER) continue;
-				
 				return node;
 			}
-			
+			for each(var nodeGroup:NodeGroup in groupList)
+			{
+				if(pt.x < nodeGroup.bb.left - componentXDisplacement - .5*nodeGroup.bb.width) continue;
+				if(pt.x > nodeGroup.bb.right - componentXDisplacement + .5*nodeGroup.bb.width) continue;
+				if(pt.y < nodeGroup.bb.top - componentYDisplacement - .5*nodeGroup.bb.height) continue;
+				if(pt.y > nodeGroup.bb.bottom - componentYDisplacement + .5*nodeGroup.bb.height) continue;
+				return nodeGroup;
+			}
 			return null;
 		}
 		
-		public function onClicked(node:Node, loc:Point):void
+		private function onClicked(node:Node, newIsNarrow:Boolean, dispatchChangeEvent:Boolean, loc:Point = null):void
 		{
-			var changeEvent:VarChangeEvent,  undoEvent:UndoEvent;
-			var constraintVar:ConstraintVar = node["graphVar"];
-			if(!constraintVar.constant)
-			{
-				node.isNarrow = !node.isNarrow;
+			var constraintVar:ConstraintVar = node.graphVar;
+			if (!constraintVar.constant && node.isEditable && node.isNarrow != newIsNarrow) {
+				node.isNarrow = newIsNarrow
 				isDirty = true;
-				node.setNodeDirty(true);
-			}
-		//	var propVal:Boolean = constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-		//	if (propVal) {
-				if(node.isEditable) {
-					changeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, PropDictionary.PROP_NARROW, node.isNarrow, loc);
-					if (!node.isNarrow) {
-						// Wide
-						AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
-					} else {
-						// Narrow
-						AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
-					}
+				node.setDirty(true);
+				if (dispatchChangeEvent) {
+					var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, PropDictionary.PROP_NARROW, node.isNarrow, loc);
+					nodeDrawingBoard.dispatchEvent(changeEvent);
 				}
-//			} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
-//				var propVal:Boolean = constraintVar.getProps().hasProp(m_propertyMode);
-//				changeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, m_propertyMode, propVal, pt);
-//			}
-			if (changeEvent) nodeDrawingBoard.dispatchEvent(changeEvent);
+			}
 		}
 		
-		public function addNode(node:Node):void
+		public function addGridChild(gridChild:GridChild):void
 		{
-			nodeList.push(node);
-			updateNodeSkin(node);
+			if (gridChild is NodeGroup) {
+				groupList.push(gridChild as NodeGroup);
+			} else if (gridChild is Node) {
+				nodeList.push(gridChild as Node);
+			}
+			gridChild.createSkin();
 		}
-
+		
+		public function get bb():Rectangle
+		{
+			if (!m_bb) calculateBounds();
+			return m_bb.clone();
+		}
+		
+		public function calculateBounds():void
+		{
+			var minX:Number = Number.POSITIVE_INFINITY;
+			var minY:Number = Number.POSITIVE_INFINITY;
+			var maxX:Number = Number.NEGATIVE_INFINITY;
+			var maxY:Number = Number.NEGATIVE_INFINITY;
+			for each (var node:Node in nodeList) {
+				minX = Math.min(minX, node.bb.left);
+				minY = Math.min(minY, node.bb.top);
+				maxX = Math.max(maxX, node.bb.right);
+				maxY = Math.max(maxY, node.bb.bottom);
+			}
+			for each (var nodeGroup:NodeGroup in groupList) {
+				minX = Math.min(minX, nodeGroup.bb.left);
+				minY = Math.min(minY, nodeGroup.bb.top);
+				maxX = Math.max(maxX, nodeGroup.bb.right);
+				maxY = Math.max(maxY, nodeGroup.bb.bottom);
+			}
+			m_bb = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+		}
+		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 		}
@@ -153,33 +216,62 @@ package scenes.game.display
 			{
 				if(nodeDrawingBoard)
 					nodeDrawingBoard.removeFromParent(true);
+				if(groupDrawingBoard)
+					groupDrawingBoard.removeFromParent(true);
 				if(edgeDrawingBoard)
 					edgeDrawingBoard.removeFromParent(true);
 				nodeDrawingBoard = new Sprite;
+				groupDrawingBoard = new Sprite;
 				edgeDrawingBoard = new Sprite;
-								
+				
 				nodeDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
+				groupDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
 
 				edgeList = new Array;
 				for each(var node:Node in nodeList)
 				{											
-					if(!node.skin)
-						updateNodeSkin(node);
-					
+					if (!node.skin) node.createSkin();
 					createEdges(node);
+				}
+				
+				for each(var nodeGroup:NodeGroup in groupList)
+				{
+					if (!nodeGroup.skin) nodeGroup.createSkin();
 				}
 				
 				nodeDrawingBoard.x = componentXDisplacement;
 				nodeDrawingBoard.y = componentYDisplacement;
+				groupDrawingBoard.x = componentXDisplacement;
+				groupDrawingBoard.y = componentYDisplacement;
 				edgeDrawingBoard.x = componentXDisplacement;
 				edgeDrawingBoard.y = componentYDisplacement;
+				World.m_world.active_level.addChildToGroupLevel(groupDrawingBoard);
 				World.m_world.active_level.addChildToNodeLevel(nodeDrawingBoard);
 				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 				nodeDrawingBoard.flatten();
+				groupDrawingBoard.flatten();
 				edgeDrawingBoard.flatten();
 				isActivated = true;
 				isDirty = true;
 			}
+		}
+		
+		public function showGroups():void
+		{
+			for each (var nodeGroup:NodeGroup in groupList)
+			{
+				nodeGroup.isDirty = true;
+			}
+			isDirty = true;
+		}
+		
+		public function hideGroups():void
+		{
+			for each (var nodeGroup:NodeGroup in groupList)
+			{
+				nodeGroup.removeSkin();
+			}
+			isDirty = true;
 		}
 		
 		public function draw():void
@@ -187,16 +279,14 @@ package scenes.game.display
 			if(!isDirty)
 				return;
 			nodeDrawingBoard.unflatten();
+			groupDrawingBoard.unflatten();
 			edgeDrawingBoard.unflatten();
 			for each(var node:Node in nodeList)
 			{
 				if(node.isDirty)
 				{
-					node.skin.draw();
-					if(node.skin.parent == null)
-						nodeDrawingBoard.addChild(node.skin);
-					node.skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * node.skin.width;
-					node.skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * node.skin.height;
+					node.createSkin();
+					nodeDrawingBoard.addChild(node.skin);
 					
 					for each(var gameEdgeID:String in node.connectedEdgeIds)
 					{
@@ -235,27 +325,16 @@ package scenes.game.display
 					node.isDirty = false;
 				}
 			}
+			for each (var nodeGroup:NodeGroup in groupList)
+			{
+				if (nodeGroup.isDirty) nodeGroup.createSkin();
+				nodeGroup.isDirty = false;
+				if (nodeGroup.skin) groupDrawingBoard.addChild(nodeGroup.skin);
+			}
 			nodeDrawingBoard.flatten();
+			groupDrawingBoard.flatten();
 			edgeDrawingBoard.flatten();
 			isDirty = false;
-		}
-		
-		protected function updateNodeSkin(node:Node):void
-		{
-			if (node.skin) {
-				node.skin.removeFromParent();
-				node.skin.disableSkin();
-			}
-			
-			var skin:NodeSkin = NodeSkin.getNextSkin();
-			skin.setNode(node);
-			node.skin = skin;
-			skin.draw();
-
-			skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * skin.width;
-			skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * skin.height;
-			
-			node.setNodeDirty(true);
 		}
 		
 		protected function createEdges(node:Node):void
@@ -387,9 +466,9 @@ package scenes.game.display
 			lineQuad.setVertexColor(3, fromColorComplement);
 		}
 		
-		public function removeNode(node:Node, dispose:Boolean = false):void
+		public function removeGridChild(gridChild:GridChild, dispose:Boolean = false):void
 		{
-			for each(var gameEdgeID:String in node.connectedEdgeIds)
+			for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
 			{
 				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 				if(edgeObj && edgeObj.edgeSprite)
@@ -401,7 +480,7 @@ package scenes.game.display
 					var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
 					
 					var otherNode:Object = toNodeObj;
-					if(toNodeObj == node)
+					if(toNodeObj == gridChild)
 						otherNode = fromNodeObj;
 					
 					edgeObj.edgeSprite.removeFromParent(dispose);
@@ -417,25 +496,23 @@ package scenes.game.display
 					}
 				}
 			}
-			if (node.skin) {
-				node.skin.removeFromParent();
-				node.skin.disableSkin();
-			}
+			gridChild.removeSkin();
 		}
 		
 		public function removeFromParent(dispose:Boolean):void
 		{
 			for each (var node:Node in nodeList) {
-				removeNode(node, dispose);
+				removeGridChild(node, dispose);
 			}
 			nodeDrawingBoard.removeFromParent(dispose);
+			groupDrawingBoard.removeFromParent(dispose);
 			edgeDrawingBoard.removeFromParent(dispose);
 			isActivated = false;
 		}
 		
 		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
 		{
-			if(true)//marqueeRect.intersects(nodeDrawingBoard.bounds))
+			if(marqueeRect.intersects(bb))
 			{
 				if(visited == false)
 				{
@@ -453,17 +530,16 @@ package scenes.game.display
 					for(var i:int = 0; i < nodeList.length; i++)
 					{
 						var node:Node = nodeList[i];
-						var skin:NodeSkin = node.skin;
-						if (!skin) continue;
+						if (!node.skin) continue;
 						if (node.centerPoint.x < marqueeRect.left ||
 							node.centerPoint.x > marqueeRect.right ||
 							node.centerPoint.y < marqueeRect.top ||
 							node.centerPoint.y > marqueeRect.bottom) {
 							// If out of rect (most likely scenario) unselect if selected
-							if (node.startingSelectionState) node.unselectNode(selectedNodes);
+							if (node.startingSelectionState) node.unselect(selectedNodes);
 							continue;
 						}
-						if (!node.startingSelectionState) node.selectNode(selectedNodes);
+						if (!node.startingSelectionState) node.select(selectedNodes);
 					}
 				}
 			}
@@ -485,10 +561,19 @@ package scenes.game.display
 					if(node.isSelected == true)
 					{
 						node.isSelected = false;
-						node.setNodeDirty(false);
+						node.setDirty(false);
 					}
 				}
 				nodeDrawingBoard.flatten();
+				groupDrawingBoard.unflatten();
+				for each (var nodeGroup:NodeGroup in groupList)
+				{
+					if (nodeGroup.isSelected) {
+						nodeGroup.isSelected = false;
+						nodeGroup.setDirty(false);
+					}
+				}
+				groupDrawingBoard.flatten();
 				NumNodesSelected = 0;
 			}
 			
@@ -536,7 +621,8 @@ package scenes.game.display
 		
 		public function intersects(viewRect:Rectangle):Boolean
 		{
-			if(nodeDrawingBoard.bounds.intersects(viewRect) ||
+			if (nodeDrawingBoard.bounds.intersects(viewRect) ||
+				groupDrawingBoard.bounds.intersects(viewRect) ||
 				edgeDrawingBoard.bounds.intersects(viewRect))
 					return true;
 			else

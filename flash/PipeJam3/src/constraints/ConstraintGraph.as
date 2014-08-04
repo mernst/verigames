@@ -37,6 +37,7 @@ package constraints
 		private static const NULL_SCORING:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
 		public var variableDict:Dictionary = new Dictionary();
+		public var groupDict:Dictionary = new Dictionary();
 		public var constraintsDict:Dictionary = new Dictionary();
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
@@ -169,7 +170,6 @@ package constraints
 					}
 					// Build Scoring
 					var scoringObj:Object = levelObj[SCORING];
-					var groupsObj:Object = levelObj[GROUPS];
 					var constraintScore:int = scoringObj ? scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY] : 100;
 					var variableScoreObj:Object = scoringObj ? scoringObj[VARIABLES] : {"type:0": 0, "type:1": 1};
 					var type0Score:int = variableScoreObj[ConstraintScoringConfig.TYPE_0_VALUE_KEY];
@@ -242,6 +242,25 @@ package constraints
 							graph.constraintsDict[constr2.id] = constr2;
 						} else if (newConstraint is SubtypeConstraint) {
 							graph.constraintsDict[newConstraint.id] = newConstraint;
+						}
+					}
+					// Build groups
+					var groupsObj:Object = levelObj[GROUPS];
+					if (groupsObj) {
+						for (var groupId:String in groupsObj) {
+							var groupMembers:Array = groupsObj[groupId] as Array;
+							groupId = groupId.replace(":", "_"); // reformat
+							graph.groupDict[groupId] = new Vector.<ConstraintVar>();
+							for each (var groupVarId:String in groupMembers) {
+								groupVarId = groupVarId.replace(":", "_"); // reformat
+								var groupVar:ConstraintVar = graph.variableDict[groupVarId];
+								if (!groupVar) {
+									trace("Warning! Group member found with no corresponding ConstraintVar: " + groupVarId);
+									continue;
+								}
+								(graph.groupDict[groupId] as Vector.<ConstraintVar>).push(groupVar);
+								groupVar.associatedGroupId = groupId;
+							}
 						}
 					}
 					break;

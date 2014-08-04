@@ -18,6 +18,7 @@ package scenes.game.display
 		static protected var availableGameNodeSkins:Vector.<NodeSkin>;
 		static protected var activeGameNodeSkins:Dictionary;
 		
+		// TODO: Circular dependency
 		public var associatedNode:Node;
 		
 		static protected var mAtlas:TextureAtlas;	
@@ -47,7 +48,7 @@ package scenes.game.display
 		
 		public var id:int;
 		public static var numSkins:int = 5000;
-		
+		// TODO: Move to factory
 		static public function InitializeSkins():void
 		{
 			//generate skins

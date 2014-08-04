@@ -104,6 +104,7 @@ package scenes.game.display
 		
 		static public var changingFullScreenState:Boolean = false;
 		
+		// TODO: Circular dependency - remove this reference, children should send events to parents not depend on World
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
 		
