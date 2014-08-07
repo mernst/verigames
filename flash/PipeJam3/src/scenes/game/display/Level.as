@@ -336,7 +336,7 @@ package scenes.game.display
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
-			//loadInitialConfiguration();
+			loadInitialConfiguration();
 			initialized = true;
 			//trace("Level edges and nodes all created.");
 			// When level loaded, don't need this event listener anymore
