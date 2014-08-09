@@ -1,8 +1,13 @@
 package verigames.level;
 
-import java.util.*;
-
 import static verigames.utilities.Misc.ensure;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class XMLValidator
 {
@@ -51,7 +56,7 @@ public class XMLValidator
         {
           int varID = c.getVariableID();
           if (!chutesByVarID.containsKey(varID))
-            chutesByVarID.put(varID, new HashSet<>());
+            chutesByVarID.put(varID, new HashSet<Chute>());
           chutesByVarID.get(varID).add(c);
         }
       }
