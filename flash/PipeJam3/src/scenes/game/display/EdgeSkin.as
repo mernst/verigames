@@ -1,14 +1,18 @@
 package scenes.game.display
 {
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	
 	public class EdgeSkin extends Quad
 	{
-		public function EdgeSkin(width:Number, height:Number, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
+		public var parentEdge:Edge;
+		
+		public function EdgeSkin(width:Number, height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
 		{
 			super(width, height, color, premultipliedAlpha);
 			
+			parentEdge = _parentEdge;
 			//move position 1 to make an isoceles triangle
 			mVertexData.setPosition(1,width, height/2);
 			//Move vertex 2 to the center of the from side, 3 to the old 2 position
@@ -31,7 +35,7 @@ package scenes.game.display
 		public function setHighlight(highlightColor:uint):void
 		{
 			filter = BlurFilter.createGlow(highlightColor);
-			trace("skin", x,y);
+//			trace("skin", x,y);
 		}
 		
 		public function removeHighlight():void
@@ -46,6 +50,11 @@ package scenes.game.display
 		public override function set x(newX:Number):void
 		{
 			super.x = newX;
+		}
+		
+		public function addToParent(parent:Sprite):void
+		{
+			parent.addChild(this);
 		}
 	}
 }

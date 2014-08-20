@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 	
 	import assets.AssetsAudio;
@@ -30,7 +31,7 @@ package scenes.game.display
 		protected var nodeDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
 		protected var nodeList:Vector.<Node>;
-		protected var edgeList:Array;
+		protected var edgeList:Vector.<Edge>;
 		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
 		public var isDirty:Boolean = true;
@@ -41,8 +42,8 @@ package scenes.game.display
 		
 		public var m_errorProps:PropDictionary;
 		
-		protected var componentXDisplacement:Number;
-		protected var componentYDisplacement:Number;
+		public var componentXDisplacement:Number;
+		public var componentYDisplacement:Number;
 		
 		private static const LINE_THICKNESS:Number = 5;
 		static public const SKIN_DIAMETER:Number = 20;
@@ -55,7 +56,7 @@ package scenes.game.display
 			componentXDisplacement = gridXOffset*Level.GRID_SIZE;
 			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
 			nodeList = new Vector.<Node>();
-			edgeList = new Array;
+			edgeList = new Vector.<Edge>;
 		}
 		
 		protected function onTouch(event:TouchEvent):void
@@ -67,27 +68,46 @@ package scenes.game.display
 				var node:Node = findNodeAtPoint(loc);
 				if(node)
 				{
-					if(!event.shiftKey)
+					if(event.shiftKey && event.ctrlKey) //group select
+					{
+						nodeDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, node));
+					}
+					else if(event.shiftKey) //individual select or not
+					{
+						if(!node.isSelected)
+							node.selectNode(World.m_world.active_level.selectedNodes);
+						else
+							node.unselectNode(World.m_world.active_level.selectedNodes);
+					}
+					else if(event.ctrlKey) //propagate size up or down stream
+					{
+							if(Keyboard.capsLock)
+							{
+								World.m_world.active_level.propagate();
+							}
+							else
+							{
+								var visitedNodes:Dictionary = new Dictionary;
+								//propigate narrowness down, or wideness up
+								if(!node.isEditable)
+									node.propagate(node.isNarrow, visitedNodes);
+							}
+							World.m_world.active_level.onWidgetChange();
+					}
+					else if(World.altKeyDown)
+					{
+						if(!Keyboard.capsLock)
+							World.m_world.active_level.solveSection(node);
+						else
+							World.m_world.active_level.solveAllSections();
+					}
+					else
 					{
 						if(!node.isLocked)
 						{
 							var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
 							onClicked(node, globPt);
-						}
-					}
-					else
-					{
-						if(!event.ctrlKey)
-						{
-							if(!node.isSelected)
-								node.selectNode(World.m_world.active_level.selectedNodes);
-							else
-								node.unselectNode(World.m_world.active_level.selectedNodes);
-						}
-						else
-						{
-							nodeDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, node));
-						}
+						}	
 					}
 				}
 			}
@@ -140,7 +160,13 @@ package scenes.game.display
 		public function addNode(node:Node):void
 		{
 			nodeList.push(node);
-			updateNodeSkin(node);
+			node.updateNode();
+		}
+		
+		public function addEdge(edge:Edge):void
+		{
+			edgeList.push(edge);
+			edge.updateEdge();
 		}
 
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -160,13 +186,18 @@ package scenes.game.display
 								
 				nodeDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
 
-				edgeList = new Array;
 				for each(var node:Node in nodeList)
 				{											
 					if(!node.skin)
-						updateNodeSkin(node);
-					
-					createEdges(node);
+						node.updateNode();
+				}
+				
+				createEdges();
+				
+				for each(var edge:Edge in edgeList)
+				{											
+					if(!edge.skin)
+						edge.updateEdge();
 				}
 				
 				nodeDrawingBoard.x = componentXDisplacement;
@@ -197,76 +228,65 @@ package scenes.game.display
 						nodeDrawingBoard.addChild(node.skin);
 					node.skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * node.skin.width;
 					node.skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * node.skin.height;
-					
-					for each(var gameEdgeID:String in node.connectedEdgeIds)
-					{
-						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-						if(edgeObj.edgeSprite && edgeObj.isDirty) //needs to be created  before here if we want it
-						{
-							updateEdge(edgeObj);
-							if(edgeObj.edgeSprite.parent != edgeDrawingBoard)
-							{
-								if(edgeObj.edgeSprite.parent != null)
-								{
-									//move to current gridsquare and adjust x/y boundaries to force drawing
-									var currentXOffset:Number = edgeObj.parentXOffset;
-									var currentYOffset:Number = edgeObj.parentYOffset;
-									
-									var toNodeID:String = edgeObj["to_var_id"];
-									var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-									var fromNodeID:String = edgeObj["from_var_id"];
-							 		var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-									
-									edgeObj.edgeSprite.x += currentXOffset*Level.GRID_SIZE;
-									edgeObj.edgeSprite.x -= componentXDisplacement;
-									edgeObj.edgeSprite.y += currentYOffset*Level.GRID_SIZE;
-									edgeObj.edgeSprite.y -= componentYDisplacement;
-									edgeDrawingBoard.addChild(edgeObj.edgeSprite);
-									edgeObj.parentXOffset = gridXOffset;
-									edgeObj.parentYOffset = gridYOffset;
-								}
-							}
-							
-							if(edgeObj.edgeSprite.parent.parent == null)
-								World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
-						}
-						
-					}
-					node.isDirty = false;
 				}
+			}
+			for each(var edge:Edge in edgeList)
+			{				
+				if(edge.skin && edge.isDirty) //needs to be created  before here if we want it
+				{
+					edge.updateEdge(node);
+					if(edge.skin.parent != edgeDrawingBoard)
+					{
+						if(edge.skin.parent != null)
+						{
+							//move to current gridsquare and adjust x/y boundaries to force drawing
+							var currentXOffset:Number = edge.skin.parent.x;
+							var currentYOffset:Number = edge.skin.parent.y;
+							
+							//put into global space
+							edge.skin.x += currentXOffset;
+							edge.skin.y += currentYOffset;
+							
+							//adjust to current displacement
+							edge.skin.x -= componentXDisplacement;
+							edge.skin.y -= componentYDisplacement;
+							
+							edge.skin.addToParent(edgeDrawingBoard);
+							edge.parentXOffset = gridXOffset;
+							edge.parentYOffset = gridYOffset; 
+							//	trace(edgeObj.parentXOffset, edgeObj.parentYOffset, edgeObj.edgeSkin.x, edgeObj.edgeSkin.y);
+						}
+					}
+					
+					if(edge.skin.parent.parent == null)
+						World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
+				}
+
+				node.isDirty = false;
 			}
 			nodeDrawingBoard.flatten();
 			edgeDrawingBoard.flatten();
 			isDirty = false;
 		}
 		
-		protected function updateNodeSkin(node:Node):void
+		protected function createEdges():void
 		{
-			if (node.skin) {
-				node.skin.removeFromParent();
-				node.skin.disableSkin();
+			if(!edgeDrawingBoard)
+			{
+				edgeDrawingBoard = new Sprite;
+				edgeDrawingBoard.x = componentXDisplacement;
+				edgeDrawingBoard.y = componentYDisplacement;
+				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 			}
 			
-			var skin:NodeSkin = NodeSkin.getNextSkin();
-			skin.setNode(node);
-			node.skin = skin;
-			skin.draw();
-
-			skin.x = node.centerPoint.x - componentXDisplacement - 0.5 * skin.width;
-			skin.y = node.centerPoint.y - componentYDisplacement - 0.5 * skin.height;
-			
-			node.setNodeDirty(true);
-		}
-		
-		protected function createEdges(node:Node):void
-		{
-			for each(var gameEdgeID:String in node.connectedEdgeIds)
+			for each(var edge:Edge in edgeList)
 			{
-				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				edgeList.push(edgeObj);
-				if(edgeObj.edgeSprite == null)
+				if(edge.skin == null)
 				{
-					createEdge(edgeObj);
+					var edgeSkin:EdgeSkin = edge.createEdgeSkin();
+					edgeSkin.addToParent(edgeDrawingBoard);
+					edgeSkin.x -= componentXDisplacement;
+					edgeSkin.y -= componentYDisplacement;
 				}
 			}
 		}
@@ -280,24 +300,22 @@ package scenes.game.display
 
 			if(fromNodeObj == toNodeObj) return;
 			
-			edge.edgeSprite = drawLine(fromNodeObj, toNodeObj);
+			edge.edgeSkin = drawLine(fromNodeObj, toNodeObj);
 			edge.parentXOffset = gridXOffset;
 			edge.parentYOffset = gridYOffset;
 			edge.isDirty = true;
 		}
 		
-		private function updateEdge(edge:Object):void
+		private function updateEdge(edge:Edge):void
 		{
-			if(edge.edgeSprite)
+			if(edge.skin)
 			{	
-				var toNodeID:String = edge["to_var_id"];
-				var toNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-				var fromNodeID:String = edge["from_var_id"];
-				var fromNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+				var toNode:Node = World.m_world.active_level.nodeLayoutObjs[edge.toNode.id];
+				var fromNode:Node = World.m_world.active_level.nodeLayoutObjs[ edge.fromNode.id];
 				
-				edge.edgeSprite.parent.unflatten();
-				setupLine(fromNodeObj, toNodeObj, edge.edgeSprite, true);
-				edge.edgeSprite.parent.flatten();
+				(edge.skin.parent as Sprite).unflatten();
+				setupLine(fromNode, toNode, edge.skin, true);
+				(edge.skin.parent as Sprite).flatten();
 			}
 			edge.isDirty = false;
 		}
@@ -388,49 +406,54 @@ package scenes.game.display
 		}
 		
 		public function removeNode(node:Node, dispose:Boolean = false):void
-		{
-			for each(var gameEdgeID:String in node.connectedEdgeIds)
-			{
-				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				if(edgeObj && edgeObj.edgeSprite)
-				{
-					//need to check if the other end is on screen, and if it is, pass this edge off to that node
-					var toNodeID:String = edgeObj["to_var_id"];
-					var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-					var fromNodeID:String = edgeObj["from_var_id"];
-					var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-					
-					var otherNode:Object = toNodeObj;
-					if(toNodeObj == node)
-						otherNode = fromNodeObj;
-					
-					edgeObj.edgeSprite.removeFromParent(dispose);
-					edgeObj.edgeSprite = null;
-					
-					//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
-					if(otherNode && otherNode.skin && otherNode.skin.parent != nodeDrawingBoard)
-					{
-						//destroy edge and recreate
-						otherNode.parentGrid.createEdges(otherNode);
-						otherNode.parentGrid.isDirty = true;
-						otherNode.isDirty = true;
-					}
-				}
-			}
+		{			
 			if (node.skin) {
 				node.skin.removeFromParent();
 				node.skin.disableSkin();
 			}
 		}
 		
+		public function removeEdge(edge:Edge, dispose:Boolean = false):void
+		{			
+			//if we exist and are owned by this gridsquare do something
+			if(edge && edge.skin && edge.skin.parent == edgeDrawingBoard)
+			{
+				var newParent:GridSquare;
+				
+				//need to check if the one end is on screen, and if it is, pass this edge off to that grid
+				if(edge.toNode.parentGrid != this && edge.toNode.parentGrid.isActivated == true)
+					newParent = edge.toNode.parentGrid;
+				else if(edge.fromNode.parentGrid != this && edge.fromNode.parentGrid.isActivated == true)
+					newParent = edge.fromNode.parentGrid;
+				else
+				{
+					edge.skin.removeFromParent(dispose);
+					edge.skin = null;
+				}
+				
+				//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
+				if(newParent)
+				{
+					//destroy edge and recreate
+					newParent.createEdges();
+					newParent.isDirty = true;
+				}
+			}
+		}
+		
 		public function removeFromParent(dispose:Boolean):void
 		{
+			isActivated = false; //do first, so we can check against it in removeEdge
+			
 			for each (var node:Node in nodeList) {
 				removeNode(node, dispose);
 			}
+			
+			for each (var edge:Edge in edgeList) {
+				removeEdge(edge, dispose);
+			}
 			nodeDrawingBoard.removeFromParent(dispose);
 			edgeDrawingBoard.removeFromParent(dispose);
-			isActivated = false;
 		}
 		
 		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
@@ -563,7 +586,7 @@ package scenes.game.display
 					var node:Node = nodeList[index];
 					for each(var gameEdgeID:String in node.connectedEdgeIds)
 					{
-						var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+						var edgeObj:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						updateEdge(edgeObj);
 						edgeList.push(edgeObj);
 					}

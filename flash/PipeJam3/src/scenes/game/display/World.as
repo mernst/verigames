@@ -109,6 +109,9 @@ package scenes.game.display
 		
 		static protected var m_numWidgetsClicked:int = 0;
 		
+		static public var altKeyDown:Boolean;
+
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;
@@ -393,6 +396,7 @@ package scenes.game.display
 			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			
 			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
@@ -408,7 +412,7 @@ package scenes.game.display
 			{
 				waitIconDisplayed = false;
 
-				active_level.solveSelection(solverUpdateCallback, solverDoneCallback);
+				active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
 			}
 		}
 		
@@ -947,9 +951,17 @@ package scenes.game.display
 			//when we build on the undoStack, clear out the redoStack
 			redoStack = new Vector.<UndoEvent>();
 		}
+		public function handleKeyDown(event:starling.events.KeyboardEvent):void
+		{
+			if(event.keyCode == Keyboard.S)
+				altKeyDown = true;
+		}
 		
 		public function handleKeyUp(event:starling.events.KeyboardEvent):void
 		{
+			if(event.keyCode == Keyboard.S)
+				altKeyDown = false;
+			
 			if(event.ctrlKey)
 			{
 				switch(event.keyCode)
@@ -982,7 +994,7 @@ package scenes.game.display
 					case 66: //'b' for load Best scoring config
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
-							active_level.loadBestScoringConfiguration();
+							active_level.loadBestScoringConfiguration(); 
 						}
 						break;
 					case 67: //'c' for copy constraints
@@ -1015,7 +1027,7 @@ package scenes.game.display
 			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
 		}
 		
-		protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
+		 protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
 			//added newest at the end, so start at the end
 			for(var i:int = event.eventsToUndo.length-1; i>=0; i--)
@@ -1186,6 +1198,7 @@ package scenes.game.display
 			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			
 			if(active_level)
 				removeChild(active_level, true);

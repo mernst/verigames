@@ -6,6 +6,7 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
+	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
@@ -14,6 +15,7 @@ package scenes.game.display
 	
 	import constraints.Constraint;
 	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
 	import constraints.ConstraintValue;
 	import constraints.ConstraintVar;
 	import constraints.events.ErrorEvent;
@@ -36,7 +38,8 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
-	
+	import scenes.game.components.MiniMap;
+
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -126,11 +129,11 @@ package scenes.game.display
 		protected var gridSystemDict:Dictionary;
 		
 		static public var GRID_SIZE:int = 500;
-		static public var NUM_NODES_TO_SELECT:int = 300;
+		static public var NUM_NODES_TO_SELECT:int = 75;
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
-		static public var NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
-		
+		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
+		static public var NARROW_NODE_SIZE_CONSTRAINT_VALUE:Number = 0.0;
 		public var currentGridDict:Dictionary;
 		
 		protected var currentSelectionProcessCount:int;
@@ -177,6 +180,15 @@ package scenes.game.display
 				tutorialManager = new TutorialLevelManager(m_tutorialTag);
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
+			
+			if(levelGraph.graphScoringConfig && levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY))
+				CONFLICT_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+			
+			if(levelGraph.graphScoringConfig && levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_1_VALUE_KEY))
+				WIDE_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_1_VALUE_KEY);
+			
+			if(levelGraph.graphScoringConfig && levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY))
+				NARROW_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY);
 			
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
@@ -363,7 +375,7 @@ package scenes.game.display
 				for(var j:int = topGridNumber; j<bottomGridNumber+1; j++)
 				{
 					var gridName:String = i+"_"+j;
-					if(gridSystemDict[gridName] != null)
+					if(gridSystemDict[gridName] != null) //it's created if there's something in it
 					{
 						gridSystemDict[gridName].activate();
 						newCurrentGridDict[gridName] = gridSystemDict[gridName];
@@ -462,35 +474,44 @@ package scenes.game.display
 			for(var constraintNum:int = 0; constraintNum<constraintLength; constraintNum++)
 			{
 				var constraintId:String = m_levelLayoutObj["layout"]["constraints"][constraintNum];
-				var edgeLayoutObj:Object = new Object;
-				edgeLayoutObj["id"] = constraintId;
+			//	edgeLayoutObj."id" = constraintId;
 				var result:Object = constraintId.split(" ");
 				if (result == null) throw new Error("Invalid constraint layout string found: " + constraintId);
 				if (result.length != 3) throw new Error("Invalid constraint layout string found: " + constraintId);
 				var graphConstraint:Constraint = levelGraph.constraintsDict[constraintId] as Constraint;
 				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
-				edgeLayoutObj["constraint"] = graphConstraint;
-				edgeLayoutObj["from_var_id"] = result[0];
-				nodeLayoutObjs[result[0]]["connectedEdgeIds"].push(constraintId);
-				edgeLayoutObj["to_var_id"] = result[2];
-				nodeLayoutObjs[result[2]]["connectedEdgeIds"].push(constraintId);
+		//		edgeLayoutObj. = graphConstraint;
+				var startNode:Node =  nodeLayoutObjs[result[0]];
+				var endNode:Node =  nodeLayoutObjs[result[2]];
+				var edge:Edge = new Edge(constraintId, graphConstraint,startNode, endNode);
+				startNode["connectedEdgeIds"].push(constraintId);
+				endNode["connectedEdgeIds"].push(constraintId);
 				
-				edgeLayoutObjs[constraintId] = edgeLayoutObj;
+				edgeLayoutObjs[constraintId] = edge;
+				
+				addEdgeToGrids(edge);
 				n++;
 			}
 			trace("edge count = " + n);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
+		//in real life this probably should figure out what squares it travels through also.
+		public function addEdgeToGrids(edge:Edge):void
+		{
+			edge.toNode.parentGrid.addEdge(edge);
+			edge.fromNode.parentGrid.addEdge(edge);
+		}
+		
 		public function addChildToNodeLevel(child:Sprite):void
 		{
 			m_nodesContainer.addChild(child);
 			//uncomment to add quad as background to each gridSquare for debugging
-			//			var color:int = Math.round(0xffffff * Math.random());
-			//			var q:Quad = new Quad(gridSize, gridSize, color);
-			//			q.x = child.x;
-			//			q.y = child.y;
-			//			addChildAt(q,0);
+//			var color:int = Math.random();
+//			var q:Quad = new Quad(GRID_SIZE, GRID_SIZE, color);
+//			q.x = child.x;
+//			q.y = child.y;
+//			addChildAt(q,0);
 		}
 		
 		public function addChildToEdgeLevel(child:Sprite):void
@@ -705,7 +726,7 @@ package scenes.game.display
 		}
 		
 		//assume this only generates on toggle width events
-		protected function onWidgetChange(evt:VarChangeEvent = null):void
+		public function onWidgetChange(evt:VarChangeEvent = null):void
 		{
 			//trace("Level: onWidgetChange");
 			if (evt) {
@@ -842,12 +863,9 @@ package scenes.game.display
 			if(!node.isLocked)
 				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
-					//need to check if the other end is on screen, and if it is, pass this edge off to that node
 					var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
-					var toNodeID:String = edgeObj["to_var_id"];
-					var toNodeObj:Object = nodeLayoutObjs[toNodeID];
-					var fromNodeID:String = edgeObj["from_var_id"];
-					var fromNodeObj:Object = nodeLayoutObjs[fromNodeID];
+					var toNodeObj:Object = edgeObj.toNode;
+					var fromNodeObj:Object = edgeObj.fromNode;
 					
 					var otherNode:Object = toNodeObj;
 					if(toNodeObj == node)
@@ -955,18 +973,18 @@ package scenes.game.display
 			var firstConflictLoc:Point;
 			var lastConflictLoc:Point;
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
-				var edgeLayout:Object = edgeLayoutObjs[edgeId];
+				var edgeLayout:Edge = edgeLayoutObjs[edgeId];
 				if (!edgeLayout) {
 					trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
 					continue;
 				}
-				var edgeNode:Node = nodeLayoutObjs[edgeLayout["to_var_id"]];
+				var edgeNode:Node = edgeLayout.toNode;
 				if (!edgeNode) {
 					trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
 					continue;
 				}
-				if (!edgeNode.isEditable && nodeLayoutObjs[edgeLayout["from_var_id"]]) {
-					edgeNode = nodeLayoutObjs[edgeLayout["from_var_id"]];
+				if (!edgeNode.isEditable && edgeLayout.fromNode) {
+					edgeNode = edgeLayout.fromNode;
 				}
 				var conflictLoc:Point = edgeNode.centerPoint.clone();
 				if (i == conflictIndex) {
@@ -1140,6 +1158,7 @@ package scenes.game.display
 			onWidgetChange();
 		}
 		
+		var solverRunningTime:Number;
 		public function solverTimerCallback(evt:TimerEvent):void
 		{
 			solveSelection(solverUpdate, solverDone);
@@ -1156,35 +1175,44 @@ package scenes.game.display
 		
 		public var loopcount:int = 0;
 		public var looptimer:Timer;
-		
 		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
-		public function solveSelection1(updateCallback:Function, doneCallback:Function):void
+		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
-			//loop through all nodes, finding ones with conflicts
-			for each(var node:Node in nodeLayoutObjs)
+			if(firstRun)
 			{
-				if(node.hasError() && node.unused)
-				{
-					node.unused = false;
-					trace(node.id);
-					onGroupSelection(new SelectionEvent("foo", node));
-					solveSelection1(updateCallback, doneCallback);
-					unselectAll();
-					return;
-				}
+				solverRunningTime = new Date().getTime();
 			}
-			
-			// if we make it this far start over
-			trace("new loop", loopcount);
-			looptimer = new Timer(1000, 1);
-			looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
-			looptimer.start();
+			//if caps lock is down, start repeated solving using 'random' selection
+			if(Keyboard.capsLock)
+			{
+				//loop through all nodes, finding ones with conflicts
+				for each(var node:Node in nodeLayoutObjs)
+				{
+					if(node.hasError() && node.unused)
+					{
+						node.unused = false;
+						trace(node.id);
+						onGroupSelection(new SelectionEvent("foo", node));
+						solveSelection1(updateCallback, doneCallback);
+						unselectAll();
+						return;
+					}
+				}
+				
+				// if we make it this far start over
+				trace("new loop", loopcount);
+				looptimer = new Timer(1000, 1);
+				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+				looptimer.start();
+			}
+			else
+				solveSelection1(updateCallback, doneCallback);
 		}
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
 		{
 			var edgeObj:Object = edgeLayoutObjs[edgeId];
-			return edgeObj ? edgeObj.edgeSprite : null;
+			return edgeObj ? edgeObj.edgeSkin : null;
 		}
 		
 		public function getNode(nodeId:String):Node
@@ -1197,7 +1225,7 @@ package scenes.game.display
 		public var initvarsArray:Array;
 		public var updateCallback:Function;
 		public var doneCallback:Function;
-		public function solveSelection(_updateCallback:Function, _doneCallback:Function):void
+		public function solveSelection1(_updateCallback:Function, _doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
@@ -1219,11 +1247,9 @@ package scenes.game.display
 				{
 					var constraint1Value:int = -1;
 					var constraint2Value:int = -1;
-					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					var toNodeID:String = edgeObj["to_var_id"];
-					var toNode:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-					var fromNodeID:String = edgeObj["from_var_id"];
-					var fromNode:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+					var edgeObj:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					var toNode:Node = edgeObj.toNode;
+					var fromNode:Node =edgeObj.fromNode;
 					
 					//figure out which is the other node
 					var nodeToCheck:Object = toNode;
@@ -1320,7 +1346,7 @@ package scenes.game.display
 						var constraint:String = constraint1Value+"_"+constraint2Value; 
 												
 						//check for duplicates						
-						if(storedConstraints[constraint] == null)
+						if(storedConstraints[constraint] == null && CONFLICT_CONSTRAINT_VALUE != 0)
 						{
 							storedConstraints[constraint] = constraint;
 							if(fromNode.isEditable && toNode.isEditable && !fromNode.isLocked && !toNode.isLocked)
@@ -1345,7 +1371,10 @@ package scenes.game.display
 					{
 						if(storedConstraints[constraint1Value] == null)
 						{
-							constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
+							if(WIDE_NODE_SIZE_CONSTRAINT_VALUE != 0)
+								constraintArray.push(new Array(WIDE_NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
+							if(NARROW_NODE_SIZE_CONSTRAINT_VALUE != 0)
+								constraintArray.push(new Array(NARROW_NODE_SIZE_CONSTRAINT_VALUE, -constraint1Value));
 							storedConstraints[constraint1Value] = toNode;
 						}
 					}
@@ -1353,7 +1382,10 @@ package scenes.game.display
 					{
 						if(storedConstraints[constraint2Value] == null)
 						{
-							constraintArray.push(new Array(NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
+							if(WIDE_NODE_SIZE_CONSTRAINT_VALUE != 0)
+								constraintArray.push(new Array(WIDE_NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
+							if(NARROW_NODE_SIZE_CONSTRAINT_VALUE != 0)
+								constraintArray.push(new Array(NARROW_NODE_SIZE_CONSTRAINT_VALUE, -constraint2Value));
 							storedConstraints[constraint2Value] = fromNode;
 						}
 					}
@@ -1377,7 +1409,6 @@ package scenes.game.display
 				timer = new Timer(500,1);
 				timer.addEventListener(TimerEvent.TIMER, solverStartCallback);
 				timer.start();
-				
 			}
 		}
 		
@@ -1401,7 +1432,6 @@ package scenes.game.display
 				if(!node.isLocked)
 				{
 					var constraintVar:ConstraintVar = node["graphVar"];
-					var parentGridSquare:GridSquare = node.parentGrid;
 					node.setNodeDirty(true);
 					node.isNarrow = true;
 					if(vars[ii] == 1)
@@ -1415,7 +1445,7 @@ package scenes.game.display
 				onWidgetChange();
 		}
 		
-		public var count:int = 3000;
+		public var count:int = 0;
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
@@ -1425,12 +1455,10 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
-			
-			//reset to score before solver ran, which might be current score
-		//	loadBestScoringConfiguration();
-			
-			//do it again
-			if(count < 3000)
+			trace("time elapsed", new Date().getTime()-solverRunningTime);
+			trace("num conflicts", MiniMap.numConflicts);
+			//do it again?
+			if(Keyboard.capsLock && count < 3000)
 			{
 				count++;
 				trace("count", count);
@@ -1466,6 +1494,95 @@ package scenes.game.display
 				node.unlockNode();
 			}
 			
+		}
+		
+		public function propagate():void
+		{
+			// TODO Auto Generated method stub
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				if(node.isNarrow)
+				{
+					var visitedNodes:Dictionary = new Dictionary;
+					node.propagate(true, visitedNodes);
+				}
+			}
+			
+		}
+		
+		public function solveAllSections():void
+		{
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				if(node.hasError() && !node.isEditable)
+				{
+					trace(node.id);
+					solveSection(node);
+				}
+			}
+		}
+		//using width of starting node, make connected nodes the same width until either a) we don't create a new conflict by flipping,
+		// or b) we create an unsolvable conflict by hitting a fixed node
+		public function solveSection(node:Node):void
+		{
+			var flippedNodes:Vector.<Node> = new Vector.<Node>;
+			var nodesToSolve:Vector.<Node> = new Vector.<Node>;
+			nodesToSolve.push(node);
+			var notDone:Boolean = true;
+			do{
+				if(!solveNodes(nodesToSolve, flippedNodes))
+					break;
+				if(nodesToSolve.length == 0)
+					notDone = false;
+			}while(notDone);
+			
+			//solved nodes returned false
+			if(notDone)
+			{
+				//reset nodes to start
+				for each(var resetFlippedNode:Node in flippedNodes)
+				resetFlippedNode.isNarrow = !resetFlippedNode.isNarrow;
+			}
+			else //update scoring, etc
+			{
+				for each(var flippedNode:Node in flippedNodes)
+				{
+					var constraintVar:ConstraintVar = flippedNode["graphVar"];
+					flippedNode.setNodeDirty(true);
+					if(constraintVar) 
+						constraintVar.setProp(PropDictionary.PROP_NARROW, flippedNode.isNarrow);
+				}
+				onWidgetChange();
+			}
+		}
+		
+		//solves current node errors, and returns list of nodes to solve, or null
+		//if list is empty, we are done, if null, we can't solve (hit a fixed node the wrong size)
+		protected function solveNodes(nodesToSolve:Vector.<Node>, flippedNodes:Vector.<Node>):Boolean
+		{
+			var node:Node = nodesToSolve.pop();
+			
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
+			{
+				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				var toNode:Node = edge.toNode;
+				var fromNode:Node = edge.fromNode;
+				
+				var otherNode:Node = (toNode == node) ? fromNode : toNode;
+				if(!fromNode.isNarrow && toNode.isNarrow)
+				{
+					if(!otherNode.isEditable)
+						return false;
+					
+					otherNode.isNarrow = !otherNode.isNarrow;
+					flippedNodes.push(otherNode);
+					
+					if(otherNode.hasError())
+						nodesToSolve.push(otherNode);
+				}
+			}
+			
+			return true;
 		}
 	}
 }

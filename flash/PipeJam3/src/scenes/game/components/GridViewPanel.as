@@ -610,7 +610,6 @@ package scenes.game.components
 					}
 					break;
 				case Keyboard.DOWN:
-				case Keyboard.S:
 				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) {
 						viewRect = getViewInContentSpace();

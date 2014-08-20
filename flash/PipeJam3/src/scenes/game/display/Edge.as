@@ -14,7 +14,7 @@ package scenes.game.display
 		public var parentXOffset:Number;
 		public var parentYOffset:Number;
 		
-		public var edgeSkin:EdgeSkin;
+		public var skin:EdgeSkin;
 		
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
@@ -31,22 +31,22 @@ package scenes.game.display
 		
 		public function createEdgeSkin():EdgeSkin
 		{
-			if(!edgeSkin)
+			if(!skin)
 			{					
 				createSkin();
 			}
 			isDirty = false;
 			
-			return edgeSkin;
+			return skin;
 		}
 		
-		public function updateEdge(currentNode:Node):void
+		public function updateEdge(currentHoverNode:Node = null):void
 		{
-			if(edgeSkin && edgeSkin.parent)
+			if(skin && skin.parent)
 			{					
-				(edgeSkin.parent as Sprite).unflatten();
-				setLineColor(currentNode);
-				(edgeSkin.parent as Sprite).flatten();
+				(skin.parent as Sprite).unflatten();
+				setLineColor(currentHoverNode);
+				(skin.parent as Sprite).flatten();
 				isDirty = false;
 			}
 		}
@@ -62,7 +62,7 @@ package scenes.game.display
 			var hyp:Number = Math.sqrt(a+b);
 			
 			//draw the quad flat, rotate later
-			edgeSkin = new EdgeSkin(hyp, Edge.LINE_THICKNESS);
+			skin = new EdgeSkin(hyp, Edge.LINE_THICKNESS, this);
 			setLineColor(null);
 			var otherEdgeId:String = toNode.id + " -> " + fromNode.id;
 			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];
@@ -102,15 +102,15 @@ package scenes.game.display
 					centerDy = -0.5 * LINE_THICKNESS * Math.cos(theta);
 				}
 			}
-			edgeSkin.rotation = theta;
+			skin.rotation = theta;
 			
 			if (offsetDoubleLine) {
 				centerDx += 1.5 * Math.sin(theta);
 				centerDy += 1.5 * Math.cos(theta);;
 			}
 			
-			edgeSkin.x = -edgeSkin.bounds.left + Math.min(p1.x, p2.x)  + centerDx;
-			edgeSkin.y = -edgeSkin.bounds.top + Math.min(p1.y, p2.y)  + centerDy;
+			skin.x = -skin.bounds.left + Math.min(p1.x, p2.x)  + centerDx;
+			skin.y = -skin.bounds.top + Math.min(p1.y, p2.y)  + centerDy;
 			
 			//trace(centerDx, centerDy, theta, dX, dY, " <-- Line made");
 		}
@@ -124,7 +124,7 @@ package scenes.game.display
 			if(!fromNode.isNarrow && toNode.isNarrow)
 				toColor = 0xff0000;
 			
-			edgeSkin.setColor(toColor, fromColor, fromColorComplement);
+			skin.setColor(toColor, fromColor, fromColorComplement);
 			
 			if(isHighlighted)
 			{
@@ -158,12 +158,12 @@ package scenes.game.display
 						color = 0x00ff00;
 					}
 					
-					edgeSkin.setHighlight(color);
+					skin.setHighlight(color);
 				}
 			}
 			else
 			{
-				edgeSkin.removeHighlight();
+				skin.removeHighlight();
 			}
 		}
 	}

@@ -58,13 +58,29 @@ package scenes.game.display
 			isDirty = true;
 		}
 		
+		public function updateNode():void
+		{
+			if (skin) {
+				skin.removeFromParent();
+				skin.disableSkin();
+			}
+			
+			skin = NodeSkin.getNextSkin();
+			skin.setNode(this);
+			skin.draw();
+			
+			skin.x = centerPoint.x - parentGrid.componentXDisplacement - 0.5 * skin.width;
+			skin.y = centerPoint.y - parentGrid.componentYDisplacement - 0.5 * skin.height;
+			
+			setNodeDirty(true);
+		}
+		
 		public function selectNode(selectedNodes:Dictionary):void
 		{
 			isSelected = true;
 			setNodeDirty(false);
 			parentGrid.NumNodesSelected++;
 			selectedNodes[id] = this;
-			
 		}
 		
 		public function unselectNode(selectedNodes:Dictionary):void
@@ -103,18 +119,18 @@ package scenes.game.display
 			{
 				for each(var gameEdgeID:String in connectedEdgeIds)
 				{
-					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					edgeObj.isDirty = true;
+					var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					edge.isDirty = true;
 				}
 			}
 		}
 		
-		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph):void
+		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			if(isEditable)
 			{
 				isNarrow = !_isWide;
-				isDirty = true;
+				setNodeDirty(setEdgesDirty);
 				var constraintVar:ConstraintVar = levelGraph.variableDict[id];
 				if (constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW) == _isWide) constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
 			}
@@ -125,17 +141,65 @@ package scenes.game.display
 		{
 			for each(var gameEdgeID:String in connectedEdgeIds)
 			{
-				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				var toNodeID:String = edgeObj["to_var_id"];
-				var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-				var fromNodeID:String = edgeObj["from_var_id"];
-				var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				var toNode:Node = edge.toNode;
+				var fromNode:Node = edge.fromNode;
 				
 				//error?
-				if(!fromNodeObj.isNarrow && toNodeObj.isNarrow)
+				if(!fromNode.isNarrow && toNode.isNarrow)
 					return true;
 			}
 			return false;
+		}
+		
+		protected var visitedNodes:Dictionary;
+		public function propagate(upstream:Boolean, visitedNodes:Dictionary):void
+		{
+			var gameEdgeID:String;
+			var edgeObj:Edge;
+			var toNodeID:String;
+			var toNode:Node;
+			var fromNodeID:String;
+			var fromNode:Node;
+						
+			if(upstream)
+			{
+				for each(gameEdgeID in connectedEdgeIds)
+				{
+					edgeObj = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					toNodeID = edgeObj.toNode.id;
+					if(toNodeID == id)
+					{
+						fromNode = edgeObj.fromNode;
+						fromNode.updateSelectionAssignment(!this.isNarrow, World.m_world.active_level.levelGraph, true);
+						if(visitedNodes[fromNode.id] == null)
+						{
+							visitedNodes[fromNode.id] = fromNode;
+							fromNode.propagate(upstream, visitedNodes);
+						}
+					}
+				}
+			}
+			else
+			{
+				for each(gameEdgeID in connectedEdgeIds)
+				{
+					edgeObj = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					toNodeID = edgeObj.toNode.id;
+					fromNodeID = edgeObj.fromNode.id;
+					if(fromNodeID == id)
+					{
+						toNode = edgeObj.toNode;
+						if(visitedNodes[toNode.id] == null)
+						{
+							toNode.updateSelectionAssignment(!this.isNarrow, World.m_world.active_level.levelGraph, true);
+							visitedNodes[toNode.id] = toNode;
+							toNode.propagate(upstream, visitedNodes);
+						}
+					}
+				}
+			}
+			
 		}
 	}
 }
