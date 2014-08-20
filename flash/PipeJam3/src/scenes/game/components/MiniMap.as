@@ -5,8 +5,26 @@ package scenes.game.components
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
+	import constraints.Constraint;
+	import constraints.ConstraintVar;
+	
+	import display.BasicButton;
+	import display.MapHideButton;
+	import display.MapShowButton;
+	
+	import events.MiniMapEvent;
+	import events.MoveEvent;
+	
+	import graph.PropDictionary;
+	
+	import scenes.BaseComponent;
+	import scenes.game.display.Level;
 	import scenes.game.display.Node;
 	import scenes.game.display.NodeSkin;
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -20,18 +38,6 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	import assets.AssetInterface;
-	import constraints.Constraint;
-	import constraints.ConstraintVar;
-	import display.BasicButton;
-	import display.MapHideButton;
-	import display.MapShowButton;
-	import events.MiniMapEvent;
-	import events.MoveEvent;
-	import graph.PropDictionary;
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	import scenes.game.display.NodeSkin;
 	import utils.XMath;
 	
 	public class MiniMap extends BaseComponent
@@ -80,6 +86,10 @@ package scenes.game.components
 		protected var narrowColor:int;
 		protected var errorColor:int = 0xFFFF0000;
 		
+		private var showNumConflicts:Boolean = false;
+		private var numConflictsTextField:TextFieldHack;
+		static public var numConflicts:int;
+		
 		public function MiniMap()
 		{
 			super();
@@ -114,6 +124,14 @@ package scenes.game.components
 			m_showButton.x = m_hideButton.x = HIDE_SHOW_BUTTON_LOC.x / scaleX;
 			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
 			addChild(m_showButton);
+			
+			numConflictsTextField = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, 30,20, 18, 0xff0000) as TextFieldHack;
+			numConflictsTextField.touchable = false;
+			numConflictsTextField.x = 100;
+			numConflictsTextField.y = 215;
+			TextFactory.getInstance().updateAlign(numConflictsTextField, 2, 1);
+			if(showNumConflicts)
+				addChild(numConflictsTextField);
 			
 			wideColor = 0xFF000000 ^ NodeSkin.WIDE_COLOR;
 			narrowColor = 0xFF000000 ^ NodeSkin.NARROW_COLOR;
@@ -244,13 +262,14 @@ package scenes.game.components
 						nodeBitmapData = null;
 					}
 				}
+				numConflicts = 0;
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.levelGraph.unsatisfiedConstraintDict) {
 					var constraint:Constraint = currentLevel.levelGraph.constraintsDict[errorId];
 					if (currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
 						var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
 						//mark the 'to' node to the error dict as the spot of the error
-						nodeErrorDict[edgeLayout["to_var_id"]] = edgeLayout;
+						nodeErrorDict[edgeLayout.toNode.id] = edgeLayout;
 					}
 				}
 				var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
@@ -284,6 +303,7 @@ package scenes.game.components
 			}
 			drawViewSpaceIndicator();
 			isDirty = false;
+			numConflictsTextField.text = String(numConflicts);
 		}
 		
 		private function drawViewSpaceIndicator():void
@@ -413,7 +433,10 @@ package scenes.game.components
 			var iconLoc:Point = level2map(widgetLevelPt);
 			var color:int = wideColor;
 			if(nodeErrorDict[id] != null)
+			{
 				color = errorColor;
+				numConflicts++;
+			}
 			else if(isNarrow)
 				color = narrowColor;
 			
