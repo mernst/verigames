@@ -9,34 +9,26 @@ nodes = {}
 groups = {}
 node2group = {}
 
-def merge_node_to_group(node, group, merge_dir, node_is_group):
+def merge_node_to_group(node, group):
 	global nodes
 	global groups
 	global node2group
-	if merge_dir == MERGE_INTO_TO_NODE: # merge source node into destination group
-		for input_id in node.inputs:
-			group.addinput(node.inputs[input_id]) # this will also update the edge to reference this group node
-	else: # merge destination node into source group
-		for output_id in node.outputs:
-			group.addoutput(node.outputs[output_id]) # this will also update the edge to reference this group node
-	if node_is_group:
-		if groups.get(node.id) is not None:
-			del groups[node.id]
-	else:
+	for input_id in node.inputs:
+		group.addinput(node.inputs[input_id]) # this will also update the edge to reference this group node
+	for output_id in node.outputs:
+		group.addoutput(node.outputs[output_id]) # this will also update the edge to reference this group node
+	if groups.get(node.id) is None: # node is not group
 		node2group[node.id] = group
 		group.grouped_nodes[node.id] = node
 		if nodes.get(node.id) is not None:
 			del nodes[node.id]
 
-def merge_group_to_group(from_group, to_group, merge_dir):
+def merge_group_to_group(group_to_merge, group_to_remain):
 	global node2group
-	if merge_dir == MERGE_INTO_TO_NODE:
-		group_to_merge = from_group
-		group_to_remain = to_group
-	else:
-		group_to_merge = to_group
-		group_to_remain = from_group
-	merge_node_to_group(node=from_group, group=to_group, merge_dir=merge_dir, node_is_group=True)
+	global groups
+	merge_node_to_group(node=group_to_merge, group=group_to_remain)
+	if groups.get(group_to_merge.id) is not None:
+		del groups[group_to_merge.id]
 	for grouped_node_id in group_to_merge.grouped_nodes:
 		group_to_remain.grouped_nodes[grouped_node_id] = group_to_merge.grouped_nodes[grouped_node_id]
 		node2group[grouped_node_id] = group_to_remain
@@ -59,26 +51,26 @@ def merge_nodes(edge, merge_dir):
 		group = Node('grp_%s' % group_indx, False)
 		group_indx += 1
 		groups[group.id] = group
+		if merge_dir == MERGE_INTO_TO_NODE:
+			to_group = group
+			node_to_merge = to_node
+		else:
+			from_group = group
+			node_to_merge = from_node
+		# Update all input/output edges to point to this new group, rather than the node
+		merge_node_to_group(node=node_to_merge, group=group)
+	if merge_dir == MERGE_INTO_TO_NODE:
+		to_group.removeinput(edge) # no-op for new groups
 		if from_group is not None:
-			merge_group_to_group(from_group=from_group, to_group=group, merge_dir=MERGE_INTO_TO_NODE)
+			merge_group_to_group(group_to_merge=from_group, group_to_remain=to_group)
 		else:
-			merge_node_to_group(node=from_node, group=group, merge_dir=MERGE_INTO_TO_NODE, node_is_group=False)
-		if to_group is not None:
-			merge_group_to_group(from_group=group, to_group=to_group, merge_dir=MERGE_INTO_FROM_NODE)
-		else:
-			merge_node_to_group(node=to_node, group=group, merge_dir=MERGE_INTO_FROM_NODE, node_is_group=False)
-	elif merge_dir == MERGE_INTO_TO_NODE:
-		to_group.removeinput(edge)
-		if from_group is not None:
-			merge_group_to_group(from_group=from_group, to_group=to_group, merge_dir=merge_dir)
-		else:
-			merge_node_to_group(node=from_node, group=to_group, merge_dir=MERGE_INTO_TO_NODE, node_is_group=False)
+			merge_node_to_group(node=from_node, group=to_group)
 	elif merge_dir == MERGE_INTO_FROM_NODE:
-		from_group.removeoutput(edge)
+		from_group.removeoutput(edge) # no-op for new groups
 		if to_group is not None:
-			merge_group_to_group(from_group=from_group, to_group=to_group, merge_dir=merge_dir)
+			merge_group_to_group(group_to_merge=to_group, group_to_remain=from_group)
 		else:
-			merge_node_to_group(node=to_node, group=from_group, merge_dir=MERGE_INTO_FROM_NODE, node_is_group=False)
+			merge_node_to_group(node=to_node, group=from_group)
 	else:
 		print 'WARNING: Invalid merge direction: %s' % merge_dir
 
@@ -101,27 +93,28 @@ def optimize_graph(infilename, outfilename):
 			to_node = edge.tonode
 			if from_node.isconstant or to_node.isconstant:
 				continue # don't merge fixed nodes for now
+			# Remove edges group nodes together into one group node
 			if from_node.noutputs == 1 and to_node.ninputs == 1:
 				# Case 1: Two nodes connected by one edge with no other edges coming in/out (respectively)
-				# Remove the edge that joins them and group them together into one node
 				merge_nodes(edge=edge, merge_dir=MERGE_INTO_TO_NODE)
-				n_edges_reduced += 1
-				removed_edges[edge_id] = True
-			# elif from_node.ninputs == 0 and to_node.ninputs == 1:
-			# 	# Case 2: For nodes with no inputs, eliminate edges where to_node's only incoming edge is this one
-			# 	merge_nodes(edge=edge, merge_dir=MERGE_INTO_FROM_NODE)
-			# 	n_edges_reduced += 1
-			# 	removed_edges[edge_id] = True
-			# elif to_node.noutputs == 0 and from_node.noutputs == 1:
-			# 	# Case 3: For nodes with no outputs, eliminate edges where from_nodes's only outgoing edge is this one
-			# 	merge_nodes(edge=edge, merge_dir=MERGE_INTO_TO_NODE)
-			# 	n_edges_reduced += 1
-			# 	removed_edges[edge_id] = True
+			elif from_node.ninputs == 0 and from_node.noutputs == 1: #zzz and to_node.ninputs == 1:
+				# Case 2: For nodes with no inputs, eliminate edges where to_node's only incoming edge is this one
+				merge_nodes(edge=edge, merge_dir=MERGE_INTO_FROM_NODE)
+			elif to_node.noutputs == 0 and to_node.ninputs == 1: #zzz and from_node.noutputs == 1:
+				# Case 3: For nodes with no outputs, eliminate edges where from_nodes's only outgoing edge is this one
+				merge_nodes(edge=edge, merge_dir=MERGE_INTO_TO_NODE)
+			else:
+				continue
+			n_edges_reduced += 1
+			removed_edges[edge_id] = True
+			#print 'removed %s' % edge_id
 		# Remove edges from dict
 		for edge_id in removed_edges:
 			del edges[edge_id]
 		print 'Pass %s removed %s edges' % (pass_num, n_edges_reduced)
 		pass_num += 1
+	# Reload graph, use original edges
+	original_version, original_default_var_type, original_scoring, original_nodes, original_edges, original_groups, original_assignments = load_constraints_graph(infilename)
 	with open('%s_OPT.json' % outfilename, 'w') as fout:
 		fout.write('{"version": %s,\n' % version)
 		# fout.write('"default_var_type": %s,\n' % default_var_type)
@@ -149,11 +142,11 @@ def optimize_graph(infilename, outfilename):
 		fout.write('},\n')
 		fout.write('"constraints": [\n')
 		first = True
-		for edge_id in edges:
+		for edge_id in original_edges:
 			if not first:
 				fout.write(',\n')
 			first = False
-			fout.write('"%s <= %s"' % (edges[edge_id].fromnode.outputvarsimple(), edges[edge_id].tonode.outputvarsimple()))
+			fout.write('"%s <= %s"' % (original_edges[edge_id].fromnode.outputvarsimple(), original_edges[edge_id].tonode.outputvarsimple()))
 		fout.write(']}')
 
 

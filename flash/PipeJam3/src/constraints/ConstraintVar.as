@@ -14,6 +14,7 @@ package constraints
 		public var scoringConfig:ConstraintScoringConfig;
 		public var possibleKeyfors:Vector.<String>;
 		public var keyforVals:Vector.<String>;
+		public var associatedGroupId:String;
 		
 		private var m_props:PropDictionary;
 		private var m_value:ConstraintValue;
@@ -57,6 +58,7 @@ package constraints
 				}
 			}
 			if (m_props.hasProp(prop) != value) {
+				trace(id, value ? " -> narrow" : " -> wide");
 				m_props.setProp(prop, value);
 				dispatchEvent(new VarChangeEvent(VarChangeEvent.VAR_CHANGED_IN_GRAPH, this, prop, value));
 			}

@@ -5,6 +5,19 @@ from load_constraints_graph import *
 WIDTHPERPORT = 0.6
 DECIMAL_PLACES = 2 # round all layout values to X decimal places
 PAD_FACTOR = 2.0 # sfdp/prism tend to create tight layouts, this will multiply the width and height of the node by X to create more padding around nodes
+
+# Common header used for graphviz files
+GRAPH_HEADER =  'digraph G {\n'
+GRAPH_HEADER += '  graph [\n'
+GRAPH_HEADER += '    overlap="prism500",\n'
+GRAPH_HEADER += '    splines="line"\n'
+GRAPH_HEADER += '  ];\n'
+GRAPH_HEADER += '  node [\n'
+GRAPH_HEADER += '    label="",\n'
+GRAPH_HEADER += '    fixedsize=true,\n'
+GRAPH_HEADER += '    shape="rect"\n'
+GRAPH_HEADER += '  ];\n'
+
 class Point:
 	def __init__(self, x, y):
 		self.x = round(float(x), DECIMAL_PLACES)
@@ -41,9 +54,69 @@ def get_bonus(var_scoring, graph_scoring=None):
 		type0_bonus = 0.0
 	return type0_bonus, type1_bonus
 
+def layout_nodes(nodes, edges, outfilename, remove_graphviz_files):
+	# Create graphviz input file
+	graphin = '%s' % GRAPH_HEADER
+	node_dim = {}
+	# Nodes
+	for nodeid in nodes:
+		node = nodes[nodeid]
+		node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
+		calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
+		graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR*node.width, PAD_FACTOR*calcheight)
+		node_dim[nodeid] = [PAD_FACTOR*node.width, PAD_FACTOR*calcheight]
+	print 'Adding graphviz edges...'
+	# Edges
+	for edgeid in edges:
+		graphin += '%s;\n' % edgeid
+	graphin += '}'
+	with open(outfilename + '-IN.txt','w') as writegraph:
+		writegraph.write(graphin)
+	print 'Laying out with graphviz (sfdp)...'
+	# Layout with graphviz
+	with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename)) as sfdpcmd:
+		sfdpcmd.read()
+	min_x = None
+	min_y = None
+	max_x = None
+	max_y = None
+	with open(outfilename + '-OUT.txt','r') as readgraph:
+		firstline = True
+		for line in readgraph:
+			if len(line) < 4:
+				continue
+			if line[:4] == 'node':
+				vals = line.split(' ')
+				try:
+					id = vals[1]
+					node = nodes.get(id)
+					if node is None:
+						print 'Error parsing graphviz output node line: %s, couldn''t find node: %s' % (line, id)
+					x = float(vals[2])
+					y = float(vals[3])
+					node.pt = Point(x, y)
+					node_width_height = node_dim.get(id, [0, 0])
+					if min_x is None:
+						min_x = x - 0.5 * node_width_height[0]
+					else:
+						min_x = min(min_x, x - 0.5 * node_width_height[0])
+					if min_y is None:
+						min_y = y - 0.5 * node_width_height[1]
+					else:
+						min_y = min(min_y, y - 0.5 * node_width_height[1])
+					max_x = max(max_x, x + 0.5 * node_width_height[0])
+					max_y = max(max_y, y + 0.5 * node_width_height[1])
+				except:
+					pass
+	if remove_graphviz_files:
+		os.remove(outfilename + '-OUT.txt')
+		os.remove(outfilename + '-IN.txt')
+	return min_x, min_y, max_x, max_y
+
 # Main method to create layout, assignments files from constraint input json
 def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 	version, default_var_type, scoring, nodes, edges, groups, assignments = load_constraints_graph(infilename)
+	node2group = {}
 	if scoring is None:
 		scoring = {}
 	n_vars = 0
@@ -221,96 +294,162 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 			writesat.write('p wcnf %s %s\n' % (next_weighted_sat_var_index - 1, next_weighted_sat_conjunc_index - 1))
 			for line in weighted_dimacs_lines:
 				writesat.write('%s' % line)
-	else:
-		print 'Creating graphviz file...'
-		# Create graphviz input file
-		graphin =  'digraph G {\n'
-		graphin += '  graph [\n'
-		graphin += '    overlap="prism500",\n'
-		graphin += '    splines="line"\n'
-		graphin += '  ];\n'
-		graphin += '  node [\n'
-		graphin += '    label="",\n'
-		graphin += '	fixedsize=true,\n'
-		graphin += '	shape="rect"\n'
-		graphin += '  ];\n'
-		print 'Adding graphviz nodes...'
-		# Nodes
-		for nodeid in nodes:
-			node = nodes[nodeid]
+		print '---------------'
+		return
+	print 'Creating graphviz files...'
+	for group_id in groups:
+		for node_id in groups[group_id]:
+			formatted_node_id = 'var_%s' % node_id[4:]
+			if node2group.get(formatted_node_id) is not None:
+				print 'Warning! Multiple groups may exist for %s' % formatted_node_id
+			node2group[formatted_node_id] = group_id
+	# Create graphviz input file
+	graphin = '%s' % GRAPH_HEADER
+	# Layout group nodes individually (group nodes only)
+	group_layout = {}
+	layoutf =  '{\n'
+	layoutf += '"id": "%s",\n' % infilename
+	layoutf += '"layout": {\n'
+	for group_id in groups:
+		group_nodes = {}
+		group_edges = {}
+		for node_id in groups[group_id]:
+			found_node = nodes.get(node_id)
+			if found_node is None:
+				print 'Warning! Node listed in group not found: %s' % node_id
+				continue
+			group_nodes[found_node.id] = found_node
+			for edge_id in found_node.inputs:
+				input_edge = found_node.inputs[edge_id]
+				from_group = node2group.get(input_edge.fromnode.id)
+				if from_group == group_id:
+					group_edges[input_edge.id] = input_edge
+			for edge_id in found_node.outputs:
+				output_edge = found_node.outputs[edge_id]
+				to_group = node2group.get(output_edge.tonode.id)
+				if to_group == group_id:
+					group_edges[output_edge.id] = output_edge
+		if not group_nodes:
+			continue # if no nodes, move on to next group
+		min_x, min_y, max_x, max_y = layout_nodes(nodes=group_nodes, edges=group_edges, outfilename='%s_grp_%s' % (outfilename, group_id[4:]), remove_graphviz_files=remove_graphviz_files)
+		group_layout[group_id] = {'w': (max_x - min_x), 'h': (max_y - min_y)}
+		graphin += 'grp_%s [width=%s,height=%s];\n' % (group_id[4:], group_layout[group_id]['w'], group_layout[group_id]['h'])
+	print 'Adding graphviz nodes...'
+	# Nodes
+	for node_id in nodes:
+		node = nodes[node_id]
+		group = node2group.get(node_id)
+		if group is None: # grouped nodes should already be laid out (locally)
 			node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
 			calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
 			graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR*node.width, PAD_FACTOR*calcheight)
-		print 'Adding graphviz edges...'
-		# Edges
-		for edgeid in edges:
-			graphin += '%s;\n' % edgeid
-		graphin += '}'
-		with open(outfilename + '-IN.txt','w') as writegraph:
-			writegraph.write(graphin)
-		print 'Laying out with graphviz (sfdp)...'
-		# Layout with graphviz
-		with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename)) as sfdpcmd:
-			sfdpcmd.read()
-		# Layout node positions from output
-		print 'Reading in graphviz layout...'
-		nodelayout = {}
-		layoutf =  '{\n'
-		layoutf += '"id": "%s",\n' % infilename
-		layoutf += '"layout": {\n'
-		layoutf += '  "vars": {\n'
-		with open(outfilename + '-OUT.txt','r') as readgraph:
-			firstline = True
-			for line in readgraph:
-				if len(line) < 4:
-					continue
-				if line[:4] == 'node':
-					vals = line.split(' ')
-					try:
-						id = vals[1]
-						node = nodes.get(id)
-						if node is None:
-							print 'Error parsing graphviz output node line: %s, couldn''t find node: %s' % (line, id)
-						x = float(vals[2])
-						y = float(vals[3])
+	print 'Adding graphviz edges...'
+	# Edges
+	for edge_id in edges:
+		edge = edges[edge_id]
+		# If edge leads to/from grouped node(s), adjust edge id to lead to/from group id, not node id
+		from_node_id = node2group.get(edge.fromnode.id, edge.fromnode.id)
+		to_node_id = node2group.get(edge.tonode.id, edge.tonode.id)
+		graphin += '%s -> %s;\n' % (from_node_id, to_node_id)
+	graphin += '}'
+	with open(outfilename + '-IN.txt','w') as writegraph:
+		writegraph.write(graphin)
+	print 'Laying out with graphviz (sfdp)...'
+	# Layout with graphviz
+	with os.popen('sfdp -y -Tplain -o%s-OUT.txt %s-IN.txt' % (outfilename, outfilename)) as sfdpcmd:
+		sfdpcmd.read()
+	# Layout node positions from output
+	print 'Reading in graphviz layout...'
+	nodelayout = {}
+	layoutf += '  "vars": {\n'
+	firstline = True
+	with open(outfilename + '-OUT.txt','r') as readgraph:
+		for line in readgraph:
+			if len(line) < 4:
+				continue
+			if line[:4] == 'node':
+				vals = line.split(' ')
+				try:
+					id = vals[1]
+					node = nodes.get(id)
+					x = float(vals[2])
+					y = float(vals[3])
+					layout_obj = {}
+					if groups.get(id) is not None:
+						group_layout[id]['x'] = x
+						group_layout[id]['y'] = y
+						# output layout as separate item in "groups" key in layout dict
+					elif node is None:
+						print 'Error parsing graphviz output node line: %s, couldn''t find node: %s' % (line, id)
+					else:
 						node.pt = Point(x, y)
 						if nodelayout.get(node.id) is not None:
 							print 'Warning! Multiple node lines found with same id: %s' % node.id
 						nodelayout[node.id] = {'x': node.pt.x, 'y': node.pt.y, 'w':node.width, 'h': node.height}
+						layout_obj = nodelayout[node.id]
 						if firstline:
 							firstline = False
 						else:
 							layoutf += ',\n'
-						layoutf += '    "%s":%s' % (node.id, json.dumps(nodelayout[node.id], separators=(',', ':'))) # separators: no whitespace
-					except Exception as e:
-						print 'Error parsing graphviz output node line: %s -> %s' % (line, e)
-					#print 'node id:%s x,y: %s,%s' % (id, x, y)
-		layoutf += '\n  },\n' # end vars {}
-		layoutf += '  "constraints": [\n'
-		firstline = True
-		for edge_id in edges:
-			if not firstline:
-				layoutf += ','
-			layoutf += '"%s"' % edges[edge_id].id
+						layoutf += '    "%s":%s' % (id, json.dumps(layout_obj, separators=(',', ':'))) # separators: no whitespace
+				except Exception as e:
+					print 'Error parsing graphviz output node line: %s -> %s' % (line, e)
+				#print 'node id:%s x,y: %s,%s' % (id, x, y)
+	# Deal with grouped nodes
+	for node_id in nodes:
+		node = nodes[node_id]
+		group = node2group.get(node.id)
+		if group is not None:
+			group_layout_obj = group_layout.get(group, {})
+			group_x = group_layout_obj.get('x', 0.0)
+			group_y = group_layout_obj.get('y', 0.0)
+			group_w = group_layout_obj.get('w', 0.0)
+			group_h = group_layout_obj.get('h', 0.0)
+			node.pt.x += group_x - 0.5 * group_w
+			node.pt.y += group_y - 0.5 * group_h
+			nodelayout[node.id] = {'x': node.pt.x, 'y': node.pt.y, 'w':node.width, 'h': node.height}
+			if firstline:
+				firstline = False
+			else:
+				layoutf += ',\n'
+			layoutf += '    "%s":%s' % (node.id, json.dumps(nodelayout[node.id], separators=(',', ':'))) # separators: no whitespace
+	layoutf += '\n  }' # end vars {}
+	# Output group layout positions
+	layoutf += ',\n'
+	layoutf += '  "groups": {\n'
+	firstline = True
+	for group_id in groups:
+		if firstline:
 			firstline = False
-		layoutf += '\n  ]\n' # end constraints 
-		layoutf += '}}' # end layout {} file {}
-		layout_filename = outfilename + 'Layout.json'
-		if remove_graphviz_files:
-			os.remove(outfilename + '-OUT.txt')
-			os.remove(outfilename + '-IN.txt')
-		print 'Writing layout file: %s' % layout_filename
-		with open(layout_filename, 'w') as writelayout:
-			writelayout.write(layoutf)
-		dimacs_filename = outfilename + '.cnf'
-		print 'Writing dimacs unweighted sat file: %s' % dimacs_filename
-		with open(dimacs_filename, 'w') as writesat:
-			writesat.write('c keys%s\n' % unweighted_var_keys)
-			writesat.write('c offset %s\n' % (equality_pts_offset + always_true_pts_offset))
-			writesat.write('p cnf %s %s\n' % (next_unweighted_sat_var_index - 1, next_unweighted_sat_conjunc_index - 1))
-			for line in unweighted_dimacs_lines:
-				writesat.write(line)
-	print '------------'
+		else:
+			layoutf += ',\n'
+		layoutf += '    "%s":%s' % (group_id, json.dumps(group_layout[group_id], separators=(',', ':'))) # separators: no whitespace
+	layoutf += '\n  }' # end groups {}
+	layoutf += ',\n  "constraints": [\n'
+	firstline = True
+	for edge_id in edges:
+		if not firstline:
+			layoutf += ','
+		layoutf += '"%s"' % edges[edge_id].id
+		firstline = False
+	layoutf += '\n  ]\n' # end constraints 
+	layoutf += '}}' # end layout {} file {}
+	layout_filename = outfilename + 'Layout.json'
+	if remove_graphviz_files:
+		os.remove(outfilename + '-OUT.txt')
+		os.remove(outfilename + '-IN.txt')
+	print 'Writing layout file: %s' % layout_filename
+	with open(layout_filename, 'w') as writelayout:
+		writelayout.write(layoutf)
+	dimacs_filename = outfilename + '.cnf'
+	print 'Writing dimacs unweighted sat file: %s' % dimacs_filename
+	with open(dimacs_filename, 'w') as writesat:
+		writesat.write('c keys%s\n' % unweighted_var_keys)
+		writesat.write('c offset %s\n' % (equality_pts_offset + always_true_pts_offset))
+		writesat.write('p cnf %s %s\n' % (next_unweighted_sat_var_index - 1, next_unweighted_sat_conjunc_index - 1))
+		for line in unweighted_dimacs_lines:
+			writesat.write(line)
+	print '---------------'
 
 ### Command line interface ###
 if __name__ == "__main__":

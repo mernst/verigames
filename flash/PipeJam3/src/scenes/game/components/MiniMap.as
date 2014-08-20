@@ -413,8 +413,8 @@ package scenes.game.components
 		public function addWidget(node:Node, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
-			var id:String = node["id"];
-			var bb:Rectangle = node["bb"] as Rectangle;
+			var id:String = node.id;
+			var bb:Rectangle = node.bb;
 			if (bb == null) throw new Error("Tried to add widget to MiniMap but no bounding box found in layout information.");
 			
 			var levelPctLeftX:Number = (bb.topLeft.x - visibleBB.x) / visibleBB.width;
@@ -425,7 +425,7 @@ package scenes.game.components
 			
 			var iconWidth:Number = Math.min(2 / scaleX, mapRightX - mapLeftX);
 			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
-			var constrVar:ConstraintVar = node["graphVar"] as ConstraintVar;
+			var constrVar:ConstraintVar = node.graphVar;
 			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			//var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
 			
