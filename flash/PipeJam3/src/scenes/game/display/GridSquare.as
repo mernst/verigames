@@ -199,6 +199,13 @@ package scenes.game.display
 			gridChild.createSkin();
 		}
 		
+		public function addEdge(edge:Edge):void
+		{
+			edgeList.push(edge);
+			edge.updateEdge();
+		}
+
+		
 		public function get bb():Rectangle
 		{
 			if (!m_bb) calculateBounds();
@@ -498,30 +505,44 @@ package scenes.game.display
 		{
 			for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
 			{
-				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				if(edgeObj && edgeObj.skin)
+				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				if(edge && edge.skin)
 				{
 					//need to check if the other end is on screen, and if it is, pass this edge off to that node
-					var toNodeID:String = edgeObj["to_var_id"];
-					var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-					var fromNodeID:String = edgeObj["from_var_id"];
-					var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+					var toNodeObj:Object = edge.toNode;
+					var fromNodeObj:Object = edge.fromNode;
 					
 					var otherNode:Object = toNodeObj;
 					if(toNodeObj == gridChild)
 						otherNode = fromNodeObj;
 					
-					edgeObj.edgeSprite.removeFromParent(dispose);
-					edgeObj.edgeSprite = null;
+					edge.skin.removeFromParent(dispose);
+					edge.skin = null;
 					
-					//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
-					if(otherNode && otherNode.skin && otherNode.skin.parent != nodeDrawingBoard)
+					if(edge && edge.skin && edge.skin.parent == edgeDrawingBoard)
 					{
-						//destroy edge and recreate
-						otherNode.parentGrid.createEdges(otherNode);
-						otherNode.parentGrid.isDirty = true;
-						otherNode.isDirty = true;
+						var newParent:GridSquare;
+
+						//need to check if the one end is on screen, and if it is, pass this edge off to that grid
+						if(edge.toNode.parentGrid != this && edge.toNode.parentGrid.isActivated == true)
+							newParent = edge.toNode.parentGrid;
+						else if(edge.fromNode.parentGrid != this && edge.fromNode.parentGrid.isActivated == true)
+							newParent = edge.fromNode.parentGrid;
+						else
+						{
+							edge.skin.removeFromParent(dispose);
+							edge.skin = null;
+						}
+						
+						//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
+						if(newParent)
+						{
+							//destroy edge and recreate
+							newParent.createEdges();
+							newParent.isDirty = true;
+						}
 					}
+
 				}
 			}
 			gridChild.removeSkin();

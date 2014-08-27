@@ -565,13 +565,20 @@ package scenes.game.display
 				
 				edgeLayoutObjs[constraintId] = edge;
 				
-			//	addEdgeToGrids(edge);
+				addEdgeToGrids(edge);
 				n++;
 			}
 			trace("edge count = " + n);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
+		//in real life this probably should figure out what squares it travels through also.
+		public function addEdgeToGrids(edge:Edge):void
+		{
+			edge.toNode.parentGrid.addEdge(edge);
+			edge.fromNode.parentGrid.addEdge(edge);
+		}
+
 		public function addChildToGroupLevel(child:Sprite):void
 		{
 			m_groupsContainer.addChild(child);
