@@ -36,11 +36,9 @@ package scenes.game.display
 			skin.x = centerPoint.x - parentGrid.componentXDisplacement - 0.5 * skin.width;
 			skin.y = centerPoint.y - parentGrid.componentYDisplacement - 0.5 * skin.height;
 			
-			setNodeDirty(true);
-		}
-		
-		{
-			super.select(selectedNodes);
+			setDirty(true);
+
+		//	super.select(selectedNodes);
 			if (skin) createSkin();
 			parentGrid.isDirty = (skin != null);
 		}
@@ -70,16 +68,19 @@ package scenes.game.display
 		{
 			super.removeSkin();
 			if (skin) (skin as NodeSkin).disableSkin();
-					var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					edge.isDirty = true;
+			for each(var gameEdgeID:String in connectedEdgeIds)
+			{
+				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				edgeObj.isDirty = true;
+			}
 		}
 		
-		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
+		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			super.updateSelectionAssignment(_isWide, levelGraph);
 			if(isEditable)
 			{
-				setNodeDirty(setEdgesDirty);
+				setDirty(setEdgesDirty);
 				var constraintVar:ConstraintVar = levelGraph.variableDict[id];
 				if (constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW) == _isWide) constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
 			}

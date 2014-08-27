@@ -565,7 +565,7 @@ package scenes.game.display
 				
 				edgeLayoutObjs[constraintId] = edge;
 				
-				addEdgeToGrids(edge);
+			//	addEdgeToGrids(edge);
 				n++;
 			}
 			trace("edge count = " + n);
@@ -575,8 +575,6 @@ package scenes.game.display
 		public function addChildToGroupLevel(child:Sprite):void
 		{
 			m_groupsContainer.addChild(child);
-		}
-		
 		}
 		
 		public function addChildToNodeLevel(child:Sprite):void
@@ -1241,7 +1239,7 @@ package scenes.game.display
 			onWidgetChange();
 		}
 		
-		var solverRunningTime:Number;
+		protected var solverRunningTime:Number;
 		public function solverTimerCallback(evt:TimerEvent):void
 		{
 			solveSelection(solverUpdate, solverDone);
@@ -1631,7 +1629,7 @@ package scenes.game.display
 				for each(var flippedNode:Node in flippedNodes)
 				{
 					var constraintVar:ConstraintVar = flippedNode["graphVar"];
-					flippedNode.setNodeDirty(true);
+					flippedNode.setDirty(true);
 					if(constraintVar) 
 						constraintVar.setProp(PropDictionary.PROP_NARROW, flippedNode.isNarrow);
 				}

@@ -33,7 +33,7 @@ package scenes.game.display
 		
 		protected var gridOffset:Point;
 		
-		public var skin:Sprite;
+		public var skin:NodeSkin;
 		
 		public function GridChild(_layoutObject:Object, _id:String, _bb:Rectangle, _parentGrid:GridSquare) 
 		{
@@ -115,7 +115,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph):void
+		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			if(isEditable)
 			{

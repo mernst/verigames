@@ -32,6 +32,7 @@ package scenes.game.display
 		protected var groupDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
 		protected var nodeList:Vector.<Node>;
+		protected var edgeList:Vector.<Edge>;
 		protected var groupList:Vector.<NodeGroup>;
 		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
@@ -59,6 +60,7 @@ package scenes.game.display
 			componentXDisplacement = gridXOffset*Level.GRID_SIZE;
 			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
 			nodeList = new Vector.<Node>();
+			edgeList = new Vector.<Edge>;
 			groupList = new Vector.<NodeGroup>();
 		}
 		
@@ -80,6 +82,7 @@ package scenes.game.display
 				if(!event.shiftKey)
 				{
 					if(!gridChild.isLocked)
+					{
 					}
 					else if(event.shiftKey) //individual select or not
 					{
@@ -119,17 +122,21 @@ package scenes.game.display
 					}
 					else if(event.ctrlKey) //propagate size up or down stream
 					{
-							if(Keyboard.capsLock)
-							{
-								World.m_world.active_level.propagate();
+						if(Keyboard.capsLock)
+						{
+							World.m_world.active_level.propagate();
+						}
+					}
 				}
 				else
 				{
 					if(!event.ctrlKey)
-								//propigate narrowness down, or wideness up
-								if(!node.isEditable)
-									node.propagate(node.isNarrow, visitedNodes);
-							}
+					{
+						//propigate narrowness down, or wideness up
+						var visitedNodes:Dictionary = new Dictionary;
+						if(!node.isEditable)
+							node.propagate(node.isNarrow, visitedNodes);
+					
 							World.m_world.active_level.onWidgetChange();
 					}
 					else if(World.altKeyDown)
@@ -142,9 +149,6 @@ package scenes.game.display
 					else
 					{
 						touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
-						{
-							var globPt:Point = nodeDrawingBoard.localToGlobal(loc);
-							onClicked(node, globPt);
 					}
 				}
 			}
@@ -310,7 +314,8 @@ package scenes.game.display
 					nodeDrawingBoard.addChild(node.skin);
 				}
 			}
-			for each(var edge:Edge in edgeList)
+			var edge:Edge;
+			for each(edge in edgeList)
 			{				
 				if(edge.skin && edge.isDirty) //needs to be created  before here if we want it
 				{
@@ -354,9 +359,8 @@ package scenes.game.display
 			groupDrawingBoard.flatten();
 			edgeDrawingBoard.flatten();
 			isDirty = false;
-		}
 		
-			for each(var edge:Edge in edgeList)
+			for each(edge in edgeList)
 			{
 				if(edge.skin == null)
 				{
@@ -368,19 +372,27 @@ package scenes.game.display
 			}
 		}
 		
-		private function createEdge(edge:Object):void
+		private function createEdges():void
 		{
-			var toNodeID:String = edge["to_var_id"];
-			var toNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[toNodeID];
-			var fromNodeID:String = edge["from_var_id"];
-			var fromNodeObj:Node = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
-
-			if(fromNodeObj == toNodeObj) return;
+			if(!edgeDrawingBoard)
+			{
+				edgeDrawingBoard = new Sprite;
+				edgeDrawingBoard.x = componentXDisplacement;
+				edgeDrawingBoard.y = componentYDisplacement;
+				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
+			}
 			
-			edge.edgeSkin = drawLine(fromNodeObj, toNodeObj);
-			edge.parentXOffset = gridXOffset;
-			edge.parentYOffset = gridYOffset;
-			edge.isDirty = true;
+			for each(var edge:Edge in edgeList)
+			{
+				if(edge.skin == null)
+				{
+					var edgeSkin:EdgeSkin = edge.createEdgeSkin();
+					edgeSkin.addToParent(edgeDrawingBoard);
+					edgeSkin.x -= componentXDisplacement;
+					edgeSkin.y -= componentYDisplacement;
+				}
+			}
+
 		}
 		
 		private function updateEdge(edge:Edge):void
@@ -483,39 +495,35 @@ package scenes.game.display
 		}
 		
 		public function removeGridChild(gridChild:GridChild, dispose:Boolean = false):void
-		{			
+		{
 			for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
-				node.skin.removeFromParent();
-				node.skin.disableSkin();
-			}
-		}
-		
-		public function removeEdge(edge:Edge, dispose:Boolean = false):void
-		{			
-			//if we exist and are owned by this gridsquare do something
-			if(edge && edge.skin && edge.skin.parent == edgeDrawingBoard)
 			{
-				var newParent:GridSquare;
+				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				if(edgeObj && edgeObj.skin)
+				{
+					//need to check if the other end is on screen, and if it is, pass this edge off to that node
+					var toNodeID:String = edgeObj["to_var_id"];
+					var toNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[toNodeID];
+					var fromNodeID:String = edgeObj["from_var_id"];
+					var fromNodeObj:Object = World.m_world.active_level.nodeLayoutObjs[fromNodeID];
+					
+					var otherNode:Object = toNodeObj;
 					if(toNodeObj == gridChild)
-				
-				//need to check if the one end is on screen, and if it is, pass this edge off to that grid
-				if(edge.toNode.parentGrid != this && edge.toNode.parentGrid.isActivated == true)
-					newParent = edge.toNode.parentGrid;
-				else if(edge.fromNode.parentGrid != this && edge.fromNode.parentGrid.isActivated == true)
-					newParent = edge.fromNode.parentGrid;
-				else
-				{
-					edge.skin.removeFromParent(dispose);
-					edge.skin = null;
+						otherNode = fromNodeObj;
+					
+					edgeObj.edgeSprite.removeFromParent(dispose);
+					edgeObj.edgeSprite = null;
+					
+					//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
+					if(otherNode && otherNode.skin && otherNode.skin.parent != nodeDrawingBoard)
+					{
+						//destroy edge and recreate
+						otherNode.parentGrid.createEdges(otherNode);
+						otherNode.parentGrid.isDirty = true;
+						otherNode.isDirty = true;
+					}
 				}
-				
-				//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
-				if(newParent)
-				{
-					//destroy edge and recreate
-					newParent.createEdges();
-					newParent.isDirty = true;
-				}
+			}
 			gridChild.removeSkin();
 		}
 		
@@ -527,9 +535,9 @@ package scenes.game.display
 				removeGridChild(node, dispose);
 			}
 			
-			for each (var edge:Edge in edgeList) {
-				removeEdge(edge, dispose);
-			}
+		//	for each (var edge:Edge in edgeList) {
+		//		removeGridChild(edge, dispose);
+		//	}
 			nodeDrawingBoard.removeFromParent(dispose);
 			groupDrawingBoard.removeFromParent(dispose);
 			edgeDrawingBoard.removeFromParent(dispose);
@@ -651,7 +659,7 @@ package scenes.game.display
 				edgeDrawingBoard.bounds.intersects(viewRect))
 					return true;
 			else
-				return false
+				return false;
 		}
 	}
 }
