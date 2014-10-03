@@ -108,12 +108,6 @@ package assets
 		[Embed(source = "../../lib/assets/BorderVignette.png")]
 		public static const BorderVignetteClass:Class;
 		
-		[Embed(source = "../../lib/assets/minion1.jpg")]
-		public static const Minion1Class:Class;
-		
-		[Embed(source = "../../lib/assets/minion2.jpg")]
-		public static const Minion2Class:Class;
-		
 		[Embed(source = "../../lib/assets/shimmer.png")]
 		public static const ShimmerClass:Class;
 		
