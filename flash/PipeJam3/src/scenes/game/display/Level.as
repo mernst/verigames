@@ -542,7 +542,7 @@ package scenes.game.display
 			{
 				gridSquare.calculateBounds();
 			}
-			trace("node count = " + n);
+			//trace("node count = " + n);
 			
 			// Process layout edges (constraints)
 			var visibleLines:int = 0;
@@ -568,7 +568,7 @@ package scenes.game.display
 				addEdgeToGrids(edge);
 				n++;
 			}
-			trace("edge count = " + n);
+			//trace("edge count = " + n);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
@@ -614,7 +614,7 @@ package scenes.game.display
 			m_bestScore = levelGraph.currentScore;
 			levelGraph.startingScore = levelGraph.currentScore;
 			flatten();
-			trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
+			//trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
 		
 		public function restart():void
@@ -637,7 +637,7 @@ package scenes.game.display
 			loadAssignments(m_levelAssignmentsObj);
 			
 			targetScoreReached = false;
-			trace("Restarted: " + m_levelLayoutObj["id"]);
+			//trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
@@ -752,7 +752,7 @@ package scenes.game.display
 		override public function dispose():void
 		{
 			initialized = false;
-			trace("Disposed of : " + m_levelLayoutObj["id"]);
+			//trace("Disposed of : " + m_levelLayoutObj["id"]);
 			if (m_disposed) {
 				return;
 			}
@@ -1063,7 +1063,7 @@ package scenes.game.display
 		{
 			var i:int = 0;
 			var conflictIndex:int = m_currentConflictIndex + (forward ? 1 : -1);
-			trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
+			//trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
 			var firstConflictLoc:Point;
 			var lastConflictLoc:Point;
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
@@ -1085,10 +1085,8 @@ package scenes.game.display
 					m_currentConflictIndex = i;
 					return conflictLoc;
 				} else if (i == 0) {
-					trace("2 edge = ", edgeId);
 					firstConflictLoc = conflictLoc;
 				} else if (!firstConflictLoc) {
-					trace("3 edge = ", edgeId);
 					firstConflictLoc = conflictLoc;
 				}
 				i++;
@@ -1171,7 +1169,7 @@ package scenes.game.display
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
-				trace("New best score: " + m_bestScore);
+				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
@@ -1279,7 +1277,7 @@ package scenes.game.display
 					if(node.hasError() && node.unused)
 					{
 						node.unused = false;
-						trace(node.id);
+					//trace(node.id);
 						onGroupSelection(new SelectionEvent("foo", node));
 						solveSelection1(updateCallback, doneCallback);
 						unselectAll();
@@ -1288,7 +1286,7 @@ package scenes.game.display
 				}
 				
 				// if we make it this far start over
-				trace("new loop", loopcount);
+			//trace("new loop", loopcount);
 				looptimer = new Timer(1000, 1);
 				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
 				looptimer.start();
@@ -1480,7 +1478,6 @@ package scenes.game.display
 				}
 			}
 			
-			trace("constraintArray.length", constraintArray.length);
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1509,11 +1506,11 @@ package scenes.game.display
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var nodeUpdated:Boolean = false;
-			trace("update", unsat_weight);
+			//trace("update", unsat_weight);
 			if(	m_inSolver == false) //got marked done early
 				return;
 			
-			trace(levelGraph.currentScore);
+			//trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
@@ -1537,7 +1534,7 @@ package scenes.game.display
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
-			trace(errMsg);
+			//trace(errMsg);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
@@ -1549,7 +1546,7 @@ package scenes.game.display
 			if(Keyboard.capsLock && count < 3000)
 			{
 				count++;
-				trace("count", count);
+				//trace("count", count);
 				timer = new Timer(1000, 1);
 				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
 				timer.start();
