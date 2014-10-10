@@ -84,7 +84,15 @@ package scenes.game.display
 					if(!gridChild.isLocked)
 					{
 					}
-					else if(event.shiftKey) //individual select or not
+					
+					if(event.ctrlKey) //propagate size up or down stream
+					{
+						if(Keyboard.capsLock)
+						{
+							World.m_world.active_level.propagate();
+						}
+					}
+					else
 					{
 						var globPt:Point = touchedDrawingBoard.localToGlobal(loc);
 						var node:Node;
@@ -118,13 +126,6 @@ package scenes.game.display
 							nodeGroup.calculateNodeInfo();
 							var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, null, PropDictionary.PROP_NARROW, nodeGroup.isNarrow, null);
 							nodeDrawingBoard.dispatchEvent(changeEvent);
-						}
-					}
-					else if(event.ctrlKey) //propagate size up or down stream
-					{
-						if(Keyboard.capsLock)
-						{
-							World.m_world.active_level.propagate();
 						}
 					}
 				}
