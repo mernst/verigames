@@ -1,9 +1,11 @@
 package verigames.level;
 
-import verigames.utilities.Misc;
-
-import java.io.*;
-import java.util.*;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides a high level method that takes a {@link World} object and returns a

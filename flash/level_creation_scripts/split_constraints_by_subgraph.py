@@ -103,4 +103,6 @@ if __name__ == "__main__":
 	infile = sys.argv[1]
 	if len(sys.argv) == 2:
 		outfile = sys.argv[1]
+	else:
+		outfile = sys.argv[2]
 	split_constraints_by_subgraph(infile, outfile)

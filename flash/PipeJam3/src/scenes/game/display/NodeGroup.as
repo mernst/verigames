@@ -41,7 +41,7 @@ package scenes.game.display
 		public override function createSkin():void
 		{
 			super.createSkin();
-			skin = new Sprite();
+			skin = NodeSkin.getNextSkin();
 			if (hasError()) {
 				const LINE_WIDTH:uint = 5;
 				var errQuad1:Quad = new Quad(bb.width, LINE_WIDTH, 0xAA0000);

@@ -479,4 +479,4 @@ def load_constraints_graph(infilename):
 				default_var_type = TYPE_0
 			elif type1_score > type0_score:
 				default_var_type = TYPE_1
-	return version, default_var_type, scoring, nodes, edges, groups, assignments
+	return version, default_var_type, scoring, nodes, edges, assignments

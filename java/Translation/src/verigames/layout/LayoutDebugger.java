@@ -1,14 +1,16 @@
 package verigames.layout;
 
-import checkers.util.PluginUtil;
-import verigames.graph.Edge;
-import verigames.level.*;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+
+import verigames.graph.Edge;
+import verigames.level.Board;
+import verigames.level.Intersection;
+import verigames.level.Level;
+import verigames.level.World;
 
 /**
  * Supports faster debugging of game graphs by outputting Graphviz-generated

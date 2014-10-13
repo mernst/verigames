@@ -1,12 +1,8 @@
 package verigames.layout;
 
 import static verigames.layout.Misc.getIntersectionHeight;
-import static verigames.layout.Misc.usesPorts;
-import static verigames.level.Intersection.Kind.*;
-import static verigames.utilities.Misc.ensure;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import verigames.level.Board;

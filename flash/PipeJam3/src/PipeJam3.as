@@ -33,8 +33,6 @@ package
 	import server.ReplayController;
 	
 	import starling.core.Starling;
-	import starling.events.Event;
-	import scenes.game.display.World;
 	
 	import system.VerigameServerConstants;
 	
@@ -53,7 +51,7 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOGGING_ON:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
-		public static var TUTORIAL_DEMO:Boolean = true;
+		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
