@@ -96,6 +96,7 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
+		
 		public static const MIN_SCALE:Number = 1.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
@@ -216,11 +217,12 @@ package scenes.game.components
 //				oldViewRect = currentViewRect;		
 //			}
 			
-			if (m_selectionUpdated) {
+			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
 				m_selectionUpdated = false;
-				var globalStartingPt:Point = localToGlobal(m_startingTouchPoint);
+				//var globalStartingPt:Point = localToGlobal(m_startingTouchPoint);
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
-				m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
+				//m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
+				m_currentLevel.handlePaint(globalCurrentPt);
 			}
 			
 			if(endingMoveMode) //force gc after dragging
@@ -296,13 +298,19 @@ package scenes.game.components
 		{
 			if(m_currentLevel)
 			{
-				m_currentLevel.handleMarquee(null, null);
+				//m_currentLevel.handleMarquee(null, null);
+				if(!m_currentLevel.m_inSolver)
+					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
+				else
+					dispatchEvent(new MenuEvent(MenuEvent.STOP_SOLVER));
+				m_currentLevel.endPaint();
 			}
 		}
 		
 		private function beginMoveMode():void
 		{
 			m_startingTouchPoint = new Point(content.x, content.y);
+			currentMode = MOVING_MODE;
 		}
 		
 		private function endMoveMode():void
@@ -322,7 +330,7 @@ package scenes.game.components
 		
 		override protected function onTouch(event:TouchEvent):void
 		{
-		//	trace("Mode:" + event.type);
+			//trace("Mode:" + event.type);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if(currentMode == SELECTING_MODE)
@@ -333,23 +341,25 @@ package scenes.game.components
 				{
 					endMoveMode();
 				}
-				if(currentMode != NORMAL_MODE)
+				if (currentMode != NORMAL_MODE)
+				{
 					currentMode = NORMAL_MODE;
+				}
 				else
 				{
 					if (m_currentLevel && event.target == contentBarrier && World.changingFullScreenState == false) {
 						m_currentLevel.unselectAll();
 						var evt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 						m_currentLevel.onPropertyModeChange(evt);
-				//??		onPropertyModeChange(evt);
 					}
 					else
 						World.changingFullScreenState = false;
 				}
 			}
-			else if(event.getTouches(this, TouchPhase.MOVED).length)
+			else if (event.getTouches(this, TouchPhase.BEGAN).length || event.getTouches(this, TouchPhase.MOVED).length)
 			{
-				var touches:Vector.<Touch> = event.getTouches(this, TouchPhase.MOVED);
+				var touches:Vector.<Touch> = event.getTouches(this, TouchPhase.BEGAN);
+				if (!touches.length) touches = event.getTouches(this, TouchPhase.MOVED);
 				if(event.shiftKey)
 				{
 					if(currentMode != SELECTING_MODE)
@@ -357,25 +367,20 @@ package scenes.game.components
 						if (currentMode == MOVING_MODE) endMoveMode();
 						currentMode = SELECTING_MODE;
 						m_startingTouchPoint = touches[0].getPreviousLocation(this);
+						if (m_currentLevel) m_currentLevel.beginPaint();
 					}
 					m_currentTouchPoint = touches[0].getLocation(this);
 					m_selectionUpdated = true;
 				}
 				else
 				{
-					if(currentMode != MOVING_MODE)
+					if (currentMode != SELECTING_MODE)
 					{
-						if (currentMode == SELECTING_MODE) endSelectMode();
-						currentMode = MOVING_MODE;
-						beginMoveMode();
-					}
-					if (touches.length == 1)
-					{
-						// one finger touching -> move
-						if (touches[0].target == contentBarrier)
+						// Don't allow user to go straight from painting to moving with shift, if 
+						if(currentMode != MOVING_MODE) beginMoveMode();
+						if (touches[0].target == contentBarrier && currentMode == MOVING_MODE)
 						{
 							var loc:Point = touches[0].getLocation(m_currentLevel);
-					//		trace(loc.x, loc.y);
 							if (getPanZoomAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
@@ -386,56 +391,8 @@ package scenes.game.components
 							}
 						}
 					}
-					else if (touches.length == 2)
-					{
-						/*
-						// TODO: Need to take a look at this if we reactivate multitouch - hasn't been touched in a while 
-						// two fingers touching -> rotate and scale
-						var touchA:Touch = touches[0];
-						var touchB:Touch = touches[1];
-						
-						var currentPosA:Point  = touchA.getLocation(parent);
-						var previousPosA:Point = touchA.getPreviousLocation(parent);
-						var currentPosB:Point  = touchB.getLocation(parent);
-						var previousPosB:Point = touchB.getPreviousLocation(parent);
-						
-						var currentVector:Point  = currentPosA.subtract(currentPosB);
-						var previousVector:Point = previousPosA.subtract(previousPosB);
-						
-						var currentAngle:Number  = Math.atan2(currentVector.y, currentVector.x);
-						var previousAngle:Number = Math.atan2(previousVector.y, previousVector.x);
-						var deltaAngle:Number = currentAngle - previousAngle;
-						
-						// update pivot point based on previous center
-						var previousLocalA:Point  = touchA.getPreviousLocation(this);
-						var previousLocalB:Point  = touchB.getPreviousLocation(this);
-						pivotX = (previousLocalA.x + previousLocalB.x) * 0.5;
-						pivotY = (previousLocalA.y + previousLocalB.y) * 0.5;
-						
-						// update location based on the current center
-						x = (currentPosA.x + currentPosB.x) * 0.5;
-						y = (currentPosA.y + currentPosB.y) * 0.5;
-						
-						// rotate
-						//	rotation += deltaAngle;
-						
-						// scale
-						var sizeDiff:Number = currentVector.length / previousVector.length;
-						
-						scaleContent(sizeDiff);
-						m_currentLevel.updateVisibleList();
-	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
-	//					content.x = currentCenterPt.x - previousCenterPt.x;
-	//					content.y = currentCenterPt.y - previousCenterPt.y;
-						*/
-					}
 				}
 			}
-			
-//			var touch:Touch = event.getTouch(this, TouchPhase.ENDED);
-//			
-//			if (touch && touch.tapCount == 2)
-//				parent.addChild(this); // bring self to front
 			
 			// enable this code to see when you're hovering over the object
 			// touch = event.getTouch(this, TouchPhase.HOVER);
@@ -527,6 +484,7 @@ package scenes.game.components
 		 */
 		private function scaleContent(sizeDiffX:Number, sizeDiffY:Number):Boolean
 		{
+			m_selectionUpdated = (currentMode == SELECTING_MODE);
 			var oldScaleX:Number = content.scaleX;
 			var oldScaleY:Number = content.scaleY;
 			var newScaleX:Number = XMath.clamp(content.scaleX * sizeDiffX, MIN_SCALE, MAX_SCALE);
@@ -862,6 +820,7 @@ package scenes.game.components
 		
 		public function recenter():void
 		{
+			m_selectionUpdated = (currentMode == SELECTING_MODE);
 			content.x = 0;
 			content.y = 0;
 			inactiveContent.x = inactiveContent.y = 0;

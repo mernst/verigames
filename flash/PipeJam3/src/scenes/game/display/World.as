@@ -440,7 +440,6 @@ package scenes.game.display
 		
 		private function onStopSolving():void
 		{
-			
 			solverDoneCallback("");
 		}
 		

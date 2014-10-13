@@ -203,6 +203,7 @@ package scenes.game.components
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomInButton.x - m_solveButton.width - 10;
 			m_solveButton.y = m_zoomInButton.y - 3;
+			m_solveButton.enabled = false;
 			
 			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
@@ -244,6 +245,7 @@ package scenes.game.components
 		{
 			trace("stop animation");
 			inSolver = false;
+			if (m_currentLevel) m_currentLevel.unselectAll();
 			m_solveButton.setButtonText("Solve Selection");
 		}
 		

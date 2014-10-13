@@ -117,20 +117,21 @@ package scenes.game.display
 						}
 					}
 				}
-				else
-				{
-					if(!event.ctrlKey)
-					{
-						if(!gridChild.isSelected)
-							gridChild.select(World.m_world.active_level.selectedNodes);
-						else
-							gridChild.unselect(World.m_world.active_level.selectedNodes);
-					}
-					else
-					{
-						touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
-					}
-				}
+				//disable individual node selection for paint 
+				//else
+				//{
+					//if(!event.ctrlKey)
+					//{
+						//if(!gridChild.isSelected)
+							//gridChild.select(World.m_world.active_level.selectedNodes);
+						//else
+							//gridChild.unselect(World.m_world.active_level.selectedNodes);
+					//}
+					//else
+					//{
+						//touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
+					//}
+				//}
 			}
 		}
 		
@@ -256,6 +257,29 @@ package scenes.game.display
 			}
 		}
 		
+		/*
+		 * Used to show which GridSquare is being referenced for debug
+		 */
+		private var debugQ:Quad;
+		public function showDebugQuad():void
+		{
+			if (nodeDrawingBoard) {
+				hideDebugQuad();
+				const BORD:Number = 5.0;
+				debugQ = new Quad(Level.GRID_SIZE - 2 * BORD, Level.GRID_SIZE - 2 * BORD, 0x0);
+				debugQ.x = BORD;
+				debugQ.y = BORD;
+				debugQ.alpha = 0.2;
+				nodeDrawingBoard.addChild(debugQ);
+				nodeDrawingBoard.flatten();
+			}
+		}
+		
+		public function hideDebugQuad():void
+		{
+			if (debugQ) debugQ.removeFromParent(true);
+		}
+		
 		public function showGroups():void
 		{
 			for each (var nodeGroup:NodeGroup in groupList)
@@ -323,6 +347,11 @@ package scenes.game.display
 						
 					}
 					node.isDirty = false;
+				}
+				else if (node.filterIsDirty && node.skin is NodeSkin)
+				{
+					(node.skin as NodeSkin).updateFilter();
+					node.filterIsDirty = false;
 				}
 			}
 			for each (var nodeGroup:NodeGroup in groupList)
@@ -510,7 +539,7 @@ package scenes.game.display
 			isActivated = false;
 		}
 		
-		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
+		public function handleMarqueeSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
 		{
 			if(marqueeRect.intersects(bb))
 			{
@@ -542,6 +571,21 @@ package scenes.game.display
 						if (!node.startingSelectionState) node.select(selectedNodes);
 					}
 				}
+			}
+		}
+		
+		public function handlePaintSelection(paintPt:Point, paintRadiusSquared:Number, selectedNodes:Dictionary):void
+		{
+			for(var i:int = 0; i < nodeList.length; i++)
+			{
+				var node:Node = nodeList[i];
+				if (!node.skin) continue;
+				if (node.graphVar.constant) continue;
+				var dX:Number = paintPt.x - node.centerPoint.x;
+				var dY:Number = paintPt.y - node.centerPoint.y;
+				if (dX * dX > paintRadiusSquared) continue;
+				if (dY * dY > paintRadiusSquared) continue;
+				if (dX * dX + dY * dY <= paintRadiusSquared && !node.isSelected) node.select(selectedNodes);
 			}
 		}
 		

@@ -9,6 +9,7 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import starling.textures.TextureAtlas;
 	
 	import assets.AssetInterface;
 	
@@ -131,6 +132,8 @@ package scenes.game.display
 		static public var GRID_SIZE:int = 500;
 		static public var NUM_NODES_TO_SELECT:int = 300;
 		
+		static public var PAINT_RADIUS:int = 60;
+		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
 		static public var NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
 		
@@ -146,6 +149,8 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
+		
+		protected var m_paintBrush:Sprite = new Sprite();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -187,6 +192,16 @@ package scenes.game.display
 			}
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
+			
+			// Create paintbrush: TODO make higher res circle
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbSelected);
+			var circleImage:Image = new Image(circleTexture);
+			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
+			circleImage.x = -0.5 * circleImage.width;
+			circleImage.y = -0.5 * circleImage.height;
+			circleImage.alpha = 0.7;
+			m_paintBrush.addChild(circleImage);
 			
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
@@ -354,7 +369,7 @@ package scenes.game.display
 				{
 					for each(gridSquare in currentGridDict)
 					{
-						gridSquare.handleSelection(marqueeRect.bounds, selectedNodes);
+						gridSquare.handleMarqueeSelection(marqueeRect.bounds, selectedNodes);
 					}
 				}
 			} else {
@@ -1191,6 +1206,51 @@ package scenes.game.display
 					gridSquare.visited = false;
 				}
 			}
+		}
+		
+		public function beginPaint():void
+		{
+			//trace("beginPaint()");
+			unselectAll();
+		}
+		
+		public function handlePaint(globPt:Point):void
+		{
+			//trace("handlePaint(", globPt, ")");
+			if (!parent) return;
+			m_paintBrush.scaleX = 1.0 / parent.scaleX / scaleX;
+			m_paintBrush.scaleY = 1.0 / parent.scaleY / scaleY;
+			var localPt:Point = this.globalToLocal(globPt);
+			m_paintBrush.x = localPt.x;
+			m_paintBrush.y = localPt.y;
+			addChild(m_paintBrush);
+			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY;
+			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
+			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
+			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
+			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
+			
+			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
+			{
+				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
+				{
+					var gridName:String = i + "_" + j;
+					//trace("gridName: ", gridName);
+					if(gridSystemDict[gridName] is GridSquare)
+					{
+						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
+						//thisGrid.showDebugQuad();
+						thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes);
+					}
+				}
+			}
+		}
+		
+		public function endPaint():void
+		{
+			//trace("endPaint()");
+			m_paintBrush.removeFromParent();
 		}
 		
 		public function unselectAll(addEventToLast:Boolean = false):void

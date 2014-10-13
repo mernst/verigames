@@ -47,7 +47,7 @@ package scenes.game.display
 		static public const LOCKED_COLOR:int = 0x00FF00;
 		
 		public var id:int;
-		public static var numSkins:int = 5000;
+		public static var numSkins:int = 2000;
 		// TODO: Move to factory
 		static public function InitializeSkins():void
 		{
@@ -169,20 +169,7 @@ package scenes.game.display
 			textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
 			addChild(textureImage);
 			
-			if(associatedNode.isSelected)
-			{
-				// Apply the glow filter if not already there
-				if(!this.filter)
-					this.filter = BlurFilter.createGlow(0xff00ff);
-			}
-			else
-			{
-				if(this.filter)
-				{
-					this.filter.dispose();
-					this.filter = null;
-				}
-			}
+			updateFilter();
 			
 			if(associatedNode.isLocked)
 			{
@@ -198,6 +185,24 @@ package scenes.game.display
 			{
 				removeChild(lockedIcon);
 				removeChild(lockedQuad);
+			}
+		}
+		
+		public function updateFilter():void
+		{
+			if(associatedNode.isSelected)
+			{
+				// Apply the glow filter if not already there
+				if(!this.filter)
+					this.filter = BlurFilter.createGlow(0xff00ff);
+			}
+			else
+			{
+				if(this.filter)
+				{
+					this.filter.dispose();
+					this.filter = null;
+				}
 			}
 		}
 		
