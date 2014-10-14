@@ -348,11 +348,6 @@ package scenes.game.display
 					}
 					node.isDirty = false;
 				}
-				else if (node.filterIsDirty && node.skin is NodeSkin)
-				{
-					(node.skin as NodeSkin).updateFilter();
-					node.filterIsDirty = false;
-				}
 			}
 			for each (var nodeGroup:NodeGroup in groupList)
 			{

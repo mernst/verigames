@@ -362,15 +362,19 @@ package scenes.game.components
 				if (!touches.length) touches = event.getTouches(this, TouchPhase.MOVED);
 				if(event.shiftKey)
 				{
-					if(currentMode != SELECTING_MODE)
+					if (m_currentLevel && m_currentLevel.getAutoSolveAllowed())
 					{
-						if (currentMode == MOVING_MODE) endMoveMode();
-						currentMode = SELECTING_MODE;
-						m_startingTouchPoint = touches[0].getPreviousLocation(this);
-						if (m_currentLevel) m_currentLevel.beginPaint();
+						// Only allow painting/selecting if autosolve is enabled
+						if(currentMode != SELECTING_MODE)
+						{
+							if (currentMode == MOVING_MODE) endMoveMode();
+							currentMode = SELECTING_MODE;
+							m_startingTouchPoint = touches[0].getPreviousLocation(this);
+							if (m_currentLevel) m_currentLevel.beginPaint();
+						}
+						m_currentTouchPoint = touches[0].getLocation(this);
+						m_selectionUpdated = true;
 					}
-					m_currentTouchPoint = touches[0].getLocation(this);
-					m_selectionUpdated = true;
 				}
 				else
 				{

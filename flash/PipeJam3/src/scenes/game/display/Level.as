@@ -194,8 +194,8 @@ package scenes.game.display
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
 			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbSelected);
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
 			var circleImage:Image = new Image(circleTexture);
 			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
 			circleImage.x = -0.5 * circleImage.width;
@@ -1137,9 +1137,9 @@ package scenes.game.display
 			return true;
 		}
 		
-		public function getSolveButtonsAllowed():Boolean
+		public function getAutoSolveAllowed():Boolean
 		{ 
-			if (tutorialManager) return tutorialManager.getSolveButtonsAllowed();
+			if (tutorialManager) return tutorialManager.getAutoSolveAllowed();
 			return true;
 		}
 		

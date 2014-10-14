@@ -1107,7 +1107,7 @@ package scenes.game.display
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			if (gameControlPanel) {
 				gameControlPanel.setNavigationButtonVisibility(active_level.getPanZoomAllowed());
-				gameControlPanel.setSolveButtonsVisibility(active_level.getSolveButtonsAllowed());
+				gameControlPanel.setSolveButtonsVisibility(active_level.getAutoSolveAllowed());
 			}
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
