@@ -335,11 +335,6 @@ package scenes.game.display
 					node.createSkin();
 					nodeDrawingBoard.addChild(node.skin);
 				}
-				else if (node.filterIsDirty && node.skin is NodeSkin)
-				{
-					(node.skin as NodeSkin).updateFilter();
-					node.filterIsDirty = false;
-				}
 				node.isDirty = false;
 			}
 			var edge:Edge;
