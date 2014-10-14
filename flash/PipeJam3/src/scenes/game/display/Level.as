@@ -1357,8 +1357,8 @@ package scenes.game.display
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
 		{
-			var edgeObj:Object = edgeLayoutObjs[edgeId];
-			return edgeObj ? edgeObj.edgeSkin : null;
+			var edge:Edge = edgeLayoutObjs[edgeId];
+			return edge ? edge.skin : null;
 		}
 		
 		public function getNode(nodeId:String):Node
@@ -1600,8 +1600,8 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
-			trace("time elapsed", new Date().getTime()-solverRunningTime);
-			trace("num conflicts", MiniMap.numConflicts);
+			//trace("time elapsed", new Date().getTime()-solverRunningTime);
+			//trace("num conflicts", MiniMap.numConflicts);
 			//do it again?
 			if(Keyboard.capsLock && count < 3000)
 			{
