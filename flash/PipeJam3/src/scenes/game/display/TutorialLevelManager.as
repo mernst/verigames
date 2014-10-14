@@ -171,7 +171,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function getSolveButtonsAllowed():Boolean
+		public function getAutoSolveAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
 				case L13635_TUTORIAL:
@@ -439,9 +439,9 @@ package scenes.game.display
 				case L13635_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"For larger levels we provide an autosolver.\n" + 
-						"Select a group of Widgets by holding Shift and\n" +
-						"dragging the mouse or clicking on individual\n" +
-						"     Widgets, then press \"Solve Selection\".   \n",
+						"Paint a group of Widgets by holding Shift and\n" +
+						"Click+Dragging the mouse. When the mouse is released\n" +
+						"the autosolver will begin solving the selected Widgets.",
 						null,
 						null,
 						null, null);

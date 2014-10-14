@@ -28,6 +28,8 @@ package scenes.game.display
 		static protected var LightBlueCircle:Texture;
 		static protected var DarkBlueCircleWithOutline:Texture;
 		static protected var LightBlueCircleWithOutline:Texture;
+		static protected var LightBlueSelectedCircle:Texture;
+		static protected var DarkBlueSelectedCircle:Texture;
 		
 		protected var lockedIcon:Image;
 		protected var lockedQuad:Quad;
@@ -129,6 +131,8 @@ package scenes.game.display
 				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightStart);
 				DarkBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
 				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
+				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightSelected);
+				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkSelected);
 			}
 		}
 		
@@ -141,7 +145,15 @@ package scenes.game.display
 			
 			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
 			var narrowScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
-			if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
+			if (associatedNode.isNarrow && associatedNode.isSelected)
+			{
+				textureImage = new Image(LightBlueSelectedCircle);
+			}
+			else if (!associatedNode.isNarrow && associatedNode.isSelected)
+			{
+				textureImage = new Image(DarkBlueSelectedCircle);
+			}
+			else if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
 			{
 				textureImage = new Image(DarkBlueCircleWithOutline);
 			}
@@ -169,8 +181,6 @@ package scenes.game.display
 			textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
 			addChild(textureImage);
 			
-			updateFilter();
-			
 			if(associatedNode.isLocked)
 			{
 				lockedQuad = new Quad(20,20, LOCKED_COLOR);
@@ -185,24 +195,6 @@ package scenes.game.display
 			{
 				removeChild(lockedIcon);
 				removeChild(lockedQuad);
-			}
-		}
-		
-		public function updateFilter():void
-		{
-			if(associatedNode.isSelected)
-			{
-				// Apply the glow filter if not already there
-				if(!this.filter)
-					this.filter = BlurFilter.createGlow(0xff00ff);
-			}
-			else
-			{
-				if(this.filter)
-				{
-					this.filter.dispose();
-					this.filter = null;
-				}
 			}
 		}
 		

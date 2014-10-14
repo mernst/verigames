@@ -75,6 +75,9 @@ package scenes.game.components
 		/** Button to solve the selected nodes */
 		private var m_solveButton:NineSliceButton;
 		
+		/** Text showing solver status */
+		private var m_solverTextfield:TextFieldWrapper;
+		
 		/** Button to start the level over */
 		private var m_resetButton:NineSliceButton;
 		
@@ -205,6 +208,12 @@ package scenes.game.components
 			m_solveButton.y = m_zoomInButton.y - 3;
 			m_solveButton.enabled = false;
 			
+			m_solverTextfield = TextFactory.getInstance().createDefaultTextField("Autosolving...", 140, 14, 12, 0xFFFFFF);
+			TextFactory.getInstance().updateAlign(m_solverTextfield, 1, 1);
+			m_solverTextfield.x = m_solveButton.x - 60;
+			m_solverTextfield.y = m_solveButton.y;
+			m_solverTextfield.visible = false;
+			
 			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
 			busyAnimationMovieClip.y = m_solveButton.y;
@@ -226,7 +235,8 @@ package scenes.game.components
 			addChild(m_recenterButton);
 			//addChild(m_fullScreenButton);
 			//addChild(m_smallScreenButton);
-			addChild(m_solveButton);
+			//addChild(m_solveButton);
+			addChild(m_solverTextfield);
 		}
 		
 		public var inSolver:Boolean = false;
@@ -237,6 +247,7 @@ package scenes.game.components
 				trace("start animation");
 				inSolver = true;
 				m_solveButton.setButtonText("Running...");
+				m_solverTextfield.visible = true;
 			}
 			
 		}
@@ -247,6 +258,7 @@ package scenes.game.components
 			inSolver = false;
 			if (m_currentLevel) m_currentLevel.unselectAll();
 			m_solveButton.setButtonText("Solve Selection");
+			m_solverTextfield.visible = false;
 		}
 		
 		protected function checkForTriggerFullScreen(event:MouseEvent):void
@@ -376,7 +388,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
-			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
+			setSolveButtonsVisibility(level.getAutoSolveAllowed());
 		}
 		
 		public function setNavigationButtonVisibility(viz:Boolean):void

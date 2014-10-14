@@ -13,7 +13,6 @@ package scenes.game.display
 	public class Node extends GridChild
 	{
 		public var graphVar:ConstraintVar;
-		public var filterIsDirty:Boolean = false;
 		
 		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
 		{
@@ -26,16 +25,14 @@ package scenes.game.display
 		public override function select(selectedNodes:Dictionary):void
 		{
 			super.select(selectedNodes);
-			//if (skin) createSkin();
-			filterIsDirty = true;
+			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
 		
 		public override function unselect(selectedNodes:Dictionary):void
 		{
 			super.unselect(selectedNodes);
-			//if (skin) createSkin();
-			filterIsDirty = true;
+			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
 		
@@ -50,7 +47,6 @@ package scenes.game.display
 			skin.x = centerPoint.x - gridOffset.x - 0.5 * skin.width;
 			skin.y = centerPoint.y - gridOffset.y - 0.5 * skin.height;
 			
-			filterIsDirty = false;
 			setDirty(true);
 		}
 		

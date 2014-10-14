@@ -77,13 +77,14 @@ package scenes.game.display
 				costume.removeFromParent(true);
 			
 			var assetName:String;
-			if (m_propertyMode == PropDictionary.PROP_NARROW) {
-				assetName = AssetInterface.PipeJamSubTexture_BallSizeTestSimple;
-			} else if (m_inputEdge && m_inputEdge.isWide()) {
-				assetName = AssetInterface.PipeJamSubTexture_BallSizeTestMapWide;
-			} else {
-				assetName = AssetInterface.PipeJamSubTexture_BallSizeTestMapNarrow;
-			}
+			//if (m_propertyMode == PropDictionary.PROP_NARROW) {
+				//assetName = AssetInterface.PipeJamSubTexture_BallSizeTestSimple;
+			//} else if (m_inputEdge && m_inputEdge.isWide()) {
+				//assetName = AssetInterface.PipeJamSubTexture_BallSizeTestMapWide;
+			//} else {
+				//assetName = AssetInterface.PipeJamSubTexture_BallSizeTestMapNarrow;
+			//}
+			// TODO: Art for this removed since not being used
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var texture:Texture = atlas.getTexture(assetName);
 			costume = new Image(texture);

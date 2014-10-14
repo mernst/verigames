@@ -206,8 +206,8 @@ package scenes.game.display
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
 			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbSelected);
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
 			var circleImage:Image = new Image(circleTexture);
 			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
 			circleImage.x = -0.5 * circleImage.width;
@@ -1084,12 +1084,12 @@ package scenes.game.display
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
 				var edgeLayout:Edge = edgeLayoutObjs[edgeId];
 				if (!edgeLayout) {
-					trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
+					//trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
 					continue;
 				}
 				var edgeNode:Node = edgeLayout.toNode;
 				if (!edgeNode) {
-					trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
+					//trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
 					continue;
 				}
 				if (!edgeNode.isEditable && edgeLayout.fromNode) {
@@ -1155,9 +1155,9 @@ package scenes.game.display
 			return true;
 		}
 		
-		public function getSolveButtonsAllowed():Boolean
+		public function getAutoSolveAllowed():Boolean
 		{ 
-			if (tutorialManager) return tutorialManager.getSolveButtonsAllowed();
+			if (tutorialManager) return tutorialManager.getAutoSolveAllowed();
 			return true;
 		}
 		
