@@ -1066,12 +1066,12 @@ package scenes.game.display
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
 				var edgeLayout:Object = edgeLayoutObjs[edgeId];
 				if (!edgeLayout) {
-					trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
+					//trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
 					continue;
 				}
 				var edgeNode:Node = nodeLayoutObjs[edgeLayout["to_var_id"]];
 				if (!edgeNode) {
-					trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
+					//trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
 					continue;
 				}
 				if (!edgeNode.isEditable && nodeLayoutObjs[edgeLayout["from_var_id"]]) {
