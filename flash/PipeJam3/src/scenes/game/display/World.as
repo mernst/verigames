@@ -108,6 +108,9 @@ package scenes.game.display
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
 		
+		var m_backgroundImage:Image;
+		var m_backgroundImageSolving:Image;
+		
 		static protected var m_numWidgetsClicked:int = 0;
 		
 		static public var altKeyDown:Boolean;
@@ -330,26 +333,26 @@ package scenes.game.display
 			}
 			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
 			var background:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundClass");
-			var m_backgroundImage:Image = new Image(background);
-			
+			m_backgroundImage = new Image(background);
+			var backgroundDark:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundDarkClass");
+			m_backgroundImageSolving = new Image(backgroundDark);
 			
 			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
 			{
-				m_backgroundImage.width = 480;
-				m_backgroundImage.height = 320;
+				m_backgroundImage.width = m_backgroundImageSolving.width = 480;
+				m_backgroundImage.height = m_backgroundImageSolving.height = 320;
 
 			}
 			else
 			{
 				if(newWidth != 0)
-					m_backgroundImage.width = newWidth;
+					m_backgroundImage.width = m_backgroundImageSolving.width = newWidth;
 				if(newHeight != 0)
-					m_backgroundImage.height = newHeight;
+					m_backgroundImage.height = m_backgroundImageSolving.height = newHeight;
 			}
 			
-			
-			m_backgroundImage.blendMode = BlendMode.NONE;
-			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);	
+			m_backgroundImage.blendMode = m_backgroundImageSolving.blendMode = BlendMode.NONE;
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);
 		}
 		
 		public function initForeground(seed:int = 0, isWide:Boolean = false):void
@@ -404,6 +407,9 @@ package scenes.game.display
 			
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
+			
+			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
+			
 			trace("Done initializing event listeners.");
 		}
 		
@@ -412,9 +418,11 @@ package scenes.game.display
 			if(active_level)
 			{
 				waitIconDisplayed = false;
-
+				
 				active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
 			}
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
+			if (m_backgroundImage) m_backgroundImage.removeFromParent();
 		}
 		
 		protected var waitIconDisplayed:Boolean;
@@ -461,7 +469,8 @@ package scenes.game.display
 				busyAnimationMovieClip.dispose();
 				busyAnimationMovieClip = null;
 			}
-			
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);
+			if (m_backgroundImageSolving) m_backgroundImageSolving.removeFromParent();
 			showSolverState(false);
 		}
 		
@@ -1255,6 +1264,11 @@ package scenes.game.display
 		{
 			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
 			m_activeToolTip = null;
+		}
+		
+		private function onNumSelectedNodesChanged(evt:SelectionEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.updateNumNodesSelectedDisplay();
 		}
 		
 		public function setHighScores():void

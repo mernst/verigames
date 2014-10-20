@@ -71,19 +71,19 @@ package scenes.game.display
 			skin = null;
 		}
 		
-		public override function select(selectedNodes:Dictionary):void
+		public override function select():void
 		{
 			isSelected = true;
 			for each (var node:Node in nodeDict) {
-				node.select(selectedNodes);
+				node.select();
 			}
 		}
 		
-		public override function unselect(selectedNodes:Dictionary):void
+		public override function unselect():void
 		{
 			isSelected = false;
 			for each (var node:Node in nodeDict) {
-				node.unselect(selectedNodes);
+				node.unselect();
 			}
 		}
 		

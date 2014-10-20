@@ -50,6 +50,9 @@ package scenes.game.display
 		private static const LINE_THICKNESS:Number = 5;
 		static public const SKIN_DIAMETER:Number = 20;
 		
+		private var m_nodeScaleX:Number = 1;
+		private var m_nodeScaleY:Number = 1;
+		
 		private var m_bb:Rectangle;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
@@ -190,6 +193,7 @@ package scenes.game.display
 				nodeList.push(gridChild as Node);
 			}
 			gridChild.createSkin();
+			gridChild.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 		}
 		
 		public function addEdge(edge:Edge):void
@@ -250,6 +254,7 @@ package scenes.game.display
 				for each(var node:Node in nodeList)
 				{											
 					if (!node.skin) node.createSkin();
+					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				}
 				createEdges();
 				
@@ -262,6 +267,7 @@ package scenes.game.display
 				for each(var nodeGroup:NodeGroup in groupList)
 				{
 					if (!nodeGroup.skin) nodeGroup.createSkin();
+					nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				}
 				
 				nodeDrawingBoard.x = componentXDisplacement;
@@ -322,6 +328,18 @@ package scenes.game.display
 			isDirty = true;
 		}
 		
+		public function scaleNodes(nodeScaleX:Number, nodeScaleY:Number):void
+		{
+			if (m_nodeScaleX == nodeScaleX && m_nodeScaleY == nodeScaleY) return;
+			const len:int = nodeList.length;
+			for (var i:int = 0; i < len; i++)
+			{
+				nodeList[i].scaleSkin(nodeScaleX, nodeScaleY);
+			}
+			m_nodeScaleX = nodeScaleX;
+			m_nodeScaleY = nodeScaleY;
+		}
+		
 		public function draw():void
 		{
 			if(!isDirty)
@@ -334,6 +352,7 @@ package scenes.game.display
 				if(node.isDirty)
 				{
 					node.createSkin();
+					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 					nodeDrawingBoard.addChild(node.skin);
 				}
 				node.isDirty = false;
@@ -375,6 +394,7 @@ package scenes.game.display
 			for each (var nodeGroup:NodeGroup in groupList)
 			{
 				if (nodeGroup.isDirty) nodeGroup.createSkin();
+				nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				nodeGroup.isDirty = false;
 				if (nodeGroup.skin) groupDrawingBoard.addChild(nodeGroup.skin);
 			}
@@ -580,43 +600,9 @@ package scenes.game.display
 			edgeDrawingBoard.removeFromParent(dispose);
 		}
 		
-		public function handleMarqueeSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
+		public function handlePaintSelection(paintPt:Point, paintRadiusSquared:Number, selectedNodes:Vector.<GridChild>, maxSelectable:int):Boolean
 		{
-			if(marqueeRect.intersects(bb))
-			{
-				if(visited == false)
-				{
-					//record the current selection state of all nodes
-					for(var ii:int = 0; ii< nodeList.length; ii++)
-					{
-						var node1:Node = nodeList[ii];
-						var nodeSelected:Boolean = node1.isSelected ? true : false
-						node1.startingSelectionState = nodeSelected;
-					}
-					visited = true;
-				}
-				else
-				{
-					for(var i:int = 0; i < nodeList.length; i++)
-					{
-						var node:Node = nodeList[i];
-						if (!node.skin) continue;
-						if (node.centerPoint.x < marqueeRect.left ||
-							node.centerPoint.x > marqueeRect.right ||
-							node.centerPoint.y < marqueeRect.top ||
-							node.centerPoint.y > marqueeRect.bottom) {
-							// If out of rect (most likely scenario) unselect if selected
-							if (node.startingSelectionState) node.unselect(selectedNodes);
-							continue;
-						}
-						if (!node.startingSelectionState) node.select(selectedNodes);
-					}
-				}
-			}
-		}
-		
-		public function handlePaintSelection(paintPt:Point, paintRadiusSquared:Number, selectedNodes:Dictionary):void
-		{
+			var selectionChanged:Boolean = false;
 			for(var i:int = 0; i < nodeList.length; i++)
 			{
 				var node:Node = nodeList[i];
@@ -626,8 +612,16 @@ package scenes.game.display
 				var dY:Number = paintPt.y - node.centerPoint.y;
 				if (dX * dX > paintRadiusSquared) continue;
 				if (dY * dY > paintRadiusSquared) continue;
-				if (dX * dX + dY * dY <= paintRadiusSquared && !node.isSelected) node.select(selectedNodes);
+				if (dX * dX + dY * dY <= paintRadiusSquared && !node.isSelected) {
+					while (selectedNodes.length >= maxSelectable) {
+						selectedNodes.shift().unselect();
+					}
+					node.select();
+					selectedNodes.push(node);
+					selectionChanged = true;
+				}
 			}
+			return selectionChanged;
 		}
 		
 		public function markVisited():void

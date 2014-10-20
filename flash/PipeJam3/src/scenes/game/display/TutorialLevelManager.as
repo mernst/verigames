@@ -289,6 +289,21 @@ package scenes.game.display
 			return new Point();
 		}
 		
+		public function getMaxSelectableWidgets():int
+		{
+			switch (m_tutorialTag) {
+				case L13635_TUTORIAL:
+					return 25;
+				case L13663_TUTORIAL:
+					return 30;
+				case L13722_TUTORIAL:
+					return 150;
+				case L13727_TUTORIAL:
+					return 200;
+			}
+			return -1;
+		}
+		
 		private function pointToNode(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name).skin; };

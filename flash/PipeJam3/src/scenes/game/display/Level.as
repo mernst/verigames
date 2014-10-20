@@ -75,12 +75,9 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		public var selectedNodes:Dictionary;
+		public var selectedNodes:Vector.<GridChild> = new Vector.<GridChild>();
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
 		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
-		
-		protected var marqueeRect:Shape = new Shape();
-		protected var m_marqueeChanged:Boolean = false;
 		
 		//the level node and decendents
 		protected var m_levelLayoutObj:Object;
@@ -218,7 +215,6 @@ package scenes.game.display
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
 			NodeSkin.InitializeSkins();
-			selectedNodes = new Dictionary;
 		}
 		
 		public function loadBestScoringConfiguration():void
@@ -375,21 +371,9 @@ package scenes.game.display
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			var gridSquare:GridSquare;
-			if (m_marqueeChanged) {
-				m_marqueeChanged = false;
-				if(marqueeRect.height > 0 && marqueeRect.width > 0)
-				{
-					for each(gridSquare in currentGridDict)
-					{
-						gridSquare.handleMarqueeSelection(marqueeRect.bounds, selectedNodes);
-					}
-				}
-			} else {
-				//clean up the old dictionary disposing of what's left
-				for each(gridSquare in currentGridDict)
-				{
-					gridSquare.draw();
-				}
+			for each(gridSquare in currentGridDict)
+			{
+				gridSquare.draw();
 			}
 		}
 		
@@ -446,9 +430,24 @@ package scenes.game.display
 		private static const GROUP_SCALE_THRESHOLD:Number = 5.0 / Constants.GAME_SCALE;
 		private var m_groupsShown:Boolean = false;
 		
+		private static const MIN_NODE_SCALE:Number = 4.0 / Constants.GAME_SCALE;
+		
 		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
 		{
-			var gridSquare:GridSquare;
+			var gridSquare:GridSquare,
+				newNodeScaleX:Number,
+				newNodeScaleY:Number;
+			if (newScaleX < MIN_NODE_SCALE || newScaleY < MIN_NODE_SCALE) {
+				newNodeScaleX = MIN_NODE_SCALE / newScaleX;
+				newNodeScaleY = MIN_NODE_SCALE / newScaleY;
+			} else {
+				newNodeScaleX = newNodeScaleY = 1;
+			}
+			for each (gridSquare in currentGridDict)
+			{
+				gridSquare.scaleNodes(newNodeScaleX, newNodeScaleY);
+			}
+				
 			if (newScaleX < GROUP_SCALE_THRESHOLD || newScaleY < GROUP_SCALE_THRESHOLD) {
 				if (!m_groupsShown) {
 					for each (gridSquare in currentGridDict)
@@ -968,20 +967,20 @@ package scenes.game.display
 		
 		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array, previouslyCheckedNodes:Dictionary):void
 		{
-			node.select(selectedNodes);
+			node.select();
 			
 			//include locked nodes, but not their children
 			if(!node.isLocked)
 				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
-					var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
-					var toNodeObj:Object = edgeObj.toNode;
-					var fromNodeObj:Object = edgeObj.fromNode;
+					var edge:Edge = edgeLayoutObjs[gameEdgeID];
+					var toNode:Node = edge.toNode;
+					var fromNode:Node = edge.fromNode;
 					
-					var otherNode:Object = toNodeObj;
-					if(toNodeObj == node)
-						otherNode = fromNodeObj;
-					if(selectedNodes[otherNode.id] == null)
+					var otherNode:Node = toNode;
+					if(toNode == node)
+						otherNode = fromNode;
+					if(!otherNode.isSelected)
 					{
 						if(previouslyCheckedNodes[otherNode.id] == null)
 						{
@@ -995,7 +994,7 @@ package scenes.game.display
 		protected function onGroupUnselection(evt:SelectionEvent):void
 		{
 			for each (var comp:Object in evt.selection) {
-				//zzz
+				// TODO
 			}
 		}
 		
@@ -1030,6 +1029,12 @@ package scenes.game.display
 		public function getLevelToolTipsInfo():Vector.<TutorialManagerTextInfo>
 		{
 			return tutorialManager ? tutorialManager.getPersistentToolTipsInfo() : (new Vector.<TutorialManagerTextInfo>());
+		}
+		
+		public function getMaxSelectableWidgets():int
+		{
+			if (tutorialManager) return tutorialManager.getMaxSelectableWidgets();
+			return -1;
 		}
 		
 		public function getTargetScore():int
@@ -1194,38 +1199,6 @@ package scenes.game.display
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
-		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
-		{
-			var gridSquare:GridSquare;
-			if(startingPoint != null)
-			{
-				marqueeRect.removeChildren();
-				//scale line size
-				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
-				marqueeRect.graphics.lineStyle(lineSize, 0x000000);
-				marqueeRect.graphics.moveTo(0,0);
-				var pt1:Point = globalToLocal(startingPoint);
-				var pt2:Point = globalToLocal(currentPoint);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, 0);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, 0);
-				marqueeRect.x = pt1.x;
-				marqueeRect.y = pt1.y;
-				//do here to make sure we are on top
-				addChild(marqueeRect);
-				m_marqueeChanged = true;
-			}
-			else
-			{		
-				removeChild(marqueeRect);	
-				for each(gridSquare in currentGridDict)
-				{
-					gridSquare.visited = false;
-				}
-			}
-		}
-		
 		public function beginPaint():void
 		{
 			//trace("beginPaint()");
@@ -1248,7 +1221,7 @@ package scenes.game.display
 			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
 			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
 			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
-			
+			var selectionChanged:Boolean = false;
 			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
 			{
 				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
@@ -1259,10 +1232,13 @@ package scenes.game.display
 					{
 						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
 						//thisGrid.showDebugQuad();
-						thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes);
+						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
+						selectionChanged = (selectionChanged || thisGridSelectionChanged);
 					}
 				}
 			}
+			//trace("Paint select changed:" + selectionChanged);
+			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 		
 		public function endPaint():void
@@ -1271,14 +1247,14 @@ package scenes.game.display
 			m_paintBrush.removeFromParent();
 		}
 		
-		public function unselectAll(addEventToLast:Boolean = false):void
+		public function unselectAll():void
 		{
 			for each(var node:Node in selectedNodes)
 			{
-				node.unselect(selectedNodes);
+				node.unselect();
 			}
-			
-			selectedNodes = new Dictionary; 
+			selectedNodes = new Vector.<GridChild>();
+			dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 		
 		public function onUseSelectionPressed(choice:String):void
@@ -1324,6 +1300,7 @@ package scenes.game.display
 		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
+			// vvvv
 			if(firstRun)
 			{
 				solverRunningTime = new Date().getTime();
@@ -1398,13 +1375,13 @@ package scenes.game.display
 					var fromNode:Node =edgeObj.fromNode;
 					
 					//figure out which is the other node
-					var nodeToCheck:Object = toNode;
+					var nodeToCheck:Node = toNode;
 					if(toNode == gridChild)
 						nodeToCheck = fromNode;
 					
 					//if far end of this edge isn't in selected nodes, then add a constraint acting like it's fixed
 					//this will help the solver return only better scores.
-					if(selectedNodes[nodeToCheck.id] == null)
+					if(!nodeToCheck.isSelected)
 					{
 						//deal with constraints to/from unselected nodes
 						if(nodeToCheck == fromNode)
@@ -1629,7 +1606,6 @@ package scenes.game.display
 			{
 				node.lock();
 			}
-			
 		}
 		
 		public function unlockSelection():void
@@ -1638,7 +1614,6 @@ package scenes.game.display
 			{
 				node.unlock();
 			}
-			
 		}
 		
 		public function propagate():void

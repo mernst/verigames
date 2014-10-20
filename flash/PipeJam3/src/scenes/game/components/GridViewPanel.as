@@ -131,7 +131,6 @@ package scenes.game.components
 			contentBarrier.alpha = 0.01;
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier,0);
-
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -172,9 +171,7 @@ package scenes.game.components
 			
 			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
 				m_selectionUpdated = false;
-				//var globalStartingPt:Point = localToGlobal(m_startingTouchPoint);
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
-				//m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
 				m_currentLevel.handlePaint(globalCurrentPt);
 			}
 			
@@ -244,7 +241,6 @@ package scenes.game.components
 		{
 			if(m_currentLevel)
 			{
-				//m_currentLevel.handleMarquee(null, null);
 				if(!m_currentLevel.m_inSolver)
 					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
 				else

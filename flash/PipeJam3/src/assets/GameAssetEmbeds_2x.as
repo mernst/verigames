@@ -80,6 +80,9 @@ package assets
 		[Embed(source = "../../lib/assets/Backgrounds/FlowJamGraphsBackground.jpg")]
 		public static const GraphsBackgroundClass:Class;
 		
+		[Embed(source = "../../lib/assets/Backgrounds/FlowJamGraphsBackgroundDark.jpg")]
+		public static const GraphsBackgroundDarkClass:Class;
+		
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground0.jpg")]
 		public static const Background0Class:Class;
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground1.jpg")]

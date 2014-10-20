@@ -9,6 +9,8 @@ package events
 		public static var COMPONENT_SELECTED:String = "component_selected";
 		public static var COMPONENT_UNSELECTED:String = "component_unselected";
 		
+		public static var NUM_SELECTED_NODES_CHANGED:String = "num_sel_nodes_changed";
+		
 		public var selection:Vector.<Object>;
 		public var component:Object;
 		

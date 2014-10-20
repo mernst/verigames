@@ -22,16 +22,16 @@ package scenes.game.display
 			isEditable = !graphVar.constant;
 		}
 		
-		public override function select(selectedNodes:Dictionary):void
+		public override function select():void
 		{
-			super.select(selectedNodes);
+			super.select();
 			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
 		
-		public override function unselect(selectedNodes:Dictionary):void
+		public override function unselect():void
 		{
-			super.unselect(selectedNodes);
+			super.unselect();
 			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
