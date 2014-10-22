@@ -15,5 +15,4 @@ package constraints
 			return lhs.getValue().intVal <= rhs.getValue().intVal;
 		}
 	}
-
 }

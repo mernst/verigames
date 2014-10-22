@@ -298,7 +298,8 @@ package scenes.game.components
 						trace("Caught updating error");
 					}
 				}
-				addChildAt(bitmapImage, 1);
+				if(bitmapImage)
+					addChildAt(bitmapImage, 1);
 				
 			}
 			drawViewSpaceIndicator();

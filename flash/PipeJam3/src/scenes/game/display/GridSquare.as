@@ -180,11 +180,11 @@ package scenes.game.display
 		{
 			var constraintVar:ConstraintVar = node.graphVar;
 			if (!constraintVar.constant && node.isEditable && node.isNarrow != newIsNarrow) {
-				node.isNarrow = newIsNarrow
+				node.isNarrow = newIsNarrow;
 				isDirty = true;
 				node.setDirty(true);
 				if (dispatchChangeEvent) {
-					var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, PropDictionary.PROP_NARROW, node.isNarrow, loc);
+					var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, constraintVar, PropDictionary.PROP_NARROW, node.isNarrow, loc, node);
 					nodeDrawingBoard.dispatchEvent(changeEvent);
 				}
 			}

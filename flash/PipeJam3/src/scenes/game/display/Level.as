@@ -20,6 +20,8 @@ package scenes.game.display
 	import constraints.ConstraintVar;
 	import constraints.events.ErrorEvent;
 	import constraints.events.VarChangeEvent;
+	import constraints.SubtypeConstraint;
+	import constraints.ClauseConstraint;
 	
 	import deng.fzip.FZip;
 	
@@ -59,6 +61,7 @@ package scenes.game.display
 	import utils.Base64Encoder;
 	import utils.XObject;
 	import utils.XString;
+
 	
 	/**
 	 * Level all game components - widgets and links
@@ -483,10 +486,10 @@ package scenes.game.display
 				groupLayoutObjs[gridChildId] = gridChild;
 			} else {
 				var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
-				if (graphVar == null) {
-					trace("Warning: layout var found with no corresponding contraints var:" + gridChildId);
-					return null;
-				}
+//				if (graphVar == null) {
+//					trace("Warning: layout var found with no corresponding contraints var:" + gridChildId);
+//					return null;
+//				}
 				if (nodeLayoutObjs.hasOwnProperty(gridChildId)) {
 					var prevNode:Node = nodeLayoutObjs[gridChildId] as Node;
 					prevNode.parentGrid.removeGridChild(prevNode);
@@ -557,8 +560,14 @@ package scenes.game.display
 				var graphConstraint:Constraint = levelGraph.constraintsDict[constraintId] as Constraint;
 				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
 		//		edgeLayoutObj. = graphConstraint;
-				var startNode:Node =  nodeLayoutObjs[result[0]];
-				var endNode:Node =  nodeLayoutObjs[result[2]];
+				var startNode:Node = nodeLayoutObjs[result[0]];
+				var endNode:Node = nodeLayoutObjs[result[2]];
+				//switch end points if needed (support both clause oriented files, and original, for the time being)
+				if(result[2].indexOf('c') == -1 && result[0].indexOf('c') != -1)
+				{
+					startNode = nodeLayoutObjs[result[2]];
+					endNode = nodeLayoutObjs[result[0]];
+				}
 				var edge:Edge = new Edge(constraintId, graphConstraint,startNode, endNode);
 				startNode["connectedEdgeIds"].push(constraintId);
 				endNode["connectedEdgeIds"].push(constraintId);
@@ -588,7 +597,7 @@ package scenes.game.display
 		{
 			m_nodesContainer.addChild(child);
 			//uncomment to add quad as background to each gridSquare for debugging
-//			var color:int = Math.random();
+//			var color:int = Math.random()*0xffffff;
 //			var q:Quad = new Quad(GRID_SIZE, GRID_SIZE, color);
 //			q.x = child.x;
 //			q.y = child.y;
@@ -986,12 +995,40 @@ package scenes.game.display
 		
 		protected function onErrorAdded(evt:ErrorEvent):void
 		{
-			
+			var node:Node;
+			var clauseConstraint:ClauseConstraint = evt.constraintError as ClauseConstraint;
+			if(clauseConstraint)
+			{
+				if(clauseConstraint.lhs.id.indexOf('c') != -1)
+				{
+					node = nodeLayoutObjs[clauseConstraint.lhs.id];
+				}
+				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
+				{
+					node = nodeLayoutObjs[clauseConstraint.rhs.id];
+				}
+				if(node)
+					node.addError(true);
+			}
 		}
 		
 		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
-			
+			var node:Node;
+			var clauseConstraint:ClauseConstraint = evt.constraintError as ClauseConstraint;
+			if(clauseConstraint)
+			{
+				if(clauseConstraint.lhs.id.indexOf('c') != -1)
+				{
+					node = nodeLayoutObjs[clauseConstraint.lhs.id];
+				}
+				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
+				{
+					node = nodeLayoutObjs[clauseConstraint.rhs.id];
+				}
+				if(node)
+					node.addError(false);
+			}
 		}
 		
 		

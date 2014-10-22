@@ -18,8 +18,8 @@ package constraints
 		
 		private var m_props:PropDictionary;
 		private var m_value:ConstraintValue;
-		public var lhsConstraints:Vector.<SubtypeConstraint> = new Vector.<SubtypeConstraint>(); // constraints where this var appears on the left hand side (outgoing edge)
-		public var rhsConstraints:Vector.<SubtypeConstraint> = new Vector.<SubtypeConstraint>(); // constraints where this var appears on the right hand side (incoming edge)
+		public var lhsConstraints:Vector.<Constraint> = new Vector.<Constraint>(); // constraints where this var appears on the left hand side (outgoing edge)
+		public var rhsConstraints:Vector.<Constraint> = new Vector.<Constraint>(); // constraints where this var appears on the right hand side (incoming edge)
 		
 		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig, _possibleKeyfors:Vector.<String> = null, _keyforVals:Vector.<String> = null)
 		{

@@ -1,13 +1,16 @@
 package scenes.game.display
 {
 	import flash.geom.Point;
+	
 	import constraints.Constraint;
+	
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	
 	public class Edge
 	{
 		public var id:String;
-		protected var graphConstraint:Constraint;
+		public var graphConstraint:Constraint;
 		public var fromNode:Node;
 		public var toNode:Node;
 		
@@ -15,7 +18,7 @@ package scenes.game.display
 		public var parentYOffset:Number;
 		
 		public var skin:EdgeSkin;
-		
+		public var outputConnector:Quad;
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		
@@ -46,6 +49,7 @@ package scenes.game.display
 			{					
 				(skin.parent as Sprite).unflatten();
 				setLineColor(currentHoverNode);
+				//toNode.updateConnector();
 				(skin.parent as Sprite).flatten();
 				isDirty = false;
 			}
@@ -67,6 +71,9 @@ package scenes.game.display
 			var otherEdgeId:String = toNode.id + " -> " + fromNode.id;
 			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];
 			rotateLine(p1, p2, hyp, otherEdgeObj);
+			
+			if(toNode.id.indexOf('c') != -1)
+				toNode.addConnector(this);
 		}
 		
 		protected function rotateLine(p1:Point, p2:Point, hyp:Number, offsetDoubleLine:Boolean):void
@@ -118,7 +125,7 @@ package scenes.game.display
 		private function setLineColor(currentHoverNode:Node):void
 		{
 			var fromColor:int = NodeSkin.getColor(fromNode);
-			var toColor:int = NodeSkin.getColor(toNode);
+			var toColor:int = NodeSkin.getColor(toNode, this);
 			var fromColorComplement:int = NodeSkin.getComplementColor(fromNode);
 			
 			if(!fromNode.isNarrow && toNode.isNarrow)

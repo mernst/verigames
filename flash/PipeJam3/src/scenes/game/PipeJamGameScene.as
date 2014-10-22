@@ -3,6 +3,8 @@ package scenes.game
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
+	import deng.fzip.FZipFile;
+	
 	import networking.GameFileHandler;
 	
 	import scenes.Scene;
@@ -12,16 +14,18 @@ package scenes.game
 	import starling.display.Button;
 	import starling.events.Event;
 	
+	import state.LoadingState;
 	import state.ParseConstraintGraphState;
+	import state.ParseWCNFGraphState;
 	
 	public class PipeJamGameScene extends Scene
 	{
-		protected var nextParseState:ParseConstraintGraphState;
+		protected var nextParseState:LoadingState;
 		
 		//takes a partial path to the files, using the base file name. -.json, -Layout.json and -Constraints.json will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../SampleWorlds/L21414_V17680"//L21414_V17680,L10823_V16,L21373_V101s,L13076_V4,L13076_V4p
+			"../SampleWorlds/in2"//L1_V4"//in1.wcnf"//L21414_V17680,L10823_V16,L21373_V101s,L13076_V4,L13076_V4p
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
@@ -38,6 +42,8 @@ package scenes.game
 		protected var m_layoutLoaded:Boolean = false;
 		protected var m_assignmentsLoaded:Boolean = false;
 		protected var m_worldLoaded:Boolean = false;
+		
+		protected var m_currentFileName:String;
 		
 		/** Start button image */
 		protected var start_button:Button;
@@ -67,7 +73,12 @@ package scenes.game
 		
 		private function onLayoutLoaded(_layoutObj:Object):void
 		{
-			m_layoutObj = _layoutObj; 
+			if(_layoutObj is FZipFile)
+			{
+				m_layoutObj = (_layoutObj as FZipFile).content.toString();
+			}
+			else
+				m_layoutObj = _layoutObj; 
 			m_layoutLoaded = true;
 			checkTasksComplete();
 		}
@@ -92,10 +103,63 @@ package scenes.game
 			} else {
 				m_worldObj = obj;
 			}
+			
+			if(obj is FZipFile)
+			{
+				m_assignmentsLoaded = true;
+				m_currentFileName = (obj as FZipFile).filename;
+				m_worldObj = (obj as FZipFile).content.toString();
+			}
 			m_worldLoaded = true;
 			checkTasksComplete();
 		}
 		
+		
+		public function parseCNF():void
+		{
+			parseWorldFile();
+			parseLayoutFile();
+		}
+		
+		protected function parseWorldFile():void
+		{
+			var lineArray:Array = m_worldObj.split('\n');
+			var currentLine:int = 0;
+			while((lineArray[currentLine] as String).charAt(0) == 'c')
+				currentLine++;
+			var countArray:Array = lineArray[currentLine].split(' ');
+			var numVars:int = parseInt(countArray[2]);
+			var clauseCount:int = parseInt(countArray[3]);
+			var weighted:Boolean = false;
+			if(countArray[1].charAt[0] == 'w')
+				weighted = true;
+
+			m_worldObj = {"id": "L10823_V16",
+				"version": 1,
+				"scoring": {"variables": {"type:0": 0, "type:1": 1}, "constraints": 100},
+				"variables":{
+				},
+				"constraints":[ ]
+			};
+			
+			var constraintsArray:Array = m_worldObj.constraints;
+			for(var index:int = currentLine+1; index<lineArray.length; index++)
+			{
+				var clauseArray:Array = lineArray[index].split(' ');
+				var lineIndex:int = 0;
+				var weight:int = 100;
+				if(weighted)
+					weight = parseInt(clauseArray[lineIndex]);
+				
+				
+			}
+		}
+		
+		protected function parseLayoutFile():void
+		{
+			
+		}
+		 
 		public function parseJson():void
 		{
 			
@@ -103,6 +167,7 @@ package scenes.game
 				nextParseState.removeFromParent();
 			nextParseState = new ParseConstraintGraphState(m_worldObj);
 			addChild(nextParseState); //to allow done parsing event to be caught
+	
 			this.addEventListener(ParseConstraintGraphState.WORLD_PARSED, worldComplete);
 			nextParseState.stateLoad();
 		}
@@ -119,7 +184,10 @@ package scenes.game
 		{
 			if(m_layoutLoaded && m_worldLoaded && m_assignmentsLoaded)
 			{
-				parseJson();
+				if(m_worldObj is String)
+					parseCNF();
+				else
+					parseJson();
 			}
 		}
 		

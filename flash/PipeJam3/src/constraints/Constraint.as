@@ -5,6 +5,7 @@ package constraints
 	{
 		public static const SUBTYPE:String = "subtype";
 		public static const EQUALITY:String = "equality";
+		public static const CLAUSE:String = "clause";
 		public static const MAP_GET:String = "map.get";
 		public static const IF_NODE:String = "selection_check";
 		public static const GENERICS_NODE:String = "enabled_check";

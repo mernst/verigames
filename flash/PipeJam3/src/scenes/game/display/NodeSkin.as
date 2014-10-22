@@ -1,17 +1,18 @@
 package scenes.game.display
 {
-	import constraints.ConstraintValue;
 	import flash.utils.Dictionary;
 	
 	import assets.AssetInterface;
-		
+	
+	import constraints.ConstraintValue;
+	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.display.Quad;
 	
 	public class NodeSkin extends Sprite
 	{
@@ -26,6 +27,7 @@ package scenes.game.display
 		static protected var LightGrayCircle:Texture;
 		static protected var DarkBlueCircle:Texture;
 		static protected var LightBlueCircle:Texture;
+		static protected var Minion:Texture;
 		static protected var DarkBlueCircleWithOutline:Texture;
 		static protected var LightBlueCircleWithOutline:Texture;
 		
@@ -79,8 +81,16 @@ package scenes.game.display
 			return nextSkin;
 		}
 		
-		static public function getColor(node:Object):int
+		static public function getColor(node:Node, edge:Edge = null):int
 		{
+			//ask the node if it's a clause, and if it is, figure out if the end is wide or not
+			if(edge)
+			{
+				if(edge.graphConstraint.lhs.id.indexOf('c') == 0)
+					return WIDE_COLOR;
+				else
+					return NARROW_COLOR;
+			}
 			if(!node.isNarrow && !node.isEditable)
 			{
 				return WIDE_NONEDITABLE_COLOR;
@@ -139,36 +149,59 @@ package scenes.game.display
 				removeChild(textureImage, true);
 			}
 			
-			var wideScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
-			var narrowScore:Number = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
-			if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
+			var wideScore:Number = 1;
+			var narrowScore:Number = 0;
+			if(!associatedNode.isClause)
 			{
-				textureImage = new Image(DarkBlueCircleWithOutline);
-			}
-			else if (narrowScore > wideScore && !associatedNode.isNarrow && associatedNode.isEditable)
+				wideScore = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
+				narrowScore = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
+
+				if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
+				{
+					textureImage = new Image(DarkBlueCircleWithOutline);
+				}
+				else if (narrowScore > wideScore && !associatedNode.isNarrow && associatedNode.isEditable)
+				{
+					textureImage = new Image(LightBlueCircleWithOutline);
+				}
+				else if(!associatedNode.isNarrow && !associatedNode.isEditable)
+				{
+					textureImage = new Image(DarkGrayCircle);
+				}
+				else if(associatedNode.isNarrow && !associatedNode.isEditable)
+				{
+					textureImage = new Image(LightGrayCircle);
+				}
+				else if(!associatedNode.isNarrow && associatedNode.isEditable)
+				{
+					textureImage = new Image(DarkBlueCircle);
+				}
+				else if(associatedNode.isNarrow && associatedNode.isEditable)
+				{
+					textureImage = new Image(LightBlueCircle);
+				}
+				addChild(textureImage);
+			} else
 			{
-				textureImage = new Image(LightBlueCircleWithOutline);
+				var q:Quad;
+				if(associatedNode.hasErrorNow)
+				{
+					q = new Quad(20,20,0xff0000);
+				}
+				else
+				{
+					q = new Quad(20,20,0x00ff00);
+				}
+				q.x = q.y = -5;
+				addChild(q);
+
 			}
-			else if(!associatedNode.isNarrow && !associatedNode.isEditable)
+			if(textureImage)
+				textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
+			for each(var q:Quad in associatedNode.connectors)
 			{
-				textureImage = new Image(DarkGrayCircle);
-			}
-			else if(associatedNode.isNarrow && !associatedNode.isEditable)
-			{
-				textureImage = new Image(LightGrayCircle);
-			}
-			else if(!associatedNode.isNarrow && associatedNode.isEditable)
-			{
-				textureImage = new Image(DarkBlueCircle);
-			}
-			else if(associatedNode.isNarrow && associatedNode.isEditable)
-			{
-				textureImage = new Image(LightBlueCircle);
-			}
-			
-			textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
-			addChild(textureImage);
-			
+				addChild(q);
+			}			
 			if(associatedNode.isSelected)
 			{
 				// Apply the glow filter if not already there

@@ -241,6 +241,7 @@ package networking
 		
 		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, assignmentsFileLoadedCallback:Function):void
 		{
+			
 			var gameFileHandler:GameFileHandler;
 			//do this so I can debug the object...
 			var levelInformation:Object = PipeJamGame.levelInfo;
@@ -308,12 +309,25 @@ package networking
 				}
 				else if(fileName && fileName.length > 0)
 				{
-					var worldFileHandler1:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-					worldFileHandler1.loadFile(loadType, fileName+".zip");
-					var layoutFileHandler1:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-					layoutFileHandler1.loadFile(loadType, fileName+"Layout.zip");
-					var assignmentsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-					assignmentsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
+					if(fileName.indexOf("cnf") == -1)
+					{
+						//check for which form we are loading, try loading one, and if it works, continue...
+						var worldFileHandler1:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
+						worldFileHandler1.loadFile(loadType, fileName+".zip");
+						var layoutFileHandler1:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
+						layoutFileHandler1.loadFile(loadType, fileName+"Layout.zip");
+						var assignmentsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
+						assignmentsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
+					}
+					else
+					{
+						var worldFileHandler2:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
+						worldFileHandler2.loadFile(loadType, fileName+".zip");
+						var index:int = fileName.lastIndexOf('.');
+						var fileNameRoot:String = fileName.substring(0, index);
+						var layoutFileHandler2:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
+						layoutFileHandler2.loadFile(loadType, fileNameRoot+".plain.zip");
+					}
 				}
 			}
 		}
@@ -331,7 +345,7 @@ package networking
 		{
 			fzip = new FZip();
 			fzip.addEventListener(flash.events.Event.COMPLETE, zipLoaded);
-			fzip.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			//fzip.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			
 			var loader:URLLoader = new URLLoader();
 			switch(loadType)
@@ -398,23 +412,32 @@ package networking
 			{
 				zipFile = fzip.getFileAt(0);
 				var contentsStr:String = zipFile.content.toString();
-				var containerObj:Object = JSON.parse(contentsStr);
-				var assignmentsObj:Object = containerObj["assignments"];
-				var layoutObj:Object = containerObj["layout"];
-				if (assignmentsObj && layoutObj)
+				if(zipFile.filename.indexOf("cnf") == -1 && zipFile.filename.indexOf("plain") == -1)
 				{
-					var containerArray:Array = new Array(3);
-					containerArray[0] = containerObj;
-					containerArray[1] = assignmentsObj;
-					containerArray[2] = layoutObj;
-					trace("loaded world file: " + zipFile.filename);
-					m_callback(containerArray);
+					var containerObj:Object = JSON.parse(contentsStr);
+					var assignmentsObj:Object = containerObj["assignments"];
+					var layoutObj:Object = containerObj["layout"];
+					if (assignmentsObj && layoutObj)
+					{
+						var containerArray:Array = new Array(3);
+						containerArray[0] = containerObj;
+						containerArray[1] = assignmentsObj;
+						containerArray[2] = layoutObj;
+						trace("loaded world file: " + zipFile.filename);
+						m_callback(containerArray);
+					}
+					else
+					{
+						trace("loaded individual file: " + zipFile.filename);
+						zipFile = fzip.getFileAt(0);
+						m_callback(containerObj);
+					}
 				}
 				else
 				{
 					trace("loaded individual file: " + zipFile.filename);
 					zipFile = fzip.getFileAt(0);
-					m_callback(containerObj);
+					m_callback(zipFile);
 				}
 			}
 		}
