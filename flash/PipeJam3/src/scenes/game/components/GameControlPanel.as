@@ -75,6 +75,15 @@ package scenes.game.components
 		/** Button to solve the selected nodes */
 		private var m_solveButton:NineSliceButton;
 		
+		/** Text showing solver status */
+		private var m_solverTextfield:TextFieldWrapper;
+		
+		/** Text showing num selected nodes */
+		private var m_selectedTextfield:TextFieldWrapper;
+		
+		/** Indicator showing num selected nodes */
+		private var m_selectedBarDisplay:SelectedBarDisplay;
+		
 		/** Button to start the level over */
 		private var m_resetButton:NineSliceButton;
 		
@@ -146,7 +155,7 @@ package scenes.game.components
 			const LEVEL_TEXT_WIDTH:Number = 200.0;
 			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, NodeSkin.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;
-			m_levelNameTextfield.x = 0.4 * WIDTH - 0.5 * LEVEL_TEXT_WIDTH;
+			m_levelNameTextfield.x = 0.25 * WIDTH - 0.5 * LEVEL_TEXT_WIDTH;
 			m_levelNameTextfield.y = 36;
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			
@@ -199,10 +208,28 @@ package scenes.game.components
 			m_smallScreenButton.visible = false;
 			
 			m_solveButton = ButtonFactory.getInstance().createButton("Solve Selection", (m_recenterButton.x+m_recenterButton.width)-m_zoomInButton.x,
-											14, 8, 8, "Autosolve the current selection.\nShift-click or shift-marquee to select.");
+											14, 8, 8, "Autosolve the current selection.");
 			m_solveButton.addEventListener(Event.TRIGGERED, onSolveSelection);
 			m_solveButton.x = m_zoomInButton.x - m_solveButton.width - 10;
 			m_solveButton.y = m_zoomInButton.y - 3;
+			m_solveButton.enabled = false;
+			
+			m_selectedTextfield = TextFactory.getInstance().createDefaultTextField("Selected: 0", 80, 10, 8, 0x0);
+			TextFactory.getInstance().updateAlign(m_selectedTextfield, 1, 1);
+			m_selectedTextfield.x = 0.5 * WIDTH - 40;
+			m_selectedTextfield.y = -11;
+			m_selectedTextfield.visible = false;
+			
+			m_selectedBarDisplay = new SelectedBarDisplay(0, 1, 40, 6);
+			m_selectedBarDisplay.x = 0.5 * WIDTH;
+			m_selectedBarDisplay.y = -14;
+			m_selectedBarDisplay.visible = false;
+			
+			m_solverTextfield = TextFactory.getInstance().createDefaultTextField("Autosolving...", 80, 12, 10, Constants.GOLD);
+			TextFactory.getInstance().updateAlign(m_solverTextfield, 1, 1);
+			m_solverTextfield.x = m_levelNameTextfield.x + 0.5 * LEVEL_TEXT_WIDTH + 140;
+			m_solverTextfield.y = m_levelNameTextfield.y;
+			m_solverTextfield.visible = false;
 			
 			busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
 			busyAnimationMovieClip.x = m_solveButton.x + m_solveButton.width + 3;
@@ -225,7 +252,10 @@ package scenes.game.components
 			addChild(m_recenterButton);
 			//addChild(m_fullScreenButton);
 			//addChild(m_smallScreenButton);
-			addChild(m_solveButton);
+			//addChild(m_solveButton);
+			addChild(m_solverTextfield);
+			addChild(m_selectedTextfield);
+			addChild(m_selectedBarDisplay);
 		}
 		
 		public var inSolver:Boolean = false;
@@ -236,6 +266,7 @@ package scenes.game.components
 				trace("start animation");
 				inSolver = true;
 				m_solveButton.setButtonText("Running...");
+				m_solverTextfield.visible = true;
 			}
 			
 		}
@@ -244,7 +275,9 @@ package scenes.game.components
 		{
 			trace("stop animation");
 			inSolver = false;
+			if (m_currentLevel) m_currentLevel.unselectAll();
 			m_solveButton.setButtonText("Solve Selection");
+			m_solverTextfield.visible = false;
 		}
 		
 		protected function checkForTriggerFullScreen(event:MouseEvent):void
@@ -372,9 +405,22 @@ package scenes.game.components
 			m_currentLevel = level;
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
-			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 1);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
-			setSolveButtonsVisibility(level.getSolveButtonsAllowed());
+			setSolveButtonsVisibility(level.getAutoSolveAllowed());
+			updateNumNodesSelectedDisplay();
+		}
+		
+		public function updateNumNodesSelectedDisplay():void
+		{
+			if (!m_currentLevel) return;
+			var num:int = m_currentLevel.selectedNodes.length;
+			var max:int = m_currentLevel.getMaxSelectableWidgets();
+			m_selectedTextfield.visible = (num > 0);
+			TextFactory.getInstance().updateText(m_selectedTextfield, "Selected: " + num + ((max <= 0) ? "" : "/" + max));
+			TextFactory.getInstance().updateAlign(m_selectedTextfield, 1, 1);
+			m_selectedBarDisplay.update(num, max);
+			m_selectedBarDisplay.visible = ((num > 0) && (max > 0));
 		}
 		
 		public function setNavigationButtonVisibility(viz:Boolean):void
@@ -593,7 +639,7 @@ package scenes.game.components
 				scaleX = 960/newWidth;
 				scaleY = 640/newHeight;
 				x = (480-width)/2; //center
-				y = 320 - 72*scaleY + 10;
+				y = 320 - 72*scaleY + 27;
 				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
 				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 				m_fullScreenButton.visible = false;
@@ -603,7 +649,7 @@ package scenes.game.components
 			{
 				scaleX = scaleY = 1;
 				x = 0;
-				y = 320 - height + 10; //level name extends up out of the bounds
+				y = 320 - height + 27; //level name extends up out of the bounds
 				topLeftScorePanel = m_scorePanel.localToGlobal(new Point(0, 0));
 				m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 				m_fullScreenButton.visible = true;
@@ -626,13 +672,9 @@ package scenes.game.components
 }
 
 import assets.AssetsFont;
-
 import display.ToolTippableSprite;
-
 import events.ToolTipEvent;
-
 import scenes.game.components.GameControlPanel;
-
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -683,5 +725,37 @@ class TargetScoreDisplay extends ToolTippableSprite
 	protected override function getToolTipEvent():ToolTipEvent
 	{
 		return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, m_toolTipText);
+	}
+}
+
+class SelectedBarDisplay extends Sprite
+{
+	private static const BORDER_W:Number = 2;
+	private var barWidth:Number;
+	private var barHeight:Number;
+	
+	private var backQ:Quad;
+	private var numQ:Quad;
+	
+	public function SelectedBarDisplay(_num:int, _den:int, _barWidth:Number, _barHeight:Number)
+	{
+		barWidth = _barWidth;
+		barHeight = _barHeight;
+		backQ = new Quad(barWidth, barHeight, 0x0);
+		backQ.x = -0.5 * barWidth;
+		backQ.y = -0.5 * barHeight;
+		addChild(backQ);
+		update(_num, _den);
+	}
+	
+	public function update(num:int, den:int):void
+	{
+		if (numQ) numQ.removeFromParent(true);
+		if (den <= 0) return;
+		var pct:Number = Math.min(Number(num / den), 1.0); // don't allow to go over 1.0
+		numQ = new Quad(pct * (barWidth - 2 * BORDER_W), barHeight - 2 * BORDER_W, 0xFFFFFF);
+		numQ.x = -0.5 * barWidth + BORDER_W;
+		numQ.y = -0.5 * barHeight + BORDER_W;
+		addChild(numQ);
 	}
 }

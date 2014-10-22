@@ -42,9 +42,7 @@ package assets
 		private var gameAssetEmbeds_2x:GameAssetEmbeds_2x;
 		
 		// List of Subtexture names from PipeJamSpriteSheet atlas
-		public static const PipeJamSubTexture_BallSizeTestMapNarrow:String = "BallSizeTestMapNarrow";
-		public static const PipeJamSubTexture_BallSizeTestMapWide:String = "BallSizeTestMapWide";
-		public static const PipeJamSubTexture_BallSizeTestSimple:String = "BallSizeTestSimple";
+		public static const PipeJamSubTexture_PaintCircle:String = "PaintCircle";
 		public static const PipeJamSubTexture_GrayDarkBoxPrefix:String = "GrayDarkBox";
 		public static const PipeJamSubTexture_GrayDarkBoxSelectPrefix:String = "GrayDarkBoxSelect";
 		public static const PipeJamSubTexture_GrayDarkStart:String = "GrayDarkStart";
@@ -67,6 +65,7 @@ package assets
 		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
 		public static const PipeJamSubTexture_BlueDarkBoxSelectPrefix:String = "BlueDarkBoxSelect";
 		public static const PipeJamSubTexture_BlueDarkStart:String = "BlueDarkStart";
+		public static const PipeJamSubTexture_BlueDarkSelected:String = "BlueDarkSelected";
 		public static const PipeJamSubTexture_BlueDarkEnd:String = "BlueDarkEnd";
 		public static const PipeJamSubTexture_BlueDarkPlug:String = "BlueDarkPlug";
 		public static const PipeJamSubTexture_BlueDarkJoint:String = "BlueDarkJoint";
@@ -74,6 +73,7 @@ package assets
 		public static const PipeJamSubTexture_BlueLightBoxPrefix:String = "BlueLightBox";
 		public static const PipeJamSubTexture_BlueLightBoxSelectPrefix:String = "BlueLightBoxSelect";
 		public static const PipeJamSubTexture_BlueLightStart:String = "BlueLightStart";
+		public static const PipeJamSubTexture_BlueLightSelected:String = "BlueLightSelected";
 		public static const PipeJamSubTexture_BlueLightEnd:String = "BlueLightEnd";
 		public static const PipeJamSubTexture_BlueLightOutline:String = "BlueLightOutline";
 		public static const PipeJamSubTexture_BlueDarkOutline:String = "BlueDarkOutline";

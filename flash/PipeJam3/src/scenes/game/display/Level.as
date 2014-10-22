@@ -10,6 +10,7 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import starling.textures.TextureAtlas;
 	
 	import assets.AssetInterface;
 	
@@ -77,12 +78,9 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		public var selectedNodes:Dictionary;
+		public var selectedNodes:Vector.<GridChild> = new Vector.<GridChild>();
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
 		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
-		
-		protected var marqueeRect:Shape = new Shape();
-		protected var m_marqueeChanged:Boolean = false;
 		
 		//the level node and decendents
 		protected var m_levelLayoutObj:Object;
@@ -137,6 +135,8 @@ package scenes.game.display
 		static public var GRID_SIZE:int = 500;
 		static public var NUM_NODES_TO_SELECT:int = 75;
 		
+		static public var PAINT_RADIUS:int = 60;
+		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
 		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
 		static public var NARROW_NODE_SIZE_CONSTRAINT_VALUE:Number = 0.0;
@@ -152,6 +152,8 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
+		
+		protected var m_paintBrush:Sprite = new Sprite();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -203,10 +205,19 @@ package scenes.game.display
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
+			// Create paintbrush: TODO make higher res circle
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
+			var circleImage:Image = new Image(circleTexture);
+			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
+			circleImage.x = -0.5 * circleImage.width;
+			circleImage.y = -0.5 * circleImage.height;
+			circleImage.alpha = 0.7;
+			m_paintBrush.addChild(circleImage);
+			
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
 			NodeSkin.InitializeSkins();
-			selectedNodes = new Dictionary;
 		}
 		
 		public function loadBestScoringConfiguration():void
@@ -363,21 +374,9 @@ package scenes.game.display
 		protected function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			var gridSquare:GridSquare;
-			if (m_marqueeChanged) {
-				m_marqueeChanged = false;
-				if(marqueeRect.height > 0 && marqueeRect.width > 0)
-				{
-					for each(gridSquare in currentGridDict)
-					{
-						gridSquare.handleSelection(marqueeRect.bounds, selectedNodes);
-					}
-				}
-			} else {
-				//clean up the old dictionary disposing of what's left
-				for each(gridSquare in currentGridDict)
-				{
-					gridSquare.draw();
-				}
+			for each(gridSquare in currentGridDict)
+			{
+				gridSquare.draw();
 			}
 		}
 		
@@ -434,9 +433,24 @@ package scenes.game.display
 		private static const GROUP_SCALE_THRESHOLD:Number = 5.0 / Constants.GAME_SCALE;
 		private var m_groupsShown:Boolean = false;
 		
+		private static const MIN_NODE_SCALE:Number = 4.0 / Constants.GAME_SCALE;
+		
 		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
 		{
-			var gridSquare:GridSquare;
+			var gridSquare:GridSquare,
+				newNodeScaleX:Number,
+				newNodeScaleY:Number;
+			if (newScaleX < MIN_NODE_SCALE || newScaleY < MIN_NODE_SCALE) {
+				newNodeScaleX = MIN_NODE_SCALE / newScaleX;
+				newNodeScaleY = MIN_NODE_SCALE / newScaleY;
+			} else {
+				newNodeScaleX = newNodeScaleY = 1;
+			}
+			for each (gridSquare in currentGridDict)
+			{
+				gridSquare.scaleNodes(newNodeScaleX, newNodeScaleY);
+			}
+				
 			if (newScaleX < GROUP_SCALE_THRESHOLD || newScaleY < GROUP_SCALE_THRESHOLD) {
 				if (!m_groupsShown) {
 					for each (gridSquare in currentGridDict)
@@ -545,7 +559,7 @@ package scenes.game.display
 			{
 				gridSquare.calculateBounds();
 			}
-			trace("node count = " + n);
+			//trace("node count = " + n);
 			
 			// Process layout edges (constraints)
 			var visibleLines:int = 0;
@@ -577,7 +591,7 @@ package scenes.game.display
 				addEdgeToGrids(edge);
 				n++;
 			}
-			trace("edge count = " + n);
+			//trace("edge count = " + n);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
@@ -623,7 +637,7 @@ package scenes.game.display
 			m_bestScore = levelGraph.currentScore;
 			levelGraph.startingScore = levelGraph.currentScore;
 			flatten();
-			trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
+			//trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
 		
 		public function restart():void
@@ -646,7 +660,7 @@ package scenes.game.display
 			loadAssignments(m_levelAssignmentsObj);
 			
 			targetScoreReached = false;
-			trace("Restarted: " + m_levelLayoutObj["id"]);
+			//trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
@@ -761,7 +775,7 @@ package scenes.game.display
 		override public function dispose():void
 		{
 			initialized = false;
-			trace("Disposed of : " + m_levelLayoutObj["id"]);
+			//trace("Disposed of : " + m_levelLayoutObj["id"]);
 			if (m_disposed) {
 				return;
 			}
@@ -962,20 +976,20 @@ package scenes.game.display
 		
 		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array, previouslyCheckedNodes:Dictionary):void
 		{
-			node.select(selectedNodes);
+			node.select();
 			
 			//include locked nodes, but not their children
 			if(!node.isLocked)
 				for each(var gameEdgeID:String in node.connectedEdgeIds)
 				{
-					var edgeObj:Object = edgeLayoutObjs[gameEdgeID];
-					var toNodeObj:Object = edgeObj.toNode;
-					var fromNodeObj:Object = edgeObj.fromNode;
+					var edge:Edge = edgeLayoutObjs[gameEdgeID];
+					var toNode:Node = edge.toNode;
+					var fromNode:Node = edge.fromNode;
 					
-					var otherNode:Object = toNodeObj;
-					if(toNodeObj == node)
-						otherNode = fromNodeObj;
-					if(selectedNodes[otherNode.id] == null)
+					var otherNode:Node = toNode;
+					if(toNode == node)
+						otherNode = fromNode;
+					if(!otherNode.isSelected)
 					{
 						if(previouslyCheckedNodes[otherNode.id] == null)
 						{
@@ -989,7 +1003,7 @@ package scenes.game.display
 		protected function onGroupUnselection(evt:SelectionEvent):void
 		{
 			for each (var comp:Object in evt.selection) {
-				//zzz
+				// TODO
 			}
 		}
 		
@@ -1054,6 +1068,12 @@ package scenes.game.display
 			return tutorialManager ? tutorialManager.getPersistentToolTipsInfo() : (new Vector.<TutorialManagerTextInfo>());
 		}
 		
+		public function getMaxSelectableWidgets():int
+		{
+			if (tutorialManager) return tutorialManager.getMaxSelectableWidgets();
+			return -1;
+		}
+		
 		public function getTargetScore():int
 		{
 			return m_targetScore;
@@ -1100,18 +1120,18 @@ package scenes.game.display
 		{
 			var i:int = 0;
 			var conflictIndex:int = m_currentConflictIndex + (forward ? 1 : -1);
-			trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
+			//trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
 			var firstConflictLoc:Point;
 			var lastConflictLoc:Point;
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
 				var edgeLayout:Edge = edgeLayoutObjs[edgeId];
 				if (!edgeLayout) {
-					trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
+					//trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
 					continue;
 				}
 				var edgeNode:Node = edgeLayout.toNode;
 				if (!edgeNode) {
-					trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
+					//trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
 					continue;
 				}
 				if (!edgeNode.isEditable && edgeLayout.fromNode) {
@@ -1122,10 +1142,8 @@ package scenes.game.display
 					m_currentConflictIndex = i;
 					return conflictLoc;
 				} else if (i == 0) {
-					trace("2 edge = ", edgeId);
 					firstConflictLoc = conflictLoc;
 				} else if (!firstConflictLoc) {
-					trace("3 edge = ", edgeId);
 					firstConflictLoc = conflictLoc;
 				}
 				i++;
@@ -1179,9 +1197,9 @@ package scenes.game.display
 			return true;
 		}
 		
-		public function getSolveButtonsAllowed():Boolean
+		public function getAutoSolveAllowed():Boolean
 		{ 
-			if (tutorialManager) return tutorialManager.getSolveButtonsAllowed();
+			if (tutorialManager) return tutorialManager.getAutoSolveAllowed();
 			return true;
 		}
 		
@@ -1208,7 +1226,7 @@ package scenes.game.display
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
-				trace("New best score: " + m_bestScore);
+				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
@@ -1218,46 +1236,62 @@ package scenes.game.display
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
-		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
+		public function beginPaint():void
 		{
-			var gridSquare:GridSquare;
-			if(startingPoint != null)
-			{
-				marqueeRect.removeChildren();
-				//scale line size
-				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
-				marqueeRect.graphics.lineStyle(lineSize, 0x000000);
-				marqueeRect.graphics.moveTo(0,0);
-				var pt1:Point = globalToLocal(startingPoint);
-				var pt2:Point = globalToLocal(currentPoint);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, 0);
-				marqueeRect.graphics.lineTo(pt2.x-pt1.x, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, pt2.y-pt1.y);
-				marqueeRect.graphics.lineTo(0, 0);
-				marqueeRect.x = pt1.x;
-				marqueeRect.y = pt1.y;
-				//do here to make sure we are on top
-				addChild(marqueeRect);
-				m_marqueeChanged = true;
-			}
-			else
-			{		
-				removeChild(marqueeRect);	
-				for each(gridSquare in currentGridDict)
-				{
-					gridSquare.visited = false;
-				}
-			}
+			//trace("beginPaint()");
+			unselectAll();
 		}
 		
-		public function unselectAll(addEventToLast:Boolean = false):void
+		public function handlePaint(globPt:Point):void
+		{
+			//trace("handlePaint(", globPt, ")");
+			if (!parent) return;
+			m_paintBrush.scaleX = 1.0 / parent.scaleX / scaleX;
+			m_paintBrush.scaleY = 1.0 / parent.scaleY / scaleY;
+			var localPt:Point = this.globalToLocal(globPt);
+			m_paintBrush.x = localPt.x;
+			m_paintBrush.y = localPt.y;
+			addChild(m_paintBrush);
+			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY;
+			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
+			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
+			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
+			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
+			var selectionChanged:Boolean = false;
+			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
+			{
+				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
+				{
+					var gridName:String = i + "_" + j;
+					//trace("gridName: ", gridName);
+					if(gridSystemDict[gridName] is GridSquare)
+					{
+						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
+						//thisGrid.showDebugQuad();
+						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
+						selectionChanged = (selectionChanged || thisGridSelectionChanged);
+					}
+				}
+			}
+			//trace("Paint select changed:" + selectionChanged);
+			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
+		}
+		
+		public function endPaint():void
+		{
+			//trace("endPaint()");
+			m_paintBrush.removeFromParent();
+		}
+		
+		public function unselectAll():void
 		{
 			for each(var node:Node in selectedNodes)
 			{
-				node.unselect(selectedNodes);
+				node.unselect();
 			}
-			
-			selectedNodes = new Dictionary; 
+			selectedNodes = new Vector.<GridChild>();
+			dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 		
 		public function onUseSelectionPressed(choice:String):void
@@ -1303,6 +1337,7 @@ package scenes.game.display
 		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
+			// vvvv
 			if(firstRun)
 			{
 				solverRunningTime = new Date().getTime();
@@ -1316,7 +1351,7 @@ package scenes.game.display
 					if(node.hasError() && node.unused)
 					{
 						node.unused = false;
-						trace(node.id);
+					//trace(node.id);
 						onGroupSelection(new SelectionEvent("foo", node));
 						solveSelection1(updateCallback, doneCallback);
 						unselectAll();
@@ -1325,7 +1360,7 @@ package scenes.game.display
 				}
 				
 				// if we make it this far start over
-				trace("new loop", loopcount);
+			//trace("new loop", loopcount);
 				looptimer = new Timer(1000, 1);
 				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
 				looptimer.start();
@@ -1336,8 +1371,8 @@ package scenes.game.display
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
 		{
-			var edgeObj:Object = edgeLayoutObjs[edgeId];
-			return edgeObj ? edgeObj.edgeSkin : null;
+			var edge:Edge = edgeLayoutObjs[edgeId];
+			return edge ? edge.skin : null;
 		}
 		
 		public function getNode(nodeId:String):Node
@@ -1377,13 +1412,13 @@ package scenes.game.display
 					var fromNode:Node =edgeObj.fromNode;
 					
 					//figure out which is the other node
-					var nodeToCheck:Object = toNode;
+					var nodeToCheck:Node = toNode;
 					if(toNode == gridChild)
 						nodeToCheck = fromNode;
 					
 					//if far end of this edge isn't in selected nodes, then add a constraint acting like it's fixed
 					//this will help the solver return only better scores.
-					if(selectedNodes[nodeToCheck.id] == null)
+					if(!nodeToCheck.isSelected)
 					{
 						//deal with constraints to/from unselected nodes
 						if(nodeToCheck == fromNode)
@@ -1517,7 +1552,6 @@ package scenes.game.display
 				}
 			}
 			
-			trace("constraintArray.length", constraintArray.length);
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1546,11 +1580,11 @@ package scenes.game.display
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var nodeUpdated:Boolean = false;
-			trace("update", unsat_weight);
+			//trace("update", unsat_weight);
 			if(	m_inSolver == false) //got marked done early
 				return;
 			
-			trace(levelGraph.currentScore);
+			//trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
@@ -1574,19 +1608,19 @@ package scenes.game.display
 		public var timer:Timer;
 		public function solverDone(errMsg:String):void
 		{
-			trace(errMsg);
+			//trace(errMsg);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
-			trace("time elapsed", new Date().getTime()-solverRunningTime);
-			trace("num conflicts", MiniMap.numConflicts);
+			//trace("time elapsed", new Date().getTime()-solverRunningTime);
+			//trace("num conflicts", MiniMap.numConflicts);
 			//do it again?
 			if(Keyboard.capsLock && count < 3000)
 			{
 				count++;
-				trace("count", count);
+				//trace("count", count);
 				timer = new Timer(1000, 1);
 				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
 				timer.start();
@@ -1609,7 +1643,6 @@ package scenes.game.display
 			{
 				node.lock();
 			}
-			
 		}
 		
 		public function unlockSelection():void
@@ -1618,7 +1651,6 @@ package scenes.game.display
 			{
 				node.unlock();
 			}
-			
 		}
 		
 		public function propagate():void

@@ -50,6 +50,9 @@ package scenes.game.display
 		private static const LINE_THICKNESS:Number = 5;
 		static public const SKIN_DIAMETER:Number = 20;
 		
+		private var m_nodeScaleX:Number = 1;
+		private var m_nodeScaleY:Number = 1;
+		
 		private var m_bb:Rectangle;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
@@ -129,29 +132,21 @@ package scenes.game.display
 						}
 					}
 				}
-				else
-				{
-					if(!event.ctrlKey)
-					{
-						//propigate narrowness down, or wideness up
-						var visitedNodes:Dictionary = new Dictionary;
-						if(!node.isEditable)
-							node.propagate(node.isNarrow, visitedNodes);
-					
-							World.m_world.active_level.onWidgetChange();
-					}
-					else if(World.altKeyDown)
-					{
-						if(!gridChild.isSelected)
-							gridChild.select(World.m_world.active_level.selectedNodes);
-						else
-							gridChild.unselect(World.m_world.active_level.selectedNodes);
-					}
-					else
-					{
-						touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
-					}
-				}
+				//disable individual node selection for paint 
+				//else
+				//{
+					//if(!event.ctrlKey)
+					//{
+						//if(!gridChild.isSelected)
+							//gridChild.select(World.m_world.active_level.selectedNodes);
+						//else
+							//gridChild.unselect(World.m_world.active_level.selectedNodes);
+					//}
+					//else
+					//{
+						//touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
+					//}
+				//}
 			}
 		}
 		
@@ -198,6 +193,7 @@ package scenes.game.display
 				nodeList.push(gridChild as Node);
 			}
 			gridChild.createSkin();
+			gridChild.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 		}
 		
 		public function addEdge(edge:Edge):void
@@ -258,6 +254,7 @@ package scenes.game.display
 				for each(var node:Node in nodeList)
 				{											
 					if (!node.skin) node.createSkin();
+					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				}
 				createEdges();
 				
@@ -270,6 +267,7 @@ package scenes.game.display
 				for each(var nodeGroup:NodeGroup in groupList)
 				{
 					if (!nodeGroup.skin) nodeGroup.createSkin();
+					nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				}
 				
 				nodeDrawingBoard.x = componentXDisplacement;
@@ -287,6 +285,29 @@ package scenes.game.display
 				isActivated = true;
 				isDirty = true;
 			}
+		}
+		
+		/*
+		 * Used to show which GridSquare is being referenced for debug
+		 */
+		private var debugQ:Quad;
+		public function showDebugQuad():void
+		{
+			if (nodeDrawingBoard) {
+				hideDebugQuad();
+				const BORD:Number = 5.0;
+				debugQ = new Quad(Level.GRID_SIZE - 2 * BORD, Level.GRID_SIZE - 2 * BORD, 0x0);
+				debugQ.x = BORD;
+				debugQ.y = BORD;
+				debugQ.alpha = 0.2;
+				nodeDrawingBoard.addChild(debugQ);
+				nodeDrawingBoard.flatten();
+			}
+		}
+		
+		public function hideDebugQuad():void
+		{
+			if (debugQ) debugQ.removeFromParent(true);
 		}
 		
 		public function showGroups():void
@@ -307,6 +328,18 @@ package scenes.game.display
 			isDirty = true;
 		}
 		
+		public function scaleNodes(nodeScaleX:Number, nodeScaleY:Number):void
+		{
+			if (m_nodeScaleX == nodeScaleX && m_nodeScaleY == nodeScaleY) return;
+			const len:int = nodeList.length;
+			for (var i:int = 0; i < len; i++)
+			{
+				nodeList[i].scaleSkin(nodeScaleX, nodeScaleY);
+			}
+			m_nodeScaleX = nodeScaleX;
+			m_nodeScaleY = nodeScaleY;
+		}
+		
 		public function draw():void
 		{
 			if(!isDirty)
@@ -319,8 +352,10 @@ package scenes.game.display
 				if(node.isDirty)
 				{
 					node.createSkin();
+					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 					nodeDrawingBoard.addChild(node.skin);
 				}
+				node.isDirty = false;
 			}
 			var edge:Edge;
 			for each(edge in edgeList)
@@ -354,12 +389,12 @@ package scenes.game.display
 					if(edge.skin.parent.parent == null)
 						World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 				}
-
-				node.isDirty = false;
 			}
+				
 			for each (var nodeGroup:NodeGroup in groupList)
 			{
 				if (nodeGroup.isDirty) nodeGroup.createSkin();
+				nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				nodeGroup.isDirty = false;
 				if (nodeGroup.skin) groupDrawingBoard.addChild(nodeGroup.skin);
 			}
@@ -565,39 +600,28 @@ package scenes.game.display
 			edgeDrawingBoard.removeFromParent(dispose);
 		}
 		
-		public function handleSelection(marqueeRect:Rectangle, selectedNodes:Dictionary):void
+		public function handlePaintSelection(paintPt:Point, paintRadiusSquared:Number, selectedNodes:Vector.<GridChild>, maxSelectable:int):Boolean
 		{
-			if(marqueeRect.intersects(bb))
+			var selectionChanged:Boolean = false;
+			for(var i:int = 0; i < nodeList.length; i++)
 			{
-				if(visited == false)
-				{
-					//record the current selection state of all nodes
-					for(var ii:int = 0; ii< nodeList.length; ii++)
-					{
-						var node1:Node = nodeList[ii];
-						var nodeSelected:Boolean = node1.isSelected ? true : false
-						node1.startingSelectionState = nodeSelected;
+				var node:Node = nodeList[i];
+				if (!node.skin) continue;
+				if (node.graphVar.constant) continue;
+				var dX:Number = paintPt.x - node.centerPoint.x;
+				var dY:Number = paintPt.y - node.centerPoint.y;
+				if (dX * dX > paintRadiusSquared) continue;
+				if (dY * dY > paintRadiusSquared) continue;
+				if (dX * dX + dY * dY <= paintRadiusSquared && !node.isSelected) {
+					while (selectedNodes.length >= maxSelectable) {
+						selectedNodes.shift().unselect();
 					}
-					visited = true;
-				}
-				else
-				{
-					for(var i:int = 0; i < nodeList.length; i++)
-					{
-						var node:Node = nodeList[i];
-						if (!node.skin) continue;
-						if (node.centerPoint.x < marqueeRect.left ||
-							node.centerPoint.x > marqueeRect.right ||
-							node.centerPoint.y < marqueeRect.top ||
-							node.centerPoint.y > marqueeRect.bottom) {
-							// If out of rect (most likely scenario) unselect if selected
-							if (node.startingSelectionState) node.unselect(selectedNodes);
-							continue;
-						}
-						if (!node.startingSelectionState) node.select(selectedNodes);
-					}
+					node.select();
+					selectedNodes.push(node);
+					selectionChanged = true;
 				}
 			}
+			return selectionChanged;
 		}
 		
 		public function markVisited():void

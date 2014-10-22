@@ -171,7 +171,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function getSolveButtonsAllowed():Boolean
+		public function getAutoSolveAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
 				case L13635_TUTORIAL:
@@ -287,6 +287,21 @@ package scenes.game.display
 					return new Point();
 			}
 			return new Point();
+		}
+		
+		public function getMaxSelectableWidgets():int
+		{
+			switch (m_tutorialTag) {
+				case L13635_TUTORIAL:
+					return 25;
+				case L13663_TUTORIAL:
+					return 30;
+				case L13722_TUTORIAL:
+					return 150;
+				case L13727_TUTORIAL:
+					return 200;
+			}
+			return -1;
 		}
 		
 		private function pointToNode(name:String):Function
@@ -439,9 +454,9 @@ package scenes.game.display
 				case L13635_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"For larger levels we provide an autosolver.\n" + 
-						"Select a group of Widgets by holding Shift and\n" +
-						"dragging the mouse or clicking on individual\n" +
-						"     Widgets, then press \"Solve Selection\".   \n",
+						"Paint a group of Widgets by holding Shift and\n" +
+						"Click+Dragging the mouse. When the mouse is released\n" +
+						"the autosolver will begin solving the selected Widgets.",
 						null,
 						null,
 						null, null);

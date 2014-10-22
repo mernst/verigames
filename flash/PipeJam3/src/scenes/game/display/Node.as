@@ -39,31 +39,17 @@ package scenes.game.display
 			connectors = new Vector.<Quad>;
 		}
 		
-		public function updateNode():void
+		public override function select():void
 		{
-			if (skin) {
-				skin.removeFromParent();
-				skin.disableSkin();
-			}
-			
-			skin = NodeSkin.getNextSkin();
-			skin.setNode(this);
-			skin.draw();
-			
-			skin.x = centerPoint.x - parentGrid.componentXDisplacement - 0.5 * skin.width;
-			skin.y = centerPoint.y - parentGrid.componentYDisplacement - 0.5 * skin.height;
-			
-			setDirty(true);
-
-		//	super.select(selectedNodes);
-			if (skin) createSkin();
+			super.select();
+			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
 		
-		public override function unselect(selectedNodes:Dictionary):void
+		public override function unselect():void
 		{
-			super.unselect(selectedNodes);
-			if (skin) createSkin();
+			super.unselect();
+			setDirty();
 			parentGrid.isDirty = (skin != null);
 		}
 		

@@ -30,6 +30,8 @@ package scenes.game.display
 		static protected var Minion:Texture;
 		static protected var DarkBlueCircleWithOutline:Texture;
 		static protected var LightBlueCircleWithOutline:Texture;
+		static protected var LightBlueSelectedCircle:Texture;
+		static protected var DarkBlueSelectedCircle:Texture;
 		
 		protected var lockedIcon:Image;
 		protected var lockedQuad:Quad;
@@ -49,7 +51,7 @@ package scenes.game.display
 		static public const LOCKED_COLOR:int = 0x00FF00;
 		
 		public var id:int;
-		public static var numSkins:int = 5000;
+		public static var numSkins:int = 2000;
 		// TODO: Move to factory
 		static public function InitializeSkins():void
 		{
@@ -139,6 +141,8 @@ package scenes.game.display
 				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightStart);
 				DarkBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
 				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
+				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightSelected);
+				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkSelected);
 			}
 		}
 		
@@ -151,12 +155,15 @@ package scenes.game.display
 			
 			var wideScore:Number = 1;
 			var narrowScore:Number = 0;
-			if(!associatedNode.isClause)
+			if (associatedNode.isNarrow && associatedNode.isSelected)
 			{
-				wideScore = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_1);
-				narrowScore = associatedNode.graphVar.scoringConfig.getScoringValue(ConstraintValue.VERBOSE_TYPE_0);
-
-				if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
+				textureImage = new Image(LightBlueSelectedCircle);
+			}
+			else if (!associatedNode.isNarrow && associatedNode.isSelected)
+			{
+				textureImage = new Image(DarkBlueSelectedCircle);
+			}
+			else if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
 				{
 					textureImage = new Image(DarkBlueCircleWithOutline);
 				}
@@ -194,7 +201,6 @@ package scenes.game.display
 				}
 				q.x = q.y = -5;
 				addChild(q);
-
 			}
 			if(textureImage)
 				textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
@@ -202,20 +208,6 @@ package scenes.game.display
 			{
 				addChild(q);
 			}			
-			if(associatedNode.isSelected)
-			{
-				// Apply the glow filter if not already there
-				if(!this.filter)
-					this.filter = BlurFilter.createGlow(0xff00ff);
-			}
-			else
-			{
-				if(this.filter)
-				{
-					this.filter.dispose();
-					this.filter = null;
-				}
-			}
 			
 			if(associatedNode.isLocked)
 			{

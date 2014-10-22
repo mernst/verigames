@@ -62,24 +62,36 @@ package scenes.game.display
 			// implemented by children
 		}
 		
+		public function scaleSkin(newScaleX:Number, newScaleY:Number):void
+		{
+			if (false && skin) // not working properly yet
+			{
+				var oldScaleX:Number = skin.scaleX;
+				var oldScaleY:Number = skin.scaleY;
+				
+				skin.scaleX = newScaleX;
+				skin.scaleY = newScaleY;
+				skin.x -= 0.5 * (newScaleX - oldScaleX) * skin.width;
+				skin.y -= 0.5 * (newScaleY - oldScaleY) * skin.height;
+			}
+		}
+		
 		public function removeSkin():void
 		{
 			if (skin) skin.removeFromParent();
 			skin = null;
 		}
 		
-		public function select(selectedNodes:Dictionary):void
+		public function select():void
 		{
 			isSelected = true;
 			parentGrid.NumNodesSelected++;
-			selectedNodes[id] = this;
 		}
 		
-		public function unselect(selectedNodes:Dictionary):void
+		public function unselect():void
 		{
 			isSelected = false;
 			parentGrid.NumNodesSelected--;
-			delete selectedNodes[id];
 		}
 		
 		public function lock():void
