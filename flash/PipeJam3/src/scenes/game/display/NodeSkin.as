@@ -27,7 +27,6 @@ package scenes.game.display
 		static protected var LightGrayCircle:Texture;
 		static protected var DarkBlueCircle:Texture;
 		static protected var LightBlueCircle:Texture;
-		static protected var Minion:Texture;
 		static protected var DarkBlueCircleWithOutline:Texture;
 		static protected var LightBlueCircleWithOutline:Texture;
 		static protected var LightBlueSelectedCircle:Texture;
@@ -155,15 +154,17 @@ package scenes.game.display
 			
 			var wideScore:Number = 1;
 			var narrowScore:Number = 0;
-			if (associatedNode.isNarrow && associatedNode.isSelected)
+			if(!associatedNode.isClause)
 			{
-				textureImage = new Image(LightBlueSelectedCircle);
-			}
-			else if (!associatedNode.isNarrow && associatedNode.isSelected)
-			{
-				textureImage = new Image(DarkBlueSelectedCircle);
-			}
-			else if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
+				if (associatedNode.isNarrow && associatedNode.isSelected)
+				{
+					textureImage = new Image(LightBlueSelectedCircle);
+				}
+				else if (!associatedNode.isNarrow && associatedNode.isSelected)
+				{
+					textureImage = new Image(DarkBlueSelectedCircle);
+				}
+				else if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
 				{
 					textureImage = new Image(DarkBlueCircleWithOutline);
 				}
