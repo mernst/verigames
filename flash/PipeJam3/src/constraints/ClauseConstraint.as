@@ -12,7 +12,7 @@ package constraints
 			rhs.rhsConstraints.push(this);
 		}
 			
-		public override function isSatisfied():Boolean
+		public function isClauseSatisfied(varIdChanged:String, newPropValue:Boolean):Boolean
 		{
 			//there must be a better way, but I need to find the node associated with the clause end of this constraint,
 			// and see if it's satisfied or not
@@ -24,7 +24,7 @@ package constraints
 			
 			var clause:Node = World.m_world.active_level.nodeLayoutObjs[clauseID];
 			if(clause)
-				return clause.isSatisfied();
+				return clause.isSatisfied(varIdChanged, newPropValue);
 			
 			return false; //it's an error to get here
 		}

@@ -2,11 +2,9 @@ package constraints
 {
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
-	import graph.PropDictionary;
-	import constraints.events.ErrorEvent;
-	
 	import starling.events.EventDispatcher;
 	
+	import constraints.events.ErrorEvent;	
 	import utils.XString;
 
 	public class ConstraintGraph extends EventDispatcher
@@ -56,14 +54,11 @@ package constraints
 		
 		static protected var updateCount:int = 0;
 		
-		static public function foo()
-		{
-			var g:ConstraintGraph = new ConstraintGraph;
-			g.qid = 3;
-		}
 		public function updateScore(varIdChanged:String = null, propChanged:String = null, newPropValue:Boolean = false):void
 		{
-			this.qid = 3;
+			var clauseID:String;
+			var constraint:ClauseConstraint;
+			
 			oldScore = prevScore;
 			prevScore = currentScore;
 //			if(updateCount++ % 200 == 0)
@@ -71,103 +66,103 @@ package constraints
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
+			var currentConstraints:Dictionary = new Dictionary();
 			var newSatisfiedConstraints:Dictionary = new Dictionary();
 			if (varIdChanged != null && propChanged != null) {
 				var varChanged:ConstraintVar = variableDict[varIdChanged] as ConstraintVar;
-				if (varChanged.getValue() != null && varChanged.scoringConfig != null) {
-					var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
-					var prevConstraintPoints:int = 0;
-					// Recalc incoming/outgoing constraints
-					var i:int;
-					for (i = 0; i < varChanged.lhsConstraints.length; i++) {
-						lhsConstraint = varChanged.lhsConstraints[i];
-						if (lhsConstraint.isSatisfied()) prevConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+
+				var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
+				var prevConstraintPoints:int = 0;
+				// Recalc incoming/outgoing constraints
+				var i:int;
+				for (i = 0; i < varChanged.lhsConstraints.length; i++) {
+					lhsConstraint = varChanged.lhsConstraints[i];
+					if(lhsConstraint is ClauseConstraint && currentConstraints[lhsConstraint.id] == null)
+					{
+						constraint = lhsConstraint as ClauseConstraint;
+						currentConstraints[constraint.id] = lhsConstraint;
+						if (constraint.isClauseSatisfied(varIdChanged, !newPropValue)) prevConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
 					}
-					for (i = 0; i < varChanged.rhsConstraints.length; i++) {
-						rhsConstraint = varChanged.rhsConstraints[i];
-						if (rhsConstraint.isSatisfied()) prevConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-					}
-					// Recalc incoming/outgoing constraints
-					varChanged.setProp(propChanged, newPropValue);
-					var newBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
-					var newConstraintPoints:int = 0;
-					for (i = 0; i < varChanged.lhsConstraints.length; i++) {
-						lhsConstraint = varChanged.lhsConstraints[i];
-						if (lhsConstraint.isSatisfied()) {
-							newConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-							newSatisfiedConstraints[lhsConstraint.id] = lhsConstraint;
-						} else {
-							newUnsatisfiedConstraints[lhsConstraint.id] = lhsConstraint;
-						}
-					}
-					for (i = 0; i < varChanged.rhsConstraints.length; i++) {
-						rhsConstraint = varChanged.rhsConstraints[i];
-						if (rhsConstraint.isSatisfied()) {
-							newConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-							newSatisfiedConstraints[rhsConstraint.id] = rhsConstraint;
-						} else {
-							newUnsatisfiedConstraints[rhsConstraint.id] = rhsConstraint;
-						}
-					}
-					// Offset score by change in bonus and new constraints satisfied/not
-//					trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
-					currentScore += (newBonus - prevBonus) + (newConstraintPoints - prevConstraintPoints);
-//					trace("new currentScore ", currentScore);
 				}
-			} else {
+				for (i = 0; i < varChanged.rhsConstraints.length; i++) {
+					rhsConstraint = varChanged.rhsConstraints[i];
+					if(rhsConstraint is ClauseConstraint && currentConstraints[rhsConstraint.id] == null)
+					{
+						constraint = rhsConstraint as ClauseConstraint;
+						currentConstraints[rhsConstraint.id] = rhsConstraint;
+						if (constraint.isClauseSatisfied(varIdChanged, !newPropValue)) prevConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+					}
+				}
+				// Recalc incoming/outgoing constraints
+				varChanged.setProp(propChanged, newPropValue);
+				var newBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
+				var newConstraintPoints:int = 0;
+				for each(constraint in currentConstraints) {
+					if(constraint.lhs.id.indexOf('c') != -1)
+						clauseID = constraint.lhs.id;
+					else
+						clauseID = constraint.rhs.id;
+					if (constraint.isClauseSatisfied(varIdChanged, newPropValue)) {
+						newConstraintPoints += constraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+						newSatisfiedConstraints[clauseID] = constraint;
+					} else {
+						newUnsatisfiedConstraints[clauseID] = constraint;
+					}
+				}
+				// Offset score by change in bonus and new constraints satisfied/not
+//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+				currentScore += newConstraintPoints - prevConstraintPoints;
+				trace("new currentScore ", currentScore);
+			}
+			 else {
 				currentScore = 0;
-				for (var varId:String in variableDict) {
-					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
-					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
-						// If there is a bonus for the current value of thisVar, add to score
-						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
-					}
-				}
+//				for (var varId:String in variableDict) {
+//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
+//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
+//						// If there is a bonus for the current value of thisVar, add to score
+//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+//					}
+//				}
 				for (constraintId in constraintsDict) {
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
 					var thisConstr:Constraint = constraintsDict[constraintId] as Constraint;
 					if(thisConstr is ClauseConstraint)
 					{
-						//leave it this way for the time being, although it implies that a satisfied clause contributes 
-						// score in relation to number of variables contained by it
-						//probably not what we want
-						if (thisConstr.isSatisfied()) {
-							currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-							newSatisfiedConstraints[constraintId] = thisConstr;
+						constraint = thisConstr as ClauseConstraint;
+						if(thisConstr.lhs.id.indexOf('c') != -1)
+							clauseID = thisConstr.lhs.id;
+						else
+							clauseID = thisConstr.rhs.id;
+						if (constraint.isClauseSatisfied(null, false)) {
+							//get clauseID
+							
+							
+							
+							if(newSatisfiedConstraints[clauseID] == null)
+							{
+								currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+								newSatisfiedConstraints[clauseID] = thisConstr;
+							}
 						} else {
-							newUnsatisfiedConstraints[constraintId] = thisConstr;
+							newUnsatisfiedConstraints[clauseID] = thisConstr;
 						}
-					}
-					else
-					{
-						if (thisConstr.isSatisfied()) {
-							currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-							newSatisfiedConstraints[constraintId] = thisConstr;
-						} else {
-							newUnsatisfiedConstraints[constraintId] = thisConstr;
-						}						
-					}
-
+					} 
 				}
 			}
-			for (constraintId in newSatisfiedConstraints) {
-				if (unsatisfiedConstraintDict.hasOwnProperty(constraintId)) {
-					trace("remove " + constraintId);
-					delete unsatisfiedConstraintDict[constraintId];
-					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints[constraintId]));
+			for (clauseID in newSatisfiedConstraints) {
+				if (unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
+					delete unsatisfiedConstraintDict[clauseID];
+					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints[clauseID]));
 				}
 			}
-			for (constraintId in newUnsatisfiedConstraints) {
-				if (!unsatisfiedConstraintDict.hasOwnProperty(constraintId)) {
-					trace("add " + constraintId);
-					unsatisfiedConstraintDict[constraintId] = newUnsatisfiedConstraints[constraintId];
-					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints[constraintId]));
+			for (clauseID in newUnsatisfiedConstraints) {
+				if (!unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
+					unsatisfiedConstraintDict[clauseID] = newUnsatisfiedConstraints[clauseID];
+					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints[clauseID]));
 				}
 			}
 			if (isNaN(startingScore)) startingScore = currentScore;
-			if(updateCount++ % 200 == 0)
-				trace("Score: " + currentScore);
 		}
 		
 		public function resetScoring():void
@@ -317,6 +312,7 @@ package constraints
 			var constType:String = result[3];
 			var rhsType:String = result[4];
 			var rhsId:String = result[5];
+			var typeNumArray:Array;
 			
 			var lsuffix:String = "";
 			var rsuffix:String = "";
@@ -329,11 +325,9 @@ package constraints
 			} else if (rhsType == GRP && lhsType == TYPE) {
 				lsuffix = "__" + GRP + "_" + rhsId;
 			} else if (rhsType == VAR && lhsType == C) {
-				var typeNumArray:Array = lhsId.split("_");
-			//	lsuffix = "__" + VAR + "_" + typeNumArray[1];
+				typeNumArray = lhsId.split("_");
 			} else if (rhsType == C && lhsType == VAR) {
-				var typeNumArray:Array = rhsId.split("_");
-			//	lsuffix = "__" + VAR + "_" + typeNumArray[1];
+				typeNumArray = rhsId.split("_");
 			} else if (rhsType == TYPE && lhsType == TYPE) {
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}

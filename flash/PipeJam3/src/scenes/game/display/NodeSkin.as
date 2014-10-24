@@ -192,7 +192,7 @@ package scenes.game.display
 			} else
 			{
 				var q:Quad;
-				if(associatedNode.hasErrorNow)
+				if(associatedNode.hasError())
 				{
 					q = new Quad(20,20,0xff0000);
 				}
@@ -200,14 +200,14 @@ package scenes.game.display
 				{
 					q = new Quad(20,20,0x00ff00);
 				}
-				q.x = q.y = -5;
+	//			q.x = q.y = -5;
 				addChild(q);
 			}
 			if(textureImage)
 				textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
-			for each(var q:Quad in associatedNode.connectors)
+			for each(var q1:Quad in associatedNode.connectors)
 			{
-				addChild(q);
+				addChild(q1);
 			}			
 			
 			if(associatedNode.isLocked)
@@ -225,6 +225,11 @@ package scenes.game.display
 				removeChild(lockedIcon);
 				removeChild(lockedQuad);
 			}
+		}
+		
+		override public function set scaleX(newScale:Number):void
+		{
+			super.scaleX = newScale;
 		}
 		
 		public function disableSkin():void

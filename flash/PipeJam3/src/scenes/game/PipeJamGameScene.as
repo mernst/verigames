@@ -1,6 +1,5 @@
 package scenes.game
 {
-	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
 	import deng.fzip.FZipFile;
@@ -16,7 +15,6 @@ package scenes.game
 	
 	import state.LoadingState;
 	import state.ParseConstraintGraphState;
-	import state.ParseWCNFGraphState;
 	
 	public class PipeJamGameScene extends Scene
 	{

@@ -18,7 +18,6 @@ package scenes.game.display
 		public var parentYOffset:Number;
 		
 		public var skin:EdgeSkin;
-		public var outputConnector:Quad;
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		

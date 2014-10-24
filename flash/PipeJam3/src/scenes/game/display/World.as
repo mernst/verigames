@@ -108,8 +108,8 @@ package scenes.game.display
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
 		
-		var m_backgroundImage:Image;
-		var m_backgroundImageSolving:Image;
+		protected var m_backgroundImage:Image;
+		protected var m_backgroundImageSolving:Image;
 		
 		static protected var m_numWidgetsClicked:int = 0;
 		

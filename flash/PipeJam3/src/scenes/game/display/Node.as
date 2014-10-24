@@ -4,13 +4,13 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import constraints.ClauseConstraint;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
 	
 	import graph.PropDictionary;
 	
 	import starling.display.Quad;
-	import constraints.ClauseConstraint;
 
 
 	public class Node extends GridChild
@@ -20,7 +20,7 @@ package scenes.game.display
 		
 		public var connectors:Vector.<Quad>;
 		
-		var hasErrorNow:Boolean = false;
+		public var _hasError:Boolean = false;
 
 		
 		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
@@ -78,6 +78,22 @@ package scenes.game.display
 			}
 		}
 		
+		override public function scaleSkin(newScaleX:Number, newScaleY:Number):void
+		{
+
+			super.scaleSkin(newScaleX, newScaleY);
+			
+			//check to see if we have an error, and if so, scale our error marker at a lower rate
+			if(_hasError)
+			{
+				var currentWidth:Number = skin.width;
+				skin.scaleX = skin.scaleY = .75 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
+				var newWidth:Number = skin.width;
+				skin.x -= (newWidth-currentWidth)/2;
+				skin.y -= (newWidth-currentWidth)/2;
+			}
+		}
+		
 		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			super.updateSelectionAssignment(_isWide, levelGraph);
@@ -89,20 +105,9 @@ package scenes.game.display
 			}
 		}
 		
-		//looks at each edge, and if there's a conflict, returns true
 		public override function hasError():Boolean
 		{
-			for each(var gameEdgeID:String in connectedEdgeIds)
-			{
-				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				var toNode:Node = edge.toNode;
-				var fromNode:Node = edge.fromNode;
-				
-				//error?
-				if(!fromNode.isNarrow && toNode.isNarrow)
-					return true;
-			}
-			return false;
+			return _hasError;
 		}
 		
 		protected var visitedNodes:Dictionary;
@@ -163,9 +168,8 @@ package scenes.game.display
 	//		var dir:Number = edge.
 			var q:Quad = new Quad(10,10,toColor);
 			q.alpha = .8;
-			q.x =  -5 * Math.cos(rot);
-			q.y = - 5 * Math.sin(rot);
-			trace("rotation", rot, q.x, q.y);
+			q.x =  -5 * Math.cos(rot) + 5;
+			q.y = - 5 * Math.sin(rot) + 5;
 			connectors.push(q);
 
 			
@@ -175,16 +179,18 @@ package scenes.game.display
 		{
 			if(isClause)
 			{
-				trace("add error "+ addError);
-				hasErrorNow = addError;
+				_hasError = addError;
 				setDirty(true);
 			}			
 		}
 		
 		//used for clause type graphs
-		public function isSatisfied():Boolean
+		public function isSatisfied(varIdChanged:String, valueToCheck:Boolean):Boolean
 		{
 			var _isSatisfied:Boolean = false;
+			var clauseConstraint:ClauseConstraint;
+			var narrowValue:Boolean;
+			
 			for each(var gameEdgeID:String in connectedEdgeIds)
 			{
 				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
@@ -194,42 +200,41 @@ package scenes.game.display
 				var fromNodeID:String = fromNode.id;
 				//find conntecting clause which contains from node, check if that combination is satisfied
 				var found:Boolean = false;
-				for each(var clauseConstraint:ClauseConstraint in graphVar.rhsConstraints)
+				for each(clauseConstraint in graphVar.rhsConstraints)
 				{
 					if(clauseConstraint.id.indexOf(fromNodeID) != -1)
 					{
 						found = true;
+						narrowValue = fromNode.isNarrow;
+						if(fromNode.id == varIdChanged)
+							narrowValue = valueToCheck;
 						//if on rhs we want incoming to be narrow
-						if(fromNode.isNarrow)
+						if(narrowValue)
 						{
-							trace(clauseConstraint.id + " happy");
 							return true;
 						}
-						else
-							trace(clauseConstraint.id + " not happy");
 					}
 				}
 				//if we didn't find it, check the lhs constraints
 				if(!found)
 				{
-					for each(var clauseConstraint:ClauseConstraint in graphVar.lhsConstraints)
+					for each(clauseConstraint in graphVar.lhsConstraints)
 					{
 						if(clauseConstraint.id.indexOf(fromNodeID) != -1)
 						{
 							found = true;
+							narrowValue = fromNode.isNarrow;
+							if(fromNode.id == varIdChanged)
+								narrowValue = valueToCheck;
 							//if on lhs we want incoming to be wide
-							if(!fromNode.isNarrow)
+							if(!narrowValue)
 							{
-								trace(clauseConstraint.id + " happy");
 								return true;
 							}
-							else
-								trace(clauseConstraint.id + " not happy");
 						}
 					}
 				}
 			}
-			trace("sad");
 			return false;
 			
 		}

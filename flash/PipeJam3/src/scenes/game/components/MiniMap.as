@@ -265,12 +265,12 @@ package scenes.game.components
 				numConflicts = 0;
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.levelGraph.unsatisfiedConstraintDict) {
-					var constraint:Constraint = currentLevel.levelGraph.constraintsDict[errorId];
-					if (currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
-						var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
+				//	var constraint:Constraint = currentLevel.levelGraph.constraintsDict[errorId];
+				//	if (currentLevel.edgeLayoutObjs.hasOwnProperty(constraint.id)) {
+				//		var edgeLayout:Object = currentLevel.edgeLayoutObjs[constraint.id];
 						//mark the 'to' node to the error dict as the spot of the error
-						nodeErrorDict[edgeLayout.toNode.id] = edgeLayout;
-					}
+						nodeErrorDict[errorId] = errorId;
+				//	}
 				}
 				var nodeDict:Dictionary = currentLevel.nodeLayoutObjs;
 				

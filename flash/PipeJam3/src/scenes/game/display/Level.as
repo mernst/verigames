@@ -10,19 +10,18 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import starling.textures.TextureAtlas;
 	
 	import assets.AssetInterface;
 	
+	import constraints.ClauseConstraint;
 	import constraints.Constraint;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintScoringConfig;
 	import constraints.ConstraintValue;
 	import constraints.ConstraintVar;
+	import constraints.SubtypeConstraint;
 	import constraints.events.ErrorEvent;
 	import constraints.events.VarChangeEvent;
-	import constraints.SubtypeConstraint;
-	import constraints.ClauseConstraint;
 	
 	import deng.fzip.FZip;
 	
@@ -42,7 +41,8 @@ package scenes.game.display
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.MiniMap;
-
+	import scenes.game.display.Node;
+	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -56,6 +56,7 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import system.MaxSatSolver;
 	
@@ -202,6 +203,9 @@ package scenes.game.display
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
 			}
+			else
+				m_targetScore = 1000;
+			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
@@ -1071,7 +1075,7 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			if (tutorialManager) return tutorialManager.getMaxSelectableWidgets();
-			return -1;
+			return 1000;
 		}
 		
 		public function getTargetScore():int
@@ -1402,153 +1406,35 @@ package scenes.game.display
 			//loop through each object
 			for each(var gridChild:GridChild in selectedNodes)
 			{
-				//loop through each edge, checking far end for existence in dict
-				for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
+				if((gridChild is Node) && (gridChild as Node).isClause)
 				{
-					var constraint1Value:int = -1;
-					var constraint2Value:int = -1;
-					var edgeObj:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					var toNode:Node = edgeObj.toNode;
-					var fromNode:Node =edgeObj.fromNode;
-					
-					//figure out which is the other node
-					var nodeToCheck:Node = toNode;
-					if(toNode == gridChild)
-						nodeToCheck = fromNode;
-					
-					//if far end of this edge isn't in selected nodes, then add a constraint acting like it's fixed
-					//this will help the solver return only better scores.
-					if(!nodeToCheck.isSelected)
+					var clauseArray:Array = new Array();
+					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+
+					for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
 					{
-						//deal with constraints to/from unselected nodes
-						if(nodeToCheck == fromNode)
+						var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+						var fromNode:Node = edge.fromNode;
+						
+						var constraintID:int;
+						if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
 						{
-							if(toNode.isEditable)
-							{
-								if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
-								{
-									nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
-									nodeIDToConstraintsTwoWayMap[counter] = toNode;
-									constraint1Value = counter;
-									counter++;
-								}
-								else
-									constraint1Value = nodeIDToConstraintsTwoWayMap[toNode.id];
-								
-								if(!fromNode.isNarrow)
-								{
-									if(toNode.isEditable && !toNode.isLocked)
-									{
-	
-										
-										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint1Value));
-									}
-								}
-							}
+							nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+							nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+							constraintID = counter;
+							counter++;
 						}
 						else
-						{
-							if(fromNode.isEditable)
-							{
-								if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
-								{
-									nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
-									nodeIDToConstraintsTwoWayMap[counter] = fromNode;
-									constraint1Value = counter;
-									counter++;
-								}
-								else
-									constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
-							
-								if(toNode.isNarrow)
-								{
-	
-									
-									if(fromNode.isEditable && !fromNode.isLocked)
-									{
-	
-										
-										constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						//found an edge with both end nodes selected
-						if(fromNode.isEditable && !fromNode.isLocked)
-						{
-							if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
-							{
-								nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
-								nodeIDToConstraintsTwoWayMap[counter] = fromNode;
-								constraint1Value = counter;
-								counter++;
-							}
-							else
-								constraint1Value = nodeIDToConstraintsTwoWayMap[fromNode.id];
-						} 
+							constraintID = nodeIDToConstraintsTwoWayMap[fromNode.id];
 						
-						if(toNode.isEditable && !toNode.isLocked)
-						{
-							if(nodeIDToConstraintsTwoWayMap[toNode.id] == null)
-							{
-								nodeIDToConstraintsTwoWayMap[toNode.id] = counter;
-								nodeIDToConstraintsTwoWayMap[counter] = toNode;
-								constraint2Value = counter;
-								counter++;
-							}
-							else
-								constraint2Value = nodeIDToConstraintsTwoWayMap[toNode.id];
-						}
-						
-						var constraint:String = constraint1Value+"_"+constraint2Value; 
-												
-						//check for duplicates						
-						if(storedConstraints[constraint] == null && CONFLICT_CONSTRAINT_VALUE != 0)
-						{
-							storedConstraints[constraint] = constraint;
-							if(fromNode.isEditable && toNode.isEditable && !fromNode.isLocked && !toNode.isLocked)
-							{
-								constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value, constraint2Value));
-							}
-							else if(fromNode.isEditable && !fromNode.isLocked && (!toNode.isEditable || toNode.isLocked))
-							{
-								if(toNode.isNarrow)
-									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, -constraint1Value));
-							}
-							else if((!fromNode.isEditable || fromNode.isLocked) && toNode.isEditable && !toNode.isLocked)
-							{
-								if(!fromNode.isNarrow)
-									constraintArray.push(new Array(CONFLICT_CONSTRAINT_VALUE, constraint2Value));
-							}
-						}
+						if(gameEdgeID.indexOf('c') == 0)
+							clauseArray.push(constraintID);
+						else
+							clauseArray.push(-constraintID);
+
 					}
 					
-					//do this once for all selected nodes
-					if(toNode.isEditable && !toNode.isLocked && constraint1Value != -1)
-					{
-						if(storedConstraints[constraint1Value] == null)
-						{
-							if(WIDE_NODE_SIZE_CONSTRAINT_VALUE != 0)
-								constraintArray.push(new Array(WIDE_NODE_SIZE_CONSTRAINT_VALUE, constraint1Value));
-							if(NARROW_NODE_SIZE_CONSTRAINT_VALUE != 0)
-								constraintArray.push(new Array(NARROW_NODE_SIZE_CONSTRAINT_VALUE, -constraint1Value));
-							storedConstraints[constraint1Value] = toNode;
-						}
-					}
-					if(fromNode.isEditable && !fromNode.isLocked && constraint2Value != -1)
-					{
-						if(storedConstraints[constraint2Value] == null)
-						{
-							if(WIDE_NODE_SIZE_CONSTRAINT_VALUE != 0)
-								constraintArray.push(new Array(WIDE_NODE_SIZE_CONSTRAINT_VALUE, constraint2Value));
-							if(NARROW_NODE_SIZE_CONSTRAINT_VALUE != 0)
-								constraintArray.push(new Array(NARROW_NODE_SIZE_CONSTRAINT_VALUE, -constraint2Value));
-							storedConstraints[constraint2Value] = fromNode;
-						}
-					}
+					constraintArray.push(clauseArray);
 				}
 			}
 			
