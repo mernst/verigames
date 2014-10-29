@@ -105,6 +105,17 @@ package scenes.game.display
 			}
 		}
 		
+		override public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
+		{
+			super.setDirty(dirtyEdges);
+			
+			if(!isClause && flashChange)
+			{
+				if(skin)
+					skin.flash();
+			}
+		}
+		
 		public override function hasError():Boolean
 		{
 			return _hasError;

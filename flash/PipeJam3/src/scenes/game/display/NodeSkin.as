@@ -6,6 +6,8 @@ package scenes.game.display
 	
 	import constraints.ConstraintValue;
 	
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -13,6 +15,8 @@ package scenes.game.display
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import starling.display.DisplayObjectContainer;
+	import starling.animation.Tween;
 	
 	public class NodeSkin extends Sprite
 	{
@@ -247,6 +251,36 @@ package scenes.game.display
 		public function setNode(_associatedNode:Node):void
 		{
 			associatedNode = _associatedNode;
+		}
+		
+		var saveParent:DisplayObjectContainer;
+		var tween:Tween;
+		var q:Quad;
+		public function flash():void
+		{
+			q = new Quad(50, 50, 0xffff00);
+			if(parent)
+				saveParent = parent.parent;
+			else
+				saveParent = null;
+			if(saveParent)
+			{
+				q.x = x + parent.x + 25;
+				q.y = y + parent.y + 25;
+				saveParent.addChild(q);
+				tween = new Tween(q, 2);
+				tween.fadeTo(0);
+				tween.onComplete = flashComplete;
+				Starling.juggler.add(tween);
+			}
+		}
+		
+		protected function flashComplete():void
+		{
+			q.visible = false;
+			q.parent.removeChild(q); 
+			Starling.juggler.remove(tween);
+			draw();
 		}
 	}
 }

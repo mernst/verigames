@@ -415,14 +415,16 @@ package scenes.game.display
 		
 		private function onSolveSelection():void
 		{
+			//do this first as they might be removed by solveSelection if nothing relevant selected
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
+			if (m_backgroundImage) m_backgroundImage.removeFromParent();
 			if(active_level)
 			{
 				waitIconDisplayed = false;
 				
 				active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
 			}
-			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
-			if (m_backgroundImage) m_backgroundImage.removeFromParent();
+
 		}
 		
 		protected var waitIconDisplayed:Boolean;

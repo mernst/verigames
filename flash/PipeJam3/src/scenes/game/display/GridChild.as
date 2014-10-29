@@ -112,7 +112,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function setDirty(dirtyEdges:Boolean = false):void
+		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
 		{
 			parentGrid.isDirty = true;
 			isDirty = true;
