@@ -17,10 +17,7 @@ package networking
 	//	get the cookie with the express.sid value
 	//  send that to validateSession, to see if it's still a valid session id
 	//	if it is, you will get the player ID number, else null
-	//If you have a valid player ID number, then the fun begins
-	//	first you have to check to see if the player exists in the RA (why log In doesn't add the player to the RA is beyond me)
-	//		If they don't exist, add them
-	//	Then you have to make sure they are active by activating them
+
 	public class PlayerValidation
 	{
 		public static var VERIFY_SESSION:int = 1;
