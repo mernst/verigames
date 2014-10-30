@@ -7,16 +7,16 @@ package scenes.game.display
 	import constraints.ConstraintValue;
 	
 	import starling.animation.Transitions;
+	import starling.animation.Tween;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.display.DisplayObjectContainer;
-	import starling.animation.Tween;
 	
 	public class NodeSkin extends Sprite
 	{
@@ -29,16 +29,22 @@ package scenes.game.display
 		static protected var mAtlas:TextureAtlas;	
 		static protected var DarkGrayCircle:Texture;
 		static protected var LightGrayCircle:Texture;
-		static protected var DarkBlueCircle:Texture;
-		static protected var LightBlueCircle:Texture;
+		static public var DarkBlueCircle:Texture;
+		static public var LightBlueCircle:Texture;
 		static protected var DarkBlueCircleWithOutline:Texture;
 		static protected var LightBlueCircleWithOutline:Texture;
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
 		
+		static protected var mBauhausAtlas:TextureAtlas;	
+		static protected var GreenSquare:Texture;
+		static protected var RedSquare:Texture;
+		
 		protected var lockedIcon:Image;
 		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
+		protected var constraintImage:Image;
+
 		protected var isInitialized:Boolean;
 		
 		static protected var levelAtlas:TextureAtlas;
@@ -146,6 +152,9 @@ package scenes.game.display
 				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
 				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightSelected);
 				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkSelected);
+				mBauhausAtlas = AssetInterface.getTextureAtlas("Game", "NewSkinPNG", "NewSkinXML");
+				RedSquare = mBauhausAtlas.getTexture(AssetInterface.PipeJamSubTexture_RedSquare);
+				GreenSquare = mBauhausAtlas.getTexture(AssetInterface.PipeJamSubTexture_GreenSquare);
 			}
 		}
 		
@@ -195,23 +204,39 @@ package scenes.game.display
 				addChild(textureImage);
 			} else
 			{
-				var q:Quad;
+				if(constraintImage)
+				{
+					removeChild(constraintImage, true);
+				}
 				if(associatedNode.hasError())
 				{
-					q = new Quad(20,20,0xff0000);
+					constraintImage = new Image(RedSquare);
+					
+					if(associatedNode._hadError == false)
+					{
+						//flash if changing
+						flash(0x00ff00);
+					}
+					associatedNode._hadError = true;
 				}
 				else
 				{
-					q = new Quad(20,20,0x00ff00);
+					constraintImage = new Image(GreenSquare);
+					if(associatedNode._hadError == true)
+					{
+						//flash if changing
+						flash(0x00ff00);
+					}
+					associatedNode._hadError = false;
 				}
-	//			q.x = q.y = -5;
-				addChild(q);
+				constraintImage.width = constraintImage.height = constraintImage.width*.5;
+				addChild(constraintImage);
 			}
 			if(textureImage)
 				textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
-			for each(var q1:Quad in associatedNode.connectors)
+			for each(var connectorImage:Image in associatedNode.connectors)
 			{
-				addChild(q1);
+				addChild(connectorImage);
 			}			
 			
 			if(associatedNode.isLocked)
@@ -256,17 +281,17 @@ package scenes.game.display
 		var saveParent:DisplayObjectContainer;
 		var tween:Tween;
 		var q:Quad;
-		public function flash():void
+		public function flash(color:int = 0xffff00):void
 		{
-			q = new Quad(50, 50, 0xffff00);
+			q = new Quad(50, 50, color);
 			if(parent)
 				saveParent = parent.parent;
 			else
 				saveParent = null;
 			if(saveParent)
 			{
-				q.x = x + parent.x + 25;
-				q.y = y + parent.y + 25;
+				q.x = x + parent.x;// + 25;
+				q.y = y + parent.y;// + 25;
 				saveParent.addChild(q);
 				tween = new Tween(q, 2);
 				tween.fadeTo(0);

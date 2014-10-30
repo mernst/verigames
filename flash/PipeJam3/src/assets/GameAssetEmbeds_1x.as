@@ -74,6 +74,12 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.png")]
 		public static const PipeJamLevelSelectSpriteSheetPNG:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/NewSkin.xml", mimeType = "application/octet-stream")]
+		public static const NewSkinXML:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/NewSkin.png")]
+		public static const NewSkinPNG:Class;
+		
 		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamLevelSelectSpriteSheetXML:Class;
 		

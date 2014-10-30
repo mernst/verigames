@@ -97,7 +97,7 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
 		
-		public static const MIN_SCALE:Number = 0.2 / Constants.GAME_SCALE;
+		public static const MIN_SCALE:Number = 0.4 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
