@@ -33,7 +33,6 @@ package scenes.game.components
 	import graph.PropDictionary;
 	
 	import networking.TutorialController;
-	import system.MaxSatSolver;
 	
 	import particle.FanfareParticleSystem;
 	
@@ -61,6 +60,8 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	
+	import system.MaxSatSolver;
 	
 	import utils.XMath;
 	
@@ -94,6 +95,7 @@ package scenes.game.components
 		private var m_selectionUpdated:Boolean = false;
 		private var m_startingTouchPoint:Point;
 		private var m_currentTouchPoint:Point;
+		private var m_scrollEdgePoint:Point;
 		
 		private var m_lastVisibleRefreshViewRect:Rectangle;
 		
@@ -203,7 +205,6 @@ package scenes.game.components
 			PipeJam3.pipeJam3.contextMenu.clipboardItems.paste = true;
 			
 		}
-		private var count:int = 0;
 		private var oldViewRect:Rectangle;
 		private function onEnterFrame(evt:EnterFrameEvent):void
 		{
@@ -220,7 +221,41 @@ package scenes.game.components
 				System.gc();
 				endingMoveMode = false;
 			}
-			count++;
+			//if we are near the edge, scroll
+			var xDelta:Number = 0;
+			var yDelta:Number = 0;
+			if(m_scrollEdgePoint)
+			{
+				if(m_scrollEdgePoint.x < 10)
+				{
+					xDelta = 10 - m_scrollEdgePoint.x;
+				}
+				else if(m_scrollEdgePoint.x > clipRect.width - 10)
+				{
+					xDelta = -10 + (clipRect.width - m_scrollEdgePoint.x);
+				}
+				
+				if(m_scrollEdgePoint.y < 10)
+				{
+					yDelta = 10 - m_scrollEdgePoint.y;
+				} 
+				else if(m_scrollEdgePoint.y > clipRect.height - 10)
+				{
+					yDelta =  -10 + (clipRect.height - m_scrollEdgePoint.y);
+				}
+				
+				if(xDelta != 0 || yDelta != 0)
+				{
+					var viewRect:Rectangle = getViewInContentSpace();
+					var newX:Number = viewRect.x + viewRect.width / 2 - xDelta / content.scaleX;
+					var newY:Number = viewRect.y + viewRect.height / 2 - yDelta / content.scaleY;
+					moveContent(newX, newY);
+					if(currentMode == SELECTING_MODE)
+						handlePaint(m_scrollEdgePoint);
+				}
+				else
+					m_scrollEdgePoint = null;
+			}
 		}
 		
 		public function onGameComponentsCreated():void
@@ -392,6 +427,7 @@ package scenes.game.components
 				 else
 					 location = touches[0].getLocation(this.stage);
 				 movePaintBrush(location);
+				 m_scrollEdgePoint = location;
 			 }
 		}
 
