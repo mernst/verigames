@@ -3,17 +3,17 @@ package scenes.game.components
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.BitmapData;
+	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.ContextMenuEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
+	import flash.ui.ContextMenu;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import scenes.game.display.Node;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -33,12 +33,14 @@ package scenes.game.components
 	import graph.PropDictionary;
 	
 	import networking.TutorialController;
+	import system.MaxSatSolver;
 	
 	import particle.FanfareParticleSystem;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
+	import scenes.game.display.Node;
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
@@ -58,9 +60,9 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
-	import flash.ui.ContextMenu;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -84,6 +86,10 @@ package scenes.game.components
 		private var m_errorTextBubbles:Dictionary = new Dictionary();
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
+		
+		protected var m_paintBrush:Sprite = new Sprite();
+		static public var PAINT_RADIUS:int = 60;
+
 		
 		private var m_selectionUpdated:Boolean = false;
 		private var m_startingTouchPoint:Point;
@@ -132,6 +138,16 @@ package scenes.game.components
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier,0);
 			
+			// Create paintbrush: TODO make higher res circle
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
+			var circleImage:Image = new Image(circleTexture);
+			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
+			circleImage.x = -0.5 * circleImage.width;
+			circleImage.y = -0.5 * circleImage.height;
+			circleImage.alpha = 0.7;
+			m_paintBrush.addChild(circleImage);
+			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -155,7 +171,31 @@ package scenes.game.components
 			var myContextMenu:ContextMenu = new ContextMenu();
 			myContextMenu.clipboardMenu = true;
 			myContextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
-			PipeJam3.pipeJam3.contextMenu = myContextMenu;
+			PipeJam3.pipeJam3.contextMenu = myContextMenu;		
+			
+			installPaintBrush(new Point(width/2, height/2));
+			
+			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
+			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
+		}
+		
+		private function onSolverStarted():void
+		{
+			//start rotating
+			var reverse:Boolean = (Math.random() > .7) ? true : false; //just for variation..?
+			Starling.juggler.tween(m_paintBrush, 2, {
+				repeatCount: 0,
+				reverse: reverse,
+				rotation: 2*Math.PI
+			});
+			
+		}
+		
+		private function onSolverStopped():void
+		{
+			Starling.juggler.removeTweens(m_paintBrush);
+
+			
 		}
 		
 		protected function menuSelectHandler(event:flash.events.Event):void
@@ -172,7 +212,7 @@ package scenes.game.components
 			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
 				m_selectionUpdated = false;
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
-				m_currentLevel.handlePaint(globalCurrentPt);
+				handlePaint(globalCurrentPt);
 			}
 			
 			if(endingMoveMode) //force gc after dragging
@@ -245,7 +285,7 @@ package scenes.game.components
 					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
 				else
 					dispatchEvent(new MenuEvent(MenuEvent.STOP_SOLVER));
-				m_currentLevel.endPaint();
+				endPaint();
 			}
 		}
 		
@@ -273,6 +313,7 @@ package scenes.game.components
 		override protected function onTouch(event:TouchEvent):void
 		{
 			//trace("Mode:" + event.type);
+			var touches:Vector.<Touch>;
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if(currentMode == SELECTING_MODE)
@@ -300,9 +341,9 @@ package scenes.game.components
 			}
 			else if (event.getTouches(this, TouchPhase.BEGAN).length || event.getTouches(this, TouchPhase.MOVED).length)
 			{
-				var touches:Vector.<Touch> = event.getTouches(this, TouchPhase.BEGAN);
+				touches = event.getTouches(this, TouchPhase.BEGAN);
 				if (!touches.length) touches = event.getTouches(this, TouchPhase.MOVED);
-				if(event.shiftKey)
+				if(!event.shiftKey)
 				{
 					if (m_currentLevel && m_currentLevel.getAutoSolveAllowed())
 					{
@@ -312,7 +353,7 @@ package scenes.game.components
 							if (currentMode == MOVING_MODE) endMoveMode();
 							currentMode = SELECTING_MODE;
 							m_startingTouchPoint = touches[0].getPreviousLocation(this);
-							if (m_currentLevel) m_currentLevel.beginPaint();
+							if (m_currentLevel) beginPaint();
 						}
 						m_currentTouchPoint = touches[0].getLocation(this);
 						m_selectionUpdated = true;
@@ -320,6 +361,7 @@ package scenes.game.components
 				}
 				else
 				{
+					hidePaintBrush();
 					if (currentMode != SELECTING_MODE)
 					{
 						// Don't allow user to go straight from painting to moving with shift, if 
@@ -340,9 +382,17 @@ package scenes.game.components
 				}
 			}
 			
-			// enable this code to see when you're hovering over the object
-			// touch = event.getTouch(this, TouchPhase.HOVER);
-			// alpha = touch ? 0.8 : 1.0;
+			// see if the mouse has moved
+			 var touch:Touch = event.getTouch(this, TouchPhase.HOVER);
+			 if(touch || touches)
+			 {
+				 var location:Point;
+				 if(touch)
+				 	location = touch.getLocation(this.stage);
+				 else
+					 location = touches[0].getLocation(this.stage);
+				 movePaintBrush(location);
+			 }
 		}
 
 		private function onMouseWheel(evt:MouseEvent):void
@@ -516,6 +566,8 @@ package scenes.game.components
 		private function onRemovedFromStage():void
 		{
 			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+			removeEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
+			removeEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
 		}
 		
 		override public function dispose():void
@@ -557,6 +609,9 @@ package scenes.game.components
 			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
 			switch(event.keyCode)
 			{
+				case Keyboard.SHIFT:
+					hidePaintBrush();
+					break;
 				case Keyboard.TAB:
 					if (getPanZoomAllowed() && m_currentLevel) {
 						var conflictLoc:Point = m_currentLevel.getNextConflictLocation(!event.shiftKey);
@@ -649,6 +704,19 @@ package scenes.game.components
 			{
 				endSelectMode();
 				currentMode = RELEASE_SHIFT_MODE; // this will reset on next touch event
+			}
+			switch(event.keyCode)
+			{
+				case Keyboard.SHIFT:
+					showPaintBrush();
+					break;
+				case Keyboard.NUMBER_1:
+				case Keyboard.NUMBER_2:
+				case Keyboard.NUMBER_3:
+				case Keyboard.NUMBER_4:
+				case Keyboard.NUMBER_5:
+					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
+					break;
 			}
 		}
 		
@@ -1178,6 +1246,64 @@ package scenes.game.components
 			contentBarrier.alpha = 0.01;
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier, 0);
+		}
+		
+		public function beginPaint():void
+		{
+			//trace("beginPaint()");
+			m_currentLevel.unselectAll();
+		}
+		
+		public function installPaintBrush(globPt:Point):void
+		{
+			//trace("handlePaint(", globPt, ")");
+			if (!parent) return;
+			m_paintBrush.scaleX = .5;
+			m_paintBrush.scaleY = .5;
+			var localPt:Point = this.globalToLocal(globPt);
+			m_paintBrush.x = localPt.x;
+			m_paintBrush.y = localPt.y;
+			addChild(m_paintBrush);
+			m_paintBrush.visible = true;
+		}
+		
+		private function setPaintBrushSize(size:int):void
+		{
+			m_paintBrush.scaleX = m_paintBrush.scaleY = size*.20;
+			
+		}
+		
+		
+		public function movePaintBrush(pt:Point):void
+		{
+			var localPt:Point = globalToLocal(pt);
+			m_paintBrush.x = localPt.x;
+			m_paintBrush.y = localPt.y;
+		}
+		
+		public function showPaintBrush():void
+		{
+			m_paintBrush.visible = true;
+		}
+		
+		public function hidePaintBrush():void
+		{
+			m_paintBrush.visible = false;
+		}
+		
+		public function handlePaint(globPt:Point):void
+		{
+			var localPt:Point = m_currentLevel.globalToLocal(globPt);
+			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX/content.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY/content.scaleY;
+			
+			m_currentLevel.selectNodes(localPt, dX, dY);
+		}
+		
+		public function endPaint():void
+		{
+			//trace("endPaint()");
+			//m_paintBrush.removeFromParent();
 		}
 	}
 }

@@ -71,7 +71,7 @@ package scenes.game.display
 	 */
 	public class World extends BaseComponent
 	{
-		protected var edgeSetGraphViewPanel:GridViewPanel;
+		public var edgeSetGraphViewPanel:GridViewPanel;
 		public var gameControlPanel:GameControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;

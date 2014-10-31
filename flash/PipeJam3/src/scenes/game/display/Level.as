@@ -43,6 +43,7 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.display.Node;
 	
+	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -135,9 +136,7 @@ package scenes.game.display
 		
 		static public var GRID_SIZE:int = 500;
 		static public var NUM_NODES_TO_SELECT:int = 75;
-		
-		static public var PAINT_RADIUS:int = 60;
-		
+				
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
 		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
@@ -154,8 +153,6 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
-		
-		protected var m_paintBrush:Sprite = new Sprite();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -209,16 +206,6 @@ package scenes.game.display
 			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
-			
-			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
-			var circleImage:Image = new Image(circleTexture);
-			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
-			circleImage.x = -0.5 * circleImage.width;
-			circleImage.y = -0.5 * circleImage.height;
-			circleImage.alpha = 0.7;
-			m_paintBrush.addChild(circleImage);
 			
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
@@ -1242,53 +1229,7 @@ package scenes.game.display
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
-		public function beginPaint():void
-		{
-			//trace("beginPaint()");
-			unselectAll();
-		}
-		
-		public function handlePaint(globPt:Point):void
-		{
-			//trace("handlePaint(", globPt, ")");
-			if (!parent) return;
-			m_paintBrush.scaleX = 1.0 / parent.scaleX / scaleX;
-			m_paintBrush.scaleY = 1.0 / parent.scaleY / scaleY;
-			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrush.x = localPt.x;
-			m_paintBrush.y = localPt.y;
-			addChild(m_paintBrush);
-			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX;
-			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY;
-			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
-			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
-			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
-			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
-			var selectionChanged:Boolean = false;
-			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
-			{
-				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
-				{
-					var gridName:String = i + "_" + j;
-					//trace("gridName: ", gridName);
-					if(gridSystemDict[gridName] is GridSquare)
-					{
-						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
-						//thisGrid.showDebugQuad();
-						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
-						selectionChanged = (selectionChanged || thisGridSelectionChanged);
-					}
-				}
-			}
-			//trace("Paint select changed:" + selectionChanged);
-			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
-		}
-		
-		public function endPaint():void
-		{
-			//trace("endPaint()");
-			m_paintBrush.removeFromParent();
-		}
+
 		
 		public function unselectAll():void
 		{
@@ -1340,7 +1281,7 @@ package scenes.game.display
 		
 		public var loopcount:int = 0;
 		public var looptimer:Timer;
-		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
+		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
 			// vvvv
@@ -1366,7 +1307,7 @@ package scenes.game.display
 				}
 				
 				// if we make it this far start over
-			//trace("new loop", loopcount);
+				//trace("new loop", loopcount);
 				looptimer = new Timer(1000, 1);
 				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
 				looptimer.start();
@@ -1549,6 +1490,7 @@ package scenes.game.display
 		{
 			m_inSolver = true;
 			MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
@@ -1594,6 +1536,7 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 			//trace("time elapsed", new Date().getTime()-solverRunningTime);
 			//trace("num conflicts", MiniMap.numConflicts);
 			//do it again?
@@ -1720,6 +1663,32 @@ package scenes.game.display
 			}
 			
 			return true;
+		}
+		
+		public function selectNodes(localPt:Point, dX:Number, dY:Number):void
+		{
+			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
+			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
+			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
+			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
+			var selectionChanged:Boolean = false;
+			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
+			{
+				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
+				{
+					var gridName:String = i + "_" + j;
+					//trace("gridName: ", gridName);
+					if(gridSystemDict[gridName] is GridSquare)
+					{
+						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
+						//thisGrid.showDebugQuad();
+						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
+						selectionChanged = (selectionChanged || thisGridSelectionChanged);
+					}
+				}
+			}
+			//trace("Paint select changed:" + selectionChanged);
+			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 	}
 }

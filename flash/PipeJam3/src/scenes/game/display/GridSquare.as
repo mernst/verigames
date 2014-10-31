@@ -82,8 +82,9 @@ package scenes.game.display
 			var gridChild:GridChild = findNodeAtPoint(loc);
 			if(gridChild)
 			{
-				if(!event.shiftKey)
+				if(event.shiftKey)
 				{
+					World.m_world.edgeSetGraphViewPanel.hidePaintBrush();
 					if(!gridChild.isLocked)
 					{
 					}
