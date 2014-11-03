@@ -180,26 +180,7 @@ package scenes.game.components
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
 		}
-		
-		private function onSolverStarted():void
-		{
-			//start rotating
-			var reverse:Boolean = (Math.random() > .7) ? true : false; //just for variation..?
-			Starling.juggler.tween(m_paintBrush, 2, {
-				repeatCount: 0,
-				reverse: reverse,
-				rotation: 2*Math.PI
-			});
-			
-		}
-		
-		private function onSolverStopped():void
-		{
-			Starling.juggler.removeTweens(m_paintBrush);
 
-			
-		}
-		
 		protected function menuSelectHandler(event:flash.events.Event):void
 		{
 			PipeJam3.pipeJam3.contextMenu.clipboardItems.paste = true;
@@ -246,6 +227,9 @@ package scenes.game.components
 				
 				if(xDelta != 0 || yDelta != 0)
 				{
+					//slow it down some
+					xDelta /= 2;
+					yDelta /= 2;
 					var viewRect:Rectangle = getViewInContentSpace();
 					var newX:Number = viewRect.x + viewRect.width / 2 - xDelta / content.scaleX;
 					var newY:Number = viewRect.y + viewRect.height / 2 - yDelta / content.scaleY;
@@ -1341,5 +1325,29 @@ package scenes.game.components
 			//trace("endPaint()");
 			//m_paintBrush.removeFromParent();
 		}
+		
+		
+		private function onSolverStarted():void
+		{
+			//start rotating
+			var reverse:Boolean = false; //(Math.random() > .7) ? true : false; //just for variation..?
+			Starling.juggler.tween(m_paintBrush, 4, {
+				repeatCount: 0,
+				reverse: reverse,
+				rotation: 2*Math.PI
+			});
+		}
+		
+		private function onSolverStopped():void
+		{
+			Starling.juggler.removeTweens(m_paintBrush);
+			Starling.juggler.tween(m_paintBrush, 2, {
+				repeatCount: 1,
+				reverse: false,
+				rotation: 2*Math.PI,
+				delay: .30
+			});
+		}
+		
 	}
 }
