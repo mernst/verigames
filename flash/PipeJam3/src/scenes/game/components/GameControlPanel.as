@@ -273,7 +273,7 @@ package scenes.game.components
 		
 		public function stopSolveAnimation():void
 		{
-			trace("stop animation");
+//			trace("stop animation");
 			inSolver = false;
 			if (m_currentLevel) m_currentLevel.unselectAll();
 			m_solveButton.setButtonText("Solve Selection");

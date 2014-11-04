@@ -130,7 +130,7 @@ package scenes.game.display
 			if(!fromNode.isNarrow && toNode.isNarrow)
 				toColor = 0xff0000;
 			
-			skin.setColor(toColor, fromColor, fromColorComplement);
+			skin.setColor();
 			
 			if(isHighlighted)
 			{

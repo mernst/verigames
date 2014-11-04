@@ -17,8 +17,16 @@ import sys
 	"c:4 <= var:78307"
  ]
 }
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+		
 #for cnf files, need to make a wcnf version
-def convertFile(infileName, outfileName):
+def convertCNFFile(infileName, outfileName):
 
 	infile = open(infileName, 'r')
 	outfile = open(outfileName, 'w')
@@ -27,10 +35,10 @@ def convertFile(infileName, outfileName):
 	outfile.write("{\n\"id\": \"" + name[0] + "\",\"version\": 1,\n\"default\": \"type:1\",\n\"scoring\": {\"variables\": {\"type:0\": 0, \"type:1\": 1}, \"constraints\": 100},\n\"variables\":{\n},\n\"constraints\":[\n")
 	
 	addComma = False
-	lineCount = 0
+	lineCount = 1
 	for line in infile:
-		if lineCount > 0:
-			lineArray = line.split(' ')
+		lineArray = line.split(' ')
+		if is_number(lineArray[0]):
 
 			for	x in range(0, len(lineArray)-1):
 				if addComma:
@@ -40,7 +48,37 @@ def convertFile(infileName, outfileName):
 					outfile.write("\"c:" + str(lineCount) + " <= var:" + lineArray[x] + "\"")
 				else:
 					outfile.write("\"var:" + str(-int(lineArray[x])) + " <= c:" + str(lineCount) + "\"")
-		lineCount = lineCount + 1
+			lineCount = lineCount + 1
+
+	print str(lineCount)
+	outfile.write("\n]\n}")
+	
+#for cnf files, need to make a wcnf version
+def convertWCNFFile(infileName, outfileName):
+
+	infile = open(infileName, 'r')
+	outfile = open(outfileName, 'w')
+	rootname = infileName.split('/')
+	name = rootname[len(rootname)-1].split('.')
+	outfile.write("{\n\"id\": \"" + name[0] + "\",\"version\": 1,\n\"default\": \"type:1\",\n\"scoring\": {\"variables\": {\"type:0\": 0, \"type:1\": 1}, \"constraints\": 100},\n\"variables\":{\n},\n\"constraints\":[\n")
+	
+	addComma = False
+	lineCount = 1
+	for line in infile:
+
+		lineArray = line.split(' ')
+		if is_number(lineArray[0]):
+			for	x in range(1, len(lineArray)-1):
+				val = lineArray[x].strip()
+				if val is not "":
+					if addComma:
+						outfile.write(',\n')
+					addComma = True		
+					if int(val) > 0:
+						outfile.write("\"c:" + str(lineCount) + " <= var:" + val + "\"")
+					else:
+						outfile.write("\"var:" + str(-int(val)) + " <= c:" + str(lineCount) + "\"")
+			lineCount = lineCount + 1
 
 				
 	outfile.write("\n]\n}")
@@ -58,6 +96,9 @@ if __name__ == "__main__":
 
 infileName = sys.argv[1]
 outfileName = sys.argv[2]
-	
-convertFile(infileName, outfileName)
+
+if "wcnf" in infileName:	
+	convertWCNFFile(infileName, outfileName)
+else:
+	convertCNFFile(infileName, outfileName)
 	

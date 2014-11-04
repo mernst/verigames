@@ -82,8 +82,9 @@ package scenes.game.display
 			var gridChild:GridChild = findNodeAtPoint(loc);
 			if(gridChild)
 			{
-				if(!event.shiftKey)
+				if(event.shiftKey)
 				{
+					World.m_world.edgeSetGraphViewPanel.hidePaintBrush();
 					if(!gridChild.isLocked)
 					{
 					}
@@ -446,7 +447,7 @@ package scenes.game.display
 				var fromNode:Node = World.m_world.active_level.nodeLayoutObjs[ edge.fromNode.id];
 				
 				(edge.skin.parent as Sprite).unflatten();
-				setupLine(fromNode, toNode, edge.skin, true);
+		//		setupLine(fromNode, toNode, edge.skin, true);
 				(edge.skin.parent as Sprite).flatten();
 			}
 			edge.isDirty = false;
@@ -464,7 +465,7 @@ package scenes.game.display
 			
 			//draw the quad flat, rotate later
 			var lineQuad:Quad = new Triangle(hyp, LINE_THICKNESS);
-			setupLine(fromNode, toNode, lineQuad, true);
+		//	setupLine(fromNode, toNode, lineQuad, true);
 			//trace("drawing Line from ", fromNodeObj.id, " -> ", toNodeObj.id);
 			var otherEdgeId:String = toNode.id + " -> " + fromNode.id;
 			var otherEdgeObj:Object = World.m_world.active_level.edgeLayoutObjs[otherEdgeId];

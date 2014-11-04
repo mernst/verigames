@@ -62,6 +62,13 @@ package assets
 		public static const PipeJamSubTexture_BorderGrayDark:String = "GrayDarkEnd";// "BorderGrayDark";
 		public static const PipeJamSubTexture_BorderGrayLight:String = "GrayLightEnd";//"BorderGrayLight";
 		
+		public static const PipeJamSubTexture_RedSquare:String = "ErrorConstraint";
+		public static const PipeJamSubTexture_GreenSquare:String = "SatisfiedConstraint";
+		public static const PipeJamSubTexture_LightEdge:String = "LightEdge";
+		public static const PipeJamSubTexture_DarkEdge:String = "DarkEdge";
+		public static const PipeJamSubTexture_LightConnector:String = "LightConnector";
+		public static const PipeJamSubTexture_DarkConnector:String = "DarkConnector";
+		
 		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
 		public static const PipeJamSubTexture_BlueDarkBoxSelectPrefix:String = "BlueDarkBoxSelect";
 		public static const PipeJamSubTexture_BlueDarkStart:String = "BlueDarkStart";

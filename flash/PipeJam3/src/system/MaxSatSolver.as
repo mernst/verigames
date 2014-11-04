@@ -7,6 +7,9 @@ package system
 		static private var m_mgr:MaxSatManager = new MaxSatManager();
 		static private var unsat_best:int = -1;
 		
+		static public var SOLVER_STARTED:String = "solver_started";
+		static public var SOLVER_STOPPED:String = "solver_stopped";
+		
 		public static function test():void
 		{
 			run_solver([

@@ -10,6 +10,7 @@ package scenes.game.display
 	
 	import graph.PropDictionary;
 	
+	import starling.display.Image;
 	import starling.display.Quad;
 
 
@@ -21,7 +22,7 @@ package scenes.game.display
 		public var connectors:Vector.<Quad>;
 		
 		public var _hasError:Boolean = false;
-
+		public var _hadError:Boolean = false;
 		
 		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
 		{
@@ -87,7 +88,7 @@ package scenes.game.display
 			if(_hasError)
 			{
 				var currentWidth:Number = skin.width;
-				skin.scaleX = skin.scaleY = .75 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
+				skin.scaleX = skin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
 				var newWidth:Number = skin.width;
 				skin.x -= (newWidth-currentWidth)/2;
 				skin.y -= (newWidth-currentWidth)/2;
@@ -105,9 +106,25 @@ package scenes.game.display
 			}
 		}
 		
+		override public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
+		{
+			super.setDirty(dirtyEdges);
+			
+			if(!isClause && flashChange)
+			{
+				if(skin)
+					skin.flash();
+			}
+		}
+		
 		public override function hasError():Boolean
 		{
 			return _hasError;
+		}
+		
+		public function hadError():Boolean
+		{
+			return _hadError;
 		}
 		
 		protected var visitedNodes:Dictionary;
@@ -162,17 +179,15 @@ package scenes.game.display
 		
 		public function addConnector(edge:Edge):void
 		{
-			var toColor:int = NodeSkin.getColor(this, edge);
 			var rot:Number = edge.skin.rotation;
 			
 	//		var dir:Number = edge.
-			var q:Quad = new Quad(10,10,toColor);
-			q.alpha = .8;
-			q.x =  -5 * Math.cos(rot) + 5;
-			q.y = - 5 * Math.sin(rot) + 5;
-			connectors.push(q);
-
-			
+			var connector:Image =  edge.skin.getConnectorTexture();
+			connector.width = connector.height = 10;
+			connector.alpha = .8;
+			connector.x =  -5 * Math.cos(rot) + 5;
+			connector.y = - 5 * Math.sin(rot) + 5;
+			connectors.push(connector);
 		}
 		
 		public function addError(addError:Boolean):void

@@ -43,6 +43,7 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.display.Node;
 	
+	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -135,10 +136,9 @@ package scenes.game.display
 		
 		static public var GRID_SIZE:int = 500;
 		static public var NUM_NODES_TO_SELECT:int = 75;
-		
-		static public var PAINT_RADIUS:int = 60;
-		
+				
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
+		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
 		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
 		static public var NARROW_NODE_SIZE_CONSTRAINT_VALUE:Number = 0.0;
 		public var currentGridDict:Dictionary;
@@ -153,8 +153,6 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
-		
-		protected var m_paintBrush:Sprite = new Sprite();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -208,16 +206,6 @@ package scenes.game.display
 			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
-			
-			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
-			var circleImage:Image = new Image(circleTexture);
-			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
-			circleImage.x = -0.5 * circleImage.width;
-			circleImage.y = -0.5 * circleImage.height;
-			circleImage.alpha = 0.7;
-			m_paintBrush.addChild(circleImage);
 			
 			gridSystemDict = new Dictionary;
 			currentGridDict = new Dictionary;
@@ -548,6 +536,7 @@ package scenes.game.display
 				maxX = Math.max(maxX, gridChild.bb.right);
 				maxY = Math.max(maxY, gridChild.bb.bottom);
 				n++;
+
 			}
 			for (var groupId:String in m_levelLayoutObj["layout"]["groups"])
 			{
@@ -1240,53 +1229,7 @@ package scenes.game.display
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
-		public function beginPaint():void
-		{
-			//trace("beginPaint()");
-			unselectAll();
-		}
-		
-		public function handlePaint(globPt:Point):void
-		{
-			//trace("handlePaint(", globPt, ")");
-			if (!parent) return;
-			m_paintBrush.scaleX = 1.0 / parent.scaleX / scaleX;
-			m_paintBrush.scaleY = 1.0 / parent.scaleY / scaleY;
-			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrush.x = localPt.x;
-			m_paintBrush.y = localPt.y;
-			addChild(m_paintBrush);
-			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX;
-			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY;
-			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
-			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
-			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
-			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
-			var selectionChanged:Boolean = false;
-			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
-			{
-				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
-				{
-					var gridName:String = i + "_" + j;
-					//trace("gridName: ", gridName);
-					if(gridSystemDict[gridName] is GridSquare)
-					{
-						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
-						//thisGrid.showDebugQuad();
-						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
-						selectionChanged = (selectionChanged || thisGridSelectionChanged);
-					}
-				}
-			}
-			//trace("Paint select changed:" + selectionChanged);
-			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
-		}
-		
-		public function endPaint():void
-		{
-			//trace("endPaint()");
-			m_paintBrush.removeFromParent();
-		}
+
 		
 		public function unselectAll():void
 		{
@@ -1338,7 +1281,7 @@ package scenes.game.display
 		
 		public var loopcount:int = 0;
 		public var looptimer:Timer;
-		//this is a test robot. It will find a conflict, select neighboring nodes, and then solve that area, and repeat
+		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
 			// vvvv
@@ -1364,7 +1307,7 @@ package scenes.game.display
 				}
 				
 				// if we make it this far start over
-			//trace("new loop", loopcount);
+				//trace("new loop", loopcount);
 				looptimer = new Timer(1000, 1);
 				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
 				looptimer.start();
@@ -1403,6 +1346,8 @@ package scenes.game.display
 			var counter:int = 1;
 			constraintArray = new Array;
 			initvarsArray = new Array;
+			var directNodeArray:Array = new Array;
+			var directEdgeDict:Dictionary = new Dictionary
 			//loop through each object
 			for each(var gridChild:GridChild in selectedNodes)
 			{
@@ -1411,10 +1356,13 @@ package scenes.game.display
 					var clauseArray:Array = new Array();
 					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
 
+					//find all variables connected to the constraint, and add them to the array
 					for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
 					{
 						var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						var fromNode:Node = edge.fromNode;
+						
+						directEdgeDict[gameEdgeID] = edge;
 						
 						var constraintID:int;
 						if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
@@ -1427,17 +1375,95 @@ package scenes.game.display
 						else
 							constraintID = nodeIDToConstraintsTwoWayMap[fromNode.id];
 						
+						//if the constraint starts from the clause, it's a positive var, else it's negative.
 						if(gameEdgeID.indexOf('c') == 0)
 							clauseArray.push(constraintID);
 						else
 							clauseArray.push(-constraintID);
-
+						
+						directNodeArray.push(fromNode);
+						
 					}
-					
 					constraintArray.push(clauseArray);
 				}
 			}
-			
+
+			//now, find all the other constraints associated with the directly connected variables,
+			//add the nodes connected to those constraints as fixed values,
+			//so the score doesn't go down.
+			for each(var directNode:Node in directNodeArray)
+			{
+				for each(var conEdgeID:String in directNode.connectedEdgeIds)
+				{
+					//have we already dealt with this edge?
+					if(directEdgeDict[conEdgeID])
+						continue;
+					
+					var conEdge:Edge = World.m_world.active_level.edgeLayoutObjs[conEdgeID];
+					directEdgeDict[conEdgeID] = conEdge;
+					
+					var nextLayerClause:Node = conEdge.toNode;
+					
+					//check to see if this clause is satisfied by the remaining connections, and if it is, ignore it
+					var satisfied:Boolean = false;
+					var usedEdgeArray:Array = new Array;
+					for each(var nextLayerEdgeID:String in nextLayerClause.connectedEdgeIds)
+					{				
+						if(directEdgeDict[nextLayerEdgeID])
+						{
+							usedEdgeArray.push(nextLayerEdgeID);
+							continue;
+						}
+						var nextLayerEdge:Edge = World.m_world.active_level.edgeLayoutObjs[nextLayerEdgeID];
+						var nextLayerVar:Node = nextLayerEdge.fromNode;
+						
+						if(nextLayerEdgeID.indexOf('c') == 0 && !nextLayerVar.isNarrow)
+						{
+							satisfied = true;
+							break;
+						}
+						else if(nextLayerVar.isNarrow)
+						{
+							satisfied = true;
+							break;
+						}
+					}
+						
+					//follow these out one more layer
+					if(!satisfied)
+					{
+						clauseArray = new Array();
+						clauseArray.push(FIXED_CONSTRAINT_VALUE);
+					
+						for each(var edgeID:String in usedEdgeArray)
+						{
+							var nextLayerEdge1:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
+							var varArray:Array = new Array();
+							varArray.push(FIXED_CONSTRAINT_VALUE);
+														
+							var nextLevelConstraintID:int;
+							if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = nextLayerVar1;
+								nextLevelConstraintID = counter;
+								counter++;
+							}
+							else
+								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[nextLayerVar1.id];
+							
+							if(edgeID.indexOf('c') == 0)
+								clauseArray.push(nextLevelConstraintID);
+							else
+								clauseArray.push(-nextLevelConstraintID);
+						}
+						
+						constraintArray.push(clauseArray);
+					}
+				}
+			}
+	
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1449,23 +1475,27 @@ package scenes.game.display
 					else
 						initvarsArray.push(1);
 				}
+
 				//build in a delay to allow UI to change
 				World.m_world.showSolverState(true);
 				timer = new Timer(500,1);
 				timer.addEventListener(TimerEvent.TIMER, solverStartCallback);
 				timer.start();
 			}
+			else //just end
+				doneCallback("");
 		}
 		
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
 			MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var nodeUpdated:Boolean = false;
+			var someNodeUpdated:Boolean = false;
 			//trace("update", unsat_weight);
 			if(	m_inSolver == false) //got marked done early
 				return;
@@ -1474,19 +1504,25 @@ package scenes.game.display
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
+				var nodeUpdated:Boolean = false;
 				if(!node.isLocked)
 				{
 					var constraintVar:ConstraintVar = node["graphVar"];
-					node.setDirty(true);
+					var currentVal:Boolean = node.isNarrow;
 					node.isNarrow = true;
 					if(vars[ii] == 1)
 						node.isNarrow = false;
-					if(constraintVar) 
-						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
-					nodeUpdated = true; 
+					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
+					nodeUpdated = currentVal != node.isNarrow; 
+					if(currentVal != node.isNarrow)
+					{
+						node.setDirty(true, true);
+						if(constraintVar) 
+							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+					}
 				}
 			}
-			if(nodeUpdated)
+			if(someNodeUpdated)
 				onWidgetChange();
 		}
 		
@@ -1500,6 +1536,7 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			System.gc();
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 			//trace("time elapsed", new Date().getTime()-solverRunningTime);
 			//trace("num conflicts", MiniMap.numConflicts);
 			//do it again?
@@ -1626,6 +1663,32 @@ package scenes.game.display
 			}
 			
 			return true;
+		}
+		
+		public function selectNodes(localPt:Point, dX:Number, dY:Number):void
+		{
+			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
+			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
+			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
+			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
+			var selectionChanged:Boolean = false;
+			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
+			{
+				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
+				{
+					var gridName:String = i + "_" + j;
+					//trace("gridName: ", gridName);
+					if(gridSystemDict[gridName] is GridSquare)
+					{
+						var thisGrid:GridSquare = gridSystemDict[gridName] as GridSquare;
+						//thisGrid.showDebugQuad();
+						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
+						selectionChanged = (selectionChanged || thisGridSelectionChanged);
+					}
+				}
+			}
+			//trace("Paint select changed:" + selectionChanged);
+			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 	}
 }

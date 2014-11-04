@@ -1,16 +1,31 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
+	
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
+	import starling.display.Image;
 	
-	public class EdgeSkin extends Quad
+	public class EdgeSkin extends Sprite
 	{
 		public var parentEdge:Edge;
+		static protected var mAtlas:TextureAtlas;	
+		static protected var DarkConnector:Texture;
+		static protected var LightConnector:Texture;
 		
-		public function EdgeSkin(width:Number, height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
+		protected var skinHeight:Number;
+		protected var skinWidth:Number;
+		
+		protected var textureImage:Image;
+		
+		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
 		{
-			super(width, height, color, premultipliedAlpha);
+//			super(width, height, color, premultipliedAlpha);
+			skinHeight = _height;
+			skinWidth = _width;
 			
 			parentEdge = _parentEdge;
 			//move position 1 to make an isoceles triangle
@@ -18,18 +33,40 @@ package scenes.game.display
 //			//Move vertex 2 to the center of the from side, 3 to the old 2 position
 //			mVertexData.setPosition(2, -3, height/2);
 //			mVertexData.setPosition(3, 0, height);
-			mVertexData.setUniformColor(color);
+//			mVertexData.setUniformColor(color);
 			
-			onVertexDataChanged();
+//			onVertexDataChanged();
+			mAtlas = AssetInterface.getTextureAtlas("Game", "NewSkinPNG", "NewSkinXML");
+			DarkConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
+			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_DarkConnector);
 		}
 		
-		public function setColor(toColor:uint, fromColor:uint, fromColorComplement:uint):void
+		public function setColor():void
 		{
-			setVertexColor(0, fromColorComplement);
-			setVertexColor(1, toColor);
-			setVertexColor(2, fromColor);
-			setVertexColor(3, toColor);
-
+			if(textureImage)
+			{
+				removeChild(textureImage, true);
+			}
+			
+			if (parentEdge.fromNode.isNarrow)
+			{
+				textureImage = new Image(LightConnector);
+			}
+			else
+			{
+				textureImage = new Image(DarkConnector);
+			}
+			textureImage.width = skinWidth;
+			textureImage.height = skinHeight;
+			addChild(textureImage);
+		}
+		
+		public function getConnectorTexture():Image
+		{
+			if(parentEdge.graphConstraint.lhs.id.indexOf('c') == 0)
+				return new Image(DarkConnector);
+			else
+				return new Image(LightConnector);
 		}
 		
 		public function setHighlight(highlightColor:uint):void
