@@ -71,7 +71,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_limit):
             if node.get('x') is None or node.get('y') is None:
                 print 'Warning! Node found without layout info: %s' % node_id
                 continue
-            node_id_ = node_id.replace(':', '_')
+            node_id_ = node_id.replace(':', '_').replace('clause_', 'c_')
             out.write('%s"%s":{"x":%s,"y":%s}' % (comma, node_id_, node.get('x'), node.get('y')))
             comma = ',\n      '
         out.write('\n     }\n  }\n}')

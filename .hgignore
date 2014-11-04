@@ -348,3 +348,13 @@ flash/PipeJam3/.project
 flash/PipeJam3/Verigame.lxml
 flash/PipeJam3/src/CircleTest.as
 flash/PipeJam3/src/display/ColorImage.as
+flash/level_creation_scripts/cnstr/hadoop-v8-constraints_dot_files/
+flash/level_creation_scripts/cnstr/hadoop-v8-constraints_game_files
+flash/level_creation_scripts/networkx-1.9.1
+flash/PipeJam3/SampleWorlds/p_000307_00002500.zip
+flash/PipeJam3/SampleWorlds/p_000307_00002500Assignments.zip
+flash/PipeJam3/SampleWorlds/p_000307_00002500Layout.zip
+flash/level_creation_scripts/cnstr/hadoop-v8-constraints.graph
+flash/level_creation_scripts/cnstr/hadoop-v8-constraints.graphs
+flash/level_creation_scripts/cnstr/hadoop-v8-constraints.json
+hadoop-v8-constraints.json
