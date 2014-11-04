@@ -1,48 +1,35 @@
 import ijson, json, re, os
 
 NODE_HEIGHT = 1.0
+
+NODE_RADIUS = 0.15
+CLAUSE_RADIUS = 0.15
+
 TYPE_0 = 'type:0'
 TYPE_1 = 'type:1'
 DEFAULT_TYPE = TYPE_1
 
-class Node:
-	def __init__(self, id, isconstant):
+class BaseNode:
+	def __init__(self, id, rad):
 		self.id = id
-		self.isconstant = isconstant
-		self.type_value = None
-		if id[:6] == 'type_0':
-			self.type_value = TYPE_0
-		elif id[:6] == 'type_1':
-			self.type_value = TYPE_1		
-		self.inputs = {}
-		self.outputs = {}
-		self.ninputs = 0
-		self.noutputs = 0
-		self.grouped_nodes = {} # if this node is a group, member nodes are stored here
-		self.sortedinputs = None
-		self.sortedoutputs = None
+		self.width = rad
+		self.height = rad
 		self.pt = None
-		self.width = None
-		self.height = NODE_HEIGHT
+		self.score = None
+		self._current_score = None
+		self.grouped_nodes = {} # if this node is a group, member nodes are stored here
+
+class Node(BaseNode):
+	def __init__(self, id):
+		BaseNode.__init__(self, id, NODE_RADIUS)
+		self.type_value = None
+		self.outputs = {}
+		self.noutputs = 0
 		self.keyfor_value = None
 		self.possible_keyfor = None
 		self.default = None
-		self.score = None
 		self._current_value = None
-		self._current_score = None
 		
-	def addinput(self, edge):
-		if self.inputs.get(edge.id) is None:
-			self.ninputs += 1
-			self.inputs[edge.id] = edge
-			edge.tonode = self
-	
-	def removeinput(self, edge):
-		if self.inputs.get(edge.id) is not None:
-			self.ninputs -= 1
-			del self.inputs[edge.id]
-			edge.tonode = None
-
 	def addoutput(self, edge):
 		if self.outputs.get(edge.id) is None:
 			self.noutputs += 1
@@ -70,43 +57,7 @@ class Node:
 		return var_obj
 	
 	def outputvarsimple(self):
-		if self.isconstant:
-			return self.type_value
 		return self.id.replace('_', ':')
-
-	def sortedges(self):
-		sortedin = []
-		for edgeid in self.inputs:
-			edge = self.inputs[edgeid]
-			if edge.fromnode is None:
-				print 'Error: disconnected edge found. Edge id: %s' % edgeid
-				continue
-			if edge.fromnode.pt is None:
-				print 'Error: non-laid-out node found after graphviz call. Node id: %s' % edge.fromnode.id
-				continue
-			sortedin.append((edge.fromnode.pt.x, edge.id))
-		sortedin = sorted(sortedin)
-		self.sortedinputs = [self.inputs.get(n[1]) for n in sortedin]
-		p = 0
-		for edge in self.sortedinputs:
-			edge.toport = p
-			p += 1
-		sortedout = []
-		for edgeid in self.outputs:
-			edge = self.outputs[edgeid]
-			if edge.tonode is None:
-				print 'Error: disconnected edge found. Edge id: %s' % edgeid
-				continue
-			if edge.tonode.pt is None:
-				print 'Error: non-laid-out node found after graphviz call. Node id: %s' % edge.tonode.id
-				continue
-			sortedout.append((edge.tonode.pt.x, edge.id))
-		sortedout = sorted(sortedout)
-		self.sortedoutputs = [self.outputs.get(n[1]) for n in sortedout]
-		# DON'T reset p=0, rather keep counting so that input ports don't overlap output ports
-		for edge in self.sortedoutputs:
-			edge.fromport = p
-			p += 1
 
 	def get_current_value(self, graph_var_default=1):
 		if self._current_value is not None:
@@ -137,40 +88,26 @@ class Node:
 		self._current_score = score
 		return self._current_score
 
-class Edge:
-	def __init__(self, id, constraint):
-		self.id = id
-		self.constraint = constraint
-		self.pts = None
-		self.score = None
-		self.fromnode = None
-		self.tonode = None
-		self.fromport = None
-		self.toport = None
-		self.equality_constraint_twin = None
-		self._currently_satisfied = None
-		self._current_score = None
+class Clause(BaseNode):
+	def __init__(self, id):
+		BaseNode.__init__(self, id, CLAUSE_RADIUS)
+		self.inputs = {}
+		self.ninputs = 0
+		
+	def addinput(self, edge):
+		if self.inputs.get(edge.id) is None:
+			self.ninputs += 1
+			self.inputs[edge.id] = edge
+			edge.tonode = self
+	
+	def removeinput(self, edge):
+		if self.inputs.get(edge.id) is not None:
+			self.ninputs -= 1
+			del self.inputs[edge.id]
+			edge.tonode = None
 
 	def get_currently_satisfied(self, graph_var_default=1):
-		if self._currently_satisfied is not None:
-			return self._currently_satisfied
-		self._current_score = None # reset score
-		is_satisfied = False
-		if self.fromnode is not None and self.tonode is not None:
-			lhs_value = self.fromnode.get_current_value(graph_var_default=graph_var_default)
-			rhs_value = self.tonode.get_current_value(graph_var_default=graph_var_default)
-			#print 'lhs=%s rhs=%s' % (lhs_value, rhs_value)
-			if self.equality_constraint_twin is not None:
-				is_satisfied = (lhs_value == rhs_value)
-				self.equality_constraint_twin._currently_satisfied = is_satisfied
-				self.equality_constraint_twin._current_score = None # reset score
-			else: # subtype contraint
-				is_satisfied = (lhs_value <= rhs_value)
-		else:
-			raise Exception('Edge found with missing to/from node, edge: %s to: %s from:%s' % (self, self.fromnode, self.tonode))
-		self._currently_satisfied = is_satisfied
-		#print 'satisfied=%s' % self._currently_satisfied
-		return self._currently_satisfied
+		return True # zzz
 
 	def get_current_score(self, graph_var_default=1, graph_scoring=None):
 		if self._current_score is not None:
@@ -189,10 +126,32 @@ class Edge:
 			self.equality_constraint_twin._current_score = score
 		return self._current_score
 
-# Convert constraints (lhs and rhs) to nodes and edges suitable to graphviz
-# For constants (type:0 or type:1) add suffix = var_## so that they are unique nodes
-# Input: lhname:lhid <= rhname:rhid, i.e. type:0 <= var:23 ('type, '0', 'var', '23')
-def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
+class Edge:
+	def __init__(self, id, negated):
+		self.id = id
+		self.negated = negated
+		self.score = None
+		self.fromnode = None
+		self.tonode = None
+		self._currently_satisfied = None
+
+	def get_currently_satisfied(self, graph_var_default=1):
+		if self._currently_satisfied is not None:
+			return self._currently_satisfied
+		is_satisfied = False
+		if self.fromnode is not None:
+			var_value = self.fromnode.get_current_value(graph_var_default=graph_var_default)
+			is_satisfied = ((var_value == 1 and not self.negated) or (var_value == 0 and self.negated))
+		else:
+			raise Exception('Edge found with missing var, edge: %s to: %s from:%s' % (self, self.fromnode))
+		self._currently_satisfied = is_satisfied
+		#print 'satisfied=%s' % self._currently_satisfied
+		return self._currently_satisfied
+
+
+# Convert constraints (lhs and rhs) to nodes, clauses and edges suitable to graphviz
+# Input: lhname:lhid <= rhname:rhid, i.e. type:0 <= var:23 ('type', '0', 'var', '23')
+def constr2graph(lhname, lhid, rhname, rhid, score, oper, nodedict, edgedict, clausedict, clauseindx):
 	lhconst = True
 	rhconst = True
 	if (lhname == 'var' or lhname == 'grp') and rhname == 'type':
@@ -217,32 +176,45 @@ def constr2graph(lhname, lhid, rhname, rhid, nodedict, edgedict):
 	else:
 		print 'Warning! Unexpected constraint type (not var/grp <> var/grp or var/grp <> type) = "%s" / "%s". Ignoring...' % (lhname, rhname)
 		return None
-	# Get (or create) nodes
-	fromnode = nodedict.get(lhs)
-	if fromnode is None:
-		fromnode = Node(lhs, lhconst)
-		nodedict[lhs] = fromnode
-	tonode = nodedict.get(rhs)
-	if tonode is None:
-		tonode = Node(rhs, rhconst)
-		nodedict[rhs] = tonode
-	# Get (or create) edge
+	# Get (or create) node(s)
+	lhs_node = None
+	rhs_node = None
+	if not lhconst: # only create Node for vars, not const
+		lhs_node = nodedict.get(lhs)
+		if lhs_node is None:
+			lhs_node = Node(lhs)
+			nodedict[lhs] = lhs_node
+	if not rhconst: # only create Node for vars, not const
+		rhs_node = nodedict.get(rhs)
+		if rhs_node is None:
+			rhs_node = Node(rhs)
+			nodedict[rhs] = rhs_node
+	if not lhconst and not rhconst: # both var
+		pass
+	elif not lhconst: # lhs var, rhs const
+		pass
+	elif not rhconst: # rhs var, lhs const
+		pass
+	else: # both const, this shouldn't happen
+		raise Exception('Constraint found between two consts %s %s %s %s %s' % (lhname, lhid, oper, rhname, rhid))
+	# Get (or create) edge(s)
 	id = '%s -> %s' % (lhs, rhs)
-	constraint = '%s:%s <= %s:%s' % (lhname, lhid, rhname, rhid)
 	edge = edgedict.get(id)
 	if edge is None:
-		edge = Edge(id, constraint)
+		edge = Edge(id, negated)
 		edgedict[id] = edge
 	# Connect edge to nodes
-	fromnode.addoutput(edge)
-	tonode.addinput(edge)
-	return edge
+	lhs_node.addoutput(edge)
+	rhs_node.addinput(edge)
+
 
 def load_constraints_graph(infilename):
 	regex1 = re.compile("(var|grp|type):(.*) ?(<|=)= ?(var|grp|type):(.*)", re.IGNORECASE)
 	regex2 = re.compile("(var|grp|type):(.*)", re.IGNORECASE)
+	clause_indx = 0
 	nodes = {}
 	edges = {}
+	clauses = {}
 	groups = {}
 	assignments = {}
 	parser = ijson.parse(open(infilename + '.json', 'r'))
@@ -321,13 +293,7 @@ def load_constraints_graph(infilename):
 				rhname = matches[3].strip()
 				rhid = matches[4].strip()
 				constr_oper = matches[2].strip()
-				new_edge = constr2graph(lhname, lhid, rhname, rhid, nodes, edges)
-				if constr_oper == '=':
-					# For equality, add constraint in the other direction as well and associate the two
-					twin_edge = constr2graph(rhname, rhid, lhname, lhid, nodes, edges)
-					if new_edge is not None and twin_edge is not None:
-						new_edge.equality_constraint_twin = twin_edge
-						twin_edge.equality_constraint_twin = new_edge
+				constr2graph(lhname, lhid, rhname, rhid, None, constr_oper, nodes, edges, clauses, clause_indx)
 			except Exception as e:
 				print 'Error parsing constraint: %s -> %s' % (value, e)
 				continue
@@ -365,17 +331,7 @@ def load_constraints_graph(infilename):
 					print 'Error parsing constraint: %s %s %s -> %s' % (lhs, constr_oper, rhs, e)
 					constr2 = None
 					continue
-				new_edge = constr2graph(lhname, lhid, rhname, rhid, nodes, edges)
-				if new_edge is not None:
-					new_edge.score = score
-				if constr_oper == 'equality':
-					# For equality, add constraint in the other direction as well and associate the two
-					twin_edge = constr2graph(rhname, rhid, lhname, lhid, nodes, edges)
-					if twin_edge is not None:
-						twin_edge.score = score
-						if new_edge is not None:
-							new_edge.equality_constraint_twin = twin_edge
-							twin_edge.equality_constraint_twin = new_edge
+				constr2graph(lhname, lhid, rhname, rhid, score, constr_oper, nodes, edges, clauses, clause_indx)
 			else:
 				print 'Error parsing constraint: %s %s %s' % (lhs, constr_oper, rhs)
 			constr2 = None
@@ -467,8 +423,7 @@ def load_constraints_graph(infilename):
 		formattedid = asgid.replace(':', '_')
 		if formattedid in nodes:
 			continue
-		isconst = (parts[0].lower() != 'var') and (parts[0].lower() != 'grp')
-		nodes[formattedid] = Node(formattedid, isconst)
+		nodes[formattedid] = Node(formattedid)
 	# Determine a graph default if none based on scoring, or simply pick one
 	if default_var_type is None:
 		default_var_type = DEFAULT_TYPE
@@ -479,4 +434,4 @@ def load_constraints_graph(infilename):
 				default_var_type = TYPE_0
 			elif type1_score > type0_score:
 				default_var_type = TYPE_1
-	return version, default_var_type, scoring, nodes, edges, assignments
+	return version, default_var_type, scoring, nodes, edges, clauses, assignments

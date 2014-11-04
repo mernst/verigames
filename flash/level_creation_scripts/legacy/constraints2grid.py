@@ -1,8 +1,6 @@
 import json, sys, os
 from load_constraints_graph import *
 
-# Width space given to each incoming/outgoing edge plus 1 unit on each end of a box of padding [][i0][i1]...[in][]
-WIDTHPERPORT = 0.6
 DECIMAL_PLACES = 2 # round all layout values to X decimal places
 PAD_FACTOR = 2.0 # sfdp/prism tend to create tight layouts, this will multiply the width and height of the node by X to create more padding around nodes
 
@@ -10,25 +8,25 @@ PAD_FACTOR = 2.0 # sfdp/prism tend to create tight layouts, this will multiply t
 GRAPH_HEADER =  'digraph G {\n'
 GRAPH_HEADER += '  graph [\n'
 GRAPH_HEADER += '    overlap="prism500",\n'
+GRAPH_HEADER += '    penwidth="0.2",\n'
 GRAPH_HEADER += '    splines="line"\n'
 GRAPH_HEADER += '  ];\n'
 GRAPH_HEADER += '  node [\n'
 GRAPH_HEADER += '    label="",\n'
 GRAPH_HEADER += '    fixedsize=true,\n'
-GRAPH_HEADER += '    shape="rect"\n'
+GRAPH_HEADER += '    shape="circle"\n'
+GRAPH_HEADER += '    width="0.15",\n'
+GRAPH_HEADER += '    height="0.15"\n'
 GRAPH_HEADER += '  ];\n'
+
+# Seth's values: 
+# graph [ overlap="scalexy", penwidth="0.2", outputorder=edgesfirst, sep="0.1" ];\n
+# node [ shape="circle" style="filled", width="0.15", height="0.15 ];\n
 
 class Point:
 	def __init__(self, x, y):
 		self.x = round(float(x), DECIMAL_PLACES)
 		self.y = round(float(y), DECIMAL_PLACES)
-
-def getportx(node, portnum):
-	return node.pt.x - 0.5 * node.width + (1.5 + portnum) * WIDTHPERPORT
-
-# get height of box used for dot to allow more vertical space based on number of boxlines passing thru
-def getstaggeredlineheight(lineindex):
-	return (lineindex * 0.75 + 0.75) / 2.0
 
 def get_bonus(var_scoring, graph_scoring=None):
 	type0_bonus = None
@@ -61,9 +59,10 @@ def layout_nodes(nodes, edges, outfilename, remove_graphviz_files):
 	# Nodes
 	for nodeid in nodes:
 		node = nodes[nodeid]
-		node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
-		calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
-		graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR*node.width, PAD_FACTOR*calcheight)
+		if PAD_FACTOR != 1:
+			node.width = max(1.0, (node.ninputs + node.noutputs) / 4.0) * NODE_RADIUS
+			node.height = node.width
+		graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR * node.width, PAD_FACTOR*node.height)
 		node_dim[nodeid] = [PAD_FACTOR*node.width, PAD_FACTOR*calcheight]
 	print 'Adding graphviz edges...'
 	# Edges
@@ -340,8 +339,7 @@ def constraints2grid(infilename, outfilename, remove_graphviz_files=True):
 		node = nodes[node_id]
 		group = node2group.get(node_id)
 		if group is None: # grouped nodes should already be laid out (locally)
-			node.width = round(float((max(1, node.ninputs + node.noutputs) + 2) * WIDTHPERPORT), DECIMAL_PLACES)
-			calcheight = round(getstaggeredlineheight(node.ninputs) + getstaggeredlineheight(node.noutputs) + 1.0, DECIMAL_PLACES)
+			# zzzz
 			graphin += '%s [width=%s,height=%s];\n' % (node.id, PAD_FACTOR*node.width, PAD_FACTOR*calcheight)
 	print 'Adding graphviz edges...'
 	# Edges
