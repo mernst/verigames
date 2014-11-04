@@ -8,7 +8,7 @@ package scenes.game.display
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
 	
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	
 	import starling.display.Image;
 	import starling.display.Quad;

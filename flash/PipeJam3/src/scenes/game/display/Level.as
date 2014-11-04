@@ -1,7 +1,8 @@
 package scenes.game.display
 {
+	
+	import deng.fzip.FZip;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -10,61 +11,42 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	
-	import assets.AssetInterface;
-	
-	import constraints.ClauseConstraint;
-	import constraints.Constraint;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintScoringConfig;
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
-	import constraints.SubtypeConstraint;
-	import constraints.events.ErrorEvent;
-	import constraints.events.VarChangeEvent;
-	
-	import deng.fzip.FZip;
-	
-	import events.MenuEvent;
-	import events.MiniMapEvent;
-	import events.PropertyModeChangeEvent;
-	import events.SelectionEvent;
-	import events.WidgetChangeEvent;
-	
-	import graph.PropDictionary;
-	
-	import networking.GameFileHandler;
-	import networking.PlayerValidation;
-	
-	import org.osmf.events.TimeEvent;
-	
-	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
-	import scenes.game.components.MiniMap;
-	import scenes.game.display.Node;
-	
-	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
-	import starling.display.Quad;
-	import starling.display.Shape;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
 	
+	import assets.AssetInterface;
+	import constraints.ClauseConstraint;
+	import constraints.Constraint;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
+	import constraints.ConstraintValue;
+	import constraints.ConstraintVar;
+	import constraints.events.ErrorEvent;
+	import constraints.events.VarChangeEvent;
+	import events.MenuEvent;
+	import events.MiniMapEvent;
+	import events.PropertyModeChangeEvent;
+	import events.SelectionEvent;
+	import events.WidgetChangeEvent;
+	import utils.PropDictionary;
+	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	import scenes.BaseComponent;
+	import scenes.game.display.Node;
+	import scenes.game.PipeJamGameScene;
 	import system.MaxSatSolver;
-	
 	import utils.Base64Encoder;
 	import utils.XObject;
 	import utils.XString;
-
+	
 	
 	/**
 	 * Level all game components - widgets and links
@@ -743,9 +725,6 @@ package scenes.game.display
 				if (constraintVar.constant) continue;
 				if (!assignmentsObj["assignments"].hasOwnProperty(constraintVar.formattedId)) assignmentsObj["assignments"][constraintVar.formattedId] = { };
 				assignmentsObj["assignments"][constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] = constraintVar.getValue().verboseStrVal;
-				var keyfors:Array = new Array();
-				for (var i:int = 0; i < constraintVar.keyforVals.length; i++) keyfors.push(constraintVar.keyforVals[i]);
-				if (keyfors.length > 0) assignmentsObj["assignments"][constraintVar.formattedId][ConstraintGraph.KEYFOR_VALUES] = keyfors;
 				
 				var isWide:Boolean = (constraintVar.getValue().verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
 				if(isWide)
@@ -859,55 +838,10 @@ package scenes.game.display
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		public function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
-		/*	var i:int, nodeId:String, gameNode:GameNode, edgeId:String, gameEdge:GameEdgeContainer;
-			if (evt.prop == PropDictionary.PROP_NARROW) {
-				m_propertyMode = PropDictionary.PROP_NARROW;
-				for (edgeId in m_gameEdgeDict) {
-					gameEdge = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-					gameEdge.setPropertyMode(m_propertyMode);
-					activate(gameEdge);
-				}
-				for (nodeId in m_gameNodeDict) {
-					gameNode = m_gameNodeDict[nodeId] as GameNode;
-					gameNode.setPropertyMode(m_propertyMode);
-					activate(gameNode);
-				}
-			} else {
-				m_propertyMode = evt.prop;
-				var edgesToActivate:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-				for (nodeId in m_gameNodeDict) {
-					gameNode = m_gameNodeDict[nodeId] as GameNode;
-					// TODO: broken
-					//if (m_nodeList[i] is GameMapGetJoint) {
-						//var mapget:GameMapGetJoint = m_nodeList[i] as GameMapGetJoint;
-						//if (mapget.getNode.getMapProperty() == evt.prop) {
-							//m_nodeList[i].setPropertyMode(m_propertyMode);
-							//edgesToActivate = edgesToActivate.concat(mapget.getUpstreamEdgeContainers());
-							//continue;
-						//}
-					//}
-					gameNode.setPropertyMode(m_propertyMode);
-					deactivate(gameNode);
-				}
-				var gameNodesToActivate:Vector.<GameNode> = new Vector.<GameNode>();
-				for (edgeId in m_gameEdgeDict) {
-					gameEdge = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-					gameEdge.setPropertyMode(m_propertyMode);
-					if (edgesToActivate.indexOf(gameEdge) > -1) {
-						gameNodesToActivate.push(gameEdge.m_fromNode);
-					} else {
-						deactivate(gameEdge);
-					}
-				}
-				for (nodeId in m_gameNodeDict) {
-					gameNode = m_gameNodeDict[nodeId] as GameNode;	
-					gameNode.setPropertyMode(m_propertyMode);
-					if (gameNodesToActivate.indexOf(gameNode) == -1) {
-						deactivate(gameNode);
-					}
-				}
+			if (evt.prop != PropDictionary.PROP_NARROW)
+			{
+				throw new Error("Unsupported property: " + evt.prop);
 			}
-			flatten();*/
 		}
 		
 		protected function refreshTroublePoints():void

@@ -4,7 +4,7 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	import starling.display.Sprite;
 	
 	public class GridChild 

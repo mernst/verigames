@@ -2,7 +2,6 @@ package tasks
 {
 	import constraints.ConstraintGraph;
 	import flash.utils.Dictionary;
-	import graph.LevelNodes;
 	
 	public class ParseConstraintGraphTask extends Task 
 	{

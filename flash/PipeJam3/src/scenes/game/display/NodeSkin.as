@@ -278,9 +278,9 @@ package scenes.game.display
 			associatedNode = _associatedNode;
 		}
 		
-		var saveParent:DisplayObjectContainer;
-		var tween:Tween;
-		var q:Quad;
+		private var saveParent:DisplayObjectContainer;
+		private var tween:Tween;
+		private var q:Quad;
 		public function flash(color:int = 0xffff00):void
 		{
 			q = new Quad(50, 50, color);

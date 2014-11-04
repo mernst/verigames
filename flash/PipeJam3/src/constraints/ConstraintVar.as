@@ -1,7 +1,7 @@
 package constraints 
 {
 	import constraints.events.VarChangeEvent;
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	import starling.events.EventDispatcher;
 	
 	public class ConstraintVar extends EventDispatcher
@@ -12,8 +12,6 @@ package constraints
 		public var defaultVal:ConstraintValue;
 		public var constant:Boolean;
 		public var scoringConfig:ConstraintScoringConfig;
-		public var possibleKeyfors:Vector.<String>;
-		public var keyforVals:Vector.<String>;
 		public var associatedGroupId:String;
 		
 		private var m_props:PropDictionary;
@@ -21,18 +19,15 @@ package constraints
 		public var lhsConstraints:Vector.<Constraint> = new Vector.<Constraint>(); // constraints where this var appears on the left hand side (outgoing edge)
 		public var rhsConstraints:Vector.<Constraint> = new Vector.<Constraint>(); // constraints where this var appears on the right hand side (incoming edge)
 		
-		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig, _possibleKeyfors:Vector.<String> = null, _keyforVals:Vector.<String> = null)
+		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig)
 		{
 			id = _id;
 			m_value = _val;
 			defaultVal = _defaultVal;
 			constant = _constant;
 			scoringConfig = _scoringConfig;
-			possibleKeyfors = (_possibleKeyfors == null) ? (new Vector.<String>()) : _possibleKeyfors;
-			keyforVals = (_keyforVals == null) ? (new Vector.<String>()) : _keyforVals;
 			m_props = new PropDictionary();
 			if (m_value.intVal == 0) m_props.setProp(PropDictionary.PROP_NARROW, true);
-			for (var i:int = 0; i < keyforVals.length; i++) m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + keyforVals[i], true);
 			var suffixParts:Array = id.split("__");
 			var prefixId:String = suffixParts[0];
 			var idParts:Array = prefixId.split("_");
@@ -48,14 +43,8 @@ package constraints
 		{
 			if (prop == PropDictionary.PROP_NARROW) {
 				m_value = ConstraintValue.fromStr(value ? ConstraintValue.TYPE_0 : ConstraintValue.TYPE_1);
-			} else if (prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
-				var keyfor:String = prop.substr(prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) + PropDictionary.PROP_KEYFOR_PREFIX.length, prop.length - PropDictionary.PROP_KEYFOR_PREFIX.length);
-				if (value) {
-					if (possibleKeyfors.indexOf(keyfor) == -1) throw new Error("Error! Attempting to add keyfor: " + keyfor + " when not in possible keyfors list for varId:" + id);
-					if (keyforVals.indexOf(keyfor) == -1) keyforVals.push(keyfor);
-				} else {
-					if (keyforVals.indexOf(keyfor) > -1) keyforVals.splice(keyforVals.indexOf(keyfor), 1);
-				}
+			} else {
+				throw new Error("Unsupported property: " + prop);
 			}
 			if (m_props.hasProp(prop) != value) {
 				trace(id, value ? " -> narrow" : " -> wide");

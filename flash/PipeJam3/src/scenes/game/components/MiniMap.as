@@ -18,7 +18,7 @@ package scenes.game.components
 	import events.MiniMapEvent;
 	import events.MoveEvent;
 	
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;

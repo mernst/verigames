@@ -11,7 +11,7 @@ package system
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
 	

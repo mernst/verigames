@@ -1,7 +1,7 @@
 package scenes.game.display 
 {
 	import events.TutorialEvent;
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	import starling.core.Starling;
 	import networking.TutorialController;
 	

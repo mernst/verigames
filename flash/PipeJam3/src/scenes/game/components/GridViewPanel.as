@@ -30,7 +30,7 @@ package scenes.game.components
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	
 	import networking.TutorialController;
 	

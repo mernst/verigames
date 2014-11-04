@@ -16,13 +16,8 @@ package constraints
 		private static const QID:String = "qid";
 		// Sections:
 		private static const SCORING:String = "scoring";
-		private static const GROUPS:String = "groups";
 		private static const VARIABLES:String = "variables";
 		private static const CONSTRAINTS:String = "constraints";
-		// Constraint fields:
-		private static const CONSTRAINT:String = "constraint";
-		private static const LHS:String = "lhs";
-		private static const RHS:String = "rhs";
 		// Variable fields:
 		private static const DEFAULT:String = "default";
 		private static const SCORE:String = "score";
@@ -32,14 +27,11 @@ package constraints
 		private static const CONSTANT:String = "constant";
 		// Constraint side types:
 		private static const VAR:String = "var";
-		private static const TYPE:String = "type";
-		private static const GRP:String = "grp";
 		private static const C:String = "c";
 		
 		private static const NULL_SCORING:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
 		public var variableDict:Dictionary = new Dictionary();
-		public var groupDict:Dictionary = new Dictionary();
 		public var constraintsDict:Dictionary = new Dictionary();
 		public var clauseDict:Dictionary = new Dictionary();
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
@@ -236,17 +228,7 @@ package constraints
 							} else {
 								typeVal = graphDefaultVal.clone();
 							}
-							var possibleKeyfors:Vector.<String> = new Vector.<String>();
-							var possibleKeyforsArr:Array = varParamsObj[POSSIBLE_KEYFORS];
-							if (possibleKeyforsArr) {
-								for (var i:int = 0; i < possibleKeyforsArr.length; i++) possibleKeyfors.push(possibleKeyforsArr[i]);
-							}
-							var keyforVals:Vector.<String> = new Vector.<String>();
-							var keyforValsArr:Array = varParamsObj[KEYFOR_VALUES];
-							if (keyforValsArr) {
-								for (var j:int = 0; j < keyforValsArr.length; j++) keyforVals.push(keyforValsArr[j]);
-							}
-							var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring, possibleKeyfors, keyforVals);
+							var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring);
 							graph1.variableDict[formattedId] = newVar;
 						}
 					}
@@ -255,42 +237,15 @@ package constraints
 					for (var c:int = 0; c < constraintsArr.length; c++) {
 						var newConstraint:Constraint;
 						if (getQualifiedClassName(constraintsArr[c]) == "String") {
-							// process as String, i.e. "var:1 <= var:2"
+							// process as String, i.e. "var:1 <= c:2"
 							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1.variableDict, graphDefaultVal, graph1.graphScoringConfig);
 						} else {
-							// process as json object i.e. {"rhs": "type:1", "constraint": "subtype", "lhs": "var:9"}
-							newConstraint = parseConstraintJson(constraintsArr[c] as Object, graph1.variableDict, graphDefaultVal, graph1.graphScoringConfig.clone());
+							throw new Error("Unknown constraint format: " + constraintsArr[c]);
 						}
-						if (newConstraint is EqualityConstraint) {
-							// For equality, convert to two separate equality constaints (one for each edge) and put in constraintsDict
-							// Scoring: take same scoring for now, any conflict on EITHER subtype constraint will cause -100 (or whatever conflict penalty is for the equality constrtaint)
-							var constr1:SubtypeConstraint = new SubtypeConstraint(newConstraint.lhs, newConstraint.rhs, newConstraint.scoring);
-							var constr2:SubtypeConstraint = new SubtypeConstraint(newConstraint.rhs, newConstraint.lhs, newConstraint.scoring);
-							graph1.constraintsDict[constr1.id] = constr1;
-							graph1.constraintsDict[constr2.id] = constr2;
-						} else if (newConstraint is SubtypeConstraint) {
+						if (newConstraint is ClauseConstraint) {
 							graph1.constraintsDict[newConstraint.id] = newConstraint;
-						}else if (newConstraint is ClauseConstraint) {
-							graph1.constraintsDict[newConstraint.id] = newConstraint;
-						}
-					}
-					// Build groups
-					var groupsObj:Object = levelObj[GROUPS];
-					if (groupsObj) {
-						for (var groupId:String in groupsObj) {
-							var groupMembers:Array = groupsObj[groupId] as Array;
-							groupId = groupId.replace(":", "_"); // reformat
-							graph1.groupDict[groupId] = new Vector.<ConstraintVar>();
-							for each (var groupVarId:String in groupMembers) {
-								groupVarId = groupVarId.replace(":", "_"); // reformat
-								var groupVar:ConstraintVar = graph1.variableDict[groupVarId];
-								if (!groupVar) {
-									trace("Warning! Group member found with no corresponding ConstraintVar: " + groupVarId);
-									continue;
-								}
-								(graph1.groupDict[groupId] as Vector.<ConstraintVar>).push(groupVar);
-								groupVar.associatedGroupId = groupId;
-							}
+						} else {
+							throw new Error("Unknown constraint type:" + newConstraint);
 						}
 					}
 					break;
@@ -303,7 +258,7 @@ package constraints
 		
 		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
 		{
-			var pattern:RegExp = /(var|type|grp|c):(.*) (<|=)= (var|type|grp|c):(.*)/i;
+			var pattern:RegExp = /(var|c):(.*) (<|=)= (var|c):(.*)/i;
 			var result:Object = pattern.exec(_str);
 			if (result == null) throw new Error("Invalid constraint string found: " + _str);
 			if (result.length != 6) throw new Error("Invalid constraint string found: " + _str);
@@ -313,22 +268,14 @@ package constraints
 			var rhsType:String = result[4];
 			var rhsId:String = result[5];
 			var typeNumArray:Array;
-			
+ 			
 			var lsuffix:String = "";
 			var rsuffix:String = "";
-			if (lhsType == VAR && rhsType == TYPE) {
-				rsuffix = "__" + VAR + "_" + lhsId;
-			} else if (lhsType == GRP && rhsType == TYPE) {
-				rsuffix = "__" + GRP + "_" + lhsId;
-			} else if (rhsType == VAR && lhsType == TYPE) {
-				lsuffix = "__" + VAR + "_" + rhsId;
-			} else if (rhsType == GRP && lhsType == TYPE) {
-				lsuffix = "__" + GRP + "_" + rhsId;
-			} else if (rhsType == VAR && lhsType == C) {
+			if (rhsType == VAR && lhsType == C) {
 				typeNumArray = lhsId.split("_");
 			} else if (rhsType == C && lhsType == VAR) {
 				typeNumArray = rhsId.split("_");
-			} else if (rhsType == TYPE && lhsType == TYPE) {
+			} else {
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}
 			
@@ -342,63 +289,10 @@ package constraints
 			}
 			else
 			{
-				switch (constType) {
-					case "<":
-						newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring);
-						break;
-					case "=":
-						newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring);
-						break;
-					default:
-						throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
-						break;
-				}
+				throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
 			}
-			return newConstraint;
-		}
-		
-		private static function parseConstraintJson(_constraintJson:Object, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
-		{
-			var type:String = _constraintJson[CONSTRAINT];
-			var lhsStr:String = _constraintJson[LHS];
-			var rhsStr:String = _constraintJson[RHS];
-			var pattern:RegExp = /(var|type|grp):(.*)/i;
-			var lhsResult:Object = pattern.exec(lhsStr);
-			var rhsResult:Object = pattern.exec(rhsStr);
-			if (!lhsResult || !rhsResult) throw new Error("Error parsing constraint json for lhs:'" + lhsStr + "' rhs:'" + rhsStr + "'");
-			if (lhsResult.length != 3 || rhsResult.length != 3) throw new Error("Error parsing constraint json for lhs:'" + lhsStr + "' rhs:'" + rhsStr + "'");
-			
-			var lsuffix:String = "";
-			var rsuffix:String = "";
-			if ((lhsResult[1] as String) == VAR && (rhsResult[1] as String) == TYPE) {
-				rsuffix = "__" + VAR + "_" + (lhsResult[2] as String);
-			} else if ((lhsResult[1] as String) == GRP && (rhsResult[1] as String) == TYPE) {
-				rsuffix = "__" + GRP + "_" + (lhsResult[2] as String);
-			} else if ((rhsResult[1] as String) == VAR && (lhsResult[1] as String) == TYPE) {
-				lsuffix = "__" + VAR + "_" + (rhsResult[2] as String);
-			} else if ((rhsResult[1] as String) == GRP && (lhsResult[1] as String) == TYPE) {
-				lsuffix = "__" + GRP + "_" + (rhsResult[2] as String);
-			} else if ((lhsResult[1] as String) == TYPE && (rhsResult[1] as String) == TYPE) {
-				//trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_constraintJson));
-			}
-			
-			var lhs:ConstraintVar = parseConstraintSide(lhsResult[1] as String, lhsResult[2] as String, lsuffix, _variableDictionary, _defaultVal, _defaultScoring);
-			var rhs:ConstraintVar = parseConstraintSide(rhsResult[1] as String, rhsResult[2] as String, rsuffix, _variableDictionary, _defaultVal, _defaultScoring);
-			
-			var newConstraint:Constraint;
-			switch (type) {
-				case Constraint.SUBTYPE:
-					newConstraint = new SubtypeConstraint(lhs, rhs, _defaultScoring);
-					break;
-				case Constraint.EQUALITY:
-					newConstraint = new EqualityConstraint(lhs, rhs, _defaultScoring);
-					break;
-				default:
-					throw new Error("Invalid constraint type found ('"+type+"') in parseConstraintJson()");
-					break;
-			}
-			return newConstraint;
-		}
+ 			return newConstraint;
+ 		}
 		
 		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintVar
 		{
@@ -409,17 +303,12 @@ package constraints
 			} else {
 				if (_type == VAR) {
 					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
-				} else if (_type == GRP) {
-					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
 				} else if (_type == C) {
 					var typeNumArray:Array = _type_num.split("_");
 					fullId = _type + "_" + _type_num;
 					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
-				} else if (_type == TYPE) {
-					var constrVal:ConstraintValue = ConstraintValue.fromStr(_type_num);
-					constrVar = new ConstraintVar(fullId, constrVal, constrVal, true, NULL_SCORING);
 				} else {
-					throw new Error("Invalid constraint var/type found: ('" + _type + "'). Expecting 'var' or 'type'");
+					throw new Error("Invalid constraint element found: ('" + _type + "'). Expecting 'var' or 'c'");
 				}
 				_variableDictionary[fullId] = constrVar;
 			}
@@ -427,5 +316,4 @@ package constraints
 		}
 		
 	}
-
 }

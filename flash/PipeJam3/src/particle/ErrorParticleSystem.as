@@ -9,7 +9,7 @@ package particle
 	import starling.extensions.PDParticleSystem;
 	import starling.textures.Texture;
 	
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	
 	public class ErrorParticleSystem extends Sprite 
 	{
@@ -40,19 +40,6 @@ package particle
 			
 			id = nextID++;
             mParticleSystem = new PDParticleSystem(errorConfig, errorTexture);
-			if (errorProps && !errorProps.hasProp(PropDictionary.PROP_NARROW)) {
-				for (var prop:String in errorProps.iterProps()) {
-					if (prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
-						// If there's a MapGet error but no narrow error, change color
-						// Original values:
-						//<startColor  red="1.00" green="0.18" blue="0.08" alpha="1.00"/>
-						//<finishColor red="0.90" green="0.16" blue="0.07" alpha="0.80"/>
-						mParticleSystem.startColor = new ColorArgb(1.0, 0.0, 1.0, 1.0);
-						mParticleSystem.endColor   = new ColorArgb(1.0, 0.2, 0.2, 0.8);
-						break;
-					}
-				}
-			}
 			mHitQuad = new Quad(20, 10, 0xFFFFFF);
 			mHitQuad.x = mHitQuad.y = -mHitQuad.width / 2.0;
 			mHitQuad.alpha = 0;

@@ -15,7 +15,7 @@ package scenes.game.display
 	import events.SelectionEvent;
 	import events.UndoEvent;
 	
-	import graph.PropDictionary;
+	import utils.PropDictionary;
 	
 	import starling.display.Quad;
 	import starling.display.Sprite;
