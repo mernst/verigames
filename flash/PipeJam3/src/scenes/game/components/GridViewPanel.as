@@ -231,6 +231,12 @@ package scenes.game.components
 				m_selectionUpdated = false;
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
 				handlePaint(globalCurrentPt);
+				
+				var num:int = m_currentLevel.selectedNodes.length;
+				if (m_selectedText) {
+					TextFactory.getInstance().updateText(m_selectedText, String(num));
+					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+				}
 			}
 			
 			if(endingMoveMode) //force gc after dragging
@@ -1321,15 +1327,14 @@ package scenes.game.components
 		}
 		
 		
+		
 		public function movePaintBrush(pt:Point):void
 		{
 			var localPt:Point = globalToLocal(pt);
 			m_paintBrushContainer.x = localPt.x;
 			m_paintBrushContainer.y = localPt.y;
 			
-			var num:int = m_currentLevel.selectedNodes.length;
-			TextFactory.getInstance().updateText(m_selectedText, String(num));
-			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+			m_selectionUpdated = true;
 		}
 		
 		public function showPaintBrush():void
