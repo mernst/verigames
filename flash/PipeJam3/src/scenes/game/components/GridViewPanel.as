@@ -105,9 +105,9 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
 		
-		public static const MIN_SCALE:Number = 0.4 / Constants.GAME_SCALE;
+		public static const MIN_SCALE:Number = 1.5 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
-		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
+		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
@@ -475,7 +475,7 @@ package scenes.game.components
 		{
 			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
 			newY = XMath.clamp(newY, m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
-			
+			trace("PAN ", newX, newY);
 			panTo(newX, newY);
 			var currentViewRect:Rectangle = getViewInContentSpace();
 			m_currentLevel.updateLevelDisplay(currentViewRect);
@@ -882,37 +882,24 @@ package scenes.game.components
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
 			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
-			if ((m_currentLevel.m_boundingBox.width < MAX_SCALE * WIDTH) || (m_currentLevel.m_boundingBox.height < MAX_SCALE * VIEW_HEIGHT)) {
-				// If about the size of the window, just center the level
-				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
-				globPt = m_currentLevel.localToGlobal(centerPt);
-				localPt = content.globalToLocal(globPt);
-				moveContent(localPt.x, localPt.y);
-				//trace("center to: " + localPt);
-			} else {
-				// Otherwise center on the first visible box
-				var nodes:Dictionary = m_currentLevel.getNodes();
-				var foundNode:Node;
-				for (var nodeId:String in nodes) {
-					var gameNode:Node = nodes[nodeId] as Node;
-					if (gameNode && gameNode.isEditable && gameNode.skin) {
-						foundNode = gameNode;
-						break;
-					}
-				}
-				if (foundNode) moveContent(foundNode.centerPoint.x, foundNode.centerPoint.y);
-			}
+			
+			centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
+			globPt = m_currentLevel.localToGlobal(centerPt);
+			localPt = content.globalToLocal(globPt);
+			moveContent(localPt.x, localPt.y);
+			trace("center to: " + localPt);
+			
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
 			scaleContent(newScale, newScale);
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
-				content.x += startPtOffset.x * content.scaleX;
-				content.y += startPtOffset.y * content.scaleY;
+				content.x += startPtOffset.x;
+				content.y += startPtOffset.y;
 				inactiveContent.x = content.x;
 				inactiveContent.y = content.y;
-				newScale = m_currentLevel.tutorialManager.getStartScaleFactor();
+				newScale = STARTING_SCALE * m_currentLevel.tutorialManager.getStartScaleFactor();
 				scaleContent(newScale, newScale);
 			}
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));

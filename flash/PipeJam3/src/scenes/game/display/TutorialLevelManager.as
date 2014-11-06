@@ -55,6 +55,11 @@ package scenes.game.display
 				case "7":
 				case "8":
 				case "9":
+				case "10":
+				case "11":
+				case "12":
+				case "13":
+				case "14":
 					break;
 				default:
 					throw new Error("Unknown Tutorial encountered: " + m_tutorialTag);
@@ -183,6 +188,12 @@ package scenes.game.display
 				case "3":
 				case "4":
 				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
+				case "10":
+				case "11":
 					return false;
 			}
 			return true;
@@ -205,6 +216,11 @@ package scenes.game.display
 				case "7":
 				case "8":
 				case "9":
+				case "10":
+				case "11":
+				case "12":
+				case "13":
+				case "14":
 					return 1.0
 			}
 			return 1.0;
@@ -214,7 +230,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "1":
-					return new Point(20, 150);//move right 80px (pan left) and down (pan up) 15px
+					return new Point(0, 10); // shift level down by 10px
 				case "2":
 				case "3":
 				case "4":
@@ -224,7 +240,6 @@ package scenes.game.display
 				case "8":
 				case "9":
 					return new Point();
-					//return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
 			}
 			return new Point();
 		}
@@ -233,7 +248,9 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "1":
+					return 100;
 				case "2":
+					return 150;
 				case "3":
 				case "4":
 				case "5":
@@ -241,7 +258,14 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
+					return 300;
 				case "9":
+				case "10":
+				case "11":
+					return 400;
+				case "12":
+				case "13":
+				case "14":
 					return 500;
 			}
 			return -1;
@@ -336,18 +360,49 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "1":
 					return new TutorialManagerTextInfo(
-						"Click and drag to paint widgets to be solved by the autosolver!\nEliminate as many red conflicts as you can!",
+						"Click and drag to paint! Release to autosolve!\nEliminate as many red conflicts as you can!",
 						null,
 						null,
 						null, null);
 				case "2":
+					return new TutorialManagerTextInfo(
+						"Use the arrow keys or mouse to the edge of the screen to pan! Use +/- to zoom!",
+						null,
+						null,
+						null, null);
 				case "3":
 				case "4":
-				case "5":
-				case "6":
 				case "7":
 				case "8":
 				case "9":
+				case "10":
+				case "11":
+				case "13":
+				case "14":
+					return new TutorialManagerTextInfo(
+						"Keep eliminating the red conflicts!",
+						null,
+						null,
+						null, null);
+				case "5":
+					return new TutorialManagerTextInfo(
+						"Sometimes areas need to be painted multiple times.\nKeep eliminating the red conflicts!",
+						null,
+						null,
+						null, null);
+				case "6":
+					return new TutorialManagerTextInfo(
+						"Sometimes large selection areas are needed to eliminate a conflict.\nKeep eliminating the red conflicts!",
+						null,
+						null,
+						null, null);
+				case "12":
+					return new TutorialManagerTextInfo(
+						"For larger levels use on the minimap in the top right to navigate!",
+						null,
+						null,
+						Constants.TOP_LEFT, null);
+				
 					return null;
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(

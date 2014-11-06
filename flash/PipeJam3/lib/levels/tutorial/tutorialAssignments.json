@@ -12,6 +12,7 @@
 {
   "id": "p_000105_00002010",
   "qid": 2005,
+  "target_score": 170,
   "assignments":{
   }
 }
@@ -20,6 +21,7 @@
 {
   "id": "p_000165_00012806",
   "qid": 2007,
+  "target_score": 277,
   "assignments":{
   }
 }
@@ -28,6 +30,7 @@
 {
   "id": "p_000174_00001016",
   "qid": 2003,
+  "target_score": 310,
   "assignments":{
   }
 }
@@ -36,6 +39,7 @@
 {
   "id": "p_000199_00000594",
   "qid": 2010,
+  "target_score": 319,
   "assignments":{
   }
 }
@@ -44,6 +48,7 @@
 {
   "id": "p_000217_00000608",
   "qid": 2013,
+  "target_score": 390,
   "assignments":{
   }
 }
@@ -52,6 +57,7 @@
 {
   "id": "p_000217_00001972",
   "qid": 2004,
+  "target_score": 348,
   "assignments":{
   }
 }
@@ -60,14 +66,52 @@
 {
   "id": "p_000225_00011148",
   "qid": 2008,
+  "target_score": 368,
   "assignments":{
   }
 }
 ,
 
 {
-  "id": "p_000249_00000600",
-  "qid": 2011,
+  "id": "p_000267_00011256",
+  "qid": 2009,
+  "target_score":  527,
+  "assignments":{
+  }
+}
+,
+
+{
+  "id": "p_000359_00000609",
+  "qid": 2014,
+  "target_score":  570,
+  "assignments":{
+  }
+}
+,
+
+{
+  "id": "p_000542_00001008",
+  "qid": 2001,
+  "target_score":  1071,
+  "assignments":{
+  }
+}
+,
+
+{
+  "id": "p_000664_00000030",
+  "qid": 2000,
+  "target_score":  1145,
+  "assignments":{
+  }
+}
+,
+
+{
+  "id": "p_000806_00000602",
+  "qid": 2012,
+  "target_score": 1714,
   "assignments":{
   }
 }

@@ -159,7 +159,7 @@ package scenes.game.display
 			levelObj = _levelObj;
 			m_levelLayoutObj = _levelLayoutObj;
 			m_levelLayoutName = _levelLayoutObj["id"];
-			m_levelQID = _levelLayoutObj["qid"];
+			m_levelQID = _levelObj["qid"];
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
@@ -1153,14 +1153,14 @@ package scenes.game.display
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
-				//trace("New best score: " + m_bestScore);
+				trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
-			if (levelGraph.prevScore != levelGraph.currentScore)
-				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
+			//if (levelGraph.prevScore != levelGraph.currentScore)
+			dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
 
