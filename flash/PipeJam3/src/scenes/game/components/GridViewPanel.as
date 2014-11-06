@@ -153,6 +153,7 @@ package scenes.game.components
 			circleImage.y = -0.5 * circleImage.height;
 			circleImage.alpha = 0.7;
 			m_paintBrush.addChild(circleImage);
+			m_paintBrush.flatten();
 			
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
 			var scoreBoxImage:Image = new Image(scoreBoxTexture);
@@ -161,7 +162,6 @@ package scenes.game.components
 			scoreBoxImage.y = circleImage.y;
 			m_selectionCount.addChild(scoreBoxImage);
 			
-			m_paintBrushContainer.addChild(m_paintBrush);
 			m_paintBrushContainer.addChild(m_selectionCount);
 			
 			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
@@ -185,6 +185,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 			
 			m_paintBrushContainer.addChild(m_selectionLimitText);
+			m_paintBrushContainer.flatten();
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -227,16 +228,23 @@ package scenes.game.components
 		{
 			if (!m_currentLevel) return;
 			
-			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
-				m_selectionUpdated = false;
-				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
-				handlePaint(globalCurrentPt);
+			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
 				
+				m_paintBrush.x = m_paintBrushContainer.x = m_nextPaintbrushLocation.x;
+				m_paintBrush.y = m_paintBrushContainer.y = m_nextPaintbrushLocation.y;
 				var num:int = m_currentLevel.selectedNodes.length;
 				if (m_selectedText) {
 					TextFactory.getInstance().updateText(m_selectedText, String(num));
 					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+					m_paintBrushContainer.flatten();
 				}
+				m_nextPaintbrushLocationUpdated = false;
+			}
+		
+			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
+				m_selectionUpdated = false;
+				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
+				handlePaint(globalCurrentPt);
 			}
 			
 			if(endingMoveMode) //force gc after dragging
@@ -1311,39 +1319,45 @@ package scenes.game.components
 		{
 			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrushContainer.scaleX = .5;
-			m_paintBrushContainer.scaleY = .5;
+			m_paintBrush.scaleX = m_paintBrushContainer.scaleX = .5;
+			m_paintBrush.scaleY = m_paintBrushContainer.scaleY = .5;
 			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrushContainer.x = localPt.x;
-			m_paintBrushContainer.y = localPt.y;
+			m_paintBrush.x = m_paintBrushContainer.x = localPt.x;
+			m_paintBrush.y = m_paintBrushContainer.y = localPt.y;
+			addChild(m_paintBrush);
 			addChild(m_paintBrushContainer);
+			m_paintBrush.flatten();
+			m_paintBrushContainer.flatten();
+			m_paintBrush.visible = true;
 			m_paintBrushContainer.visible = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
+			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
 			m_paintBrushContainer.scaleX = m_paintBrushContainer.scaleY = size*.20;
-			
+			m_paintBrush.flatten();
+			m_paintBrushContainer.flatten();
 		}
 		
 		
-		
+		private var m_nextPaintbrushLocation:Point;
+		private var m_nextPaintbrushLocationUpdated:Boolean = false;
 		public function movePaintBrush(pt:Point):void
 		{
-			var localPt:Point = globalToLocal(pt);
-			m_paintBrushContainer.x = localPt.x;
-			m_paintBrushContainer.y = localPt.y;
-			
-			m_selectionUpdated = true;
+			m_nextPaintbrushLocation = globalToLocal(pt);
+			m_nextPaintbrushLocationUpdated = true;
 		}
 		
 		public function showPaintBrush():void
 		{
+			m_paintBrush.visible = true;
 			m_paintBrushContainer.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
+			m_paintBrush.visible = false;
 			m_paintBrushContainer.visible = false;
 		}
 		
@@ -1377,11 +1391,11 @@ package scenes.game.components
 		private function onSolverStopped():void
 		{
 			Starling.juggler.removeTweens(m_paintBrush);
-			Starling.juggler.tween(m_paintBrush, 2, {
+			Starling.juggler.tween(m_paintBrush, 0.2, {
 				repeatCount: 1,
 				reverse: false,
 				rotation: 2*Math.PI,
-				delay: .30
+				delay: .2
 			});
 		}
 		
