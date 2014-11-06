@@ -435,16 +435,16 @@ package scenes.game.display
 			{
 				if(waitIconDisplayed == false)
 				{
-					busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
-					addChild(busyAnimationMovieClip);
-					Starling.juggler.add(this.busyAnimationMovieClip);
+					//busyAnimationMovieClip = new MovieClip(waitAnimationImages, 4);
+					//addChild(busyAnimationMovieClip);
+					//Starling.juggler.add(this.busyAnimationMovieClip);
 					waitIconDisplayed = true;
 //					var borderTexture:Texture = AssetInterface.getTexture("Game", "Wait1Class");
 //					solvingImage = new Image(borderTexture);
 //					solvingImage.alpha = .6;
-					busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = 4;
-					busyAnimationMovieClip.x = 240 - busyAnimationMovieClip.width/2;
-					busyAnimationMovieClip.y = 110;
+					//busyAnimationMovieClip.scaleX = busyAnimationMovieClip.scaleY = 4;
+					//busyAnimationMovieClip.x = 240 - busyAnimationMovieClip.width/2;
+					//busyAnimationMovieClip.y = 110;
 //					addChild(solvingImage);
 				}
 				if(active_level)

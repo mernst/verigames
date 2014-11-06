@@ -1153,7 +1153,7 @@ package scenes.game.display
 		{
 			if (recordBestScore && (levelGraph.currentScore > m_bestScore)) {
 				m_bestScore = levelGraph.currentScore;
-				trace("New best score: " + m_bestScore);
+				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
