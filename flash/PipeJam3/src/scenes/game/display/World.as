@@ -226,7 +226,7 @@ package scenes.game.display
 		private function initGameControlPanel():void {
 			trace("Initializing GameControlPanel...");
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
+			//gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {

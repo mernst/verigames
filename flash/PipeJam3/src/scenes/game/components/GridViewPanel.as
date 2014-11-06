@@ -30,7 +30,7 @@ package scenes.game.components
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
-	import utils.PropDictionary;
+	import flashx.textLayout.elements.BreakElement;
 	
 	import networking.TutorialController;
 	
@@ -63,6 +63,7 @@ package scenes.game.components
 	
 	import system.MaxSatSolver;
 	
+	import utils.PropDictionary;
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -95,6 +96,7 @@ package scenes.game.components
 		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
 
+		protected var rightSideMenu:Sprite;
 		
 		private var m_selectionUpdated:Boolean = false;
 		private var m_startingTouchPoint:Point;
@@ -108,6 +110,17 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
+		
+		//brush details
+		protected var m_solverBrush:Sprite;
+		protected var m_widenBrush:Sprite;
+		protected var m_narrowBrush:Sprite;
+	
+		public static const SOLVER_BRUSH:int = 0;
+		public static const WIDEN_BRUSH:int = 1;
+		public static const NARROW_BRUSH:int = 2;
+		
+		public static const CHANGE_BRUSH:String = "change_brush";
 		
 		public static const MIN_SCALE:Number = 0.4 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
@@ -144,30 +157,31 @@ package scenes.game.components
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier,0);
 			
-			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
-			var circleImage:Image = new Image(circleTexture);
-			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
-			circleImage.x = -0.5 * circleImage.width;
-			circleImage.y = -0.5 * circleImage.height;
-			circleImage.alpha = 0.7;
-			m_paintBrush.addChild(circleImage);
+			// Create paintbrushs for menu
+			m_solverBrush = createPaintBrush(SOLVER_BRUSH);
+			m_solverBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
+			m_widenBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
+			m_narrowBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 			
+			m_paintBrush = createPaintBrush(SOLVER_BRUSH);
+			changeBrush(m_paintBrush);
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
 			var scoreBoxImage:Image = new Image(scoreBoxTexture);
 			scoreBoxImage.width = scoreBoxImage.height = .6 * PAINT_RADIUS;
-			scoreBoxImage.x = circleImage.x;
-			scoreBoxImage.y = circleImage.y;
 			m_selectionCount.addChild(scoreBoxImage);
+			m_selectionCount.x = m_paintBrushContainer.bounds.left;
+			m_selectionCount.y = m_paintBrushContainer.bounds.left;
 			
-			m_paintBrushContainer.addChild(m_paintBrush);
 			m_paintBrushContainer.addChild(m_selectionCount);
 			
 			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
 			m_selectedText.touchable = false;
-			m_selectedText.x = circleImage.x + 2;
-			m_selectedText.y = circleImage.y + 1;
+			m_selectedText.x = m_selectionCount.x + 2;
+			m_selectedText.y = m_selectionCount.y + 1;
 			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
 			
 			m_paintBrushContainer.addChild(m_selectedText);
@@ -186,8 +200,59 @@ package scenes.game.components
 			
 			m_paintBrushContainer.addChild(m_selectionLimitText);
 			
+			rightSideMenu = new Sprite();
+			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
+			rightSideMenu.addChild(backgroundQuad);
+			rightSideMenu.x = WIDTH - 40;
+			addChild(rightSideMenu);
+			
+			rightSideMenu.addChild(m_solverBrush);
+			m_solverBrush.scaleX = m_solverBrush.scaleY = .2;
+			m_solverBrush.x = 8 + m_solverBrush.width/2;
+			m_solverBrush.y = 120;
+			rightSideMenu.addChild(m_widenBrush);
+			m_widenBrush.x = m_solverBrush.x;
+			m_widenBrush.y = 160;
+			m_widenBrush.scaleX = m_widenBrush.scaleY = .2;
+			rightSideMenu.addChild(m_narrowBrush);
+			m_narrowBrush.x = m_solverBrush.x;
+			m_narrowBrush.y = 200;
+			m_narrowBrush.scaleX = m_narrowBrush.scaleY = .2;
+			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+
+		protected function createPaintBrush(style:int):Sprite
+		{
+			// Create paintbrush: TODO make higher res circle
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
+			var circleImage:Image = new Image(circleTexture);
+			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
+			circleImage.x = -0.5 * circleImage.width;
+			circleImage.y = -0.5 * circleImage.height;
+			circleImage.alpha = 0.7;
+			
+			var paintBrush:Sprite = new Sprite;
+			paintBrush.addChild(circleImage);
+			
+			switch(style)
+			{
+				case SOLVER_BRUSH:
+					break;
+				case NARROW_BRUSH:
+					var q:Quad = new Quad(10,10, 0xff0000);
+					paintBrush.addChild(q);
+					break;
+				case WIDEN_BRUSH:
+					var q:Quad = new Quad(10,10, 0x00ff00);
+					paintBrush.addChild(q);
+					break;
+			}
+
+			
+			return paintBrush;
 		}
 		
 		private function onAddedToStage():void
@@ -1312,6 +1377,30 @@ package scenes.game.components
 		{
 			//trace("beginPaint()");
 			m_currentLevel.unselectAll();
+		}
+		
+		private function changeCurrentBrush(evt:starling.events.Event):void
+		{
+			if(evt.target == m_solverBrush)
+			{
+				changeBrush(createPaintBrush(SOLVER_BRUSH));
+			}
+			else if(evt.target == m_narrowBrush)
+			{
+				changeBrush(createPaintBrush(NARROW_BRUSH));
+			}
+			else if(evt.target == m_widenBrush)
+			{
+				changeBrush(createPaintBrush(WIDEN_BRUSH));
+			}
+		}
+		private function changeBrush(brush:Sprite):void
+		{
+			if(m_paintBrush.parent)
+				m_paintBrushContainer.removeChild(m_paintBrush);
+			m_paintBrush = brush;
+			m_paintBrushContainer.addChild(m_paintBrush);
+			
 		}
 		
 		public function installPaintBrush(globPt:Point):void

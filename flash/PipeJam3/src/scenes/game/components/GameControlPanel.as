@@ -132,7 +132,7 @@ package scenes.game.components
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
 			var quad:Quad = new Quad(SCORE_PANEL_AREA.width + 10, SCORE_PANEL_AREA.height, 0x231F20);
 			m_scorePanel.addChild(quad);
-			
+						
 			m_scoreBarContainer = new Sprite();
 			m_scorePanel.addChild(m_scoreBarContainer);
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
