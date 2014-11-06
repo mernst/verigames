@@ -354,7 +354,7 @@ package scenes.game.display
 				{
 					node.createSkin();
 					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
-					nodeDrawingBoard.addChild(node.skin);
+					if (node.skin) nodeDrawingBoard.addChild(node.skin);
 				}
 				node.isDirty = false;
 			}
@@ -614,8 +614,12 @@ package scenes.game.display
 				if (dX * dX > paintRadiusSquared) continue;
 				if (dY * dY > paintRadiusSquared) continue;
 				if (dX * dX + dY * dY <= paintRadiusSquared && !node.isSelected) {
-					while (selectedNodes.length >= maxSelectable) {
-						selectedNodes.shift().unselect();
+					if (false) { // use this branch for actively unselecting when max is reached 
+						while (selectedNodes.length >= maxSelectable) {
+							selectedNodes.shift().unselect();
+						}
+					} else if (selectedNodes.length >= maxSelectable) {
+						break; // done selecting
 					}
 					node.select();
 					selectedNodes.push(node);

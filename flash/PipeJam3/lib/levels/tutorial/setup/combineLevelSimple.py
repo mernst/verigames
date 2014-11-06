@@ -1,18 +1,15 @@
 import sys
 
 FILES = [
-	'IntroWidget',
-	'WidgetPractice',
-	'LockedWidget',
-	'Links',
-	'Jams',
-	'Widen',
-	'ZoomPan',
-	'L13601',
-	'L13635',
-	'L13663',
-	'L13722',
-	'L13727',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
 ]
 
 def combineLevels(files):

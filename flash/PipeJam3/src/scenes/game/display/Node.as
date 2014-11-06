@@ -58,6 +58,7 @@ package scenes.game.display
 		{
 			super.createSkin();
 			var newSkin:NodeSkin = NodeSkin.getNextSkin();
+			if (newSkin == null) return;
 			newSkin.setNode(this);
 			newSkin.draw();
 			skin = newSkin;
@@ -85,7 +86,7 @@ package scenes.game.display
 			super.scaleSkin(newScaleX, newScaleY);
 			
 			//check to see if we have an error, and if so, scale our error marker at a lower rate
-			if(_hasError)
+			if(_hasError && skin)
 			{
 				var currentWidth:Number = skin.width;
 				skin.scaleX = skin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;

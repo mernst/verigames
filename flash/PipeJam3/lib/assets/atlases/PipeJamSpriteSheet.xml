@@ -70,6 +70,8 @@
 	<SubTexture name="BlueLightSegmentVert" x="437" y="788" width="10" height="10" />
 	<SubTexture name="BlueLightSelected" x="110" y="895" width="53" height="53" />
 	<SubTexture name="BlueLightStart" x="2" y="894" width="53" height="53" />
+	<SubTexture name="DarkConnector" x="875" y="18" width="16" height="16" />
+	<SubTexture name="ErrorConstraint" x="808" y="2" width="32" height="32" />
 	<SubTexture name="FullscreenButton" x="953" y="31" width="30" height="30" />
 	<SubTexture name="FullscreenButtonOver" x="953" y="63" width="30" height="30" />
 	<SubTexture name="FullscreenButtonSelected" x="953" y="95" width="30" height="30" />
@@ -133,7 +135,8 @@
 	<SubTexture name="GrayLightSegmentTop" x="401" y="783" width="10" height="5" />
 	<SubTexture name="GrayLightSegmentVert" x="401" y="788" width="10" height="10" />
 	<SubTexture name="GrayLightStart" x="56" y="894" width="53" height="53" />
-	<SubTexture name="MenuArrowHorizonal" x="779" y="36" width="10" height="19" />
+	<SubTexture name="LightConnector" x="875" y="2" width="16" height="16" />
+	<SubTexture name="MenuArrowHorizonal" x="779" y="35" width="10" height="19" />
 	<SubTexture name="MenuArrowVertical" x="791" y="40" width="19" height="10" />
 	<SubTexture name="MenuBoxAttached" x="390" y="224" width="192" height="192" />
 	<SubTexture name="MenuBoxAttachedBottom" x="454" y="352" width="64" height="64" />
@@ -156,7 +159,7 @@
 	<SubTexture name="MenuBoxFreeTopLeft" x="390" y="30" width="64" height="64" />
 	<SubTexture name="MenuBoxFreeTopRight" x="518" y="30" width="64" height="64" />
 	<SubTexture name="MenuBoxScrollbar" x="792" y="95" width="4" height="4" />
-	<SubTexture name="MenuBoxScrollbarButton" x="789" y="61" width="10" height="10" />
+	<SubTexture name="MenuBoxScrollbarButton" x="788" y="60" width="11" height="11" />
 	<SubTexture name="MenuBoxScrollbarButtonOver" x="789" y="72" width="10" height="10" />
 	<SubTexture name="MenuBoxScrollbarButtonSelected" x="789" y="83" width="10" height="10" />
 	<SubTexture name="MenuButton" x="584" y="30" width="192" height="192" />
@@ -191,7 +194,6 @@
 	<SubTexture name="MenuButtonTopRight" x="712" y="30" width="64" height="64" />
 	<SubTexture name="OrangeAdaptor" x="779" y="162" width="43" height="61" />
 	<SubTexture name="OrangeAdaptorPlug" x="779" y="116" width="16" height="44" />
-	<SubTexture name="OrangeScore" x="808" y="2" width="32" height="32" />
 	<SubTexture name="PaintCircle" x="165" y="827" width="194" height="194" />
 	<SubTexture name="RecenterButton" x="985" y="127" width="30" height="30" />
 	<SubTexture name="RecenterButtonOver" x="985" y="159" width="30" height="30" />
@@ -199,6 +201,7 @@
 	<SubTexture name="ResetButton" x="985" y="31" width="30" height="30" />
 	<SubTexture name="ResetButtonOver" x="985" y="63" width="30" height="30" />
 	<SubTexture name="ResetButtonSelected" x="985" y="95" width="30" height="30" />
+	<SubTexture name="SatisfiedConstraint" x="842" y="2" width="32" height="32" />
 	<SubTexture name="ScoreBarBlue" x="813" y="44" width="48" height="48" />
 	<SubTexture name="ScoreBarForeground" x="1" y="479" width="960" height="102" />
 	<SubTexture name="ScoreBarOrange" x="865" y="44" width="46" height="46" />

@@ -1618,6 +1618,7 @@ package scenes.game.display
 						//thisGrid.showDebugQuad();
 						var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
 						selectionChanged = (selectionChanged || thisGridSelectionChanged);
+						if (selectedNodes.length >= getMaxSelectableWidgets()) break;
 					}
 				}
 			}

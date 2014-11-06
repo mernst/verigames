@@ -205,7 +205,7 @@ package scenes.game.components
 			//if we are near the edge, scroll
 			var xDelta:Number = 0;
 			var yDelta:Number = 0;
-			if(m_scrollEdgePoint)
+			if(m_scrollEdgePoint && getPanZoomAllowed())
 			{
 				if(m_scrollEdgePoint.x < 10)
 				{

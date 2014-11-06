@@ -46,25 +46,15 @@ package scenes.game.display
 		{
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-				case L13601_TUTORIAL:
-				case L13635_TUTORIAL:
-				case L13663_TUTORIAL:
-				case L13722_TUTORIAL:
-				case L13727_TUTORIAL:
-				// No longer used:
-				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
-				case CREATE_JOINT_TUTORIAL:
-				case SKILLS_A_TUTORIAL:
-				case SKILLS_B_TUTORIAL:
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
 					break;
 				default:
 					throw new Error("Unknown Tutorial encountered: " + m_tutorialTag);
@@ -173,31 +163,14 @@ package scenes.game.display
 		
 		public function getAutoSolveAllowed():Boolean
 		{
-			switch (m_tutorialTag) {
-				case L13635_TUTORIAL:
-				case L13663_TUTORIAL:
-				case L13722_TUTORIAL:
-				case L13727_TUTORIAL:
-					return true;
-				default:
-					return false;
-			}
 			return true;
 		}
 		
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
+				case "1":
 					return false;
-				case ZOOM_PAN_TUTORIAL:
-					return true;
 			}
 			return true;
 		}
@@ -205,21 +178,11 @@ package scenes.game.display
 		public function getMiniMapShown():Boolean
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-				case L13601_TUTORIAL:
-				case L13635_TUTORIAL:
-				case L13663_TUTORIAL:
-				case LAYOUT_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
-				case CREATE_JOINT_TUTORIAL:
-				case SKILLS_A_TUTORIAL:
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
 					return false;
 			}
 			return true;
@@ -227,37 +190,22 @@ package scenes.game.display
 		
 		public function getLayoutFixed():Boolean
 		{
-			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-					return true;
-			}
 			return true;
 		}
 		
 		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-				case WIDGET_PRACTICE_TUTORIAL:
-				case LOCKED_TUTORIAL:
-					return 1.0;
-				case LINKS_TUTORIAL:
-					return 0.8;
-				case JAMS_TUTORIAL:
-				case WIDEN_TUTORIAL:
-					return 1.0;
-				case ZOOM_PAN_TUTORIAL:
-					return 6.0;
-				case L13722_TUTORIAL:
-				case L13727_TUTORIAL:
-					return 8.0;
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
+					return 1.0
 			}
 			return 1.0;
 		}
@@ -265,26 +213,18 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-					return new Point(0, 15);
-				case WIDGET_PRACTICE_TUTORIAL:
-					return new Point(0, 5);
-				case LOCKED_TUTORIAL:
-					return new Point(0, 10);
-				case LINKS_TUTORIAL:
-					return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
-				case JAMS_TUTORIAL:
-					return new Point(0, 15);
-				case WIDEN_TUTORIAL:
+				case "1":
+					return new Point(20, 150);//move right 80px (pan left) and down (pan up) 15px
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
 					return new Point();
-				case ZOOM_PAN_TUTORIAL:
-					return new Point( -200, 100);// move left , up
-				case L13601_TUTORIAL:
-				case L13635_TUTORIAL:
-				case L13663_TUTORIAL:
-				case L13722_TUTORIAL:
-				case L13727_TUTORIAL:
-					return new Point();
+					//return new Point(80, -15);//move right 80px (pan left) and up (pan down) 15px
 			}
 			return new Point();
 		}
@@ -292,14 +232,17 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			switch (m_tutorialTag) {
-				case L13635_TUTORIAL:
-					return 25;
-				case L13663_TUTORIAL:
-					return 30;
-				case L13722_TUTORIAL:
-					return 150;
-				case L13727_TUTORIAL:
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
 					return 200;
+				case "6":
+				case "7":
+				case "8":
+				case "9":
+					return 500;
 			}
 			return -1;
 		}
@@ -391,6 +334,21 @@ package scenes.game.display
 		{
 			if (m_currentTutorialText != null) return m_currentTutorialText;
 			switch (m_tutorialTag) {
+				case "1":
+					return new TutorialManagerTextInfo(
+						"Click and drag to paint widgets to be solved by the autosolver!\nEliminate as many red conflicts as you can!",
+						null,
+						null,
+						null, null);
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
+					return null;
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click on WIDGETS to change their color.\n" +

@@ -36,7 +36,7 @@ package scenes.game.display
 //			mVertexData.setUniformColor(color);
 			
 //			onVertexDataChanged();
-			mAtlas = AssetInterface.getTextureAtlas("Game", "NewSkinPNG", "NewSkinXML");
+			mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			DarkConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
 			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_DarkConnector);
 		}

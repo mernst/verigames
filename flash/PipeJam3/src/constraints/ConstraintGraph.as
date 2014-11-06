@@ -179,6 +179,7 @@ package constraints
 			graph1.qid = parseInt(levelObj[QID]);
 			switch (ver) {
 				case "1": // Version 1
+				case "2": // Version 2
 					// No "default" specified in json, use game default
 					var graphDefaultVal:ConstraintValue;
 					if (defaultValue == ConstraintScoringConfig.TYPE_0_VALUE_KEY) {

@@ -62,10 +62,8 @@ package assets
 		public static const PipeJamSubTexture_BorderGrayDark:String = "GrayDarkEnd";// "BorderGrayDark";
 		public static const PipeJamSubTexture_BorderGrayLight:String = "GrayLightEnd";//"BorderGrayLight";
 		
-		public static const PipeJamSubTexture_RedSquare:String = "ErrorConstraint";
-		public static const PipeJamSubTexture_GreenSquare:String = "SatisfiedConstraint";
-		public static const PipeJamSubTexture_LightEdge:String = "LightEdge";
-		public static const PipeJamSubTexture_DarkEdge:String = "DarkEdge";
+		public static const PipeJamSubTexture_ErrorConstraint:String = "ErrorConstraint";
+		public static const PipeJamSubTexture_SatisfiedConstraint:String = "SatisfiedConstraint";
 		public static const PipeJamSubTexture_LightConnector:String = "LightConnector";
 		public static const PipeJamSubTexture_DarkConnector:String = "DarkConnector";
 		
@@ -89,7 +87,6 @@ package assets
 		public static const PipeJamSubTexture_BlueLightSegmentPrefix:String = "BlueLightSegment";
 		public static const PipeJamSubTexture_OrangeAdaptor:String = "OrangeAdaptor";
 		public static const PipeJamSubTexture_OrangeAdaptorPlug:String = "OrangeAdaptorPlug";
-		public static const PipeJamSubTexture_OrangeScore:String = "OrangeScore";
 		public static const PipeJamSubTexture_ScoreBarForeground:String = "ScoreBarForeground";
 		public static const PipeJamSubTexture_ScoreBarBlue:String = "ScoreBarBlue";
 		public static const PipeJamSubTexture_ScoreBarOrange:String = "ScoreBarOrange";

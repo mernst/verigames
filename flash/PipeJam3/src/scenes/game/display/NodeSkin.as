@@ -36,7 +36,6 @@ package scenes.game.display
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
 		
-		static protected var mBauhausAtlas:TextureAtlas;	
 		static protected var GreenSquare:Texture;
 		static protected var RedSquare:Texture;
 		
@@ -76,6 +75,7 @@ package scenes.game.display
 			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 		}
 		
+		private static var nextId:int = 0;
 		static public function getNextSkin():NodeSkin
 		{
 			var nextSkin:NodeSkin;
@@ -83,11 +83,28 @@ package scenes.game.display
 				nextSkin = availableGameNodeSkins.pop();
 			else
 			{
-				nextSkin = new NodeSkin(numSkins);
-				numSkins++;
+				if (false) // attempt limiting the number of skins
+				{
+					var attempts:int = 0;
+					while (!activeGameNodeSkins[nextId])
+					{
+						if (nextId > numSkins) nextId = 0;
+						nextId++;
+						attempts++;
+						if (attempts > numSkins) break;
+					}
+					nextSkin = activeGameNodeSkins[nextId];
+					nextId++;
+					if (nextSkin) nextSkin.disableSkin();
+				}
+				else
+				{
+					nextSkin = new NodeSkin(numSkins);
+					numSkins++;
+				}
 			}
 
-			activeGameNodeSkins[nextSkin.id] = nextSkin;
+			if (nextSkin) activeGameNodeSkins[nextSkin.id] = nextSkin;
 
 			return nextSkin;
 		}
@@ -152,9 +169,8 @@ package scenes.game.display
 				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
 				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightSelected);
 				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkSelected);
-				mBauhausAtlas = AssetInterface.getTextureAtlas("Game", "NewSkinPNG", "NewSkinXML");
-				RedSquare = mBauhausAtlas.getTexture(AssetInterface.PipeJamSubTexture_RedSquare);
-				GreenSquare = mBauhausAtlas.getTexture(AssetInterface.PipeJamSubTexture_GreenSquare);
+				RedSquare = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_ErrorConstraint);
+				GreenSquare = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_SatisfiedConstraint);
 			}
 		}
 		
@@ -222,6 +238,7 @@ package scenes.game.display
 				else
 				{
 					constraintImage = new Image(GreenSquare);
+					
 					if(associatedNode._hadError == true)
 					{
 						//flash if changing
@@ -229,7 +246,7 @@ package scenes.game.display
 					}
 					associatedNode._hadError = false;
 				}
-				constraintImage.width = constraintImage.height = constraintImage.width*.5;
+				constraintImage.width = constraintImage.height = 20;
 				addChild(constraintImage);
 			}
 			if(textureImage)
@@ -265,6 +282,7 @@ package scenes.game.display
 		{
 			availableGameNodeSkins.push(this);
 			associatedNode.skin = null;
+			if (tween) Starling.juggler.remove(tween);
 			delete activeGameNodeSkins[id];
 		}
 		
@@ -302,9 +320,12 @@ package scenes.game.display
 		
 		protected function flashComplete():void
 		{
-			q.visible = false;
-			q.parent.removeChild(q); 
-			Starling.juggler.remove(tween);
+			if (q)
+			{
+				q.visible = false;
+				if (q.parent) q.parent.removeChild(q);
+			}
+			if (tween) Starling.juggler.remove(tween);
 			draw();
 		}
 	}
