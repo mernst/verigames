@@ -88,7 +88,11 @@ package scenes.game.components
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
+		protected var m_paintBrushContainer:Sprite = new Sprite();
 		protected var m_paintBrush:Sprite = new Sprite();
+		protected var m_selectionCount:Sprite = new Sprite();
+		protected var m_selectedText:TextFieldWrapper;
+		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
 
 		
@@ -149,6 +153,38 @@ package scenes.game.components
 			circleImage.y = -0.5 * circleImage.height;
 			circleImage.alpha = 0.7;
 			m_paintBrush.addChild(circleImage);
+			
+			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
+			var scoreBoxImage:Image = new Image(scoreBoxTexture);
+			scoreBoxImage.width = scoreBoxImage.height = .6 * PAINT_RADIUS;
+			scoreBoxImage.x = circleImage.x;
+			scoreBoxImage.y = circleImage.y;
+			m_selectionCount.addChild(scoreBoxImage);
+			
+			m_paintBrushContainer.addChild(m_paintBrush);
+			m_paintBrushContainer.addChild(m_selectionCount);
+			
+			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
+			m_selectedText.touchable = false;
+			m_selectedText.x = circleImage.x + 2;
+			m_selectedText.y = circleImage.y + 1;
+			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+			
+			m_paintBrushContainer.addChild(m_selectedText);
+			
+			var divisionLineQuad:Quad = new Quad(m_selectedText.width - 6, 2, 0xc1a06d);
+			divisionLineQuad.touchable = false;
+			divisionLineQuad.x = m_selectedText.x + 3;
+			divisionLineQuad.y = m_selectedText.y + m_selectedText.height - 3;
+			m_paintBrushContainer.addChild(divisionLineQuad);
+			
+			m_selectionLimitText = TextFactory.getInstance().createTextField("1000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
+			m_selectionLimitText.touchable = false;
+			m_selectionLimitText.x = m_selectedText.x;
+			m_selectionLimitText.y = divisionLineQuad.y;
+			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
+			
+			m_paintBrushContainer.addChild(m_selectionLimitText);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -767,6 +803,10 @@ package scenes.game.components
 					}
 				}
 				m_currentLevel = level;
+				
+				var max:int = m_currentLevel.getMaxSelectableWidgets();
+				TextFactory.getInstance().updateText(m_selectionLimitText, String(max));
+				TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 
 			}
 			
@@ -1278,18 +1318,18 @@ package scenes.game.components
 		{
 			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrush.scaleX = .5;
-			m_paintBrush.scaleY = .5;
+			m_paintBrushContainer.scaleX = .5;
+			m_paintBrushContainer.scaleY = .5;
 			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrush.x = localPt.x;
-			m_paintBrush.y = localPt.y;
-			addChild(m_paintBrush);
-			m_paintBrush.visible = true;
+			m_paintBrushContainer.x = localPt.x;
+			m_paintBrushContainer.y = localPt.y;
+			addChild(m_paintBrushContainer);
+			m_paintBrushContainer.visible = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
-			m_paintBrush.scaleX = m_paintBrush.scaleY = size*.20;
+			m_paintBrushContainer.scaleX = m_paintBrushContainer.scaleY = size*.20;
 			
 		}
 		
@@ -1297,25 +1337,29 @@ package scenes.game.components
 		public function movePaintBrush(pt:Point):void
 		{
 			var localPt:Point = globalToLocal(pt);
-			m_paintBrush.x = localPt.x;
-			m_paintBrush.y = localPt.y;
+			m_paintBrushContainer.x = localPt.x;
+			m_paintBrushContainer.y = localPt.y;
+			
+			var num:int = m_currentLevel.selectedNodes.length;
+			TextFactory.getInstance().updateText(m_selectedText, String(num));
+			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
 		}
 		
 		public function showPaintBrush():void
 		{
-			m_paintBrush.visible = true;
+			m_paintBrushContainer.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
-			m_paintBrush.visible = false;
+			m_paintBrushContainer.visible = false;
 		}
 		
 		public function handlePaint(globPt:Point):void
 		{
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
-			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX/content.scaleX;
-			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY/content.scaleY;
+			const dX:Number = PAINT_RADIUS * m_paintBrushContainer.scaleX/content.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrushContainer.scaleY/content.scaleY;
 			
 			m_currentLevel.selectNodes(localPt, dX, dY);
 		}
