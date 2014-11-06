@@ -1,8 +1,6 @@
 import sys, os
 from process_sat import input_cnstr, connected, dot, output_dimacs, write_game_files
 
-NODE_LIMIT = 100
-
 ### Command line interface ###
 if __name__ == "__main__":
     usage = 'Usage: %s constraint_filename_prefix_omit_json_extension' % sys.argv[0]
@@ -18,6 +16,8 @@ if __name__ == "__main__":
     graphs_fn = '%s.graphs' % file_pref
     connected.run(graph_fn, graphs_fn)
 
+    node_limit = int(raw_input('Enter limit on number of vars required to layout level (or 0 to layout all levels): '))
+
     dot_dirn = '%s_dot_files' % file_pref
     suf_i = 0
     while os.path.exists(dot_dirn):
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         dot_dirn = '%s_dot_files_%s' % (file_pref, suf_i)
     os.makedirs(dot_dirn)
     print 'Writing dot files to: %s' % dot_dirn
-    dot.run(graphs_fn, dot_dirn, NODE_LIMIT)
+    dot.run(graphs_fn, dot_dirn, node_limit)
 
     # wcnf_dirn = '%s_wcnf_files' % file_pref
     # suf_i = 0
@@ -43,6 +43,6 @@ if __name__ == "__main__":
         game_files_dirn = '%s_game_files%s' % (file_pref, suf_i)
     os.makedirs(game_files_dirn)
     print 'Writing game files to: %s' % game_files_dirn
-    qids_start = 2000
-    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, NODE_LIMIT)
+    qids_start = int(raw_input('Enter qid to start with: '))
+    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_limit)
 

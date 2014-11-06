@@ -2,6 +2,19 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util
 
+def add_layout_to_graph(G, node_layout):
+    for node_id in G.nodes():
+        node = G.node[node_id]
+        if node.has_key('x') or node.has_key('y'):
+            print 'Warning! Node %s already has layout info: [%s, %s]' % (node_id, node.get('x', ''), node.get('y', ''))
+        node_id_ = node_id.replace(':', '_')
+        layout_info = node_layout.get(node_id_)
+        if not layout_info:
+            print 'Warning! No layout info found for node %s' % node_id_
+            continue
+        node['x'] = layout_info[0]
+        node['y'] = layout_info[1]
+
 def layout_with_sfdp(dot_filename, Gs):
     with os.popen('sfdp -y -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
         _util.print_step('Laying out %s' % dot_filename)
@@ -19,18 +32,15 @@ def layout_with_sfdp(dot_filename, Gs):
             except Exception as e:
                 print 'Warning! Error parsing layout for %s in %s:\n\n%s' % (data[1], dot_filename, e)
     for G in Gs:
-        for node_id in G.nodes():
-            node = G.node[node_id]
-            if node.has_key('x') or node.has_key('y'):
-                print 'Warning! Node %s already has layout info: [%s, %s]' % (node_id, node.get('x', ''), node.get('y', ''))
-            node_id_ = node_id.replace(':', '_')
-            layout_info = node_layout.get(node_id_)
-            if not layout_info:
-                print 'Warning! No layout info found for node %s' % node_id_
-                continue
-            node['x'] = layout_info[0]
-            node['y'] = layout_info[1]
+        add_layout_to_graph(G, node_layout)
             
+
+def layout_with_fruchterman_reingold(Gs):
+    for G in Gs:
+        _util.print_step('Laying out %s...' % G.graph.get('id', ''))
+        node_layout = nx.fruchterman_reingold_layout(G)
+        add_layout_to_graph(G, node_layout)
+        
 
 def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
     _util.print_step('loading')
@@ -41,12 +51,6 @@ def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
 
     _util.print_step('outputting')
 
-    use_G = []
-
-    if True:
-        for G in Gs:
-            use_G.append(G)
-
     total_conf = 0
     total_del = 0
 
@@ -56,8 +60,8 @@ def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
         label_txt = 'label=""'
     header = '''
 digraph G {
-  graph [ overlap="scalexy" penwidth="0.2" outputorder=edgesfirst sep="0.1" ]
-  node [ shape="circle" style="filled" width="0.15" height="0.15" %s ]
+  graph [ overlap="scalexy" penwidth="0.2" outputorder=edgesfirst size=10 sep="0.1" ]
+  node [ shape="circle" style="filled" width="0.2" height="0.2" %s ]
     ''' % label_txt
 
     footer = '''
@@ -73,7 +77,7 @@ digraph G {
 
     laid_out_Gs = []
 
-    for Gi, G in enumerate(sorted(use_G)):
+    for Gi, G in enumerate(sorted(Gs)):
         to_del = {}
         n_vars = len([n for n in G.nodes() if n.startswith('var')])
         for node in G.nodes():
@@ -83,13 +87,15 @@ digraph G {
         # Limit the number of nodes in a graph (if less than limit, don't produce dot file)
         if n_vars < node_limit:
             continue
+        if n_vars > 20000:
+            continue
 
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
-
         # Individual files per graph
         if out_is_folder:
             outfilename = outfile + ('/%s.dot' % G.graph['id'])
+            _util.print_step('Writing %s' % outfilename)
             output = open(outfilename, 'w')
             output.write(header)
 
@@ -190,6 +196,7 @@ digraph G {
             output.write(footer)
             output.close()
             layout_with_sfdp(outfilename, [G])
+            #layout_with_fruchterman_reingold([G])
         else:
             output.write('  }\n')
             laid_out_Gs.append(G)
@@ -202,7 +209,6 @@ digraph G {
     cPickle.dump(Gs, open(infile, 'wb'), cPickle.HIGHEST_PROTOCOL)
 
     print 'conflicts', total_conf
-    print 'PSEUDO EXTRA', (total_del - 2 * len(use_G))
 
     _util.print_step(None)
 
