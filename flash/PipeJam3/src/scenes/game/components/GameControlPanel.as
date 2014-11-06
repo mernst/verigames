@@ -414,13 +414,13 @@ package scenes.game.components
 		public function updateNumNodesSelectedDisplay():void
 		{
 			if (!m_currentLevel) return;
-			var num:int = m_currentLevel.selectedNodes.length;
-			var max:int = m_currentLevel.getMaxSelectableWidgets();
-			m_selectedTextfield.visible = (num > 0);
-			TextFactory.getInstance().updateText(m_selectedTextfield, "Selected: " + num + ((max <= 0) ? "" : "/" + max));
-			TextFactory.getInstance().updateAlign(m_selectedTextfield, 1, 1);
-			m_selectedBarDisplay.update(num, max);
-			m_selectedBarDisplay.visible = ((num > 0) && (max > 0));
+//			var num:int = m_currentLevel.selectedNodes.length;
+//			var max:int = m_currentLevel.getMaxSelectableWidgets();
+//			m_selectedTextfield.visible = (num > 0);
+//			TextFactory.getInstance().updateText(m_selectedTextfield, "Selected: " + num + ((max <= 0) ? "" : "/" + max));
+//			TextFactory.getInstance().updateAlign(m_selectedTextfield, 1, 1);
+//			m_selectedBarDisplay.update(num, max);
+//			m_selectedBarDisplay.visible = ((num > 0) && (max > 0));
 		}
 		
 		public function setNavigationButtonVisibility(viz:Boolean):void
