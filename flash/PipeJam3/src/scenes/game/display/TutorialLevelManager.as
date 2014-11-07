@@ -107,7 +107,7 @@ package scenes.game.display
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("To remove this conflict three others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					} else {
 						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
@@ -385,6 +385,7 @@ package scenes.game.display
 				case "1":
 				case "3":
 				case "4":
+				case "5":
 				case "6":
 				case "7":
 				case "8":
@@ -395,12 +396,6 @@ package scenes.game.display
 				case "14":
 					return new TutorialManagerTextInfo(
 						"Keep eliminating the red conflicts!",
-						null,
-						null,
-						null, null);
-				case "5":
-					return new TutorialManagerTextInfo(
-						"Sometimes areas need to be painted multiple times.\nKeep eliminating the red conflicts!",
 						null,
 						null,
 						null, null);

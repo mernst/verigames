@@ -872,6 +872,11 @@ package scenes.game.display
 						switchToLevelSelect();
 					return;
 				}
+				else if (tutorialController.isLastTutorialLevel())
+				{
+					switchToLevelSelect();
+					return;
+				}
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
@@ -1099,7 +1104,7 @@ package scenes.game.display
 				qid = (newLevel.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelGraph.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
-			if (restart) {
+			if (restart || newLevel == active_level) {
 				if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.hideContinueButton();
 				newLevel.restart();
 			} else if (active_level) {
