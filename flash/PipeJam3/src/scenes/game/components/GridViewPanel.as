@@ -124,7 +124,7 @@ package scenes.game.components
 		
 		public static const MIN_SCALE:Number = 0.4 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
-		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
+		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
@@ -199,6 +199,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 			
 			m_paintBrushContainer.addChild(m_selectionLimitText);
+			m_paintBrushContainer.flatten();
 			
 			rightSideMenu = new Sprite();
 			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
@@ -246,8 +247,8 @@ package scenes.game.components
 					paintBrush.addChild(q);
 					break;
 				case WIDEN_BRUSH:
-					var q:Quad = new Quad(10,10, 0x00ff00);
-					paintBrush.addChild(q);
+					var q1:Quad = new Quad(10,10, 0x00ff00);
+					paintBrush.addChild(q1);
 					break;
 			}
 
@@ -292,6 +293,19 @@ package scenes.game.components
 		{
 			if (!m_currentLevel) return;
 			
+			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
+				
+				m_paintBrush.x = m_paintBrushContainer.x = m_nextPaintbrushLocation.x;
+				m_paintBrush.y = m_paintBrushContainer.y = m_nextPaintbrushLocation.y;
+				var num:int = m_currentLevel.selectedNodes.length;
+				if (m_selectedText) {
+					TextFactory.getInstance().updateText(m_selectedText, String(num));
+					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+					m_paintBrushContainer.flatten();
+				}
+				m_nextPaintbrushLocationUpdated = false;
+			}
+		
 			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
 				m_selectionUpdated = false;
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
@@ -576,7 +590,7 @@ package scenes.game.components
 		{
 			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
 			newY = XMath.clamp(newY, m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
-			
+		//	trace("PAN ", newX, newY);
 			panTo(newX, newY);
 			var currentViewRect:Rectangle = getViewInContentSpace();
 			m_currentLevel.updateLevelDisplay(currentViewRect);
@@ -987,37 +1001,24 @@ package scenes.game.components
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
 			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
-			if ((m_currentLevel.m_boundingBox.width < MAX_SCALE * WIDTH) || (m_currentLevel.m_boundingBox.height < MAX_SCALE * VIEW_HEIGHT)) {
-				// If about the size of the window, just center the level
-				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
-				globPt = m_currentLevel.localToGlobal(centerPt);
-				localPt = content.globalToLocal(globPt);
-				moveContent(localPt.x, localPt.y);
-				//trace("center to: " + localPt);
-			} else {
-				// Otherwise center on the first visible box
-				var nodes:Dictionary = m_currentLevel.getNodes();
-				var foundNode:Node;
-				for (var nodeId:String in nodes) {
-					var gameNode:Node = nodes[nodeId] as Node;
-					if (gameNode && gameNode.isEditable && gameNode.skin) {
-						foundNode = gameNode;
-						break;
-					}
-				}
-				if (foundNode) moveContent(foundNode.centerPoint.x, foundNode.centerPoint.y);
-			}
+			
+			centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
+			globPt = m_currentLevel.localToGlobal(centerPt);
+			localPt = content.globalToLocal(globPt);
+			moveContent(localPt.x, localPt.y);
+			trace("center to: " + localPt);
+			
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
 			scaleContent(newScale, newScale);
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
-				content.x += startPtOffset.x * content.scaleX;
-				content.y += startPtOffset.y * content.scaleY;
+				content.x += startPtOffset.x;
+				content.y += startPtOffset.y;
 				inactiveContent.x = content.x;
 				inactiveContent.y = content.y;
-				newScale = m_currentLevel.tutorialManager.getStartScaleFactor();
+				newScale = STARTING_SCALE * m_currentLevel.tutorialManager.getStartScaleFactor();
 				scaleContent(newScale, newScale);
 			}
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
@@ -1407,40 +1408,45 @@ package scenes.game.components
 		{
 			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrushContainer.scaleX = .5;
-			m_paintBrushContainer.scaleY = .5;
+			m_paintBrush.scaleX = m_paintBrushContainer.scaleX = .5;
+			m_paintBrush.scaleY = m_paintBrushContainer.scaleY = .5;
 			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrushContainer.x = localPt.x;
-			m_paintBrushContainer.y = localPt.y;
+			m_paintBrush.x = m_paintBrushContainer.x = localPt.x;
+			m_paintBrush.y = m_paintBrushContainer.y = localPt.y;
+			addChild(m_paintBrush);
 			addChild(m_paintBrushContainer);
+			m_paintBrush.flatten();
+			m_paintBrushContainer.flatten();
+			m_paintBrush.visible = true;
 			m_paintBrushContainer.visible = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
+			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
 			m_paintBrushContainer.scaleX = m_paintBrushContainer.scaleY = size*.20;
-			
+			m_paintBrush.flatten();
+			m_paintBrushContainer.flatten();
 		}
 		
 		
+		private var m_nextPaintbrushLocation:Point;
+		private var m_nextPaintbrushLocationUpdated:Boolean = false;
 		public function movePaintBrush(pt:Point):void
 		{
-			var localPt:Point = globalToLocal(pt);
-			m_paintBrushContainer.x = localPt.x;
-			m_paintBrushContainer.y = localPt.y;
-			
-			var num:int = m_currentLevel.selectedNodes.length;
-			TextFactory.getInstance().updateText(m_selectedText, String(num));
-			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+			m_nextPaintbrushLocation = globalToLocal(pt);
+			m_nextPaintbrushLocationUpdated = true;
 		}
 		
 		public function showPaintBrush():void
 		{
+			m_paintBrush.visible = true;
 			m_paintBrushContainer.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
+			m_paintBrush.visible = false;
 			m_paintBrushContainer.visible = false;
 		}
 		
@@ -1474,11 +1480,11 @@ package scenes.game.components
 		private function onSolverStopped():void
 		{
 			Starling.juggler.removeTweens(m_paintBrush);
-			Starling.juggler.tween(m_paintBrush, 2, {
+			Starling.juggler.tween(m_paintBrush, 0.2, {
 				repeatCount: 1,
 				reverse: false,
 				rotation: 2*Math.PI,
-				delay: .30
+				delay: .2
 			});
 		}
 		
