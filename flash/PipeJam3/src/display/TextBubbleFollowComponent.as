@@ -41,6 +41,7 @@ package display
 		{
 			if ((m_pointAtFn != null) && ((m_pointAt == null) || (m_pointAt.parent == null))) {
 				m_pointAt = m_pointAtFn(m_level);
+				this.visible = (m_pointAt != null);
 			}
 			super.onEnterFrame(evt);
 		}

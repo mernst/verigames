@@ -122,11 +122,11 @@ package scenes.game.display
 		public function afterScoreUpdate(levelGraph:ConstraintGraph):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
-			var tip:TutorialManagerTextInfo, widthTxt:String;
+			var tip:TutorialManagerTextInfo, num:int, longConflictFound:Boolean, key:String;
 			switch (m_tutorialTag) {
 				case "04":
-					var num:int = 0;
-					var longConflictFound:Boolean = false;
+					num = 0;
+					longConflictFound = false;
 					for (var key:String in levelGraph.unsatisfiedConstraintDict) {
 						num++;
 						trace("key ", key);
@@ -139,6 +139,30 @@ package scenes.game.display
 						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86622"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
 						tips.push(tip);
 						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86623"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tips.push(tip);
+					}
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
+				case "6":
+					num = 0;
+					longConflictFound = false;
+					for (var key:String in levelGraph.unsatisfiedConstraintDict) {
+						num++;
+						trace("key ", key);
+						if (key == "c_61618" || key == "c_102237" || key == "c_27250") longConflictFound = true;
+					}
+					trace("num", num);
+					if (num == 1 && longConflictFound) {
+						tip = new TutorialManagerTextInfo("Try painting\nfrom here", null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2596"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2646"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2657"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here and this\nwhole cluster", null, pointToNode("var_3561"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -269,7 +293,7 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-					return 300;
+					return 350;
 				case "9":
 				case "10":
 				case "11":
