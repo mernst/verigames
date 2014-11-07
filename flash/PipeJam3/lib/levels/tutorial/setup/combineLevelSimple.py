@@ -1,6 +1,7 @@
 import sys
 
 FILES = [
+	't01',
 	'1',
 	'2',
 	'3',

@@ -46,6 +46,7 @@ package scenes.game.display
 		{
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {
+				case "t01":
 				case "1":
 				case "2":
 				case "3":
@@ -247,6 +248,8 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			switch (m_tutorialTag) {
+				case "t01":
+					return 10;
 				case "1":
 					return 100;
 				case "2":
