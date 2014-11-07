@@ -1,7 +1,8 @@
 
 {
   "id": "p_000664_00000030",
-  "qid": 2000,
+  "display_name": "Detonate",
+  "qid": 2016,
   "version": "2",
   "default": "type:1",
   "scoring": {

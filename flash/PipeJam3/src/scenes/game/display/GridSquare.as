@@ -622,6 +622,7 @@ package scenes.game.display
 						break; // done selecting
 					}
 					node.select();
+					trace("select " + node.id);
 					selectedNodes.push(node);
 					selectionChanged = true;
 				}

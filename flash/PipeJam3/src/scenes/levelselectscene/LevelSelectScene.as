@@ -251,9 +251,15 @@ package scenes.levelselectscene
 				var currentSelectedLevel:Object = currentVisibleListBox.currentSelection.data;
 				
 				removeChild(nameText);
-				if(currentSelectedLevel.hasOwnProperty("name"))
+				var name:String;
+				if (currentSelectedLevel.hasOwnProperty("display_name")) {
+					name = currentSelectedLevel.display_name;
+				} else if (currentSelectedLevel.hasOwnProperty("name")) {
+					name = currentSelectedLevel.name;
+				}
+				if(currentSelectedLevel.hasOwnProperty("name") || currentSelectedLevel.hasOwnProperty("display_name"))
 				{
-					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLevel.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
+					nameText = TextFactory.getInstance().createTextField("Name: " + name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(nameText, 0, 1);
 					addChild(nameText);
 					nameText.x = levelSelectInfoPanel.x+ 10;
@@ -525,6 +531,11 @@ package scenes.levelselectscene
 				var obj:Object = new Object;
 				obj.levelId = levelObj["qid"].toString();
 				obj.name = levelObj["id"].toString();
+				if (levelObj.hasOwnProperty("display_name")) {
+					obj.display_name = levelObj["display_name"].toString();
+				} else {
+					obj.display_name = levelObj["id"].toString();
+				}
 				
 				//unlock all that user should be able play, check the ones they have played
 				if(PipeJam3.RELEASE_BUILD)

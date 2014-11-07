@@ -404,7 +404,7 @@ package scenes.game.components
 		{
 			m_currentLevel = level;
 			updateScore(level, true);
-			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
+			TextFactory.getInstance().updateText(m_levelNameTextfield, level.level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 1);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 			setSolveButtonsVisibility(level.getAutoSolveAllowed());

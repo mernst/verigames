@@ -330,6 +330,7 @@ package display
 			
 			for(var ii:int = 0; ii < objArray.length; ++ ii) {
 				var label:String = objArray[ii].name;
+				if (objArray[ii].hasOwnProperty("display_name")) label = objArray[ii].display_name;
 				var labelSz:uint = 12;
 				var newButton:BasicButton;
 				

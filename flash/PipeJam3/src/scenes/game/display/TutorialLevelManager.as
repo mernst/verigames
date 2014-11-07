@@ -1,5 +1,8 @@
 package scenes.game.display 
 {
+	import constraints.ClauseConstraint;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintVar;
 	import events.TutorialEvent;
 	import utils.PropDictionary;
 	import starling.core.Starling;
@@ -13,27 +16,8 @@ package scenes.game.display
 	
 	public class TutorialLevelManager extends EventDispatcher
 	{
-		// This is the order the tutorials appers in:
-		private static const WIDGET_TUTORIAL:String = "widget";
-		private static const WIDGET_PRACTICE_TUTORIAL:String = "widgetpractice";
-		private static const LOCKED_TUTORIAL:String = "locked";
-		private static const LINKS_TUTORIAL:String = "links";
-		private static const JAMS_TUTORIAL:String = "jams";
-		private static const WIDEN_TUTORIAL:String = "widen";
-		private static const ZOOM_PAN_TUTORIAL:String = "zoompan";
-		private static const L13601_TUTORIAL:String = "L13601";
-		private static const L13635_TUTORIAL:String = "L13635";
-		private static const L13663_TUTORIAL:String = "L13663";
-		private static const L13722_TUTORIAL:String = "L13722";
-		private static const L13727_TUTORIAL:String = "L13727";
-		
-		// Not currently used:
-		private static const OPTIMIZE_TUTORIAL:String = "optimize";
-		private static const LAYOUT_TUTORIAL:String = "layout";
-		private static const GROUP_SELECT_TUTORIAL:String = "groupselect";
-		private static const CREATE_JOINT_TUTORIAL:String = "createjoint";
-		private static const SKILLS_A_TUTORIAL:String = "skillsa";
-		private static const SKILLS_B_TUTORIAL:String = "skillsb";
+		// This is the order the tutorials appears in:
+		// TODO
 		
 		private var m_tutorialTag:String;
 		private var m_levelStarted:Boolean = false;
@@ -46,7 +30,10 @@ package scenes.game.display
 		{
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {
-				case "t01":
+				case "01":
+				case "02":
+				case "03":
+				case "04":
 				case "1":
 				case "2":
 				case "3":
@@ -89,82 +76,80 @@ package scenes.game.display
 			m_levelStarted = false;
 		}
 		
-		public function onWidgetChange(idChanged:String, propChanged:String, propValue:Boolean):void
+		public function onWidgetChange(idChanged:String, propChanged:String, propValue:Boolean, levelGraph:ConstraintGraph):void
 		{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, widthTxt:String;
 			switch (m_tutorialTag) {
-				case JAMS_TUTORIAL:
-					var jammed:Boolean = (propChanged == PropDictionary.PROP_NARROW && !propValue);
-					var jamText:String = "Jam cleared! +" + 100 /* TODO: get from level*/ + " points.";
-					if (jammed) {
-						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
+				case "01":
+					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
+					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
+					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
-						jamText = "JAMS happen when wide Links enter\n" +
-						"narrow Widgets. This Jam penalizes\n" +
-						"your score by " + 100 /* TODO: get from level*/ + " points.";
+					}
+					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
-					m_currentTutorialText = new TutorialManagerTextInfo(
-						jamText,
-						null,
-						pointToClash("var_0 -> type_0__var_0"),
-						Constants.TOP_RIGHT, Constants.TOP);
-					var txtVec:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
-					txtVec.push(m_currentTutorialText);
-					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, txtVec));
 					break;
-				case LINKS_TUTORIAL:
-					var edgeId:String;
-					if (idChanged == "var_1") {
-						edgeId = "var_1 -> type_1__var_1";
-					} else if (idChanged == "var_0") {
-						edgeId = "var_0 -> type_1__var_0";
+				case "02":
+					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
+					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
+					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					if (tips.length == 0) {
+						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tips.push(tip);
 					} else {
-						break;
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tips.push(tip);
 					}
-					widthTxt = !propValue ? "Wide Link" : "Narrow Link";
-					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), Constants.BOTTOM_RIGHT, Constants.RIGHT);
-					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
-				case WIDEN_TUTORIAL:
-					if (idChanged == "var_0") {
-						if (propValue) {
-							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
-							tips.push(tip);
-						}
-						m_currentToolTipsText = tips;
-						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+			}
+		}
+		
+		public function afterScoreUpdate(levelGraph:ConstraintGraph):void
+		{
+			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
+			var tip:TutorialManagerTextInfo, widthTxt:String;
+			switch (m_tutorialTag) {
+				case "04":
+					var num:int = 0;
+					var longConflictFound:Boolean = false;
+					for (var key:String in levelGraph.unsatisfiedConstraintDict) {
+						num++;
+						trace("key ", key);
+						if (key == "c_80002" || key == "c_150843" || key == "c_13896") longConflictFound = true;
 					}
+					trace("num", num);
+					if (num == 1 && longConflictFound) {
+						tip = new TutorialManagerTextInfo("Try painting from here   ", null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86622"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86623"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tips.push(tip);
+					}
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
 			}
 		}
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<Node>):void
 		{
-			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
-			switch (m_tutorialTag) {
-				case GROUP_SELECT_TUTORIAL:
-					if (!m_levelFinished && (updatedGameNodes.length > 1)) {
-						m_levelFinished = true;
-						Starling.juggler.delayCall(function():void {
-							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
-						}, 0.5);
-					}
-					break;
-				case LAYOUT_TUTORIAL:
-					for (var i:int = 0; i < updatedGameNodes.length; i++) {
-						if (updatedGameNodes[i].id == "var_3") {
-							m_currentToolTipsText = tips;
-							dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
-							break;
-						}
-					}
-					break;
-			}
+			
 		}
 		
 		public function getAutoSolveAllowed():Boolean
@@ -175,6 +160,10 @@ package scenes.game.display
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
+				case "01":
+				case "02":
+				case "03":
+				case "04":
 				case "1":
 					return false;
 			}
@@ -184,6 +173,10 @@ package scenes.game.display
 		public function getMiniMapShown():Boolean
 		{
 			switch (m_tutorialTag) {
+				case "01":
+				case "02":
+				case "03":
+				case "04":
 				case "1":
 				case "2":
 				case "3":
@@ -208,8 +201,14 @@ package scenes.game.display
 		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
-				case "1":
+				case "01":
+				case "02":
+					return 0.75;
 				case "2":
+					return 1.3;
+				case "03":
+				case "04":
+				case "1":
 				case "3":
 				case "4":
 				case "5":
@@ -230,6 +229,10 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
+				case "01":
+				case "02":
+				case "03":
+				case "04":
 				case "1":
 					return new Point(0, 10); // shift level down by 10px
 				case "2":
@@ -248,8 +251,13 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			switch (m_tutorialTag) {
-				case "t01":
+				case "01":
 					return 10;
+				case "02":
+					return 30;
+				case "03":
+				case "04":
+					return 50;
 				case "1":
 					return 100;
 				case "2":
@@ -322,35 +330,18 @@ package scenes.game.display
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
-				case LOCKED_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("var_0"), Constants.BOTTOM, Constants.CENTER);
+				case "01":
+					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("var_1"), Constants.BOTTOM, Constants.CENTER);
-					tips.push(tip);
-					break;
-				case JAMS_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("var_0 -> type_0__var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
+					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
-				case LINKS_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("var_0 -> type_1__var_0"), Constants.BOTTOM_RIGHT, Constants.RIGHT);
+				case "02":
+					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("var_1 -> type_1__var_1"), Constants.BOTTOM_RIGHT, Constants.RIGHT);
+					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					break;
-				case WIDEN_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nNarrow Widget", null, pointToClash("type_1__var_0 -> var_0"), Constants.BOTTOM_LEFT, Constants.CENTER);
-					tips.push(tip);
-					break;
-				// Not used
-				case LAYOUT_TUTORIAL:
-					tip = new TutorialManagerTextInfo(
-						"Widgets can be dragged to\n" +
-						"help organize the layout.\n" +
-						"Separate the Widgets.",
-						null,
-						pointToNode("var_3"),
-						Constants.BOTTOM_LEFT, null);
+					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 					tips.push(tip);
 					break;
 			}
@@ -361,20 +352,40 @@ package scenes.game.display
 		{
 			if (m_currentTutorialText != null) return m_currentTutorialText;
 			switch (m_tutorialTag) {
-				case "1":
+				case "01":
 					return new TutorialManagerTextInfo(
-						"Click and drag to paint! Release to autosolve!\nEliminate as many red conflicts as you can!",
+						"Click and drag to paint, release to autosolve.\nEliminate as many red conflicts as you can!",
+						null,
+						null,
+						null, null);
+				case "02":
+					return new TutorialManagerTextInfo(
+						"The autosolver will optimize the selection to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!",
+						null,
+						null,
+						null, null);
+				case "03":
+					return new TutorialManagerTextInfo(
+						"There is a limit to how many things you select. The numbers on the\npaintbrush indicate how many you've selected and the selection limit.",
+						null,
+						null,
+						null, null);
+				case "04":
+					return new TutorialManagerTextInfo(
+						"Different selection areas will create different solutions.\nSometimes many items need to change to eliminate a conflict.",
 						null,
 						null,
 						null, null);
 				case "2":
 					return new TutorialManagerTextInfo(
-						"Use the arrow keys or mouse to the edge of the screen to pan! Use +/- to zoom!",
+						"Use the arrow keys or mouse to the edge of the screen to pan. Use +/- to zoom.",
 						null,
 						null,
 						null, null);
+				case "1":
 				case "3":
 				case "4":
+				case "6":
 				case "7":
 				case "8":
 				case "9":
@@ -393,142 +404,14 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
-				case "6":
-					return new TutorialManagerTextInfo(
-						"Sometimes large selection areas are needed to eliminate a conflict.\nKeep eliminating the red conflicts!",
-						null,
-						null,
-						null, null);
 				case "12":
 					return new TutorialManagerTextInfo(
-						"For larger levels use on the minimap in the top right to navigate!",
+						"For larger levels use on the minimap in the top right to navigate.",
 						null,
 						null,
 						Constants.TOP_LEFT, null);
 				
 					return null;
-				case WIDGET_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Click on WIDGETS to change their color.\n" +
-						"Get 1 point for matching a Widget to its outline color!",
-						null,
-						pointToNode("var_1"),
-						Constants.TOP, null);
-				case WIDGET_PRACTICE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Practice clicking on Widgets and matching colors.\n",
-						null,
-						null,
-						null, null);
-				case LOCKED_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Transparent Widgets are locked.\n" +
-						"Their colors can't be changed.",
-						null,
-						pointToNode("var_0"),
-						Constants.TOP, null);
-				case LINKS_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Widgets are connected\n" +
-						"by LINKS. Light Widgets\n" +
-						"create narrow Links, dark\n" +
-						"Widgets create wide\n" +
-						"Links.",
-						null,
-						pointToEdge("var_0 -> type_1__var_0"),
-						Constants.LEFT, null);
-				case JAMS_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"JAMS happen when wide Links enter\n" +
-						"narrow Widgets. Each Jam penalizes\n" +
-						"your score by " + 100 /* TODO: get from level*/ + " points.",
-						null,
-						pointToClash("var_0 -> type_0__var_0"),
-						Constants.TOP_RIGHT, Constants.TOP);
-				case WIDEN_TUTORIAL:
-					return null;/* new TutorialManagerTextInfo(
-						"Click the widgets to widen their links\n" +
-						"and fix the jams.",
-						null,
-						null,
-						null, null);*/
-				case ZOOM_PAN_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"       Larger levels require navigation:      \n" +
-						" Drag the background to move around the level.\n" +
-						"      Use the +/- buttons to zoom in and out. \n" +
-						"Navigate between jams using Tab and Shift+Tab.",
-						null,
-						null,
-						null, null);
-				case L13601_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Now try a level generated from real code!",
-						null,
-						null,
-						null, null);
-				case L13635_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"For larger levels we provide an autosolver.\n" + 
-						"Paint a group of Widgets by holding Shift and\n" +
-						"Click+Dragging the mouse. When the mouse is released\n" +
-						"the autosolver will begin solving the selected Widgets.",
-						null,
-						null,
-						null, null);
-				case L13663_TUTORIAL:
-					break;
-				case L13722_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Try using the map in the top right\n" +
-						"        to navigate around.       ",
-						null,
-						null,
-						null, null);
-				case L13727_TUTORIAL:
-					break;
-				// The following are not currently in use:
-				case OPTIMIZE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Sometimes the best score still has Jams.\n" +
-						"Try different configurations to improve your score!",
-						null,
-						null,
-						Constants.BOTTOM_LEFT, null);
-				case LAYOUT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"The LAYOUT can be changed to help visualize the\n" +
-						"problem. Layout moves will not affect your score.",
-						null,
-						null,
-						null, null);
-				case GROUP_SELECT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"SELECT groups of Widgets by holding <SHIFT>\n" +
-						"and click-dragging the mouse. SELECT and\n" +
-						"move a group of Widgets to continue.",
-						null,
-						null,
-						null, null);
-				case CREATE_JOINT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Create a joint on any Link by\n" +
-						"double-clicking a spot on the Link.",
-						null,
-						null,
-						null, null);
-				case SKILLS_A_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Use the skills\nyou've learned to\nsolve a bigger\nchallenge!",
-						null,
-						null,
-						Constants.TOP_LEFT, null);
-				case SKILLS_B_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Good work!\nTry using the map\nin the top right\nto navigate this\nlarger level.",
-						null,
-						null,
-						Constants.TOP_LEFT, null);
 			}
 			return null;
 		}
