@@ -1,7 +1,8 @@
 
 {
   "id": "p_000225_00011148",
-  "qid": 2008,
+  "display_name": "Alpaca panic",
+  "qid": 2012,
   "version": "2",
   "default": "type:1",
   "scoring": {

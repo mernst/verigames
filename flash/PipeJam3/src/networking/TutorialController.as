@@ -198,6 +198,7 @@ package networking
 			currentLevelQID = parseInt(PipeJamGame.levelInfo.tutorialLevelID);
 			
 			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
+			if (!currentLevel) return 0;
 			var currentPosition:int = currentLevel["position"];
 			currentPosition++;
 			var nextPosition:int = currentPosition;
@@ -207,7 +208,10 @@ package networking
 			{
 				if(nextPosition == tutorialOrderedList.length)
 					return 0;
-				
+				if (!orderToTutorialDictionary.hasOwnProperty(nextPosition))
+					return 0;
+				if (!orderToTutorialDictionary[nextPosition].hasOwnProperty("qid"))
+					return 0;
 				var nextQID:int = orderToTutorialDictionary[nextPosition]["qid"];
 				
 				//if we chose the last level from the level select screen, assume we want to play in order, done or not
@@ -268,6 +272,18 @@ package networking
 			}
 			
 			return true;
+		}
+		
+		public function isLastTutorialLevel():Boolean
+		{
+			
+			if (!PipeJamGame.levelInfo) return false;
+			var currentLevelQID:int = parseInt(PipeJamGame.levelInfo.tutorialLevelID);
+			
+			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
+			if (!currentLevel) return false;
+			var currentPosition:int = currentLevel["position"];
+			return (currentPosition == tutorialOrderedList.length - 1);
 		}
 		
 		public function sendMessage(type:int, callback:Function):void

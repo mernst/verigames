@@ -245,7 +245,7 @@ package scenes.game.display
 				//graphVar.setProp(PropDictionary.PROP_NARROW, !assignmentIsWide);
 				//levelGraph.updateScore();
 				if (updateTutorialManager && tutorialManager) {
-					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide);
+					tutorialManager.onWidgetChange(graphVar.id, PropDictionary.PROP_NARROW, !assignmentIsWide, levelGraph);
 				}
 			}
 			var gameNode:Node = nodeLayoutObjs[graphVar.id] as Node;
@@ -823,7 +823,7 @@ package scenes.game.display
 				levelGraph.updateScore(evt.graphVar.id, evt.prop, evt.newValue);
 				//evt.graphVar.setProp(evt.prop, evt.newValue);
 				//levelGraph.updateScore();
-				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue);
+				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue, levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
 				//save incremental changes so we can update if user quits and restarts
 				if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
@@ -838,6 +838,7 @@ package scenes.game.display
 				}
 			} else {
 				levelGraph.updateScore();
+				if (tutorialManager) tutorialManager.afterScoreUpdate(levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
 			onScoreChange(true);
@@ -1005,7 +1006,9 @@ package scenes.game.display
 		
 		public function getMaxSelectableWidgets():int
 		{
-			if (tutorialManager) return tutorialManager.getMaxSelectableWidgets();
+			var num:int = -1;
+			if (tutorialManager) num = tutorialManager.getMaxSelectableWidgets();
+			if (num > 0) return num;
 			return 1000;
 		}
 		
@@ -1555,6 +1558,7 @@ package scenes.game.display
 						node.setDirty(true, true);
 						if(constraintVar) 
 							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+						if (tutorialManager) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 					}
 				}
 			}

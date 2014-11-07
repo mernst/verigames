@@ -76,7 +76,7 @@ package scenes.game.display
 			for each(var gameEdgeID:String in connectedEdgeIds)
 			{
 				var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				edgeObj.isDirty = true;
+				if (edgeObj) edgeObj.isDirty = true;
 			}
 		}
 		

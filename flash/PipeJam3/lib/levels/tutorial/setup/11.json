@@ -1,7 +1,8 @@
 
 {
   "id": "p_000542_00001008",
-  "qid": 2001,
+  "display_name": "Clam planet",
+  "qid": 2015,
   "version": "2",
   "default": "type:1",
   "scoring": {

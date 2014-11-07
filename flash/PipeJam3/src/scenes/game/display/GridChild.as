@@ -122,7 +122,7 @@ package scenes.game.display
 				{
 					// TODO: Circular dependency
 					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					edgeObj.isDirty = true;
+					if (edgeObj) edgeObj.isDirty = true;
 				}
 			}
 		}

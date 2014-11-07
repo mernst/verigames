@@ -132,21 +132,23 @@ package scenes.game.display
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
 				var levelObj:Object = allLevels[level_index];
-				var levelName:String = levelObj["id"];
-				var levelLayoutObj:Object = findLevelFile(levelName, m_layoutObj);
-				var levelAssignmentsObj:Object = findLevelFile(levelName, m_assignmentsObj);
+				var levelId:String = levelObj["id"];
+				var levelDisplayName:String = levelId;
+				if (levelObj.hasOwnProperty("display_name")) levelDisplayName = levelObj["display_name"];
+				var levelLayoutObj:Object = findLevelFile(levelId, m_layoutObj);
+				var levelAssignmentsObj:Object = findLevelFile(levelId, m_assignmentsObj);
 				// if we didn't find the level, assume this is a global constraints file
 				if(levelAssignmentsObj == null) levelAssignmentsObj = m_assignmentsObj;
 				
-				var levelNameFound:String = levelName;
+				var levelNameFound:String = levelId;
 				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.name) {
 					levelNameFound = PipeJamGame.levelInfo.name;
 				}
-				if (!m_worldGraphDict.hasOwnProperty(levelName)) {
-					throw new Error("World level found without constraint graph:" + levelName);
+				if (!m_worldGraphDict.hasOwnProperty(levelObj["id"])) {
+					throw new Error("World level found without constraint graph:" + levelObj["id"]);
 				}
-				var levelGraph:ConstraintGraph = m_worldGraphDict[levelName] as ConstraintGraph;
-				var my_level:Level = new Level(levelName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
+				var levelGraph:ConstraintGraph = m_worldGraphDict[levelObj["id"]] as ConstraintGraph;
+				var my_level:Level = new Level(levelDisplayName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
@@ -870,6 +872,11 @@ package scenes.game.display
 						switchToLevelSelect();
 					return;
 				}
+				else if (tutorialController.isLastTutorialLevel())
+				{
+					switchToLevelSelect();
+					return;
+				}
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
@@ -1097,7 +1104,7 @@ package scenes.game.display
 				qid = (newLevel.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelGraph.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
-			if (restart) {
+			if (restart || newLevel == active_level) {
 				if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.hideContinueButton();
 				newLevel.restart();
 			} else if (active_level) {

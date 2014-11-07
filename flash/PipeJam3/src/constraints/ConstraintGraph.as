@@ -128,9 +128,6 @@ package constraints
 							clauseID = thisConstr.rhs.id;
 						if (constraint.isClauseSatisfied(null, false)) {
 							//get clauseID
-							
-							
-							
 							if(newSatisfiedConstraints[clauseID] == null)
 							{
 								currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
