@@ -228,7 +228,7 @@ package scenes.game.display
 		private function initGameControlPanel():void {
 			trace("Initializing GameControlPanel...");
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
+			//gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
@@ -415,16 +415,29 @@ package scenes.game.display
 			trace("Done initializing event listeners.");
 		}
 		
-		private function onSolveSelection():void
+		private function onSolveSelection(event:MenuEvent):void
 		{
 			//do this first as they might be removed by solveSelection if nothing relevant selected
-			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
-			if (m_backgroundImage) m_backgroundImage.removeFromParent();
-			if(active_level)
+
+			if(active_level && active_level.selectedNodes)
 			{
-				waitIconDisplayed = false;
-				
-				active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
+				if(event.data == GridViewPanel.SOLVER_BRUSH)
+				{
+					if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
+					if (m_backgroundImage) m_backgroundImage.removeFromParent();	
+					
+					waitIconDisplayed = false;
+					
+					active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
+				}
+				else if(event.data == GridViewPanel.NARROW_BRUSH)
+				{
+					active_level.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_NARROW);
+				}
+				else if(event.data == GridViewPanel.WIDEN_BRUSH)
+				{
+					active_level.onUseSelectionPressed(MenuEvent.MAKE_SELECTION_WIDE);
+				}
 			}
 
 		}
