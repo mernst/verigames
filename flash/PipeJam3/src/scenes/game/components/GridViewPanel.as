@@ -1,7 +1,5 @@
 package scenes.game.components
 {
-	import flash.desktop.Clipboard;
-	import flash.desktop.ClipboardFormats;
 	import flash.display.BitmapData;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
@@ -30,8 +28,6 @@ package scenes.game.components
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
-	import flashx.textLayout.elements.BreakElement;
-	
 	import networking.TutorialController;
 	
 	import particle.FanfareParticleSystem;
@@ -39,7 +35,6 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
-	import scenes.game.display.Node;
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
@@ -89,7 +84,7 @@ package scenes.game.components
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
-		protected var m_paintBrushContainer:Sprite = new Sprite();
+		protected var m_scoreContainerSprite:Sprite = new Sprite();
 		protected var m_paintBrush:Sprite = new Sprite();
 		protected var m_selectionCount:Sprite = new Sprite();
 		protected var m_selectedText:TextFieldWrapper;
@@ -116,9 +111,9 @@ package scenes.game.components
 		protected var m_widenBrush:Sprite;
 		protected var m_narrowBrush:Sprite;
 	
-		public static const SOLVER_BRUSH:int = 0;
-		public static const WIDEN_BRUSH:int = 1;
-		public static const NARROW_BRUSH:int = 2;
+		public static const SOLVER_BRUSH:String = "SOLVER_BRUSH";
+		public static const WIDEN_BRUSH:String = "WIDEN_BRUSH";
+		public static const NARROW_BRUSH:String = "NARROW_BRUSH";
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
@@ -157,26 +152,28 @@ package scenes.game.components
 			contentBarrier.visible = true;
 			addChildAt(contentBarrier,0);
 			
-			// Create paintbrushs for menu
-			m_solverBrush = createPaintBrush(SOLVER_BRUSH);
-			m_solverBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
-			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
-			m_widenBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
-			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
-			m_narrowBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			// Create paintbrushes for menu, and for mouse cursor
+			m_solverBrush = createPaintBrush(SOLVER_BRUSH, true);
+			var solverBrush:Sprite = createPaintBrush(SOLVER_BRUSH);
+			solverBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			m_widenBrush = createPaintBrush(WIDEN_BRUSH, true);
+			var widenBrush:Sprite = createPaintBrush(WIDEN_BRUSH);
+			widenBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			m_narrowBrush = createPaintBrush(NARROW_BRUSH, true);
+			var narrowBrush:Sprite = createPaintBrush(NARROW_BRUSH);
+			narrowBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 			
-			m_paintBrush = createPaintBrush(SOLVER_BRUSH);
-			changeBrush(m_paintBrush);
+			m_paintBrush = m_solverBrush;
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
 			var scoreBoxImage:Image = new Image(scoreBoxTexture);
 			scoreBoxImage.width = scoreBoxImage.height = .6 * PAINT_RADIUS;
 			m_selectionCount.addChild(scoreBoxImage);
-			m_selectionCount.x = m_paintBrushContainer.bounds.left;
-			m_selectionCount.y = m_paintBrushContainer.bounds.left;
+			m_selectionCount.x = m_scoreContainerSprite.bounds.left;
+			m_selectionCount.y = m_scoreContainerSprite.bounds.left;
 			
-			m_paintBrushContainer.addChild(m_selectionCount);
+			m_scoreContainerSprite.addChild(m_selectionCount);
 			
 			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
 			m_selectedText.touchable = false;
@@ -184,13 +181,13 @@ package scenes.game.components
 			m_selectedText.y = m_selectionCount.y + 1;
 			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
 			
-			m_paintBrushContainer.addChild(m_selectedText);
+			m_scoreContainerSprite.addChild(m_selectedText);
 			
 			var divisionLineQuad:Quad = new Quad(m_selectedText.width - 6, 2, 0xc1a06d);
 			divisionLineQuad.touchable = false;
 			divisionLineQuad.x = m_selectedText.x + 3;
 			divisionLineQuad.y = m_selectedText.y + m_selectedText.height - 3;
-			m_paintBrushContainer.addChild(divisionLineQuad);
+			m_scoreContainerSprite.addChild(divisionLineQuad);
 			
 			m_selectionLimitText = TextFactory.getInstance().createTextField("1000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
 			m_selectionLimitText.touchable = false;
@@ -198,8 +195,8 @@ package scenes.game.components
 			m_selectionLimitText.y = divisionLineQuad.y;
 			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 			
-			m_paintBrushContainer.addChild(m_selectionLimitText);
-			m_paintBrushContainer.flatten();
+			m_scoreContainerSprite.addChild(m_selectionLimitText);
+			m_scoreContainerSprite.flatten();
 			
 			rightSideMenu = new Sprite();
 			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
@@ -207,52 +204,59 @@ package scenes.game.components
 			rightSideMenu.x = WIDTH - 40;
 			addChild(rightSideMenu);
 			
-			rightSideMenu.addChild(m_solverBrush);
-			m_solverBrush.scaleX = m_solverBrush.scaleY = .2;
-			m_solverBrush.x = 8 + m_solverBrush.width/2;
-			m_solverBrush.y = 120;
-			rightSideMenu.addChild(m_widenBrush);
-			m_widenBrush.x = m_solverBrush.x;
-			m_widenBrush.y = 160;
-			m_widenBrush.scaleX = m_widenBrush.scaleY = .2;
-			rightSideMenu.addChild(m_narrowBrush);
-			m_narrowBrush.x = m_solverBrush.x;
-			m_narrowBrush.y = 200;
-			m_narrowBrush.scaleX = m_narrowBrush.scaleY = .2;
+			solverBrush.scaleX = solverBrush.scaleY = .2;
+			solverBrush.x = (rightSideMenu.width - solverBrush.width)/2;
+			solverBrush.y = 120;
+			rightSideMenu.addChild(solverBrush);
+			widenBrush.x = solverBrush.x;
+			widenBrush.y = 160;
+			widenBrush.scaleX = widenBrush.scaleY = .2;
+			rightSideMenu.addChild(widenBrush);
+			narrowBrush.x = solverBrush.x;
+			narrowBrush.y = 200;
+			narrowBrush.scaleX = narrowBrush.scaleY = .2;
+			rightSideMenu.addChild(narrowBrush);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 
-		protected function createPaintBrush(style:int):Sprite
+		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
 		{
 			// Create paintbrush: TODO make higher res circle
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
 			var circleImage:Image = new Image(circleTexture);
 			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
-			circleImage.x = -0.5 * circleImage.width;
-			circleImage.y = -0.5 * circleImage.height;
+			if(offset)
+			{
+				circleImage.x = -0.5 * circleImage.width;
+				circleImage.y = -0.5 * circleImage.height;
+			}
 			circleImage.alpha = 0.7;
 			
 			var paintBrush:Sprite = new Sprite;
 			paintBrush.addChild(circleImage);
 			
+			var q:Quad;
 			switch(style)
 			{
 				case SOLVER_BRUSH:
+					paintBrush.name = SOLVER_BRUSH;
 					break;
 				case NARROW_BRUSH:
-					var q:Quad = new Quad(10,10, 0xff0000);
+					paintBrush.name = NARROW_BRUSH;
+					q = new Quad(10,10, 0xff0000); //just add something to differentiate until we have real art
 					paintBrush.addChild(q);
 					break;
 				case WIDEN_BRUSH:
-					var q1:Quad = new Quad(10,10, 0x00ff00);
-					paintBrush.addChild(q1);
+					paintBrush.name = WIDEN_BRUSH;
+					q = new Quad(10,10, 0x00ff00); //ditto
+					paintBrush.addChild(q);
 					break;
 			}
-
-			
+			if(q && !offset)
+				q.x = q.y = paintBrush.width/2;
 			return paintBrush;
 		}
 		
@@ -277,8 +281,9 @@ package scenes.game.components
 			myContextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
 			PipeJam3.pipeJam3.contextMenu = myContextMenu;		
 			
-			installPaintBrush(new Point(width/2, height/2));
-			
+			installPaintBrush(true);
+			m_nextPaintbrushLocation = new Point(width/2, height/2);
+
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
 		}
@@ -295,13 +300,15 @@ package scenes.game.components
 			
 			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
 				
-				m_paintBrush.x = m_paintBrushContainer.x = m_nextPaintbrushLocation.x;
-				m_paintBrush.y = m_paintBrushContainer.y = m_nextPaintbrushLocation.y;
+				m_paintBrush.x = m_nextPaintbrushLocation.x;
+				m_paintBrush.y =  m_nextPaintbrushLocation.y; 
+				m_scoreContainerSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/2;
+				m_scoreContainerSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/2; 
 				var num:int = m_currentLevel.selectedNodes.length;
 				if (m_selectedText) {
 					TextFactory.getInstance().updateText(m_selectedText, String(num));
 					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
-					m_paintBrushContainer.flatten();
+					m_scoreContainerSprite.flatten();
 				}
 				m_nextPaintbrushLocationUpdated = false;
 			}
@@ -416,7 +423,7 @@ package scenes.game.components
 			if(m_currentLevel)
 			{
 				if(!m_currentLevel.m_inSolver)
-					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION));
+					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION, m_paintBrush.name));
 				else
 					dispatchEvent(new MenuEvent(MenuEvent.STOP_SOLVER));
 				endPaint();
@@ -522,7 +529,14 @@ package scenes.game.components
 			 {
 				 var location:Point;
 				 if(touch)
+				 {
 				 	location = touch.getLocation(this.stage);
+					if(location.x > rightSideMenu.x)
+						hidePaintBrush();
+					else
+						if(!event.shiftKey)
+							showPaintBrush();
+				 }
 				 else
 					 location = touches[0].getLocation(this.stage);
 				 movePaintBrush(location);
@@ -1380,53 +1394,58 @@ package scenes.game.components
 			m_currentLevel.unselectAll();
 		}
 		
-		private function changeCurrentBrush(evt:starling.events.Event):void
+		private function changeCurrentBrush(evt:starling.events.TouchEvent):void
 		{
-			if(evt.target == m_solverBrush)
+			if(evt.getTouches(this, TouchPhase.ENDED).length && evt.target is DisplayObject)
 			{
-				changeBrush(createPaintBrush(SOLVER_BRUSH));
-			}
-			else if(evt.target == m_narrowBrush)
-			{
-				changeBrush(createPaintBrush(NARROW_BRUSH));
-			}
-			else if(evt.target == m_widenBrush)
-			{
-				changeBrush(createPaintBrush(WIDEN_BRUSH));
+				var target:DisplayObject = (evt.target as DisplayObject).parent;
+				if(target.name == SOLVER_BRUSH)
+				{
+					changeBrush(m_solverBrush);
+				}
+				else if(target.name == NARROW_BRUSH)
+				{
+					changeBrush(m_narrowBrush);
+				}
+				else if(target.name == WIDEN_BRUSH)
+				{
+					changeBrush(m_widenBrush);
+				}
 			}
 		}
 		private function changeBrush(brush:Sprite):void
 		{
-			if(m_paintBrush.parent)
-				m_paintBrushContainer.removeChild(m_paintBrush);
-			m_paintBrush = brush;
-			m_paintBrushContainer.addChild(m_paintBrush);
+			if(brush == m_paintBrush)
+				return;
 			
+			var currentVisibility:Boolean = m_paintBrush.visible;
+			if(m_paintBrush.parent)
+				removeChild(m_paintBrush);
+			m_paintBrush = brush;
+			installPaintBrush(currentVisibility);
 		}
 		
-		public function installPaintBrush(globPt:Point):void
+		public function installPaintBrush(currentVisibility:Boolean):void
 		{
 			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrush.scaleX = m_paintBrushContainer.scaleX = .5;
-			m_paintBrush.scaleY = m_paintBrushContainer.scaleY = .5;
-			var localPt:Point = this.globalToLocal(globPt);
-			m_paintBrush.x = m_paintBrushContainer.x = localPt.x;
-			m_paintBrush.y = m_paintBrushContainer.y = localPt.y;
+			m_paintBrush.scaleX = m_scoreContainerSprite.scaleX = .5;
+			m_paintBrush.scaleY = m_scoreContainerSprite.scaleY = .5;
 			addChild(m_paintBrush);
-			addChild(m_paintBrushContainer);
+			addChild(m_scoreContainerSprite);
 			m_paintBrush.flatten();
-			m_paintBrushContainer.flatten();
-			m_paintBrush.visible = true;
-			m_paintBrushContainer.visible = true;
+			m_scoreContainerSprite.flatten();
+			m_paintBrush.visible = currentVisibility;
+			m_scoreContainerSprite.visible = currentVisibility;
+			m_nextPaintbrushLocationUpdated = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
 			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
-			m_paintBrushContainer.scaleX = m_paintBrushContainer.scaleY = size*.20;
+			m_scoreContainerSprite.scaleX = m_scoreContainerSprite.scaleY = size*.20;
 			m_paintBrush.flatten();
-			m_paintBrushContainer.flatten();
+			m_scoreContainerSprite.flatten();
 		}
 		
 		
@@ -1441,20 +1460,20 @@ package scenes.game.components
 		public function showPaintBrush():void
 		{
 			m_paintBrush.visible = true;
-			m_paintBrushContainer.visible = true;
+			m_scoreContainerSprite.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
 			m_paintBrush.visible = false;
-			m_paintBrushContainer.visible = false;
+			m_scoreContainerSprite.visible = false;
 		}
 		
 		public function handlePaint(globPt:Point):void
 		{
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
-			const dX:Number = PAINT_RADIUS * m_paintBrushContainer.scaleX/content.scaleX;
-			const dY:Number = PAINT_RADIUS * m_paintBrushContainer.scaleY/content.scaleY;
+			const dX:Number = PAINT_RADIUS * m_scoreContainerSprite.scaleX/content.scaleX;
+			const dY:Number = PAINT_RADIUS * m_scoreContainerSprite.scaleY/content.scaleY;
 			
 			m_currentLevel.selectNodes(localPt, dX, dY);
 		}

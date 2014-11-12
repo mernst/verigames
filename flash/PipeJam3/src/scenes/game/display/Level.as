@@ -1207,6 +1207,7 @@ package scenes.game.display
 			}
 			//update score
 			onWidgetChange();
+			unselectAll();
 		}
 		
 		protected var solverRunningTime:Number;
@@ -1229,35 +1230,34 @@ package scenes.game.display
 		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
-			// vvvv
 			if(firstRun)
 			{
 				solverRunningTime = new Date().getTime();
 			}
 			//if caps lock is down, start repeated solving using 'random' selection
-			if(Keyboard.capsLock)
-			{
-				//loop through all nodes, finding ones with conflicts
-				for each(var node:Node in nodeLayoutObjs)
-				{
-					if(node.hasError() && node.unused)
-					{
-						node.unused = false;
-					//trace(node.id);
-						onGroupSelection(new SelectionEvent("foo", node));
-						solveSelection1(updateCallback, doneCallback);
-						unselectAll();
-						return;
-					}
-				}
-				
-				// if we make it this far start over
-				//trace("new loop", loopcount);
-				looptimer = new Timer(1000, 1);
-				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
-				looptimer.start();
-			}
-			else
+//			if(Keyboard.capsLock)
+//			{
+//				//loop through all nodes, finding ones with conflicts
+//				for each(var node:Node in nodeLayoutObjs)
+//				{
+//					if(node.hasError() && node.unused)
+//					{
+//						node.unused = false;
+//					//trace(node.id);
+//						onGroupSelection(new SelectionEvent("foo", node));
+//						solveSelection1(updateCallback, doneCallback);
+//						unselectAll();
+//						return;
+//					}
+//				}
+//				
+//				// if we make it this far start over
+//				//trace("new loop", loopcount);
+//				looptimer = new Timer(1000, 1);
+//				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+//				looptimer.start();
+//			}
+//			else
 				solveSelection1(updateCallback, doneCallback);
 		}
 		
@@ -1272,16 +1272,16 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
-
-		public var constraintArray:Array;
-		public var initvarsArray:Array;
+	
 		public var updateCallback:Function;
 		public var doneCallback:Function;
-		var newSelectedVars:Vector.<Node>;
-		var newSelectedClauses:Dictionary;
-		var storedDirectEdgesDict:Dictionary;
-		var directNodeArray:Array;
-		var counter:int;
+		private var constraintArray:Array;
+		private var initvarsArray:Array;
+		private var newSelectedVars:Vector.<Node>;
+		private var newSelectedClauses:Dictionary;
+		private var storedDirectEdgesDict:Dictionary;
+		private var directNodeArray:Array;
+		private var counter:int;
 		public function solveSelection1(_updateCallback:Function, _doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1306,7 +1306,7 @@ package scenes.game.display
 
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
-			fixEdgeVarValues();
+			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
 	
 			if(constraintArray.length > 0)
 			{
@@ -1388,8 +1388,8 @@ package scenes.game.display
 				for each(var edgeID:String in selectedVar.connectedEdgeIds)
 				{
 					var edgeToCheck:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
-					var toNode:Node = edgeToCheck.toNode;
-					if(newSelectedClauses[toNode.id])
+					var toNodeToCheck:Node = edgeToCheck.toNode;
+					if(newSelectedClauses[toNodeToCheck.id])
 					{
 						attachedSelected = true;
 						continue;
