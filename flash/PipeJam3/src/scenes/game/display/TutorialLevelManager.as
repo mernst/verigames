@@ -127,7 +127,7 @@ package scenes.game.display
 				case "04":
 					num = 0;
 					longConflictFound = false;
-					for (var key:String in levelGraph.unsatisfiedConstraintDict) {
+					for (key in levelGraph.unsatisfiedConstraintDict) {
 						num++;
 						trace("key ", key);
 						if (key == "c_80002" || key == "c_150843" || key == "c_13896") longConflictFound = true;
@@ -147,7 +147,7 @@ package scenes.game.display
 				case "6":
 					num = 0;
 					longConflictFound = false;
-					for (var key:String in levelGraph.unsatisfiedConstraintDict) {
+					for (key in levelGraph.unsatisfiedConstraintDict) {
 						num++;
 						trace("key ", key);
 						if (key == "c_61618" || key == "c_102237" || key == "c_27250") longConflictFound = true;
