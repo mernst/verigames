@@ -84,14 +84,19 @@ package scenes.game.components
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
-		protected var m_scoreContainerSprite:Sprite = new Sprite();
+		private var m_tutorialTextLayer:Sprite = new Sprite();
+		
+		private var m_paintBrushLayer:Sprite = new Sprite();
+		protected var m_paintBrushInfoSprite:Sprite = new Sprite();
 		protected var m_paintBrush:Sprite = new Sprite();
 		protected var m_selectionCount:Sprite = new Sprite();
 		protected var m_selectedText:TextFieldWrapper;
 		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
-
+		
 		protected var rightSideMenu:Sprite;
+		private var m_fanfareLayer:Sprite = new Sprite();
+		private var m_buttonLayer:Sprite = new Sprite();
 		
 		private var m_selectionUpdated:Boolean = false;
 		private var m_startingTouchPoint:Point;
@@ -139,6 +144,10 @@ package scenes.game.components
 			errorBubbleContainer = new Sprite();
 			addChild(errorBubbleContainer);
 			
+			addChild(m_tutorialTextLayer);
+			
+			addChild(m_paintBrushLayer);
+			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
 			m_border.width = WIDTH + 10;
@@ -170,10 +179,10 @@ package scenes.game.components
 			var scoreBoxImage:Image = new Image(scoreBoxTexture);
 			scoreBoxImage.width = scoreBoxImage.height = .6 * PAINT_RADIUS;
 			m_selectionCount.addChild(scoreBoxImage);
-			m_selectionCount.x = m_scoreContainerSprite.bounds.left;
-			m_selectionCount.y = m_scoreContainerSprite.bounds.left;
+			m_selectionCount.x = m_paintBrushInfoSprite.bounds.left;
+			m_selectionCount.y = m_paintBrushInfoSprite.bounds.left;
 			
-			m_scoreContainerSprite.addChild(m_selectionCount);
+			m_paintBrushInfoSprite.addChild(m_selectionCount);
 			
 			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
 			m_selectedText.touchable = false;
@@ -181,13 +190,13 @@ package scenes.game.components
 			m_selectedText.y = m_selectionCount.y + 1;
 			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
 			
-			m_scoreContainerSprite.addChild(m_selectedText);
+			m_paintBrushInfoSprite.addChild(m_selectedText);
 			
 			var divisionLineQuad:Quad = new Quad(m_selectedText.width - 6, 2, 0xc1a06d);
 			divisionLineQuad.touchable = false;
 			divisionLineQuad.x = m_selectedText.x + 3;
 			divisionLineQuad.y = m_selectedText.y + m_selectedText.height - 3;
-			m_scoreContainerSprite.addChild(divisionLineQuad);
+			m_paintBrushInfoSprite.addChild(divisionLineQuad);
 			
 			m_selectionLimitText = TextFactory.getInstance().createTextField("1000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
 			m_selectionLimitText.touchable = false;
@@ -195,8 +204,8 @@ package scenes.game.components
 			m_selectionLimitText.y = divisionLineQuad.y;
 			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 			
-			m_scoreContainerSprite.addChild(m_selectionLimitText);
-			m_scoreContainerSprite.flatten();
+			m_paintBrushInfoSprite.addChild(m_selectionLimitText);
+			m_paintBrushInfoSprite.flatten();
 			
 			rightSideMenu = new Sprite();
 			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
@@ -216,6 +225,9 @@ package scenes.game.components
 			narrowBrush.y = 200;
 			narrowBrush.scaleX = narrowBrush.scaleY = .2;
 			rightSideMenu.addChild(narrowBrush);
+			
+			addChild(m_buttonLayer);
+			addChild(m_fanfareLayer);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -302,13 +314,13 @@ package scenes.game.components
 				
 				m_paintBrush.x = m_nextPaintbrushLocation.x;
 				m_paintBrush.y =  m_nextPaintbrushLocation.y; 
-				m_scoreContainerSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/2;
-				m_scoreContainerSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/2; 
+				m_paintBrushInfoSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/2;
+				m_paintBrushInfoSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/2; 
 				var num:int = m_currentLevel.selectedNodes.length;
 				if (m_selectedText) {
 					TextFactory.getInstance().updateText(m_selectedText, String(num));
 					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
-					m_scoreContainerSprite.flatten();
+					m_paintBrushInfoSprite.flatten();
 				}
 				m_nextPaintbrushLocationUpdated = false;
 			}
@@ -1048,18 +1060,18 @@ package scenes.game.components
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-				continueButton.x = WIDTH - continueButton.width - 5;
+				continueButton.x = WIDTH - continueButton.width - 50;
 				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
 			}
 			
 			if (!m_currentLevel.targetScoreReached) {
 				m_currentLevel.targetScoreReached = true;
 				if(PipeJamGameScene.inTutorial)
-					addChild(continueButton);
+					m_buttonLayer.addChild(continueButton);
 				
 				// Fanfare
 				removeFanfare();
-				addChild(m_fanfareContainer);
+				m_fanfareLayer.addChild(m_fanfareContainer);
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
@@ -1083,7 +1095,7 @@ package scenes.game.components
 				if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				m_fanfareTextContainer.alpha = 1;
-				addChild(m_fanfareTextContainer);
+				m_fanfareLayer.addChild(m_fanfareTextContainer);
 				
 				if (PipeJamGameScene.inTutorial) {
 					// For tutorial, move text and button off to the side
@@ -1302,7 +1314,7 @@ package scenes.game.components
 			recenter();
 			this.clipRect = null;
 			//remove these to help with compression
-			removeChild(m_border);
+			m_border.removeFromParent();
 			
 			var bmpdata:BitmapData = drawToBitmapData(backgroundColor);
 	
@@ -1380,7 +1392,7 @@ package scenes.game.components
 			clipRect = new Rectangle(x, y, newWidth, newHeight);
 		
 			if(contentBarrier)
-				removeChild(contentBarrier);
+				contentBarrier.removeFromParent()
 			
 			contentBarrier = new Quad(newWidth,newHeight, 0x00);
 			contentBarrier.alpha = 0.01;
@@ -1420,7 +1432,7 @@ package scenes.game.components
 			
 			var currentVisibility:Boolean = m_paintBrush.visible;
 			if(m_paintBrush.parent)
-				removeChild(m_paintBrush);
+				m_paintBrush.removeFromParent();
 			m_paintBrush = brush;
 			installPaintBrush(currentVisibility);
 		}
@@ -1429,23 +1441,23 @@ package scenes.game.components
 		{
 			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrush.scaleX = m_scoreContainerSprite.scaleX = .5;
-			m_paintBrush.scaleY = m_scoreContainerSprite.scaleY = .5;
-			addChild(m_paintBrush);
-			addChild(m_scoreContainerSprite);
+			m_paintBrush.scaleX = m_paintBrushInfoSprite.scaleX = .5;
+			m_paintBrush.scaleY = m_paintBrushInfoSprite.scaleY = .5;
+			m_paintBrushLayer.addChild(m_paintBrush);
+			m_paintBrushLayer.addChild(m_paintBrushInfoSprite);
 			m_paintBrush.flatten();
-			m_scoreContainerSprite.flatten();
+			m_paintBrushInfoSprite.flatten();
 			m_paintBrush.visible = currentVisibility;
-			m_scoreContainerSprite.visible = currentVisibility;
+			m_paintBrushInfoSprite.visible = currentVisibility;
 			m_nextPaintbrushLocationUpdated = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
 			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
-			m_scoreContainerSprite.scaleX = m_scoreContainerSprite.scaleY = size*.20;
+			m_paintBrushInfoSprite.scaleX = m_paintBrushInfoSprite.scaleY = size*.20;
 			m_paintBrush.flatten();
-			m_scoreContainerSprite.flatten();
+			m_paintBrushInfoSprite.flatten();
 		}
 		
 		
@@ -1460,20 +1472,20 @@ package scenes.game.components
 		public function showPaintBrush():void
 		{
 			m_paintBrush.visible = true;
-			m_scoreContainerSprite.visible = true;
+			m_paintBrushInfoSprite.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
 			m_paintBrush.visible = false;
-			m_scoreContainerSprite.visible = false;
+			m_paintBrushInfoSprite.visible = false;
 		}
 		
 		public function handlePaint(globPt:Point):void
 		{
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
-			const dX:Number = PAINT_RADIUS * m_scoreContainerSprite.scaleX/content.scaleX;
-			const dY:Number = PAINT_RADIUS * m_scoreContainerSprite.scaleY/content.scaleY;
+			const dX:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleX/content.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleY/content.scaleY;
 			
 			m_currentLevel.selectNodes(localPt, dX, dY);
 		}
