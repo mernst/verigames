@@ -258,12 +258,12 @@ package scenes.game.components
 					break;
 				case NARROW_BRUSH:
 					paintBrush.name = NARROW_BRUSH;
-					q = new Quad(10,10, 0xff0000); //just add something to differentiate until we have real art
+					q = new Quad(10,10, Constants.NARROW_BLUE);
 					paintBrush.addChild(q);
 					break;
 				case WIDEN_BRUSH:
 					paintBrush.name = WIDEN_BRUSH;
-					q = new Quad(10,10, 0x00ff00); //ditto
+					q = new Quad(10,10, Constants.WIDE_BLUE);
 					paintBrush.addChild(q);
 					break;
 			}

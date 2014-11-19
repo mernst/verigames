@@ -30,6 +30,10 @@ package
 		public static const BROWN:uint = 0x624202;
 		public static const RED:uint = 0xFF0000;
 		
+		public static const NARROW_BLUE:uint = 0x87b9d3;
+		public static const WIDE_BLUE:uint = 0x406d90;
+		
+		
 		//Nine slice
 		public static const TOP_LEFT:String = "TopLeft";
 		public static const TOP:String = "Top";
