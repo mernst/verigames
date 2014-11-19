@@ -30,6 +30,8 @@ package scenes.game.display
 		{
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 				case "02":
 				case "03":
@@ -107,7 +109,7 @@ package scenes.game.display
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict three others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					} else {
 						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
