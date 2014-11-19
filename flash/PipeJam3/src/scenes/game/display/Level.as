@@ -1,7 +1,6 @@
 package scenes.game.display
 {
 	
-	import deng.fzip.FZip;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -11,6 +10,33 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	
+	import assets.AssetInterface;
+	
+	import constraints.ClauseConstraint;
+	import constraints.Constraint;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
+	import constraints.ConstraintValue;
+	import constraints.ConstraintVar;
+	import constraints.events.ErrorEvent;
+	import constraints.events.VarChangeEvent;
+	
+	import deng.fzip.FZip;
+	
+	import events.MenuEvent;
+	import events.MiniMapEvent;
+	import events.PropertyModeChangeEvent;
+	import events.SelectionEvent;
+	import events.WidgetChangeEvent;
+	
+	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	
+	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
+	import scenes.game.display.Node;
+	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -22,28 +48,10 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	import assets.AssetInterface;
-	import constraints.ClauseConstraint;
-	import constraints.Constraint;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintScoringConfig;
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
-	import constraints.events.ErrorEvent;
-	import constraints.events.VarChangeEvent;
-	import events.MenuEvent;
-	import events.MiniMapEvent;
-	import events.PropertyModeChangeEvent;
-	import events.SelectionEvent;
-	import events.WidgetChangeEvent;
-	import utils.PropDictionary;
-	import networking.GameFileHandler;
-	import networking.PlayerValidation;
-	import scenes.BaseComponent;
-	import scenes.game.display.Node;
-	import scenes.game.PipeJamGameScene;
 	import system.MaxSatSolver;
+	
 	import utils.Base64Encoder;
+	import utils.PropDictionary;
 	import utils.XObject;
 	import utils.XString;
 	
@@ -1199,6 +1207,7 @@ package scenes.game.display
 			}
 			//update score
 			onWidgetChange();
+			unselectAll();
 		}
 		
 		protected var solverRunningTime:Number;
@@ -1221,35 +1230,34 @@ package scenes.game.display
 		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
-			// vvvv
 			if(firstRun)
 			{
 				solverRunningTime = new Date().getTime();
 			}
 			//if caps lock is down, start repeated solving using 'random' selection
-			if(Keyboard.capsLock)
-			{
-				//loop through all nodes, finding ones with conflicts
-				for each(var node:Node in nodeLayoutObjs)
-				{
-					if(node.hasError() && node.unused)
-					{
-						node.unused = false;
-					//trace(node.id);
-						onGroupSelection(new SelectionEvent("foo", node));
-						solveSelection1(updateCallback, doneCallback);
-						unselectAll();
-						return;
-					}
-				}
-				
-				// if we make it this far start over
-				//trace("new loop", loopcount);
-				looptimer = new Timer(1000, 1);
-				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
-				looptimer.start();
-			}
-			else
+//			if(Keyboard.capsLock)
+//			{
+//				//loop through all nodes, finding ones with conflicts
+//				for each(var node:Node in nodeLayoutObjs)
+//				{
+//					if(node.hasError() && node.unused)
+//					{
+//						node.unused = false;
+//					//trace(node.id);
+//						onGroupSelection(new SelectionEvent("foo", node));
+//						solveSelection1(updateCallback, doneCallback);
+//						unselectAll();
+//						return;
+//					}
+//				}
+//				
+//				// if we make it this far start over
+//				//trace("new loop", loopcount);
+//				looptimer = new Timer(1000, 1);
+//				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+//				looptimer.start();
+//			}
+//			else
 				solveSelection1(updateCallback, doneCallback);
 		}
 		
@@ -1264,11 +1272,16 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
-
-		public var constraintArray:Array;
-		public var initvarsArray:Array;
+	
 		public var updateCallback:Function;
 		public var doneCallback:Function;
+		private var constraintArray:Array;
+		private var initvarsArray:Array;
+		private var newSelectedVars:Vector.<Node>;
+		private var newSelectedClauses:Dictionary;
+		private var storedDirectEdgesDict:Dictionary;
+		private var directNodeArray:Array;
+		private var counter:int;
 		public function solveSelection1(_updateCallback:Function, _doneCallback:Function):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1280,26 +1293,60 @@ package scenes.game.display
 			
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var storedConstraints:Dictionary = new Dictionary;
-			var counter:int = 1;
+			counter = 1;
 			constraintArray = new Array;
 			initvarsArray = new Array;
-			var directNodeArray:Array = new Array;
-			var directEdgeDict:Dictionary = new Dictionary
-			//loop through each object
+			directNodeArray = new Array;
+			storedDirectEdgesDict = new Dictionary;
+			//loop through each object, store selected variables for later use
+			newSelectedVars = new Vector.<Node>;
+			newSelectedClauses = new Dictionary;
+			
+			createConstraintsForClauses(); 
+
+			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
+			
+			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
+	
+			if(constraintArray.length > 0)
+			{
+				//generate initvars array
+				for(var ii:int = 1;ii<counter;ii++)
+				{
+					var gameNode:Object = nodeIDToConstraintsTwoWayMap[ii];
+					if(gameNode.isNarrow)
+						initvarsArray.push(0);
+					else
+						initvarsArray.push(1);
+				}
+
+				//build in a delay to allow UI to change
+				World.m_world.showSolverState(true);
+				timer = new Timer(500,1);
+				timer.addEventListener(TimerEvent.TIMER, solverStartCallback);
+				timer.start();
+			}
+			else //just end
+				doneCallback("");
+		}
+		
+		private function createConstraintsForClauses():void
+		{
 			for each(var gridChild:GridChild in selectedNodes)
 			{
 				if((gridChild is Node) && (gridChild as Node).isClause)
 				{
+					newSelectedClauses[(gridChild as Node).id] = gridChild;
 					var clauseArray:Array = new Array();
 					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
-
+					
 					//find all variables connected to the constraint, and add them to the array
 					for each(var gameEdgeID:String in gridChild.connectedEdgeIds)
 					{
 						var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 						var fromNode:Node = edge.fromNode;
 						
-						directEdgeDict[gameEdgeID] = edge;
+						storedDirectEdgesDict[gameEdgeID] = edge;
 						
 						var constraintID:int;
 						if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
@@ -1323,8 +1370,85 @@ package scenes.game.display
 					}
 					constraintArray.push(clauseArray);
 				}
+				else if((gridChild is Node) && (gridChild as Node).isClause == false)
+				{
+					newSelectedVars.push(gridChild as Node);
+				}
 			}
-
+		}
+		
+		private function findIsolatedSelectedVars():void
+		{
+			//check for variables that have no selected attached clauses. If found, create a clause for each attached constraint
+			//and clauses for the far ends to suggest they don't change
+			for each(var selectedVar:Node in newSelectedVars)
+			{
+				var attachedSelected:Boolean = false;
+				
+				for each(var edgeID:String in selectedVar.connectedEdgeIds)
+				{
+					var edgeToCheck:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+					var toNodeToCheck:Node = edgeToCheck.toNode;
+					if(newSelectedClauses[toNodeToCheck.id])
+					{
+						attachedSelected = true;
+						continue;
+					}
+				}
+				
+				if(attachedSelected == false)
+				{
+					for each(var unattachedEdgeID:String in selectedVar.connectedEdgeIds)
+					{
+						var unattachedEdge:Edge = World.m_world.active_level.edgeLayoutObjs[unattachedEdgeID];
+						var toNode:Node = unattachedEdge.toNode;
+						var clauseArray:Array = new Array();
+						clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+						for each(var gameEdgeID:String in toNode.connectedEdgeIds)
+						{
+							var constraintEdge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+							var fromNode:Node = constraintEdge.fromNode;
+							//directNodeArray.push(fromNode1);
+							//directEdgeDict[gameEdgeID1] = edge3;
+							
+							var constraintID:int;
+							if(nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+								constraintID = counter;
+								counter++;
+							}
+							else
+								constraintID = nodeIDToConstraintsTwoWayMap[fromNode.id];
+							
+							//if the constraint starts from the clause, it's a positive var, else it's negative.
+							if(gameEdgeID.indexOf('c') == 0)
+								clauseArray.push(constraintID);
+							else
+								clauseArray.push(-constraintID);
+							
+							if(fromNode != selectedVar)
+							{
+								//create a separate clause here for this one node, based on it's current size
+								var nodeClauseArray:Array = new Array();
+								nodeClauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+								
+								if(fromNode.isNarrow)
+									nodeClauseArray.push(-constraintID);
+								else
+									nodeClauseArray.push(constraintID);
+								constraintArray.push(nodeClauseArray);
+							}	
+						}
+						constraintArray.push(clauseArray);
+					}
+				}
+			}
+		}
+		
+		private function fixEdgeVarValues():void
+		{
 			//now, find all the other constraints associated with the directly connected variables,
 			//add the nodes connected to those constraints as fixed values,
 			//so the score doesn't go down.
@@ -1333,11 +1457,11 @@ package scenes.game.display
 				for each(var conEdgeID:String in directNode.connectedEdgeIds)
 				{
 					//have we already dealt with this edge?
-					if(directEdgeDict[conEdgeID])
+					if(storedDirectEdgesDict[conEdgeID])
 						continue;
 					
 					var conEdge:Edge = World.m_world.active_level.edgeLayoutObjs[conEdgeID];
-					directEdgeDict[conEdgeID] = conEdge;
+					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
 					var nextLayerClause:Node = conEdge.toNode;
 					
@@ -1346,7 +1470,7 @@ package scenes.game.display
 					var usedEdgeArray:Array = new Array;
 					for each(var nextLayerEdgeID:String in nextLayerClause.connectedEdgeIds)
 					{				
-						if(directEdgeDict[nextLayerEdgeID])
+						if(storedDirectEdgesDict[nextLayerEdgeID])
 						{
 							usedEdgeArray.push(nextLayerEdgeID);
 							continue;
@@ -1365,20 +1489,20 @@ package scenes.game.display
 							break;
 						}
 					}
-						
+					
 					//follow these out one more layer
 					if(!satisfied)
 					{
-						clauseArray = new Array();
+						var clauseArray:Array = new Array();
 						clauseArray.push(FIXED_CONSTRAINT_VALUE);
-					
+						
 						for each(var edgeID:String in usedEdgeArray)
 						{
 							var nextLayerEdge1:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
 							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
 							var varArray:Array = new Array();
 							varArray.push(FIXED_CONSTRAINT_VALUE);
-														
+							
 							var nextLevelConstraintID:int;
 							if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
 							{
@@ -1395,32 +1519,10 @@ package scenes.game.display
 							else
 								clauseArray.push(-nextLevelConstraintID);
 						}
-						
 						constraintArray.push(clauseArray);
 					}
 				}
 			}
-	
-			if(constraintArray.length > 0)
-			{
-				//generate initvars array
-				for(var ii:int = 1;ii<counter;ii++)
-				{
-					var gameNode:Object = nodeIDToConstraintsTwoWayMap[ii];
-					if(gameNode.isNarrow)
-						initvarsArray.push(0);
-					else
-						initvarsArray.push(1);
-				}
-
-				//build in a delay to allow UI to change
-				World.m_world.showSolverState(true);
-				timer = new Timer(500,1);
-				timer.addEventListener(TimerEvent.TIMER, solverStartCallback);
-				timer.start();
-			}
-			else //just end
-				doneCallback("");
 		}
 		
 		public function solverStartCallback(evt:TimerEvent):void
