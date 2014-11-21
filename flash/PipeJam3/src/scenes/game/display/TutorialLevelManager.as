@@ -186,6 +186,8 @@ package scenes.game.display
 		public function getPanZoomAllowed():Boolean
 		{
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 				case "02":
 				case "03":
@@ -199,6 +201,8 @@ package scenes.game.display
 		public function getMiniMapShown():Boolean
 		{
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 				case "02":
 				case "03":
@@ -227,6 +231,8 @@ package scenes.game.display
 		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 				case "02":
 					return 0.75;
@@ -255,6 +261,8 @@ package scenes.game.display
 		public function getStartPanOffset():Point
 		{
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 				case "02":
 				case "03":
@@ -277,6 +285,8 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			switch (m_tutorialTag) {
+				case "001":
+				case "002":
 				case "01":
 					return 10;
 				case "02":
@@ -356,18 +366,44 @@ package scenes.game.display
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
-				case "01":
-					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+				case "001":
+					tip = new TutorialManagerTextInfo("para", null, pointToNode("var_1"), Constants.BOTTOM_RIGHT, Constants.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("para", null, pointToNode("var_2"), Constants.BOTTOM_LEFT, Constants.CENTER);
+					tips.push(tip);
+					
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_1"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_6"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
+					
+					break;
+				case "01":
+					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "02":
-					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 					tips.push(tip);
 					break;
 			}
@@ -378,6 +414,14 @@ package scenes.game.display
 		{
 			if (m_currentTutorialText != null) return m_currentTutorialText;
 			switch (m_tutorialTag) {
+				case "001":
+					return new TutorialManagerTextInfo(
+						"Paras can be toggled. Click and drag to paint paras for toggling.\nRelease the mouse to apply the paintbrush.",
+						null,
+						null,
+						null, null);
+				case "002":
+					return null;
 				case "01":
 					return new TutorialManagerTextInfo(
 						"Click and drag to paint, release to autosolve.\nEliminate as many red conflicts as you can!",
