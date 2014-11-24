@@ -1,8 +1,8 @@
 package scenes.game.display
 {
+	import assets.AssetsFont;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
-	import flash.display.Sprite;
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -11,6 +11,9 @@ package scenes.game.display
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import starling.display.Quad;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -75,8 +78,9 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
-		protected var m_backgroundLayer:starling.display.Sprite;
-		protected var m_foregroundLayer:starling.display.Sprite;
+		protected var m_backgroundLayer:Sprite;
+		protected var m_foregroundLayer:Sprite;
+		protected var m_splashLayer:Sprite;
 		
 		protected var shareDialog:SaveDialog;
 		
@@ -772,23 +776,32 @@ package scenes.game.display
 		public function onWidgetChange(evt:WidgetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? evt.level : active_level;
-			if (!level_changed) return;
-
+			if (level_changed != active_level) return;
+			
 			if (miniMap)
 			{
 				miniMap.isDirty = true;
 				miniMap.imageIsDirty = true;
 			}
 			
-			gameControlPanel.updateScore(level_changed, false);
-			var oldScore:int = level_changed.prevScore;
-			var newScore:int = level_changed.currentScore;
+			gameControlPanel.updateScore(active_level, false);
+			var oldScore:int = active_level.prevScore;
+			var newScore:int = active_level.currentScore;
 			if (evt) {
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
-				if (newScore >= level_changed.getTargetScore()) {
-					if(active_level.m_inSolver)
-						solverDoneCallback("");
-					edgeSetGraphViewPanel.displayContinueButton(true);
+				if (newScore >= active_level.getTargetScore()) {
+					if (!active_level.targetScoreReached) {
+						active_level.targetScoreReached = true;
+						if(active_level.m_inSolver)
+							solverDoneCallback("");
+						var continueDelay:Number = 0;
+						var showFanfare:Boolean = true;
+						if (active_level && active_level.tutorialManager) {
+							continueDelay = active_level.tutorialManager.continueButtonDelay();
+							showFanfare = active_level.tutorialManager.showFanfare();
+						}
+						Starling.juggler.delayCall(edgeSetGraphViewPanel.displayContinueButton, continueDelay, true, showFanfare);
+					}
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
 				}
@@ -807,7 +820,7 @@ package scenes.game.display
 						details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
 						details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
 					}
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, level_changed.getTimeMs());
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, active_level.getTimeMs());
 				}
 			}
 			
@@ -818,7 +831,7 @@ package scenes.game.display
 					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
 				
 				//beat the target score?
-				if(newScore  > level_changed.getTargetScore())
+				if(newScore  > active_level.getTargetScore())
 				{
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
@@ -1125,6 +1138,10 @@ package scenes.game.display
 				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 				active_level.dispose();
 			}
+			if (m_splashLayer) {
+				m_splashLayer.removeChildren(0, -1, true);
+				m_splashLayer.removeFromParent();
+			}
 			
 			if (m_activeToolTip) {
 				m_activeToolTip.removeFromParent(true);
@@ -1161,6 +1178,27 @@ package scenes.game.display
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			//called later by initScoring
 			//onWidgetChange();
+			var levelSplash:Image;
+			if (active_level.tutorialManager) levelSplash = active_level.tutorialManager.getSplashScreen();
+			if (levelSplash) {
+				if (!m_splashLayer) {
+					m_splashLayer = new Sprite();
+					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
+				} else {
+					m_splashLayer.removeChildren(0, -1, true);
+				}
+				var backQ:Quad = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
+				backQ.alpha = 0.4;
+				m_splashLayer.addChild(backQ);
+				levelSplash.x = 0.5 * (Constants.GameWidth - levelSplash.width);
+				levelSplash.y = 0.5 * (Constants.GameHeight - levelSplash.height);
+				m_splashLayer.addChild(levelSplash);
+				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click anywhere to continue...", Constants.GameWidth, 12, 8, Constants.GOLD);
+				splashText.y = Constants.GameHeight - 12;
+				m_splashLayer.addChild(splashText);
+				addChild(m_splashLayer);
+			}
+			
 			trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			edgeSetGraphViewPanel.loadLevel();
@@ -1183,6 +1221,16 @@ package scenes.game.display
 			miniMap.isDirty = true;
 
 			trace("World.onLevelLoaded complete");
+		}
+		
+		private function onTouchSplashScreen(evt:TouchEvent):void
+		{
+			if (evt.getTouches(this, TouchPhase.BEGAN).length && m_splashLayer)
+			{
+				// Touch screen pressed, remove it
+				m_splashLayer.removeChildren(0, -1, true);
+				m_splashLayer.removeFromParent();
+			}
 		}
 		
 		private function onRemovedFromStage():void

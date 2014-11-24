@@ -241,7 +241,7 @@ package display
 				m_tutorialArrow.x = -offset.x * (width / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
 				m_tutorialArrow.y = -offset.y * (height / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
 			} else if (m_pointFrom != null) {
-				var newX:Number = Constants.GameWidth / 2;
+				var newX:Number = (Constants.GameWidth - Constants.RightPanelWidth) / 2;
 				var newY:Number = height / 2 - m_paddingSz + m_inset;
 				switch (m_pointFrom) {
 					case Constants.CENTER:
@@ -251,14 +251,14 @@ package display
 						newX = width / 2 - m_paddingSz + m_inset;
 						break;
 					case Constants.TOP_RIGHT:
-						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
 						break;
 					case Constants.LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
 					case Constants.RIGHT:
-						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
 					case Constants.BOTTOM:
@@ -269,7 +269,7 @@ package display
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 					case Constants.BOTTOM_RIGHT:
-						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
 						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 				}

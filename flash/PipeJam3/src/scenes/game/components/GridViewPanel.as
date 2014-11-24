@@ -208,9 +208,9 @@ package scenes.game.components
 			m_paintBrushInfoSprite.flatten();
 			
 			rightSideMenu = new Sprite();
-			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
+			var backgroundQuad:Quad = new Quad(Constants.RightPanelWidth, HEIGHT, 0x785201);
 			rightSideMenu.addChild(backgroundQuad);
-			rightSideMenu.x = WIDTH - 40;
+			rightSideMenu.x = WIDTH - Constants.RightPanelWidth;
 			addChild(rightSideMenu);
 			
 			solverBrush.scaleX = solverBrush.scaleY = .2;
@@ -381,14 +381,14 @@ package scenes.game.components
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (var i:int = 0; i < toolTips.length; i++) {
 				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
-				addChild(tip);
+				m_tutorialTextLayer.addChildAt(tip, 0);
 				m_persistentToolTips.push(tip);
 			}
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				addChild(m_tutorialText);
+				m_tutorialTextLayer.addChild(m_tutorialText);
 			}
 			
 			recenter();
@@ -973,7 +973,7 @@ package scenes.game.components
 			var levelTextInfo:TutorialManagerTextInfo = (evt.newTextInfo.length == 1) ? evt.newTextInfo[0] : null;
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				addChild(m_tutorialText);
+				m_tutorialTextLayer.addChild(m_tutorialText);
 			}
 		}
 		
@@ -986,7 +986,7 @@ package scenes.game.components
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (i = 0; i < toolTips.length; i++) {
 				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
-				addChild(tip);
+				m_tutorialTextLayer.addChildAt(tip, 0);
 				m_persistentToolTips.push(tip);
 			}
 		}
@@ -1054,23 +1054,22 @@ package scenes.game.components
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
-		public function displayContinueButton(permanently:Boolean = false):void
+		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
 		{
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 50;
-				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
+				continueButton.y = HEIGHT - continueButton.height - GameControlPanel.OVERLAP;
 			}
 			
-			if (!m_currentLevel.targetScoreReached) {
-				m_currentLevel.targetScoreReached = true;
-				if(PipeJamGameScene.inTutorial)
-					m_buttonLayer.addChild(continueButton);
-				
-				// Fanfare
-				removeFanfare();
+			if(PipeJamGameScene.inTutorial)
+				m_buttonLayer.addChild(continueButton);
+			
+			// Fanfare
+			removeFanfare();
+			if (showFanfare) {
 				m_fanfareLayer.addChild(m_fanfareContainer);
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
@@ -1110,7 +1109,7 @@ package scenes.game.components
 					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_FADE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, alpha: 0, transition:Transitions.EASE_IN } );
 				}
 				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC + LEVEL_COMPLETE_TEXT_FADE_SEC - 0.5);
-			}
+			} // end if showing fanfare
 			
 			if(PipeJamGameScene.inTutorial)
 				TutorialController.getTutorialController().addCompletedTutorial(m_currentLevel.m_tutorialTag, true);

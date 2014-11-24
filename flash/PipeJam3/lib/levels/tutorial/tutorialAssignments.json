@@ -10,6 +10,15 @@
 ,
 
 {
+  "id": "002",
+  "qid": 2102,
+  "target_score": 9,
+  "assignments":{
+  }
+}
+,
+
+{
   "id": "01",
   "qid": 2001,
   "target_score": 5,
@@ -118,27 +127,9 @@
 ,
 
 {
-  "id": "p_000267_00011256",
-  "qid": 2013,
-  "target_score":  527,
-  "assignments":{
-  }
-}
-,
-
-{
   "id": "p_000359_00000609",
   "qid": 2014,
   "target_score":  570,
-  "assignments":{
-  }
-}
-,
-
-{
-  "id": "p_000542_00001008",
-  "qid": 2015,
-  "target_score":  1071,
   "assignments":{
   }
 }

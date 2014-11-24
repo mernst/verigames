@@ -1,9 +1,12 @@
 package scenes.game.display 
 {
+	import assets.AssetInterface;
 	import constraints.ClauseConstraint;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
 	import events.TutorialEvent;
+	import starling.display.Image;
+	import starling.textures.Texture;
 	import utils.PropDictionary;
 	import starling.core.Starling;
 	import networking.TutorialController;
@@ -44,9 +47,7 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-				case "9":
 				case "10":
-				case "11":
 				case "12":
 				case "13":
 				case "14":
@@ -126,15 +127,28 @@ package scenes.game.display
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, num:int, longConflictFound:Boolean, key:String;
 			switch (m_tutorialTag) {
+				case "001":
+					num = 0;
+					for (key in levelGraph.unsatisfiedConstraintDict) num++;
+					if (num == 0) { // End of level, display summary
+						tip = new TutorialManagerTextInfo(
+							"Great work! The target score for this level was reached by\n" + 
+							"satisfying all the dox. Move on to the next level to learn more!",
+							null, 
+							null, 
+							Constants.BOTTOM, null);
+						m_currentTutorialText = tip;
+						tips.push(tip)
+						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, tips));
+					}
+					break;
 				case "04":
 					num = 0;
 					longConflictFound = false;
 					for (key in levelGraph.unsatisfiedConstraintDict) {
 						num++;
-						trace("key ", key);
 						if (key == "c_80002" || key == "c_150843" || key == "c_13896") longConflictFound = true;
 					}
-					trace("num", num);
 					if (num == 1 && longConflictFound) {
 						tip = new TutorialManagerTextInfo("Try painting from here   ", null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
 						tips.push(tip);
@@ -151,10 +165,8 @@ package scenes.game.display
 					longConflictFound = false;
 					for (key in levelGraph.unsatisfiedConstraintDict) {
 						num++;
-						trace("key ", key);
 						if (key == "c_61618" || key == "c_102237" || key == "c_27250") longConflictFound = true;
 					}
-					trace("num", num);
 					if (num == 1 && longConflictFound) {
 						tip = new TutorialManagerTextInfo("Try painting\nfrom here", null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
@@ -215,9 +227,7 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-				case "9":
 				case "10":
-				case "11":
 					return false;
 			}
 			return true;
@@ -247,9 +257,7 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-				case "9":
 				case "10":
-				case "11":
 				case "12":
 				case "13":
 				case "14":
@@ -276,7 +284,6 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-				case "9":
 					return new Point();
 			}
 			return new Point();
@@ -306,9 +313,7 @@ package scenes.game.display
 				case "7":
 				case "8":
 					return 350;
-				case "9":
 				case "10":
-				case "11":
 					return 400;
 				case "12":
 				case "13":
@@ -409,6 +414,35 @@ package scenes.game.display
 			}
 			return tips;
 		}
+			
+		public function getSplashScreen():Image
+		{
+			switch (m_tutorialTag) {
+				case "002":
+					var splashText:Texture = AssetInterface.getTexture("Game", "ConstraintsSplashClass");
+					var splash:Image = new Image(splashText);
+					return splash;
+			}
+			return null;
+		}
+		
+		public function continueButtonDelay():Number
+		{
+			switch (m_tutorialTag) {
+				case "001":
+					return 5.0;
+			}
+			return 0;
+		}
+		
+		public function showFanfare():Boolean
+		{
+			switch (m_tutorialTag) {
+				case "001":
+					return false;
+			}
+			return true;
+		}
 		
 		public function getTextInfo():TutorialManagerTextInfo
 		{
@@ -416,12 +450,17 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
-						"Paras can be toggled. Click and drag to paint paras for toggling.\nRelease the mouse to apply the paintbrush.",
+						"Paras can change states. Click and drag to paint paras.\nRelease the mouse to apply the state being painted.",
 						null,
 						null,
 						null, null);
 				case "002":
-					return null;
+					return new TutorialManagerTextInfo(
+						"New paintbrush unlocked! Change paintbrushes by clicking\n" + 
+						"on one of the paintbrush previews on the right -->\n",
+						null,
+						null,
+						Constants.BOTTOM_RIGHT, null);
 				case "01":
 					return new TutorialManagerTextInfo(
 						"Click and drag to paint, release to autosolve.\nEliminate as many red conflicts as you can!",
@@ -459,9 +498,7 @@ package scenes.game.display
 				case "6":
 				case "7":
 				case "8":
-				case "9":
 				case "10":
-				case "11":
 				case "13":
 				case "14":
 					return new TutorialManagerTextInfo(

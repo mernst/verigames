@@ -4,9 +4,11 @@ package
     {
         public static const GameWidth:int  = 480;
         public static const GameHeight:int = 320;
-        
+		
         public static const CenterX:int = GameWidth / 2;
         public static const CenterY:int = GameHeight / 2;
+		
+		public static const RightPanelWidth:int = 40;
 		
 		/** [Game Sizes] = GAME_SCALE * [XML Layout Sizes] */
 		public static const GAME_SCALE:Number = 10.0;

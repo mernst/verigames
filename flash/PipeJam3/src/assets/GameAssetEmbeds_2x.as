@@ -107,7 +107,10 @@ package assets
 		public static const Background10Class:Class;
 		[Embed(source="../../lib/assets/Backgrounds/FlowJamBackground11.jpg")]
 		public static const Background11Class:Class;
-				
+		
+		[Embed(source="../../lib/assets/splash/ConstraintRules.jpg")]
+		public static const ConstraintsSplashClass:Class;
+		
 		[Embed(source = "../../lib/assets/BorderVignette.png")]
 		public static const BorderVignetteClass:Class;
 		
