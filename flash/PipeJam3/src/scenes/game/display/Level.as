@@ -1135,6 +1135,14 @@ package scenes.game.display
 			return true;
 		}
 		
+		public function getVisibleBrushes():int
+		{ 
+			if (tutorialManager) 
+				return tutorialManager.getVisibleBrushes();
+			//all visible
+			return 0xFFFFFF;
+		}
+		
 		public function getAutoSolveAllowed():Boolean
 		{ 
 			if (tutorialManager) return tutorialManager.getAutoSolveAllowed();

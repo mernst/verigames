@@ -1,22 +1,29 @@
 package scenes
 {
-	import display.ToolTippableSprite;
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import assets.AssetInterface;
+	
+	import display.ToolTippableSprite;
+	
+	import scenes.game.components.GridViewPanel;
+	
 	import starling.core.RenderSupport;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.MovieClip;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
-	import starling.textures.Texture;
 	import starling.events.Event;
-	import starling.display.MovieClip;
-	import starling.display.DisplayObjectContainer;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 
 	public class BaseComponent extends ToolTippableSprite
 	{	
@@ -151,6 +158,45 @@ package scenes
 			}
 			
 			
+		}
+		
+		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
+		{
+			// Create paintbrush: TODO make higher res circle
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
+			var circleImage:Image = new Image(circleTexture);
+			circleImage.width = circleImage.height = 2 * GridViewPanel.PAINT_RADIUS;
+			if(offset)
+			{
+				circleImage.x = -0.5 * circleImage.width;
+				circleImage.y = -0.5 * circleImage.height;
+			}
+			circleImage.alpha = 0.7;
+			
+			var paintBrush:Sprite = new Sprite;
+			paintBrush.addChild(circleImage);
+			
+			var q:Quad;
+			switch(style)
+			{
+				case GridViewPanel.SOLVER_BRUSH:
+					paintBrush.name = GridViewPanel.SOLVER_BRUSH;
+					break;
+				case GridViewPanel.NARROW_BRUSH:
+					paintBrush.name = GridViewPanel.NARROW_BRUSH;
+					q = new Quad(10,10, Constants.NARROW_BLUE);
+					paintBrush.addChild(q);
+					break;
+				case GridViewPanel.WIDEN_BRUSH:
+					paintBrush.name = GridViewPanel.WIDEN_BRUSH;
+					q = new Quad(10,10, Constants.WIDE_BLUE);
+					paintBrush.addChild(q);
+					break;
+			}
+			if(q && !offset)
+				q.x = q.y = paintBrush.width/2;
+			return paintBrush;
 		}
 	}
 }
