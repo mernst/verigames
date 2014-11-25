@@ -142,6 +142,28 @@ package scenes.game.display
 						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, tips));
 					}
 					break;
+				case "002":
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_3"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_2"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_1"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_1"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_5"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_8"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_7"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_6"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_6"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
 				case "04":
 					num = 0;
 					longConflictFound = false;
@@ -395,7 +417,26 @@ package scenes.game.display
 					tips.push(tip);
 					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_6"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
 					tips.push(tip);
-					
+					break;
+				case "002":
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_1"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_6"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tips.push(tip);
 					break;
 				case "01":
 					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
@@ -463,7 +504,7 @@ package scenes.game.display
 						Constants.BOTTOM_RIGHT, null);
 				case "01":
 					return new TutorialManagerTextInfo(
-						"Click and drag to paint, release to autosolve.\nEliminate as many red conflicts as you can!",
+						"Eliminate as many red conflicts as you can!",
 						null,
 						null,
 						null, null);
