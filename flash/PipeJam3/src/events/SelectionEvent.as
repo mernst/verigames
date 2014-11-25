@@ -11,6 +11,8 @@ package events
 		
 		public static var NUM_SELECTED_NODES_CHANGED:String = "num_sel_nodes_changed";
 		
+		public static var BRUSH_CHANGED:String = "brush_changed";
+		
 		public var selection:Vector.<Object>;
 		public var component:Object;
 		
