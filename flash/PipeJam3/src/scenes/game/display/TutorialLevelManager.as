@@ -26,6 +26,10 @@ package scenes.game.display
 		private var m_currentTutorialText:TutorialManagerTextInfo;
 		private var m_currentToolTipsText:Vector.<TutorialManagerTextInfo>;
 		
+		public static const SOLVER_BRUSH:int = 0x000001;
+		public static const WIDEN_BRUSH:int = 0x000002;
+		public static const NARROW_BRUSH:int = 0x000004;
+		
 		public function TutorialLevelManager(_tutorialTag:String)
 		{
 			m_tutorialTag = _tutorialTag;
@@ -318,6 +322,39 @@ package scenes.game.display
 			return -1;
 		}
 		
+		public function getVisibleBrushes():int
+		{
+			switch (m_tutorialTag) {
+				case "001":
+					return SOLVER_BRUSH;
+				case "002":
+					return WIDEN_BRUSH;
+				case "01":
+					return NARROW_BRUSH;
+				case "02":
+					return SOLVER_BRUSH + WIDEN_BRUSH;
+				case "03":
+					return SOLVER_BRUSH + NARROW_BRUSH;
+				case "04":
+					return WIDEN_BRUSH + NARROW_BRUSH;
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "9":
+				case "10":
+				case "11":
+				case "12":
+				case "13":
+				case "14":
+				default:
+					return SOLVER_BRUSH + WIDEN_BRUSH + NARROW_BRUSH;
+			}
+		}
 		private function pointToNode(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name).skin; };

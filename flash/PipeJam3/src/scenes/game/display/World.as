@@ -48,6 +48,7 @@ package scenes.game.display
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
+	import scenes.game.components.SideControlPanel;
 	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
@@ -73,6 +74,7 @@ package scenes.game.display
 	{
 		public var edgeSetGraphViewPanel:GridViewPanel;
 		public var gameControlPanel:GameControlPanel;
+		public var sideControlPanel:SideControlPanel;
 		protected var miniMap:MiniMap;
 		protected var inGameMenuBox:InGameMenuDialog;
 		protected var m_backgroundLayer:starling.display.Sprite;
@@ -171,6 +173,7 @@ package scenes.game.display
 			m_initQueue.push(initGridViewPanel);
 			m_initQueue.push(initForeground);
 			m_initQueue.push(initGameControlPanel);
+			m_initQueue.push(initSideControlPanel);
 			m_initQueue.push(initMiniMap);
 			m_initQueue.push(initTutorial);
 			m_initQueue.push(initLevel);
@@ -247,6 +250,23 @@ package scenes.game.display
 			PipeJamGame.resetSoundButtonParent();
 			
 			trace("Done initializing GameControlPanel.");
+		}
+		
+		private function initSideControlPanel():void {
+			trace("Initializing SideControlPanel...");
+			
+			sideControlPanel = new SideControlPanel(40, Starling.current.nativeStage.stageHeight);
+			sideControlPanel.x = gameControlPanel.width - 40;
+			addChild(sideControlPanel);
+			
+			addEventListener(SelectionEvent.BRUSH_CHANGED, changeBrush);
+			
+			trace("Done initializing SideControlPanel.");
+		}
+		
+		private function changeBrush(event:SelectionEvent):void
+		{
+			edgeSetGraphViewPanel.changeBrush(event.component as String);
 		}
 		
 		private function initMiniMap():void {
@@ -1142,16 +1162,15 @@ package scenes.game.display
 			
 			if (active_level.tutorialManager) {
 				miniMap.visible = active_level.tutorialManager.getMiniMapShown();
+				showVisibleBrushes();
+				showCurrentBrush();
 			} else {
 				miniMap.visible = true;
 			}
 			if (miniMap) miniMap.setLevel(active_level);
 			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-			if (gameControlPanel) {
-				gameControlPanel.setNavigationButtonVisibility(active_level.getPanZoomAllowed());
-				gameControlPanel.setSolveButtonsVisibility(active_level.getAutoSolveAllowed());
-			}
+			 
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
 		}
@@ -1302,6 +1321,27 @@ package scenes.game.display
 		public function addSoundButton(m_sfxButton:SoundButton):void
 		{
 			gameControlPanel.addSoundButton(m_sfxButton);
+		}
+		
+		public function showVisibleBrushes():void
+		{
+			if(active_level && active_level.tutorialManager) 
+			{
+				var visibleBrushes:int = active_level.tutorialManager.getVisibleBrushes();
+				sideControlPanel.showVisibleBrushes(visibleBrushes);
+			}
+			else
+				sideControlPanel.showVisibleBrushes(0xffffff);
+		}
+		
+		public function showCurrentBrush():void
+		{
+			if(active_level && active_level.tutorialManager) 
+			{
+				var visibleBrushes:int = active_level.tutorialManager.getVisibleBrushes();
+				edgeSetGraphViewPanel.setFirstBrush(visibleBrushes);
+				
+			}
 		}
 	}
 }

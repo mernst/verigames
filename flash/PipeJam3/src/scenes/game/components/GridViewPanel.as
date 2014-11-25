@@ -25,6 +25,7 @@ package scenes.game.components
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.PropertyModeChangeEvent;
+	import events.SelectionEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
@@ -36,6 +37,7 @@ package scenes.game.components
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
 	import scenes.game.display.OutlineFilter;
+	import scenes.game.display.TutorialLevelManager;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
 	
@@ -94,7 +96,6 @@ package scenes.game.components
 		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
 		
-		protected var rightSideMenu:Sprite;
 		private var m_fanfareLayer:Sprite = new Sprite();
 		private var m_buttonLayer:Sprite = new Sprite();
 		
@@ -163,14 +164,8 @@ package scenes.game.components
 			
 			// Create paintbrushes for menu, and for mouse cursor
 			m_solverBrush = createPaintBrush(SOLVER_BRUSH, true);
-			var solverBrush:Sprite = createPaintBrush(SOLVER_BRUSH);
-			solverBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 			m_widenBrush = createPaintBrush(WIDEN_BRUSH, true);
-			var widenBrush:Sprite = createPaintBrush(WIDEN_BRUSH);
-			widenBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 			m_narrowBrush = createPaintBrush(NARROW_BRUSH, true);
-			var narrowBrush:Sprite = createPaintBrush(NARROW_BRUSH);
-			narrowBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 			
 			m_paintBrush = m_solverBrush;
 			
@@ -206,70 +201,12 @@ package scenes.game.components
 			
 			m_paintBrushInfoSprite.addChild(m_selectionLimitText);
 			m_paintBrushInfoSprite.flatten();
-			
-			rightSideMenu = new Sprite();
-			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
-			rightSideMenu.addChild(backgroundQuad);
-			rightSideMenu.x = WIDTH - 40;
-			addChild(rightSideMenu);
-			
-			solverBrush.scaleX = solverBrush.scaleY = .2;
-			solverBrush.x = (rightSideMenu.width - solverBrush.width)/2;
-			solverBrush.y = 120;
-			rightSideMenu.addChild(solverBrush);
-			widenBrush.x = solverBrush.x;
-			widenBrush.y = 160;
-			widenBrush.scaleX = widenBrush.scaleY = .2;
-			rightSideMenu.addChild(widenBrush);
-			narrowBrush.x = solverBrush.x;
-			narrowBrush.y = 200;
-			narrowBrush.scaleX = narrowBrush.scaleY = .2;
-			rightSideMenu.addChild(narrowBrush);
-			
+
 			addChild(m_buttonLayer);
 			addChild(m_fanfareLayer);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-
-		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
-		{
-			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
-			var circleImage:Image = new Image(circleTexture);
-			circleImage.width = circleImage.height = 2 * PAINT_RADIUS;
-			if(offset)
-			{
-				circleImage.x = -0.5 * circleImage.width;
-				circleImage.y = -0.5 * circleImage.height;
-			}
-			circleImage.alpha = 0.7;
-			
-			var paintBrush:Sprite = new Sprite;
-			paintBrush.addChild(circleImage);
-			
-			var q:Quad;
-			switch(style)
-			{
-				case SOLVER_BRUSH:
-					paintBrush.name = SOLVER_BRUSH;
-					break;
-				case NARROW_BRUSH:
-					paintBrush.name = NARROW_BRUSH;
-					q = new Quad(10,10, Constants.NARROW_BLUE);
-					paintBrush.addChild(q);
-					break;
-				case WIDEN_BRUSH:
-					paintBrush.name = WIDEN_BRUSH;
-					q = new Quad(10,10, Constants.WIDE_BLUE);
-					paintBrush.addChild(q);
-					break;
-			}
-			if(q && !offset)
-				q.x = q.y = paintBrush.width/2;
-			return paintBrush;
 		}
 		
 		private function onAddedToStage():void
@@ -543,7 +480,7 @@ package scenes.game.components
 				 if(touch)
 				 {
 				 	location = touch.getLocation(this.stage);
-					if(location.x > rightSideMenu.x)
+					if(location.x > WIDTH)
 						hidePaintBrush();
 					else
 						if(!event.shiftKey)
@@ -1406,28 +1343,45 @@ package scenes.game.components
 			m_currentLevel.unselectAll();
 		}
 		
-		private function changeCurrentBrush(evt:starling.events.TouchEvent):void
+		public function setFirstBrush(visibleBrushes:int):void
 		{
-			if(evt.getTouches(this, TouchPhase.ENDED).length && evt.target is DisplayObject)
+			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
 			{
-				var target:DisplayObject = (evt.target as DisplayObject).parent;
-				if(target.name == SOLVER_BRUSH)
-				{
-					changeBrush(m_solverBrush);
-				}
-				else if(target.name == NARROW_BRUSH)
-				{
-					changeBrush(m_narrowBrush);
-				}
-				else if(target.name == WIDEN_BRUSH)
-				{
-					changeBrush(m_widenBrush);
-				}
+				changeBrush(GridViewPanel.SOLVER_BRUSH);
+				return;
+			}
+			
+			if(visibleBrushes & TutorialLevelManager.WIDEN_BRUSH)
+			{
+				changeBrush(GridViewPanel.WIDEN_BRUSH);
+				return;
+			}
+			
+			if(visibleBrushes & TutorialLevelManager.NARROW_BRUSH)
+			{
+				changeBrush(GridViewPanel.NARROW_BRUSH);
+				return;
 			}
 		}
-		private function changeBrush(brush:Sprite):void
+		
+		public function changeBrush(brushName:String):void
 		{
-			if(brush == m_paintBrush)
+			var brush:Sprite;
+			
+			if(brushName == GridViewPanel.SOLVER_BRUSH)
+			{
+				brush = m_solverBrush;
+			}
+			else if(brushName == GridViewPanel.NARROW_BRUSH)
+			{
+				brush = m_narrowBrush;
+			}
+			else if(brushName == GridViewPanel.WIDEN_BRUSH)
+			{
+				brush = m_widenBrush;
+			}
+			
+			if(brush == m_paintBrush || brush == null)
 				return;
 			
 			var currentVisibility:Boolean = m_paintBrush.visible;
@@ -1518,6 +1472,5 @@ package scenes.game.components
 				delay: .2
 			});
 		}
-		
 	}
 }
