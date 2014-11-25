@@ -331,17 +331,11 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "001":
-					return SOLVER_BRUSH;
 				case "002":
-					return WIDEN_BRUSH;
 				case "01":
-					return NARROW_BRUSH;
 				case "02":
-					return SOLVER_BRUSH + WIDEN_BRUSH;
 				case "03":
-					return SOLVER_BRUSH + NARROW_BRUSH;
 				case "04":
-					return WIDEN_BRUSH + NARROW_BRUSH;
 				case "1":
 				case "2":
 				case "3":
