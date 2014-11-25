@@ -270,20 +270,26 @@ package scenes.game.components
 		
 		private function mouseRightClickDownEventHandler(event:MouseEvent):void
 		{
-			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
-			m_paintBrush.visible = false;
-			m_paintBrushInfoSprite.visible = false;
-			m_rightMouseDown = true;
-			currentLocation = new Point(event.stageX, event.stageY);
+			if(getPanZoomAllowed())
+			{
+				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				m_paintBrush.visible = false;
+				m_paintBrushInfoSprite.visible = false;
+				m_rightMouseDown = true;
+				currentLocation = new Point(event.stageX, event.stageY);
+			}
 		}
 		
 		private function mouseRightClickUpEventHandler(event:MouseEvent):void
 		{
-			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
-			m_paintBrush.visible = true;
-			m_paintBrushInfoSprite.visible = true;
-			m_rightMouseDown = false;
-			currentLocation = null;
+			if(getPanZoomAllowed())
+			{
+				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				m_paintBrush.visible = true;
+				m_paintBrushInfoSprite.visible = true;
+				m_rightMouseDown = false;
+				currentLocation = null;
+			}
 		}
 		
 		protected function menuSelectHandler(event:flash.events.Event):void
