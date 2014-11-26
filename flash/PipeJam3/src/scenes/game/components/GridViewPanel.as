@@ -998,7 +998,7 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 50;
-				continueButton.y = HEIGHT - continueButton.height - GameControlPanel.OVERLAP;
+				continueButton.y = HEIGHT - continueButton.height - 2;
 			}
 			
 			if(PipeJamGameScene.inTutorial)
