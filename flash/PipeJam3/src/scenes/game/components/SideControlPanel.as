@@ -31,9 +31,8 @@ package scenes.game.components
 			WIDTH = _width;
 			HEIGHT = _height;
 
-			var backgroundQuad:Quad = new Quad(40, HEIGHT, 0x785201);
+			var backgroundQuad:Quad = new Quad(WIDTH, HEIGHT, 0x785201);
 			addChild(backgroundQuad);
-			x = WIDTH - 40;
 			
 			m_solverBrush = createPaintBrush(GridViewPanel.SOLVER_BRUSH);
 			m_widenBrush = createPaintBrush(GridViewPanel.WIDEN_BRUSH);

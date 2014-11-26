@@ -260,8 +260,8 @@ package scenes.game.display
 		private function initSideControlPanel():void {
 			trace("Initializing SideControlPanel...");
 			
-			sideControlPanel = new SideControlPanel(40, Starling.current.nativeStage.stageHeight);
-			sideControlPanel.x = gameControlPanel.width - 40;
+			sideControlPanel = new SideControlPanel(Constants.RightPanelWidth, Starling.current.nativeStage.stageHeight);
+			sideControlPanel.x = gameControlPanel.width - Constants.RightPanelWidth;
 			addChild(sideControlPanel);
 			
 			addEventListener(SelectionEvent.BRUSH_CHANGED, changeBrush);
