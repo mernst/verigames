@@ -103,7 +103,8 @@ package scenes.game.components
 		private var m_startingTouchPoint:Point;
 		private var m_currentTouchPoint:Point;
 		private var m_scrollEdgePoint:Point;
-		
+		private var m_inBounds:Boolean = true;
+		private var m_rightMouseDown:Boolean = false;
 		private var m_lastVisibleRefreshViewRect:Rectangle;
 		
 		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
@@ -235,13 +236,67 @@ package scenes.game.components
 
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
-		}
 
+			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_CLICK, function(e:MouseEvent):void{});
+			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightClickDownEventHandler);
+			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
+		
+		}
+		
+		protected var currentLocation:Point = null;
+		protected function mouseMoveEventHandler(event:MouseEvent):void
+		{
+			if(event.stageX > 0 &&
+				event.stageX < 960 &&
+				event.stageY > 0 &&
+				event.stageY < 640)
+					m_inBounds = true;
+			else
+				m_inBounds = false;
+			
+			if(m_rightMouseDown && currentLocation)
+			{
+				var deltaX:Number = event.stageX - currentLocation.x;
+				var deltaY:Number = event.stageY - currentLocation.y;
+				var viewRect:Rectangle = getViewInContentSpace();
+				var newX:Number = viewRect.x + viewRect.width / 2 - (deltaX / content.scaleX/2);
+				var newY:Number = viewRect.y + viewRect.height / 2 - (deltaY / content.scaleY/2);
+				trace(deltaX, newX);
+				moveContent(newX, newY);
+				currentLocation.x = event.stageX;
+				currentLocation.y = event.stageY;
+			}
+		}
+		
+		private function mouseRightClickDownEventHandler(event:MouseEvent):void
+		{
+			if(getPanZoomAllowed())
+			{
+				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				m_paintBrush.visible = false;
+				m_paintBrushInfoSprite.visible = false;
+				m_rightMouseDown = true;
+				currentLocation = new Point(event.stageX, event.stageY);
+			}
+		}
+		
+		private function mouseRightClickUpEventHandler(event:MouseEvent):void
+		{
+			if(getPanZoomAllowed())
+			{
+				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				m_paintBrush.visible = true;
+				m_paintBrushInfoSprite.visible = true;
+				m_rightMouseDown = false;
+				currentLocation = null;
+			}
+		}
+		
 		protected function menuSelectHandler(event:flash.events.Event):void
 		{
 			PipeJam3.pipeJam3.contextMenu.clipboardItems.paste = true;
-			
 		}
+		
 		private var oldViewRect:Rectangle;
 		private function onEnterFrame(evt:EnterFrameEvent):void
 		{
@@ -483,7 +538,7 @@ package scenes.game.components
 					if(location.x > WIDTH)
 						hidePaintBrush();
 					else
-						if(!event.shiftKey)
+						if(!event.shiftKey && !m_rightMouseDown)
 							showPaintBrush();
 				 }
 				 else

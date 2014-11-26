@@ -1,22 +1,20 @@
 package scenes.game.display
 {
-	import assets.AssetsFont;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import starling.display.Quad;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import assets.AssetsFont;
 	
 	import audio.AudioManager;
 	
@@ -61,10 +59,13 @@ package scenes.game.display
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.MovieClip;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
 	
@@ -163,7 +164,7 @@ package scenes.game.display
 			}
 			trace("Done creating World...");
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
+			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
 		
@@ -1179,13 +1180,13 @@ package scenes.game.display
 			
 			if (active_level.tutorialManager) {
 				miniMap.visible = active_level.tutorialManager.getMiniMapShown();
-				showVisibleBrushes();
-				showCurrentBrush();
 			} else {
 				miniMap.visible = true;
 			}
 			if (miniMap) miniMap.setLevel(active_level);
-			
+			showVisibleBrushes();
+			showCurrentBrush();
+		
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			 
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
@@ -1388,8 +1389,9 @@ package scenes.game.display
 			{
 				var visibleBrushes:int = active_level.tutorialManager.getVisibleBrushes();
 				edgeSetGraphViewPanel.setFirstBrush(visibleBrushes);
-				
 			}
+			else
+				edgeSetGraphViewPanel.setFirstBrush(0xffffff);
 		}
 	}
 }
