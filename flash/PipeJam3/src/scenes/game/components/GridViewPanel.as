@@ -104,7 +104,9 @@ package scenes.game.components
 		private var m_currentTouchPoint:Point;
 		private var m_scrollEdgePoint:Point;
 		private var m_inBounds:Boolean = true;
+		private var m_wasOutOfBounds:Boolean = true;
 		private var m_rightMouseDown:Boolean = false;
+		private var m_MouseMoveListenerInstalled:Boolean = false;
 		private var m_lastVisibleRefreshViewRect:Rectangle;
 		
 		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
@@ -135,7 +137,6 @@ package scenes.game.components
 			this.alpha = .999;
 
 			currentMode = NORMAL_MODE;
-			
 			
 			inactiveContent = new Sprite();
 			addChild(inactiveContent);
@@ -240,7 +241,18 @@ package scenes.game.components
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_CLICK, function(e:MouseEvent):void{});
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightClickDownEventHandler);
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
+			Starling.current.nativeStage.addEventListener(flash.events.Event.MOUSE_LEAVE, mouseLeaveHandler);
+		}
 		
+		protected function mouseLeaveHandler(event:flash.events.Event):void
+		{
+			m_inBounds = false;
+			m_wasOutOfBounds = true;
+			if(!m_MouseMoveListenerInstalled)
+			{
+				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				m_MouseMoveListenerInstalled = true;
+			}
 		}
 		
 		protected var currentLocation:Point = null;
@@ -251,9 +263,7 @@ package scenes.game.components
 				event.stageY > 0 &&
 				event.stageY < 640)
 					m_inBounds = true;
-			else
-				m_inBounds = false;
-			
+
 			if(m_rightMouseDown && currentLocation)
 			{
 				var deltaX:Number = event.stageX - currentLocation.x;
@@ -261,10 +271,18 @@ package scenes.game.components
 				var viewRect:Rectangle = getViewInContentSpace();
 				var newX:Number = viewRect.x + viewRect.width / 2 - (deltaX / content.scaleX/2);
 				var newY:Number = viewRect.y + viewRect.height / 2 - (deltaY / content.scaleY/2);
-				trace(deltaX, newX);
 				moveContent(newX, newY);
 				currentLocation.x = event.stageX;
 				currentLocation.y = event.stageY;
+			}
+			else if(m_inBounds && m_wasOutOfBounds)
+			{
+				if(m_MouseMoveListenerInstalled)
+				{
+					Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+					m_MouseMoveListenerInstalled = false;
+				}
+				m_wasOutOfBounds = false;
 			}
 		}
 		
@@ -272,7 +290,11 @@ package scenes.game.components
 		{
 			if(getPanZoomAllowed())
 			{
-				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				if(!m_MouseMoveListenerInstalled)
+				{
+					Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+					m_MouseMoveListenerInstalled = true;
+				}
 				m_paintBrush.visible = false;
 				m_paintBrushInfoSprite.visible = false;
 				m_rightMouseDown = true;
@@ -284,7 +306,11 @@ package scenes.game.components
 		{
 			if(getPanZoomAllowed())
 			{
-				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+				if(m_MouseMoveListenerInstalled)
+				{
+					Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+					m_MouseMoveListenerInstalled = false;
+				}
 				m_paintBrush.visible = true;
 				m_paintBrushInfoSprite.visible = true;
 				m_rightMouseDown = false;
@@ -331,7 +357,7 @@ package scenes.game.components
 			//if we are near the edge, scroll
 			var xDelta:Number = 0;
 			var yDelta:Number = 0;
-			if(m_scrollEdgePoint && getPanZoomAllowed())
+			if(m_scrollEdgePoint && getPanZoomAllowed() && m_inBounds)
 			{
 				if(m_scrollEdgePoint.x < 10)
 				{
