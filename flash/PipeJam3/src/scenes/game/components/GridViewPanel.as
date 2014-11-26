@@ -153,7 +153,7 @@ package scenes.game.components
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
-			m_border.width = WIDTH + 10;
+			m_border.width = WIDTH - Constants.RightPanelWidth + 10;
 			m_border.height = HEIGHT + 10;
 			m_border.x = m_border.y = -5;
 			m_border.touchable = false;
@@ -588,7 +588,7 @@ package scenes.game.components
 				return;
 			}
 			if (localMouse == null) {
-				localMouse = new Point(WIDTH / 2, HEIGHT / 2);
+				localMouse = new Point((WIDTH - Constants.RightPanelWidth) / 2, HEIGHT / 2);
 			} else {
 				var mousePoint:Point = localMouse.clone();
 				
@@ -1053,7 +1053,7 @@ package scenes.game.components
 			trace("center to: " + localPt);
 			
 			const BUFFER:Number = 1.5;
-			var newScale:Number = Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
+			var newScale:Number = Math.min((WIDTH - Constants.RightPanelWidth) / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
 			scaleContent(newScale, newScale);
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
@@ -1079,7 +1079,7 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 50;
-				continueButton.y = HEIGHT - continueButton.height - GameControlPanel.OVERLAP;
+				continueButton.y = HEIGHT - continueButton.height - 2;
 			}
 			
 			if(PipeJamGameScene.inTutorial)
