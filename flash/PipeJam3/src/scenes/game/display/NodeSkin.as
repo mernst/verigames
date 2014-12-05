@@ -36,13 +36,15 @@ package scenes.game.display
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
 		
-		static protected var GreenSquare:Texture;
-		static protected var RedSquare:Texture;
+		static protected var SatisfiedConstraintTexture:Texture;
+		static protected var UnsatisfiedConstraintTexture:Texture;
+		static protected var UnsatisfiedConstraintBackgroundTexture:Texture;
 		
 		protected var lockedIcon:Image;
 		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
 		protected var constraintImage:Image;
+		protected var constraintIconImage:Image;
 
 		protected var isInitialized:Boolean;
 		
@@ -163,14 +165,15 @@ package scenes.game.display
 				mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 				DarkGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkStart);
 				LightGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayLightStart);
-				DarkBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkStart);
-				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightStart);
+				DarkBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableWide);
+				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableNarrow);
 				DarkBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
 				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
-				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightSelected);
-				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkSelected);
-				RedSquare = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_ErrorConstraint);
-				GreenSquare = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_SatisfiedConstraint);
+				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableNarrowSelected);
+				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableWideSelected);
+				UnsatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_ErrorConstraint);
+				SatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_SatisfiedConstraint);
+				UnsatisfiedConstraintBackgroundTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_Conflict);
 			}
 		}
 		
@@ -218,15 +221,22 @@ package scenes.game.display
 					textureImage = new Image(LightBlueCircle);
 				}
 				addChild(textureImage);
+				if(associatedNode.isNarrow)
+					textureImage.width = textureImage.height = 10;
+				else
+					textureImage.width = textureImage.height = 14;
 			} else
 			{
 				if(constraintImage)
 				{
 					removeChild(constraintImage, true);
+					if(constraintIconImage)
+						removeChild(constraintIconImage);
 				}
 				if(associatedNode.hasError())
 				{
-					constraintImage = new Image(RedSquare);
+					constraintImage = new Image(UnsatisfiedConstraintBackgroundTexture);
+					constraintIconImage = new Image(UnsatisfiedConstraintTexture);
 					
 					if(associatedNode._hadError == false)
 					{
@@ -237,8 +247,8 @@ package scenes.game.display
 				}
 				else
 				{
-					constraintImage = new Image(GreenSquare);
-					
+					constraintImage = new Image(SatisfiedConstraintTexture);
+					constraintIconImage = null;
 					if(associatedNode._hadError == true)
 					{
 						//flash if changing
@@ -246,14 +256,22 @@ package scenes.game.display
 					}
 					associatedNode._hadError = false;
 				}
-				constraintImage.width = constraintImage.height = 20;
 				addChild(constraintImage);
+				if(constraintIconImage)
+					addChild(constraintIconImage);
 			}
-			if(textureImage)
-				textureImage.width = textureImage.height = (associatedNode.isNarrow ? 14 : 20);
+			if(constraintIconImage)
+			{
+				constraintIconImage.width = constraintIconImage.height = 10;
+				constraintImage.scaleX = constraintImage.scaleY = constraintIconImage.scaleX;
+				constraintIconImage.x = constraintIconImage.y = (constraintImage.width - constraintIconImage.width)/2;
+			}
+			else if(constraintImage)
+				constraintImage.width = constraintImage.height = 10;
+
 			for each(var connectorImage:Image in associatedNode.connectors)
 			{
-				addChild(connectorImage);
+			//	addChild(connectorImage);
 			}			
 			
 			if(associatedNode.isLocked)
@@ -327,6 +345,17 @@ package scenes.game.display
 			}
 			if (tween) Starling.juggler.remove(tween);
 			draw();
+		}
+		
+		public function scaleConflictMarker(newScale:int):void
+		{
+			var currentWidth:Number = constraintImage.width;
+			constraintImage.scaleX = constraintImage.scaleY = newScale;
+			var newWidth:Number = constraintImage.width;
+			constraintImage.x -= (newWidth-currentWidth)/2;
+			constraintImage.y -= (newWidth-currentWidth)/2;
+			
+			
 		}
 	}
 }

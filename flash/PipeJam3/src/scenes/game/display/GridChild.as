@@ -64,16 +64,7 @@ package scenes.game.display
 		
 		public function scaleSkin(newScaleX:Number, newScaleY:Number):void
 		{
-			if (false && skin) // not working properly yet
-			{
-				var oldScaleX:Number = skin.scaleX;
-				var oldScaleY:Number = skin.scaleY;
-				
-				skin.scaleX = newScaleX;
-				skin.scaleY = newScaleY;
-				skin.x -= 0.5 * (newScaleX - oldScaleX) * skin.width;
-				skin.y -= 0.5 * (newScaleY - oldScaleY) * skin.height;
-			}
+
 		}
 		
 		public function removeSkin():void

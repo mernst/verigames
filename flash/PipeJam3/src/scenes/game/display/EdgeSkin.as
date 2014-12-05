@@ -37,8 +37,8 @@ package scenes.game.display
 			
 //			onVertexDataChanged();
 			mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			DarkConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
-			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_DarkConnector);
+			DarkConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_DarkConnector);
+			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
 		}
 		
 		public function setColor():void
@@ -48,7 +48,8 @@ package scenes.game.display
 				removeChild(textureImage, true);
 			}
 			
-			if (parentEdge.fromNode.isNarrow)
+			//if we match, be light
+			if (parentEdge.fromNode.isNarrow == parentEdge.toNode.isNarrow)
 			{
 				textureImage = new Image(LightConnector);
 			}

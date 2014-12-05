@@ -62,23 +62,24 @@ package assets
 		public static const PipeJamSubTexture_BorderGrayDark:String = "GrayDarkEnd";// "BorderGrayDark";
 		public static const PipeJamSubTexture_BorderGrayLight:String = "GrayLightEnd";//"BorderGrayLight";
 		
-		public static const PipeJamSubTexture_ErrorConstraint:String = "ErrorConstraint";
-		public static const PipeJamSubTexture_SatisfiedConstraint:String = "SatisfiedConstraint";
-		public static const PipeJamSubTexture_LightConnector:String = "LightConnector";
-		public static const PipeJamSubTexture_DarkConnector:String = "DarkConnector";
+		public static const PipeJamSubTexture_ErrorConstraint:String = "ConstraintConflict";
+		public static const PipeJamSubTexture_SatisfiedConstraint:String = "ConstraintCorrected";
+		public static const PipeJamSubTexture_Conflict:String = "Conflict";
+		public static const PipeJamSubTexture_LightConnector:String = "BlueLightBox";
+		public static const PipeJamSubTexture_DarkConnector:String = "BlueDarkBox";
 		
 		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
 		public static const PipeJamSubTexture_BlueDarkBoxSelectPrefix:String = "BlueDarkBoxSelect";
-		public static const PipeJamSubTexture_BlueDarkStart:String = "BlueDarkStart";
-		public static const PipeJamSubTexture_BlueDarkSelected:String = "BlueDarkSelected";
+		public static const PipeJamSubTexture_VariableWide:String = "VariableWide";
+		public static const PipeJamSubTexture_VariableWideSelected:String = "VariableWideSelected";
 		public static const PipeJamSubTexture_BlueDarkEnd:String = "BlueDarkEnd";
 		public static const PipeJamSubTexture_BlueDarkPlug:String = "BlueDarkPlug";
 		public static const PipeJamSubTexture_BlueDarkJoint:String = "BlueDarkJoint";
 		public static const PipeJamSubTexture_BlueDarkSegmentPrefix:String = "BlueDarkSegment";
 		public static const PipeJamSubTexture_BlueLightBoxPrefix:String = "BlueLightBox";
 		public static const PipeJamSubTexture_BlueLightBoxSelectPrefix:String = "BlueLightBoxSelect";
-		public static const PipeJamSubTexture_BlueLightStart:String = "BlueLightStart";
-		public static const PipeJamSubTexture_BlueLightSelected:String = "BlueLightSelected";
+		public static const PipeJamSubTexture_VariableNarrow:String = "VariableNarrow";
+		public static const PipeJamSubTexture_VariableNarrowSelected:String = "VariableNarrowSelected";
 		public static const PipeJamSubTexture_BlueLightEnd:String = "BlueLightEnd";
 		public static const PipeJamSubTexture_BlueLightOutline:String = "BlueLightOutline";
 		public static const PipeJamSubTexture_BlueDarkOutline:String = "BlueDarkOutline";

@@ -82,14 +82,11 @@ package scenes.game.display
 		
 		override public function scaleSkin(newScaleX:Number, newScaleY:Number):void
 		{
-
-			super.scaleSkin(newScaleX, newScaleY);
-			
 			//check to see if we have an error, and if so, scale our error marker at a lower rate
 			if(_hasError && skin)
 			{
 				var currentWidth:Number = skin.width;
-				skin.scaleX = skin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
+ 				skin.scaleX = skin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
 				var newWidth:Number = skin.width;
 				skin.x -= (newWidth-currentWidth)/2;
 				skin.y -= (newWidth-currentWidth)/2;

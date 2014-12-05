@@ -21,7 +21,7 @@ package scenes.game.display
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		
-		public static const LINE_THICKNESS:Number = 5;
+		public static const LINE_THICKNESS:Number = 3;
 		
 		public function Edge(_constraintId:String, _graphConstraint:Constraint, _fromNode:Node, _toNode:Node)
 		{
@@ -62,7 +62,7 @@ package scenes.game.display
 			//a^2 + b^2 = c^2
 			var a:Number = (p2.x - p1.x) * (p2.x - p1.x);
 			var b:Number = (p2.y - p1.y) * (p2.y - p1.y);
-			var hyp:Number = Math.sqrt(a+b);
+			var hyp:Number = Math.sqrt(a+b); //have it meet the edge, but not go from the center of the variable
 			
 			//draw the quad flat, rotate later
 			skin = new EdgeSkin(hyp, Edge.LINE_THICKNESS, this);
