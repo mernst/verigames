@@ -115,7 +115,7 @@ package constraints
 //						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
 //					}
 //				}
-				for (constraintId in constraintsDict) {
+				for (constraintId in constraintsDict) { // TODO: we are recalculating each clause for every edge, need only traverse clauses once
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
 					var thisConstr:Constraint = constraintsDict[constraintId] as Constraint;
@@ -305,7 +305,7 @@ package constraints
 				}
 			} else if (_type == C) {
 				fullId = _type + "_" + _type_num;
-				if (_variableDictionary.hasOwnProperty(fullId)) {
+				if (_clauseDictionary.hasOwnProperty(fullId)) {
 					constrSide = _clauseDictionary[fullId] as ConstraintClause;
 				} else {
 					constrSide = new ConstraintClause(fullId, _defaultScoring);

@@ -251,7 +251,7 @@ package scenes.game.display
 				}
 				else
 				{
-					
+					if (isBackground) return; // no background image for satisfied conflicts
 					constraintImage = new Image(SatisfiedConstraintTexture);
 					if(associatedNode._hadError == true)
 					{
@@ -264,7 +264,6 @@ package scenes.game.display
 			}
 			if(isBackground)
 			{
-				// TODO: XXX
 				constraintImage.width = constraintImage.height = 40;
 				//constraintImage.scaleX = constraintImage.scaleY = ?;
 				//constraintIconImage.x = constraintIconImage.y = (constraintImage.width - constraintIconImage.width)/2;

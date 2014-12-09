@@ -34,13 +34,12 @@ package scenes.game.display
 			super.createSkin();
 			var newSkin:NodeSkin = NodeSkin.getNextSkin();
 			if (newSkin == null) return;
-			newSkin.setNode(this);
+			newSkin.setNode(this, true);
 			newSkin.draw();
 			backgroundSkin = newSkin;
 			
 			backgroundSkin.x = centerPoint.x - gridOffset.x - 0.5 * backgroundSkin.width;
 			backgroundSkin.y = centerPoint.y - gridOffset.y - 0.5 * backgroundSkin.height;
-			
 			setDirty(true);
 		}
 		

@@ -173,11 +173,11 @@ package scenes.game.display
 			connectors.push(connector);
 		}
 		
-		public function addError(addError:Boolean):void
+		public function addError(_error:Boolean):void
 		{
-			if(isClause)
+			if(isClause && _hasError != _error)
 			{
-				_hasError = addError;
+				_hasError = _error;
 				setDirty(true);
 			}			
 		}

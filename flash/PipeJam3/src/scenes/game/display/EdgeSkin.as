@@ -1,6 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import constraints.ConstraintClause;
+	import constraints.ConstraintVar;
+	import utils.PropDictionary;
 	
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -20,6 +23,8 @@ package scenes.game.display
 		protected var skinWidth:Number;
 		
 		protected var textureImage:Image;
+		protected var skinQuad:Quad;
+		protected var preferenceQuad:Quad;
 		
 		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
 		{
@@ -43,23 +48,41 @@ package scenes.game.display
 		
 		public function setColor():void
 		{
-			if(textureImage)
+			if (skinQuad) skinQuad.removeFromParent(true);
+			
+			var edgeMatch:Boolean = false;
+			if (parentEdge.graphConstraint.lhs is ConstraintVar)
 			{
-				removeChild(textureImage, true);
+				edgeMatch = (parentEdge.graphConstraint.lhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
+			}
+			else if (parentEdge.graphConstraint.rhs is ConstraintVar)
+			{
+				edgeMatch = !(parentEdge.graphConstraint.rhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
 			}
 			
-			//if we match, be light
-			if (parentEdge.fromNode.isNarrow == parentEdge.toNode.isNarrow)
+			//if we match, normal line. if not, bright red line
+			if (edgeMatch) //(parentEdge.graphConstraint.isSatisfied())
 			{
-				textureImage = new Image(LightConnector);
+				skinQuad = new Quad(skinWidth, skinHeight, 0xb8a186);
 			}
 			else
 			{
-				textureImage = new Image(DarkConnector);
+				skinQuad = new Quad(skinWidth, skinHeight, 0xff834d);
 			}
-			textureImage.width = skinWidth;
-			textureImage.height = skinHeight;
-			addChild(textureImage);
+			addChild(skinQuad);
+			
+			if (preferenceQuad) preferenceQuad.removeFromParent(true);
+			const PREF_LENGTH:Number = Math.min(0.5 * skinWidth, 10.0);
+			if (parentEdge.graphConstraint.lhs.id.substr(0, 1) == "c")
+			{
+				preferenceQuad = new Quad(PREF_LENGTH, skinHeight, Constants.WIDE_BLUE);
+			}
+			else
+			{
+				preferenceQuad = new Quad(PREF_LENGTH, skinHeight, Constants.NARROW_BLUE);
+			}
+			preferenceQuad.x = skinWidth - PREF_LENGTH;
+			addChild(preferenceQuad);
 		}
 		
 		public function getConnectorTexture():Image

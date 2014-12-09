@@ -10,6 +10,11 @@ package constraints
 			rhs.rhsConstraints.push(this);
 		}
 		
+		public override function isSatisfied():Boolean
+		{
+			return isClauseSatisfied("", false); 
+		}
+		
 		public function isClauseSatisfied(varIdChanged:String, newPropValue:Boolean):Boolean
 		{
 			var clause:ConstraintClause;
