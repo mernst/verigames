@@ -71,7 +71,9 @@ package scenes.game.display
 		public function removeSkin():void
 		{
 			if (skin) skin.removeFromParent();
+			if (backgroundSkin) backgroundSkin.removeFromParent();
 			skin = null;
+			backgroundSkin = null;
 		}
 		
 		public function select():void

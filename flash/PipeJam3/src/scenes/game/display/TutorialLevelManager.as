@@ -169,6 +169,41 @@ package scenes.game.display
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
+				case "01":
+					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
+					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
+					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
+				case "02":
+					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
+					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
+					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tips.push(tip);
+					}
+					if (tips.length == 0) {
+						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tips.push(tip);
+					} else {
+						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tips.push(tip);
+					}
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
 				case "04":
 					num = 0;
 					longConflictFound = false;

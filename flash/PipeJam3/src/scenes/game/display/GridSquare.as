@@ -416,8 +416,6 @@ package scenes.game.display
 			conflictBackgroundDrawingBoard.flatten();
 			nodeDrawingBoard.flatten();
 			groupDrawingBoard.flatten();
-			edgeDrawingBoard.flatten();
-			isDirty = false;
 			
 			for each(edge in edgeList)
 			{
@@ -429,6 +427,8 @@ package scenes.game.display
 					edgeSkin.y -= componentYDisplacement;
 				}
 			}
+			edgeDrawingBoard.flatten();
+			isDirty = false;
 		}
 		
 		private function createEdges():void
@@ -440,7 +440,7 @@ package scenes.game.display
 				edgeDrawingBoard.y = componentYDisplacement;
 				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 			}
-			
+			edgeDrawingBoard.unflatten();
 			for each(var edge:Edge in edgeList)
 			{
 				if(edge.skin == null)
@@ -451,7 +451,7 @@ package scenes.game.display
 					edgeSkin.y -= componentYDisplacement;
 				}
 			}
-
+			edgeDrawingBoard.flatten();
 		}
 		
 		private function updateEdge(edge:Edge):void
