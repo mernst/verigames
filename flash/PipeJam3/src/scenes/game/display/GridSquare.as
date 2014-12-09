@@ -539,7 +539,6 @@ package scenes.game.display
 			{
 				var node:Node = nodeList[i];
 				if (!node.skin) continue;
-				if (node.graphConstraintSide is ConstraintClause) continue;
 				var dX:Number = paintPt.x - node.centerPoint.x;
 				var dY:Number = paintPt.y - node.centerPoint.y;
 				if (dX * dX > paintRadiusSquared) continue;
