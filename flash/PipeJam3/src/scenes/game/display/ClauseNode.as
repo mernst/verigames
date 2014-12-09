@@ -43,12 +43,6 @@ package scenes.game.display
 			setDirty(true);
 		}
 		
-		public override function removeSkin():void
-		{
-			super.removeSkin();
-			if (backgroundSkin) backgroundSkin.disableSkin();
-		}
-		
 		public override function scaleSkin(newScaleX:Number, newScaleY:Number):void
 		{
 			//check to see if we have an error, and if so, scale our error marker at a lower rate
