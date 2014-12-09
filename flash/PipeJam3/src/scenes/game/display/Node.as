@@ -1,10 +1,11 @@
 package scenes.game.display
 {
+	import constraints.ConstraintSide;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
-	import constraints.ClauseConstraint;
+	import constraints.ConstraintEdge;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
 	
@@ -16,26 +17,18 @@ package scenes.game.display
 
 	public class Node extends GridChild
 	{
-		public var graphVar:ConstraintVar;
+		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
 		
 		public var connectors:Vector.<Quad>;
 		
-		public var _hasError:Boolean = false;
-		public var _hadError:Boolean = false;
+		public var _hasError:Boolean = false; // TODO: move to ClauseNode along with related functions
+		public var _hadError:Boolean = false; // TODO: move to ClauseNode along with related functions
 		
-		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
+		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide, _parentGrid:GridSquare)
 		{
 			super(_layoutObject, _id, _bb, _parentGrid);
-			graphVar = _graphVar;
-			//this is only intesting for non-clause Nodes
-			isNarrow = graphVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-			isEditable = !graphVar.constant;
-			if(id.indexOf("c") != -1)
-			{
-				isEditable = false;
-				isClause = true;
-			}
+			graphConstraintSide = _graphConstraintSide;
 			
 			connectors = new Vector.<Quad>;
 		}
@@ -82,15 +75,7 @@ package scenes.game.display
 		
 		override public function scaleSkin(newScaleX:Number, newScaleY:Number):void
 		{
-			//check to see if we have an error, and if so, scale our error marker at a lower rate
-			if(_hasError && skin)
-			{
-				var currentWidth:Number = skin.width;
- 				skin.scaleX = skin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
-				var newWidth:Number = skin.width;
-				skin.x -= (newWidth-currentWidth)/2;
-				skin.y -= (newWidth-currentWidth)/2;
-			}
+			// only used for ClauseNodes right now
 		}
 		
 		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
@@ -197,59 +182,5 @@ package scenes.game.display
 			}			
 		}
 		
-		//used for clause type graphs
-		public function isSatisfied(varIdChanged:String, valueToCheck:Boolean):Boolean
-		{
-			var _isSatisfied:Boolean = false;
-			var clauseConstraint:ClauseConstraint;
-			var narrowValue:Boolean;
-			
-			for each(var gameEdgeID:String in connectedEdgeIds)
-			{
-				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				var toNode:Node = edge.toNode; //this should be us
-				var fromNode:Node = edge.fromNode;
-				
-				var fromNodeID:String = fromNode.id;
-				//find conntecting clause which contains from node, check if that combination is satisfied
-				var found:Boolean = false;
-				for each(clauseConstraint in graphVar.rhsConstraints)
-				{
-					if(clauseConstraint.id.indexOf(fromNodeID) != -1)
-					{
-						found = true;
-						narrowValue = fromNode.isNarrow;
-						if(fromNode.id == varIdChanged)
-							narrowValue = valueToCheck;
-						//if on rhs we want incoming to be narrow
-						if(narrowValue)
-						{
-							return true;
-						}
-					}
-				}
-				//if we didn't find it, check the lhs constraints
-				if(!found)
-				{
-					for each(clauseConstraint in graphVar.lhsConstraints)
-					{
-						if(clauseConstraint.id.indexOf(fromNodeID) != -1)
-						{
-							found = true;
-							narrowValue = fromNode.isNarrow;
-							if(fromNode.id == varIdChanged)
-								narrowValue = valueToCheck;
-							//if on lhs we want incoming to be wide
-							if(!narrowValue)
-							{
-								return true;
-							}
-						}
-					}
-				}
-			}
-			return false;
-			
-		}
 	}
 }

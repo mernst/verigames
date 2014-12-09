@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	
+	import constraints.ConstraintClause;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -13,7 +14,7 @@ package scenes.game.display
 	
 	import assets.AssetInterface;
 	
-	import constraints.ClauseConstraint;
+	import constraints.ConstraintEdge;
 	import constraints.Constraint;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintScoringConfig;
@@ -100,13 +101,11 @@ package scenes.game.display
 		protected var m_nodesInactiveContainer:Sprite = new Sprite();
 		protected var m_errorInactiveContainer:Sprite = new Sprite();
 		protected var m_edgesInactiveContainer:Sprite = new Sprite();
-		protected var m_plugsInactiveContainer:Sprite = new Sprite();
 		public var inactiveLayer:Sprite = new Sprite();
 		
 		protected var m_nodesContainer:Sprite = new Sprite();
 		protected var m_errorContainer:Sprite = new Sprite();
 		protected var m_edgesContainer:Sprite = new Sprite();
-		protected var m_plugsContainer:Sprite = new Sprite();
 		protected var m_groupsContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
@@ -306,27 +305,23 @@ package scenes.game.display
 			}
 			
 			if (inactiveLayer == null)  inactiveLayer  = new Sprite();
-			if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
 			if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
+			if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
 			if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
-			if (m_plugsInactiveContainer == null)  m_plugsInactiveContainer  = new Sprite();
 			inactiveLayer.addChild(m_nodesInactiveContainer);
 			inactiveLayer.addChild(m_errorInactiveContainer);
 			inactiveLayer.addChild(m_edgesInactiveContainer);
-			inactiveLayer.addChild(m_plugsInactiveContainer);
 			
-			if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
 			if (m_errorContainer == null)  m_errorContainer  = new Sprite();
+			if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
 			if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
-			if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
 			if (m_groupsContainer == null) m_groupsContainer = new Sprite();
 			
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
+			addChild(m_errorContainer);
 			addChild(m_groupsContainer);
 			addChild(m_edgesContainer);
 			addChild(m_nodesContainer);
-			addChild(m_errorContainer);
-			addChild(m_plugsContainer);
 			//trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
 
@@ -481,7 +476,6 @@ package scenes.game.display
 				gridChild = new NodeGroup(gridChildLayout, gridChildId, groupBB, grid, m_groupNodes[gridChildId]);
 				groupLayoutObjs[gridChildId] = gridChild;
 			} else {
-				var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
 //				if (graphVar == null) {
 //					trace("Warning: layout var found with no corresponding contraints var:" + gridChildId);
 //					return null;
@@ -491,7 +485,14 @@ package scenes.game.display
 					prevNode.parentGrid.removeGridChild(prevNode);
 				}
 				var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5, layoutY - GridSquare.SKIN_DIAMETER * .5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
-				gridChild = new Node(gridChildLayout, gridChildId, nodeBB, graphVar, grid);
+				if (gridChildId.substr(0, 3) == "var") {
+					var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
+					gridChild = new VariableNode(gridChildLayout, gridChildId, nodeBB, graphVar, grid);
+				} else {
+					var graphClause:ConstraintClause = levelGraph.clauseDict[gridChildId] as ConstraintClause;
+					gridChild = new ClauseNode(gridChildLayout, gridChildId, nodeBB, graphClause, grid);
+				}
+				
 				nodeLayoutObjs[gridChildId] = gridChild;
 				if (graphVar && graphVar.associatedGroupId) {
 					if (!m_groupNodes.hasOwnProperty(graphVar.associatedGroupId)) m_groupNodes[graphVar.associatedGroupId] = new Dictionary();
@@ -588,6 +589,11 @@ package scenes.game.display
 		public function addChildToGroupLevel(child:Sprite):void
 		{
 			m_groupsContainer.addChild(child);
+		}
+		
+		public function addChildToConflictBackgroundLevel(child:Sprite):void
+		{
+			m_errorContainer.addChild(child);
 		}
 		
 		public function addChildToNodeLevel(child:Sprite):void
@@ -728,7 +734,7 @@ package scenes.game.display
 			var count:int = 0;
 			var numWide:int = 0;
 			for (nodeId in nodeLayoutObjs) {
-				var node:Node = nodeLayoutObjs[nodeId];
+				if (nodeId.substr(0, 1) == "c") continue;
 				var constraintVar:ConstraintVar = levelGraph.variableDict[nodeId];
 				if (constraintVar.constant) continue;
 				if (!assignmentsObj["assignments"].hasOwnProperty(constraintVar.formattedId)) assignmentsObj["assignments"][constraintVar.formattedId] = { };
@@ -779,10 +785,6 @@ package scenes.game.display
 			if (m_groupsContainer) {
 				while (m_groupsContainer.numChildren > 0) m_groupsContainer.getChildAt(0).removeFromParent(true);
 				m_groupsContainer.removeFromParent(true);
-			}
-			if (m_plugsContainer) {
-				while (m_plugsContainer.numChildren > 0) m_plugsContainer.getChildAt(0).removeFromParent(true);
-				m_plugsContainer.removeFromParent(true);
 			}
 			
 			for each(var gridSquare:GridSquare in currentGridDict)
@@ -946,7 +948,7 @@ package scenes.game.display
 		protected function onErrorAdded(evt:ErrorEvent):void
 		{
 			var node:Node;
-			var clauseConstraint:ClauseConstraint = evt.constraintError as ClauseConstraint;
+			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
 			if(clauseConstraint)
 			{
 				if(clauseConstraint.lhs.id.indexOf('c') != -1)
@@ -965,7 +967,7 @@ package scenes.game.display
 		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
 			var node:Node;
-			var clauseConstraint:ClauseConstraint = evt.constraintError as ClauseConstraint;
+			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
 			if(clauseConstraint)
 			{
 				if(clauseConstraint.lhs.id.indexOf('c') != -1)
@@ -1103,30 +1105,26 @@ package scenes.game.display
 		{
 			return; // uncomment when more testing performed
 			// Active layers
+			m_errorContainer.flatten();
 			m_nodesContainer.flatten();
-			//m_errorContainer.flatten();// Can't flatten due to animations
 			m_edgesContainer.flatten();
-			m_plugsContainer.flatten();
 			// Inactive layers
+			m_errorInactiveContainer.flatten();
 			m_nodesInactiveContainer.flatten();
-			//m_errorInactiveContainer.flatten();// Can't flatten due to animations
 			m_edgesInactiveContainer.flatten();
-			m_plugsInactiveContainer.flatten();
 		}
 		
 		public override function unflatten():void
 		{
 			super.unflatten();
 			// Active layers
+			m_errorContainer.unflatten();
 			m_nodesContainer.unflatten();
-			//m_errorContainer.unflatten();// Can't flatten due to animations
 			m_edgesContainer.unflatten();
-			m_plugsContainer.unflatten();
 			// Inactive layers
+			m_errorInactiveContainer.unflatten();
 			m_nodesInactiveContainer.unflatten();
-			//m_errorInactiveContainer.unflatten();// Can't flatten due to animations
 			m_edgesInactiveContainer.unflatten();
-			m_plugsInactiveContainer.unflatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean

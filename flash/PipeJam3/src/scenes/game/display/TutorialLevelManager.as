@@ -1,7 +1,7 @@
 package scenes.game.display 
 {
 	import assets.AssetInterface;
-	import constraints.ClauseConstraint;
+	import constraints.ConstraintEdge;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
 	import events.TutorialEvent;

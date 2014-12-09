@@ -34,6 +34,7 @@ package scenes.game.display
 		protected var gridOffset:Point;
 		
 		public var skin:NodeSkin;
+		public var backgroundSkin:NodeSkin;
 		
 		public function GridChild(_layoutObject:Object, _id:String, _bb:Rectangle, _parentGrid:GridSquare) 
 		{

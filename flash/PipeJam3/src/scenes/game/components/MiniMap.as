@@ -4,6 +4,7 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import scenes.game.display.VariableNode;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -286,7 +287,8 @@ package scenes.game.components
 						}
 			
 						for (var nodeId:String in nodeDict) {
-							addWidget(nodeDict[nodeId], false);
+							if (nodeDict[nodeId] is VariableNode)
+								addWidget(nodeDict[nodeId], false);
 						}
 						
 						bitmapTexture = Texture.fromBitmapData(nodeBitmapData);
@@ -411,7 +413,7 @@ package scenes.game.components
 			delete nodeErrorDict[toNode];
 		}
 		
-		public function addWidget(node:Node, flatten:Boolean = true):void
+		public function addWidget(node:VariableNode, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
 			var id:String = node.id;

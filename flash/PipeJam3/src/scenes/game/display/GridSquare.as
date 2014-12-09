@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import constraints.ConstraintClause;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
@@ -28,6 +29,7 @@ package scenes.game.display
 	{
 		public var id:String;
 		
+		protected var conflictBackgroundDrawingBoard:Sprite;
 		protected var nodeDrawingBoard:Sprite;
 		protected var groupDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
@@ -77,6 +79,7 @@ package scenes.game.display
 			} else {
 				return;
 			}
+			
 			var touches:Vector.<Touch> = event.getTouches(touchedDrawingBoard, TouchPhase.ENDED);
 			var loc:Point = touches[0].getLocation(touchedDrawingBoard);
 			var gridChild:GridChild = findNodeAtPoint(loc);
@@ -99,9 +102,9 @@ package scenes.game.display
 					else
 					{
 						var globPt:Point = touchedDrawingBoard.localToGlobal(loc);
-						var node:Node;
-						if (gridChild is Node) {
-							node = gridChild as Node;
+						var node:VariableNode;
+						if (gridChild is VariableNode) {
+							node = gridChild as VariableNode;
 							onClicked(node, !node.isNarrow, true, globPt);
 							if (node.isEditable && !node.graphVar.constant) {
 								if (!node.isNarrow) {
@@ -172,7 +175,7 @@ package scenes.game.display
 			return null;
 		}
 		
-		private function onClicked(node:Node, newIsNarrow:Boolean, dispatchChangeEvent:Boolean, loc:Point = null):void
+		private function onClicked(node:VariableNode, newIsNarrow:Boolean, dispatchChangeEvent:Boolean, loc:Point = null):void
 		{
 			var constraintVar:ConstraintVar = node.graphVar;
 			if (!constraintVar.constant && node.isEditable && node.isNarrow != newIsNarrow) {
@@ -239,12 +242,16 @@ package scenes.game.display
 		{			
 			if(!isActivated)
 			{
+				if (conflictBackgroundDrawingBoard)
+					conflictBackgroundDrawingBoard.removeFromParent(true);
 				if(nodeDrawingBoard)
 					nodeDrawingBoard.removeFromParent(true);
 				if(groupDrawingBoard)
 					groupDrawingBoard.removeFromParent(true);
 				if(edgeDrawingBoard)
 					edgeDrawingBoard.removeFromParent(true);
+				conflictBackgroundDrawingBoard = new Sprite;
+				conflictBackgroundDrawingBoard.touchable = false;
 				nodeDrawingBoard = new Sprite;
 				groupDrawingBoard = new Sprite;
 				edgeDrawingBoard = new Sprite;
@@ -271,15 +278,19 @@ package scenes.game.display
 					nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				}
 				
+				conflictBackgroundDrawingBoard.x = componentXDisplacement;
+				conflictBackgroundDrawingBoard.y = componentYDisplacement;
 				nodeDrawingBoard.x = componentXDisplacement;
 				nodeDrawingBoard.y = componentYDisplacement;
 				groupDrawingBoard.x = componentXDisplacement;
 				groupDrawingBoard.y = componentYDisplacement;
 				edgeDrawingBoard.x = componentXDisplacement;
 				edgeDrawingBoard.y = componentYDisplacement;
+				World.m_world.active_level.addChildToConflictBackgroundLevel(conflictBackgroundDrawingBoard);
 				World.m_world.active_level.addChildToGroupLevel(groupDrawingBoard);
 				World.m_world.active_level.addChildToNodeLevel(nodeDrawingBoard);
 				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
+				conflictBackgroundDrawingBoard.flatten();
 				nodeDrawingBoard.flatten();
 				groupDrawingBoard.flatten();
 				edgeDrawingBoard.flatten();
@@ -345,6 +356,7 @@ package scenes.game.display
 		{
 			if(!isDirty)
 				return;
+			conflictBackgroundDrawingBoard.unflatten();
 			nodeDrawingBoard.unflatten();
 			groupDrawingBoard.unflatten();
 			edgeDrawingBoard.unflatten();
@@ -355,6 +367,7 @@ package scenes.game.display
 					node.createSkin();
 					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 					if (node.skin) nodeDrawingBoard.addChild(node.skin);
+					if (node.backgroundSkin) conflictBackgroundDrawingBoard.addChild(node.backgroundSkin);
 				}
 				node.isDirty = false;
 			}
@@ -398,12 +411,14 @@ package scenes.game.display
 				nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
 				nodeGroup.isDirty = false;
 				if (nodeGroup.skin) groupDrawingBoard.addChild(nodeGroup.skin);
+				if (nodeGroup.backgroundSkin) conflictBackgroundDrawingBoard.addChild(nodeGroup.backgroundSkin);
 			}
+			conflictBackgroundDrawingBoard.flatten();
 			nodeDrawingBoard.flatten();
 			groupDrawingBoard.flatten();
 			edgeDrawingBoard.flatten();
 			isDirty = false;
-		
+			
 			for each(edge in edgeList)
 			{
 				if(edge.skin == null)
@@ -608,7 +623,7 @@ package scenes.game.display
 			{
 				var node:Node = nodeList[i];
 				if (!node.skin) continue;
-				if (node.graphVar.constant) continue;
+				if (node.graphConstraintSide is ConstraintClause) continue;
 				var dX:Number = paintPt.x - node.centerPoint.x;
 				var dY:Number = paintPt.y - node.centerPoint.y;
 				if (dX * dX > paintRadiusSquared) continue;

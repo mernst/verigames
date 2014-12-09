@@ -49,7 +49,7 @@ package constraints
 		public function updateScore(varIdChanged:String = null, propChanged:String = null, newPropValue:Boolean = false):void
 		{
 			var clauseID:String;
-			var constraint:ClauseConstraint;
+			var constraint:ConstraintEdge;
 			
 			oldScore = prevScore;
 			prevScore = currentScore;
@@ -69,18 +69,18 @@ package constraints
 				var i:int;
 				for (i = 0; i < varChanged.lhsConstraints.length; i++) {
 					lhsConstraint = varChanged.lhsConstraints[i];
-					if(lhsConstraint is ClauseConstraint && currentConstraints[lhsConstraint.id] == null)
+					if(lhsConstraint is ConstraintEdge && currentConstraints[lhsConstraint.id] == null)
 					{
-						constraint = lhsConstraint as ClauseConstraint;
+						constraint = lhsConstraint as ConstraintEdge;
 						currentConstraints[constraint.id] = lhsConstraint;
 						if (constraint.isClauseSatisfied(varIdChanged, !newPropValue)) prevConstraintPoints += lhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
 					}
 				}
 				for (i = 0; i < varChanged.rhsConstraints.length; i++) {
 					rhsConstraint = varChanged.rhsConstraints[i];
-					if(rhsConstraint is ClauseConstraint && currentConstraints[rhsConstraint.id] == null)
+					if(rhsConstraint is ConstraintEdge && currentConstraints[rhsConstraint.id] == null)
 					{
-						constraint = rhsConstraint as ClauseConstraint;
+						constraint = rhsConstraint as ConstraintEdge;
 						currentConstraints[rhsConstraint.id] = rhsConstraint;
 						if (constraint.isClauseSatisfied(varIdChanged, !newPropValue)) prevConstraintPoints += rhsConstraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
 					}
@@ -119,9 +119,9 @@ package constraints
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
 					var thisConstr:Constraint = constraintsDict[constraintId] as Constraint;
-					if(thisConstr is ClauseConstraint)
+					if(thisConstr is ConstraintEdge)
 					{
-						constraint = thisConstr as ClauseConstraint;
+						constraint = thisConstr as ConstraintEdge;
 						if(thisConstr.lhs.id.indexOf('c') != -1)
 							clauseID = thisConstr.lhs.id;
 						else
@@ -236,11 +236,11 @@ package constraints
 						var newConstraint:Constraint;
 						if (getQualifiedClassName(constraintsArr[c]) == "String") {
 							// process as String, i.e. "var:1 <= c:2"
-							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1.variableDict, graphDefaultVal, graph1.graphScoringConfig);
+							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1.variableDict, graph1.clauseDict, graphDefaultVal, graph1.graphScoringConfig);
 						} else {
 							throw new Error("Unknown constraint format: " + constraintsArr[c]);
 						}
-						if (newConstraint is ClauseConstraint) {
+						if (newConstraint is ConstraintEdge) {
 							graph1.constraintsDict[newConstraint.id] = newConstraint;
 						} else {
 							throw new Error("Unknown constraint type:" + newConstraint);
@@ -254,7 +254,7 @@ package constraints
 			return graph1;
 		}
 		
-		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
+		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _clauseDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
 		{
 			var pattern:RegExp = /(var|c):(.*) (<|=)= (var|c):(.*)/i;
 			var result:Object = pattern.exec(_str);
@@ -277,13 +277,13 @@ package constraints
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}
 			
-			var lhs:ConstraintVar = parseConstraintSide(lhsType, lhsId, lsuffix, _variableDictionary, _defaultVal, _defaultScoring.clone());
-			var rhs:ConstraintVar = parseConstraintSide(rhsType, rhsId, rsuffix, _variableDictionary, _defaultVal, _defaultScoring.clone());
+			var lhs:ConstraintSide = parseConstraintSide(lhsType, lhsId, lsuffix, _variableDictionary, _clauseDictionary, _defaultVal, _defaultScoring.clone());
+			var rhs:ConstraintSide = parseConstraintSide(rhsType, rhsId, rsuffix, _variableDictionary, _clauseDictionary, _defaultVal, _defaultScoring.clone());
 			
 			var newConstraint:Constraint;
 			if(rhsType == 'c' || lhsType == 'c')
 			{
-				newConstraint = new ClauseConstraint(lhs, rhs, _defaultScoring);
+				newConstraint = new ConstraintEdge(lhs, rhs, _defaultScoring);
 			}
 			else
 			{
@@ -292,25 +292,29 @@ package constraints
  			return newConstraint;
  		}
 		
-		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _variableDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintVar
+		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _variableDictionary:Dictionary, _clauseDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintSide
 		{
-			var constrVar:ConstraintVar;
 			var fullId:String = _type + "_" + _type_num + _typeSuffix;
-			if (_variableDictionary.hasOwnProperty(fullId)) {
-				constrVar = _variableDictionary[fullId] as ConstraintVar;
-			} else {
-				if (_type == VAR) {
-					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
-				} else if (_type == C) {
-					var typeNumArray:Array = _type_num.split("_");
-					fullId = _type + "_" + _type_num;
-					constrVar = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
+			var constrSide:ConstraintSide;
+			if (_type == VAR) {
+				if (_variableDictionary.hasOwnProperty(fullId)) {
+					constrSide = _variableDictionary[fullId] as ConstraintVar;
 				} else {
-					throw new Error("Invalid constraint element found: ('" + _type + "'). Expecting 'var' or 'c'");
+					constrSide = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
+					_variableDictionary[fullId] = constrSide;
 				}
-				_variableDictionary[fullId] = constrVar;
+			} else if (_type == C) {
+				fullId = _type + "_" + _type_num;
+				if (_variableDictionary.hasOwnProperty(fullId)) {
+					constrSide = _clauseDictionary[fullId] as ConstraintClause;
+				} else {
+					constrSide = new ConstraintClause(fullId, _defaultScoring);
+					_clauseDictionary[fullId] = constrSide;
+				}
+			} else {
+				throw new Error("Invalid constraint element found: ('" + _type + "'). Expecting 'var' or 'c'");
 			}
-			return constrVar;
+			return constrSide;
 		}
 		
 	}

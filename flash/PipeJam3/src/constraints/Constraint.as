@@ -11,12 +11,12 @@ package constraints
 		public static const GENERICS_NODE:String = "enabled_check";
 		
 		public var type:String;
-		public var lhs:ConstraintVar;
-		public var rhs:ConstraintVar;
+		public var lhs:ConstraintSide;
+		public var rhs:ConstraintSide;
 		public var scoring:ConstraintScoringConfig;
 		public var id:String;
 		
-		public function Constraint(_type:String, _lhs:ConstraintVar, _rhs:ConstraintVar, _scoring:ConstraintScoringConfig) 
+		public function Constraint(_type:String, _lhs:ConstraintSide, _rhs:ConstraintSide, _scoring:ConstraintScoringConfig) 
 		{
 			type = _type;
 			lhs = _lhs;

@@ -25,6 +25,7 @@ package scenes.game.display
 		
 		// TODO: Circular dependency
 		public var associatedNode:Node;
+		public var isBackground:Boolean = false;
 		
 		static protected var mAtlas:TextureAtlas;	
 		static protected var DarkGrayCircle:Texture;
@@ -44,8 +45,7 @@ package scenes.game.display
 		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
 		protected var constraintImage:Image;
-		protected var constraintIconImage:Image;
-
+		
 		protected var isInitialized:Boolean;
 		
 		static protected var levelAtlas:TextureAtlas;
@@ -229,14 +229,18 @@ package scenes.game.display
 			{
 				if(constraintImage)
 				{
-					removeChild(constraintImage, true);
-					if(constraintIconImage)
-						removeChild(constraintIconImage);
+					constraintImage.removeFromParent(true);
 				}
 				if(associatedNode.hasError())
 				{
-					constraintImage = new Image(UnsatisfiedConstraintBackgroundTexture);
-					constraintIconImage = new Image(UnsatisfiedConstraintTexture);
+					if (isBackground)
+					{
+						constraintImage = new Image(UnsatisfiedConstraintBackgroundTexture);
+					}
+					else
+					{
+						constraintImage = new Image(UnsatisfiedConstraintTexture);
+					}
 					
 					if(associatedNode._hadError == false)
 					{
@@ -247,8 +251,8 @@ package scenes.game.display
 				}
 				else
 				{
+					
 					constraintImage = new Image(SatisfiedConstraintTexture);
-					constraintIconImage = null;
 					if(associatedNode._hadError == true)
 					{
 						//flash if changing
@@ -257,14 +261,13 @@ package scenes.game.display
 					associatedNode._hadError = false;
 				}
 				addChild(constraintImage);
-				if(constraintIconImage)
-					addChild(constraintIconImage);
 			}
-			if(constraintIconImage)
+			if(isBackground)
 			{
-				constraintIconImage.width = constraintIconImage.height = 10;
-				constraintImage.scaleX = constraintImage.scaleY = constraintIconImage.scaleX;
-				constraintIconImage.x = constraintIconImage.y = (constraintImage.width - constraintIconImage.width)/2;
+				// TODO: XXX
+				constraintImage.width = constraintImage.height = 40;
+				//constraintImage.scaleX = constraintImage.scaleY = ?;
+				//constraintIconImage.x = constraintIconImage.y = (constraintImage.width - constraintIconImage.width)/2;
 			}
 			else if(constraintImage)
 				constraintImage.width = constraintImage.height = 10;
@@ -309,9 +312,10 @@ package scenes.game.display
 			return super.removeChild(_child, dispose);
 		}
 		
-		public function setNode(_associatedNode:Node):void
+		public function setNode(_associatedNode:Node, _isBackground:Boolean = false):void
 		{
 			associatedNode = _associatedNode;
+			isBackground = _isBackground;
 		}
 		
 		private var saveParent:DisplayObjectContainer;
