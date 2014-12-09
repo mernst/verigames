@@ -11,7 +11,12 @@ package constraints
 			lhs.lhsConstraints.push(this);
 			rhs.rhsConstraints.push(this);
 		}
-			
+		
+		public override function isSatisfied():Boolean
+		{
+			return isClauseSatisfied("", false);
+		}
+		
 		public function isClauseSatisfied(varIdChanged:String, newPropValue:Boolean):Boolean
 		{
 			//there must be a better way, but I need to find the node associated with the clause end of this constraint,

@@ -354,7 +354,17 @@ package scenes.game.display
 				{
 					node.createSkin();
 					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
-					if (node.skin) nodeDrawingBoard.addChild(node.skin);
+					if (node.skin)
+					{
+						if (node.isClause)
+						{
+							nodeDrawingBoard.addChildAt(node.skin, 0);
+						}
+						else
+						{
+							nodeDrawingBoard.addChild(node.skin);
+						}
+					}
 				}
 				node.isDirty = false;
 			}

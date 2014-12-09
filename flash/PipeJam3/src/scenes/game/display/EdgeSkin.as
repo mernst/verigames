@@ -20,6 +20,8 @@ package scenes.game.display
 		protected var skinWidth:Number;
 		
 		protected var textureImage:Image;
+		protected var skinQuad:Quad;
+		protected var preferenceQuad:Quad;
 		
 		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
 		{
@@ -43,23 +45,31 @@ package scenes.game.display
 		
 		public function setColor():void
 		{
-			if(textureImage)
-			{
-				removeChild(textureImage, true);
-			}
+			if (skinQuad) skinQuad.removeFromParent(true);
 			
 			//if we match, be light
-			if (parentEdge.fromNode.isNarrow == parentEdge.toNode.isNarrow)
+			if (parentEdge.graphConstraint.isSatisfied()) //(parentEdge.fromNode.isNarrow == parentEdge.toNode.isNarrow)
 			{
-				textureImage = new Image(LightConnector);
+				skinQuad = new Quad(skinWidth, skinHeight, 0xb8a186);
 			}
 			else
 			{
-				textureImage = new Image(DarkConnector);
+				skinQuad = new Quad(skinWidth, skinHeight, 0xff834d);
 			}
-			textureImage.width = skinWidth;
-			textureImage.height = skinHeight;
-			addChild(textureImage);
+			addChild(skinQuad);
+			
+			if (preferenceQuad) preferenceQuad.removeFromParent(true);
+			const PREF_LENGTH:Number = 12.0;
+			if (parentEdge.graphConstraint.lhs.id.substr(0, 1) == "c")
+			{
+				preferenceQuad = new Quad(PREF_LENGTH, skinHeight, Constants.WIDE_BLUE);
+			}
+			else
+			{
+				preferenceQuad = new Quad(20, skinHeight, Constants.NARROW_BLUE);
+			}
+			preferenceQuad.x = skinWidth - PREF_LENGTH;
+			addChild(preferenceQuad);
 		}
 		
 		public function getConnectorTexture():Image
