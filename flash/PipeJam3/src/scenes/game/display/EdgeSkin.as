@@ -63,11 +63,11 @@ package scenes.game.display
 			//if we match, normal line. if not, bright red line
 			if (edgeMatch) //(parentEdge.graphConstraint.isSatisfied())
 			{
-				skinQuad = new Quad(skinWidth, skinHeight, 0xb8a186);
+				skinQuad = new Quad(skinWidth, skinHeight, Constants.SATISFIED_EDGE);
 			}
 			else
 			{
-				skinQuad = new Quad(skinWidth, skinHeight, 0xff834d);
+				skinQuad = new Quad(skinWidth, skinHeight, Constants.UNSATISFIED_EDGE);
 			}
 			addChild(skinQuad);
 			

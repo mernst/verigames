@@ -185,17 +185,17 @@ package scenes
 					break;
 				case GridViewPanel.NARROW_BRUSH:
 					paintBrush.name = GridViewPanel.NARROW_BRUSH;
-					q = new Quad(10,10, Constants.NARROW_BLUE);
+					q = new Quad(20, 20, Constants.NARROW_BLUE);
 					paintBrush.addChild(q);
 					break;
 				case GridViewPanel.WIDEN_BRUSH:
 					paintBrush.name = GridViewPanel.WIDEN_BRUSH;
-					q = new Quad(10,10, Constants.WIDE_BLUE);
+					q = new Quad(20, 20, Constants.WIDE_BLUE);
 					paintBrush.addChild(q);
 					break;
 			}
-			if(q && !offset)
-				q.x = q.y = paintBrush.width/2;
+			if(q)
+				q.x = q.y = offset ? (- q.width/2) : (paintBrush.width/2 - q.width/2);
 			return paintBrush;
 		}
 	}

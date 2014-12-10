@@ -1,7 +1,6 @@
 package scenes.splashscreen
 {
 	import assets.AssetInterface;
-	import particle.ErrorParticleSystem;
 	import scenes.Scene;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -12,8 +11,6 @@ package scenes.splashscreen
 		
 		public var startMenuBox:SplashScreenMenuBox;
 		protected var background:Image;
-		protected var particleSystem:ErrorParticleSystem;
-		protected var foreground:Image;
 		
 		//would like to dispatch an event and end up here, but
 		public static var splashScreenScene:SplashScreenScene;
@@ -33,17 +30,6 @@ package scenes.splashscreen
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
 			addChild(background);
-			
-			particleSystem = new ErrorParticleSystem();
-			particleSystem.x = (721.0 / 2.0) * background.width / Constants.GameWidth;
-			particleSystem.y = (555.0 / 2.0) * background.height / Constants.GameHeight;
-			particleSystem.scaleX = particleSystem.scaleY = 8.0;
-			addChild(particleSystem);
-			
-			foreground = new Image(AssetInterface.getTexture("Game", "BoxesStartScreenForegroundImageClass"));
-			foreground.scaleX = background.scaleX;
-			foreground.scaleY = background.scaleY;
-			addChild(foreground);
 			
 			addMenuBox();
 		}

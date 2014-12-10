@@ -32,9 +32,11 @@ package
 		public static const BROWN:uint = 0x624202;
 		public static const RED:uint = 0xFF0000;
 		
-		public static const NARROW_BLUE:uint = 0x87b9d3;
-		public static const WIDE_BLUE:uint = 0x406d90;
+		public static const NARROW_BLUE:uint = 0x6cb0cf;
+		public static const WIDE_BLUE:uint = 0x5876a6;
 		
+		public static const SATISFIED_EDGE:uint = 0xb8a186;
+		public static const UNSATISFIED_EDGE:uint = 0xff834d;
 		
 		//Nine slice
 		public static const TOP_LEFT:String = "TopLeft";
