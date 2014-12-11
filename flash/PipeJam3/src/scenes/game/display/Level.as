@@ -94,8 +94,6 @@ package scenes.game.display
 		public var groupLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
 		
-		protected var m_groupNodes:Dictionary = new Dictionary();
-		
 		protected var m_hidingErrorText:Boolean = false;
 		
 		protected var m_nodesInactiveContainer:Sprite = new Sprite();
@@ -106,7 +104,6 @@ package scenes.game.display
 		protected var m_nodesContainer:Sprite = new Sprite();
 		protected var m_errorContainer:Sprite = new Sprite();
 		protected var m_edgesContainer:Sprite = new Sprite();
-		protected var m_groupsContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
 		protected var m_backgroundImage:Image;
@@ -315,11 +312,9 @@ package scenes.game.display
 			if (m_errorContainer == null)  m_errorContainer  = new Sprite();
 			if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
 			if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
-			if (m_groupsContainer == null) m_groupsContainer = new Sprite();
 			
 			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
 			addChild(m_errorContainer);
-			addChild(m_groupsContainer);
 			addChild(m_edgesContainer);
 			addChild(m_nodesContainer);
 			//trace("load level time1", new Date().getTime()-time1);
@@ -430,19 +425,11 @@ package scenes.game.display
 				
 			if (newScaleX < GROUP_SCALE_THRESHOLD || newScaleY < GROUP_SCALE_THRESHOLD) {
 				if (!m_groupsShown) {
-					for each (gridSquare in currentGridDict)
-					{
-						gridSquare.showGroups();
-					}
-					draw();
+					// TODO GROUPS
 				}
 			} else {
 				if (m_groupsShown) {
-					for each (gridSquare in currentGridDict)
-					{
-						gridSquare.hideGroups();
-					}
-					draw();
+					// TODO GROUPS
 					m_groupsShown = false;
 				}
 			}
@@ -467,38 +454,24 @@ package scenes.game.display
 				gridSystemDict[nodeGridName] = grid;
 			}
 			var gridChild:GridChild;
-			if (isGroup) {
-				if (groupLayoutObjs.hasOwnProperty(gridChildId)) {
-					var prevNodeGroup:NodeGroup = groupLayoutObjs[gridChildId] as NodeGroup;
-					prevNodeGroup.parentGrid.removeGridChild(prevNodeGroup);
-				}
-				var groupBB:Rectangle = new Rectangle(layoutX, layoutY, layoutWidth, layoutHeight);
-				gridChild = new NodeGroup(gridChildLayout, gridChildId, groupBB, grid, m_groupNodes[gridChildId]);
-				groupLayoutObjs[gridChildId] = gridChild;
-			} else {
-//				if (graphVar == null) {
-//					trace("Warning: layout var found with no corresponding contraints var:" + gridChildId);
-//					return null;
-//				}
-				if (nodeLayoutObjs.hasOwnProperty(gridChildId)) {
-					var prevNode:Node = nodeLayoutObjs[gridChildId] as Node;
-					prevNode.parentGrid.removeGridChild(prevNode);
-				}
-				var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5, layoutY - GridSquare.SKIN_DIAMETER * .5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
-				if (gridChildId.substr(0, 3) == "var") {
-					var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
-					gridChild = new VariableNode(gridChildLayout, gridChildId, nodeBB, graphVar, grid);
-				} else {
-					var graphClause:ConstraintClause = levelGraph.clauseDict[gridChildId] as ConstraintClause;
-					gridChild = new ClauseNode(gridChildLayout, gridChildId, nodeBB, graphClause, grid);
-				}
-				
-				nodeLayoutObjs[gridChildId] = gridChild;
-				if (graphVar && graphVar.associatedGroupId) {
-					if (!m_groupNodes.hasOwnProperty(graphVar.associatedGroupId)) m_groupNodes[graphVar.associatedGroupId] = new Dictionary();
-					m_groupNodes[graphVar.associatedGroupId][gridChildId] = gridChild;
-				}
+			//if (graphVar == null) {
+				//trace("Warning: layout var found with no corresponding contraints var:" + gridChildId);
+				//return null;
+			//}
+			if (nodeLayoutObjs.hasOwnProperty(gridChildId)) {
+				var prevNode:Node = nodeLayoutObjs[gridChildId] as Node;
+				prevNode.parentGrid.removeGridChild(prevNode);
 			}
+			var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5, layoutY - GridSquare.SKIN_DIAMETER * .5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
+			if (gridChildId.substr(0, 3) == "var") {
+				var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
+				gridChild = new VariableNode(gridChildLayout, gridChildId, nodeBB, graphVar, grid);
+			} else {
+				var graphClause:ConstraintClause = levelGraph.clauseDict[gridChildId] as ConstraintClause;
+				gridChild = new ClauseNode(gridChildLayout, gridChildId, nodeBB, graphClause, grid);
+			}
+			
+			nodeLayoutObjs[gridChildId] = gridChild;
 			grid.addGridChild(gridChild);
 			return gridChild;
 		}
@@ -584,11 +557,6 @@ package scenes.game.display
 		{
 			edge.toNode.parentGrid.addEdge(edge);
 			edge.fromNode.parentGrid.addEdge(edge);
-		}
-
-		public function addChildToGroupLevel(child:Sprite):void
-		{
-			m_groupsContainer.addChild(child);
 		}
 		
 		public function addChildToConflictBackgroundLevel(child:Sprite):void
@@ -782,10 +750,6 @@ package scenes.game.display
 				while (m_edgesContainer.numChildren > 0) m_edgesContainer.getChildAt(0).removeFromParent(true);
 				m_edgesContainer.removeFromParent(true);
 			}
-			if (m_groupsContainer) {
-				while (m_groupsContainer.numChildren > 0) m_groupsContainer.getChildAt(0).removeFromParent(true);
-				m_groupsContainer.removeFromParent(true);
-			}
 			
 			for each(var gridSquare:GridSquare in currentGridDict)
 			{
@@ -834,10 +798,6 @@ package scenes.game.display
 					PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.graphVar.id] = constraintType;
 				}
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
-				if (evt.graphVar.associatedGroupId) {
-					var nodeGroup:NodeGroup = groupLayoutObjs[evt.graphVar.associatedGroupId];
-					if (nodeGroup) nodeGroup.calculateNodeInfo(); // recalc whether group is wide or narrow and hasError
-				}
 			} else {
 				levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.afterScoreUpdate(levelGraph);
@@ -892,11 +852,7 @@ package scenes.game.display
 		//used when ctrl-shift clicking a node, selects x whole group or nearest neighbors if no group
 		protected function onGroupSelection(evt:SelectionEvent):void
 		{
-			if (evt.component is NodeGroup) {
-				// Select all nodes in group
-				var nodeGroup:NodeGroup = evt.component as NodeGroup;
-				
-			} else if (evt.component is Node) {
+			if (evt.component is Node) {
 				var node:Node = evt.component as Node;
 				currentSelectionProcessCount = 1;
 				var nextToVisitArray:Array = new Array;
@@ -916,26 +872,24 @@ package scenes.game.display
 		{
 			node.select();
 			
-			//include locked nodes, but not their children
-			if(!node.isLocked)
-				for each(var gameEdgeID:String in node.connectedEdgeIds)
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
+			{
+				var edge:Edge = edgeLayoutObjs[gameEdgeID];
+				var toNode:Node = edge.toNode;
+				var fromNode:Node = edge.fromNode;
+				
+				var otherNode:Node = toNode;
+				if(toNode == node)
+					otherNode = fromNode;
+				if(!otherNode.isSelected)
 				{
-					var edge:Edge = edgeLayoutObjs[gameEdgeID];
-					var toNode:Node = edge.toNode;
-					var fromNode:Node = edge.fromNode;
-					
-					var otherNode:Node = toNode;
-					if(toNode == node)
-						otherNode = fromNode;
-					if(!otherNode.isSelected)
+					if(previouslyCheckedNodes[otherNode.id] == null)
 					{
-						if(previouslyCheckedNodes[otherNode.id] == null)
-						{
-							nextToVisitArray.push(otherNode);
-							previouslyCheckedNodes[otherNode.id] = otherNode;
-						}
+						nextToVisitArray.push(otherNode);
+						previouslyCheckedNodes[otherNode.id] = otherNode;
 					}
 				}
+			}
 		}
 		
 		protected function onGroupUnselection(evt:SelectionEvent):void
@@ -947,42 +901,41 @@ package scenes.game.display
 		
 		protected function onErrorAdded(evt:ErrorEvent):void
 		{
-			var node:Node;
+			var clauseNode:ClauseNode;
 			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
 			if(clauseConstraint)
 			{
 				if(clauseConstraint.lhs.id.indexOf('c') != -1)
 				{
-					node = nodeLayoutObjs[clauseConstraint.lhs.id];
+					clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
 				}
 				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
 				{
-					node = nodeLayoutObjs[clauseConstraint.rhs.id];
+					clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
 				}
-				if(node)
-					node.addError(true);
+				if(clauseNode)
+					clauseNode.addError(true);
 			}
 		}
 		
 		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
-			var node:Node;
+			var clauseNode:ClauseNode;
 			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
 			if(clauseConstraint)
 			{
 				if(clauseConstraint.lhs.id.indexOf('c') != -1)
 				{
-					node = nodeLayoutObjs[clauseConstraint.lhs.id];
+					clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
 				}
 				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
 				{
-					node = nodeLayoutObjs[clauseConstraint.rhs.id];
+					clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
 				}
-				if(node)
-					node.addError(false);
+				if(clauseNode)
+					clauseNode.addError(false);
 			}
 		}
-		
 		
 		protected static function getVisible(_layoutObj:Object, _defaultValue:Boolean = true):Boolean
 		{
@@ -1550,22 +1503,19 @@ package scenes.game.display
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
 				var nodeUpdated:Boolean = false;
-				if(!node.isLocked)
+				var constraintVar:ConstraintVar = node["graphVar"];
+				var currentVal:Boolean = node.isNarrow;
+				node.isNarrow = true;
+				if(vars[ii] == 1)
+					node.isNarrow = false;
+				someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
+				nodeUpdated = currentVal != node.isNarrow; 
+				if(currentVal != node.isNarrow)
 				{
-					var constraintVar:ConstraintVar = node["graphVar"];
-					var currentVal:Boolean = node.isNarrow;
-					node.isNarrow = true;
-					if(vars[ii] == 1)
-						node.isNarrow = false;
-					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
-					nodeUpdated = currentVal != node.isNarrow; 
-					if(currentVal != node.isNarrow)
-					{
-						node.setDirty(true, true);
-						if(constraintVar) 
-							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
-						if (tutorialManager) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
-					}
+					node.setDirty(true, true);
+					if(constraintVar) 
+						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+					if (tutorialManager) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 				}
 			}
 			if(someNodeUpdated)
@@ -1606,22 +1556,6 @@ package scenes.game.display
 			
 		}
 		
-		public function lockSelection():void
-		{
-			for each(var node:Node in selectedNodes)
-			{
-				node.lock();
-			}
-		}
-		
-		public function unlockSelection():void
-		{
-			for each(var node:Node in selectedNodes)
-			{
-				node.unlock();
-			}
-		}
-		
 		public function propagate():void
 		{
 			// TODO Auto Generated method stub
@@ -1634,81 +1568,6 @@ package scenes.game.display
 				}
 			}
 			
-		}
-		
-		public function solveAllSections():void
-		{
-			for each(var node:Node in nodeLayoutObjs)
-			{
-				if(node.hasError() && !node.isEditable)
-				{
-					trace(node.id);
-					solveSection(node);
-				}
-			}
-		}
-		//using width of starting node, make connected nodes the same width until either a) we don't create a new conflict by flipping,
-		// or b) we create an unsolvable conflict by hitting a fixed node
-		public function solveSection(node:Node):void
-		{
-			var flippedNodes:Vector.<Node> = new Vector.<Node>;
-			var nodesToSolve:Vector.<Node> = new Vector.<Node>;
-			nodesToSolve.push(node);
-			var notDone:Boolean = true;
-			do{
-				if(!solveNodes(nodesToSolve, flippedNodes))
-					break;
-				if(nodesToSolve.length == 0)
-					notDone = false;
-			}while(notDone);
-			
-			//solved nodes returned false
-			if(notDone)
-			{
-				//reset nodes to start
-				for each(var resetFlippedNode:Node in flippedNodes)
-				resetFlippedNode.isNarrow = !resetFlippedNode.isNarrow;
-			}
-			else //update scoring, etc
-			{
-				for each(var flippedNode:Node in flippedNodes)
-				{
-					var constraintVar:ConstraintVar = flippedNode["graphVar"];
-					flippedNode.setDirty(true);
-					if(constraintVar) 
-						constraintVar.setProp(PropDictionary.PROP_NARROW, flippedNode.isNarrow);
-				}
-				onWidgetChange();
-			}
-		}
-		
-		//solves current node errors, and returns list of nodes to solve, or null
-		//if list is empty, we are done, if null, we can't solve (hit a fixed node the wrong size)
-		protected function solveNodes(nodesToSolve:Vector.<Node>, flippedNodes:Vector.<Node>):Boolean
-		{
-			var node:Node = nodesToSolve.pop();
-			
-			for each(var gameEdgeID:String in node.connectedEdgeIds)
-			{
-				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-				var toNode:Node = edge.toNode;
-				var fromNode:Node = edge.fromNode;
-				
-				var otherNode:Node = (toNode == node) ? fromNode : toNode;
-				if(!fromNode.isNarrow && toNode.isNarrow)
-				{
-					if(!otherNode.isEditable)
-						return false;
-					
-					otherNode.isNarrow = !otherNode.isNarrow;
-					flippedNodes.push(otherNode);
-					
-					if(otherNode.hasError())
-						nodesToSolve.push(otherNode);
-				}
-			}
-			
-			return true;
 		}
 		
 		public function selectNodes(localPt:Point, dX:Number, dY:Number):void

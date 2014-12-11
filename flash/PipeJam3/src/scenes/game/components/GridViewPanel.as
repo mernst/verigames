@@ -841,16 +841,6 @@ package scenes.game.components
 						World.m_world.solverDoneCallback("");
 					}
 					break;
-				case Keyboard.L:
-					if (m_currentLevel) {
-						m_currentLevel.lockSelection();
-					}
-					break;
-				case Keyboard.U:
-					if (m_currentLevel) {
-						m_currentLevel.unlockSelection();
-					}
-					break;
 				case Keyboard.EQUAL:
 				case Keyboard.NUMPAD_ADD:
 					zoomInDiscrete();

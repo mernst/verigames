@@ -32,11 +32,9 @@ package scenes.game.display
 		
 		protected var conflictBackgroundDrawingBoard:Sprite;
 		protected var nodeDrawingBoard:Sprite;
-		protected var groupDrawingBoard:Sprite;
 		protected var edgeDrawingBoard:Sprite;
 		protected var nodeList:Vector.<Node>;
 		protected var edgeList:Vector.<Edge>;
-		protected var groupList:Vector.<NodeGroup>;
 		public var NumNodesSelected:int = 0;
 		public var visited:Boolean = false;
 		public var isDirty:Boolean = true;
@@ -67,7 +65,6 @@ package scenes.game.display
 			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
 			nodeList = new Vector.<Node>();
 			edgeList = new Vector.<Edge>;
-			groupList = new Vector.<NodeGroup>();
 		}
 		
 		protected function onTouch(event:TouchEvent):void
@@ -75,8 +72,6 @@ package scenes.game.display
 			var touchedDrawingBoard:Sprite;
 			if (event.getTouches(nodeDrawingBoard, TouchPhase.ENDED).length) {
 				touchedDrawingBoard = nodeDrawingBoard;
-			} else if (event.getTouches(groupDrawingBoard, TouchPhase.ENDED).length) {
-				touchedDrawingBoard = groupDrawingBoard;
 			} else {
 				return;
 			}
@@ -89,9 +84,6 @@ package scenes.game.display
 				if(event.shiftKey)
 				{
 					World.m_world.edgeSetGraphViewPanel.hidePaintBrush();
-					if(!gridChild.isLocked)
-					{
-					}
 					
 					if(event.ctrlKey) //propagate size up or down stream
 					{
@@ -116,24 +108,6 @@ package scenes.game.display
 									AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
 								}
 							}
-						} else if (gridChild is NodeGroup) {
-							var nodeGroup:NodeGroup = gridChild as NodeGroup;
-							nodeGroup.isNarrow = !nodeGroup.isNarrow;
-							nodeGroup.setDirty(true);
-							if (!nodeGroup.isNarrow) {
-								// Wide (after it will be changed)
-								AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
-							} else {
-								// Narrow
-								AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
-							}
-							for each (node in nodeGroup.nodeDict)
-							{
-								onClicked(node, nodeGroup.isNarrow, false);
-							}
-							nodeGroup.calculateNodeInfo();
-							var changeEvent:VarChangeEvent = new VarChangeEvent(VarChangeEvent.VAR_CHANGE_USER, null, PropDictionary.PROP_NARROW, nodeGroup.isNarrow, null);
-							nodeDrawingBoard.dispatchEvent(changeEvent);
 						}
 					}
 				}
@@ -146,10 +120,6 @@ package scenes.game.display
 							//gridChild.select(World.m_world.active_level.selectedNodes);
 						//else
 							//gridChild.unselect(World.m_world.active_level.selectedNodes);
-					//}
-					//else
-					//{
-						//touchedDrawingBoard.dispatchEvent(new SelectionEvent(SelectionEvent.GROUP_SELECTED, gridChild));
 					//}
 				//}
 			}
@@ -164,14 +134,6 @@ package scenes.game.display
 				if(pt.y < node.bb.top - componentYDisplacement - .5*SKIN_DIAMETER) continue;
 				if(pt.y > node.bb.bottom - componentYDisplacement + .5*SKIN_DIAMETER) continue;
 				return node;
-			}
-			for each(var nodeGroup:NodeGroup in groupList)
-			{
-				if(pt.x < nodeGroup.bb.left - componentXDisplacement - .5*nodeGroup.bb.width) continue;
-				if(pt.x > nodeGroup.bb.right - componentXDisplacement + .5*nodeGroup.bb.width) continue;
-				if(pt.y < nodeGroup.bb.top - componentYDisplacement - .5*nodeGroup.bb.height) continue;
-				if(pt.y > nodeGroup.bb.bottom - componentYDisplacement + .5*nodeGroup.bb.height) continue;
-				return nodeGroup;
 			}
 			return null;
 		}
@@ -192,9 +154,7 @@ package scenes.game.display
 		
 		public function addGridChild(gridChild:GridChild):void
 		{
-			if (gridChild is NodeGroup) {
-				groupList.push(gridChild as NodeGroup);
-			} else if (gridChild is Node) {
+			if (gridChild is Node) {
 				nodeList.push(gridChild as Node);
 			}
 			gridChild.createSkin();
@@ -225,12 +185,6 @@ package scenes.game.display
 				maxX = Math.max(maxX, node.bb.right);
 				maxY = Math.max(maxY, node.bb.bottom);
 			}
-			for each (var nodeGroup:NodeGroup in groupList) {
-				minX = Math.min(minX, nodeGroup.bb.left);
-				minY = Math.min(minY, nodeGroup.bb.top);
-				maxX = Math.max(maxX, nodeGroup.bb.right);
-				maxY = Math.max(maxY, nodeGroup.bb.bottom);
-			}
 			m_bb = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
@@ -246,18 +200,14 @@ package scenes.game.display
 					conflictBackgroundDrawingBoard.removeFromParent(true);
 				if(nodeDrawingBoard)
 					nodeDrawingBoard.removeFromParent(true);
-				if(groupDrawingBoard)
-					groupDrawingBoard.removeFromParent(true);
 				if(edgeDrawingBoard)
 					edgeDrawingBoard.removeFromParent(true);
 				conflictBackgroundDrawingBoard = new Sprite;
 				conflictBackgroundDrawingBoard.touchable = false;
 				nodeDrawingBoard = new Sprite;
-				groupDrawingBoard = new Sprite;
 				edgeDrawingBoard = new Sprite;
 				
 				nodeDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
-				groupDrawingBoard.addEventListener(TouchEvent.TOUCH, onTouch);
 				
 				for each(var node:Node in nodeList)
 				{											
@@ -272,27 +222,17 @@ package scenes.game.display
 						edge.updateEdge();
 				}
 				
-				for each(var nodeGroup:NodeGroup in groupList)
-				{
-					if (!nodeGroup.skin) nodeGroup.createSkin();
-					nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
-				}
-				
 				conflictBackgroundDrawingBoard.x = componentXDisplacement;
 				conflictBackgroundDrawingBoard.y = componentYDisplacement;
 				nodeDrawingBoard.x = componentXDisplacement;
 				nodeDrawingBoard.y = componentYDisplacement;
-				groupDrawingBoard.x = componentXDisplacement;
-				groupDrawingBoard.y = componentYDisplacement;
 				edgeDrawingBoard.x = componentXDisplacement;
 				edgeDrawingBoard.y = componentYDisplacement;
 				World.m_world.active_level.addChildToConflictBackgroundLevel(conflictBackgroundDrawingBoard);
-				World.m_world.active_level.addChildToGroupLevel(groupDrawingBoard);
 				World.m_world.active_level.addChildToNodeLevel(nodeDrawingBoard);
 				World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 				conflictBackgroundDrawingBoard.flatten();
 				nodeDrawingBoard.flatten();
-				groupDrawingBoard.flatten();
 				edgeDrawingBoard.flatten();
 				isActivated = true;
 				isDirty = true;
@@ -322,24 +262,6 @@ package scenes.game.display
 			if (debugQ) debugQ.removeFromParent(true);
 		}
 		
-		public function showGroups():void
-		{
-			for each (var nodeGroup:NodeGroup in groupList)
-			{
-				nodeGroup.isDirty = true;
-			}
-			isDirty = true;
-		}
-		
-		public function hideGroups():void
-		{
-			for each (var nodeGroup:NodeGroup in groupList)
-			{
-				nodeGroup.removeSkin();
-			}
-			isDirty = true;
-		}
-		
 		public function scaleNodes(nodeScaleX:Number, nodeScaleY:Number):void
 		{
 			if (m_nodeScaleX == nodeScaleX && m_nodeScaleY == nodeScaleY) return;
@@ -358,7 +280,6 @@ package scenes.game.display
 				return;
 			conflictBackgroundDrawingBoard.unflatten();
 			nodeDrawingBoard.unflatten();
-			groupDrawingBoard.unflatten();
 			edgeDrawingBoard.unflatten();
 			for each(var node:Node in nodeList)
 			{
@@ -404,18 +325,9 @@ package scenes.game.display
 						World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 				}
 			}
-				
-			for each (var nodeGroup:NodeGroup in groupList)
-			{
-				if (nodeGroup.isDirty) nodeGroup.createSkin();
-				nodeGroup.scaleSkin(m_nodeScaleX, m_nodeScaleY);
-				nodeGroup.isDirty = false;
-				if (nodeGroup.skin) groupDrawingBoard.addChild(nodeGroup.skin);
-				if (nodeGroup.backgroundSkin) conflictBackgroundDrawingBoard.addChild(nodeGroup.backgroundSkin);
-			}
+			
 			conflictBackgroundDrawingBoard.flatten();
 			nodeDrawingBoard.flatten();
-			groupDrawingBoard.flatten();
 			
 			for each(edge in edgeList)
 			{
@@ -528,7 +440,6 @@ package scenes.game.display
 		//		removeGridChild(edge, dispose);
 		//	}
 			nodeDrawingBoard.removeFromParent(dispose);
-			groupDrawingBoard.removeFromParent(dispose);
 			edgeDrawingBoard.removeFromParent(dispose);
 		}
 		
@@ -580,15 +491,6 @@ package scenes.game.display
 					}
 				}
 				nodeDrawingBoard.flatten();
-				groupDrawingBoard.unflatten();
-				for each (var nodeGroup:NodeGroup in groupList)
-				{
-					if (nodeGroup.isSelected) {
-						nodeGroup.isSelected = false;
-						nodeGroup.setDirty(false);
-					}
-				}
-				groupDrawingBoard.flatten();
 				NumNodesSelected = 0;
 			}
 			
@@ -603,7 +505,7 @@ package scenes.game.display
 				for(var index:int = 0; index<nodeList.length; index++)
 				{
 					var node:Node = nodeList[index];
-					if(node.isSelected && !node.isLocked)
+					if(node.isSelected)
 						node.updateSelectionAssignment(assignmentIsWide, World.m_world.active_level.levelGraph);
 				}
 				isDirty = true;
@@ -637,7 +539,6 @@ package scenes.game.display
 		public function intersects(viewRect:Rectangle):Boolean
 		{
 			if (nodeDrawingBoard.bounds.intersects(viewRect) ||
-				groupDrawingBoard.bounds.intersects(viewRect) ||
 				edgeDrawingBoard.bounds.intersects(viewRect))
 					return true;
 			else

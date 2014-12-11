@@ -443,9 +443,6 @@ package scenes.game.components
 			else if(isNarrow)
 				color = narrowColor;
 			
-			if(node.isLocked)
-				color = NodeSkin.LOCKED_COLOR;
-			
 			//set the 2x2 square
 			var size:int = 2;
 

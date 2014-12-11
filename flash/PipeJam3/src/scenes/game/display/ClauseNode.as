@@ -19,6 +19,9 @@ package scenes.game.display
 	public class ClauseNode extends Node
 	{
 		
+		private var _hasError:Boolean = false;
+		private var _hadError:Boolean = false;
+		
 		public function ClauseNode(_layoutObject:Object, _id:String, _bb:Rectangle, _graphClause:ConstraintClause, _parentGrid:GridSquare)
 		{
 			super(_layoutObject, _id, _bb, _graphClause, _parentGrid);
@@ -28,6 +31,30 @@ package scenes.game.display
 		}
 		
 		public function get graphClause():ConstraintClause { return graphConstraintSide as ConstraintClause; }
+		
+		public function hasError():Boolean
+		{
+			return _hasError;
+		}
+		
+		public function get hadError():Boolean
+		{
+			return _hadError;
+		}
+		
+		public function set hadError(_val:Boolean):void
+		{
+			_hadError = _val;
+		}
+		
+		public function addError(_error:Boolean):void
+		{
+			if(isClause && _hasError != _error)
+			{
+				_hasError = _error;
+				setDirty(true);
+			}			
+		}
 		
 		public override function createSkin():void
 		{

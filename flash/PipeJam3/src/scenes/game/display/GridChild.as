@@ -21,7 +21,6 @@ package scenes.game.display
 		public var isSelected:Boolean = false;
 		public var isEditable:Boolean;
 		public var isNarrow:Boolean;
-		public var isLocked:Boolean = false;
 		public var isDirty:Boolean = false;
 		
 		public var startingSelectionState:Boolean = false;
@@ -88,24 +87,6 @@ package scenes.game.display
 			parentGrid.NumNodesSelected--;
 		}
 		
-		public function lock():void
-		{
-			if(isLocked == false)
-			{
-				isLocked = true;
-				setDirty(false);
-			}
-		}
-		
-		public function unlock():void
-		{
-			if(isLocked == true)
-			{
-				isLocked = false;
-				setDirty(false);
-			}
-		}
-		
 		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
 		{
 			parentGrid.isDirty = true;
@@ -129,13 +110,6 @@ package scenes.game.display
 				isDirty = true;
 			}
 		}
-		
-		public function hasError():Boolean
-		{
-			//implemented by children
-			return false;
-		}
-
 	}
 
 }

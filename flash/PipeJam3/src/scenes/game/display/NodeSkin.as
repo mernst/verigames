@@ -41,8 +41,6 @@ package scenes.game.display
 		static protected var UnsatisfiedConstraintTexture:Texture;
 		static protected var UnsatisfiedConstraintBackgroundTexture:Texture;
 		
-		protected var lockedIcon:Image;
-		protected var lockedQuad:Quad;
 		protected var textureImage:Image;
 		protected var constraintImage:Image;
 		
@@ -57,8 +55,6 @@ package scenes.game.display
 
 		static public const WIDE_COLOR_COMPLEMENT:int = 0x0B90FF;
 		static public const NARROW_COLOR_COMPLEMENT:int = 0x89DDD0;
-		
-		static public const LOCKED_COLOR:int = 0x00FF00;
 		
 		public var id:int;
 		public static var numSkins:int = 2000;
@@ -186,7 +182,7 @@ package scenes.game.display
 			
 			var wideScore:Number = 1;
 			var narrowScore:Number = 0;
-			if(!associatedNode.isClause)
+			if(!(associatedNode as ClauseNode))
 			{
 				if (associatedNode.isNarrow && associatedNode.isSelected)
 				{
@@ -225,13 +221,16 @@ package scenes.game.display
 					textureImage.width = textureImage.height = 10;
 				else
 					textureImage.width = textureImage.height = 14;
-			} else
+			}
+			else
 			{
+				// Is clause
+				var associatedClauseNode:ClauseNode = associatedNode as ClauseNode;
 				if(constraintImage)
 				{
 					constraintImage.removeFromParent(true);
 				}
-				if(associatedNode.hasError())
+				if(associatedClauseNode.hasError())
 				{
 					if (isBackground)
 					{
@@ -242,23 +241,23 @@ package scenes.game.display
 						constraintImage = new Image(UnsatisfiedConstraintTexture);
 					}
 					
-					if(associatedNode._hadError == false)
+					if(associatedClauseNode.hadError == false)
 					{
 						//flash if changing
 						flash(0x00ff00);
 					}
-					associatedNode._hadError = true;
+					associatedClauseNode.hadError = true;
 				}
 				else
 				{
 					if (isBackground) return; // no background image for satisfied conflicts
 					constraintImage = new Image(SatisfiedConstraintTexture);
-					if(associatedNode._hadError == true)
+					if(associatedClauseNode.hadError == true)
 					{
 						//flash if changing
 						flash(0x00ff00);
 					}
-					associatedNode._hadError = false;
+					associatedClauseNode.hadError = false;
 				}
 				addChild(constraintImage);
 			}
@@ -271,26 +270,11 @@ package scenes.game.display
 			else if(constraintImage)
 				constraintImage.width = constraintImage.height = 10;
 
-			for each(var connectorImage:Image in associatedNode.connectors)
-			{
-			//	addChild(connectorImage);
-			}			
+			//for each(var connectorImage:Image in associatedNode.connectors)
+			//{
+			////	addChild(connectorImage);
+			//}			
 			
-			if(associatedNode.isLocked)
-			{
-				lockedQuad = new Quad(20,20, LOCKED_COLOR);
-				addChild(lockedQuad);
-				if(!lockedIcon)
-					lockedIcon = new Image(levelAtlas.getTexture("DocumentIconLocked"));
-				lockedIcon.width = lockedIcon.height = 8;
-				lockedIcon.x = lockedIcon.y = 12;
-				addChild(lockedIcon);
-			}
-			else if(lockedIcon)
-			{
-				removeChild(lockedIcon);
-				removeChild(lockedQuad);
-			}
 		}
 		
 		override public function set scaleX(newScale:Number):void

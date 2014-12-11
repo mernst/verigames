@@ -22,9 +22,6 @@ package scenes.game.display
 		
 		public var connectors:Vector.<Quad>;
 		
-		public var _hasError:Boolean = false; // TODO: move to ClauseNode along with related functions
-		public var _hadError:Boolean = false; // TODO: move to ClauseNode along with related functions
-		
 		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide, _parentGrid:GridSquare)
 		{
 			super(_layoutObject, _id, _bb, _parentGrid);
@@ -100,16 +97,6 @@ package scenes.game.display
 			}
 		}
 		
-		public override function hasError():Boolean
-		{
-			return _hasError;
-		}
-		
-		public function hadError():Boolean
-		{
-			return _hadError;
-		}
-		
 		protected var visitedNodes:Dictionary;
 		public function propagate(upstream:Boolean, visitedNodes:Dictionary):void
 		{
@@ -171,15 +158,6 @@ package scenes.game.display
 			connector.x =  -5 * Math.cos(rot) + 5;
 			connector.y = - 5 * Math.sin(rot) + 5;
 			connectors.push(connector);
-		}
-		
-		public function addError(_error:Boolean):void
-		{
-			if(isClause && _hasError != _error)
-			{
-				_hasError = _error;
-				setDirty(true);
-			}			
 		}
 		
 	}
