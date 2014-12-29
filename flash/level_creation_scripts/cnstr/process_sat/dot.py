@@ -46,8 +46,8 @@ def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
     _util.print_step('loading')
 
     out_is_folder = os.path.isdir(outfile)
-
-    Gs = cPickle.load(open(infile, 'rb'))
+    with open(infile, 'rb') as read_in:
+        Gs = cPickle.load(read_in)
 
     _util.print_step('outputting')
 
@@ -205,8 +205,8 @@ digraph G {
         output.write(footer)
         output.close()
         layout_with_sfdp(outfilename, laid_out_Gs)
-
-    cPickle.dump(Gs, open(infile, 'wb'), cPickle.HIGHEST_PROTOCOL)
+    with open(infile, 'wb') as write_out:
+        cPickle.dump(Gs, write_out, cPickle.HIGHEST_PROTOCOL)
 
     print 'conflicts', total_conf
 
