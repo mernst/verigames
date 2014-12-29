@@ -1,7 +1,5 @@
 package scenes.game.display
 {
-	
-	import constraints.ConstraintClause;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -11,33 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	
-	import assets.AssetInterface;
-	
-	import constraints.ConstraintEdge;
-	import constraints.Constraint;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintScoringConfig;
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
-	import constraints.events.ErrorEvent;
-	import constraints.events.VarChangeEvent;
-	
-	import deng.fzip.FZip;
-	
-	import events.MenuEvent;
-	import events.MiniMapEvent;
-	import events.PropertyModeChangeEvent;
-	import events.SelectionEvent;
-	import events.WidgetChangeEvent;
-	
-	import networking.GameFileHandler;
-	import networking.PlayerValidation;
-	
-	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
-	import scenes.game.display.Node;
-	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -49,13 +20,32 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
+	import assets.AssetInterface;
+	import constraints.Constraint;
+	import constraints.ConstraintClause;
+	import constraints.ConstraintEdge;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
+	import constraints.ConstraintValue;
+	import constraints.ConstraintVar;
+	import constraints.events.ErrorEvent;
+	import constraints.events.VarChangeEvent;
+	import deng.fzip.FZip;
+	import events.MenuEvent;
+	import events.MiniMapEvent;
+	import events.PropertyModeChangeEvent;
+	import events.SelectionEvent;
+	import events.WidgetChangeEvent;
+	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	import scenes.BaseComponent;
+	import scenes.game.display.Node;
+	import scenes.game.PipeJamGameScene;
 	import system.MaxSatSolver;
-	
 	import utils.Base64Encoder;
 	import utils.PropDictionary;
 	import utils.XObject;
 	import utils.XString;
-	
 	
 	/**
 	 * Level all game components - widgets and links
@@ -1133,8 +1123,6 @@ package scenes.game.display
 			dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 		}
 		
-
-		
 		public function unselectAll():void
 		{
 			for each(var node:Node in selectedNodes)
@@ -1553,20 +1541,6 @@ package scenes.game.display
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{
-			
-		}
-		
-		public function propagate():void
-		{
-			// TODO Auto Generated method stub
-			for each(var node:Node in nodeLayoutObjs)
-			{
-				if(node.isNarrow)
-				{
-					var visitedNodes:Dictionary = new Dictionary;
-					node.propagate(true, visitedNodes);
-				}
-			}
 			
 		}
 		
