@@ -1,5 +1,5 @@
 import sys, os
-from process_sat import input_cnstr, connected, dot, output_dimacs, write_game_files
+from process_sat import input_cnstr, connected, dot, output_dimacs, group, write_game_files
 
 ### Command line interface ###
 if __name__ == "__main__":
@@ -16,8 +16,10 @@ if __name__ == "__main__":
     graphs_fn = '%s.graphs' % file_pref
     connected.run(graph_fn, graphs_fn)
 
-    node_limit = int(raw_input('Enter limit on number of vars required to layout level (or 0 to layout all levels): '))
-
+    node_min = int(raw_input('Enter minimum number of vars required to process level (or -1 to process all levels): '))
+    node_max = int(raw_input('Enter maximum number of vars required to process level (or -1 to process all levels): '))
+    if node_max == -1:
+        node_max = sys.maxsize
     dot_dirn = '%s_dot_files' % file_pref
     suf_i = 0
     while os.path.exists(dot_dirn):
@@ -25,8 +27,11 @@ if __name__ == "__main__":
         dot_dirn = '%s_dot_files_%s' % (file_pref, suf_i)
     os.makedirs(dot_dirn)
     print 'Writing dot files to: %s' % dot_dirn
-    dot.run(graphs_fn, dot_dirn, node_limit)
-
+    dot.run(graphs_fn, dot_dirn, node_min, node_max)
+    
+    groups_fn = '%s.groups' % file_pref
+    group.run(graphs_fn, groups_fn, node_min, node_max)
+    
     # wcnf_dirn = '%s_wcnf_files' % file_pref
     # suf_i = 0
     # while os.path.exists(wcnf_dirn):
@@ -44,5 +49,5 @@ if __name__ == "__main__":
     os.makedirs(game_files_dirn)
     print 'Writing game files to: %s' % game_files_dirn
     qids_start = int(raw_input('Enter qid to start with: '))
-    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_limit)
+    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_min, node_max)
 

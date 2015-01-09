@@ -2,12 +2,12 @@ import networkx as nx
 import cPickle, json, sys, os
 import _util
 
-def run(graphs_infile, game_files_directory, version, qids_start, node_limit):
+def run(graphs_infile, game_files_directory, version, qids_start, node_min, node_max):
     
-    Gs = cPickle.load(open(graphs_infile, 'rb'))
-
+    with open(graphs_infile, 'rb') as infile:
+        Gs = cPickle.load(infile)
     constraints_name = os.path.basename(graphs_infile).split('.')[0]
-    
+
     if not os.path.isdir(game_files_directory):
         raise RuntimeError('game_files_directory is not a directory/does not exist: %s' % game_files_directory)
 
@@ -15,8 +15,8 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_limit):
     for Gi, G in enumerate(sorted(Gs)):
         n_vars = len([n for n in G.nodes() if n.startswith('var')])
 
-        # Limit the number of nodes in a graph (if less than limit, don't produce dot file)
-        if n_vars < node_limit:
+        # Limit the number of nodes in a graph
+        if n_vars < node_min or n_vars > node_max:
             continue
 
         if not G.graph.has_key('id'):
@@ -34,9 +34,10 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_limit):
     "variables": {"type:0": 0, "type:1": 0},
     "constraints": 1
   },
+  "groups":%s,
   "variables":{},
   "constraints":[
-    ''' % (G.graph['id'], current_qid, version))
+    ''' % (G.graph['id'], current_qid, version, json.dumps(G.graph.get('groups', []))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')
@@ -82,12 +83,13 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_limit):
 
 ### Command line interface ###
 if __name__ == "__main__":
-    if len(sys.argv) != 6:
-        print 'Usage: %s graphs_infile game_files_directory version qids_start node_limit' % sys.argv[0]
+    if len(sys.argv) != 7:
+        print 'Usage: %s graphs_infile game_files_directory version qids_start node_min node_max' % sys.argv[0]
         quit()
     graphs_infile = sys.argv[1]
     game_files_directory = sys.argv[2]
     version = sys.argv[3]
     qids_start = sys.argv[4]
-    node_limit = sys.argv[5]
-    run(infile, outfile)
+    node_min = sys.argv[5]
+    node_max = sys.argv[6]
+    run(graphs_infile, game_files_directory, version, qids_start, node_min, node_max)
