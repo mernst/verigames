@@ -7,21 +7,23 @@ build:
 	gcc maxsatz2009.c -o maxsatz2009
 	gcc maxsatz.c -o maxsatz
 '''
-import os, json
+import os, json, sys
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 all_assignments = {}
-files = [f for f in os.listdir('.') if os.path.isfile(f)]
+files = os.listdir(sys.argv[1])
 n_autosolve_levels = 0
 n_total_levels = 0
 n_autosolve_nodes = 0
 n_total_nodes = 0
 n_autosolve_constraints = 0
 n_total_constraints = 0
+current = 0
 for fname in files:
 	is_sat = False
 	is_weighted = False
-	if fname[-5:] == '.wcnf':
+	if fname[-5:] == '.json' or fname[-5:] == '.wcnf':
+		ext = fname[-4:]
 		n_total_levels += 1
 		n_autosolve_levels += 1
 		fprefix = fname[:-5]
@@ -33,14 +35,18 @@ for fname in files:
 		is_sat = True
 	if is_sat:
 		if is_weighted:
-			ext = 'wcnf'
-			print '%s (weighted)' % fprefix
+			#ext = 'json'
+			#print '%s (weighted)' % fprefix
+			None
 		else:
 			ext = 'cnf'
 			print fprefix
 		# Get mapping of sat var ids (1->n) to original constraint vars (var:12452, etc) from comment in wcnf
 		keys = []
-		with open('%s.%s' % (fprefix, ext), 'r') as sat_in:
+		with open(sys.argv[1] + '\%s.%s' % (fprefix, ext), 'r') as sat_in:
+			if current % 100 == 0:
+				print sys.argv[1] + '\%s.%s' % (fprefix, ext)
+			current = current + 1
 			for input_line in sat_in:
 				input_line = input_line.strip()
 				if input_line[:7] == 'c keys ':
@@ -57,7 +63,7 @@ for fname in files:
 					nodes_constraints = input_line[7:].split(' ')
 					n_total_nodes += int(nodes_constraints[0])
 					n_total_constraints += int(nodes_constraints[1])
-		with os.popen('%s/maxsatz2009 %s.%s' % (SCRIPT_PATH, fprefix, ext)) as sat_cmd:
+		with os.popen('%s/maxsatz.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
 			lines = sat_cmd.readlines()
 			max_score = None
 			penalty = None
@@ -78,54 +84,20 @@ for fname in files:
 				else:
 					constraint_value = 'type:0'
 				if sat_id > len(keys):
-					print 'Warning! Found sat variable id out of range given in keys from .%s file: %s len(keys): %s' % (ext, sat_id, len(keys))
+					#print 'Warning! Found sat variable id out of range given in keys from .%s file: %s len(keys): %s' % (ext, sat_id, len(keys))
 					continue
 				constraint_id = 'var:%s' % keys[sat_id-1]
 				if all_assignments.get(constraint_id) is not None:
-					print 'Warning! Multiple assignments found for %s' % constraint_id
+					#print 'Warning! Multiple assignments found for %s' % constraint_id
 					continue
 				all_assignments[constraint_id] = constraint_value
 		with open('%s.out' % fprefix, 'w') as cnf_out:
 			for line in lines:
 				cnf_out.write(line)
-		#Attempt to write target score to constraints json file
-		try:
-			with open('%sAssignments.json' % fprefix, 'r') as constr_in:
-				lines = constr_in.readlines()
-				target_score_line = -1
-				starting_score = None
-				for i, line in enumerate(lines):
-					if line.strip()[:14] == '"target_score"' or line.strip()[:14] == "'target_score'":
-						target_score_line = i
-					elif line.strip()[:17] == '"starting_score:"' or line.strip()[:17] == "'starting_score:'":
-						starting_score = float(line.strip()[17:].strip()[:-1])
-			if is_weighted:
-				target_score = float(max_score - penalty) + score_offset
-			else:
-				#TODO: just multiply by 100 for now since they're all identical in this version
-				target_score = float(100.0*(max_score - penalty)) + score_offset
-			target_score_str = '"target_score":%s,\n' % target_score
-			if target_score_line == -1:
-				lines.insert(1, target_score_str) # if no target score already, just write to second line
-			else:
-				lines[target_score_line] = target_score_str
-			lines = ''.join(lines)
-			os.remove('%sAssignments.json' % fprefix)
-			with open('%sAssignments.json' % fprefix, 'w') as constr_out:
-				constr_out.write(lines)
-			if starting_score >= float(max_score - penalty):
-				print 'Starting Score >= Target, moving to auto folder...'
-				auto_dir = os.path.dirname('auto/')
-				if not os.path.exists(auto_dir):
-					os.makedirs(auto_dir)
-				os.rename('%s.json' % fprefix, 'auto/%s.json' % fprefix)
-				os.rename('%sAssignments.json' % fprefix, 'auto/%sAssignments.json' % fprefix)
-				os.rename('%sLayout.json' % fprefix, 'auto/%sLayout.json' % fprefix)
-		except Exception as e:
-			print 'Error writing target score: %s' % e
-			continue
+				if "Optimal" in line and not "= 0" in line:
+					print "Unoptimal", fprefix
 with open('AllAssignments.json', 'w') as asg_out:
 	asg_out.write(json.dumps(all_assignments))
-print 'Levels: %s autosolved / %s total = %s%' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
-print 'Nodes: %s autosolved / %s total = %s%' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
-print 'constraints: %s autosolved / %s total = %s%' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
+print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
+print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
