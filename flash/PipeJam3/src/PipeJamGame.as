@@ -28,6 +28,7 @@ package
 	import events.MenuEvent;
 	import events.NavigationEvent;
 	
+	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
@@ -167,11 +168,17 @@ package
 					loadLevelFromName(m_fileName);
 			}
 			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
+			{
 				showScene("LoadingScene");
+			}
 			else
 			{
 				PlayerValidation.playerID = PlayerValidation.playerIDForTesting;
-				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+				if(PipeJam3.LOCAL_DEPLOYMENT)
+				{
+					TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+					Achievements.getAchievementsEarnedForPlayer();
+				}
 				showScene("SplashScreen");				
 			}
 			

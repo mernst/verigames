@@ -27,8 +27,6 @@ package scenes.loadingscreen
 	{
 		
 		protected var background:Image;
-		protected var particleSystem:ErrorParticleSystem;
-		protected var foreground:Image;
 		
 		/**Used to hold final message open so it's visible */
 		protected var timer:Timer;
@@ -66,17 +64,6 @@ package scenes.loadingscreen
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
 			addChild(background);
-			
-			particleSystem = new ErrorParticleSystem();
-			particleSystem.x = 395.5 * background.width / Constants.GameWidth;
-			particleSystem.y = 302.0 * background.height / Constants.GameHeight;
-			particleSystem.scaleX = particleSystem.scaleY = 8.0;
-			addChild(particleSystem);
-			
-			foreground = new Image(AssetInterface.getTexture("Game", "BoxesStartScreenForegroundImageClass"));
-			foreground.scaleX = background.scaleX;
-			foreground.scaleY = background.scaleY;
-			addChild(foreground);
 			
 			const BUTTON_CENTER_X:Number = 241; // center point to put Play and Log In buttons
 			

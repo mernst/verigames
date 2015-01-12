@@ -63,11 +63,14 @@ package networking
 		
 		protected static function getAchievements(result:int, e:Event):void
 		{
-			var achievementObject:Object = JSON.parse(e.target.data);
-			currentAchievementList = new Dictionary;
-			for each(var achievement:Object in achievementObject.playerAchievements)
+			if(result != NetworkConnection.EVENT_ERROR)
 			{
-				currentAchievementList[achievement.achievementId] = achievement;
+				var achievementObject:Object = JSON.parse(e.target.data);
+				currentAchievementList = new Dictionary;
+				for each(var achievement:Object in achievementObject.playerAchievements)
+				{
+					currentAchievementList[achievement.achievementId] = achievement;
+				}
 			}
 		}
 		

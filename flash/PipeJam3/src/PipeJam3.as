@@ -13,7 +13,6 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
-	
 	import assets.AssetsFont;
 	
 	import audio.AudioManager;
@@ -55,6 +54,7 @@ package
 		public static var USE_LOCAL_PROXY:Boolean = false;
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
+		public static var REQUIRE_LOG_IN:Boolean = false;
 		public static var PRODUCTION:Boolean = false;
 		public static var INSTALL_DVD:Boolean = false;
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
@@ -76,6 +76,7 @@ package
 		static public var pipeJam3:PipeJam3;
 		
 		private static var m_replayText:TextField = new TextField();
+
 		
 		public function PipeJam3()
 		{
@@ -135,12 +136,13 @@ package
 			// this event is dispatched when stage3D is set up
 			mStarling.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated);
 			
-			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
 			if (ExternalInterface.available) {
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
+			
+		//	var fileID:String = loaderInfo.parameters.fileID;
 			
 			var fullURL:String = this.loaderInfo.url;
 			var protocolEndIndex:int = fullURL.indexOf('//');
@@ -149,14 +151,14 @@ package
 			if(NetworkConnection.baseURL.indexOf("http") != -1)
 			{
 				if(PipeJam3.PRODUCTION == true)
-					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/game/interop.php";
+					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/cgi-bin/interop.php";
 				else if(PipeJam3.INSTALL_DVD == true)
 					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/flowjam/scripts/interop.php";
 			}
 			else
 			{
-				NetworkConnection.productionInterop = "http://flowjam.verigames.com/game/interop.php";
-				NetworkConnection.baseURL = "http://flowjam.verigames.com";
+				NetworkConnection.productionInterop = "http://paradox.verigames.org/cgi-bin/interop.php";
+				NetworkConnection.baseURL = "http://paradox.verigames.org";
 			}
 			//initialize stuff
 			new NetworkConnection();

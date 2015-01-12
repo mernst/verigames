@@ -560,6 +560,7 @@ package networking
 							return;
 					var solutionInfo:Object = PipeJamGame.levelInfo;
 					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
+					solutionInfo.target_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
 					solutionInfo.playerID =  PlayerValidation.playerID;

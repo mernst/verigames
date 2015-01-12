@@ -19,13 +19,6 @@ package networking
 		public var m_callback:Function = null;
 		
 		static public var postAlerts:Boolean = false;
-		//the first address is verigames, the second the development environ, the third my machine
-		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-		//this should be the proxy server url, not the MongoDB or RA instance URL. Might be the same, might not be.
-		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
-		static public var productionProxy:String = "http://flowjam.verigames.com/pr(not)oxy";
-		static public var localProxy:String = "http://128.95.2.112:8001";
-		static public var PROXY_URL:String = productionProxy;
 		static public var productionInterop:String;
 		
 		static public var EVENT_COMPLETE:int = 1;
@@ -37,10 +30,7 @@ package networking
 		
 		public function NetworkConnection()
 		{
-			if(PipeJam3.USE_LOCAL_PROXY == true)
-				PROXY_URL = localProxy;
-			else if(PipeJam3.RELEASE_BUILD == false)
-				PROXY_URL = stagingProxy;
+
 		}
 		
 		/**

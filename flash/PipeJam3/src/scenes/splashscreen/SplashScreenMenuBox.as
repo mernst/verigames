@@ -74,17 +74,7 @@ package scenes.splashscreen
 			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
 			const TOP_BUTTON_Y:int = 205;
 			
-			if(PipeJam3.m_savedCurrentLevel.data.hasOwnProperty("levelInfoID") && PipeJam3.m_savedCurrentLevel.data.levelInfoID != null)
-			{
-				return_to_last_level_button = ButtonFactory.getInstance().createDefaultButton("Continue", 88, 32);
-				return_to_last_level_button.addEventListener(starling.events.Event.TRIGGERED, onReturnToLastTriggered);
-				return_to_last_level_button.x = BUTTON_CENTER_X - return_to_last_level_button.width / 2;
-				return_to_last_level_button.y = TOP_BUTTON_Y;
-				
-				play_button = ButtonFactory.getInstance().createDefaultButton(PipeJam3.TUTORIAL_DEMO ? "Play" : "New", 88, 32);
-			}
-			else
-				play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
+			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			if(return_to_last_level_button != null)
 				play_button.y = return_to_last_level_button.y + return_to_last_level_button.height + 5;
@@ -161,16 +151,16 @@ package scenes.splashscreen
 		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
-			if(!PlayerValidation.playerLoggedIn)
-			{
-				var dialogText:String = "You must be logged in to continue play.";
-				var dialogWidth:Number = 160;
-				var dialogHeight:Number = 60;
-				var socialText:String = "";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
-				addChild(alert);
-			}
-			else
+//			if(!PlayerValidation.playerLoggedIn)
+//			{
+//				var dialogText:String = "You must be logged in to continue play.";
+//				var dialogWidth:Number = 160;
+//				var dialogHeight:Number = 60;
+//				var socialText:String = "";
+//				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
+//				addChild(alert);
+//			}
+//			else
 				getNextRandomLevel(null);
 		}
 		

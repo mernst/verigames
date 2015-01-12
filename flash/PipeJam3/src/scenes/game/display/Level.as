@@ -1,7 +1,6 @@
 package scenes.game.display
 {
 	
-	import constraints.ConstraintClause;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -14,8 +13,9 @@ package scenes.game.display
 	
 	import assets.AssetInterface;
 	
-	import constraints.ConstraintEdge;
 	import constraints.Constraint;
+	import constraints.ConstraintClause;
+	import constraints.ConstraintEdge;
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintScoringConfig;
 	import constraints.ConstraintValue;
@@ -186,9 +186,15 @@ package scenes.game.display
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
+				
+				//now check to see if we have a higher target
+				if(m_targetScore < PipeJamGame.levelInfo.target_score)
+					m_targetScore = PipeJamGame.levelInfo.target_score;
 			}
 			else
-				m_targetScore = 1000;
+			{
+				m_targetScore = PipeJamGame.levelInfo.target_score;
+			}
 			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
@@ -964,7 +970,7 @@ package scenes.game.display
 			var num:int = -1;
 			if (tutorialManager) num = tutorialManager.getMaxSelectableWidgets();
 			if (num > 0) return num;
-			return 1000;
+			return 10000;
 		}
 		
 		public function getTargetScore():int
@@ -1126,7 +1132,7 @@ package scenes.game.display
 				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
+				if(levelGraph.oldScore != 0  && (!PipeJam3.REQUIRE_LOG_IN || PlayerValidation.playerLoggedIn))
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
