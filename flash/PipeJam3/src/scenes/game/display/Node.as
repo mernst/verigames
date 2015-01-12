@@ -1,20 +1,15 @@
 package scenes.game.display
 {
-	import constraints.ConstraintSide;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	
-	import constraints.ConstraintEdge;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintVar;
-	
-	import utils.PropDictionary;
-	
 	import starling.display.Image;
 	import starling.display.Quad;
-
-
+	
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintSide;
+	import constraints.ConstraintVar;
+	import utils.PropDictionary;
+	
 	public class Node extends GridChild
 	{
 		public var graphConstraintSide:ConstraintSide;
@@ -95,56 +90,6 @@ package scenes.game.display
 				if(skin)
 					skin.flash();
 			}
-		}
-		
-		protected var visitedNodes:Dictionary;
-		public function propagate(upstream:Boolean, visitedNodes:Dictionary):void
-		{
-			var gameEdgeID:String;
-			var edgeObj:Edge;
-			var toNodeID:String;
-			var toNode:Node;
-			var fromNodeID:String;
-			var fromNode:Node;
-						
-			if(upstream)
-			{
-				for each(gameEdgeID in connectedEdgeIds)
-				{
-					edgeObj = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					toNodeID = edgeObj.toNode.id;
-					if(toNodeID == id)
-					{
-						fromNode = edgeObj.fromNode;
-						fromNode.updateSelectionAssignment(!this.isNarrow, World.m_world.active_level.levelGraph, true);
-						if(visitedNodes[fromNode.id] == null)
-						{
-							visitedNodes[fromNode.id] = fromNode;
-							fromNode.propagate(upstream, visitedNodes);
-						}
-					}
-				}
-			}
-			else
-			{
-				for each(gameEdgeID in connectedEdgeIds)
-				{
-					edgeObj = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					toNodeID = edgeObj.toNode.id;
-					fromNodeID = edgeObj.fromNode.id;
-					if(fromNodeID == id)
-					{
-						toNode = edgeObj.toNode;
-						if(visitedNodes[toNode.id] == null)
-						{
-							toNode.updateSelectionAssignment(!this.isNarrow, World.m_world.active_level.levelGraph, true);
-							visitedNodes[toNode.id] = toNode;
-							toNode.propagate(upstream, visitedNodes);
-						}
-					}
-				}
-			}
-			
 		}
 		
 		public function addConnector(edge:Edge):void

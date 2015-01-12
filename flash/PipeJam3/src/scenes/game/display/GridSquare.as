@@ -85,14 +85,7 @@ package scenes.game.display
 				{
 					World.m_world.edgeSetGraphViewPanel.hidePaintBrush();
 					
-					if(event.ctrlKey) //propagate size up or down stream
-					{
-						if(Keyboard.capsLock)
-						{
-							World.m_world.active_level.propagate();
-						}
-					}
-					else
+					if(!event.ctrlKey)
 					{
 						var globPt:Point = touchedDrawingBoard.localToGlobal(loc);
 						var node:VariableNode;

@@ -16,7 +16,8 @@ def add_layout_to_graph(G, node_layout):
         node['y'] = layout_info[1]
 
 def layout_with_sfdp(dot_filename, Gs):
-    with os.popen('sfdp -y -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
+    print 'Running dot -y -Kfdp -Tplain -o%s.out %s ...' % (dot_filename, dot_filename)
+    with os.popen('dot -y -Kfdp -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
         _util.print_step('Laying out %s' % dot_filename)
         sfdpcmd.read()
     node_layout = {}
@@ -42,12 +43,12 @@ def layout_with_fruchterman_reingold(Gs):
         add_layout_to_graph(G, node_layout)
         
 
-def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
+def run(infile, outfile, node_min=0, node_max=20000, SHOW_LABELS=False):
     _util.print_step('loading')
 
     out_is_folder = os.path.isdir(outfile)
-
-    Gs = cPickle.load(open(infile, 'rb'))
+    with open(infile, 'rb') as read_in:
+        Gs = cPickle.load(read_in)
 
     _util.print_step('outputting')
 
@@ -60,13 +61,11 @@ def run(infile, outfile, node_limit=0, SHOW_LABELS=False):
         label_txt = 'label=""'
     header = '''
 digraph G {
-  graph [ overlap="scalexy" penwidth="0.2" outputorder=edgesfirst size=10 sep="0.1" ]
-  node [ shape="circle" style="filled" width="0.2" height="0.2" %s ]
+  graph [ overlap="scalexy" penwidth="0.2" splines=none outputorder=edgesfirst size=100 sep="+0.4" esep="+0.0"]
+  node [ shape="circle" width="0.2" height="0.2" %s ]
     ''' % label_txt
 
     footer = '''
-  { rank=source; type_1 }
-  { rank=sink; type_0 }
 }
 '''
 
@@ -84,12 +83,10 @@ digraph G {
             if G.node[node].has_key('pseudo'):
                 to_del[node] = True
 
-        # Limit the number of nodes in a graph (if less than limit, don't produce dot file)
-        if n_vars < node_limit:
+        # Limit the number of nodes in a graph
+        if n_vars < node_min or n_vars > node_max:
             continue
-        if n_vars > 20000:
-            continue
-
+        
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
         # Individual files per graph
@@ -205,8 +202,8 @@ digraph G {
         output.write(footer)
         output.close()
         layout_with_sfdp(outfilename, laid_out_Gs)
-
-    cPickle.dump(Gs, open(infile, 'wb'), cPickle.HIGHEST_PROTOCOL)
+    with open(infile, 'wb') as write_out:
+        cPickle.dump(Gs, write_out, cPickle.HIGHEST_PROTOCOL)
 
     print 'conflicts', total_conf
 
@@ -215,11 +212,12 @@ digraph G {
 
 ### Command line interface ###
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print 'Usage: %s infile outfile show_labels[0/1] node_limit' % sys.argv[0]
+    if len(sys.argv) != 6:
+        print 'Usage: %s infile outfile show_labels[0/1] node_min node_max' % sys.argv[0]
         quit()
     infile = sys.argv[1]
     outfile = sys.argv[2]
     show_labels = sys.argv[3]
-    node_limit = sys.argv[4]
-    run(infile, outfile, show_labels, node_limit)
+    node_min = sys.argv[4]
+    node_max = sys.argv[5]
+    run(infile, outfile, show_labels, node_min, node_max)

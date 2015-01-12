@@ -1,20 +1,10 @@
 package scenes.game.display
 {
-	import constraints.ConstraintSide;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	
-	import constraints.ConstraintEdge;
-	import constraints.ConstraintGraph;
 	import constraints.ConstraintVar;
-	
 	import utils.PropDictionary;
 	
-	import starling.display.Image;
-	import starling.display.Quad;
-
-
 	public class VariableNode extends Node
 	{
 		
