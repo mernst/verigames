@@ -16,7 +16,8 @@ def add_layout_to_graph(G, node_layout):
         node['y'] = layout_info[1]
 
 def layout_with_sfdp(dot_filename, Gs):
-    with os.popen('sfdp -y -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
+    print 'Running dot -y -Kfdp -Tplain -o%s.out %s ...' % (dot_filename, dot_filename)
+    with os.popen('dot -y -Kfdp -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
         _util.print_step('Laying out %s' % dot_filename)
         sfdpcmd.read()
     node_layout = {}
@@ -60,13 +61,11 @@ def run(infile, outfile, node_min=0, node_max=20000, SHOW_LABELS=False):
         label_txt = 'label=""'
     header = '''
 digraph G {
-  graph [ overlap="scalexy" penwidth="0.2" outputorder=edgesfirst size=10 sep="0.1" ]
-  node [ shape="circle" style="filled" width="0.2" height="0.2" %s ]
+  graph [ overlap="scalexy" penwidth="0.2" splines=none outputorder=edgesfirst size=100 sep="+0.4" esep="+0.0"]
+  node [ shape="circle" width="0.2" height="0.2" %s ]
     ''' % label_txt
 
     footer = '''
-  { rank=source; type_1 }
-  { rank=sink; type_0 }
 }
 '''
 
