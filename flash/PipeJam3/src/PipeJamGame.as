@@ -156,16 +156,30 @@ package
 						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
 						TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 					}
+					else if(vars.code)
+					{
+						var accessCode:String = vars.code;
+						PlayerValidation.initiateAccessTokenAccess(accessCode);
+						PlayerValidation.AuthorizationAttempted = true;
+					}
+					else if(vars.error)
+					{
+						PlayerValidation.accessToken = "denied";
+						PlayerValidation.AuthorizationAttempted = true;
+					}
 				}
 			}
 			
 			// use file if set in url, else create and show menu screen
-			if(m_fileName)
+			if(m_fileName || PlayerValidation.AuthorizationAttempted)
 			{ 
 				if(PipeJamGame.levelInfo) //local file
 					showScene("PipeJamGame");
-				else
+				else if(m_fileName)
 					loadLevelFromName(m_fileName);
+				else
+					onGetRandomLevel();
+					
 			}
 			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 			{
@@ -227,7 +241,7 @@ package
 			}			
 		}	
 		
-		protected function onGetRandomLevel(event:NavigationEvent = null):void
+		public function onGetRandomLevel(event:NavigationEvent = null):void
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
@@ -259,21 +273,43 @@ package
 		
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
 		{
-			var highScoreArray:Array = new Array;
+			var highScoreArray:Array = new Array; 
+			PlayerValidation.countNeededUserNameRequests();
 			for each(var level:Object in list)
 			{
-				level.numericScore = int(level.current_score);
+				level.numericScore = int(level[0]);
+				level.playerID = int(level[1]);
+				level.assignmentsID = int(level[2]);
 				highScoreArray.push(level);
+				PlayerValidation.validationObject.getPlayerInfo(level[1]);
 			}
 			
 			if(highScoreArray.length > 0)
-				highScoreArray.sortOn("numericScore", Array.DESCENDING | Array.NUMERIC);
+				highScoreArray.sort(orderHighScores);
 			
 			PipeJamGame.levelInfo.highScores = highScoreArray;
 
 			if(World.m_world)
 				World.m_world.setHighScores();
 		}
+		
+		protected function orderHighScores(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a[0]); 
+			var score2:int = parseInt(b[0]); 
+			if (score1 < score2) 
+			{ 
+				return -1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return 1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{

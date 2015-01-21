@@ -13,6 +13,7 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
+	
 	import assets.AssetsFont;
 	
 	import audio.AudioManager;
@@ -25,6 +26,8 @@ package
 	
 	import networking.GameFileHandler;
 	import networking.NetworkConnection;
+	import networking.PlayerValidation;
+	import networking.HTTPCookies;
 	
 	import scenes.splashscreen.SplashScreenScene;
 	
@@ -34,6 +37,7 @@ package
 	import starling.core.Starling;
 	
 	import system.VerigameServerConstants;
+	import flash.net.URLVariables;
 	
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
@@ -46,17 +50,29 @@ package
 		
 		private var mStarling:Starling;
 		
-		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = false;
-		public static var LOGGING_ON:Boolean = false;
-		public static var LOCAL_DEPLOYMENT:Boolean = false;
+		/** at most one of these two should be true */
+		public static var RELEASE_BUILD:Boolean = true;
 		public static var TUTORIAL_DEMO:Boolean = false;
-		public static var USE_LOCAL_PROXY:Boolean = false;
+		
+		/** set to true to debug networking/save files from your machine, else false. Might not currently work in all cases. */
+		public static var LOCAL_DEPLOYMENT:Boolean = true;
+		
+		/** turn on logging of game play. */
+		public static var LOGGING_ON:Boolean = false;
+		
+		/** will be hosted on server, and thus networking things should assume that. */
+		public static var PRODUCTION:Boolean = true;
+		
+		/** to be hosted on the installer dvd. PRODUCTION needs to be false. */
+		public static var INSTALL_DVD:Boolean = false;
+		
+		/** require the player to be logged in before serving levels, else only can play the tutorial. */
+		public static var REQUIRE_LOG_IN:Boolean = false;
+		
+		
+		/** show frames per second, and memory usage. */
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
-		public static var REQUIRE_LOG_IN:Boolean = false;
-		public static var PRODUCTION:Boolean = false;
-		public static var INSTALL_DVD:Boolean = false;
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
@@ -76,7 +92,6 @@ package
 		static public var pipeJam3:PipeJam3;
 		
 		private static var m_replayText:TextField = new TextField();
-
 		
 		public function PipeJam3()
 		{
@@ -142,9 +157,10 @@ package
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
 			
-		//	var fileID:String = loaderInfo.parameters.fileID;
+			HTTPCookies.initialize();
 			
 			var fullURL:String = this.loaderInfo.url;
+
 			var protocolEndIndex:int = fullURL.indexOf('//');
 			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);

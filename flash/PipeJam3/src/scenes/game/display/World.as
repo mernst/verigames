@@ -440,6 +440,16 @@ package scenes.game.display
 			trace("Done initializing event listeners.");
 		}
 		
+		public function loadAssignmentFile(assignmentID:String):void
+		{
+			GameFileHandler.loadFile(assignmentsFileLoadedCallback, GameFileHandler.USE_DATABASE,  GameFileHandler.getFileURL +"&data_id=\"" + assignmentID +"\"");
+		}
+		
+		public function assignmentsFileLoadedCallback(obj:Object):void
+		{
+			this.active_level.loadAssignmentsConfiguration(obj);
+		}
+		
 		private function onSolveSelection(event:MenuEvent):void
 		{
 			//do this first as they might be removed by solveSelection if nothing relevant selected
@@ -913,7 +923,7 @@ package scenes.game.display
 				//if this is the first time we've completed these, post the achievement, else just move on
 				if(tutorialsDone)
 				{
-					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID) && PlayerValidation.playerLoggedIn)
+					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID) && PlayerValidation.accessGranted())
 						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED_ID, Achievements.TUTORIAL_FINISHED_STRING);
 					else
 						switchToLevelSelect();

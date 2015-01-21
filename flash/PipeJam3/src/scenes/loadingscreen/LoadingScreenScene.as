@@ -72,57 +72,16 @@ package scenes.loadingscreen
 			loading_button.y = 230;
 			loading_button.removeTouchEvent(); //we want a non-responsive button look
 			addChild(loading_button);
-
-			//set max loading time of ten seconds
-			timeoutTimer = new Timer(10000, 1);
-			timeoutTimer.addEventListener(TimerEvent.TIMER, playerValidationAttempted);
-			timeoutTimer.start();
-			
-			PlayerValidation.validatePlayerIsLoggedInAndActive(playerValidationAttempted, this);
-		}
-		
-		public function timeout(e:TimerEvent = null):void
-		{
-			
-		}
-		
-		public var count:int = 0;
-		public var playerTimeOut:Boolean = false;
-		public function playerValidationAttempted(e:TimerEvent = null):void
-		{
-			if(e && e.target == timeoutTimer && sessionVerificationHasBeenAttempted == false)
-			{
-				setStatus("Player Validation Timed Out");
-				playerTimeOut = true;
-			}
-
-			sessionVerificationHasBeenAttempted = true;
-			if (timeoutTimer) 
-			{
-				timeoutTimer.removeEventListener(TimerEvent.TIMER, playerValidationAttempted);
-				timeoutTimer.stop();
-			}
-			timeoutTimer = null;
-			//burn part of a second to let last loading message be visible
-			timer = new Timer(600, 1);
-			timer.addEventListener(TimerEvent.TIMER, changeScene);
-			timer.start();
 		}
 			
 		public function changeScene(e:TimerEvent = null):void
 		{	
 			var tutorialController:TutorialController = TutorialController.getTutorialController();
-			//would like some way for this to show message when validation failed, not just timed out
-			//but without playerTimeOut flag, this never exits the loading screen
-			if (timer && timer.running && playerTimeOut)
-			{
-				return;
+
+			if (tutorialController.completedTutorialDictionary != null) {
+
 			}
-			else if (timer && !timer.running && tutorialController.completedTutorialDictionary != null) {
-				timer.stop();
-				timer.removeEventListener(TimerEvent.TIMER, changeScene);
-			}
-			else if (tutorialController.completedTutorialDictionary == null && PlayerValidation.playerLoggedIn)
+			else if (tutorialController.completedTutorialDictionary == null && PlayerValidation.accessGranted())
 			{
 				timer = new Timer(200, 1);
 				timer.addEventListener(TimerEvent.TIMER, changeScene);
@@ -131,7 +90,7 @@ package scenes.loadingscreen
 			}
 			timer == null;
 			
-			if(tutorialController.completedTutorialDictionary != null || PlayerValidation.playerLoggedIn == false)
+			if(tutorialController.completedTutorialDictionary != null || PlayerValidation.accessGranted() == false)
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		

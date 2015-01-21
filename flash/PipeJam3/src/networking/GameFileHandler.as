@@ -113,8 +113,7 @@ package networking
 		{
 			var fileURL:String = getFileURL + "&data_id=\"" + id + "\"";
 			
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.loadFile(USE_DATABASE, fileURL);
+			loadFile(callback, USE_DATABASE, fileURL);
 		}
 		
 		static public function saveLayoutFile(callback:Function, _layoutAsString:String):void
@@ -291,20 +290,16 @@ package networking
 						version = PipeJamGame.levelInfo.version;
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
-						gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						gameFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");
+						loadFile(worldFileLoadedCallback, loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");
 					}
 					else
 					{
 						var levelInfo:Object = PipeJamGame.levelInfo;
 						// TODO: probably rename from /xml and /constraints to /level and /assignments
 						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
-						var worldFileHandler:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
-						var layoutFileHandler:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler.loadFile(loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.layoutID+"\"");
-						var assignmentsFileHandler:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-						assignmentsFileHandler.loadFile(loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");	
+						loadFile(worldFileLoadedCallback, loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
+						loadFile(layoutFileLoadedCallback, loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.layoutID+"\"");
+						loadFile(assignmentsFileLoadedCallback, loadType,  getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");	
 					}
 				}
 				else if(fileName && fileName.length > 0)
@@ -312,24 +307,25 @@ package networking
 					if(fileName.indexOf("cnf") == -1)
 					{
 						//check for which form we are loading, try loading one, and if it works, continue...
-						var worldFileHandler1:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler1.loadFile(loadType, fileName+".zip");
-						var layoutFileHandler1:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler1.loadFile(loadType, fileName+"Layout.zip");
-						var assignmentsFileHandler1:GameFileHandler = new GameFileHandler(assignmentsFileLoadedCallback);
-						assignmentsFileHandler1.loadFile(loadType, fileName+"Assignments.zip");
+						loadFile(worldFileLoadedCallback, loadType, fileName+".zip");
+						loadFile(layoutFileLoadedCallback, loadType, fileName+"Layout.zip");
+						loadFile(assignmentsFileLoadedCallback, loadType, fileName+"Assignments.zip");
 					}
 					else
 					{
-						var worldFileHandler2:GameFileHandler = new GameFileHandler(worldFileLoadedCallback);
-						worldFileHandler2.loadFile(loadType, fileName+".zip");
+						loadFile(worldFileLoadedCallback, loadType, fileName+".zip");
 						var index:int = fileName.lastIndexOf('.');
 						var fileNameRoot:String = fileName.substring(0, index);
-						var layoutFileHandler2:GameFileHandler = new GameFileHandler(layoutFileLoadedCallback);
-						layoutFileHandler2.loadFile(loadType, fileNameRoot+".plain.zip");
+						loadFile(layoutFileLoadedCallback, loadType, fileNameRoot+".plain.zip");
 					}
 				}
 			}
+		}
+		
+		static public function loadFile(callback:Function, loadType:int, url:String):void
+		{
+			var fileLoader:GameFileHandler = new GameFileHandler(callback);
+			fileLoader.loadFile(loadType, url);
 		}
 		
 		/************************ End of static functions *********************************/
@@ -507,7 +503,8 @@ package networking
 		
 		public function saveLevel(saveType:String):void
 		{
-			sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
+			if(PipeJam3.RELEASE_BUILD || PipeJam3.LOCAL_DEPLOYMENT)
+				sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
 		}
 		
 		public function onLevelSubmitted(result:int, e:flash.events.Event):void
@@ -532,10 +529,7 @@ package networking
 		
 		public function sendMessage(type:int, callback:Function, info:String = null, data:String = null):void
 		{
-			var request:String;
-			var method:String;
 			var url:String = null;
-			var usePython:Boolean = true;
 			var messages:Array = new Array (); 
 			var data_id:String;
 			
@@ -564,7 +558,7 @@ package networking
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
 					solutionInfo.playerID =  PlayerValidation.playerID;
-					solutionInfo.username = PlayerValidation.playerUserName; 
+					solutionInfo.username = PlayerValidation.userNames[PlayerValidation.playerID]; 
 					delete solutionInfo["id"]; //need to remove this or else successive saves won't work
 					delete solutionInfo["_id"]; //need to remove this or else successive saves won't work
 					PipeJamGame.levelInfo.revision = solutionInfo.revision;
@@ -587,7 +581,6 @@ package networking
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
-					request = "/api/score&method=URL";
 					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/score'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;

@@ -11,6 +11,7 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import flash.utils.Dictionary;
+	import flash.net.URLRequestHeader;
 
 	//one NetworkConnection object created for each connection and used only once
 	public class NetworkConnection
@@ -55,11 +56,29 @@ package networking
 			globalURL = url;
 			var urlRequest:URLRequest;
 			var rand:String = "";
-			 //IE caches all requests, so things don't update properly without this
-			if(request.indexOf('&') != -1)
+			var contentType:String = URLLoaderDataFormat.TEXT;
+			if(request == "authorize" && PlayerValidation.accessGranted())
+			{
 				rand = "&rand="+String(Math.round(Math.random()*1000));
+				urlRequest = new URLRequest(url+rand);
+				var header:URLRequestHeader = new URLRequestHeader("Authorization", "Bearer " + PlayerValidation.accessToken); 
+				urlRequest.requestHeaders.push(header);
+				request = "";
+			}
+			if(request == "JSON")
+			{
+				urlRequest = new URLRequest(url);
+				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");
+				//urlRequest.requestHeaders.push(jsonHeader);
+				//contentType = null;
+			}
+			else
+			{
+				if(request && request.indexOf('&') != -1)//IE caches all requests, so things don't update properly without this
+					rand = "&rand="+String(Math.round(Math.random()*1000));
 			
-			urlRequest = new URLRequest(url+request+rand);
+				urlRequest = new URLRequest(url+request+rand);
+			}
 			var loader:URLLoader = new URLLoader();
 			
 			if(method == URLRequestMethod.GET)
@@ -69,11 +88,9 @@ package networking
 				urlRequest.method = URLRequestMethod.POST;
 				if(data != null)
 				{
-					//var variables:URLVariables = new URLVariables();
-					//variables.file = "test";
-					urlRequest.contentType = URLLoaderDataFormat.TEXT;
-					//loader.dataFormat = URLLoaderDataFormat.VARIABLES;
-					urlRequest.data = data;//+"\n"; //terminate line so Java can use readLine to get message
+					if(contentType)
+						urlRequest.contentType = contentType;
+					urlRequest.data = data;
 				}
 				else
 					urlRequest.data = null;

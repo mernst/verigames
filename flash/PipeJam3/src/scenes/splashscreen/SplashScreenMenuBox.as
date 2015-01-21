@@ -3,6 +3,8 @@ package scenes.splashscreen
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
@@ -31,7 +33,6 @@ package scenes.splashscreen
 		
 		//main screen buttons
 		protected var play_button:NineSliceButton;
-		protected var return_to_last_level_button:NineSliceButton;
 		protected var continue_tutorial_button:NineSliceButton;
 		
 		//These are visible in demo mode only (PipeJam3.RELEASE_BUILD == false)
@@ -76,10 +77,7 @@ package scenes.splashscreen
 			
 			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
-			if(return_to_last_level_button != null)
-				play_button.y = return_to_last_level_button.y + return_to_last_level_button.height + 5;
-			else
-				play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
+			play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
 			
 			if(!isTutorialDone())
 			{
@@ -91,8 +89,6 @@ package scenes.splashscreen
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
-				if(return_to_last_level_button)
-					m_mainMenu.addChild(return_to_last_level_button);
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 				if(continue_tutorial_button)
@@ -132,35 +128,13 @@ package scenes.splashscreen
 			}
 		}
 		
-
-		
-		protected function onReturnToLastTriggered(e:starling.events.Event):void
-		{
-			if(!PlayerValidation.playerLoggedIn)
-			{
-				var dialogText:String = "You must be logged in to continue play.";
-				var dialogWidth:Number = 160;
-				var dialogHeight:Number = 60;
-				var socialText:String = "";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
-				addChild(alert);
-			}
-			else
-				getSavedLevel(null);
-		}
-		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
-//			if(!PlayerValidation.playerLoggedIn)
-//			{
-//				var dialogText:String = "You must be logged in to continue play.";
-//				var dialogWidth:Number = 160;
-//				var dialogHeight:Number = 60;
-//				var socialText:String = "";
-//				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
-//				addChild(alert);
-//			}
-//			else
+			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
+			{
+				navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/PipeJam3.html&client_id=54b97ebee0da42ff17b927c5"), "");
+			}
+			else
 				getNextRandomLevel(null);
 		}
 		

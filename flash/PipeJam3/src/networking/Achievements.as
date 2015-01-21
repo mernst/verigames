@@ -142,7 +142,7 @@ package networking
 		//checks to see if we should award an achievement for the type, and if so, award it
 		public static function checkAchievements(type:String, value:int):void
 		{
-			if(PlayerValidation.playerLoggedIn != true)
+			if(PlayerValidation.accessGranted() != true)
 				return;
 			
 			if(type == WidgetChangeEvent.LEVEL_WIDGET_CHANGED)

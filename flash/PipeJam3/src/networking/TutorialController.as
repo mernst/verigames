@@ -128,7 +128,7 @@ package networking
 		}
 		public function post():void
 		{
-			if(PlayerValidation.playerLoggedIn)
+			if(PlayerValidation.accessGranted())
 				sendMessage(TUTORIAL_LEVEL_COMPLETE, postMessage);
 			else
 			{

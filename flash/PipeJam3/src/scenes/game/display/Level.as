@@ -129,6 +129,7 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
+		private var m_unsat_weight:int;
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -178,7 +179,7 @@ package scenes.game.display
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
 				
 				//now check to see if we have a higher target
-				if(m_targetScore < PipeJamGame.levelInfo.target_score)
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
 					m_targetScore = PipeJamGame.levelInfo.target_score;
 			}
 			else
@@ -529,8 +530,8 @@ package scenes.game.display
 		//		edgeLayoutObj. = graphConstraint;
 				var startNode:Node = nodeLayoutObjs[result[0]];
 				var endNode:Node = nodeLayoutObjs[result[2]];
-				//switch end points if needed (support both clause oriented files, and original, for the time being)
-				if(result[2].indexOf('c') == -1 && result[0].indexOf('c') != -1)
+				//switch end points if needed)
+				if(result[0].indexOf('c') != -1)
 				{
 					startNode = nodeLayoutObjs[result[2]];
 					endNode = nodeLayoutObjs[result[0]];
@@ -538,7 +539,6 @@ package scenes.game.display
 				var edge:Edge = new Edge(constraintId, graphConstraint,startNode, endNode);
 				startNode["connectedEdgeIds"].push(constraintId);
 				endNode["connectedEdgeIds"].push(constraintId);
-				
 				edgeLayoutObjs[constraintId] = edge;
 				
 				addEdgeToGrids(edge);
@@ -1122,7 +1122,7 @@ package scenes.game.display
 				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0  && (!PipeJam3.REQUIRE_LOG_IN || PlayerValidation.playerLoggedIn))
+				if(levelGraph.oldScore != 0  && (!PipeJam3.REQUIRE_LOG_IN || PlayerValidation.accessGranted()))
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
@@ -1251,6 +1251,7 @@ package scenes.game.display
 			initvarsArray = new Array;
 			directNodeArray = new Array;
 			storedDirectEdgesDict = new Dictionary;
+			m_unsat_weight = int.MAX_VALUE;
 			//loop through each object, store selected variables for later use
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
@@ -1260,7 +1261,7 @@ package scenes.game.display
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
 			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
-	
+
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1489,9 +1490,9 @@ package scenes.game.display
 		{
 			var someNodeUpdated:Boolean = false;
 			//trace("update", unsat_weight);
-			if(	m_inSolver == false) //got marked done early
+			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
-			
+			m_unsat_weight = unsat_weight;
 			//trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
@@ -1518,9 +1519,10 @@ package scenes.game.display
 		
 		public var count:int = 0;
 		public var timer:Timer;
+		
 		public function solverDone(errMsg:String):void
 		{
-			//trace(errMsg);
+			//trace("solver done " + errMsg);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();

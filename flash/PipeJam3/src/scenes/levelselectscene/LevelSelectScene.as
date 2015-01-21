@@ -169,7 +169,7 @@ package scenes.levelselectscene
 			savedLevelsListBox.setClipRect();
 			newLevelListBox.setClipRect();
 			
-			if(PlayerValidation.playerLoggedIn)
+			if(PlayerValidation.accessGranted())
 			{
 				savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
 				newLevelListBox.startBusyAnimation(newLevelListBox);
@@ -191,7 +191,7 @@ package scenes.levelselectscene
 			
 			setTutorialFile(TutorialController.tutorialObj);
 			
-			if(!TutorialController.getTutorialController().isTutorialDone() || !PlayerValidation.playerLoggedIn)
+			if(!TutorialController.getTutorialController().isTutorialDone() || !PlayerValidation.accessGranted())
 				onTutorialButtonTriggered(null);
 			else
 				onNewButtonTriggered(null);

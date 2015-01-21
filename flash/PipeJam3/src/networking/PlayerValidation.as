@@ -1,17 +1,12 @@
 package networking
 {
 	import flash.events.Event;
+	import flash.net.URLRequestMethod;
+	import flash.utils.Dictionary;
 	
 	import scenes.Scene;
 	
 	import server.LoggingServerInterface;
-	
-	import starling.core.Starling;
-	import starling.events.Event;
-	import flash.net.*;
-	
-	import utils.XString;
-
 
 	//the steps are: 
 	//	get the cookie with the express.sid value
@@ -23,18 +18,21 @@ package networking
 		public static var VERIFY_SESSION:int = 1;
 		public static var GET_ENCODED_COOKIES:int = 2;
 		public static var PLAYER_INFO:int = 3;
-
-		public static var playerLoggedIn:Boolean = false;
+		public static var ACCESS_TOKEN:int = 4;
+		
+		public static var AuthorizationAttempted:Boolean = false;
+		public static var accessToken:String = null;
 		
 		public static var playerID:String = "";
 		public static var playerIDForTesting:String = "51e5b3460240288229000026"; //hard code one for local testing
-		public static var playerUserName:String = "";
+		public static var userNames:Dictionary = new Dictionary;
+		public static var outstandingUserNamesRequests:int = 0;
 		
 		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
-		static protected var validationObject:PlayerValidation = null;
+		static public var validationObject:PlayerValidation = new PlayerValidation;
 		protected var pipejamCallbackFunction:Function;
-		protected var controller:Scene;
+		protected var controller:Scene = null;
 		protected var encodedCookies:String;
 		
 		static public var GETTING_COOKIE:String = "Getting Cookie";
@@ -45,86 +43,53 @@ package networking
 		static public var VALIDATION_SUCCEEDED:String = "Player Logged In";
 		static public var VALIDATION_FAILED:String = "Validation Failed";
 		
-		//callback:Function, request:String, type:String, data:String = null, method:String = URLRequestMethod.GET, url:String = null
+		static public var authURL:String = "http://oauth.verigames.org/oauth2/authorize";
+		static public var redirect_uri:String ="http://paradox.verigames.org/game/PipeJam3.html";
+		static public var client_id:String = "54b97ebee0da42ff17b927c5";
+		static public var oauthURL:String = "http://oauth.verigames.org/oauth2/token";
 		
-		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use in release builds
-		static public function validatePlayerIsLoggedInAndActive(callback:Function, _controller:Scene):void
+		
+		public static function initiateAccessTokenAccess(accessCode:String):void
 		{
-			if(validationObject == null)
-			{
-				validationObject = new PlayerValidation;
-				validationObject.controller = _controller;
-			}
-						
-			validationObject.pipejamCallbackFunction = callback;
-			validationObject.controller.setStatus(GETTING_COOKIE);
-			validationObject.checkForCookie();
+			validationObject.getAccessToken(accessCode);
 		}
 		
-		//check for session ID cookie, and if found, try to validate it
-		protected function checkForCookie():void
+		public function getAccessToken(accessCode:String):void
 		{
-			sendMessage(GET_ENCODED_COOKIES, cookieCallback);
+			var obj:Object = new Object;
+			obj.code = accessCode;
+			obj.client_id = "54b97ebee0da42ff17b927c5";
+			obj.client_secret = "3D89WG3WJHEW789WERQH34234";
+			obj.grant_type = "authorization_code";
+			obj.redirect_uri = redirect_uri;
+			var objStr:String = JSON.stringify(obj);
+			sendMessage(ACCESS_TOKEN, tokenCallback, objStr);
 		}
 		
-		public function cookieCallback(result:int, event:flash.events.Event):void
+		public function tokenCallback(result:int, e:flash.events.Event):void
 		{
 			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
-				var cookies:String = event.target.data;
-				if(cookies.indexOf("<html>") == -1 && cookies.length > 10) //not an error message or empty cookie string = {} = %7B%7D
+				var response:String = e.target.data;
+				var jsonResponseObj:Object = JSON.parse(response);
+				
+				if(jsonResponseObj.access_token != null)
 				{
-					controller.setStatus(VALIDATING_SESSION);
-					//encode cookies
-					encodedCookies = escape(cookies);
-					//if encodedCookies is double encoded, we get %25 (= encoded %) in front of encoded %7Bs, etc.
-					if(encodedCookies.indexOf("%257B") != -1)
-						encodedCookies = cookies;
-					sendMessage(VERIFY_SESSION, sessionIDValidityCallback);
-					return;
+					accessToken = jsonResponseObj.access_token;
 				}
 			}
-			
-			//if we make it this far, just exit
-			onValidationFailed();
-			pipejamCallbackFunction();
-		}
-
-		//callback for checking the validity of the session id
-		//if the session id is valid, then get the player id and make sure they are in the RA
-		public function sessionIDValidityCallback(result:int, event:flash.events.Event):void
-		{
-			if(result == NetworkConnection.EVENT_COMPLETE)
-			{
-				var response:String = event.target.data;
-				if(response.indexOf("<html>") == -1) //else assume auth required dialog
-				{
-					var jsonResponseObj:Object = JSON.parse(response);
-					
-					if(jsonResponseObj.userId != null)
-					{
-						playerID = jsonResponseObj.userId;
-						
-						if (LoggingServerInterface.LOGGING_ON) {
-							PipeJam3.logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, PipeJam3.pipeJam3.stage, LoggingServerInterface.CGS_VERIGAMES_PREFIX + playerID);
-						}
-						controller.setStatus(ACTIVATING_PLAYER);
-						onValidationSucceeded();
-						
-						//get player user name for storing leader info, but don't wait for it
-						getPlayerInfo();
-						return; 
-					}
-				}
-			}
-			//if we make it this far, just exit
-			onValidationFailed();
-			pipejamCallbackFunction();
 		}
 		
-		public function getPlayerInfo():void
+		static public function accessGranted():Boolean
 		{
-			sendMessage(PLAYER_INFO, playerInfoCallback);
+			return AuthorizationAttempted && accessToken != null && accessToken != "denied";
+		}
+		
+		public function getPlayerInfo(playerID:String):void
+		{
+			var temp:Dictionary = userNames;
+			if(userNames[playerID] == null)
+				sendMessage(PLAYER_INFO, playerInfoCallback, playerID);
 		}
 		
 		public function playerInfoCallback(result:int, e:flash.events.Event):void
@@ -136,51 +101,47 @@ package networking
 					
 				if(jsonResponseObj.username != null)
 				{
-					playerUserName = jsonResponseObj.username;	
+					userNames[jsonResponseObj.id] = jsonResponseObj.username;
 				}
 			}
 		}
 		
-		public function onValidationSucceeded():void
+		//?? do this or update, and/or limit list size??
+		public static function countNeededUserNameRequests():void
 		{
-			playerLoggedIn = true; //whee
-			Achievements.getAchievementsEarnedForPlayer();
-			TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
-			controller.setStatus(VALIDATION_SUCCEEDED);
-		}
-		
-		public function onValidationFailed():void
-		{
-			controller.setStatus(VALIDATION_FAILED);
 			
-			TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
+		//	outstandingUserNamesRequests
+			
 		}
 		
-		public function sendMessage(type:int, callback:Function):void
+		public static function getUserName(playerID:String, defaultNumber:int):String
+		{
+			if(userNames[playerID] != null)
+				return userNames[playerID];
+			else
+				return 'Player' + defaultNumber;
+		}
+		
+		public function sendMessage(type:int, callback:Function, data:String = null):void
 		{
 			var request:String;
 			var method:String;
 			var url:String = null;
 			switch(type)
 			{
+				case ACCESS_TOKEN:
+					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
+					method = URLRequestMethod.POST; 
+					break;
 				case PLAYER_INFO:
-					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + PlayerValidation.playerID +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL2Args&data_id='/api/users/" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.GET; 
-					request = "";
+					request = "authorize";
 					break;
-				case VERIFY_SESSION:
-					url = NetworkConnection.baseURL + "/verifySession";
-					request = "?cookies="+encodedCookies;
-					method = URLRequestMethod.POST; 
-					break;
-				case GET_ENCODED_COOKIES:
-					url = NetworkConnection.baseURL + "/encodeCookies";
-					request = "";
-					method = URLRequestMethod.POST; 
-					break;
+
 			}
 			
-			NetworkConnection.sendMessage(callback, null, url, method, request);
+			NetworkConnection.sendMessage(callback, data, url, method, request);
 		}
 	}
 }

@@ -28,6 +28,8 @@ package scenes.game.components
 	import scenes.game.display.Level;
 	import scenes.game.display.NodeSkin;
 	import scenes.game.display.World;
+	import networking.HTTPCookies;
+	import networking.PlayerValidation;
 	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -613,11 +615,50 @@ package scenes.game.components
 			var level:Level = World.m_world.active_level;
 			if(level != null && highScoreArray != null)
 			{
+				var htmlString:String = "";
+				var count:int = 1;
+				var scoreObjArray:Array = new Array;
+				for each(var scoreInstance:Object in highScoreArray)
+				{
+					var scoreObj:Object = new Object;
+					scoreObj['name'] = PlayerValidation.getUserName(scoreInstance[1], count);
+					scoreObj['score'] = scoreInstance[0];
+					scoreObj['assignmentsID'] = scoreInstance[2];
+					if(scoreInstance[1] == PlayerValidation.playerID)
+						scoreObj.activePlayer = 1;
+					else
+						scoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(scoreObj);
+					count++;
+				}
+				if(scoreObjArray.length > 0)
+				{
+					var scoreStr:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr);
+				}
+				else
+				{
+					var nonScoreObj:Object = new Object;
+					nonScoreObj['name'] = 'Not played yet';
+					nonScoreObj['score'] = "";
+					nonScoreObj['assignmentsID'] = "";
+					nonScoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(nonScoreObj);
+					var scoreStr1:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr1);
+					
+				}
+				
 				var currentScore:int = level.currentScore;
 				var bestScore:int = level.bestScore;
 				var targetScore:int = level.getTargetScore();
 				var maxScoreShown:Number = Math.max(currentScore, targetScore);
-				var score:String =  highScoreArray[0].current_score;
+				var score:String = "0";
+				if(highScoreArray.length > 0)
+					score = highScoreArray[0].current_score;
+				
 				
 				if (!m_bestScoreLine) {
 					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, Constants.RED, Constants.RED, "High Score");
