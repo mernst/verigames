@@ -6,18 +6,13 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
-	import flash.net.SharedObject;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.utils.Timer;
 	
 	import assets.AssetsFont;
-	
-	import audio.AudioManager;
-	
+		
 	import cgs.server.logging.data.QuestData;
 	
 	import events.NavigationEvent;
@@ -26,22 +21,15 @@ package
 	
 	import networking.GameFileHandler;
 	import networking.NetworkConnection;
-	import networking.PlayerValidation;
 	import networking.HTTPCookies;
-	
-	import scenes.splashscreen.SplashScreenScene;
-	
+		
 	import server.LoggingServerInterface;
 	import server.ReplayController;
 	
 	import starling.core.Starling;
 	
 	import system.VerigameServerConstants;
-	import flash.net.URLVariables;
-	
-	//import mx.core.FlexGlobals;
-	//import spark.components.Application;
-	
+
 	[SWF(width = "960", height = "640", frameRate = "30", backgroundColor = "#ffffff")]
 	
 	public class PipeJam3 extends flash.display.Sprite 
@@ -50,25 +38,15 @@ package
 		
 		private var mStarling:Starling;
 		
-		/** at most one of these two should be true */
+		/** At most one of these two should be true. They can both be false. */
 		public static var RELEASE_BUILD:Boolean = true;
 		public static var TUTORIAL_DEMO:Boolean = false;
-		
-		/** set to true to debug networking/save files from your machine, else false. Might not currently work in all cases. */
-		public static var LOCAL_DEPLOYMENT:Boolean = true;
 		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = false;
 		
-		/** will be hosted on server, and thus networking things should assume that. */
-		public static var PRODUCTION:Boolean = true;
-		
-		/** to be hosted on the installer dvd. PRODUCTION needs to be false. */
+		/** to be hosted on the installer dvd. Changes location of scripts on server */
 		public static var INSTALL_DVD:Boolean = false;
-		
-		/** require the player to be logged in before serving levels, else only can play the tutorial. */
-		public static var REQUIRE_LOG_IN:Boolean = false;
-		
 		
 		/** show frames per second, and memory usage. */
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
@@ -82,13 +60,7 @@ package
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var isFullScreen:Boolean = false;
-		
-		//We store 5 pieces of info, the level record ID, the three file IDs, and a dictionary of widget size changes since last save (or load).
-		//This is for restoring game play between sessions.
-		static public var m_savedCurrentLevel:SharedObject;
 
-		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
-		public static var initialLevelDisplay:Boolean = true; 
 		static public var pipeJam3:PipeJam3;
 		
 		private static var m_replayText:TextField = new TextField();
@@ -165,11 +137,11 @@ package
 			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
 			if(NetworkConnection.baseURL.indexOf("http") != -1)
-			{
-				if(PipeJam3.PRODUCTION == true)
-					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/cgi-bin/interop.php";
-				else if(PipeJam3.INSTALL_DVD == true)
+			{			
+				if(PipeJam3.INSTALL_DVD == true)
 					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/flowjam/scripts/interop.php";
+				else
+					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/cgi-bin/interop.php";
 			}
 			else
 			{
@@ -178,7 +150,6 @@ package
 			}
 			//initialize stuff
 			new NetworkConnection();
-			m_savedCurrentLevel = SharedObject.getLocal("FlowJamData");
 			GameFileHandler.retrieveLevels();
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);

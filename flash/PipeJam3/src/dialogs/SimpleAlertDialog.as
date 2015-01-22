@@ -15,6 +15,7 @@ package dialogs
 	import starling.events.Event;
 	import starling.textures.Texture;
 
+	//currently only used to award achievements
 	public class SimpleAlertDialog extends BaseDialog
 	{
 		protected var ok_button:NineSliceButton;

@@ -17,9 +17,7 @@ package
 	import buildInfo.BuildInfo;
 	
 	import cgs.Cache.Cache;
-	
-	import dialogs.SimpleAlertDialog;
-	
+		
 	import display.GameObjectBatch;
 	import display.MusicButton;
 	import display.NineSliceBatch;
@@ -36,10 +34,8 @@ package
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.World;
 	import scenes.levelselectscene.LevelSelectScene;
-	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.SplashScreenScene;
 	
-	import starling.core.Starling;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
@@ -78,7 +74,6 @@ package
 			// load general assets
 			prepareAssets();
 			
-			scenesToCreate["LoadingScene"] = LoadingScreenScene;
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["LevelSelectScene"] = LevelSelectScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
@@ -101,36 +96,16 @@ package
 			
 			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
 			addEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
-			addEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
 
 		}	
 		
-		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
 		{						
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
-			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-			if(obj.hasOwnProperty("localfile"))
+			if (ExternalInterface.available)
 			{
-				m_fileName = obj["localfile"];
-				PipeJamGame.levelInfo = new Object;
-			}
-			else if(obj.hasOwnProperty("dbfile"))
-			{
-				m_fileName = obj["dbfile"];
-			}
-			if(obj.hasOwnProperty("tutorial"))
-			{
-				m_fileName = "tutorial";
-				PipeJamGame.levelInfo = new Object;
-				PipeJamGame.levelInfo.name = "foo";
-				PipeJamGame.levelInfo.id = obj["tutorial"];
-				PipeJamGame.levelInfo.tutorialLevelID = obj["tutorial"];
-				TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
-			}
-			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
 				if(paramsStart != -1)
@@ -181,18 +156,10 @@ package
 					onGetRandomLevel();
 					
 			}
-			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
-			{
-				showScene("LoadingScene");
-			}
 			else
 			{
 				PlayerValidation.playerID = PlayerValidation.playerIDForTesting;
-				if(PipeJam3.LOCAL_DEPLOYMENT)
-				{
-					TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
-					Achievements.getAchievementsEarnedForPlayer();
-				}
+
 				showScene("SplashScreen");				
 			}
 			
@@ -217,29 +184,7 @@ package
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			removeEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
-			removeEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
 		}
-		
-		private function onGetSavedLevel(event:NavigationEvent):void
-		{
-			PipeJamGameScene.inTutorial = false;
-			PipeJamGame.levelInfo = GameFileHandler.findLevelObject(PipeJam3.m_savedCurrentLevel.data.levelInfoID);
-			
-			if(levelInfo)
-			{
-				//update assignmentsID if needed
-				PipeJamGameScene.levelContinued = true;
-				PipeJamGame.levelInfo.assignmentsID = PipeJam3.m_savedCurrentLevel.data.assignmentsID;
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
-			}
-			else //just alert user, and then get random level
-			{
-				var dialogText:String = "Previous level doesn't exist any\n more. Serving a random level.";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, 160, 80, "", onGetRandomLevel, 2);
-				addChild(alert);
-			}			
-		}	
 		
 		public function onGetRandomLevel(event:NavigationEvent = null):void
 		{
@@ -256,12 +201,6 @@ package
 			else
 			{
 				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
-				//save info locally so we can retrieve next run
-				PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
-				PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
-				PipeJam3.m_savedCurrentLevel.data.assignmentsID = PipeJamGame.levelInfo.assignmentsID;
-				PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
-				PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			}
 		}

@@ -3,7 +3,6 @@ package networking
 	import flash.events.Event;
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
-	import scenes.loadingscreen.LoadingScreenScene;
 	import starling.display.Sprite;
 	
 	public class TutorialController extends Sprite
@@ -106,8 +105,6 @@ package networking
 				}
 			}
 			//setTutorialObj(tutorialObj);
-			
-			LoadingScreenScene.getLoadingScreenScene().changeScene();
 		}
 		
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void

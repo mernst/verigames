@@ -6,13 +6,11 @@ package networking
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
-	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	
-	import events.MenuEvent;
 	import events.NavigationEvent;
 	
 	import scenes.Scene;
@@ -114,15 +112,6 @@ package networking
 			var fileURL:String = getFileURL + "&data_id=\"" + id + "\"";
 			
 			loadFile(callback, USE_DATABASE, fileURL);
-		}
-		
-		static public function saveLayoutFile(callback:Function, _layoutAsString:String):void
-		{
-			var layoutDescription:String = PipeJamGame.levelInfo.layoutName + "::" + PipeJamGame.levelInfo.layoutDescription;
-			
-			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(SAVE_LAYOUT, callback, encodedLayoutDescription, _layoutAsString);
 		}
 		
 		static public function getHighScoresForLevel(callback:Function, levelID:String):void
@@ -503,18 +492,13 @@ package networking
 		
 		public function saveLevel(saveType:String):void
 		{
-			if(PipeJam3.RELEASE_BUILD || PipeJam3.LOCAL_DEPLOYMENT)
+			if(PipeJam3.RELEASE_BUILD)
 				sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
 		}
 		
 		public function onLevelSubmitted(result:int, e:flash.events.Event):void
 		{
-			var obj:Object = JSON.parse(e.target.data);
-			//save new file ID and clear stored updates
-			PipeJam3.m_savedCurrentLevel.data.assignmentsID = obj["assignmentsID"];
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
-			//post a dialog
-		//	World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
+
 		}
 		
 		public function onDBLevelCreated():void

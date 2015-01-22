@@ -7,9 +7,7 @@ package scenes.splashscreen
 	import flash.net.navigateToURL;
 	import flash.text.TextField;
 	import flash.utils.Timer;
-	
-	import dialogs.SimpleAlertDialog;
-	
+		
 	import display.NineSliceButton;
 	
 	import events.NavigationEvent;
@@ -153,36 +151,12 @@ package scenes.splashscreen
 			Starling.current.nativeStage.removeEventListener(flash.events.Event.ACTIVATE, onActivate);
 		}
 		
-		protected function onPlayerActivated(result:int, e:flash.events.Event):void
-		{
-			m_mainMenu.visible = false;
-			getNextPlayerLevel();
-		}
-		
 		//serve either the next tutorial level, or give the full level select screen if done
 		protected function getNextPlayerLevelDebug(e:starling.events.Event):void
 		{
 			//load tutorial file just in case
 			onTutorialButtonTriggered(null);
 		}
-		
-		//serve either the next tutorial level, or give the full level select screen if done
-		protected function getNextPlayerLevel():void
-		{
-			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
-			{
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
-				PipeJamGameScene.inTutorial = false;
-			}
-			else
-				loadTutorial();
-		}
-		
-		protected function getSavedLevel(evt:TimerEvent):void
-		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.GET_SAVED_LEVEL));
-		}
-		
 		
 		protected function getNextRandomLevel(evt:TimerEvent):void
 		{
@@ -197,8 +171,6 @@ package scenes.splashscreen
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
 		}
-		
-
 		
 		protected function isTutorialDone():Boolean
 		{
@@ -224,7 +196,6 @@ package scenes.splashscreen
 		{
 			PipeJamGameScene.inTutorial = true;
 			PipeJamGameScene.inDemo = false;
-			PipeJam3.initialLevelDisplay = false;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}

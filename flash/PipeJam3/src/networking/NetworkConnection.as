@@ -57,14 +57,19 @@ package networking
 			var urlRequest:URLRequest;
 			var rand:String = "";
 			var contentType:String = URLLoaderDataFormat.TEXT;
-			if(request == "authorize" && PlayerValidation.accessGranted())
+			if(request == "authorize")
 			{
-				rand = "&rand="+String(Math.round(Math.random()*1000));
-				urlRequest = new URLRequest(url+rand);
-				var header:URLRequestHeader = new URLRequestHeader("Authorization", "Bearer " + PlayerValidation.accessToken); 
-				urlRequest.requestHeaders.push(header);
-				request = "";
+				if(PlayerValidation.accessGranted())
+				{
+					rand = "&rand="+String(Math.round(Math.random()*1000));
+					urlRequest = new URLRequest(url+rand);
+					var header:URLRequestHeader = new URLRequestHeader("Authorization", "Bearer " + PlayerValidation.accessToken); 
+					urlRequest.requestHeaders.push(header);
+				}
+				//reset request
+				request == "";
 			}
+				
 			if(request == "JSON")
 			{
 				urlRequest = new URLRequest(url);

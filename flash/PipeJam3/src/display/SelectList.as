@@ -3,8 +3,6 @@ package display
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
-	import dialogs.SimpleTwoButtonDialog;
-	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 		
@@ -325,8 +323,6 @@ package display
 			var heightSpacing:Number = 60;
 			
 			var deleteCallback:Function = null;
-			if(addDeleteButton)
-				deleteCallback = deleteSavedGame;
 			
 			for(var ii:int = 0; ii < objArray.length; ++ ii) {
 				var label:String = objArray[ii].name;
@@ -372,36 +368,6 @@ package display
 				thumb.enabled = false;
 			else
 				thumb.enabled = true;
-		}
-		
-		protected var currentDeleteTarget:BasicButton;
-		protected function deleteSavedGame(event:TouchEvent):void
-		{
-			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 60;
-			
-			if(event.getTouches(this, TouchPhase.ENDED).length)
-			{
-				//find parent button
-				var displayObject:DisplayObject = event.target as DisplayObject;
-				while(displayObject && !(displayObject is BasicButton))
-					displayObject = displayObject.parent;
-				
-				if(displayObject == null)
-					return;
-				
-				currentDeleteTarget = displayObject as BasicButton;
-				
-				var simpleTwoButtonDialog:SimpleTwoButtonDialog = new SimpleTwoButtonDialog("Delete Saved Game?", "Yes", "No", dialogWidth, dialogHeight, reallyDeleteSavedGame);
-//				simpleTwoButtonDialog.x = (width - dialogWidth)/2;
-//				simpleTwoButtonDialog.y = 50;
-				addChild(simpleTwoButtonDialog);
-			}
-		}
-		
-		protected function reallyDeleteSavedGame(answer:int):void
-		{
-
 		}
 		
 		private function onLevelButtonTouched(event:Event):void

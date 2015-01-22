@@ -20,11 +20,7 @@ package scenes.game.display
 	
 	import constraints.ConstraintGraph;
 	import constraints.events.ErrorEvent;
-	
-	import dialogs.InGameMenuDialog;
-	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
-	import dialogs.SubmitLevelDialog;
 	
 	import display.SoundButton;
 	import display.TextBubble;
@@ -51,14 +47,11 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.components.SideControlPanel;
 	
-	import starling.animation.Juggler;
-	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
-	import starling.display.MovieClip;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
@@ -66,7 +59,6 @@ package scenes.game.display
 	import starling.events.KeyboardEvent;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
 	
 	import system.VerigameServerConstants;
@@ -80,13 +72,10 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		public var sideControlPanel:SideControlPanel;
 		protected var miniMap:MiniMap;
-		protected var inGameMenuBox:InGameMenuDialog;
 		protected var m_backgroundLayer:Sprite;
 		protected var m_foregroundLayer:Sprite;
 		protected var m_splashLayer:Sprite;
-		
-		protected var shareDialog:SaveDialog;
-		
+				
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		
@@ -397,15 +386,12 @@ package scenes.game.display
 			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
 			
-			addEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
 			
-			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
@@ -554,79 +540,6 @@ package scenes.game.display
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
-			return;
-			
-			if (!gameControlPanel) return;
-			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
-			var juggler:Juggler = Starling.juggler;
-			var animateUp:Boolean = false;
-			if(inGameMenuBox == null)
-			{
-				inGameMenuBox = new InGameMenuDialog();
-				inGameMenuBox.x = 0;
-				inGameMenuBox.y = bottomMenuY;
-				var childIndex:int = numChildren - 1;
-				if (gameControlPanel && gameControlPanel.parent == this) {
-					childIndex = getChildIndex(gameControlPanel);
-					trace("childindex:" + childIndex);
-				} else {
-					trace("not");
-				}
-				addChildAt(inGameMenuBox, childIndex);
-				//add clip rect so box seems to slide up out of the gameControlPanel
-				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				animateUp = true;
-			}
-			else if (inGameMenuBox.visible && !inGameMenuBox.animatingDown)
-				inGameMenuBox.onBackToGameButtonTriggered();
-			else // animate up
-			{
-				animateUp = true;
-			}
-			if (animateUp) {
-				if (!inGameMenuBox.visible) {
-					inGameMenuBox.y = bottomMenuY;
-					inGameMenuBox.visible = true;
-				}
-				juggler.removeTweens(inGameMenuBox);
-				inGameMenuBox.animatingDown = false;
-				inGameMenuBox.animatingUp = true;
-				juggler.tween(inGameMenuBox, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					y: bottomMenuY - inGameMenuBox.height, // -> tween.animate("x", 50)
-					onComplete: function():void { if (inGameMenuBox) inGameMenuBox.animatingUp = false; }
-				});
-			}
-			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-		}
-		
-		public function onSaveLayoutFile(event:MenuEvent):void
-		{
-			if(active_level != null) {
-				active_level.onSaveLayoutFile(event);
-				if (PipeJam3.logging) {
-					var details:Object = new Object();
-					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.name;
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
-				}
-			}
-		}
-		
-		protected function postSaveDialog(event:MenuEvent):void
-		{
-			if(shareDialog == null)
-			{
-				shareDialog = new SaveDialog(150, 100);
-			}
-			
-			addChild(shareDialog);
-		}
-		
-		protected function postSubmitDialog(event:MenuEvent):void
-		{
-			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(150, 120);
-			addChild(submitLevelDialog);
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -883,7 +796,6 @@ package scenes.game.display
 			var level:Level = active_level;
 			//forget that which we knew
 			PipeJamGameScene.levelContinued = false;
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
 				function():void
 				{
@@ -1196,9 +1108,7 @@ package scenes.game.display
 			if (miniMap) miniMap.setLevel(active_level);
 			showVisibleBrushes();
 			showCurrentBrush();
-		
-			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-			 
+					
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
 		}
@@ -1276,15 +1186,11 @@ package scenes.game.display
 			
 			removeEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
-			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
 			
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
-			removeEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
@@ -1324,14 +1230,6 @@ package scenes.game.display
 				if (levelName == name) return levels[i];
 			}
 			return null;
-		}
-		
-		public function hasDialogOpen():Boolean
-		{
-			if(inGameMenuBox && inGameMenuBox.visible)
-				return true;
-			else
-				return false;
 		}
 		
 		

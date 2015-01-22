@@ -212,7 +212,6 @@ package scenes.game.display
 		
 		protected function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
 			var graphVar:ConstraintVar;
 			for (var varId:String in levelGraph.variableDict) {
 				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
@@ -225,8 +224,6 @@ package scenes.game.display
 		
 		protected function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
-			//save object and restore at after initial assignments since I don't want these assignments saved
-			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
 			// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
 			var assignmentIsWide:Boolean = (graphVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
 			if (assignmentsObj["assignments"].hasOwnProperty(graphVar.formattedId)
@@ -245,17 +242,6 @@ package scenes.game.display
 			if (gameNode && gameNode.isNarrow == assignmentIsWide) {
 				gameNode.isNarrow = !assignmentIsWide;
 				gameNode.setDirty(true);
-			}
-			
-			//and then set from local storage, if there (but only if we really want it)
-			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[graphVar.id] != null)
-			{
-				var newWidth:String = savedAssignmentObj[graphVar.id];
-				var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
-				if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == savedAssignmentIsWide) 
-				{
-					graphVar.setProp(PropDictionary.PROP_NARROW, !savedAssignmentIsWide);
-				}
 			}
 		}
 		
@@ -616,27 +602,6 @@ package scenes.game.display
 			//trace("Restarted: " + m_levelLayoutObj["id"]);
 		}
 		
-		public function onSaveLayoutFile(event:MenuEvent):void
-		{
-			updateLevelObj();
-			
-			var levelObject:Object = PipeJamGame.levelInfo;
-			if(levelObject != null)
-			{
-				m_levelLayoutObjWrapper["id"] = event.data.name;
-				levelObject.m_layoutName = event.data.name;
-				levelObject.m_layoutDescription = event.data.description;
-				var layoutZip:ByteArray = zipJsonFile(m_levelLayoutObjWrapper, "layout");
-				var layoutZipEncodedString:String = encodeBytes(layoutZip);
-				GameFileHandler.saveLayoutFile(layoutSaved, layoutZipEncodedString);	
-			}
-		}
-		
-		protected function layoutSaved(result:int, e:flash.events.Event):void
-		{
-			dispatchEvent(new MenuEvent(MenuEvent.LAYOUT_SAVED));
-		}
-		
 		public function zipJsonFile(jsonFile:Object, name:String):ByteArray
 		{
 			var newZip:FZip = new FZip();
@@ -787,12 +752,7 @@ package scenes.game.display
 				//levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue, levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
-				//save incremental changes so we can update if user quits and restarts
-				if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
-				{
-					var constraintType:String = evt.newValue ? ConstraintValue.VERBOSE_TYPE_0 : ConstraintValue.VERBOSE_TYPE_1;
-					PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.graphVar.id] = constraintType;
-				}
+
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			} else {
 				levelGraph.updateScore();
@@ -1122,7 +1082,7 @@ package scenes.game.display
 				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0  && (!PipeJam3.REQUIRE_LOG_IN || PlayerValidation.accessGranted()))
+				if(levelGraph.oldScore != 0  && PlayerValidation.accessGranted())
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
