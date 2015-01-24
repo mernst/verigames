@@ -7,6 +7,8 @@ package networking
 	import scenes.Scene;
 	
 	import server.LoggingServerInterface;
+	
+	import utils.XMath;
 
 	//the steps are: 
 	//	get the cookie with the express.sid value
@@ -15,10 +17,9 @@ package networking
 
 	public class PlayerValidation
 	{
-		public static var VERIFY_SESSION:int = 1;
-		public static var GET_ENCODED_COOKIES:int = 2;
-		public static var PLAYER_INFO:int = 3;
-		public static var ACCESS_TOKEN:int = 4;
+		public static var GET_ACCESS_TOKEN:int = 1;
+		public static var GET_PLAYER_ID:int = 2;
+		public static var GET_PLAYER_INFO:int = 3;
 		
 		public static var AuthorizationAttempted:Boolean = false;
 		public static var accessToken:String = null;
@@ -28,20 +29,8 @@ package networking
 		public static var userNames:Dictionary = new Dictionary;
 		public static var outstandingUserNamesRequests:int = 0;
 		
-		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
 		static public var validationObject:PlayerValidation = new PlayerValidation;
-		protected var pipejamCallbackFunction:Function;
-		protected var controller:Scene = null;
-		protected var encodedCookies:String;
-		
-		static public var GETTING_COOKIE:String = "Getting Cookie";
-		static public var VALIDATING_SESSION:String = "Validating Session";
-		static public var ACTIVATING_PLAYER:String = "Activating Player";
-		static public var GETTING_PLAYER_INFO:String = "Getting Player ID";
-		
-		static public var VALIDATION_SUCCEEDED:String = "Player Logged In";
-		static public var VALIDATION_FAILED:String = "Validation Failed";
 		
 		static public var authURL:String = "http://oauth.verigames.org/oauth2/authorize";
 		static public var redirect_uri:String ="http://paradox.verigames.org/game/PipeJam3.html";
@@ -56,14 +45,16 @@ package networking
 		
 		public function getAccessToken(accessCode:String):void
 		{
+			AuthorizationAttempted = true;
+			
+			//this call is missing the client secret, which is added at the server level.
 			var obj:Object = new Object;
 			obj.code = accessCode;
-			obj.client_id = "54b97ebee0da42ff17b927c5";
-			obj.client_secret = "3D89WG3WJHEW789WERQH34234";
+			obj.client_id = client_id;
 			obj.grant_type = "authorization_code";
 			obj.redirect_uri = redirect_uri;
 			var objStr:String = JSON.stringify(obj);
-			sendMessage(ACCESS_TOKEN, tokenCallback, objStr);
+			sendMessage(GET_ACCESS_TOKEN, tokenCallback, objStr);
 		}
 		
 		public function tokenCallback(result:int, e:flash.events.Event):void
@@ -76,7 +67,30 @@ package networking
 				if(jsonResponseObj.access_token != null)
 				{
 					accessToken = jsonResponseObj.access_token;
+					getCurrentPlayerID(accessToken);
 				}
+			}
+		}
+		
+		public function getCurrentPlayerID(accessToken:String):void
+		{
+			sendMessage(GET_PLAYER_ID, getCurrentPlayerIDCallback, accessToken);
+		}
+		
+		private function getCurrentPlayerIDCallback(result:int, e:flash.events.Event):void
+		{
+			if(result == NetworkConnection.EVENT_COMPLETE)
+			{
+				var response:String = e.target.data;
+				var jsonResponseObj:Object = JSON.parse(response);
+				
+				if(jsonResponseObj.userId != null)
+				{
+					playerID = jsonResponseObj.userId;
+					getPlayerInfo(playerID);
+				}
+				else
+					playerID = "rand" + XMath.randomInt(0, 100000);
 			}
 		}
 		
@@ -89,7 +103,7 @@ package networking
 		{
 			var temp:Dictionary = userNames;
 			if(userNames[playerID] == null)
-				sendMessage(PLAYER_INFO, playerInfoCallback, playerID);
+				sendMessage(GET_PLAYER_INFO, playerInfoCallback, playerID);
 		}
 		
 		public function playerInfoCallback(result:int, e:flash.events.Event):void
@@ -129,12 +143,16 @@ package networking
 			var url:String = null;
 			switch(type)
 			{
-				case ACCESS_TOKEN:
-					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
+				case GET_ACCESS_TOKEN:
+					url = NetworkConnection.productionInterop + "?function=getTokenPOST&data_id='/token'&access_token='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.POST; 
 					break;
-				case PLAYER_INFO:
-					url = NetworkConnection.productionInterop + "?function=passURL2Args&data_id='/api/users/" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
+				case GET_PLAYER_ID:
+					url = NetworkConnection.productionInterop + "?function=getPlayerIDPOST&data_id='/validate'&access_token='" + PlayerValidation.accessToken +"'";
+					method = URLRequestMethod.POST; 
+					break;
+				case GET_PLAYER_INFO:
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.GET; 
 					request = "authorize";
 					break;

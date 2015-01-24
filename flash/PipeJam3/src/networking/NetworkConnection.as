@@ -68,9 +68,8 @@ package networking
 				}
 				//reset request
 				request == "";
-			}
-				
-			if(request == "JSON")
+			}	
+			else if(request == "JSON")
 			{
 				urlRequest = new URLRequest(url);
 				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");

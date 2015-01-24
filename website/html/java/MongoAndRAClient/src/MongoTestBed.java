@@ -43,8 +43,12 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-       // listEntries(db, "CurrentSolutions", null, false);
-        dropCollection(db, "CurrentSolutions");
+        listEntries(db, "ActiveLevels");
+        listEntries(db, "BaseLevels");
+        listEntries(db, "GameSolvedLevels");
+        listEntries(db, "fs.chunks");
+        listEntries(db, "fs.files");
+
         listCollectionNames(db);
  //      HashMap<String, String> map = new HashMap();
 //       map.put("playerID", "51e5b3460240288229000026");
@@ -54,6 +58,11 @@ public class MongoTestBed {
  //         saveAndCleanLog(db, "old");
         
 	    mongo.close();
+	}
+	
+	static void listEntries(DB db, String collectionName)
+	{
+		listEntries(db, collectionName, null, false);
 	}
 	
 	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)

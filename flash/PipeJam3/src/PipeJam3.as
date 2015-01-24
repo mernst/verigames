@@ -6,13 +6,15 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	import assets.AssetsFont;
-		
+	
 	import cgs.server.logging.data.QuestData;
 	
 	import events.NavigationEvent;
@@ -20,9 +22,11 @@ package
 	import net.hires.debug.Stats;
 	
 	import networking.GameFileHandler;
-	import networking.NetworkConnection;
 	import networking.HTTPCookies;
-		
+	import networking.NetworkConnection;
+	
+	import scenes.game.PipeJamGameScene;
+	
 	import server.LoggingServerInterface;
 	import server.ReplayController;
 	
@@ -39,8 +43,8 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = true;
-		public static var TUTORIAL_DEMO:Boolean = false;
+		public static var RELEASE_BUILD:Boolean = false;
+		public static var TUTORIAL_DEMO:Boolean = true;
 		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = false;
@@ -129,6 +133,7 @@ package
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
 			
+			//initialize JS to ActionScript link
 			HTTPCookies.initialize();
 			
 			var fullURL:String = this.loaderInfo.url;
@@ -148,11 +153,11 @@ package
 				NetworkConnection.productionInterop = "http://paradox.verigames.org/cgi-bin/interop.php";
 				NetworkConnection.baseURL = "http://paradox.verigames.org";
 			}
-			//initialize stuff
-			new NetworkConnection();
-			GameFileHandler.retrieveLevels();
+			//get level info
+			GameFileHandler.retrieveLevelMetadata();
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
+			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);
 		}
 				
 		protected function changeFullScreen(event:flash.events.Event):void
@@ -196,6 +201,11 @@ package
 			
 			// Set the updated view port
 			Starling.current.viewPort = viewPort;
+		}
+		
+		public function onLoadLevel(event:NavigationEvent = null):void
+		{
+			loadLevelFromObjectID(event.info);
 		}
 		
 		//call from JavaScript to load specific level

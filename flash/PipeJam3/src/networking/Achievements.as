@@ -118,10 +118,10 @@ package networking
 			switch(type)
 			{
 				case GET_ACHIEVEMENTS:
-					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'&access_token='" + PlayerValidation.accessToken +"'";
 					break;
 				case ADD_ACHIEVEMENT:
-					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/achievement/assign'";
+					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/achievement/assign'&code='"+ PlayerValidation.accessToken + "'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;

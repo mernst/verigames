@@ -18,6 +18,9 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	
 	import constraints.ConstraintGraph;
 	import constraints.events.ErrorEvent;
 	import dialogs.SimpleAlertDialog;
@@ -110,6 +113,8 @@ package scenes.game.display
 		static protected var m_numWidgetsClicked:int = 0;
 		
 		static public var altKeyDown:Boolean;
+		
+		public var updateTimer:Timer;
 
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -174,6 +179,7 @@ package scenes.game.display
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
+			m_initQueue.push(initUpdateTimer);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -434,6 +440,7 @@ package scenes.game.display
 		public function assignmentsFileLoadedCallback(obj:Object):void
 		{
 			this.active_level.loadAssignmentsConfiguration(obj);
+			active_level.levelGraph.startingScore = active_level.currentScore;
 		}
 		
 		private function onSolveSelection(event:MenuEvent):void
@@ -516,6 +523,30 @@ package scenes.game.display
 			AudioManager.getInstance().reset();
 			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 			trace("Playing music...");
+		}
+		
+		private function initUpdateTimer():void {
+			//once every ten seconds, maybe?
+			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
+			{
+				updateTimer = new Timer(10000, 0);
+				updateTimer.addEventListener(TimerEvent.TIMER, updateHighScores);
+				updateTimer.start();
+			}
+		}
+		
+		private function updateHighScores(event:TimerEvent):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES, null));
+		}
+		
+		private function removeUpdateTimer():void
+		{
+			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
+			{
+				updateTimer.stop();
+			}
+			
 		}
 		
 		public function changeFullScreen(newWidth:Number, newHeight:Number):void
@@ -806,7 +837,7 @@ package scenes.game.display
 					}
 				};
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
@@ -815,7 +846,7 @@ package scenes.game.display
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
-				if (evt.menuShowing && active_level) {
+				if (active_level) {
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
 					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
@@ -872,7 +903,7 @@ package scenes.game.display
 				{
 					selectLevel(levels[m_currentLevelNumber], m_currentLevelNumber == prevLevelNumber);
 				};
-			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 		}
 		
 		public function onErrorAdded(event:ErrorEvent):void
@@ -1215,6 +1246,8 @@ package scenes.game.display
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			
+			removeUpdateTimer();
+			
 			if(active_level)
 				removeChild(active_level, true);
 			m_worldObj = null;
@@ -1274,7 +1307,7 @@ package scenes.game.display
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
 				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
-		
+			
 		public function addSoundButton(m_sfxButton:SoundButton):void
 		{
 			gameControlPanel.addSoundButton(m_sfxButton);

@@ -31,30 +31,20 @@ package networking
 	 */
 	public class GameFileHandler
 	{
-		public static var GET_COMPLETED_LEVELS:int = 1;
 		public static var GET_ALL_LEVEL_METADATA:int = 2;
-		public static var SAVE_LAYOUT:int = 3;
-		public static var REQUEST_LAYOUT_LIST:int = 5;
-		public static var SAVE_LEVEL:int = 7;
-		public static var GET_ALL_SAVED_LEVELS:int = 8;
-		public static var GET_SAVED_LEVEL:int = 15;
-		public static var DELETE_SAVED_LEVEL:int = 9;
-		public static var REPORT_PLAYER_RATING:int = 12;
-		public static var REPORT_LEADERBOARD_SCORE:int = 13;
-		public static var GET_HIGH_SCORES_FOR_LEVEL:int = 14;
+		public static var SAVE_LEVEL:int = 3;
+		public static var GET_LEVEL:int = 4;
+		public static var REPORT_LEADERBOARD_SCORE:int = 5;
+		public static var GET_HIGH_SCORES_FOR_LEVEL:int = 6;
+		
 		public static var USE_LOCAL:int = 1;
 		public static var USE_DATABASE:int = 2;
 		public static var USE_URL:int = 3;
-		
-		static public var GET_COMPLETED_LEVELS_REQUEST:String = "/level/completed";
-		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
-		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 		
 		static public var levelInfoVector:Vector.<Object> = null;
 		
 		//not currently used in version 2
 		static public var completedLevelVector:Vector.<Object> = null;
-		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
 		static public var numLevels:int = 10;
 		
@@ -78,7 +68,7 @@ package networking
 		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
 		{
 			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(GET_SAVED_LEVEL, fileHandler.defaultJSONCallback, null, id);
+			fileHandler.sendMessage(GET_LEVEL, fileHandler.defaultJSONCallback, null, id);
 		}
 		
 		static public function loadLevelInfoFromName(name:String, callback:Function):void
@@ -122,13 +112,8 @@ package networking
 
 		}
 		
-		static public function deleteSavedLevel(_levelIDString:String):void
-		{
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(DELETE_SAVED_LEVEL, null, _levelIDString);
-		}
 		
-		static public function retrieveLevels():void
+		static public function retrieveLevelMetadata():void
 		{
 			GameFileHandler.getLevelMetadata(null);
 		}
@@ -168,13 +153,6 @@ package networking
 			else
 				return null;
 		}
-				
-		static public function reportPlayerPreference(preference:String):void
-		{
-			PipeJamGame.levelInfo.preference = preference;
-			var fileHandler:GameFileHandler = new GameFileHandler();
-			fileHandler.sendMessage(REPORT_PLAYER_RATING, fileHandler.defaultJSONCallback, null);
-		}
 		
 		//connect to the db and get a list of all levels
 		static public function getLevelMetadata(callback:Function):void
@@ -184,41 +162,15 @@ package networking
 			fileHandler.sendMessage(GET_ALL_LEVEL_METADATA, fileHandler.setLevelMetadataFromCurrent);
 		}
 		
-		//connect to the db and get a list of all completed levels
-		static public function getCompletedLevels(callback:Function):void
-		{
-			levelInfoVector = null;
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(GET_COMPLETED_LEVELS, fileHandler.setCompletedLevels);
-		}
-		
-		//connect to the db and get a list of all saved levels
-		static public function getSavedLevels(callback:Function):void
-		{
-			savedMatchArrayObjects = null;
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(GET_ALL_SAVED_LEVELS, fileHandler.onRequestSavedLevelsFinished);
-		}
-		
-		//request a list of layouts associated with current levelObject levelID
-		static public function getLayoutList(callback:Function):void
-		{
-			var fileHandler:GameFileHandler = new GameFileHandler(callback);
-			fileHandler.sendMessage(REQUEST_LAYOUT_LIST, fileHandler.defaultJSONCallback);
-		}
-		
 		static public function submitLevel(_levelFilesString:String, saveType:String, fileType:int = 1):void
 		{
-			//this involves:
-			//saving the level (layout and constraints, on either save or submit/share)
-			//saving the score, level and player info
-			//reporting the player performance/preference
 			var fileHandler:GameFileHandler = new GameFileHandler();
 			fileHandler.m_fileType = fileType;
 			fileHandler.m_saveType = saveType;
 			fileHandler.m_levelFilesString = _levelFilesString;
 			fileHandler.saveLevel(saveType);
 			GameFileHandler.reportScore();
+			World.m_world.dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES, null));
 		}	
 		
 		static public function reportScore():void
@@ -439,19 +391,17 @@ package networking
 		{
 			var message:String = e.target.data as String;
 			var vec:Vector.<Object> = new Vector.<Object>;
-			var obj:Object = JSON.parse(message);
-			for each(var entry:Object in obj)
-				vec.push(entry);
+			if(message.length > 0)
+			{
+				var obj:Object = JSON.parse(message);
+				for each(var entry:Object in obj)
+					vec.push(entry);
+			}
 
 			if(m_callback != null)
 				m_callback(result, vec);
 		}
 		
-		public function onRequestSavedLevelsFinished(result:int, layoutObjects:Vector.<Object>):void
-		{
-			savedMatchArrayObjects = layoutObjects;
-			m_callback(result);
-		}
 		
 		//called when level metadata is loaded 
 		public function setLevelMetadataFromCurrent(result:int, e:flash.events.Event):void
@@ -498,7 +448,7 @@ package networking
 		
 		public function onLevelSubmitted(result:int, e:flash.events.Event):void
 		{
-
+			World.m_world.dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES,null));
 		}
 		
 		public function onDBLevelCreated():void
@@ -523,19 +473,10 @@ package networking
 				case GET_HIGH_SCORES_FOR_LEVEL:
 					url = NetworkConnection.productionInterop  + "?function=getHighScoresForLevel2&data_id=" + data;
 					break;
-				case REPORT_PLAYER_RATING:
-					if(PlayerValidation.playerID == "")
-						return;
-					messages.push ({'playerID': PlayerValidation.playerID,'levelID': PipeJamGame.levelInfo.levelID,'preference': PipeJamGame.levelInfo.preference});
-					data_id = JSON.stringify(messages);
-					url = NetworkConnection.productionInterop + "?function=reportPlayerRating2&data_id='"+data_id+"'";
-					break;
 				case GET_ALL_LEVEL_METADATA:
 					url = NetworkConnection.productionInterop + "?function=getActiveLevels2&data_id=foo";
 					break;
 				case SAVE_LEVEL:
-					if(PlayerValidation.playerID == "")
-							return;
 					var solutionInfo:Object = PipeJamGame.levelInfo;
 					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.target_score =  String(World.m_world.active_level.currentScore);
@@ -565,7 +506,7 @@ package networking
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
-					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/score'";
+					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&code='"+ PlayerValidation.accessToken + "'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;

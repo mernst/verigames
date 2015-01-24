@@ -624,6 +624,7 @@ package scenes.game.components
 					scoreObj['name'] = PlayerValidation.getUserName(scoreInstance[1], count);
 					scoreObj['score'] = scoreInstance[0];
 					scoreObj['assignmentsID'] = scoreInstance[2];
+					scoreObj['score_improvement'] = scoreInstance[3];
 					if(scoreInstance[1] == PlayerValidation.playerID)
 						scoreObj.activePlayer = 1;
 					else
@@ -634,8 +635,13 @@ package scenes.game.components
 				}
 				if(scoreObjArray.length > 0)
 				{
+					scoreObjArray.sort(orderHighScoresByScore);
 					var scoreStr:String = JSON.stringify(scoreObjArray);
 					HTTPCookies.addHighScores(scoreStr);
+					
+					scoreObjArray.sort(orderHighScoresByDifference);
+					var scoreStr1:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addScoreImprovementTotals(scoreStr1);
 				}
 				else
 				{
@@ -643,11 +649,15 @@ package scenes.game.components
 					nonScoreObj['name'] = 'Not played yet';
 					nonScoreObj['score'] = "";
 					nonScoreObj['assignmentsID'] = "";
+					nonScoreObj['score_improvement'] = "";
 					nonScoreObj.activePlayer = 0;
 					
 					scoreObjArray.push(nonScoreObj);
-					var scoreStr1:String = JSON.stringify(scoreObjArray);
-					HTTPCookies.addHighScores(scoreStr1);
+					var scoreStr2:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr2);
+					scoreObjArray[0]['name'] = "";
+					var scoreStr3:String = JSON.stringify(scoreObjArray)
+					HTTPCookies.addScoreImprovementTotals(scoreStr3);
 					
 				}
 				
@@ -670,6 +680,42 @@ package scenes.game.components
 				m_scoreBarContainer.addChild(m_bestScoreLine);
 			}
 		}
+		
+		static public function orderHighScoresByScore(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['score']); 
+			var score2:int = parseInt(b['score']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
+		
+		static public function orderHighScoresByDifference(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['difference']); 
+			var score2:int = parseInt(b['difference']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{

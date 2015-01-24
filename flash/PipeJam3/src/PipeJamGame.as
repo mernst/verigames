@@ -3,12 +3,12 @@ package
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import flash.external.ExternalInterface;
 	import flash.net.URLVariables;
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
-	import flash.utils.Timer;
 	
 	import assets.AssetsAudio;
 	
@@ -96,7 +96,7 @@ package
 			
 			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
 			addEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
-
+			addEventListener(NavigationEvent.UPDATE_HIGH_SCORES, updateHighScoreList);
 		}	
 		
 		protected function addedToStage(event:starling.events.Event):void
@@ -135,12 +135,10 @@ package
 					{
 						var accessCode:String = vars.code;
 						PlayerValidation.initiateAccessTokenAccess(accessCode);
-						PlayerValidation.AuthorizationAttempted = true;
 					}
 					else if(vars.error)
 					{
 						PlayerValidation.accessToken = "denied";
-						PlayerValidation.AuthorizationAttempted = true;
 					}
 				}
 			}
@@ -184,6 +182,7 @@ package
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			removeEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
+			removeEventListener(NavigationEvent.UPDATE_HIGH_SCORES, updateHighScoreList);
 		}
 		
 		public function onGetRandomLevel(event:NavigationEvent = null):void
@@ -200,7 +199,7 @@ package
 			}
 			else
 			{
-				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
+				updateHighScoreList();
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			}
 		}
@@ -208,6 +207,11 @@ package
 		public function getRandomLevelCallback(e:TimerEvent = null):void
 		{
 			onGetRandomLevel();
+		}
+		
+		public function updateHighScoreList(event:starling.events.Event = null):void
+		{
+			GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 		}
 		
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
@@ -219,36 +223,16 @@ package
 				level.numericScore = int(level[0]);
 				level.playerID = int(level[1]);
 				level.assignmentsID = int(level[2]);
+				level.difference = int(level[3]);
 				highScoreArray.push(level);
 				PlayerValidation.validationObject.getPlayerInfo(level[1]);
 			}
-			
-			if(highScoreArray.length > 0)
-				highScoreArray.sort(orderHighScores);
 			
 			PipeJamGame.levelInfo.highScores = highScoreArray;
 
 			if(World.m_world)
 				World.m_world.setHighScores();
 		}
-		
-		protected function orderHighScores(a:Object, b:Object):int 
-		{ 
-			var score1:int = parseInt(a[0]); 
-			var score2:int = parseInt(b[0]); 
-			if (score1 < score2) 
-			{ 
-				return -1; 
-			} 
-			else if (score1 > score2) 
-			{ 
-				return 1; 
-			} 
-			else 
-			{ 
-				return 0; 
-			} 
-		} 
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{

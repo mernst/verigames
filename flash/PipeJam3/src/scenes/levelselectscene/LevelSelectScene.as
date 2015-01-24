@@ -6,13 +6,11 @@ package scenes.levelselectscene
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
-	import display.BasicButton;
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	import display.NineSliceToggleButton;
 	
 	import events.MenuEvent;
-	import events.MouseWheelEvent;
 	import events.NavigationEvent;
 		
 	import networking.GameFileHandler;
@@ -20,7 +18,6 @@ package scenes.levelselectscene
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
-	import particle.ErrorParticleSystem;
 	
 	import scenes.Scene;
 	import scenes.game.PipeJamGameScene;
@@ -50,7 +47,6 @@ package scenes.levelselectscene
 		
 		protected var tutorialListBox:SelectLevelList;
 		protected var newLevelListBox:SelectLevelList;
-		protected var savedLevelsListBox:SelectLevelList;
 		protected var currentVisibleListBox:SelectLevelList;
 		
 		//for the info panel
@@ -121,12 +117,6 @@ package scenes.levelselectscene
 			new_levels_button.x = tutorial_levels_button.x+buttonWidth+buttonPadding;
 			new_levels_button.y = buttonY + label.y;
 			
-			saved_levels_button = ButtonFactory.getInstance().createTabButton("Saved", buttonWidth, buttonHeight, 6, 6);
-			saved_levels_button.addEventListener(starling.events.Event.TRIGGERED, onSavedButtonTriggered);
-			//addChild(saved_levels_button);
-			saved_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
-			saved_levels_button.y = buttonY + label.y;
-			
 			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 50, 18);
 			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			addChild(select_button);
@@ -149,11 +139,6 @@ package scenes.levelselectscene
 			newLevelListBox.x = tutorialListBox.x;
 			addChild(newLevelListBox);
 			
-			savedLevelsListBox = new SelectLevelList(levelSelectWidth - 3*buttonPadding - 4, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding - 2);
-			savedLevelsListBox.y = tutorialListBox.y;
-			savedLevelsListBox.x = tutorialListBox.x;
-			addChild(savedLevelsListBox);
-			
 			initialize();
 		}
 		
@@ -166,27 +151,19 @@ package scenes.levelselectscene
 		public function initialize():void
 		{
 			tutorialListBox.setClipRect();
-			savedLevelsListBox.setClipRect();
 			newLevelListBox.setClipRect();
 			
 			if(PlayerValidation.accessGranted())
 			{
-				savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
 				newLevelListBox.startBusyAnimation(newLevelListBox);
 				
 				GameFileHandler.levelInfoVector = null;
-				GameFileHandler.completedLevelVector = null;
-				GameFileHandler.savedMatchArrayObjects = null;
 				GameFileHandler.getLevelMetadata(onRequestLevels);
-			//	GameFileHandler.getCompletedLevels(onRequestLevels);
-			//	GameFileHandler.getSavedLevels(onRequestSavedLevels);
 			}
 			else
 			{
 				new_levels_button.alphaValue = 0.9;
-				saved_levels_button.alphaValue = 0.9;
 				new_levels_button.enabled = false;
-				saved_levels_button.enabled = false;
 			}
 			
 			setTutorialFile(TutorialController.tutorialObj);
@@ -204,12 +181,10 @@ package scenes.levelselectscene
 		private function onTutorialButtonTriggered(e:Event):void
 		{
 			tutorialListBox.visible = true;
-			savedLevelsListBox.visible = false;
 			newLevelListBox.visible = false;
 			
 			tutorial_levels_button.setToggleState(true);
 			new_levels_button.setToggleState(false);
-			saved_levels_button.setToggleState(false);
 			
 			currentVisibleListBox = tutorialListBox;
 			updateSelectedLevelInfo();
@@ -218,7 +193,6 @@ package scenes.levelselectscene
 		private function onNewButtonTriggered(e:Event):void
 		{
 			tutorialListBox.visible = false;
-			savedLevelsListBox.visible = false;
 			newLevelListBox.visible = true;
 			
 			tutorial_levels_button.setToggleState(false);
@@ -226,20 +200,6 @@ package scenes.levelselectscene
 			saved_levels_button.setToggleState(false);	
 			
 			currentVisibleListBox = newLevelListBox;
-			updateSelectedLevelInfo();
-		}
-		
-		private function onSavedButtonTriggered(e:Event):void
-		{
-			tutorialListBox.visible = false;
-			savedLevelsListBox.visible = true;
-			newLevelListBox.visible = false;
-			
-			tutorial_levels_button.setToggleState(false);
-			new_levels_button.setToggleState(false);
-			saved_levels_button.setToggleState(true);
-			
-			currentVisibleListBox = savedLevelsListBox;
 			updateSelectedLevelInfo();
 		}
 		
@@ -370,22 +330,6 @@ package scenes.levelselectscene
 			}
 		}
 		
-		protected function onRequestSavedLevels(result:int):void
-		{
-			try{
-				if(result == NetworkConnection.EVENT_COMPLETE)
-				{
-					if(GameFileHandler.savedMatchArrayObjects != null)
-						onGetSavedLevelsComplete();
-				}
-			}
-			catch(err:Error) //probably a parse error in trying to decode the RA response
-			{
-				trace("ERROR: failure in loading levels " + err);
-				savedLevelsListBox.stopBusyAnimation();
-			}
-		}
-		
 		protected function onGetLevelMetadataComplete():void
 		{
 			matchArrayMetadata = new Array;
@@ -413,28 +357,10 @@ package scenes.levelselectscene
 			onRequestLevelsComplete();
 		}
 		
-		protected function onGetSavedLevelsComplete():void
-		{		
-			savedLevelsArrayMetadata = new Array;
-			for(var i:int = 0; i<GameFileHandler.savedMatchArrayObjects.length; i++)
-			{
-				var match:Object = GameFileHandler.savedMatchArrayObjects[i];
-				savedLevelsArrayMetadata.push(match);
-				match.unlocked = true;
-			}
-			
-			setSavedLevelsInfo(savedLevelsArrayMetadata);
-			
-			onRequestLevelsComplete();
-		}
-		
 		protected function onRequestLevelsComplete():void
 		{
 			if(GameFileHandler.levelInfoVector != null && GameFileHandler.completedLevelVector != null && newLevelListBox != null)
 				newLevelListBox.stopBusyAnimation();
-			
-			if(GameFileHandler.savedMatchArrayObjects != null && savedLevelsListBox != null)
-				savedLevelsListBox.stopBusyAnimation();
 		}
 		
 		protected static var levelCount:int = 1;
@@ -513,11 +439,6 @@ package scenes.levelselectscene
 		public function setNewLevelInfo(_newLevelInfo:Array):void
 		{
 			this.newLevelListBox.setButtonArray(_newLevelInfo, false);
-		}
-		
-		public function setSavedLevelsInfo(_savedLevelInfo:Array):void
-		{
-			this.savedLevelsListBox.setButtonArray(_savedLevelInfo, true);
 		}
 		
 		public function setTutorialFile(tutorialObj:Object):void

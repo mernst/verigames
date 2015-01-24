@@ -130,7 +130,7 @@ package scenes.splashscreen
 		{			
 			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
 			{
-				navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/PipeJam3.html&client_id=54b97ebee0da42ff17b927c5"), "");
+				navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/PipeJam3.html&client_id=" + PlayerValidation.client_id), "");
 			}
 			else
 				getNextRandomLevel(null);
