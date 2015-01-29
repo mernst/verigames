@@ -506,7 +506,7 @@ package networking
 					var targetScore:int = PipeJamGame.levelInfo.targetScore;
 					if(levelScore > targetScore)
 						leaderboardScore = 2;
-					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&code='"+ PlayerValidation.accessToken + "'";
+					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&data2='"+ PlayerValidation.accessToken + "'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;

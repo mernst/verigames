@@ -1,6 +1,5 @@
 package networking
 {
-	import flash.events.Event;
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	import starling.display.Sprite;
@@ -43,6 +42,7 @@ package networking
 		
 		protected var levelCompletedQID:String;
 		
+		//All tutorial info gets saved locally in cookies
 		public function TutorialController()
 		{
 			setTutorialObj(tutorialObj);
@@ -56,41 +56,7 @@ package networking
 			return tutorialController;
 		}
 		
-		
-		public function getTutorialIDFromName(name:String):String
-		{
-			//find first next level to play, then compare with argument
-			var levelFound:Boolean = false;
-			for each(var order:int in tutorialOrderedList)
-			{
-				var nextName:String = orderToTutorialDictionary[order]["name"];
-				
-				if(nextName == name)
-					return orderToTutorialDictionary[order]["qid"];
-			}
-			return "0";
-		}
-		
 		public function getTutorialsCompletedByPlayer():void
-		{
-			sendMessage(GET_COMPLETED_TUTORIAL_LEVELS, getTutorialsCompleted);
-		}
-		
-		protected function getTutorialsCompleted(result:int, e:flash.events.Event):void
-		{
-			if(completedTutorialDictionary == null)
-				completedTutorialDictionary = new Dictionary;
-			if (e && e.target && e.target.data) {
-				var message:String = e.target.data as String;
-				var obj:Object = JSON.parse(message);
-				for each(var entry:Object in obj)
-					completedTutorialDictionary[entry.levelID] = entry;
-			}
-			//also check cookies for levels played when not logged in
-			getTutorialsCompletedFromCookieString();
-		}
-		
-		public function getTutorialsCompletedFromCookieString():void
 		{
 			if(completedTutorialDictionary == null)
 				completedTutorialDictionary = new Dictionary;
@@ -104,7 +70,6 @@ package networking
 					completedTutorialDictionary[tutorial] = tutorial;
 				}
 			}
-			//setTutorialObj(tutorialObj);
 		}
 		
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void
@@ -125,19 +90,9 @@ package networking
 		}
 		public function post():void
 		{
-			if(PlayerValidation.accessGranted())
-				sendMessage(TUTORIAL_LEVEL_COMPLETE, postMessage);
-			else
-			{
-				//add to cookie string
-				var tutorialsCompleted:String = HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
-				tutorialsCompleted += "," + levelCompletedQID;
-				HTTPCookies.setCookie(TUTORIALS_COMPLETED_STRING, tutorialsCompleted);
-			}
-		}
-		
-		protected function postMessage(result:int, e:Event):void
-		{
+			var tutorialsCompleted:String = HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
+			tutorialsCompleted += "," + levelCompletedQID;
+ 			HTTPCookies.setCookie(TUTORIALS_COMPLETED_STRING, tutorialsCompleted);
 		}
 		
 		public function isTutorialLevelCompleted(tutorialQID:String):Boolean
@@ -145,37 +100,6 @@ package networking
 			return (completedTutorialDictionary && (completedTutorialDictionary[tutorialQID] != null));
 		}
 
-		
-		//first tutorial should be unlocked
-		//any played tutorials should be unlocked
-		//first unplayed tutorial that immediately follows a completed tutorial should be unlocked
-		public function tutorialShouldBeUnlocked(tutorialQID:String):Boolean
-		{
-			var tutorialQIDInt:int = int(tutorialQID);
-			
-			if(tutorialQIDInt == getFirstTutorialLevel())
-				return true;
-			else if(completedTutorialDictionary && (completedTutorialDictionary[tutorialQID] != null))
-				return true;
-			else
-			{
-				//find first next level to play, then compare with argument
-				var levelFound:Boolean = false;
-				for each(var order:int in tutorialOrderedList)
-				{
-					var nextQID:String = orderToTutorialDictionary[order]["qid"];
-					
-					if(!isTutorialLevelCompleted(nextQID))
-					{
-						if(nextQID == tutorialQID)
-							return true;
-						else
-							return false;
-					}
-				}
-			}
-			return false;
-		}
 		
 		//returns the first tutorial level qid in the sequence
 		public function getFirstTutorialLevel():int

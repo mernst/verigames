@@ -1212,7 +1212,7 @@ package scenes.game.display
 			directNodeArray = new Array;
 			storedDirectEdgesDict = new Dictionary;
 			m_unsat_weight = int.MAX_VALUE;
-			//loop through each object, store selected variables for later use
+
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			

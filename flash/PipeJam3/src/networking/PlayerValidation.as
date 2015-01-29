@@ -4,6 +4,8 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
+	import events.MenuEvent;
+	
 	import scenes.Scene;
 	
 	import server.LoggingServerInterface;
@@ -37,6 +39,7 @@ package networking
 		static public var client_id:String = "54b97ebee0da42ff17b927c5";
 		static public var oauthURL:String = "http://oauth.verigames.org/oauth2/token";
 		
+		public static var playerInfoQueue:Array = new Array;
 		
 		public static function initiateAccessTokenAccess(accessCode:String):void
 		{
@@ -87,7 +90,10 @@ package networking
 				if(jsonResponseObj.userId != null)
 				{
 					playerID = jsonResponseObj.userId;
-					getPlayerInfo(playerID);
+					playerInfoQueue.push(playerID);
+					getPlayerInfo();
+					Achievements.checkForFinishedTutorialAchievement();
+					Achievements.getAchievementsEarnedForPlayer();
 				}
 				else
 					playerID = "rand" + XMath.randomInt(0, 100000);
@@ -99,11 +105,19 @@ package networking
 			return AuthorizationAttempted && accessToken != null && accessToken != "denied";
 		}
 		
-		public function getPlayerInfo(playerID:String):void
+		public function getPlayerInfo():void
 		{
+			if(!accessToken) //can't look anyone up without this. This method will be called at least once after obtaining token.
+				return;
+			
 			var temp:Dictionary = userNames;
-			if(userNames[playerID] == null)
-				sendMessage(GET_PLAYER_INFO, playerInfoCallback, playerID);
+			
+			while(playerInfoQueue.length > 0)
+			{
+				var nextPlayer:String = playerInfoQueue.pop();
+				if(userNames[nextPlayer] == null)
+					sendMessage(GET_PLAYER_INFO, playerInfoCallback, nextPlayer);
+			}
 		}
 		
 		public function playerInfoCallback(result:int, e:flash.events.Event):void
@@ -138,21 +152,21 @@ package networking
 		
 		public function sendMessage(type:int, callback:Function, data:String = null):void
 		{
-			var request:String;
+			var request:String = "";
 			var method:String;
 			var url:String = null;
 			switch(type)
 			{
 				case GET_ACCESS_TOKEN:
-					url = NetworkConnection.productionInterop + "?function=getTokenPOST&data_id='/token'&access_token='" + PlayerValidation.accessToken +"'";
-					method = URLRequestMethod.POST; 
+					url = NetworkConnection.productionInterop + "?function=getAccessToken&data_id='/token'&data2='" + data +"'";
+					method = URLRequestMethod.GET; 
 					break;
 				case GET_PLAYER_ID:
-					url = NetworkConnection.productionInterop + "?function=getPlayerIDPOST&data_id='/validate'&access_token='" + PlayerValidation.accessToken +"'";
+					url = NetworkConnection.productionInterop + "?function=getPlayerIDPOST&data_id='/validate'&data2='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.POST; 
 					break;
 				case GET_PLAYER_INFO:
-					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + data +"'&access_token='" + PlayerValidation.accessToken +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + data +"'&data2='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.GET; 
 					request = "authorize";
 					break;

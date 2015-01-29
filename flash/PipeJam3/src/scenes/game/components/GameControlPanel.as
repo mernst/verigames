@@ -30,6 +30,7 @@ package scenes.game.components
 	import scenes.game.display.World;
 	import networking.HTTPCookies;
 	import networking.PlayerValidation;
+	import networking.Achievements;
 	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -632,6 +633,9 @@ package scenes.game.components
 					
 					scoreObjArray.push(scoreObj);
 					count++;
+					
+					if(scoreInstance[1] == PlayerValidation.playerID)
+						Achievements.checkAchievements(Achievements.CHECK_SCORE, scoreInstance[3]);
 				}
 				if(scoreObjArray.length > 0)
 				{

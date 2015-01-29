@@ -43,11 +43,7 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-        listEntries(db, "ActiveLevels");
-        listEntries(db, "BaseLevels");
-        listEntries(db, "GameSolvedLevels");
-        listEntries(db, "fs.chunks");
-        listEntries(db, "fs.files");
+         listEntries(db, "GameSolvedLevels");
 
         listCollectionNames(db);
  //      HashMap<String, String> map = new HashMap();

@@ -1,14 +1,11 @@
 package
 {
-	import flash.display.StageDisplayState;
-	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.external.ExternalInterface;
 	import flash.net.URLVariables;
 	import flash.system.System;
 	import flash.ui.Keyboard;
-	import flash.utils.Dictionary;
 	
 	import assets.AssetsAudio;
 	
@@ -26,7 +23,6 @@ package
 	import events.MenuEvent;
 	import events.NavigationEvent;
 	
-	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
@@ -106,6 +102,8 @@ package
 			
 			if (ExternalInterface.available)
 			{
+				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+				
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
 				if(paramsStart != -1)
@@ -129,7 +127,6 @@ package
 						PipeJamGame.levelInfo.name = "foo";
 						PipeJamGame.levelInfo.id = vars.tutorial; 
 						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
-						TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 					}
 					else if(vars.code)
 					{
@@ -211,7 +208,8 @@ package
 		
 		public function updateHighScoreList(event:starling.events.Event = null):void
 		{
-			GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
+			if(!PipeJamGameScene.inTutorial)
+				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 		}
 		
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
@@ -221,13 +219,14 @@ package
 			for each(var level:Object in list)
 			{
 				level.numericScore = int(level[0]);
-				level.playerID = int(level[1]);
-				level.assignmentsID = int(level[2]);
+				level.playerID = level[1];
+				level.assignmentsID = level[2];
 				level.difference = int(level[3]);
 				highScoreArray.push(level);
-				PlayerValidation.validationObject.getPlayerInfo(level[1]);
+				PlayerValidation.playerInfoQueue.push(level.playerID);
 			}
-			
+			PlayerValidation.validationObject.getPlayerInfo();
+
 			PipeJamGame.levelInfo.highScores = highScoreArray;
 
 			if(World.m_world)

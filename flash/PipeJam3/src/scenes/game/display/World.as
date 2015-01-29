@@ -179,7 +179,6 @@ package scenes.game.display
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
-			m_initQueue.push(initUpdateTimer);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -385,7 +384,6 @@ package scenes.game.display
 		
 		private function initEventListeners():void {
 			trace("Initializing event listeners...");
-			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
@@ -393,12 +391,7 @@ package scenes.game.display
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
-			
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
-			
-			addEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -544,7 +537,8 @@ package scenes.game.display
 		{
 			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
 			{
-				updateTimer.stop();
+				if(updateTimer)
+					updateTimer.stop();
 			}
 			
 		}
@@ -598,54 +592,6 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
-			
-			if(PipeJamGame.levelInfo.shareWithGroup == 1)
-			{
-				Achievements.checkAchievements(Achievements.SHARED_WITH_GROUP_ID, 0);
-			}
-		}
-		
-		public function onLevelUploadSuccess(event:MenuEvent):void
-		{
-			var dialogText:String;
-			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 80;
-			var socialText:String = "";
-			var numLinesInText:int = 1;
-			var callbackFunction:Function = null;
-			
-			if(event.type == MenuEvent.LEVEL_SAVED)
-			{
-				dialogText = "Level Saved.";
-			}
-			else if(event.type == MenuEvent.LAYOUT_SAVED)
-			{
-				dialogText = "Layout Saved.";
-				callbackFunction = reportSavedLayoutAchievement;
-			}
-			else //MenuEvent.LEVEL_SUBMITTED
-			{
-				dialogText = "Level Submitted!";
-			//	socialText = "I just finished a level!"; wait till social integration library
-			//	dialogHeight = 130;
-				callbackFunction = reportSubmitAchievement;
-			}
-			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, callbackFunction, numLinesInText);
-			addChild(alert);
-		}
-		
-		public function reportSubmitAchievement():void
-		{
-			Achievements.checkAchievements(MenuEvent.LEVEL_SUBMITTED, 0);
-			
-			if(PipeJamGame.levelInfo.layoutUpdated)
-				Achievements.checkAchievements(MenuEvent.SET_NEW_LAYOUT, 0);
-		}
-		
-		public function reportSavedLayoutAchievement():void
-		{
-			Achievements.checkAchievements(MenuEvent.SAVE_LAYOUT, 0);
 		}
 		
 		public function achievementAdded(event:MenuEvent):void
@@ -663,12 +609,6 @@ package scenes.game.display
 			else
 				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
 			addChild(alert);
-		}
-		
-		private function checkClashClearedEvent():void
-		{
-			if(active_level && active_level.m_targetScore != 0)
-				Achievements.checkAchievements(Achievements.CLASH_CLEARED_ID, 0);
 		}
 		
 		private function loadBestScore(event:MenuEvent):void
@@ -801,10 +741,6 @@ package scenes.game.display
 			
 			if(!PipeJamGameScene.inTutorial && evt)
 			{
-				m_numWidgetsClicked++;
-				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
-					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
-				
 				//beat the target score?
 				if(newScore  > active_level.getTargetScore())
 				{
@@ -866,9 +802,7 @@ package scenes.game.display
 				//if this is the first time we've completed these, post the achievement, else just move on
 				if(tutorialsDone)
 				{
-					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID) && PlayerValidation.accessGranted())
-						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED_ID, Achievements.TUTORIAL_FINISHED_STRING);
-					else
+					if(!Achievements.checkAchievements(Achievements.TUTORIAL_FINISHED_ID))
 						switchToLevelSelect();
 					return;
 				}
@@ -1212,19 +1146,14 @@ package scenes.game.display
 				m_activeToolTip.removeFromParent(true);
 				m_activeToolTip = null;
 			}
-			
-			removeEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
-			
+						
 			removeEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
-			
-			removeEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
-			
+
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
-			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
+
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);

@@ -5,12 +5,9 @@ package events
 	public class MenuEvent extends Event 
 	{
 		public static const SAVE_LAYOUT:String = "save_layout";
-		public static const LAYOUT_SAVED:String = "layout_saved";
 		public static const SET_NEW_LAYOUT:String = "set_new_layout";
 		public static const SUBMIT_LEVEL:String = "submit_level";
-		public static var LEVEL_SUBMITTED:String = "level_submitted";
 		public static const SAVE_LEVEL:String = "save_level";
-		public static var LEVEL_SAVED:String = "level_saved";
 		public static const POST_SAVE_DIALOG:String = "post_save_dialog";
 		public static const POST_SUBMIT_DIALOG:String = "post_submit_dialog";
 		public static const ZOOM_IN:String = "zoom_in";

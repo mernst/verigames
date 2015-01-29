@@ -6,26 +6,26 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.utils.Timer;
 	
 	import assets.AssetsFont;
 	
 	import cgs.server.logging.data.QuestData;
 	
+	import dialogs.SimpleAlertDialog;
+	
+	import events.MenuEvent;
 	import events.NavigationEvent;
 	
 	import net.hires.debug.Stats;
 	
+	import networking.Achievements;
 	import networking.GameFileHandler;
 	import networking.HTTPCookies;
 	import networking.NetworkConnection;
-	
-	import scenes.game.PipeJamGameScene;
 	
 	import server.LoggingServerInterface;
 	import server.ReplayController;
@@ -43,8 +43,8 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = false;
-		public static var TUTORIAL_DEMO:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = true;
+		public static var TUTORIAL_DEMO:Boolean = false;
 		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = false;
