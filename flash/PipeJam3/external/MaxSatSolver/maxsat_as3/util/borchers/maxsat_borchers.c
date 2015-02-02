@@ -3,6 +3,11 @@
 static CallbackFunction callback_function = 0;
 void do_callback(int new_best);
 
+const int ALG_DPLL = 1;
+const int ALG_RAND = 2;
+
+int m_alg;
+
 #include "wmaxsat.c"
 
 static int callback_use_intermediate = 0;
@@ -43,7 +48,7 @@ do_callback_now(int new_best)
 	output[i] = 1;
       }
     }
-    
+
     callback_need_call_best = 0;
     callback_function(output, num_vars, ub);
   } else if (callback_use_intermediate) {
@@ -290,10 +295,11 @@ run(int algorithm, int * clauses, int nclauses, int * initvars, int ninitvars, i
     return;
   }
 
+  m_alg = algorithm;
   if (algorithm == ALG_DPLL) {
     dp();
   } else {
-    slm(1);
+    runMaxSatz(clauses, nclauses, callback);
   }
 
   if (callback_need_call_best) {

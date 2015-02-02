@@ -6,7 +6,7 @@ import maxsat_package.CModule;
 public class maxsat
 {
 
-	public static function run(clauses:Array, initvars:Array, intermediate_callbacks:int, callback:Function):void
+	public static function run(algorithm:int, clauses:Array, initvars:Array, intermediate_callbacks:int, callback:Function):void
 	{
 		// this will be a pointer to allocated space
 		var clause_ptr:int = 0;
@@ -107,7 +107,7 @@ public class maxsat
 			};
 			
 			// call the solver
-			maxsat_swig.run(clause_ptr, clauses.length, initvar_ptr, initvar_size, intermediate_callbacks, callback_wrapper);
+			maxsat_swig.run(algorithm, clause_ptr, clauses.length, initvar_ptr, initvar_size, intermediate_callbacks, callback_wrapper);
 		} finally {
 			// free the space if it was allocated earlier
 			if (clause_ptr != 0) {

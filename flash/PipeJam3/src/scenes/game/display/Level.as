@@ -1442,7 +1442,7 @@ package scenes.game.display
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
-			MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		

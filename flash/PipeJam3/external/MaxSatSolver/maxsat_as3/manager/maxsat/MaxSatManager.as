@@ -15,6 +15,7 @@ package maxsat
 		private var m_worker:Worker;
 		private var m_workerToMain:MessageChannel;
 		
+		private var m_algorithm:int;
 		private var m_clauses:Array;
 		private var m_initvars:Array;
 		private var m_updateCallback:Function;
@@ -27,10 +28,10 @@ package maxsat
 			}
 		}
 		
-		public function start(clauses:Array, initvars:Array, updateCallback:Function, doneCallback:Function):void
+		public function start(algorithm:int, clauses:Array, initvars:Array, updateCallback:Function, doneCallback:Function):void
 		{
 			stop();
-			
+			m_algorithm = algorithm;
 			m_clauses = clauses;
 			m_initvars = initvars;
 			m_updateCallback = updateCallback;
@@ -42,6 +43,7 @@ package maxsat
 			m_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, onWorkerToMain);
 
 			m_worker.setSharedProperty("workerToMain", m_workerToMain);
+			m_worker.setSharedProperty("algorithm", m_algorithm);
 			m_worker.setSharedProperty("clauses", m_clauses);
 			m_worker.setSharedProperty("initvars", m_initvars);
 

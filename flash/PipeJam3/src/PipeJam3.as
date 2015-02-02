@@ -43,7 +43,7 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		
 		/** turn on logging of game play. */

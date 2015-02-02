@@ -7,7 +7,7 @@ void do_callback();
 #include "maxsatz2009.c"
 
 void
-do_callback()
+do_callbackm()
 {
   if (!callback_function) {
     return;
@@ -21,13 +21,14 @@ do_callback()
     } else {
       output[i] = 1;
     }
+	output[0]=32;
   }
 
   callback_function(output, NB_VAR, UB);
 }
 
 void
-run(int * clauses, int nclauses, CallbackFunction callback)
+runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
 {
   callback_function = callback;
 
