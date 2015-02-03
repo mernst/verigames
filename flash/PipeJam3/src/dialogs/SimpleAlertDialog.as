@@ -41,7 +41,7 @@ package dialogs
 			ok_button.x = background.x + (_width - ok_button.width)/2;
 			ok_button.y = background.y + _height - 16 - 16;
 			
-			if (m_socialText.length > 0) {
+			if (m_socialText && m_socialText.length > 0) {
 				var fbLogoTexture:Texture = AssetInterface.getTexture("Game", "FacebookLogoWhiteClass");
 				var fbLogoImage:Image = new Image(fbLogoTexture);
 				var fbButton:BasicButton = new BasicButton(fbLogoImage, fbLogoImage, fbLogoImage);

@@ -16,6 +16,7 @@ package events
 		public static const MIN_ZOOM_REACHED:String = "min_zoom";
 		public static const RESET_ZOOM:String = "reset_zoom";
 		public static const RECENTER:String = "recenter";
+		public static const POST_DIALOG:String = "postDialog";
 		public static const ACHIEVEMENT_ADDED:String = "achievementAdded";
 		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";
 		public static const LOAD_HIGH_SCORE:String = "LOAD_HIGH_SCORE";

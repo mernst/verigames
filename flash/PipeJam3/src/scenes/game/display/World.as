@@ -179,6 +179,7 @@ package scenes.game.display
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
+			initUpdateTimer();
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -393,6 +394,7 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			
+			addEventListener(MenuEvent.POST_DIALOG, postDialog);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			addEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
@@ -592,6 +594,16 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
+		}
+		
+		public function postDialog(event:MenuEvent):void
+		{
+			var dialogText:String = event.data as String;
+			var dialogWidth:Number = 160;
+			var dialogHeight:Number = 60;
+			
+			var dialog:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, null, null);
+			addChild(dialog);
 		}
 		
 		public function achievementAdded(event:MenuEvent):void
@@ -1154,6 +1166,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 
+			removeEventListener(MenuEvent.POST_DIALOG, postDialog);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);

@@ -2,7 +2,10 @@ package networking
 {
 	import flash.external.ExternalInterface;
 	
+	import events.MenuEvent;
 	import events.NavigationEvent;
+	
+	import PipeJam3;
 	
 	import scenes.game.display.World;
 	
@@ -48,12 +51,18 @@ package networking
 			ExternalInterface.call("alert", str);
 		}
 		
+		protected static var warningDisplayed:Boolean = false;
 		public static function addHighScores(str:String):void
 		{
 			if (!ExternalInterface.available) {
+				if(World.m_world && PipeJam3.RELEASE_BUILD && !warningDisplayed)
+				{
+					World.m_world.dispatchEvent(new MenuEvent(MenuEvent.POST_DIALOG, "no external interface"));
+					warningDisplayed = true;
+				}
 				return;
 			}
-			ExternalInterface.call("addHighScores", str);
+			ExternalInterface.call("addHighScores", escape(str));
 		}
 		
 		public static function addScoreImprovementTotals(str:String):void
@@ -61,7 +70,7 @@ package networking
 			if (!ExternalInterface.available) {
 				return;
 			}
-			ExternalInterface.call("addScoreImprovementTotals", str);
+			ExternalInterface.call("addScoreImprovementTotals",  escape(str));
 		}
 		
 		public static function callGetEncodedCookie():void
