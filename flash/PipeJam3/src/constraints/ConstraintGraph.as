@@ -38,7 +38,7 @@ package constraints
 		public var nConstraints:uint = 0;
 		public var clauseDict:Dictionary = new Dictionary();
 		public var nClauses:uint = 0;
-		public var groupsArr:Array = null;
+		public var groupsArr:Array = new Array();
 		public var groupSizes:Vector.<uint> = new Vector.<uint>();
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
@@ -238,7 +238,7 @@ package constraints
 					}
 					// Build constraints, add any uninitialized variables to graph.variableDict, and process groups
 					var constraintsArr:Array = levelObj[CONSTRAINTS];
-					var groupsArr:Array = levelObj[GROUPS];
+					var groupsArr:Array = levelObj.hasOwnProperty(GROUPS) ? levelObj[GROUPS] : new Array();
 					const GROUP_LEN:uint = groupsArr ? groupsArr.length : 0;
 					/**
 					 * "groups": [

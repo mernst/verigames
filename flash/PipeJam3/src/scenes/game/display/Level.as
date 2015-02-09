@@ -57,7 +57,6 @@ package scenes.game.display
 		/** True to allow user to navigate to any level regardless of whether levels below it are solved for debugging */
 		public static var UNLOCK_ALL_LEVELS_FOR_DEBUG:Boolean = false;
 		private static const MIN_NODE_SCALE:Number = 4.0 / Constants.GAME_SCALE;
-		private static const REMOVE_GRIDS:Boolean = true;
 		
 		/** Name of this level */
 		public var level_name:String;
@@ -337,80 +336,53 @@ package scenes.game.display
 			var j:int;
 			var groupGrid:GroupGrid;
 			
-			if (REMOVE_GRIDS)
-			{
-				
-				if (nGroups > 0)
-				{
-					for (i = 0; i < nGroups; i++)
-					{
-						groupGrid = m_groupGrids[i];
-						newGroupDepth = i;
-						if (viewRect.width < groupGrid.gridDimensions.x && viewRect.height < groupGrid.gridDimensions.y)
-						{
-							break;
-						}
-					}
-					trace("newGroupDepth: ", newGroupDepth);
-				}
-				if (newGroupDepth != currentGroupDepth)
-				{
-					const LEN:uint = m_itemsOnScreen.length;
-					for (i = 0; i < LEN; i++) m_itemsToRemove.push(m_itemsOnScreen[i]);
-					m_itemsOnScreen = new Vector.<GridChild>();
-					groupGrid = m_groupGrids[newGroupDepth];
-					var minX:int = GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-					var maxX:int = GroupGrid.getGridX(viewRect.right, groupGrid.gridDimensions);
-					var minY:int = GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-					var maxY:int = GroupGrid.getGridY(viewRect.bottom, groupGrid.gridDimensions);
-					var totalGrids:int = (maxX - minX + 1) * (maxY - minY + 1);
-					if (totalGrids > 4) trace("WARNING! Searching more than 4 grids at once: # grids = " + totalGrids);
-					var origItems:int = m_itemsToAdd.length;
-					for (i = minX; i <= maxX; i++)
-					{
-						for (j = minY; j <= maxY; j++)
-						{
-							var gridKey:String = i + "_" + j;
-							if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
-							var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
-							for (var nodeId:String in gridNodeDict)
-							{
-								var node:Node = nodeLayoutObjs[nodeId] as Node;
-								if (node) m_itemsToAdd.push(node);
-							}
-						}
-					}
-					var addedItems:int = m_itemsToAdd.length - origItems;
-					if (addedItems >= 2000)
-						trace("WARNING! ADDED: " + addedItems + " nodes at this group level");
-				}
-				currentGroupDepth = newGroupDepth;
-				return;
-			}
-			var leftGridNumber:int = Math.floor(viewRect ? viewRect.left/GRID_SIZE : -1);
-			var rightGridNumber:int = Math.floor(viewRect ? viewRect.right/GRID_SIZE : GRID_SIZE);
-			var topGridNumber:int = Math.floor(viewRect ? viewRect.top/GRID_SIZE : -1);
-			var bottomGridNumber:int = Math.floor(viewRect ? viewRect.bottom / GRID_SIZE : GRID_SIZE);
-			var currentViewGridWidth:int = Math.max(1, rightGridNumber - leftGridNumber);
-			var currentViewGridHeight:int = Math.max(1, topGridNumber - bottomGridNumber);
-			var numCurrentViewingGrids:int = currentViewGridWidth * currentViewGridHeight;
-			var newCurrentGridDict:Dictionary = new Dictionary;
-			
 			if (nGroups > 0)
 			{
-				// Finest detail = 1-4 grids, lowest detail = total grids in level
-				newGroupDepth = XMath.lremap(XMath.clamp(numCurrentViewingGrids, 4, numGrids), 4, numGrids, 0, nGroups + 1);
-				trace("newGroupDepth: ", newGroupDepth, "\n  numCurrentViewingGrids:", numCurrentViewingGrids, "minGrids:4 numGrids:", numGrids, "\n  nGroups:", nGroups);
-			}
-			
-			//create a new dictionary of current grid squares, removing those from the old dict
-			for(var i:int = leftGridNumber; i<rightGridNumber+1; i++)
-				for(var j:int = topGridNumber; j<bottomGridNumber+1; j++)
+				for (i = 0; i < nGroups; i++)
 				{
-					var gridName:String = i+"_"+j;
-					// TODO Groups
+					groupGrid = m_groupGrids[i];
+					newGroupDepth = i;
+					if (viewRect.width < groupGrid.gridDimensions.x && viewRect.height < groupGrid.gridDimensions.y)
+					{
+						break;
+					}
 				}
-			
+				trace("newGroupDepth: ", newGroupDepth);
+			}
+			if (newGroupDepth != currentGroupDepth)
+			{
+				const LEN:uint = m_itemsOnScreen.length;
+				for (i = 0; i < LEN; i++) m_itemsToRemove.push(m_itemsOnScreen[i]);
+				m_itemsOnScreen = new Vector.<GridChild>();
+				groupGrid = m_groupGrids[newGroupDepth];
+				var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
+				var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
+				var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
+				var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+				var totalGrids:int = (maxX - minX + 1) * (maxY - minY + 1);
+				//if (totalGrids > 4) trace("WARNING! Searching more than 4 grids at once: # grids = " + totalGrids);
+				var origItems:int = m_itemsToAdd.length;
+				for (i = minX; i <= maxX; i++)
+				{
+					for (j = minY; j <= maxY; j++)
+					{
+						var gridKey:String = i + "_" + j;
+						if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
+						var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
+						for (var nodeId:String in gridNodeDict)
+						{
+							var node:Node = nodeLayoutObjs[nodeId] as Node;
+							if (node) m_itemsToAdd.push(node);
+						}
+					}
+				}
+				var addedItems:int = m_itemsToAdd.length - origItems;
+				if (addedItems >= 2000)
+					trace("WARNING! ADDED: " + addedItems + " nodes at this group level");
+			}
+			currentGroupDepth = newGroupDepth;
+			return;
+		
 		}
 		
 		// REMOVE GRIDS VARS:
@@ -427,98 +399,91 @@ package scenes.game.display
 		////
 		public function draw():void
 		{
-			if (REMOVE_GRIDS)
+			if (!m_conflictsLayer) {
+				m_conflictsLayer = new Sprite();
+				//m_conflictsLayer.scaleX = m_conflictsLayer.scaleY = 1.0 / levelLayoutScale;
+				m_conflictsLayer.flatten();
+				addChild(m_conflictsLayer);
+			}
+			if (!m_edgesLayer) {
+				m_edgesLayer = new Sprite();
+				//m_edgesLayer.scaleX = m_edgesLayer.scaleY = 1.0 / levelLayoutScale;
+				m_edgesLayer.flatten();
+				addChild(m_edgesLayer);
+			}
+			if (!m_nodeLayer) {
+				m_nodeLayer = new Sprite();
+				//m_nodeLayer.scaleX = m_nodeLayer.scaleY = 1.0 / levelLayoutScale;
+				m_nodeLayer.flatten();
+				addChild(m_nodeLayer);
+			}
+			var itemsProcessed:uint = 0;
+			var edge:Edge, gameEdgeId:String;
+			var touchedEdgeLayer:Boolean = false;
+			var touchedNodeLayer:Boolean = false;
+			while (m_itemsToRemove.length && itemsProcessed <= ITEMS_PER_FRAME)
 			{
-				if (!m_conflictsLayer) {
-					m_conflictsLayer = new Sprite();
-					//m_conflictsLayer.scaleX = m_conflictsLayer.scaleY = 1.0 / levelLayoutScale;
-					m_conflictsLayer.flatten();
-					addChild(m_conflictsLayer);
-				}
-				if (!m_edgesLayer) {
-					m_edgesLayer = new Sprite();
-					//m_edgesLayer.scaleX = m_edgesLayer.scaleY = 1.0 / levelLayoutScale;
-					m_edgesLayer.flatten();
-					addChild(m_edgesLayer);
-				}
-				if (!m_nodeLayer) {
-					m_nodeLayer = new Sprite();
-					//m_nodeLayer.scaleX = m_nodeLayer.scaleY = 1.0 / levelLayoutScale;
-					m_nodeLayer.flatten();
-					addChild(m_nodeLayer);
-				}
-				var itemsProcessed:uint = 0;
-				var edge:Edge, gameEdgeId:String;
-				var touchedEdgeLayer:Boolean = false;
-				var touchedNodeLayer:Boolean = false;
-				while (m_itemsToRemove.length && itemsProcessed <= ITEMS_PER_FRAME)
+				var itemToRemove:GridChild = m_itemsToRemove.shift();
+				for each(gameEdgeId in itemToRemove.connectedEdgeIds)
 				{
-					var itemToRemove:GridChild = m_itemsToRemove.shift();
-					for each(gameEdgeId in itemToRemove.connectedEdgeIds)
+					edge = edgeLayoutObjs[gameEdgeId];
+					if (edge.skin)
 					{
-						edge = edgeLayoutObjs[gameEdgeId];
-						if (edge.skin)
-						{
-							edge.skin.removeFromParent(true);
-							edge.skin = null;
-							touchedEdgeLayer = true;
-						}
+						edge.skin.removeFromParent(true);
+						edge.skin = null;
+						touchedEdgeLayer = true;
 					}
-					if (itemToRemove.skin)
+				}
+				if (itemToRemove.skin)
+				{
+					itemToRemove.skin.removeFromParent(true);
+					itemToRemove.skin.disableSkin();
+					touchedNodeLayer = true;
+				}
+				itemsProcessed++;
+			}
+			while (m_itemsToAdd.length && itemsProcessed <= ITEMS_PER_FRAME)
+			{
+				var itemToAdd:GridChild = m_itemsToAdd.shift();
+				for each(gameEdgeId in itemToAdd.outgoingEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					edge.createSkin(); // TODO: edge drawing needs to be repaired with level scaling
+					if (edge.skin) {
+						edge.skin.x = itemToAdd.centerPoint.x;
+						edge.skin.y = itemToAdd.centerPoint.y;
+						m_edgesLayer.addChild(edge.skin);
+						touchedEdgeLayer = true;
+					}
+				}
+				if (false)
+				{
+					var nq:Quad = new Quad(8, 8, 0x0);
+					nq.x = itemToAdd.centerPoint.x;
+					nq.y = itemToAdd.centerPoint.y;
+					m_nodeLayer.addChild(nq);
+					touchedNodeLayer = true;
+				}
+				else
+				{
+					itemToAdd.createSkin();
+					if (itemToAdd.skin)
 					{
-						itemToRemove.skin.removeFromParent(true);
-						itemToRemove.skin.disableSkin();
+						//itemToAdd.skin.scaleX = itemToAdd.skin.scaleY = levelLayoutScale;
+						itemToAdd.skin.x = itemToAdd.centerPoint.x;
+						itemToAdd.skin.y = itemToAdd.centerPoint.y;
+						m_nodeLayer.addChild(itemToAdd.skin);
 						touchedNodeLayer = true;
 					}
-					itemsProcessed++;
 				}
-				while (m_itemsToAdd.length && itemsProcessed <= ITEMS_PER_FRAME)
-				{
-					var itemToAdd:GridChild = m_itemsToAdd.shift();
-					for each(gameEdgeId in itemToAdd.outgoingEdgeIds)
-					{
-						edge = edgeLayoutObjs[gameEdgeId];
-						//edge.createSkin(); // TODO: edge drawing needs to be repaired with level scaling
-						if (edge.skin) {
-							edge.skin.x = itemToAdd.centerPoint.x;
-							edge.skin.y = itemToAdd.centerPoint.y;
-							m_edgesLayer.addChild(edge.skin);
-							touchedEdgeLayer = true;
-						}
-					}
-					if (false)
-					{
-						var nq:Quad = new Quad(8, 8, 0x0);
-						nq.x = itemToAdd.centerPoint.x;
-						nq.y = itemToAdd.centerPoint.y;
-						m_nodeLayer.addChild(nq);
-						touchedNodeLayer = true;
-					}
-					else
-					{
-						itemToAdd.createSkin();
-						if (itemToAdd.skin)
-						{
-							//itemToAdd.skin.scaleX = itemToAdd.skin.scaleY = levelLayoutScale;
-							itemToAdd.skin.x = itemToAdd.centerPoint.x;
-							itemToAdd.skin.y = itemToAdd.centerPoint.y;
-							m_nodeLayer.addChild(itemToAdd.skin);
-							touchedNodeLayer = true;
-						}
-					}
-					itemsProcessed++;
-				}
-				if (touchedEdgeLayer)
-				{
-					m_edgesLayer.flatten();
-					m_conflictsLayer.flatten();
-				}
-				if (touchedNodeLayer) m_nodeLayer.flatten();
+				itemsProcessed++;
 			}
-			else
+			if (touchedEdgeLayer)
 			{
-				
+				m_edgesLayer.flatten();
+				m_conflictsLayer.flatten();
 			}
+			if (touchedNodeLayer) m_nodeLayer.flatten();
 		}
 		
 		private function checkNodeEdgesForRedraw(node:Node):void
@@ -568,7 +533,6 @@ package scenes.game.display
 				newNodeScaleX = newNodeScaleY = 1;
 			}
 			// TODO groups
-			if (REMOVE_GRIDS) return;
 			
 		}
 		
@@ -1248,17 +1212,8 @@ package scenes.game.display
 			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
 				assignmentIsWide = false;
 			
-			//need to update nodes first...
-			var gridSquare:GridSquare;
-			for each(gridSquare in gridSystemDict)
-			{
-				gridSquare.updateSelectedNodesAssignment(assignmentIsWide);
-			}
-			//...and then redraw edges based on those changes
-			for each(gridSquare in gridSystemDict)
-			{
-				gridSquare.updateSelectedEdges();
-			}
+			// TODO: groups
+			
 			//update score
 			onWidgetChange();
 			unselectAll();
