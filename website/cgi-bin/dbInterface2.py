@@ -19,7 +19,7 @@ from os import listdir
 from os.path import isfile, join
 
 def getPlayedTutorials2(playerID):
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.gameapi
 	collection = db.CompletedTutorials
 	concatList = []
@@ -30,7 +30,7 @@ def getPlayedTutorials2(playerID):
 	return item
 	
 def reportPlayedTutorial2(messageData):
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.gameapi
 	collection = db.CompletedTutorials
 	messageObj = json.loads(messageData)
@@ -41,7 +41,7 @@ def reportPlayedTutorial2(messageData):
 	return '///success'
 
 def reportPlayerRating2(messageData):
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.gameapi
 	collection = db.CompletedLevels
 	messageObj = json.loads(messageData)
@@ -50,23 +50,30 @@ def reportPlayerRating2(messageData):
 
 def getHighScoresForLevel2(levelID):
 	try:
-		client = Connection('api.flowjam.verigames.com', 27017)
+		client = Connection('api.paradox.verigames.org', 27017)
 		db = client.game2api
-		#use Levels so we don't get more than 5
-		collection = db.Levels
-		concatList = []
+		collection = db.GameSolvedLevels
+		concatList = {}
+		count = 0
 		for level in collection.find({"levelID":levelID}):
-			concatList.append(level)
-
+			count = count + 1
+			if level['playerID'] in concatList:
+				if int(concatList[level['playerID']][0]) < int(level['current_score']):
+					concatList[level['playerID']][0] = level['current_score']
+					concatList[level['playerID']][2] = level['assignmentsID']
+				concatList[level['playerID']][4] = concatList[level['playerID']][4] + 1
+				concatList[level['playerID']][3] = concatList[level['playerID']][3] + int(level['current_score']) - int(level['prev_score'])
+			else:
+				concatList[level['playerID']] = [level['current_score'], level['playerID'], level['assignmentsID'],  int(str(level['current_score']))-int(str(level['prev_score'])), 1 ]
 		item = json.dumps(concatList, default=json_util.default)
 		return item
 	except:
 		return sys.exc_info()
 
 
-#pass url to localhost:3000
-def passURL2(url):
-	resp = requests.get('http://localhost:3000' + url)
+#pass url to api.paradox.verigames.org for GETS
+def passURL2(url, code):
+	resp = requests.get('http://api.paradox.verigames.org' + url, headers = {'Authorization': 'Bearer ' + code})
 	responseString = json.dumps(resp.json())
 	try:
 		if len(responseString) != 0:
@@ -77,8 +84,33 @@ def passURL2(url):
 		return sys.exc_info()
 
 
-def passURLPOST2(url, postdata):
-	resp = requests.post('http://localhost:3000' + url, data=postdata, headers = {'content-type': 'application/json'})
+#since POSTs come in different content types, these need to be separated
+def getTokenPOST(url, postdata):
+	#add client secret
+	data = json.loads(postdata)
+	data['client_secret'] = "3D89WG3WJHEW789WERQH34234"
+	postdata = json.dumps(data)
+	resp = requests.post('http://oauth.verigames.org/oauth2' + url, data=postdata, headers = {'content-type': 'application/json'})
+	responseString = json.dumps(resp.json())
+
+	if len(responseString ) != 0:
+		return responseString 
+	else:
+		return 'success'
+
+def jsonPOST(url, code, postdata):
+	#add client secret
+	resp = requests.post('http://api.paradox.verigames.org' + url, data=postdata, headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + code})
+	responseString = json.dumps(resp.json())
+
+	if len(responseString ) != 0:
+		return responseString 
+	else:
+		return 'success'
+
+
+def getPlayerIDPOST(url, postdata):
+	resp = requests.post('http://oauth.verigames.org/oauth2' + url, data={'token':postdata})
 	responseString = json.dumps(resp.json())
 
 	if len(responseString ) != 0:
@@ -88,11 +120,14 @@ def passURLPOST2(url, postdata):
 
 def getActiveLevels2():
 	try:
-		client = Connection('api.flowjam.verigames.com', 27017)
+
+		client = Connection('api.paradox.verigames.org', 27017)
 		db = client.game2api
-		collection = db.Levels
+		collection = db.ActiveLevels
 		concatList = []
+		count = 0
 		for level in collection.find():
+			count = count + 1
 			concatList.append(level)
 
 		item = json.dumps(concatList, default=json_util.default)
@@ -102,7 +137,7 @@ def getActiveLevels2():
 
 
 def getFile2(fileID):
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.game2api
 	fs = gridfs.GridFS(db)
 	f = fs.get(ObjectId(fileID)).read()
@@ -114,7 +149,7 @@ def getFile2NonEncoded(fileID):
 		#fileObj = json.loads(jsonFileObjStr)
 		#fileID = fileObj['fileID']
 		#filename = fileObj['filename']
-		client = Connection('api.flowjam.verigames.com', 27017)
+		client = Connection('api.paradox.verigames.org', 27017)
 		db = client.game2api
 		fs = gridfs.GridFS(db)
 		f = fs.get(ObjectId(fileID)).read()
@@ -132,7 +167,7 @@ def getFile2NonEncoded(fileID):
 
 def submitLevel2(messageData, fileContents):
 	try:
-		client = Connection('api.flowjam.verigames.com', 27017)
+		client = Connection('api.paradox.verigames.org', 27017)
 		db = client.game2api
 		fs = gridfs.GridFS(db)
 		messageObj = json.loads(messageData)
@@ -149,15 +184,13 @@ def submitLevel2(messageData, fileContents):
 		messageObj["assignmentsID"] = str(newAssignmentsID)
 		collection = db.GameSolvedLevels
 		id = collection.insert(messageObj)
-		collection = db.CurrentSolutions
-		collection.insert(messageObj)
 		#mark served level as updated if score is higher than current
-		collection = db.Levels
+		collection = db.ActiveLevels
 		levelID = messageObj["levelID"]
 		for level in collection.find({"assignmentsID":previousAssignmentsID}):
 			if int(str(level["current_score"])) < int(messageObj["current_score"]):
 				currentsec = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
-				collection.update({"levelID":levelID}, {"$set": {"assignmentsID": newAssignmentsID, "last_update": currentsec, "current_score": messageObj["current_score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
+				collection.update({"levelID":levelID}, {"$set": {"last_update": currentsec, "target_score": messageObj["current_score"], "revision": messageObj["revision"], "leader": messageObj["username"]}})
 		return '{"solvedID":"' + str(id) + '"}'
 	except:
 		return sys.exc_info()
@@ -165,18 +198,11 @@ def submitLevel2(messageData, fileContents):
 
 
 def test():
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.gameapi
-
-	#mark served level as completed
-	collection = db.Level
-	xmlID = "52f3cb1ba8e0d6c8940ca999"
-	obj = collection.find_one({"xmlID":xmlID})
-	collection.update({"xmlID":xmlID}, {"$set": {"submitted": "v6test"}})
 
 	return "food"
 	
-#CERTAINLY NO REASON TO INCLUDE A SWITCH FUNCTION IN PYTHON
 if sys.argv[1] == "findPlayedTutorials2":
 	print(getPlayedTutorials2(sys.argv[2]))
 elif sys.argv[1] == "reportPlayedTutorial2":
@@ -184,9 +210,13 @@ elif sys.argv[1] == "reportPlayedTutorial2":
 elif sys.argv[1] == "reportPlayerRating2":
 	print(reportPlayerRating2(sys.argv[2]))
 elif sys.argv[1] == "passURL2":
-	print(passURL2(sys.argv[2]))
-elif sys.argv[1] == "passURLPOST2":
-	print(passURLPOST(sys.argv[2], sys.argv[3]))
+	print(passURL2(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "getTokenPOST":
+	print(getTokenPOST(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "getPlayerIDPOST":
+	print(getPlayerIDPOST(sys.argv[2], sys.argv[3]))
+elif sys.argv[1] == "jsonPOST":
+	print(jsonPOST(sys.argv[2], sys.argv[3], sys.argv[4]))
 elif sys.argv[1] == "getHighScoresForLevel2":
 	print(getHighScoresForLevel2(sys.argv[2]))
 elif sys.argv[1] == "getActiveLevels2":

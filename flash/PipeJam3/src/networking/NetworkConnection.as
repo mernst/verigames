@@ -11,6 +11,7 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import flash.utils.Dictionary;
+	import flash.net.URLRequestHeader;
 
 	//one NetworkConnection object created for each connection and used only once
 	public class NetworkConnection
@@ -19,13 +20,6 @@ package networking
 		public var m_callback:Function = null;
 		
 		static public var postAlerts:Boolean = false;
-		//the first address is verigames, the second the development environ, the third my machine
-		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-		//this should be the proxy server url, not the MongoDB or RA instance URL. Might be the same, might not be.
-		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
-		static public var productionProxy:String = "http://flowjam.verigames.com/pr(not)oxy";
-		static public var localProxy:String = "http://128.95.2.112:8001";
-		static public var PROXY_URL:String = productionProxy;
 		static public var productionInterop:String;
 		
 		static public var EVENT_COMPLETE:int = 1;
@@ -37,10 +31,7 @@ package networking
 		
 		public function NetworkConnection()
 		{
-			if(PipeJam3.USE_LOCAL_PROXY == true)
-				PROXY_URL = localProxy;
-			else if(PipeJam3.RELEASE_BUILD == false)
-				PROXY_URL = stagingProxy;
+
 		}
 		
 		/**
@@ -65,11 +56,33 @@ package networking
 			globalURL = url;
 			var urlRequest:URLRequest;
 			var rand:String = "";
-			 //IE caches all requests, so things don't update properly without this
-			if(request.indexOf('&') != -1)
-				rand = "&rand="+String(Math.round(Math.random()*1000));
+			var contentType:String = URLLoaderDataFormat.TEXT;
+			if(request == "authorize")
+			{
+				if(PlayerValidation.accessGranted())
+				{
+					rand = "&rand="+String(Math.round(Math.random()*1000));
+					urlRequest = new URLRequest(url+rand);
+					var header:URLRequestHeader = new URLRequestHeader("Authorization", "Bearer " + PlayerValidation.accessToken); 
+					urlRequest.requestHeaders.push(header);
+				}
+				//reset request
+				request == "";
+			}	
+			else if(request == "JSON")
+			{
+				urlRequest = new URLRequest(url);
+				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");
+				//urlRequest.requestHeaders.push(jsonHeader);
+				//contentType = null;
+			}
+			else
+			{
+				if(request && request.indexOf('&') != -1)//IE caches all requests, so things don't update properly without this
+					rand = "&rand="+String(Math.round(Math.random()*1000));
 			
-			urlRequest = new URLRequest(url+request+rand);
+				urlRequest = new URLRequest(url+request+rand);
+			}
 			var loader:URLLoader = new URLLoader();
 			
 			if(method == URLRequestMethod.GET)
@@ -79,11 +92,9 @@ package networking
 				urlRequest.method = URLRequestMethod.POST;
 				if(data != null)
 				{
-					//var variables:URLVariables = new URLVariables();
-					//variables.file = "test";
-					urlRequest.contentType = URLLoaderDataFormat.TEXT;
-					//loader.dataFormat = URLLoaderDataFormat.VARIABLES;
-					urlRequest.data = data;//+"\n"; //terminate line so Java can use readLine to get message
+					if(contentType)
+						urlRequest.contentType = contentType;
+					urlRequest.data = data;
 				}
 				else
 					urlRequest.data = null;

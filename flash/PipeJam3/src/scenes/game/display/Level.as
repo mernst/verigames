@@ -129,6 +129,7 @@ package scenes.game.display
 		protected var m_currentConflictIndex:int = 0;
 		
 		public var m_inSolver:Boolean = false;
+		private var m_unsat_weight:int;
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -176,9 +177,15 @@ package scenes.game.display
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
+				
+				//now check to see if we have a higher target
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
+					m_targetScore = PipeJamGame.levelInfo.target_score;
 			}
 			else
-				m_targetScore = 1000;
+			{
+				m_targetScore = PipeJamGame.levelInfo.target_score;
+			}
 			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
@@ -204,7 +211,6 @@ package scenes.game.display
 		
 		protected function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = null;
 			var graphVar:ConstraintVar;
 			for (var varId:String in levelGraph.variableDict) {
 				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
@@ -217,8 +223,6 @@ package scenes.game.display
 		
 		protected function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
 		{
-			//save object and restore at after initial assignments since I don't want these assignments saved
-			var savedAssignmentObj:Object = PipeJam3.m_savedCurrentLevel.data.assignmentUpdates;
 			// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
 			var assignmentIsWide:Boolean = (graphVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
 			if (assignmentsObj["assignments"].hasOwnProperty(graphVar.formattedId)
@@ -237,17 +241,6 @@ package scenes.game.display
 			if (gameNode && gameNode.isNarrow == assignmentIsWide) {
 				gameNode.isNarrow = !assignmentIsWide;
 				gameNode.setDirty(true);
-			}
-			
-			//and then set from local storage, if there (but only if we really want it)
-			if(PipeJamGameScene.levelContinued && !updateTutorialManager && savedAssignmentObj && savedAssignmentObj[graphVar.id] != null)
-			{
-				var newWidth:String = savedAssignmentObj[graphVar.id];
-				var savedAssignmentIsWide:Boolean = (newWidth == ConstraintValue.VERBOSE_TYPE_1);
-				if (graphVar.getProps().hasProp(PropDictionary.PROP_NARROW) == savedAssignmentIsWide) 
-				{
-					graphVar.setProp(PropDictionary.PROP_NARROW, !savedAssignmentIsWide);
-				}
 			}
 		}
 		
@@ -704,8 +697,8 @@ package scenes.game.display
 		//		edgeLayoutObj. = graphConstraint;
 				var startNode:Node = nodeLayoutObjs[result[0]];
 				var endNode:Node = nodeLayoutObjs[result[2]];
-				//switch end points if needed (support both clause oriented files, and original, for the time being)
-				if(result[2].indexOf('c') == -1 && result[0].indexOf('c') != -1)
+				//switch end points if needed)
+				if(result[0].indexOf('c') != -1)
 				{
 					startNode = nodeLayoutObjs[result[2]];
 					endNode = nodeLayoutObjs[result[0]];
@@ -714,7 +707,6 @@ package scenes.game.display
 				startNode.connectedEdgeIds.push(constraintId);
 				startNode.outgoingEdgeIds.push(constraintId);
 				endNode.connectedEdgeIds.push(constraintId);
-				
 				edgeLayoutObjs[constraintId] = edge;
 				
 				n++;
@@ -782,27 +774,6 @@ package scenes.game.display
 			
 			targetScoreReached = false;
 			//trace("Restarted: " + m_levelLayoutObj["id"]);
-		}
-		
-		public function onSaveLayoutFile(event:MenuEvent):void
-		{
-			updateLevelObj();
-			
-			var levelObject:Object = PipeJamGame.levelInfo;
-			if(levelObject != null)
-			{
-				m_levelLayoutObjWrapper["id"] = event.data.name;
-				levelObject.m_layoutName = event.data.name;
-				levelObject.m_layoutDescription = event.data.description;
-				var layoutZip:ByteArray = zipJsonFile(m_levelLayoutObjWrapper, "layout");
-				var layoutZipEncodedString:String = encodeBytes(layoutZip);
-				GameFileHandler.saveLayoutFile(layoutSaved, layoutZipEncodedString);	
-			}
-		}
-		
-		protected function layoutSaved(result:int, e:flash.events.Event):void
-		{
-			dispatchEvent(new MenuEvent(MenuEvent.LAYOUT_SAVED));
 		}
 		
 		public function zipJsonFile(jsonFile:Object, name:String):ByteArray
@@ -948,12 +919,7 @@ package scenes.game.display
 				//levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue, levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
-				//save incremental changes so we can update if user quits and restarts
-				if(PipeJam3.m_savedCurrentLevel.data.assignmentUpdates) //should only be null when doing assignments from assignments file
-				{
-					var constraintType:String = evt.newValue ? ConstraintValue.VERBOSE_TYPE_0 : ConstraintValue.VERBOSE_TYPE_1;
-					PipeJam3.m_savedCurrentLevel.data.assignmentUpdates[evt.graphVar.id] = constraintType;
-				}
+
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			} else {
 				levelGraph.updateScore();
@@ -1095,7 +1061,7 @@ package scenes.game.display
 			var num:int = -1;
 			if (tutorialManager) num = tutorialManager.getMaxSelectableWidgets();
 			if (num > 0) return num;
-			return 1000;
+			return 10000;
 		}
 		
 		public function getTargetScore():int
@@ -1257,7 +1223,7 @@ package scenes.game.display
 				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0 && PlayerValidation.playerLoggedIn)
+				if(levelGraph.oldScore != 0  && PlayerValidation.accessGranted())
 					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
@@ -1386,7 +1352,8 @@ package scenes.game.display
 			initvarsArray = new Array;
 			directNodeArray = new Array;
 			storedDirectEdgesDict = new Dictionary;
-			//loop through each object, store selected variables for later use
+			m_unsat_weight = int.MAX_VALUE;
+
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			
@@ -1395,7 +1362,7 @@ package scenes.game.display
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
 			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
-	
+
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1616,7 +1583,7 @@ package scenes.game.display
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
-			MaxSatSolver.run_solver(constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
@@ -1624,9 +1591,9 @@ package scenes.game.display
 		{
 			var someNodeUpdated:Boolean = false;
 			//trace("update", unsat_weight);
-			if(	m_inSolver == false) //got marked done early
+			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
-			
+			m_unsat_weight = unsat_weight;
 			//trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
@@ -1653,9 +1620,10 @@ package scenes.game.display
 		
 		public var count:int = 0;
 		public var timer:Timer;
+		
 		public function solverDone(errMsg:String):void
 		{
-			//trace(errMsg);
+			//trace("solver done " + errMsg);
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();

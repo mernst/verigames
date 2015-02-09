@@ -24,6 +24,7 @@ package scenes.game
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
 			"../SampleWorlds/p_062629_00000000"//L1_V4"//p_002186_00001014"
+			
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

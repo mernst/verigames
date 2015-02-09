@@ -3,11 +3,11 @@ package scenes.splashscreen
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import flash.text.TextField;
 	import flash.utils.Timer;
-	
-	import dialogs.SimpleAlertDialog;
-	
+		
 	import display.NineSliceButton;
 	
 	import events.NavigationEvent;
@@ -31,7 +31,6 @@ package scenes.splashscreen
 		
 		//main screen buttons
 		protected var play_button:NineSliceButton;
-		protected var return_to_last_level_button:NineSliceButton;
 		protected var continue_tutorial_button:NineSliceButton;
 		
 		//These are visible in demo mode only (PipeJam3.RELEASE_BUILD == false)
@@ -74,22 +73,9 @@ package scenes.splashscreen
 			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
 			const TOP_BUTTON_Y:int = 205;
 			
-			if(PipeJam3.m_savedCurrentLevel.data.hasOwnProperty("levelInfoID") && PipeJam3.m_savedCurrentLevel.data.levelInfoID != null)
-			{
-				return_to_last_level_button = ButtonFactory.getInstance().createDefaultButton("Continue", 88, 32);
-				return_to_last_level_button.addEventListener(starling.events.Event.TRIGGERED, onReturnToLastTriggered);
-				return_to_last_level_button.x = BUTTON_CENTER_X - return_to_last_level_button.width / 2;
-				return_to_last_level_button.y = TOP_BUTTON_Y;
-				
-				play_button = ButtonFactory.getInstance().createDefaultButton(PipeJam3.TUTORIAL_DEMO ? "Play" : "New", 88, 32);
-			}
-			else
-				play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
+			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
-			if(return_to_last_level_button != null)
-				play_button.y = return_to_last_level_button.y + return_to_last_level_button.height + 5;
-			else
-				play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
+			play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
 			
 			if(!isTutorialDone())
 			{
@@ -101,8 +87,6 @@ package scenes.splashscreen
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
-				if(return_to_last_level_button)
-					m_mainMenu.addChild(return_to_last_level_button);
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 				if(continue_tutorial_button)
@@ -142,33 +126,11 @@ package scenes.splashscreen
 			}
 		}
 		
-
-		
-		protected function onReturnToLastTriggered(e:starling.events.Event):void
-		{
-			if(!PlayerValidation.playerLoggedIn)
-			{
-				var dialogText:String = "You must be logged in to continue play.";
-				var dialogWidth:Number = 160;
-				var dialogHeight:Number = 60;
-				var socialText:String = "";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
-				addChild(alert);
-			}
-			else
-				getSavedLevel(null);
-		}
-		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
-			if(!PlayerValidation.playerLoggedIn)
+			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
 			{
-				var dialogText:String = "You must be logged in to continue play.";
-				var dialogWidth:Number = 160;
-				var dialogHeight:Number = 60;
-				var socialText:String = "";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
-				addChild(alert);
+				navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/PipeJam3.html&client_id=" + PlayerValidation.client_id), "");
 			}
 			else
 				getNextRandomLevel(null);
@@ -189,36 +151,12 @@ package scenes.splashscreen
 			Starling.current.nativeStage.removeEventListener(flash.events.Event.ACTIVATE, onActivate);
 		}
 		
-		protected function onPlayerActivated(result:int, e:flash.events.Event):void
-		{
-			m_mainMenu.visible = false;
-			getNextPlayerLevel();
-		}
-		
 		//serve either the next tutorial level, or give the full level select screen if done
 		protected function getNextPlayerLevelDebug(e:starling.events.Event):void
 		{
 			//load tutorial file just in case
 			onTutorialButtonTriggered(null);
 		}
-		
-		//serve either the next tutorial level, or give the full level select screen if done
-		protected function getNextPlayerLevel():void
-		{
-			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
-			{
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
-				PipeJamGameScene.inTutorial = false;
-			}
-			else
-				loadTutorial();
-		}
-		
-		protected function getSavedLevel(evt:TimerEvent):void
-		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.GET_SAVED_LEVEL));
-		}
-		
 		
 		protected function getNextRandomLevel(evt:TimerEvent):void
 		{
@@ -233,8 +171,6 @@ package scenes.splashscreen
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
 		}
-		
-
 		
 		protected function isTutorialDone():Boolean
 		{
@@ -260,7 +196,6 @@ package scenes.splashscreen
 		{
 			PipeJamGameScene.inTutorial = true;
 			PipeJamGameScene.inDemo = false;
-			PipeJam3.initialLevelDisplay = false;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}

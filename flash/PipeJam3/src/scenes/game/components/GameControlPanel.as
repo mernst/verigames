@@ -28,6 +28,9 @@ package scenes.game.components
 	import scenes.game.display.Level;
 	import scenes.game.display.NodeSkin;
 	import scenes.game.display.World;
+	import networking.HTTPCookies;
+	import networking.PlayerValidation;
+	import networking.Achievements;
 	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -613,11 +616,63 @@ package scenes.game.components
 			var level:Level = World.m_world.active_level;
 			if(level != null && highScoreArray != null)
 			{
+				var htmlString:String = "";
+				var count:int = 1;
+				var scoreObjArray:Array = new Array;
+				for each(var scoreInstance:Object in highScoreArray)
+				{
+					var scoreObj:Object = new Object;
+					scoreObj['name'] = PlayerValidation.getUserName(scoreInstance[1], count);
+					scoreObj['score'] = scoreInstance[0];
+					scoreObj['assignmentsID'] = scoreInstance[2];
+					scoreObj['score_improvement'] = scoreInstance[3];
+					if(scoreInstance[1] == PlayerValidation.playerID)
+						scoreObj.activePlayer = 1;
+					else
+						scoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(scoreObj);
+					count++;
+					
+					if(scoreInstance[1] == PlayerValidation.playerID)
+						Achievements.checkAchievements(Achievements.CHECK_SCORE, scoreInstance[3]);
+				}
+				if(scoreObjArray.length > 0)
+				{
+					scoreObjArray.sort(orderHighScoresByScore);
+					var scoreStr:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr);
+					
+					scoreObjArray.sort(orderHighScoresByDifference);
+					var scoreStr1:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addScoreImprovementTotals(scoreStr1);
+				}
+				else
+				{
+					var nonScoreObj:Object = new Object;
+					nonScoreObj['name'] = 'Not played yet';
+					nonScoreObj['score'] = "";
+					nonScoreObj['assignmentsID'] = "";
+					nonScoreObj['score_improvement'] = "";
+					nonScoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(nonScoreObj);
+					var scoreStr2:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr2);
+					scoreObjArray[0]['name'] = "";
+					var scoreStr3:String = JSON.stringify(scoreObjArray)
+					HTTPCookies.addScoreImprovementTotals(scoreStr3);
+					
+				}
+				
 				var currentScore:int = level.currentScore;
 				var bestScore:int = level.bestScore;
 				var targetScore:int = level.getTargetScore();
 				var maxScoreShown:Number = Math.max(currentScore, targetScore);
-				var score:String =  highScoreArray[0].current_score;
+				var score:String = "0";
+				if(highScoreArray.length > 0)
+					score = highScoreArray[0].current_score;
+				
 				
 				if (!m_bestScoreLine) {
 					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, Constants.RED, Constants.RED, "High Score");
@@ -629,6 +684,42 @@ package scenes.game.components
 				m_scoreBarContainer.addChild(m_bestScoreLine);
 			}
 		}
+		
+		static public function orderHighScoresByScore(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['score']); 
+			var score2:int = parseInt(b['score']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
+		
+		static public function orderHighScoresByDifference(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['difference']); 
+			var score2:int = parseInt(b['difference']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{

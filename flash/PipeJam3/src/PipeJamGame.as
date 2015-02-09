@@ -1,14 +1,11 @@
 package
 {
-	import flash.display.StageDisplayState;
-	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import flash.external.ExternalInterface;
 	import flash.net.URLVariables;
 	import flash.system.System;
 	import flash.ui.Keyboard;
-	import flash.utils.Dictionary;
-	import flash.utils.Timer;
 	
 	import assets.AssetsAudio;
 	
@@ -17,9 +14,7 @@ package
 	import buildInfo.BuildInfo;
 	
 	import cgs.Cache.Cache;
-	
-	import dialogs.SimpleAlertDialog;
-	
+		
 	import display.GameObjectBatch;
 	import display.MusicButton;
 	import display.NineSliceBatch;
@@ -35,10 +30,8 @@ package
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.World;
 	import scenes.levelselectscene.LevelSelectScene;
-	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.SplashScreenScene;
 	
-	import starling.core.Starling;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
@@ -77,7 +70,6 @@ package
 			// load general assets
 			prepareAssets();
 			
-			scenesToCreate["LoadingScene"] = LoadingScreenScene;
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["LevelSelectScene"] = LevelSelectScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
@@ -100,36 +92,18 @@ package
 			
 			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
 			addEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
-			addEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
-
+			addEventListener(NavigationEvent.UPDATE_HIGH_SCORES, updateHighScoreList);
 		}	
 		
-		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
 		{						
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
-			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-			if(obj.hasOwnProperty("localfile"))
+			if (ExternalInterface.available)
 			{
-				m_fileName = obj["localfile"];
-				PipeJamGame.levelInfo = new Object;
-			}
-			else if(obj.hasOwnProperty("dbfile"))
-			{
-				m_fileName = obj["dbfile"];
-			}
-			if(obj.hasOwnProperty("tutorial"))
-			{
-				m_fileName = "tutorial";
-				PipeJamGame.levelInfo = new Object;
-				PipeJamGame.levelInfo.name = "foo";
-				PipeJamGame.levelInfo.id = obj["tutorial"];
-				PipeJamGame.levelInfo.tutorialLevelID = obj["tutorial"];
-				TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
-			}
-			else if (ExternalInterface.available) {
+				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+				
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
 				if(paramsStart != -1)
@@ -153,25 +127,34 @@ package
 						PipeJamGame.levelInfo.name = "foo";
 						PipeJamGame.levelInfo.id = vars.tutorial; 
 						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
-						TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
+					}
+					else if(vars.code)
+					{
+						var accessCode:String = vars.code;
+						PlayerValidation.initiateAccessTokenAccess(accessCode);
+					}
+					else if(vars.error)
+					{
+						PlayerValidation.accessToken = "denied";
 					}
 				}
 			}
 			
 			// use file if set in url, else create and show menu screen
-			if(m_fileName)
+			if(m_fileName || PlayerValidation.AuthorizationAttempted)
 			{ 
 				if(PipeJamGame.levelInfo) //local file
 					showScene("PipeJamGame");
-				else
+				else if(m_fileName)
 					loadLevelFromName(m_fileName);
+				else
+					onGetRandomLevel();
+					
 			}
-			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
-				showScene("LoadingScene");
 			else
 			{
 				PlayerValidation.playerID = PlayerValidation.playerIDForTesting;
-				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
+
 				showScene("SplashScreen");				
 			}
 			
@@ -196,31 +179,10 @@ package
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			removeEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
-			removeEventListener(NavigationEvent.GET_SAVED_LEVEL, onGetSavedLevel);
+			removeEventListener(NavigationEvent.UPDATE_HIGH_SCORES, updateHighScoreList);
 		}
 		
-		private function onGetSavedLevel(event:NavigationEvent):void
-		{
-			PipeJamGameScene.inTutorial = false;
-			PipeJamGame.levelInfo = GameFileHandler.findLevelObject(PipeJam3.m_savedCurrentLevel.data.levelInfoID);
-			
-			if(levelInfo)
-			{
-				//update assignmentsID if needed
-				PipeJamGameScene.levelContinued = true;
-				PipeJamGame.levelInfo.assignmentsID = PipeJam3.m_savedCurrentLevel.data.assignmentsID;
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
-			}
-			else //just alert user, and then get random level
-			{
-				var dialogText:String = "Previous level doesn't exist any\n more. Serving a random level.";
-				var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, 160, 80, "", onGetRandomLevel, 2);
-				addChild(alert);
-			}			
-		}	
-		
-		protected function onGetRandomLevel(event:NavigationEvent = null):void
+		public function onGetRandomLevel(event:NavigationEvent = null):void
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
@@ -234,13 +196,7 @@ package
 			}
 			else
 			{
-				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
-				//save info locally so we can retrieve next run
-				PipeJam3.m_savedCurrentLevel.data.levelInfoID = PipeJamGame.levelInfo.id;
-				PipeJam3.m_savedCurrentLevel.data.levelID = PipeJamGame.levelInfo.levelID;
-				PipeJam3.m_savedCurrentLevel.data.assignmentsID = PipeJamGame.levelInfo.assignmentsID;
-				PipeJam3.m_savedCurrentLevel.data.layoutID = PipeJamGame.levelInfo.layoutID;
-				PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
+				updateHighScoreList();
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			}
 		}
@@ -250,18 +206,27 @@ package
 			onGetRandomLevel();
 		}
 		
+		public function updateHighScoreList(event:starling.events.Event = null):void
+		{
+			if(!PipeJamGameScene.inTutorial)
+				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
+		}
+		
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
 		{
-			var highScoreArray:Array = new Array;
+			var highScoreArray:Array = new Array; 
+			PlayerValidation.countNeededUserNameRequests();
 			for each(var level:Object in list)
 			{
-				level.numericScore = int(level.current_score);
+				level.numericScore = int(level[0]);
+				level.playerID = level[1];
+				level.assignmentsID = level[2];
+				level.difference = int(level[3]);
 				highScoreArray.push(level);
+				PlayerValidation.playerInfoQueue.push(level.playerID);
 			}
-			
-			if(highScoreArray.length > 0)
-				highScoreArray.sortOn("numericScore", Array.DESCENDING | Array.NUMERIC);
-			
+			PlayerValidation.validationObject.getPlayerInfo();
+
 			PipeJamGame.levelInfo.highScores = highScoreArray;
 
 			if(World.m_world)

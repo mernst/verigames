@@ -1,9 +1,13 @@
 import com.mongodb.*;
 import com.mongodb.gridfs.*;
 
+import java.io.BufferedReader;
+import java.io.Console;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -31,28 +35,36 @@ public class MongoTestBed {
 
 
         //staging game level server
-        Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
+       //  Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
+       Mongo mongo = new Mongo( "api.paradox.verigames.org", 27017 );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
-        String dbName = "gameapi";
+        String dbName = "game2api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-        
-  //     listCollection(db, "CompletedTutorials");
-       HashMap<String, String> map = new HashMap();
-       map.put("playerID", "51e5b3460240288229000026");
-       map.put("levelID", "12");
-       listEntries(db, "CompletedTutorials", map, false);
-    //    listLog(db);
-    //     saveAndCleanLog(db, "930");
+         listEntries(db, "GameSolvedLevels");
+
+        listCollectionNames(db);
+ //      HashMap<String, String> map = new HashMap();
+//       map.put("playerID", "51e5b3460240288229000026");
+  //     map.put("levelID", "12");
+//       listEntries(db, "CompletedTutorials", map, false);
+     //    listLog(db);
+ //         saveAndCleanLog(db, "old");
         
 	    mongo.close();
+	}
+	
+	static void listEntries(DB db, String collectionName)
+	{
+		listEntries(db, collectionName, null, false);
 	}
 	
 	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)
 	{
 		BasicDBObject field = new BasicDBObject();
+		if(searchKeys != null)
 		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
 		    String key = entry.getKey();
 		    String value = entry.getValue();
@@ -189,8 +201,8 @@ public class MongoTestBed {
 //	    
 //	    System.out.println(xmlin.getId() + " " + gxlin.getId());
 	
-	   static void findObjects(DB db, String objectID, String collectionName)
-	    {
+	static void findObjects(DB db, String objectID, String collectionName)
+	{
 //	        Set<String> colls = db.getCollectionNames();
 //
 //	        int count = 0;
@@ -223,38 +235,38 @@ public class MongoTestBed {
 //		    	   writer.close();
 //	            }
 //	        }
-	    }
-	   
-	   static void listCollectionNames(DB db)
-	    {
-	        Set<String> colls = db.getCollectionNames();
-	        for (String s : colls) 
-	        {
-	        	System.out.println(s);
+    }
+   
+   static void listCollectionNames(DB db)
+    {
+        Set<String> colls = db.getCollectionNames();
+        for (String s : colls) 
+        {
+        	System.out.println(s);
+        }
+    }
+
+   static void findOneObject(DB db, String collectionName, String objectID)
+    {
+        DBCollection coll = db.getCollection(collectionName);
+	    ObjectId field = new ObjectId(objectID);
+	    DBObject obj = coll.findOne(field);
+	    System.out.println(obj);
+    }
+   
+   static void listCollection(DB db, String collectionName)
+    {
+        DBCollection coll = db.getCollection(collectionName);
+        DBCursor cursor = coll.find();
+	        try {
+	           while(cursor.hasNext()) {
+	        	   DBObject obj = cursor.next();
+	        	   System.out.println(obj);    
+	           }
+	        } finally {
+	           cursor.close();
 	        }
-	    }
-	
-	   static void findOneObject(DB db, String collectionName, String objectID)
-	    {
-	        DBCollection coll = db.getCollection(collectionName);
-		    ObjectId field = new ObjectId(objectID);
-		    DBObject obj = coll.findOne(field);
-		    System.out.println(obj);
-	    }
-	   
-	   static void listCollection(DB db, String collectionName)
-	    {
-            DBCollection coll = db.getCollection(collectionName);
-            DBCursor cursor = coll.find();
-    	        try {
-    	           while(cursor.hasNext()) {
-    	        	   DBObject obj = cursor.next();
-    	        	   System.out.println(obj);    
-    	           }
-    	        } finally {
-    	           cursor.close();
-    	        }
-	    }
+    }
     static void listNonLogCollections(DB db)
     {
         Set<String> colls = db.getCollectionNames();
@@ -383,6 +395,41 @@ public class MongoTestBed {
         {
         	System.out.println(objList.get(i).toString());
         }
+    }
+    
+    static void dropCollection(DB db, String collName)
+    {
+    	boolean answer = promptForOK("Are you sure you want to remove the collection " + collName + "?");
+        
+    	if(answer)
+    	{
+    		System.out.println("Removing collection " + collName);
+	    	if (db.collectionExists(collName)) {
+	    	    DBCollection myCollection = db.getCollection(collName);
+	    	    myCollection.drop();
+	    	}
+    	}
+    	else
+    		System.out.print("Not removing collection");
+    }
+    
+    static boolean promptForOK(String prompt)
+    {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print(prompt + " (y/n)");
+        String s = "";
+		try {
+			s = br.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+       if(s.indexOf('y') == -1)
+       {
+    	   return false;
+       }
+       
+       return true;
     }
 
 }

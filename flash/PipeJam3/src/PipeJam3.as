@@ -6,28 +6,26 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
-	import flash.net.SharedObject;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.utils.Timer;
 	
 	import assets.AssetsFont;
 	
-	import audio.AudioManager;
-	
 	import cgs.server.logging.data.QuestData;
 	
+	import dialogs.SimpleAlertDialog;
+	
+	import events.MenuEvent;
 	import events.NavigationEvent;
 	
 	import net.hires.debug.Stats;
 	
+	import networking.Achievements;
 	import networking.GameFileHandler;
+	import networking.HTTPCookies;
 	import networking.NetworkConnection;
-	
-	import scenes.splashscreen.SplashScreenScene;
 	
 	import server.LoggingServerInterface;
 	import server.ReplayController;
@@ -35,10 +33,7 @@ package
 	import starling.core.Starling;
 	
 	import system.VerigameServerConstants;
-	
-	//import mx.core.FlexGlobals;
-	//import spark.components.Application;
-	
+
 	[SWF(width = "960", height = "640", frameRate = "30", backgroundColor = "#ffffff")]
 	
 	public class PipeJam3 extends flash.display.Sprite 
@@ -47,16 +42,19 @@ package
 		
 		private var mStarling:Starling;
 		
-		/** Set to true if a build for the server */
+		/** At most one of these two should be true. They can both be false. */
 		public static var RELEASE_BUILD:Boolean = false;
-		public static var LOGGING_ON:Boolean = false;
-		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
-		public static var USE_LOCAL_PROXY:Boolean = false;
+		
+		/** turn on logging of game play. */
+		public static var LOGGING_ON:Boolean = false;
+		
+		/** to be hosted on the installer dvd. Changes location of scripts on server */
+		public static var INSTALL_DVD:Boolean = false;
+		
+		/** show frames per second, and memory usage. */
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
-		public static var PRODUCTION:Boolean = false;
-		public static var INSTALL_DVD:Boolean = false;
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
@@ -66,13 +64,7 @@ package
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var isFullScreen:Boolean = false;
-		
-		//We store 5 pieces of info, the level record ID, the three file IDs, and a dictionary of widget size changes since last save (or load).
-		//This is for restoring game play between sessions.
-		static public var m_savedCurrentLevel:SharedObject;
 
-		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
-		public static var initialLevelDisplay:Boolean = true; 
 		static public var pipeJam3:PipeJam3;
 		
 		private static var m_replayText:TextField = new TextField();
@@ -135,35 +127,37 @@ package
 			// this event is dispatched when stage3D is set up
 			mStarling.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated);
 			
-			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
 			if (ExternalInterface.available) {
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
 			
+			//initialize JS to ActionScript link
+			HTTPCookies.initialize();
+			
 			var fullURL:String = this.loaderInfo.url;
+
 			var protocolEndIndex:int = fullURL.indexOf('//');
 			var baseURLEndIndex:int = fullURL.indexOf('/', protocolEndIndex + 2);
 			NetworkConnection.baseURL = fullURL.substring(0, baseURLEndIndex);
 			if(NetworkConnection.baseURL.indexOf("http") != -1)
-			{
-				if(PipeJam3.PRODUCTION == true)
-					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/game/interop.php";
-				else if(PipeJam3.INSTALL_DVD == true)
+			{			
+				if(PipeJam3.INSTALL_DVD == true)
 					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/flowjam/scripts/interop.php";
+				else
+					NetworkConnection.productionInterop = NetworkConnection.baseURL + "/cgi-bin/interop.php";
 			}
 			else
 			{
-				NetworkConnection.productionInterop = "http://flowjam.verigames.com/game/interop.php";
-				NetworkConnection.baseURL = "http://flowjam.verigames.com";
+				NetworkConnection.productionInterop = "http://paradox.verigames.org/cgi-bin/interop.php";
+				NetworkConnection.baseURL = "http://paradox.verigames.org";
 			}
-			//initialize stuff
-			new NetworkConnection();
-			m_savedCurrentLevel = SharedObject.getLocal("FlowJamData");
-			GameFileHandler.retrieveLevels();
+			//get level info
+			GameFileHandler.retrieveLevelMetadata();
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
+			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);
 		}
 				
 		protected function changeFullScreen(event:flash.events.Event):void
@@ -207,6 +201,11 @@ package
 			
 			// Set the updated view port
 			Starling.current.viewPort = viewPort;
+		}
+		
+		public function onLoadLevel(event:NavigationEvent = null):void
+		{
+			loadLevelFromObjectID(event.info);
 		}
 		
 		//call from JavaScript to load specific level

@@ -24,7 +24,7 @@ def addLevelToDB(infile, description_file):
 	version = fileElem[0].getAttribute("version")
 	property = fileElem[0].getAttribute("property")
 
-	client = Connection('api.flowjam.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.game2api
 	description = None
 	print "finding files"
@@ -36,24 +36,22 @@ def addLevelToDB(infile, description_file):
 		if filename == infileroot:
 			description = file
 			break
-			
+			fddfsf
 	if description != None:
 		levelObj["levelID"] = str(addFile(db, infile+".zip"))
 		levelObj["assignmentsID"] = str(addFile(db, infile+"Assignments.zip"))
 		levelObj["layoutID"] = str(addFile(db, infile+"Layout.zip"))
 		
 		base_collection = db.BaseLevels
-		level_collection = db.Levels
+		level_collection = db.ActiveLevels
 		
-		levelObj["target_score"] = description.getAttribute("targetscore")
-		levelObj["conflicts"] = description.getAttribute("conflicts")
-		levelObj["widgets"] = description.getAttribute("widgets")
-		levelObj["links"] = description.getAttribute("links")
+		levelObj["target_score"] = description.getAttribute("score")
+		levelObj["conflicts"] = description.getAttribute("constraints")
 		levelObj["added_date"] = time.strftime("%c")
 		levelObj["last_update"] = str(int(time.mktime(datetime.datetime.now().utctimetuple())))
 		base_collection.save(levelObj)
 		level_collection.save(levelObj)
-		
+		print 'saved file'
 def addFile(db, fileName):
 	print fileName
 	fileobj = open(fileName, 'rb')

@@ -12,14 +12,14 @@ package system
 		
 		public static function test():void
 		{
-			run_solver([
+			run_solver(1, [
 				[10,  1, 2],
 				[10, -1, -2],
 				[10, 3, 4],
 				[10, -3, -4]
 			], [],update_callback, done_callback);
 			
-			run_solver([
+			run_solver(1, [
 				[76222, -1, 2],
 				[76222, 1, -2],
 				[41225, 2, 3],
@@ -32,7 +32,7 @@ package system
 				[51429, -5, -6]
 			], [],update_callback, done_callback);
 			
-			run_solver([
+			run_solver(1, [
 				[20, -1, 10, 3, 4, -5],
 				[30, -2, 3, 1],
 				[50, -1, 9],
@@ -46,11 +46,11 @@ package system
 			], [],update_callback, done_callback);
 		}
 		
-		public static function run_solver(clause_arrays:Array, initvars_Array:Array, updatecallback:Function, donecallback:Function):void
+		public static function run_solver(algorithm:int, clause_arrays:Array, initvars_Array:Array, updatecallback:Function, donecallback:Function):void
 		{
 			try
 			{
-				m_mgr.start(clause_arrays, initvars_Array, updatecallback, donecallback);
+				m_mgr.start(algorithm, clause_arrays, initvars_Array, updatecallback, donecallback);
 			} catch (e:Error) {
 			trace(e.message);
 			}

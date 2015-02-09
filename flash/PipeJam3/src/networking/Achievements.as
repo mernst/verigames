@@ -4,50 +4,45 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
-	import events.WidgetChangeEvent;
 	import events.MenuEvent;
 	
 	import scenes.game.display.World;
-	
-	import server.LoggingServerInterface;
-	
-	import starling.core.Starling;
-	import starling.display.Sprite;
-	
-	import utils.Base64Encoder;
-	import utils.XString;
 	
 	public class Achievements
 	{
 		public static var ADD_ACHIEVEMENT:int = 0;
 		public static var GET_ACHIEVEMENTS:int = 1;
 		
-		public static var TUTORIAL_FINISHED_ID:String = "5228b505cb99a6030800002a";
+		public static var CHECK_SCORE:String = "check_score";
+		
+		/*
+		to add an achievement:
+		Run this from the command line to enter into the verigame system (I usually do from the server):
+		
+			curl -X POST -H "Content-Type: application/json" -d '{"name" : "Test123", "type":"AWARD",
+			"description" : "some description", : 1}' http://api.paradox.verigames.org/api/achievement
+		
+		Get the ID, and create a new ID and STRING pair, using the ID returned from the above call.
+		
+		Add a new set to checkAchievements at the bottom of this file. 
+		
+		Call that routine where appropriate.
+		*/
+		
+		public static var TUTORIAL_FINISHED_ID:String = "54c96d07677ea4b705d666a3";
 		public static var TUTORIAL_FINISHED_STRING:String = "Achievement: You've Finished All the Tutorials!";
 
-		public static var CLICKED_ONE_ID:String = "52542b720a7470c228000029";
-		public static var CLICKED_ONE_STRING:String = "Achievement: You've Clicked A Widget!";
+		public static var SCORED_50_ID:String = "54c92bf8677ea4b705d665a5";
+		public static var SCORED_50_STRING:String = "Achievement: You've scored 50 points on one level!";
+		
+		public static var SCORED_250_ID:String = "54c96cb0677ea4b705d666a1";
+		public static var SCORED_250_STRING:String = "Achievement: You've scored 250 on one level!";
+		
+		public static var SCORED_1000_ID:String = "54c96cd4677ea4b705d666a2";
+		public static var SCORED_1000_STRING:String = "Achievement: You've scored 1000 on one level!";
 
-		public static var CLICKED_50_ID:String = "52542ba50a7470c22800002a";
-		public static var CLICKED_50_STRING:String = "Achievement: You've clicked 50 widgets in a single session!";
-
-		public static var CLASH_CLEARED_ID:String = "52542d5a0a7470c22800002e";
-		public static var CLASH_CLEARED_STRING:String = "Achievement: You removed a jam from a level!";
-
-		public static var BEAT_THE_TARGET_ID:String = "52542d8a0a7470c22800002f";
+		public static var BEAT_THE_TARGET_ID:String = "54c92def677ea4b705d665c0";
 		public static var BEAT_THE_TARGET_STRING:String = "Achievement: You beat the target score!";
-
-		public static var USED_A_LAYOUT_ID:String = "52542c860a7470c22800002d";
-		public static var USED_A_LAYOUT_STRING:String = "Achievement: You used someone else's layout when reporting a level!";
-		
-		public static var SHARED_A_LAYOUT_ID:String = "52542c360a7470c22800002c";
-		public static var SHARED_A_LAYOUT_STRING:String = "Achievement: You've shared a layout!";
-		
-		public static var SHARED_WITH_GROUP_ID:String = "52542dab0a7470c228000030";
-		public static var SHARED_WITH_GROUP_STRING:String = "Achievement: You shared a level with your group!";
-
-		public static var REPORTED_A_LEVEL_ID:String = "52542bec0a7470c22800002b";
-		public static var REPORTED_A_LEVEL_STRING:String = "Achievement: You've reported a level!";
 
 		
 		public var m_id:String;
@@ -63,11 +58,14 @@ package networking
 		
 		protected static function getAchievements(result:int, e:Event):void
 		{
-			var achievementObject:Object = JSON.parse(e.target.data);
-			currentAchievementList = new Dictionary;
-			for each(var achievement:Object in achievementObject.playerAchievements)
+			if(result != NetworkConnection.EVENT_ERROR)
 			{
-				currentAchievementList[achievement.achievementId] = achievement;
+				var achievementObject:Object = JSON.parse(e.target.data);
+				currentAchievementList = new Dictionary;
+				for each(var achievement:Object in achievementObject.playerAchievements)
+				{
+					currentAchievementList[achievement.achievementId] = achievement;
+				}
 			}
 		}
 		
@@ -101,7 +99,8 @@ package networking
 		
 		protected function postMessage(result:int, e:Event):void
 		{
-			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.ACHIEVEMENT_ADDED, this));
+			if(World.m_world)
+				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.ACHIEVEMENT_ADDED, this));
 		}
 		
 		public function sendMessage(type:int, callback:Function):void
@@ -115,10 +114,10 @@ package networking
 			switch(type)
 			{
 				case GET_ACHIEVEMENTS:
-					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'";
+					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/achievements/search/player?playerId=" + PlayerValidation.playerID +"'&data2='" + PlayerValidation.accessToken +"'";
 					break;
 				case ADD_ACHIEVEMENT:
-					url = NetworkConnection.productionInterop + "?function=passURLPOST2&data_id='/api/achievement/assign'";
+					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/achievement/assign'&data2='"+ PlayerValidation.accessToken + "'";
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
@@ -136,55 +135,65 @@ package networking
 			NetworkConnection.sendMessage(callback, data, url, URLRequestMethod.POST, "");
 		}
 		
-		//checks to see if we should award an achievement for the type, and if so, award it
-		public static function checkAchievements(type:String, value:int):void
+		public static function checkForFinishedTutorialAchievement():void
 		{
-			if(PlayerValidation.playerLoggedIn != true)
-				return;
+			var nextLevelQID:int = TutorialController.getTutorialController().getNextUnplayedTutorial();
+			if(nextLevelQID == 0)
+				Achievements.checkAchievements(Achievements.TUTORIAL_FINISHED_ID);
 			
-			if(type == WidgetChangeEvent.LEVEL_WIDGET_CHANGED)
+		}
+		
+		//checks to see if we should award an achievement for the type, and if so, award it
+		public static function checkAchievements(type:String, value:int = 0):Boolean
+		{
+			if(PlayerValidation.accessGranted() != true)
+				return false;
+			
+			if(type == CHECK_SCORE)
 			{
-				if(value == 1)
+				if(value >= 50)
 				{
-					if(isAchievementNew(CLICKED_ONE_ID))
-						addAchievement(CLICKED_ONE_ID, CLICKED_ONE_STRING);
+					if(isAchievementNew(SCORED_50_ID))
+					{
+						addAchievement(SCORED_50_ID, SCORED_50_STRING);
+						return true;
+					}
 				}
-				else if(value == 50)
+				if(value >= 250)
 				{
-					if(isAchievementNew(CLICKED_50_ID))
-						addAchievement(CLICKED_50_ID, CLICKED_50_STRING);
+					if(isAchievementNew(SCORED_250_ID))
+					{
+						addAchievement(SCORED_250_ID, SCORED_250_STRING);
+						return true;
+					}
 				}
-			}
-			else if (type == CLASH_CLEARED_ID)
-			{
-				if(isAchievementNew(CLASH_CLEARED_ID))
-					addAchievement(CLASH_CLEARED_ID, CLASH_CLEARED_STRING);
+				if(value >= 1000)
+				{
+					if(isAchievementNew(SCORED_1000_ID))
+					{
+						addAchievement(SCORED_1000_ID, SCORED_1000_STRING);
+						return true;
+					}
+				}
 			}
 			else if (type == BEAT_THE_TARGET_ID)
 			{
 				if(isAchievementNew(BEAT_THE_TARGET_ID))
+				{
 					addAchievement(BEAT_THE_TARGET_ID, BEAT_THE_TARGET_STRING);
+					return true;
+				}
 			}
-			else if (type == MenuEvent.LEVEL_SUBMITTED)
+			else if (type == TUTORIAL_FINISHED_ID)
 			{
-				if(isAchievementNew(REPORTED_A_LEVEL_ID))
-					addAchievement(REPORTED_A_LEVEL_ID, REPORTED_A_LEVEL_STRING);
+				if(isAchievementNew(TUTORIAL_FINISHED_ID))
+				{
+					addAchievement(TUTORIAL_FINISHED_ID, TUTORIAL_FINISHED_STRING);
+					return true;
+				}
 			}
-			else if (type == MenuEvent.SET_NEW_LAYOUT)
-			{
-				if(isAchievementNew(USED_A_LAYOUT_ID))
-					addAchievement(USED_A_LAYOUT_ID, USED_A_LAYOUT_STRING);
-			}
-			else if (type == MenuEvent.SAVE_LAYOUT)
-			{
-				if(isAchievementNew(SHARED_A_LAYOUT_ID))
-					addAchievement(SHARED_A_LAYOUT_ID, SHARED_A_LAYOUT_STRING);
-			}
-			else if (type == SHARED_WITH_GROUP_ID)
-			{
-				if(isAchievementNew(SHARED_WITH_GROUP_ID))
-					addAchievement(SHARED_WITH_GROUP_ID, SHARED_WITH_GROUP_STRING);
-			}
+			
+			return false;
 			
 		}
 	}

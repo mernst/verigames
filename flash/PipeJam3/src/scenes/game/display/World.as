@@ -18,13 +18,12 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	
 	import constraints.ConstraintGraph;
 	import constraints.events.ErrorEvent;
-	
-	import dialogs.InGameMenuDialog;
-	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
-	import dialogs.SubmitLevelDialog;
 	
 	import display.SoundButton;
 	import display.TextBubble;
@@ -51,14 +50,11 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.components.SideControlPanel;
 	
-	import starling.animation.Juggler;
-	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
-	import starling.display.MovieClip;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
@@ -66,7 +62,6 @@ package scenes.game.display
 	import starling.events.KeyboardEvent;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.ColorMatrixFilter;
 	import starling.textures.Texture;
 	
 	import system.VerigameServerConstants;
@@ -80,13 +75,10 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		public var sideControlPanel:SideControlPanel;
 		protected var miniMap:MiniMap;
-		protected var inGameMenuBox:InGameMenuDialog;
 		protected var m_backgroundLayer:Sprite;
 		protected var m_foregroundLayer:Sprite;
 		protected var m_splashLayer:Sprite;
-		
-		protected var shareDialog:SaveDialog;
-		
+				
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		
@@ -121,6 +113,8 @@ package scenes.game.display
 		static protected var m_numWidgetsClicked:int = 0;
 		
 		static public var altKeyDown:Boolean;
+		
+		public var updateTimer:Timer;
 
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -390,23 +384,14 @@ package scenes.game.display
 		
 		private function initEventListeners():void {
 			trace("Initializing event listeners...");
-			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
-			
-			addEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
-			
-			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			addEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -438,6 +423,17 @@ package scenes.game.display
 			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
 			
 			trace("Done initializing event listeners.");
+		}
+		
+		public function loadAssignmentFile(assignmentID:String):void
+		{
+			GameFileHandler.loadFile(assignmentsFileLoadedCallback, GameFileHandler.USE_DATABASE,  GameFileHandler.getFileURL +"&data_id=\"" + assignmentID +"\"");
+		}
+		
+		public function assignmentsFileLoadedCallback(obj:Object):void
+		{
+			this.active_level.loadAssignmentsConfiguration(obj);
+			active_level.levelGraph.startingScore = active_level.currentScore;
 		}
 		
 		private function onSolveSelection(event:MenuEvent):void
@@ -522,6 +518,31 @@ package scenes.game.display
 			trace("Playing music...");
 		}
 		
+		private function initUpdateTimer():void {
+			//once every ten seconds, maybe?
+			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
+			{
+				updateTimer = new Timer(10000, 0);
+				updateTimer.addEventListener(TimerEvent.TIMER, updateHighScores);
+				updateTimer.start();
+			}
+		}
+		
+		private function updateHighScores(event:TimerEvent):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES, null));
+		}
+		
+		private function removeUpdateTimer():void
+		{
+			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
+			{
+				if(updateTimer)
+					updateTimer.stop();
+			}
+			
+		}
+		
 		public function changeFullScreen(newWidth:Number, newHeight:Number):void
 		{
 			//backgrounds get scaled by the AssetInterface content scale factor, so change scale before setting a new background
@@ -544,79 +565,6 @@ package scenes.game.display
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
-			return;
-			
-			if (!gameControlPanel) return;
-			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
-			var juggler:Juggler = Starling.juggler;
-			var animateUp:Boolean = false;
-			if(inGameMenuBox == null)
-			{
-				inGameMenuBox = new InGameMenuDialog();
-				inGameMenuBox.x = 0;
-				inGameMenuBox.y = bottomMenuY;
-				var childIndex:int = numChildren - 1;
-				if (gameControlPanel && gameControlPanel.parent == this) {
-					childIndex = getChildIndex(gameControlPanel);
-					trace("childindex:" + childIndex);
-				} else {
-					trace("not");
-				}
-				addChildAt(inGameMenuBox, childIndex);
-				//add clip rect so box seems to slide up out of the gameControlPanel
-				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				animateUp = true;
-			}
-			else if (inGameMenuBox.visible && !inGameMenuBox.animatingDown)
-				inGameMenuBox.onBackToGameButtonTriggered();
-			else // animate up
-			{
-				animateUp = true;
-			}
-			if (animateUp) {
-				if (!inGameMenuBox.visible) {
-					inGameMenuBox.y = bottomMenuY;
-					inGameMenuBox.visible = true;
-				}
-				juggler.removeTweens(inGameMenuBox);
-				inGameMenuBox.animatingDown = false;
-				inGameMenuBox.animatingUp = true;
-				juggler.tween(inGameMenuBox, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					y: bottomMenuY - inGameMenuBox.height, // -> tween.animate("x", 50)
-					onComplete: function():void { if (inGameMenuBox) inGameMenuBox.animatingUp = false; }
-				});
-			}
-			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-		}
-		
-		public function onSaveLayoutFile(event:MenuEvent):void
-		{
-			if(active_level != null) {
-				active_level.onSaveLayoutFile(event);
-				if (PipeJam3.logging) {
-					var details:Object = new Object();
-					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.name;
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
-				}
-			}
-		}
-		
-		protected function postSaveDialog(event:MenuEvent):void
-		{
-			if(shareDialog == null)
-			{
-				shareDialog = new SaveDialog(150, 100);
-			}
-			
-			addChild(shareDialog);
-		}
-		
-		protected function postSubmitDialog(event:MenuEvent):void
-		{
-			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(150, 120);
-			addChild(submitLevelDialog);
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -644,54 +592,6 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
-			
-			if(PipeJamGame.levelInfo.shareWithGroup == 1)
-			{
-				Achievements.checkAchievements(Achievements.SHARED_WITH_GROUP_ID, 0);
-			}
-		}
-		
-		public function onLevelUploadSuccess(event:MenuEvent):void
-		{
-			var dialogText:String;
-			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 80;
-			var socialText:String = "";
-			var numLinesInText:int = 1;
-			var callbackFunction:Function = null;
-			
-			if(event.type == MenuEvent.LEVEL_SAVED)
-			{
-				dialogText = "Level Saved.";
-			}
-			else if(event.type == MenuEvent.LAYOUT_SAVED)
-			{
-				dialogText = "Layout Saved.";
-				callbackFunction = reportSavedLayoutAchievement;
-			}
-			else //MenuEvent.LEVEL_SUBMITTED
-			{
-				dialogText = "Level Submitted!";
-			//	socialText = "I just finished a level!"; wait till social integration library
-			//	dialogHeight = 130;
-				callbackFunction = reportSubmitAchievement;
-			}
-			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, callbackFunction, numLinesInText);
-			addChild(alert);
-		}
-		
-		public function reportSubmitAchievement():void
-		{
-			Achievements.checkAchievements(MenuEvent.LEVEL_SUBMITTED, 0);
-			
-			if(PipeJamGame.levelInfo.layoutUpdated)
-				Achievements.checkAchievements(MenuEvent.SET_NEW_LAYOUT, 0);
-		}
-		
-		public function reportSavedLayoutAchievement():void
-		{
-			Achievements.checkAchievements(MenuEvent.SAVE_LAYOUT, 0);
 		}
 		
 		public function achievementAdded(event:MenuEvent):void
@@ -709,12 +609,6 @@ package scenes.game.display
 			else
 				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
 			addChild(alert);
-		}
-		
-		private function checkClashClearedEvent():void
-		{
-			if(active_level && active_level.m_targetScore != 0)
-				Achievements.checkAchievements(Achievements.CLASH_CLEARED_ID, 0);
 		}
 		
 		private function loadBestScore(event:MenuEvent):void
@@ -847,10 +741,6 @@ package scenes.game.display
 			
 			if(!PipeJamGameScene.inTutorial && evt)
 			{
-				m_numWidgetsClicked++;
-				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
-					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
-				
 				//beat the target score?
 				if(newScore  > active_level.getTargetScore())
 				{
@@ -873,7 +763,6 @@ package scenes.game.display
 			var level:Level = active_level;
 			//forget that which we knew
 			PipeJamGameScene.levelContinued = false;
-			PipeJam3.m_savedCurrentLevel.data.assignmentUpdates = new Object();
 			var callback:Function =
 				function():void
 				{
@@ -884,7 +773,7 @@ package scenes.game.display
 					}
 				};
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
@@ -893,7 +782,7 @@ package scenes.game.display
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
-				if (evt.menuShowing && active_level) {
+				if (active_level) {
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
 					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
@@ -913,9 +802,7 @@ package scenes.game.display
 				//if this is the first time we've completed these, post the achievement, else just move on
 				if(tutorialsDone)
 				{
-					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID) && PlayerValidation.playerLoggedIn)
-						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED_ID, Achievements.TUTORIAL_FINISHED_STRING);
-					else
+					if(!Achievements.checkAchievements(Achievements.TUTORIAL_FINISHED_ID))
 						switchToLevelSelect();
 					return;
 				}
@@ -950,7 +837,7 @@ package scenes.game.display
 				{
 					selectLevel(levels[m_currentLevelNumber], m_currentLevelNumber == prevLevelNumber);
 				};
-			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 		}
 		
 		public function onErrorAdded(event:ErrorEvent):void
@@ -1186,9 +1073,7 @@ package scenes.game.display
 			if (miniMap) miniMap.setLevel(active_level);
 			showVisibleBrushes();
 			showCurrentBrush();
-		
-			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
-			 
+					
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
 		}
@@ -1261,23 +1146,14 @@ package scenes.game.display
 				m_activeToolTip.removeFromParent(true);
 				m_activeToolTip = null;
 			}
-			
-			removeEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
-			
+						
 			removeEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
-			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
-			
-			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			removeEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
-			
+
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
-			removeEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
-			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
+
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
@@ -1299,6 +1175,8 @@ package scenes.game.display
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			
+			removeUpdateTimer();
+			
 			if(active_level)
 				removeChild(active_level, true);
 			m_worldObj = null;
@@ -1314,14 +1192,6 @@ package scenes.game.display
 				if (levelName == name) return levels[i];
 			}
 			return null;
-		}
-		
-		public function hasDialogOpen():Boolean
-		{
-			if(inGameMenuBox && inGameMenuBox.visible)
-				return true;
-			else
-				return false;
 		}
 		
 		
@@ -1366,7 +1236,7 @@ package scenes.game.display
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
 				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
-		
+			
 		public function addSoundButton(m_sfxButton:SoundButton):void
 		{
 			gameControlPanel.addSoundButton(m_sfxButton);

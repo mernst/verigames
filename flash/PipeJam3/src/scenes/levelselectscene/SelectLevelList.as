@@ -1,29 +1,13 @@
 package scenes.levelselectscene
 {
-	import assets.AssetInterface;
 	import assets.AssetsFont;
-	
-	
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
-	import networking.GameFileHandler;
-	
-	import scenes.BaseComponent;
-	import dialogs.SimpleTwoButtonDialog;
-	
+
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.events.Event;
-	import starling.events.Touch;
+
 	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
-	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
-	
-	import utils.XMath;
-	import display.BasicButton;
+
 	import display.NineSliceBatch;
 	import display.SelectList;
 	
@@ -72,51 +56,6 @@ package scenes.levelselectscene
 			}
 			
 			return st;
-		}
-		
-		protected override function reallyDeleteSavedGame(answer:int):void
-		{
-			if(answer == 1)
-			{
-				//remove button from dialog
-				var index:int = buttonPaneArray.indexOf(currentDeleteTarget);
-				if(index != -1)
-				{
-					buttonPaneArray.splice(index, 1);
-					
-					buttonPane.removeChildren();
-					
-					var xpos:Number = storedWidth - scrollbarBackground.width;
-					var widthSpacing:Number = xpos/2;
-					var heightSpacing:Number = 60;
-					
-					for(var ii:int = 0; ii<buttonPaneArray.length; ii++)
-					{
-						buttonPaneArray[ii].x = (widthSpacing) * (ii%2);
-						buttonPaneArray[ii].y = Math.floor(ii/2) * (heightSpacing);
-						buttonPane.addChild(buttonPaneArray[ii]);
-					}
-					
-					if(buttonPaneArray.length > 0)
-					{
-						currentSelection = buttonPaneArray[0];
-						currentSelection.setStatePosition(BasicButton.DOWN_STATE);
-					}
-					else
-					{
-						currentSelection = null;
-					}
-					
-					if(buttonPane.height<initialHeight)
-						thumb.enabled = false;
-					else
-						thumb.enabled = true;
-				
-					//and then remove level
-					var levelID:String = currentDeleteTarget.data._id.$oid;
-					GameFileHandler.deleteSavedLevel(levelID);
-				}
-			}
 		}
 	}
 }

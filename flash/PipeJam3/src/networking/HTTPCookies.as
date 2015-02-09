@@ -2,8 +2,28 @@ package networking
 {
 	import flash.external.ExternalInterface;
 	
+	import events.NavigationEvent;
+	
+	import scenes.game.display.World;
+	
 	public class HTTPCookies
 	{
+		public static function initialize():void
+		{
+			ExternalInterface.addCallback("loadAssignmentFile", loadAssignmentFile);
+			ExternalInterface.addCallback("loadLevel", loadLevel);
+		}
+		
+		public static function loadAssignmentFile(assignmentFileID:String):void
+		{
+			World.m_world.loadAssignmentFile(assignmentFileID);
+		}
+		
+		public static function loadLevel(levelID:String):void
+		{
+			World.m_world.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame", levelID));
+		}
+		
 		public static function getCookie(key:String):*
 		{
 			if (!ExternalInterface.available) {
@@ -26,6 +46,22 @@ package networking
 				return;
 			}
 			ExternalInterface.call("alert", str);
+		}
+		
+		public static function addHighScores(str:String):void
+		{
+			if (!ExternalInterface.available) {
+				return;
+			}
+			ExternalInterface.call("addHighScores", str);
+		}
+		
+		public static function addScoreImprovementTotals(str:String):void
+		{
+			if (!ExternalInterface.available) {
+				return;
+			}
+			ExternalInterface.call("addScoreImprovementTotals", str);
 		}
 		
 		public static function callGetEncodedCookie():void
