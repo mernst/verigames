@@ -22,6 +22,8 @@ package scenes.game.display
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		
+		public var currentGroupDepth:uint = 0;
+		
 		public static const LINE_THICKNESS:Number = 5;
 		
 		public function Edge(_constraintId:String, _graphConstraint:Constraint, _fromNode:Node, _toNode:Node)
@@ -30,17 +32,6 @@ package scenes.game.display
 			graphConstraint = _graphConstraint;
 			fromNode = _fromNode;
 			toNode = _toNode;
-		}
-		
-		public function createEdgeSkin():EdgeSkin
-		{
-			if(!skin)
-			{					
-				createSkin();
-			}
-			isDirty = false;
-			
-			return skin;
 		}
 		
 		public function updateEdge(currentHoverNode:Node = null):void
@@ -58,23 +49,40 @@ package scenes.game.display
 		//need to keep track of lines
 		public function createSkin():void
 		{
-			var p1:Point = fromNode.centerPoint;
-			var p2:Point = toNode.centerPoint;
-
-			//a^2 + b^2 = c^2
-			var a:Number = (p2.x - p1.x) * (p2.x - p1.x);
-			var b:Number = (p2.y - p1.y) * (p2.y - p1.y);
-			var hyp:Number = Math.sqrt(a+b);
-			
-			//get theta
-			//Sin(x) = opp/hyp
-			var theta:Number = Math.asin( (p2.y-p1.y) / hyp );  // radians
-			
-			//draw the quad flat, rotate later
-			skin = new EdgeSkin(hyp, Edge.LINE_THICKNESS, this);
-			
-			setLineColor(null);
-			rotateLine(p1, p2, theta);
+			if(!skin)
+			{
+				var fromGroup:String = fromNode.graphConstraintSide.getGroupAt(currentGroupDepth);
+				var toGroup:String = toNode.graphConstraintSide.getGroupAt(currentGroupDepth);
+				
+				var fromGroupNode:Node = (fromGroup == "") ? fromNode : World.m_world.active_level.nodeLayoutObjs[fromGroup] as Node;
+				var toGroupNode:Node = (toGroup == "") ? toNode : World.m_world.active_level.nodeLayoutObjs[toGroup] as Node;
+				
+				if (fromGroupNode == toGroupNode)
+				{
+					if (skin) skin.removeFromParent(true);
+					skin = null;
+					isDirty = false;
+					return;
+				}
+				var p1:Point = fromGroupNode.centerPoint;
+				var p2:Point = toGroupNode.centerPoint;
+				
+				//a^2 + b^2 = c^2
+				var a:Number = (p2.x - p1.x) * (p2.x - p1.x);
+				var b:Number = (p2.y - p1.y) * (p2.y - p1.y);
+				var hyp:Number = Math.sqrt(a+b);
+				
+				//get theta
+				//Sin(x) = opp/hyp
+				var theta:Number = Math.asin( (p2.y-p1.y) / hyp );  // radians
+				
+				//draw the quad flat, rotate later
+				skin = new EdgeSkin(hyp, Edge.LINE_THICKNESS, this);
+				
+				setLineColor(null);
+				rotateLine(p1, p2, theta);
+			}
+			isDirty = false;
 		}
 		
 		protected function rotateLine(p1:Point, p2:Point, theta:Number):void
