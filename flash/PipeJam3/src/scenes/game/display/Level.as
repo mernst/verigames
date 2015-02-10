@@ -99,7 +99,6 @@ package scenes.game.display
 		protected var m_edgesContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
-		public var numGrids:int = 1;
 		protected var m_backgroundImage:Image;
 		protected var m_levelStartTime:Number;
 		
@@ -112,7 +111,16 @@ package scenes.game.display
 		public var targetScoreReached:Boolean;
 		public var original_level_name:String;
 		
-		protected var gridSystemDict:Dictionary;
+		public var currentGroupDepth:int = -1;
+		public var levelLayoutScale:Number = 1.0;
+		private var m_nodeLayer:Sprite;
+		private var m_edgesLayer:Sprite;
+		private var m_conflictsLayer:Sprite;
+		private var m_itemsToRemove:Vector.<GridChild> = new Vector.<GridChild>();
+		private var m_itemsToAdd:Vector.<GridChild> = new Vector.<GridChild>();
+		private var m_itemsOnScreen:Vector.<GridChild> = new Vector.<GridChild>();
+		private var m_groupGrids:Vector.<GroupGrid>
+		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
 		
 		static public var GRID_SIZE:int = 1000;
 		
@@ -189,7 +197,6 @@ package scenes.game.display
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
-			gridSystemDict = new Dictionary;
 			NodeSkin.InitializeSkins();
 		}
 		
@@ -386,16 +393,7 @@ package scenes.game.display
 		}
 		
 		// REMOVE GRIDS VARS:
-		public var currentGroupDepth:int = -1;
-		public var levelLayoutScale:Number = 1.0;
-		private var m_nodeLayer:Sprite;
-		private var m_edgesLayer:Sprite;
-		private var m_conflictsLayer:Sprite;
-		private var m_itemsToRemove:Vector.<GridChild> = new Vector.<GridChild>();
-		private var m_itemsToAdd:Vector.<GridChild> = new Vector.<GridChild>();
-		private var m_itemsOnScreen:Vector.<GridChild> = new Vector.<GridChild>();
-		private var m_groupGrids:Vector.<GroupGrid>
-		private static const ITEMS_PER_FRAME:uint = 1000;
+		
 		////
 		public function draw():void
 		{
@@ -448,10 +446,8 @@ package scenes.game.display
 				for each(gameEdgeId in itemToAdd.outgoingEdgeIds)
 				{
 					edge = edgeLayoutObjs[gameEdgeId];
-					edge.createSkin(); // TODO: edge drawing needs to be repaired with level scaling
+					edge.createSkin();
 					if (edge.skin) {
-						edge.skin.x = itemToAdd.centerPoint.x;
-						edge.skin.y = itemToAdd.centerPoint.y;
 						m_edgesLayer.addChild(edge.skin);
 						touchedEdgeLayer = true;
 					}
@@ -469,9 +465,6 @@ package scenes.game.display
 					itemToAdd.createSkin();
 					if (itemToAdd.skin)
 					{
-						//itemToAdd.skin.scaleX = itemToAdd.skin.scaleY = levelLayoutScale;
-						itemToAdd.skin.x = itemToAdd.centerPoint.x;
-						itemToAdd.skin.y = itemToAdd.centerPoint.y;
 						m_nodeLayer.addChild(itemToAdd.skin);
 						touchedNodeLayer = true;
 					}
@@ -485,42 +478,6 @@ package scenes.game.display
 			}
 			if (touchedNodeLayer) m_nodeLayer.flatten();
 		}
-		
-		private function checkNodeEdgesForRedraw(node:Node):void
-		{
-			for each(var gameEdgeId:String in node.connectedEdgeIds)
-			{
-				var edge:Edge = edgeLayoutObjs[gameEdgeId];
-				if (edge.currentGroupDepth != currentGroupDepth)
-				{
-					edge.currentGroupDepth = currentGroupDepth;
-					if (edge.skin) edge.createSkin(); // move edge endpoints if needed due to grouping
-					edge.isDirty = true;
-				}
-				if (edge.skin && edge.isDirty)
-				{
-					edge.updateEdge(node);
-					if(edge.skin.parent != m_edgesLayer)
-					{
-						if(edge.skin.parent != null)
-						{
-							// TODO xxx move skin x,y 
-							m_edgesLayer.addChild(edge.skin);
-						}
-					}
-				}
-				if (!edge.skin)
-				{
-					edge.createSkin();
-					if (edge.skin)
-					{
-						// TODO xxx adjust skin x/y?
-						m_edgesLayer.addChild(edge.skin);
-					}
-				}
-			}
-		}
-		/////////
 		
 		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
 		{
@@ -548,7 +505,7 @@ package scenes.game.display
 				if (prevNode.skin) prevNode.skin.disableSkin();
 			}
 			
-			var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5 * levelLayoutScale, layoutY - GridSquare.SKIN_DIAMETER * .5 * levelLayoutScale, GridSquare.SKIN_DIAMETER * levelLayoutScale, GridSquare.SKIN_DIAMETER * levelLayoutScale);
+			var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5, layoutY - GridSquare.SKIN_DIAMETER * .5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
 			if (gridChildId.substr(0, 3) == "var") {
 				var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
 				gridChild = new VariableNode(gridChildId, nodeBB, graphVar);
@@ -628,18 +585,10 @@ package scenes.game.display
 				m_groupGrids.push(groupGrid);
 			}
 			
-			var leftGridNumber:int = Math.floor(m_boundingBox.left/GRID_SIZE);
-			var rightGridNumber:int = Math.floor(m_boundingBox.right/GRID_SIZE);
-			var topGridNumber:int = Math.floor(m_boundingBox.top/GRID_SIZE);
-			var bottomGridNumber:int = Math.floor(m_boundingBox.bottom/GRID_SIZE);
-			var gridWidth:int = Math.max(1, rightGridNumber - leftGridNumber);
-			var gridHeight:int = Math.max(1, bottomGridNumber - topGridNumber);
-			numGrids = gridWidth * gridHeight;
-			
 			for (var varId:String in m_levelLayoutObj["layout"]["vars"])
 			{
-				var thisNodeLayout:Object = m_levelLayoutObj["layout"]["vars"][varId];
-				gridChild = createGridChildFromLayoutObj(varId, thisNodeLayout, false);
+				var nodeLayout:Object = m_levelLayoutObj["layout"]["vars"][varId];
+				gridChild = createGridChildFromLayoutObj(varId, nodeLayout, false);
 				if (gridChild == null) continue;
 				n++;
 			}
@@ -762,11 +711,6 @@ package scenes.game.display
 		
 		public function updateLevelObj():void
 		{
-			var worldParent:DisplayObject = parent;
-			// TODO: Circular dependency
-			while(worldParent && !(worldParent is World))
-				worldParent = worldParent.parent;
-			
 			updateAssignmentsObj();
 		}
 		

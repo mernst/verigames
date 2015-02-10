@@ -41,10 +41,10 @@ package scenes.game.display
 			newSkin.setNode(this);
 			newSkin.draw();
 			skin = newSkin;
-			//
-			//skin.x = centerPoint.x - gridOffset.x - 0.5 * skin.width;
-			//skin.y = centerPoint.y - gridOffset.y - 0.5 * skin.height;
-			//
+			
+			skin.x = centerPoint.x - 0.5 * skin.width;
+			skin.y = centerPoint.y - 0.5 * skin.height;
+			
 			setDirty(true);
 		}
 		
