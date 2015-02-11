@@ -28,50 +28,12 @@ package scenes.game.display
 
 	public class GridSquare
 	{
-		public var id:String;
-		
-		protected var conflictBackgroundDrawingBoard:Sprite;
-		protected var nodeDrawingBoard:Sprite;
-		protected var edgeDrawingBoard:Sprite;
-		protected var nodeList:Vector.<Node>;
-		// TODO: remove edgeList
-		protected var edgeList:Vector.<Edge>;
-		public var NumNodesSelected:int = 0;
-		public var visited:Boolean = false;
-		public var isDirty:Boolean = true;
-		protected var isActivated:Boolean = false;
-		
-		protected var gridXOffset:Number;
-		protected var gridYOffset:Number;
-		
-		public var m_errorProps:PropDictionary;
-		
-		public var componentXDisplacement:Number;
-		public var componentYDisplacement:Number;
-		
-		private static const LINE_THICKNESS:Number = 5;
-		static public const SKIN_DIAMETER:Number = 20;
-		
-		private static const DISABLE_DRAWING_BOARDS:Boolean = true;
-		
-		private var m_nodeScaleX:Number = 1;
-		private var m_nodeScaleY:Number = 1;
-		
-		private var m_bb:Rectangle;
-		
-		public var currentGroupDepth:uint = 20;
 		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
 		{
-			id = x+"_"+y;
-			gridXOffset = x;
-			gridYOffset = y;
-			componentXDisplacement = gridXOffset*Level.GRID_SIZE;
-			componentYDisplacement = gridYOffset*Level.GRID_SIZE;
-			nodeList = new Vector.<Node>();
-			edgeList = new Vector.<Edge>;
+			
 		}
-		
+		/*
 		protected function onTouch(event:TouchEvent):void
 		{
 			if (!DISABLE_DRAWING_BOARDS) return;
@@ -241,9 +203,7 @@ package scenes.game.display
 			}
 		}
 		
-		/*
-		 * Used to show which GridSquare is being referenced for debug
-		 */
+		//Used to show which GridSquare is being referenced for debug
 		private var debugQ:Quad;
 		public function showDebugQuad():void
 		{
@@ -586,5 +546,6 @@ package scenes.game.display
 			else
 				return false;
 		}
+		*/
 	}
 }

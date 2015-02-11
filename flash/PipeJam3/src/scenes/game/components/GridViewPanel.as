@@ -960,7 +960,7 @@ package scenes.game.components
 			}
 			
 			inactiveContent.removeChildren();
-			inactiveContent.addChild(m_currentLevel.inactiveLayer);
+			//inactiveContent.addChild(m_currentLevel.inactiveLayer); // deprecated
 			
 			// Remove old error text containers and place new ones
 			for (var errorEdgeId:String in m_errorTextBubbles) {

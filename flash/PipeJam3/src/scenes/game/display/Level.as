@@ -64,7 +64,7 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelGraph:ConstraintGraph;
 		
-		public var selectedNodes:Vector.<GridChild> = new Vector.<GridChild>();
+		public var selectedNodes:Vector.<Node> = new Vector.<Node>();
 		/** used by solver to keep track of which nodes map to which constraint values, and visa versa */
 		protected var nodeIDToConstraintsTwoWayMap:Dictionary;
 		
@@ -89,15 +89,6 @@ package scenes.game.display
 		
 		protected var m_hidingErrorText:Boolean = false;
 		
-		protected var m_nodesInactiveContainer:Sprite = new Sprite();
-		protected var m_errorInactiveContainer:Sprite = new Sprite();
-		protected var m_edgesInactiveContainer:Sprite = new Sprite();
-		public var inactiveLayer:Sprite = new Sprite();
-		
-		protected var m_nodesContainer:Sprite = new Sprite();
-		protected var m_errorContainer:Sprite = new Sprite();
-		protected var m_edgesContainer:Sprite = new Sprite();
-		
 		public var m_boundingBox:Rectangle = new Rectangle(0, 0, 1, 1);
 		protected var m_backgroundImage:Image;
 		protected var m_levelStartTime:Number;
@@ -116,13 +107,11 @@ package scenes.game.display
 		private var m_nodeLayer:Sprite;
 		private var m_edgesLayer:Sprite;
 		private var m_conflictsLayer:Sprite;
-		private var m_itemsToRemove:Vector.<GridChild> = new Vector.<GridChild>();
-		private var m_itemsToAdd:Vector.<GridChild> = new Vector.<GridChild>();
-		private var m_itemsOnScreen:Vector.<GridChild> = new Vector.<GridChild>();
+		private var m_nodesToRemove:Vector.<Node> = new Vector.<Node>();
+		private var m_nodesToDraw:Vector.<Node> = new Vector.<Node>();
+		private var m_nodesOnScreen:Vector.<Node> = new Vector.<Node>();
 		private var m_groupGrids:Vector.<GroupGrid>
 		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
-		
-		static public var GRID_SIZE:int = 1000;
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
@@ -289,22 +278,6 @@ package scenes.game.display
 				addChild(m_backgroundImage);
 			}
 			
-			if (inactiveLayer == null)  inactiveLayer  = new Sprite();
-			if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
-			if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
-			if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
-			inactiveLayer.addChild(m_nodesInactiveContainer);
-			inactiveLayer.addChild(m_errorInactiveContainer);
-			inactiveLayer.addChild(m_edgesInactiveContainer);
-			
-			if (m_errorContainer == null)  m_errorContainer  = new Sprite();
-			if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
-			if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
-			
-			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
-			addChild(m_errorContainer);
-			addChild(m_edgesContainer);
-			addChild(m_nodesContainer);
 			//trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
 
@@ -356,120 +329,134 @@ package scenes.game.display
 				}
 				trace("newGroupDepth: ", newGroupDepth);
 			}
-			if (newGroupDepth != currentGroupDepth)
+			if (true)//newGroupDepth != currentGroupDepth)
 			{
-				const LEN:uint = m_itemsOnScreen.length;
-				for (i = 0; i < LEN; i++) m_itemsToRemove.push(m_itemsOnScreen[i]);
-				m_itemsOnScreen = new Vector.<GridChild>();
+				const LEN:uint = m_nodesOnScreen.length;
+				for (i = 0; i < LEN; i++) m_nodesToRemove.push(m_nodesOnScreen[i]);
+				m_nodesOnScreen = new Vector.<Node>();
 				groupGrid = m_groupGrids[newGroupDepth];
 				var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
 				var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
 				var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
 				var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
-				var totalGrids:int = (maxX - minX + 1) * (maxY - minY + 1);
-				//if (totalGrids > 4) trace("WARNING! Searching more than 4 grids at once: # grids = " + totalGrids);
-				var origItems:int = m_itemsToAdd.length;
+				var origNodes:int = m_nodesToDraw.length;
 				for (i = minX; i <= maxX; i++)
 				{
 					for (j = minY; j <= maxY; j++)
 					{
 						var gridKey:String = i + "_" + j;
 						if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
+						// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
 						var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
 						for (var nodeId:String in gridNodeDict)
 						{
 							var node:Node = nodeLayoutObjs[nodeId] as Node;
-							if (node) m_itemsToAdd.push(node);
+							if (node) m_nodesToDraw.push(node);
 						}
 					}
 				}
-				var addedItems:int = m_itemsToAdd.length - origItems;
-				if (addedItems >= 2000)
-					trace("WARNING! ADDED: " + addedItems + " nodes at this group level");
+				var addedNodes:int = m_nodesToDraw.length - origNodes;
+				if (addedNodes >= 2000)
+				{
+					trace("WARNING! ADDED: " + addedNodes + " nodes at this group level");
+				}
+				if (addedNodes < ITEMS_PER_FRAME && m_tutorialTag)
+				{
+					draw(); // for relatively small tutorials, add items right away
+				}
 			}
 			currentGroupDepth = newGroupDepth;
-			return;
-		
 		}
 		
-		// REMOVE GRIDS VARS:
-		
-		////
 		public function draw():void
 		{
 			if (!m_conflictsLayer) {
 				m_conflictsLayer = new Sprite();
-				//m_conflictsLayer.scaleX = m_conflictsLayer.scaleY = 1.0 / levelLayoutScale;
 				m_conflictsLayer.flatten();
 				addChild(m_conflictsLayer);
 			}
 			if (!m_edgesLayer) {
 				m_edgesLayer = new Sprite();
-				//m_edgesLayer.scaleX = m_edgesLayer.scaleY = 1.0 / levelLayoutScale;
 				m_edgesLayer.flatten();
 				addChild(m_edgesLayer);
 			}
 			if (!m_nodeLayer) {
 				m_nodeLayer = new Sprite();
-				//m_nodeLayer.scaleX = m_nodeLayer.scaleY = 1.0 / levelLayoutScale;
 				m_nodeLayer.flatten();
 				addChild(m_nodeLayer);
 			}
-			var itemsProcessed:uint = 0;
+			var nodesProcessed:uint = 0;
 			var edge:Edge, gameEdgeId:String;
 			var touchedEdgeLayer:Boolean = false;
 			var touchedNodeLayer:Boolean = false;
-			while (m_itemsToRemove.length && itemsProcessed <= ITEMS_PER_FRAME)
+			while (m_nodesToRemove.length && (nodesProcessed <= ITEMS_PER_FRAME || m_tutorialTag))
 			{
-				var itemToRemove:GridChild = m_itemsToRemove.shift();
-				for each(gameEdgeId in itemToRemove.connectedEdgeIds)
+				var nodeToRemove:Node = m_nodesToRemove.shift();
+				if (nodeToRemove.isClause)
 				{
-					edge = edgeLayoutObjs[gameEdgeId];
-					if (edge.skin)
+					for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
 					{
-						edge.skin.removeFromParent(true);
-						edge.skin = null;
-						touchedEdgeLayer = true;
+						edge = edgeLayoutObjs[gameEdgeId];
+						if (edge.skin)
+						{
+							edge.skin.removeFromParent(true);
+							edge.skin = null;
+							touchedEdgeLayer = true;
+						}
 					}
 				}
-				if (itemToRemove.skin)
+				if (nodeToRemove.skin)
 				{
-					itemToRemove.skin.removeFromParent(true);
-					itemToRemove.skin.disableSkin();
+					nodeToRemove.skin.removeFromParent(true);
+					nodeToRemove.skin.disableSkin();
 					touchedNodeLayer = true;
 				}
-				itemsProcessed++;
-			}
-			while (m_itemsToAdd.length && itemsProcessed <= ITEMS_PER_FRAME)
-			{
-				var itemToAdd:GridChild = m_itemsToAdd.shift();
-				for each(gameEdgeId in itemToAdd.outgoingEdgeIds)
+				if (nodeToRemove.backgroundSkin)
 				{
-					edge = edgeLayoutObjs[gameEdgeId];
-					edge.createSkin();
-					if (edge.skin) {
-						m_edgesLayer.addChild(edge.skin);
-						touchedEdgeLayer = true;
+					nodeToRemove.backgroundSkin.removeFromParent(true);
+					nodeToRemove.backgroundSkin.disableSkin();
+					touchedNodeLayer = true;
+				}
+				nodesProcessed++;
+			}
+			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)
+			{
+				var nodeToDraw:Node = m_nodesToDraw.shift();
+				// At this time only clause changes (satisfied or not) affect the
+				// look of an edge, so draw all edges when clauses are redrawn and
+				// ignore var nodes
+				if (nodeToDraw.isClause)
+				{
+					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
+					{
+						edge = edgeLayoutObjs[gameEdgeId];
+						edge.createSkin(currentGroupDepth);
+						if (edge.skin) {
+							m_edgesLayer.addChild(edge.skin);
+							touchedEdgeLayer = true;
+						}
 					}
 				}
 				if (false)
 				{
 					var nq:Quad = new Quad(8, 8, 0x0);
-					nq.x = itemToAdd.centerPoint.x;
-					nq.y = itemToAdd.centerPoint.y;
+					nq.x = nodeToDraw.centerPoint.x;
+					nq.y = nodeToDraw.centerPoint.y;
 					m_nodeLayer.addChild(nq);
 					touchedNodeLayer = true;
 				}
 				else
 				{
-					itemToAdd.createSkin();
-					if (itemToAdd.skin)
+					nodeToDraw.createSkin();
+					if (nodeToDraw.skin)
 					{
-						m_nodeLayer.addChild(itemToAdd.skin);
+						m_nodesOnScreen.push(nodeToDraw);
+						m_nodeLayer.addChild(nodeToDraw.skin);
 						touchedNodeLayer = true;
+						if (nodeToDraw.backgroundSkin) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
 					}
 				}
-				itemsProcessed++;
+				nodesProcessed++;
 			}
 			if (touchedEdgeLayer)
 			{
@@ -505,7 +492,7 @@ package scenes.game.display
 				if (prevNode.skin) prevNode.skin.disableSkin();
 			}
 			
-			var nodeBB:Rectangle = new Rectangle(layoutX - GridSquare.SKIN_DIAMETER * .5, layoutY - GridSquare.SKIN_DIAMETER * .5, GridSquare.SKIN_DIAMETER, GridSquare.SKIN_DIAMETER);
+			var nodeBB:Rectangle = new Rectangle(layoutX - Constants.SKIN_DIAMETER * .5, layoutY - Constants.SKIN_DIAMETER * .5, Constants.SKIN_DIAMETER, Constants.SKIN_DIAMETER);
 			if (gridChildId.substr(0, 3) == "var") {
 				var graphVar:ConstraintVar = levelGraph.variableDict[gridChildId] as ConstraintVar;
 				gridChild = new VariableNode(gridChildId, nodeBB, graphVar);
@@ -554,8 +541,8 @@ package scenes.game.display
 				}
 			}
 			
-			var bbWidth:Number = maxX - minX + GridSquare.SKIN_DIAMETER;
-			var bbHeight:Number = maxY - minY + GridSquare.SKIN_DIAMETER;
+			var bbWidth:Number = maxX - minX + Constants.SKIN_DIAMETER;
+			var bbHeight:Number = maxY - minY + Constants.SKIN_DIAMETER;
 			
 			// Limit content to 2048x2048
 			levelLayoutScale = Math.min(
@@ -563,10 +550,10 @@ package scenes.game.display
 				Math.min(bbHeight, 2048.0) / bbHeight
 			);
 			
-			m_boundingBox = new Rectangle(	levelLayoutScale * (minX - GridSquare.SKIN_DIAMETER * .5), 
-											levelLayoutScale * (minY - GridSquare.SKIN_DIAMETER * .5),
-											levelLayoutScale * (maxX - minX + GridSquare.SKIN_DIAMETER),
-											levelLayoutScale * (maxY - minY + GridSquare.SKIN_DIAMETER)	);
+			m_boundingBox = new Rectangle(	levelLayoutScale * (minX - Constants.SKIN_DIAMETER * .5), 
+											levelLayoutScale * (minY - Constants.SKIN_DIAMETER * .5),
+											levelLayoutScale * (maxX - minX + Constants.SKIN_DIAMETER),
+											levelLayoutScale * (maxY - minY + Constants.SKIN_DIAMETER)	);
 			
 			m_groupGrids = new Vector.<GroupGrid>();
 			const MAX_GROUP_DEPTH:int = levelGraph.groupsArr.length;
@@ -601,13 +588,11 @@ package scenes.game.display
 			
 			for (var constraintId:String in levelGraph.constraintsDict)
 			{
-			//	edgeLayoutObj."id" = constraintId;
 				var result:Object = constraintId.split(" ");
 				if (result == null) throw new Error("Invalid constraint layout string found: " + constraintId);
 				if (result.length != 3) throw new Error("Invalid constraint layout string found: " + constraintId);
 				var graphConstraint:Constraint = levelGraph.constraintsDict[constraintId] as Constraint;
 				if (graphConstraint == null) throw new Error("No graph constraint found for constraint layout: " + constraintId);
-		//		edgeLayoutObj. = graphConstraint;
 				var startNode:Node = nodeLayoutObjs[result[0]];
 				var endNode:Node = nodeLayoutObjs[result[2]];
 				//switch end points if needed)
@@ -627,28 +612,6 @@ package scenes.game.display
 			//trace("edge count = " + n);
 			
 		}
-		
-		public function addChildToConflictBackgroundLevel(child:Sprite):void
-		{
-			m_errorContainer.addChild(child);
-		}
-		
-		public function addChildToNodeLevel(child:Sprite):void
-		{
-			m_nodesContainer.addChild(child);
-			//uncomment to add quad as background to each gridSquare for debugging
-//			var color:int = Math.random()*0xffffff;
-//			var q:Quad = new Quad(GRID_SIZE, GRID_SIZE, color);
-//			q.x = child.x;
-//			q.y = child.y;
-//			addChildAt(q,0);
-		}
-		
-		public function addChildToEdgeLevel(child:Sprite):void
-		{
-			m_edgesContainer.addChild(child);
-		}
-		
 		
 		public function start():void
 		{
@@ -780,20 +743,7 @@ package scenes.game.display
 			if (tutorialManager) tutorialManager.endLevel();
 			
 			nodeLayoutObjs = new Dictionary();
-			
-			if (m_nodesContainer) {
-				while (m_nodesContainer.numChildren > 0) m_nodesContainer.getChildAt(0).removeFromParent(true);
-				m_nodesContainer.removeFromParent(true);
-			}
-			if (m_errorContainer) {
-				while (m_errorContainer.numChildren > 0) m_errorContainer.getChildAt(0).removeFromParent(true);
-				m_errorContainer.removeFromParent(true);
-			}
-			if (m_edgesContainer) {
-				while (m_edgesContainer.numChildren > 0) m_edgesContainer.getChildAt(0).removeFromParent(true);
-				m_edgesContainer.removeFromParent(true);
-			}
-			
+			// TODO groups - dispose layers
 			disposeChildren();
 			
 			removeEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
@@ -1058,31 +1008,14 @@ package scenes.game.display
 			return null;
 		}
 		
-		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
-			return; // uncomment when more testing performed
-			// Active layers
-			m_errorContainer.flatten();
-			m_nodesContainer.flatten();
-			m_edgesContainer.flatten();
-			// Inactive layers
-			m_errorInactiveContainer.flatten();
-			m_nodesInactiveContainer.flatten();
-			m_edgesInactiveContainer.flatten();
+			//super.flatten();
 		}
 		
 		public override function unflatten():void
 		{
 			super.unflatten();
-			// Active layers
-			m_errorContainer.unflatten();
-			m_nodesContainer.unflatten();
-			m_edgesContainer.unflatten();
-			// Inactive layers
-			m_errorInactiveContainer.unflatten();
-			m_nodesInactiveContainer.unflatten();
-			m_edgesInactiveContainer.unflatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean
@@ -1144,7 +1077,7 @@ package scenes.game.display
 			{
 				node.unselect();
 			}
-			selectedNodes = new Vector.<GridChild>();
+			selectedNodes = new Vector.<Node>();
 			dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 		}
 		
@@ -1156,8 +1089,14 @@ package scenes.game.display
 			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
 				assignmentIsWide = false;
 			
-			// TODO: groups
-			
+			for each(var node:Node in selectedNodes)
+			{
+				if (!node.isClause)
+				{
+					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
+					m_nodesToDraw.push(node); // this will also redraw edges
+				}
+			}
 			//update score
 			onWidgetChange();
 			unselectAll();
@@ -1286,18 +1225,18 @@ package scenes.game.display
 		
 		private function createConstraintsForClauses():void
 		{
-			for each(var gridChild:GridChild in selectedNodes)
+			for each(var node:Node in selectedNodes)
 			{
-				if((gridChild is Node) && (gridChild as Node).isClause)
+				if(node.isClause)
 				{
-					newSelectedClauses[(gridChild as Node).id] = gridChild;
+					newSelectedClauses[node.id] = node;
 					var clauseArray:Array = new Array();
 					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
 					
 					//find all variables connected to the constraint, and add them to the array
-					for each(var gameEdgeId:String in gridChild.connectedEdgeIds)
+					for each(var gameEdgeId:String in node.connectedEdgeIds)
 					{
-						var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeId];
+						var edge:Edge = edgeLayoutObjs[gameEdgeId];
 						var fromNode:Node = edge.fromNode;
 						
 						storedDirectEdgesDict[gameEdgeId] = edge;
@@ -1324,9 +1263,9 @@ package scenes.game.display
 					}
 					constraintArray.push(clauseArray);
 				}
-				else if((gridChild is Node) && (gridChild as Node).isClause == false)
+				else
 				{
-					newSelectedVars.push(gridChild as Node);
+					newSelectedVars.push(node);
 				}
 			}
 		}
@@ -1554,25 +1493,62 @@ package scenes.game.display
 		
 		public function selectNodes(localPt:Point, dX:Number, dY:Number):void
 		{
-			var leftGridNumber:int = Math.floor((localPt.x - dX) / GRID_SIZE);
-			var rightGridNumber:int = Math.floor((localPt.x + dX) / GRID_SIZE);
-			var topGridNumber:int = Math.floor((localPt.y - dY) / GRID_SIZE);
-			var bottomGridNumber:int = Math.floor((localPt.y + dY) / GRID_SIZE);
+			if (currentGroupDepth < 0) currentGroupDepth = 0;
+			var groupGrid:GroupGrid = m_groupGrids[currentGroupDepth];
+			const GRID_DIM:Point = groupGrid.gridDimensions.clone();
+			const MAX_SEL:int = getMaxSelectableWidgets();
+			const RAD_SQUARED:Number = dX * dX;
+			
+			var leftGridNumber:int = GroupGrid.getGridX(localPt.x - dX, GRID_DIM);
+			var rightGridNumber:int = GroupGrid.getGridX(localPt.x + dX, GRID_DIM);
+			var topGridNumber:int = GroupGrid.getGridX(localPt.y - dY, GRID_DIM);
+			var bottomGridNumber:int = GroupGrid.getGridX(localPt.y + dY, GRID_DIM);
 			var selectionChanged:Boolean = false;
+			trace("localPt: ", localPt, " dX/Y: ", dX);
 			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
 			{
 				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
 				{
 					var gridName:String = i + "_" + j;
-					//trace("gridName: ", gridName);
-					// TODO groups
-					//var thisGridSelectionChanged:Boolean = thisGrid.handlePaintSelection(localPt, dX * dX, selectedNodes, getMaxSelectableWidgets());
-					//selectionChanged = (selectionChanged || thisGridSelectionChanged);
-					//if (selectedNodes.length >= getMaxSelectableWidgets()) break;
+					if (!groupGrid.grid.hasOwnProperty(gridName)) continue; // no nodes in this grid
+					var gridNodeDict:Dictionary = groupGrid.grid[gridName] as Dictionary;
+					for (var nodeId:String in gridNodeDict)
+					{
+						var node:Node = nodeLayoutObjs[nodeId] as Node;
+						if (!node)
+						{
+							trace("WARNING! Node id not found: " + nodeId);
+							continue;
+						}
+						var diffX:Number = localPt.x - node.centerPoint.x;
+						trace("node.centerPoint: ", node.centerPoint);
+						if (diffX > dX || -diffX > dX) continue;
+						var diffY:Number = localPt.y - node.centerPoint.y;
+						if (diffY > dY || -diffY > dY) continue;
+						var diffXSq:Number = diffX * diffX;
+						var diffYSq:Number = diffY * diffY;
+						if (diffXSq + diffYSq <= RAD_SQUARED && !node.isSelected) {
+							if (false) { // use this branch for actively unselecting when max is reached 
+								while (selectedNodes.length >= MAX_SEL) {
+									selectedNodes.shift().unselect();
+								}
+							} else if (selectedNodes.length >= MAX_SEL) {
+								break; // done selecting
+							}
+							node.select();
+							//trace("select " + node.id);
+							selectedNodes.push(node);
+							m_nodesToDraw.push(node);
+							selectionChanged = true;
+						}
+					}
+					if (selectedNodes.length >= MAX_SEL) break;
 				}
 			}
 			//trace("Paint select changed:" + selectionChanged);
-			if (selectionChanged) dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
+			if (selectionChanged) {
+				dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
+			}
 		}
 	}
 	
@@ -1585,7 +1561,7 @@ import flash.utils.Dictionary;
 
 internal class GroupGrid
 {
-	private static const NODE_PER_GRID_ESTIMATE:uint = 500;
+	private static const NODE_PER_GRID_ESTIMATE:uint = 300;
 	
 	public var grid:Dictionary = new Dictionary();
 	public var gridDimensions:Point = new Point(); // in pixels

@@ -22,8 +22,6 @@ package scenes.game.display
 		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		
-		public var currentGroupDepth:uint = 0;
-		
 		public static const LINE_THICKNESS:Number = 5;
 		
 		public function Edge(_constraintId:String, _graphConstraint:Constraint, _fromNode:Node, _toNode:Node)
@@ -38,16 +36,16 @@ package scenes.game.display
 		{
 			if(skin && skin.parent)
 			{					
-				(skin.parent as Sprite).unflatten();
+				//(skin.parent as Sprite).unflatten();
 				setLineColor(currentHoverNode);
 				//toNode.updateConnector();
-				(skin.parent as Sprite).flatten();
+				//(skin.parent as Sprite).flatten();
 				isDirty = false;
 			}
 		}
 		
 		//need to keep track of lines
-		public function createSkin():void
+		public function createSkin(currentGroupDepth:int):void
 		{
 			if(!skin)
 			{
