@@ -14,19 +14,6 @@ def add_layout_to_graph(G, node_layout):
             continue
         node['x'] = layout_info[0]
         node['y'] = layout_info[1]
-        min_x = G.graph.get('min_x', layout_info[0])
-        max_X = G.graph.get('max_x', layout_info[0])
-        min_y = G.graph.get('min_y', layout_info[1])
-        max_y = G.graph.get('max_y', layout_info[1])
-        if layout_info[0] < min_x:
-            G.graph['min_x'] = layout_info[0]
-        if layout_info[0] > max_x:
-            G.graph['max_x'] = layout_info[0]
-        if layout_info[1] < min_y:
-            G.graph['min_y'] = layout_info[1]
-        if layout_info[1] > max_y:
-            G.graph['max_y'] = layout_info[1]
-        
 
 def layout_with_sfdp(dot_filename, Gs):
     print 'Running dot -y -Kfdp -Tplain -o%s.out %s ...' % (dot_filename, dot_filename)

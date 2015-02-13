@@ -64,13 +64,8 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 {
   "id": "%s",
   "layout": {
-    "bounds": [%s,%s,%s,%s],
     "vars": {
-      ''' % (G.graph.get('id',''), 
-        G.graph.get('min_x',0), 
-        G.graph.get('min_y',0), 
-        G.graph.get('max_x',0), 
-        G.graph.get('max_y',0))
+      ''' % G.graph['id'])
         comma = ''
         for node_id in G.nodes():
             node = G.node[node_id]

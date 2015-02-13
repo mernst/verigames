@@ -10,9 +10,9 @@ package scenes.game.display
 		private var _hasError:Boolean = false;
 		private var _hadError:Boolean = false;
 		
-		public function ClauseNode(_id:String, _bb:Rectangle, _graphClause:ConstraintClause)
+		public function ClauseNode(_layoutObject:Object, _id:String, _bb:Rectangle, _graphClause:ConstraintClause, _parentGrid:GridSquare)
 		{
-			super(_id, _bb, _graphClause);
+			super(_layoutObject, _id, _bb, _graphClause, _parentGrid);
 			
 			isEditable = false;
 			isClause = true;
@@ -55,6 +55,8 @@ package scenes.game.display
 			backgroundSkin.x = centerPoint.x - 0.5 * backgroundSkin.width;
 			backgroundSkin.y = centerPoint.y - 0.5 * backgroundSkin.height;
 			
+			backgroundSkin.x = centerPoint.x - gridOffset.x - 0.5 * backgroundSkin.width;
+			backgroundSkin.y = centerPoint.y - gridOffset.y - 0.5 * backgroundSkin.height;
 			setDirty(true);
 		}
 		

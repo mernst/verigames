@@ -113,5 +113,9 @@ package scenes.game.display
 			super.x = newX;
 		}
 		
+		public function addToParent(parent:Sprite):void
+		{
+			parent.addChild(this);
+		}
 	}
 }
