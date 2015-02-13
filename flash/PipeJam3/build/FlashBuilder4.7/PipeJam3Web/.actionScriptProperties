@@ -42,6 +42,7 @@
       <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/cgs-common/CGSCommon.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/MaxSatSolver/maxsat_as3/example/lib/maxsat_manager.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="${ROOT}/external/MaxSatSolver/maxsat_as3/example/lib/maxsat_util.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/Users/craigc/Documents/PipeJam/flash/PipeJam3/external/Feathers 1.0.1/swc/feathers.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
