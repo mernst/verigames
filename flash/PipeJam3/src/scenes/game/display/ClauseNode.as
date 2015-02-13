@@ -52,6 +52,8 @@ package scenes.game.display
 			newSkin.setNode(this, true);
 			newSkin.draw();
 			backgroundSkin = newSkin;
+			backgroundSkin.x = centerPoint.x - 0.5 * backgroundSkin.width;
+			backgroundSkin.y = centerPoint.y - 0.5 * backgroundSkin.height;
 			
 			setDirty(true);
 		}

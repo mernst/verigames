@@ -109,7 +109,7 @@ package scenes.game.display
 		private var m_conflictsLayer:Sprite;
 		private var m_nodesToRemove:Vector.<Node> = new Vector.<Node>();
 		private var m_nodesToDraw:Vector.<Node> = new Vector.<Node>();
-		private var m_nodesOnScreen:Vector.<Node> = new Vector.<Node>();
+		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
 		private var m_groupGrids:Vector.<GroupGrid>
 		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
 		
@@ -156,7 +156,7 @@ package scenes.game.display
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
-			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
+			if (m_tutorialTag != null) {
 				tutorialManager = new TutorialLevelManager(m_tutorialTag);
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
@@ -211,7 +211,7 @@ package scenes.game.display
 				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
 				setGraphVarFromAssignments(graphVar, assignmentsObj, updateTutorialManager);
 			}
-			if(graphVar) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
+			if(graphVar != null) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
 			refreshTroublePoints();
 			onScoreChange();
 		}
@@ -329,41 +329,49 @@ package scenes.game.display
 				}
 				trace("newGroupDepth: ", newGroupDepth);
 			}
-			if (true)//newGroupDepth != currentGroupDepth)
+			var candidatesToRemove:Dictionary = new Dictionary();
+			for (var nodeOnScreenId:String in m_nodeOnScreenDict) candidatesToRemove[nodeOnScreenId] = true;
+			
+			groupGrid = m_groupGrids[newGroupDepth];
+			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
+			var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
+			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
+			var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+			var origNodes:int = m_nodesToDraw.length;
+			for (i = minX; i <= maxX; i++)
 			{
-				const LEN:uint = m_nodesOnScreen.length;
-				for (i = 0; i < LEN; i++) m_nodesToRemove.push(m_nodesOnScreen[i]);
-				m_nodesOnScreen = new Vector.<Node>();
-				groupGrid = m_groupGrids[newGroupDepth];
-				var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-				var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
-				var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-				var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
-				var origNodes:int = m_nodesToDraw.length;
-				for (i = minX; i <= maxX; i++)
+				for (j = minY; j <= maxY; j++)
 				{
-					for (j = minY; j <= maxY; j++)
+					var gridKey:String = i + "_" + j;
+					if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
+					// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
+					var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
+					for (var nodeId:String in gridNodeDict)
 					{
-						var gridKey:String = i + "_" + j;
-						if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
-						// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
-						var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
-						for (var nodeId:String in gridNodeDict)
+						var node:Node = nodeLayoutObjs[nodeId] as Node;
+						if (node != null)
 						{
-							var node:Node = nodeLayoutObjs[nodeId] as Node;
-							if (node) m_nodesToDraw.push(node);
+							if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) m_nodesToDraw.push(node);
+							if (candidatesToRemove.hasOwnProperty(nodeId)) delete candidatesToRemove[node.graphConstraintSide.id];
 						}
 					}
 				}
-				var addedNodes:int = m_nodesToDraw.length - origNodes;
-				if (addedNodes >= 2000)
-				{
-					trace("WARNING! ADDED: " + addedNodes + " nodes at this group level");
-				}
-				if (addedNodes < ITEMS_PER_FRAME && m_tutorialTag)
-				{
-					draw(); // for relatively small tutorials, add items right away
-				}
+			}
+			for (var nodeToRemoveId:String in candidatesToRemove)
+			{
+				var nodeToRemove:Node = nodeLayoutObjs[nodeToRemoveId] as Node;
+				if (nodeToRemove != null) m_nodesToRemove.push(nodeToRemove);
+			}
+			
+			
+			var addedNodes:int = m_nodesToDraw.length - origNodes;
+			if (addedNodes >= 2000)
+			{
+				trace("WARNING! ADDED: " + addedNodes + " nodes at this group level");
+			}
+			if (addedNodes < ITEMS_PER_FRAME && m_tutorialTag)
+			{
+				draw(); // for relatively small tutorials, add items right away
 			}
 			currentGroupDepth = newGroupDepth;
 		}
@@ -389,6 +397,7 @@ package scenes.game.display
 			var edge:Edge, gameEdgeId:String;
 			var touchedEdgeLayer:Boolean = false;
 			var touchedNodeLayer:Boolean = false;
+			var touchedConflictLayer:Boolean = false;
 			while (m_nodesToRemove.length && (nodesProcessed <= ITEMS_PER_FRAME || m_tutorialTag))
 			{
 				var nodeToRemove:Node = m_nodesToRemove.shift();
@@ -405,18 +414,21 @@ package scenes.game.display
 						}
 					}
 				}
-				if (nodeToRemove.skin)
+				if (nodeToRemove.skin != null)
 				{
 					nodeToRemove.skin.removeFromParent(true);
 					nodeToRemove.skin.disableSkin();
+					nodeToRemove.skin = null;
 					touchedNodeLayer = true;
 				}
-				if (nodeToRemove.backgroundSkin)
+				if (nodeToRemove.backgroundSkin != null)
 				{
 					nodeToRemove.backgroundSkin.removeFromParent(true);
 					nodeToRemove.backgroundSkin.disableSkin();
-					touchedNodeLayer = true;
+					nodeToRemove.backgroundSkin = null;
+					touchedConflictLayer = true;
 				}
+				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.graphConstraintSide.id)) delete m_nodeOnScreenDict[nodeToRemove.graphConstraintSide.id];
 				nodesProcessed++;
 			}
 			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)
@@ -450,20 +462,21 @@ package scenes.game.display
 					nodeToDraw.createSkin();
 					if (nodeToDraw.skin)
 					{
-						m_nodesOnScreen.push(nodeToDraw);
+						m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
 						m_nodeLayer.addChild(nodeToDraw.skin);
 						touchedNodeLayer = true;
-						if (nodeToDraw.backgroundSkin) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
+						if (nodeToDraw.backgroundSkin)
+						{
+							m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
+							touchedConflictLayer = true;
+						}
 					}
 				}
 				nodesProcessed++;
 			}
-			if (touchedEdgeLayer)
-			{
-				m_edgesLayer.flatten();
-				m_conflictsLayer.flatten();
-			}
+			if (touchedEdgeLayer) m_edgesLayer.flatten();
 			if (touchedNodeLayer) m_nodeLayer.flatten();
+			if (touchedConflictLayer) m_conflictsLayer.flatten();
 		}
 		
 		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
@@ -813,7 +826,7 @@ package scenes.game.display
 		protected function onComponentSelection(evt:SelectionEvent):void
 		{
 			var component:Object = evt.component;
-			if(component)
+			if(component != null)
 				componentSelectionChanged(component, true);
 			
 			var selectionChangedComponents:Vector.<Object> = new Vector.<Object>();
@@ -823,7 +836,7 @@ package scenes.game.display
 		protected function onComponentUnselection(evt:SelectionEvent):void
 		{
 			var component:Object = evt.component;
-			if(component)
+			if(component != null)
 				componentSelectionChanged(component, false);
 			
 			var selectionChangedComponents:Vector.<Object> = new Vector.<Object>();
@@ -856,39 +869,51 @@ package scenes.game.display
 		
 		protected function onErrorAdded(evt:ErrorEvent):void
 		{
-			var clauseNode:ClauseNode;
-			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
-			if(clauseConstraint)
+			for (var errorEdgeId:String in evt.constraintChangeDict) // new conflicts
 			{
-				if(clauseConstraint.lhs.id.indexOf('c') != -1)
+				var clauseConstraint:ConstraintEdge = evt.constraintChangeDict[errorEdgeId] as ConstraintEdge;
+				if(clauseConstraint != null)
 				{
-					clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
+					var clauseNode:ClauseNode;
+					if(clauseConstraint.lhs.id.indexOf('c') != -1)
+					{
+						clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
+					}
+					else if(clauseConstraint.rhs.id.indexOf('c') != -1)
+					{
+						clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
+					}
+					if (clauseNode != null)
+					{
+						clauseNode.addError(true);
+						if (clauseNode.skin != null) m_nodesToDraw.push(clauseNode);
+					}
 				}
-				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
-				{
-					clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
-				}
-				if(clauseNode)
-					clauseNode.addError(true);
 			}
 		}
 		
 		protected function onErrorRemoved(evt:ErrorEvent):void
 		{
-			var clauseNode:ClauseNode;
-			var clauseConstraint:ConstraintEdge = evt.constraintError as ConstraintEdge;
-			if(clauseConstraint)
+			for (var errorEdgeId:String in evt.constraintChangeDict) // solved clauses
 			{
-				if(clauseConstraint.lhs.id.indexOf('c') != -1)
+				var clauseConstraint:ConstraintEdge = evt.constraintChangeDict[errorEdgeId] as ConstraintEdge;
+				if(clauseConstraint != null)
 				{
-					clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
+					var clauseNode:ClauseNode;
+					if(clauseConstraint.lhs.id.indexOf('c') != -1)
+					{
+						clauseNode = nodeLayoutObjs[clauseConstraint.lhs.id];
+					}
+					else if(clauseConstraint.rhs.id.indexOf('c') != -1)
+					{
+						clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
+					}
+					if (clauseNode != null)
+					{
+						clauseNode.addError(false);
+						if (clauseNode.skin != null) m_nodesToDraw.push(clauseNode);
+					}
 				}
-				else if(clauseConstraint.rhs.id.indexOf('c') != -1)
-				{
-					clauseNode = nodeLayoutObjs[clauseConstraint.rhs.id];
-				}
-				if(clauseNode)
-					clauseNode.addError(false);
 			}
 		}
 		
@@ -917,7 +942,7 @@ package scenes.game.display
 		public function getMaxSelectableWidgets():int
 		{
 			var num:int = -1;
-			if (tutorialManager) num = tutorialManager.getMaxSelectableWidgets();
+			if (tutorialManager != null) num = tutorialManager.getMaxSelectableWidgets();
 			if (num > 0) return num;
 			return 10000;
 		}
@@ -973,12 +998,12 @@ package scenes.game.display
 			var lastConflictLoc:Point;
 			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
 				var edgeLayout:Edge = edgeLayoutObjs[edgeId];
-				if (!edgeLayout) {
+				if (edgeLayout == null) {
 					//trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
 					continue;
 				}
 				var edgeNode:Node = edgeLayout.toNode;
-				if (!edgeNode) {
+				if (edgeNode == null) {
 					//trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
 					continue;
 				}
@@ -991,17 +1016,17 @@ package scenes.game.display
 					return conflictLoc;
 				} else if (i == 0) {
 					firstConflictLoc = conflictLoc;
-				} else if (!firstConflictLoc) {
+				} else if (firstConflictLoc == null) {
 					firstConflictLoc = conflictLoc;
 				}
 				i++;
 				lastConflictLoc = conflictLoc;
 			}
-			if (lastConflictLoc && conflictIndex < 0) {
+			if (lastConflictLoc != null && conflictIndex < 0) {
 				m_currentConflictIndex = i - 1;
 				return lastConflictLoc;
 			}
-			if (firstConflictLoc) {
+			if (firstConflictLoc != null) {
 				m_currentConflictIndex = 0;
 				return firstConflictLoc;
 			}
@@ -1020,13 +1045,13 @@ package scenes.game.display
 		
 		public function getPanZoomAllowed():Boolean
 		{ 
-			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
+			if (tutorialManager != null) return tutorialManager.getPanZoomAllowed();
 			return true;
 		}
 		
 		public function getVisibleBrushes():int
 		{ 
-			if (tutorialManager) 
+			if (tutorialManager != null) 
 				return tutorialManager.getVisibleBrushes();
 			//all visible
 			return 0xFFFFFF;
@@ -1034,7 +1059,7 @@ package scenes.game.display
 		
 		public function getAutoSolveAllowed():Boolean
 		{ 
-			if (tutorialManager) return tutorialManager.getAutoSolveAllowed();
+			if (tutorialManager != null) return tutorialManager.getAutoSolveAllowed();
 			return true;
 		}
 		
@@ -1076,6 +1101,10 @@ package scenes.game.display
 			for each(var node:Node in selectedNodes)
 			{
 				node.unselect();
+				if (node.skin != null)
+				{
+					m_nodesToDraw.push(node);
+				}
 			}
 			selectedNodes = new Vector.<Node>();
 			dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
@@ -1446,10 +1475,14 @@ package scenes.game.display
 				nodeUpdated = currentVal != node.isNarrow; 
 				if(currentVal != node.isNarrow)
 				{
-					node.setDirty(true, true);
-					if(constraintVar) 
+					if (node.skin != null)
+					{
+						node.setDirty(true, true);
+						m_nodesToDraw.push(node);
+					}
+					if(constraintVar != null) 
 						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
-					if (tutorialManager) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
+					if (tutorialManager != null) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 				}
 			}
 			if(someNodeUpdated)
@@ -1515,7 +1548,7 @@ package scenes.game.display
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
-						if (!node)
+						if (node == null)
 						{
 							trace("WARNING! Node id not found: " + nodeId);
 							continue;

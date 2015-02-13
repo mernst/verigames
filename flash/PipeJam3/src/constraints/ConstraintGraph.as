@@ -145,18 +145,19 @@ package constraints
 					} 
 				}
 			}
+			
 			for (clauseID in newSatisfiedConstraints) {
 				if (unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
 					delete unsatisfiedConstraintDict[clauseID];
-					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints[clauseID]));
 				}
 			}
 			for (clauseID in newUnsatisfiedConstraints) {
 				if (!unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
 					unsatisfiedConstraintDict[clauseID] = newUnsatisfiedConstraints[clauseID];
-					dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints[clauseID]));
 				}
 			}
+			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints));
+			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints));
 			if (isNaN(startingScore)) startingScore = currentScore;
 		}
 		

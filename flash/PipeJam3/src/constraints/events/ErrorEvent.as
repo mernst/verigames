@@ -1,6 +1,6 @@
 package constraints.events 
 {
-	import constraints.Constraint;
+	import flash.utils.Dictionary;
 	import starling.events.Event;
 	
 	public class ErrorEvent extends Event 
@@ -8,12 +8,12 @@ package constraints.events
 		public static const ERROR_ADDED:String = "error_added";
 		public static const ERROR_REMOVED:String = "error_removed";
 		
-		public var constraintError:Constraint;
+		public var constraintChangeDict:Dictionary;
 		
-		public function ErrorEvent(type:String, _constraintError:Constraint) 
+		public function ErrorEvent(type:String, _constraintChangeDict:Dictionary) 
 		{
 			super(type);
-			constraintError = _constraintError;
+			constraintChangeDict = _constraintChangeDict;
 		}
 		
 	}
