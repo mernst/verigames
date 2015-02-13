@@ -1,9 +1,11 @@
 package scenes.game.components
 {
+	import feathers.display.TiledImage;
 	import flash.display.BitmapData;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -12,6 +14,7 @@ package scenes.game.components
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -81,7 +84,6 @@ package scenes.game.components
 		private var m_tutorialText:TutorialText;
 		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
-		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Dictionary = new Dictionary();
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
@@ -102,12 +104,10 @@ package scenes.game.components
 		private var m_selectionUpdated:Boolean = false;
 		private var m_startingTouchPoint:Point;
 		private var m_currentTouchPoint:Point;
-		private var m_scrollEdgePoint:Point;
 		private var m_inBounds:Boolean = true;
 		private var m_wasOutOfBounds:Boolean = true;
 		private var m_rightMouseDown:Boolean = false;
 		private var m_MouseMoveListenerInstalled:Boolean = false;
-		private var m_lastVisibleRefreshViewRect:Rectangle;
 		
 		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
 		protected static const NORMAL_MODE:int = 0;
@@ -121,7 +121,7 @@ package scenes.game.components
 		protected var m_solver2Brush:Sprite;
 		protected var m_widenBrush:Sprite;
 		protected var m_narrowBrush:Sprite;
-		
+	
 		public static const SOLVER1_BRUSH:String = "BrushCircle";
 		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 		public static const WIDEN_BRUSH:String = "BrushHexagon";
@@ -129,16 +129,17 @@ package scenes.game.components
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
-		public static const MIN_SCALE:Number = 0.4 / Constants.GAME_SCALE;
+		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
+		private static var m_gridTexture:Texture;
 		
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
-			
+
 			currentMode = NORMAL_MODE;
 			
 			inactiveContent = new Sprite();
@@ -207,7 +208,7 @@ package scenes.game.components
 			
 			m_paintBrushInfoSprite.addChild(m_selectionLimitText);
 			m_paintBrushInfoSprite.flatten();
-			
+
 			addChild(m_buttonLayer);
 			addChild(m_fanfareLayer);
 			
@@ -218,7 +219,7 @@ package scenes.game.components
 		private function onAddedToStage():void
 		{
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
-			
+				
 			//create a clip rect for the window
 			clipRect = new Rectangle(x, y, m_border.width, m_border.height - 10);
 			
@@ -238,10 +239,10 @@ package scenes.game.components
 			
 			installPaintBrush(true);
 			m_nextPaintbrushLocation = new Point(width/2, height/2);
-			
+
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
-			
+
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_CLICK, function(e:MouseEvent):void{});
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightClickDownEventHandler);
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
@@ -266,8 +267,8 @@ package scenes.game.components
 				event.stageX < 960 &&
 				event.stageY > 0 &&
 				event.stageY < 640)
-				m_inBounds = true;
-			
+					m_inBounds = true;
+
 			if(m_rightMouseDown && currentLocation)
 			{
 				var deltaX:Number = event.stageX - currentLocation.x;
@@ -358,44 +359,6 @@ package scenes.game.components
 				System.gc();
 				endingMoveMode = false;
 			}
-			//if we are near the edge, scroll
-			var xDelta:Number = 0;
-			var yDelta:Number = 0;
-			if(m_scrollEdgePoint && getPanZoomAllowed() && m_inBounds)
-			{
-				if(m_scrollEdgePoint.x < 10)
-				{
-					xDelta = 10 - m_scrollEdgePoint.x;
-				}
-				else if(m_scrollEdgePoint.x > clipRect.width - 10)
-				{
-					xDelta = -10 + (clipRect.width - m_scrollEdgePoint.x);
-				}
-				
-				if(m_scrollEdgePoint.y < 10)
-				{
-					yDelta = 10 - m_scrollEdgePoint.y;
-				} 
-				else if(m_scrollEdgePoint.y > clipRect.height - 10)
-				{
-					yDelta =  -10 + (clipRect.height - m_scrollEdgePoint.y);
-				}
-				
-				if(xDelta != 0 || yDelta != 0)
-				{
-					//slow it down some
-					xDelta /= 2;
-					yDelta /= 2;
-					var viewRect:Rectangle = getViewInContentSpace();
-					var newX:Number = viewRect.x + viewRect.width / 2 - xDelta / content.scaleX;
-					var newY:Number = viewRect.y + viewRect.height / 2 - yDelta / content.scaleY;
-					moveContent(newX, newY);
-					if(currentMode == SELECTING_MODE)
-						handlePaint(m_scrollEdgePoint);
-				}
-				else
-					m_scrollEdgePoint = null;
-			}
 		}
 		
 		public function outsideEventHandler(event:starling.events.Event):void
@@ -466,9 +429,9 @@ package scenes.game.components
 		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
 			//if (evt.prop == PropDictionary.PROP_NARROW) {
-			//contentBarrier.visible = false;
+				//contentBarrier.visible = false;
 			//} else {
-			//contentBarrier.visible = true;
+				//contentBarrier.visible = true;
 			//}
 		}
 		
@@ -584,21 +547,20 @@ package scenes.game.components
 				var location:Point;
 				if(touch)
 				{
-					currentMode = HOVER_MODE;
-					location = touch.getLocation(this.stage);
-					if(location.x > WIDTH)
-						hidePaintBrush();
-					else
-						if(!event.shiftKey && !m_rightMouseDown)
-							showPaintBrush();
+					 currentMode = HOVER_MODE;
+				location = touch.getLocation(this.stage);
+				if(location.x > WIDTH)
+					hidePaintBrush();
+				else
+					if(!event.shiftKey && !m_rightMouseDown)
+						showPaintBrush();
 				}
 				else
 					location = touches[0].getLocation(this.stage);
 				movePaintBrush(location);
-				m_scrollEdgePoint = location;
 			}
 		}
-		
+
 		private function onMouseWheel(evt:MouseEvent):void
 		{
 			var delta:Number = evt.delta;
@@ -606,64 +568,74 @@ package scenes.game.components
 			handleMouseWheel(delta, localMouse);			
 		}
 		
-		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
+		private function handleMouseWheel(delta:Number, localMouse:Point = null):void
 		{
 			if (!getPanZoomAllowed())
 			{
 				return;
 			}
+			showZoomPanGrid();
 			if (localMouse == null) {
 				localMouse = new Point((WIDTH - Constants.RightPanelWidth) / 2, HEIGHT / 2);
 			} else {
 				var mousePoint:Point = localMouse.clone();
 				
 				const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
-					Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
+						Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
 				
 				localMouse.x *= native2Starling.x;
 				localMouse.y *= native2Starling.y;
 			}
 			// Now localMouse is in local coordinates (relative to this instance of GridViewPanel).
 			// Next, we'll convert to content space
-			var prevMouse:Point = content.globalToLocal(localMouse);
+			var contentToScale:DisplayObject = m_gridContainer;
+			var prevMouse:Point = contentToScale.globalToLocal(localMouse);
 			// Now we have the mouse location in current content space.
 			// We want this location to not move after scaling
 			
-			// Scale content
-			var contentScaled:Boolean = scaleContent(1.00 + 2 * delta / 100.0, 1.00 + 2 * delta / 100.0);
+			// Calculate what new scale would be
+			var sizeDiff:Number = 1.00 + 2 * delta / 100.0;
 			
-			if(contentScaled)
+			var newScaleX:Number = XMath.clamp(contentToScale.scaleX * sizeDiff, MIN_SCALE, MAX_SCALE);
+			var newScaleY:Number = XMath.clamp(contentToScale.scaleY * sizeDiff, MIN_SCALE, MAX_SCALE);
+			
+			var scaleChanged:Boolean = (newScaleX != contentToScale.scaleX && newScaleY != contentToScale.scaleY);
+			
+			if(scaleChanged)
 			{
+				scaleContent(sizeDiff, sizeDiff, contentToScale);
 				//find the difference between the location of the clicked point previous and current in global space
-				var newGlobalPrevMouse:Point = content.localToGlobal(prevMouse);
+				var newGlobalPrevMouse:Point = contentToScale.localToGlobal(prevMouse);
 				//offset by the differences
-				content.x -= newGlobalPrevMouse.x - localMouse.x;
-				content.y -= newGlobalPrevMouse.y - localMouse.y;
-				inactiveContent.x = content.x;
-				inactiveContent.y = content.y;
-				dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
-				var currentViewRect:Rectangle = getViewInContentSpace();
-				m_currentLevel.updateLevelDisplay(currentViewRect);
-				//turn this off if in an undo event
-				if(createUndoEvent)
+				contentToScale.x -= newGlobalPrevMouse.x - localMouse.x;
+				contentToScale.y -= newGlobalPrevMouse.y - localMouse.y;
+				if (contentToScale == content)
 				{
-					var eventToUndo:MouseWheelEvent = new MouseWheelEvent(mousePoint, delta, new Date().time);
-					var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
-					eventToDispatch.addToSimilar = true;
-					dispatchEvent(eventToDispatch);
+					inactiveContent.x = content.x;
+					inactiveContent.y = content.y;
+					dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+					var currentViewRect:Rectangle = getViewInContentSpace();
+					m_currentLevel.updateLevelDisplay(currentViewRect);
 				}
+				checkGridSize();
 			}
 		}
 		
-		private function moveContent(newX:Number, newY:Number):void
+		private function moveContent(newX:Number, newY:Number, useGrid:Boolean = true):void
 		{
+			var contentToMove:DisplayObject = content;
+			if (useGrid)
+			{
+				showZoomPanGrid();
+				contentToMove = m_gridContainer;
+			}
 			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
 			newY = XMath.clamp(newY, m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
-			//	trace("PAN ", newX, newY);
-			panTo(newX, newY);
-			var currentViewRect:Rectangle = getViewInContentSpace();
-			m_currentLevel.updateLevelDisplay(currentViewRect);
-			m_lastVisibleRefreshViewRect = currentViewRect;
+		//	trace("PAN ", newX, newY);
+			panTo(newX, newY, contentToMove);
+			var currentViewRect:Rectangle = getViewInContentSpace(contentToMove);
+			if (contentToMove == content) m_currentLevel.updateLevelDisplay(currentViewRect);
+			checkGridSize();
 		}
 		
 		public function atMinZoom(scale:Point = null):Boolean
@@ -678,61 +650,134 @@ package scenes.game.components
 			return ((scale.x >= MAX_SCALE) || (scale.y >= MAX_SCALE));
 		}
 		
+		private function isGridUp():Boolean { return (m_gridContainer && m_gridContainer.parent); }
+		
+		private function checkGridSize():void
+		{
+			if (!isGridUp()) return;
+			var viewSpace:Rectangle = getViewInContentSpace(m_gridContainer);
+			if (m_gridTileImg.x > viewSpace.x || 
+				m_gridTileImg.x + m_gridTileImg.width < viewSpace.right ||
+				m_gridTileImg.y > viewSpace.y || 
+				m_gridTileImg.y + m_gridTileImg.height < viewSpace.bottom)
+			{
+				m_gridTileImg.x = viewSpace.x - 2 * viewSpace.width;
+				m_gridTileImg.y = viewSpace.y - 2 * viewSpace.height;
+				m_gridTileImg.width = 5 * viewSpace.width;
+				m_gridTileImg.height = 5 * viewSpace.height;
+				m_gridTileImg.textureScale = 1.0 / m_gridContainer.scaleX;
+			}
+		}
+		
+		private var m_gridTileImg:TiledImage;
+		private var m_gridContainer:Sprite;
+		private var m_zoomPanTimer:Timer;
+		private static const ZOOM_PAN_TIME_SEC:Number = 1.6;
+		private function showZoomPanGrid():void
+		{
+			if (!m_gridTexture) m_gridTexture = AssetInterface.getTexture("Game", "GridClass");
+			if (!m_gridTileImg) m_gridTileImg = new TiledImage(m_gridTexture);
+			if (!m_gridContainer)
+			{
+				m_gridContainer = new Sprite();
+				m_gridContainer.addChild(m_gridTileImg);
+			}
+			if (!isGridUp()) // if not showing grid, show now and start the timer
+			{
+				var viewSpace:Rectangle = getViewInContentSpace();
+				m_gridTileImg.x = viewSpace.x - 2 * viewSpace.width;
+				m_gridTileImg.y = viewSpace.y - 2 * viewSpace.height;
+				m_gridTileImg.width = 5 * viewSpace.width;
+				m_gridTileImg.height = 5 * viewSpace.height;
+				m_gridTileImg.textureScale = 1.0 / content.scaleX;
+				m_gridContainer.scaleX = content.scaleX;
+				m_gridContainer.scaleY = content.scaleY;
+				m_gridContainer.x = content.x;
+				m_gridContainer.y = content.y;
+				addChildAt(m_gridContainer, getChildIndex(content) + 1);
+				if (!m_zoomPanTimer) m_zoomPanTimer = new Timer(ZOOM_PAN_TIME_SEC * 1000.0, 1);
+				m_zoomPanTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hideZoomPanGridAndApplyChanges);
+			}
+			m_zoomPanTimer.reset(); // reset the timer (even if grid was already being shown)
+			m_zoomPanTimer.start();
+		}
+		
+		private function hideZoomPanGridAndApplyChanges(evt:TimerEvent):void
+		{
+			m_zoomPanTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, hideZoomPanGridAndApplyChanges);
+			content.scaleX = inactiveContent.scaleX = m_gridContainer.scaleX;
+			content.scaleY = inactiveContent.scaleY = m_gridContainer.scaleY;
+			content.x = inactiveContent.x = m_gridContainer.x;
+			content.y = inactiveContent.y = m_gridContainer.y;
+			
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+			if (m_currentLevel)
+			{
+				m_currentLevel.handleScaleChange(content.scaleX, content.scaleY);
+				var currentViewRect:Rectangle = getViewInContentSpace();
+				m_currentLevel.updateLevelDisplay(currentViewRect);
+			}
+			m_gridContainer.removeFromParent();
+		}
+		
 		/**
 		 * Scale the content by the given scale factor (sizeDiff of 1.5 = 150% the original size)
 		 * @param	sizeDiff Size difference factor, 1.5 = 150% of original size
 		 */
-		private function scaleContent(sizeDiffX:Number, sizeDiffY:Number):Boolean
+		private function scaleContent(sizeDiffX:Number, sizeDiffY:Number, contentToScale:DisplayObject = null):void
 		{
+			if (contentToScale == null) contentToScale = content;
 			m_selectionUpdated = (currentMode == SELECTING_MODE);
-			var oldScaleX:Number = content.scaleX;
-			var oldScaleY:Number = content.scaleY;
-			var newScaleX:Number = XMath.clamp(content.scaleX * sizeDiffX, MIN_SCALE, MAX_SCALE);
-			var newScaleY:Number = XMath.clamp(content.scaleY * sizeDiffY, MIN_SCALE, MAX_SCALE);
+			var newScaleX:Number = XMath.clamp(contentToScale.scaleX * sizeDiffX, MIN_SCALE, MAX_SCALE);
+			var newScaleY:Number = XMath.clamp(contentToScale.scaleY * sizeDiffY, MIN_SCALE, MAX_SCALE);
 			
-			if(newScaleX == oldScaleX || newScaleY == oldScaleY)
-				return false;
+			if(newScaleX == contentToScale.scaleX || newScaleY == contentToScale.scaleY)
+				return;
 			
 			//if we fit inside the current view, don't scale any more
 			//var levelBounds:Rectangle = m_currentLevel.m_boundingBox;
-			//if(newScaleX < oldScaleX && levelBounds.width*content.scaleX < clipRect.width 
-			//&& levelBounds.height*content.scaleY < clipRect.height - 90)
-			//return false;
+			//if(newScaleX < oldScaleX && levelBounds.width*contentToScale.scaleX < clipRect.width 
+					//&& levelBounds.height*contentToScale.scaleY < clipRect.height - 90)
+				//return false;
 			
 			//if one of these got capped, scale the other proportionally
 			if(newScaleX == MAX_SCALE || newScaleY == MAX_SCALE)
 				if(newScaleX > newScaleY)
 				{
-					sizeDiffX = newScaleX/content.scaleX;
-					newScaleY = content.scaleY*sizeDiffX;
+					sizeDiffX = newScaleX/contentToScale.scaleX;
+					newScaleY = contentToScale.scaleY*sizeDiffX;
 				} else {
-					sizeDiffX = newScaleX/content.scaleX;
-					newScaleY = content.scaleY*sizeDiffX;
+					sizeDiffX = newScaleX/contentToScale.scaleX;
+					newScaleY = contentToScale.scaleY*sizeDiffX;
 				}
 			
-			var origViewCoords:Rectangle = getViewInContentSpace();
+			var origViewCoords:Rectangle = getViewInContentSpace(contentToScale);
 			// Perform scaling
-			var oldScale:Point = new Point(content.scaleX, content.scaleY);
-			content.scaleX = newScaleX;
-			content.scaleY = newScaleY;
-			inactiveContent.scaleX = content.scaleX;
-			inactiveContent.scaleY = content.scaleY;
-			onContentScaleChanged(oldScale);
+			var oldScale:Point = new Point(contentToScale.scaleX, contentToScale.scaleY);
+			contentToScale.scaleX = newScaleX;
+			contentToScale.scaleY = newScaleY;
+			if (contentToScale == content)
+			{
+				inactiveContent.scaleX = contentToScale.scaleX;
+				inactiveContent.scaleY = contentToScale.scaleY;
+				onContentScaleChanged(oldScale);
+			}
 			
-			var newViewCoords:Rectangle = getViewInContentSpace();
+			var newViewCoords:Rectangle = getViewInContentSpace(contentToScale);
 			// Adjust so that original centered point is still in the middle
 			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
 			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
 			
-			content.x -= dX * content.scaleX;
-			content.y -= dY * content.scaleY;
-			inactiveContent.x = content.x;
-			inactiveContent.y = content.y;
-			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			contentToScale.x -= dX * contentToScale.scaleX;
+			contentToScale.y -= dY * contentToScale.scaleY;
+			if (contentToScale == content)
+			{
+				inactiveContent.x = content.x;
+				inactiveContent.y = content.y;
+			}
+			//trace("newscale:" + contentToScale.scaleX + "new xy:" + contentToScale.x + " " + contentToScale.y);
 			
-			if (m_currentLevel) m_currentLevel.handleScaleChange(content.scaleX, content.scaleY);
-			
-			return true;
+			if (m_currentLevel && contentToScale == content) m_currentLevel.handleScaleChange(contentToScale.scaleX, contentToScale.scaleY);
 		}
 		
 		private function onContentScaleChanged(prevScale:Point):void
@@ -749,22 +794,17 @@ package scenes.game.components
 			}
 			
 			if (m_currentLevel == null) return;
-			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
+ 			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
 				m_currentLevel.hideErrorText();
-			} else {
+ 			} else {
 				m_currentLevel.showErrorText();
-			}
+ 			}
 		}
 		
-		//returns a point containing the content scale factors
-		public function getContentScale():Point
+		private function getViewInContentSpace(contentToUse:DisplayObject = null):Rectangle
 		{
-			return new Point(content.scaleX, content.scaleY);
-		}
-		
-		private function getViewInContentSpace():Rectangle
-		{
-			return new Rectangle(-content.x / content.scaleX, -content.y / content.scaleY, clipRect.width / content.scaleX, clipRect.height / content.scaleY);
+			if (contentToUse == null) contentToUse = content;
+			return new Rectangle(-contentToUse.x / contentToUse.scaleX, -contentToUse.y / contentToUse.scaleY, clipRect.width / contentToUse.scaleX, clipRect.height / contentToUse.scaleY);
 		}
 		
 		private function onRemovedFromStage():void
@@ -811,6 +851,7 @@ package scenes.game.components
 		{
 			var viewRect:Rectangle, newX:Number, newY:Number;
 			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
+			var contentToUse:DisplayObject = isGridUp() ? m_gridContainer : content;
 			switch(event.keyCode)
 			{
 				case Keyboard.SHIFT:
@@ -819,25 +860,25 @@ package scenes.game.components
 				case Keyboard.TAB:
 					if (getPanZoomAllowed() && m_currentLevel) {
 						var conflictLoc:Point = m_currentLevel.getNextConflictLocation(!event.shiftKey);
-						if (conflictLoc != null) moveContent(conflictLoc.x, conflictLoc.y);
+						if (conflictLoc != null) moveContent(conflictLoc.x, conflictLoc.y, false);
 					}
 					break;
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace();
+						viewRect = getViewInContentSpace(contentToUse);
 						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / content.scaleY;
+						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
 						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.DOWN:
 				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace();
+						viewRect = getViewInContentSpace(contentToUse);
 						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / content.scaleY;
+						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
 						moveContent(newX, newY);
 					}
 					break;
@@ -845,8 +886,8 @@ package scenes.game.components
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace();
-						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / content.scaleX;
+						viewRect = getViewInContentSpace(contentToUse);
+						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
 						newY = viewRect.y + viewRect.height / 2;
 						moveContent(newX, newY);
 					}
@@ -855,8 +896,8 @@ package scenes.game.components
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace();
-						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / content.scaleX;
+						viewRect = getViewInContentSpace(contentToUse);
+						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
 						newY = viewRect.y + viewRect.height / 2;
 						moveContent(newX, newY);
 					}
@@ -921,7 +962,8 @@ package scenes.game.components
 			m_continueButtonForced = false;
 			removeFanfare();
 			hideContinueButton();
-			removeSpotlight();
+			if (m_gridContainer) m_gridContainer.removeFromParent();
+			if (m_zoomPanTimer) m_zoomPanTimer.stop();
 			if(m_currentLevel != level)
 			{
 				if(m_currentLevel)
@@ -931,11 +973,6 @@ package scenes.game.components
 					content.removeChild(m_currentLevel);
 					if (m_currentLevel.tutorialManager) {
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
-						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
-						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
-						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
-						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
-						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 					}
@@ -945,7 +982,6 @@ package scenes.game.components
 				var max:int = m_currentLevel.getMaxSelectableWidgets();
 				TextFactory.getInstance().updateText(m_selectionLimitText, String(max));
 				TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
-				
 			}
 			
 			inactiveContent.removeChildren();
@@ -974,24 +1010,19 @@ package scenes.game.components
 			m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 			if (m_currentLevel.tutorialManager) {
 				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
-				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
-				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
-				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
-				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
-				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
 				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 			}
 			
 			// Queue all nodes/edges to add (later we can refine to only on-screen
 			//for (var nodeId:String in m_currentLevel.nodeLayoutObjs) {
-			//var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
-			//m_nodeLayoutQueue.push(nodeLayoutObj);
+				//var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
+				//m_nodeLayoutQueue.push(nodeLayoutObj);
 			//}
 			//var edgeId:String;
 			//for (edgeId in m_currentLevel.edgeLayoutObjs) {
-			//var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
-			//m_edgeLayoutQueue.push(edgeLayoutObj);
+				//var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
+				//m_edgeLayoutQueue.push(edgeLayoutObj);
 			//}
 			onGameComponentsCreated();
 		}
@@ -1026,11 +1057,13 @@ package scenes.game.components
 		
 		private function onLevelViewChanged(evt:MiniMapEvent):void
 		{
+			// TODO: grid?
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		public function recenter():void
 		{
+			// TODO: grid?
 			m_selectionUpdated = (currentMode == SELECTING_MODE);
 			content.x = 0;
 			content.y = 0;
@@ -1064,13 +1097,13 @@ package scenes.game.components
 			centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 			globPt = m_currentLevel.localToGlobal(centerPt);
 			localPt = content.globalToLocal(globPt);
-			moveContent(localPt.x, localPt.y);
+			moveContent(localPt.x, localPt.y, false);
 			trace("center to: " + localPt);
 			
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min((WIDTH - Constants.RightPanelWidth) / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
 				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY));
-			scaleContent(newScale, newScale);
+			scaleContent(newScale, newScale, content);
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
 				content.x += startPtOffset.x;
@@ -1192,11 +1225,9 @@ package scenes.game.components
 		//calculates the relative point of the level's content and centers it
 		public function moveToPoint(percentPoint:Point):void
 		{
-			//		var contentX:Number = percentPoint.x * content.bounds.width + 0.5*m_currentLevel.m_boundingBox.x;
-			//		var contentY:Number = percentPoint.y * content.bounds.height + 0.5*m_currentLevel.m_boundingBox.y;
 			var contentX:Number = m_currentLevel.m_boundingBox.x / scaleX + percentPoint.x * m_currentLevel.m_boundingBox.width / scaleX;
 			var contentY:Number = m_currentLevel.m_boundingBox.y / scaleY + percentPoint.y * m_currentLevel.m_boundingBox.height / scaleY;
-			
+
 			moveContent(contentX, contentY);
 		}
 		
@@ -1205,13 +1236,16 @@ package scenes.game.components
 		 * @param	panX
 		 * @param	panY
 		 */
-		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
+		public function panTo(panX:Number, panY:Number, contentToMove:DisplayObject):void
 		{
-			content.x = clipRect.width / 2 - panX * content.scaleX;
-			inactiveContent.x = content.x;
-			content.y = clipRect.height / 2 - panY * content.scaleY;
-			inactiveContent.y = content.y;
-			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+			contentToMove.x = clipRect.width / 2 - panX * contentToMove.scaleX;
+			contentToMove.y = clipRect.height / 2 - panY * contentToMove.scaleY;
+			if (contentToMove == content)
+			{
+				inactiveContent.x = content.x;
+				inactiveContent.y = content.y;
+				dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+			}
 		}
 		
 		/**
@@ -1234,96 +1268,8 @@ package scenes.game.components
 			dispatchEvent(eventToDispatch);
 		}
 		
-		public function onHighlightTutorialEvent(evt:TutorialEvent):void
-		{
-			/*		if (!evt.highlightOn) {
-			removeSpotlight();
-			return;
-			}
-			if (!m_currentLevel) return;
-			var edge:GameEdgeContainer;
-			switch (evt.type) {
-			case TutorialEvent.HIGHLIGHT_BOX:
-			var node:GameNode = m_currentLevel.getNode(evt.componentId);
-			if (node) spotlightComponent(node);
-			break;
-			case TutorialEvent.HIGHLIGHT_EDGE:
-			edge = m_currentLevel.getEdgeContainer(evt.componentId);
-			if (edge) spotlightComponent(edge, 3.0, 1.75, 1.2);
-			break;
-			case TutorialEvent.HIGHLIGHT_PASSAGE:
-			edge = m_currentLevel.getEdgeContainer(evt.componentId);
-			if (edge && edge.innerFromBoxSegment) spotlightComponent(edge.innerFromBoxSegment, 3.0, 3, 2);
-			break;
-			case TutorialEvent.HIGHLIGHT_CLASH:
-			edge = m_currentLevel.getEdgeContainer(evt.componentId);
-			if (edge && edge.errorContainer) spotlightComponent(edge.errorContainer, 3.0, 1.3, 1.3);
-			break;
-			}*/
-		}
-		
-		private function removeSpotlight():void
-		{
-			if (m_spotlight) m_spotlight.removeFromParent();
-		}
-		
-		public function spotlightComponent(component:DisplayObject, timeSec:Number = 3.0, widthScale:Number = 1.75, heightScale:Number = 1.75):void
-		{
-			if (!m_currentLevel) return;
-			m_startingTouchPoint = new Point(content.x, content.y);
-			var bounds:Rectangle = component.getBounds(component);
-			var centerPt:Point = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-			var globPt:Point = component.localToGlobal(centerPt);
-			var localPt:Point = content.globalToLocal(globPt);
-			
-			if (!m_spotlight) {
-				var spotlightTexture:Texture = AssetInterface.getTexture("Game", "SpotlightClass");
-				m_spotlight = new Image(spotlightTexture);
-				m_spotlight.touchable = false;
-				m_spotlight.alpha = 0.3;
-			}
-			m_spotlight.width = component.width * widthScale;
-			m_spotlight.height = component.height * heightScale;
-			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
-			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
-			content.addChild(m_spotlight);
-			var destX:Number = localPt.x - m_spotlight.width / 2;
-			var destY:Number = localPt.y - m_spotlight.height / 2;
-			Starling.juggler.removeTweens(m_spotlight);
-			Starling.juggler.tween(m_spotlight, 0.9*timeSec, { delay:0.1*timeSec, x:destX, transition: Transitions.EASE_OUT_ELASTIC } );
-			Starling.juggler.tween(m_spotlight, timeSec, { delay:0, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
-		}
-		
 		public override function handleUndoEvent(undoEvent:starling.events.Event, isUndo:Boolean = true):void
 		{
-			if(undoEvent is MouseWheelEvent)
-			{
-				var wheelEvt:MouseWheelEvent = undoEvent as MouseWheelEvent;
-				var delta:Number = wheelEvt.delta;
-				var localMouse:Point = wheelEvt.mousePoint;
-				if(isUndo)
-					handleMouseWheel(-delta, localMouse, false);
-				else
-					handleMouseWheel(delta, localMouse, false);
-			}
-			else if ((undoEvent is MoveEvent) && (undoEvent.type == MoveEvent.MOUSE_DRAG))
-			{
-				var moveEvt:MoveEvent = undoEvent as MoveEvent;
-				var startPoint:Point = moveEvt.startLoc;
-				var endPoint:Point = moveEvt.endLoc;
-				if(isUndo)
-				{
-					content.x = startPoint.x;
-					content.y = startPoint.y;
-				}
-				else
-				{
-					content.x = endPoint.x;
-					content.y = endPoint.y;
-				}
-				inactiveContent.x = content.x;
-				inactiveContent.y = content.y;
-			}
 		}
 		
 		public function getPanZoomAllowed():Boolean
@@ -1349,7 +1295,7 @@ package scenes.game.components
 			m_border.removeFromParent();
 			
 			var bmpdata:BitmapData = drawToBitmapData(backgroundColor);
-			
+	
 			var scaleWidth:Number = _maxwidth/bmpdata.width;
 			var scaleHeight:Number = _maxheight/bmpdata.height;
 			var newWidth:Number, newHeight:Number;
@@ -1367,14 +1313,14 @@ package scenes.game.components
 			}
 			
 			//crashes on my machine in debug, even though should be supported in 11.3
-			//		var byteArray:ByteArray = new ByteArray;
-			//		bmpdata.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
+	//		var byteArray:ByteArray = new ByteArray;
+	//		bmpdata.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
 			
 			var m:Matrix = new Matrix();
 			m.scale(scaleWidth, scaleHeight);
 			var smallBMD:BitmapData = new BitmapData(newWidth, newHeight);
 			smallBMD.draw(bmpdata, m);
-			
+		
 			//restore state
 			content.x = currentX;
 			content.y = currentY;
@@ -1402,27 +1348,28 @@ package scenes.game.components
 		{
 			var support:RenderSupport = new RenderSupport();
 			var star:Starling = Starling.current;
-			
+
 			if (destination == null)
 				destination = new BitmapData(480, 320);
-			
+
 			support.renderTarget = null;
 			support.setOrthographicProjection(0, 0, 960, 640);
 			support.clear(_backgroundColor, 1);
 			render(support, 1.0);
 			support.finishQuadBatch();
-			
+
 			Starling.current.context.drawToBitmapData(destination);
-			//	Starling.current.context.present(); // required on some platforms to avoid flickering
-			
+		//	Starling.current.context.present(); // required on some platforms to avoid flickering
+
 			return destination;
 		}
 		
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{
+			// TODO grid?
 			clipRect = new Rectangle(x, y, newWidth, newHeight);
-			
+		
 			if(contentBarrier)
 				contentBarrier.removeFromParent()
 			
@@ -1537,6 +1484,7 @@ package scenes.game.components
 		
 		protected function handlePaint(globPt:Point):void
 		{
+			// TODO grid?
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
 			const dX:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleX/content.scaleX;
 			const dY:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleY/content.scaleY;

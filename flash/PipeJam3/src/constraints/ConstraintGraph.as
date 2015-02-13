@@ -6,7 +6,7 @@ package constraints
 	
 	import constraints.events.ErrorEvent;	
 	import utils.XString;
-	
+
 	public class ConstraintGraph extends EventDispatcher
 	{
 		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(1);
@@ -47,7 +47,7 @@ package constraints
 		public var currentScore:int = 0;
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
-		
+		static public var m_maxScore:int = 0;
 		public var qid:int = -1;
 		
 		static protected var updateCount:int = 0;
@@ -59,8 +59,8 @@ package constraints
 			
 			oldScore = prevScore;
 			prevScore = currentScore;
-			//			if(updateCount++ % 200 == 0)
-			//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
+//			if(updateCount++ % 200 == 0)
+//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
@@ -68,7 +68,7 @@ package constraints
 			var newSatisfiedConstraints:Dictionary = new Dictionary();
 			if (varIdChanged != null && propChanged != null) {
 				var varChanged:ConstraintVar = variableDict[varIdChanged] as ConstraintVar;
-				
+
 				var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
 				var prevConstraintPoints:int = 0;
 				// Recalc incoming/outgoing constraints
@@ -108,19 +108,19 @@ package constraints
 					}
 				}
 				// Offset score by change in bonus and new constraints satisfied/not
-				//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 				currentScore += newConstraintPoints - prevConstraintPoints;
 				trace("new currentScore ", currentScore);
 			}
-			else {
+			 else {
 				currentScore = 0;
-				//				for (var varId:String in variableDict) {
-				//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
-				//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
-				//						// If there is a bonus for the current value of thisVar, add to score
-				//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
-				//					}
-				//				}
+//				for (var varId:String in variableDict) {
+//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
+//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
+//						// If there is a bonus for the current value of thisVar, add to score
+//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+//					}
+//				}
 				for (constraintId in constraintsDict) { // TODO: we are recalculating each clause for every edge, need only traverse clauses once
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
@@ -180,6 +180,7 @@ package constraints
 			var graph1:ConstraintGraph = new ConstraintGraph();
 			var ver:String = levelObj[VERSION];
 			var defaultValue:String = levelObj[DEFAULT_VAR];
+			m_maxScore = 0;
 			graph1.qid = parseInt(levelObj[QID]);
 			switch (ver) {
 				case "1": // Version 1
@@ -285,6 +286,7 @@ package constraints
 						if (newConstraint is ConstraintEdge) {
 							graph1.nConstraints++;
 							graph1.constraintsDict[newConstraint.id] = newConstraint;
+							m_maxScore++;
 							// Attach any groups
 							if (groupsArr && GROUP_LEN) {
 								var fillLeft:Boolean = (newConstraint.lhs.groups == null);
@@ -325,6 +327,7 @@ package constraints
 					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + ver);
 					break;
 			}
+			
 			return graph1;
 		}
 		
@@ -340,7 +343,7 @@ package constraints
 			var rhsType:String = result[4];
 			var rhsId:String = result[5];
 			var typeNumArray:Array;
-			
+ 			
 			var lsuffix:String = "";
 			var rsuffix:String = "";
 			if (rhsType == VAR && lhsType == C) {
@@ -363,8 +366,8 @@ package constraints
 			{
 				throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
 			}
-			return newConstraint;
-		}
+ 			return newConstraint;
+ 		}
 		
 		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _graph:ConstraintGraph, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintSide
 		{

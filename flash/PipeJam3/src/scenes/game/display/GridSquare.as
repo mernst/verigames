@@ -28,6 +28,7 @@ package scenes.game.display
 
 	public class GridSquare
 	{
+		
 		public function GridSquare( x:Number, y:Number, height:Number, width:Number)
 		{
 			
@@ -35,6 +36,7 @@ package scenes.game.display
 		/*
 		protected function onTouch(event:TouchEvent):void
 		{
+			if (!DISABLE_DRAWING_BOARDS) return;
 			var touchedDrawingBoard:Sprite;
 			if (event.getTouches(nodeDrawingBoard, TouchPhase.ENDED).length) {
 				touchedDrawingBoard = nodeDrawingBoard;
@@ -99,6 +101,7 @@ package scenes.game.display
 		
 		private function onClicked(node:VariableNode, newIsNarrow:Boolean, dispatchChangeEvent:Boolean, loc:Point = null):void
 		{
+			if (!DISABLE_DRAWING_BOARDS) return;
 			var constraintVar:ConstraintVar = node.graphVar;
 			if (!constraintVar.constant && node.isEditable && node.isNarrow != newIsNarrow) {
 				node.isNarrow = newIsNarrow;
@@ -150,9 +153,10 @@ package scenes.game.display
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 		}
-
+		
 		public function activate():void
-		{			
+		{
+			if (!DISABLE_DRAWING_BOARDS) return;
 			if(!isActivated)
 			{
 				if (conflictBackgroundDrawingBoard)
@@ -161,6 +165,7 @@ package scenes.game.display
 					nodeDrawingBoard.removeFromParent(true);
 				if(edgeDrawingBoard)
 					edgeDrawingBoard.removeFromParent(true);
+				if (!DISABLE_DRAWING_BOARDS) return;
 				conflictBackgroundDrawingBoard = new Sprite;
 				conflictBackgroundDrawingBoard.touchable = false;
 				nodeDrawingBoard = new Sprite;
@@ -231,28 +236,18 @@ package scenes.game.display
 			m_nodeScaleY = nodeScaleY;
 		}
 		
-		public function draw():void
+		private function checkNodeEdgesForRedraw(node:Node):void
 		{
-			if(!isDirty)
-				return;
-			conflictBackgroundDrawingBoard.unflatten();
-			nodeDrawingBoard.unflatten();
-			edgeDrawingBoard.unflatten();
-			for each(var node:Node in nodeList)
+			for each(var gameEdgeID:String in node.connectedEdgeIds)
 			{
-				if(node.isDirty)
+				var edge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+				if (edge.currentGroupDepth != currentGroupDepth)
 				{
-					node.createSkin();
-					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
-					if (node.skin) nodeDrawingBoard.addChild(node.skin);
-					if (node.backgroundSkin) conflictBackgroundDrawingBoard.addChild(node.backgroundSkin);
+					edge.currentGroupDepth = currentGroupDepth;
+					if (edge.skin) edge.createSkin(); // move edge endpoints if needed due to grouping
+					edge.isDirty = true;
 				}
-				node.isDirty = false;
-			}
-			var edge:Edge;
-			for each(edge in edgeList)
-			{				
-				if(edge.skin && edge.isDirty) //needs to be created  before here if we want it
+				if (edge.skin && edge.isDirty)
 				{
 					edge.updateEdge(node);
 					if(edge.skin.parent != edgeDrawingBoard)
@@ -271,7 +266,7 @@ package scenes.game.display
 							edge.skin.x -= componentXDisplacement;
 							edge.skin.y -= componentYDisplacement;
 							
-							edge.skin.addToParent(edgeDrawingBoard);
+							edgeDrawingBoard.addChild(edge.skin);
 							edge.parentXOffset = gridXOffset;
 							edge.parentYOffset = gridYOffset; 
 							//	trace(edgeObj.parentXOffset, edgeObj.parentYOffset, edgeObj.edgeSkin.x, edgeObj.edgeSkin.y);
@@ -281,28 +276,72 @@ package scenes.game.display
 					if(edge.skin.parent.parent == null)
 						World.m_world.active_level.addChildToEdgeLevel(edgeDrawingBoard);
 				}
+				if (!edge.skin)
+				{
+					edge.createSkin();
+					if (edge.skin)
+					{
+						edgeDrawingBoard.addChild(edge.skin);
+						edge.skin.x -= componentXDisplacement;
+						edge.skin.y -= componentYDisplacement;
+					}
+				}
+			}
+		}
+		
+		public function changeGroupDepth(newGroupDepth:int):void
+		{
+			isDirty = (newGroupDepth == currentGroupDepth);
+			currentGroupDepth = newGroupDepth;
+		}
+		
+		public function draw():void
+		{
+			if(!isDirty)
+				return;
+			if (!DISABLE_DRAWING_BOARDS) return;
+			conflictBackgroundDrawingBoard.unflatten();
+			nodeDrawingBoard.unflatten();
+			edgeDrawingBoard.unflatten();
+			for each(var node:Node in nodeList)
+			{
+				var newGroup:String = node.graphConstraintSide.getGroupAt(currentGroupDepth);
+				var oldGroup:String = node.graphConstraintSide.getGroupAt(node.currentGroupDepth);
+				if (newGroup != oldGroup)
+				{
+					if (newGroup != "")
+					{
+						// If grouped, disable skin
+						if (node.skin) node.skin.disableSkin();
+					}
+					else
+					{
+						// If no longer grouped, mark as dirty
+						node.isDirty = true;
+					}
+					node.currentGroupDepth = currentGroupDepth;
+				}
+				if(node.isDirty)
+				{
+					node.createSkin();
+					node.scaleSkin(m_nodeScaleX, m_nodeScaleY);
+					if (node.skin) nodeDrawingBoard.addChild(node.skin);
+					if (node.backgroundSkin) conflictBackgroundDrawingBoard.addChild(node.backgroundSkin);
+				}
+				node.isDirty = false;
+				// Check edges for redraw
+				checkNodeEdgesForRedraw(node);
 			}
 			
 			conflictBackgroundDrawingBoard.flatten();
 			nodeDrawingBoard.flatten();
-			
-			for each(edge in edgeList)
-			{
-				if(edge.skin == null)
-				{
-					var edgeSkin:EdgeSkin = edge.createEdgeSkin();
-					edgeSkin.addToParent(edgeDrawingBoard);
-					edgeSkin.x -= componentXDisplacement;
-					edgeSkin.y -= componentYDisplacement;
-				}
-			}
 			edgeDrawingBoard.flatten();
 			isDirty = false;
 		}
 		
 		private function createEdges():void
 		{
-			if(!edgeDrawingBoard)
+			if(!edgeDrawingBoard && !DISABLE_DRAWING_BOARDS)
 			{
 				edgeDrawingBoard = new Sprite;
 				edgeDrawingBoard.x = componentXDisplacement;
@@ -314,10 +353,13 @@ package scenes.game.display
 			{
 				if(edge.skin == null)
 				{
-					var edgeSkin:EdgeSkin = edge.createEdgeSkin();
-					edgeSkin.addToParent(edgeDrawingBoard);
-					edgeSkin.x -= componentXDisplacement;
-					edgeSkin.y -= componentYDisplacement;
+					edge.createSkin();
+					if (edge.skin)
+					{
+						edgeDrawingBoard.addChild(edge.skin);
+						edge.skin.x -= componentXDisplacement;
+						edge.skin.y -= componentYDisplacement;
+					}
 				}
 			}
 			edgeDrawingBoard.flatten();
@@ -361,15 +403,15 @@ package scenes.game.display
 						var newParent:GridSquare;
 
 						//need to check if the one end is on screen, and if it is, pass this edge off to that grid
-						if(edge.toNode.parentGrid != this && edge.toNode.parentGrid.isActivated == true)
-							newParent = edge.toNode.parentGrid;
-						else if(edge.fromNode.parentGrid != this && edge.fromNode.parentGrid.isActivated == true)
-							newParent = edge.fromNode.parentGrid;
-						else
-						{
-							edge.skin.removeFromParent(dispose);
-							edge.skin = null;
-						}
+						//if(edge.toNode.parentGrid != this && edge.toNode.parentGrid.isActivated == true)
+							//newParent = edge.toNode.parentGrid;
+						//else if(edge.fromNode.parentGrid != this && edge.fromNode.parentGrid.isActivated == true)
+							//newParent = edge.fromNode.parentGrid;
+						//else
+						//{
+							//edge.skin.removeFromParent(dispose);
+							//edge.skin = null;
+						//}
 						
 						//if the other end has a skin (it's on screen), but a different parent (not this one, that we are disposing of currently), attach this edge to that node
 						if(newParent)
@@ -396,8 +438,8 @@ package scenes.game.display
 		//	for each (var edge:Edge in edgeList) {
 		//		removeGridChild(edge, dispose);
 		//	}
-			nodeDrawingBoard.removeFromParent(dispose);
-			edgeDrawingBoard.removeFromParent(dispose);
+			if (nodeDrawingBoard) nodeDrawingBoard.removeFromParent(dispose);
+			if (edgeDrawingBoard) edgeDrawingBoard.removeFromParent(dispose);
 		}
 		
 		public function handlePaintSelection(paintPt:Point, paintRadiusSquared:Number, selectedNodes:Vector.<GridChild>, maxSelectable:int):Boolean
@@ -435,6 +477,7 @@ package scenes.game.display
 		
 		public function unselectAll():void
 		{
+			if (!DISABLE_DRAWING_BOARDS) return;
 			if(NumNodesSelected)
 			{
 				nodeDrawingBoard.unflatten();
@@ -455,6 +498,7 @@ package scenes.game.display
 		
 		public function updateSelectedNodesAssignment(assignmentIsWide:Boolean):void
 		{
+			if (!DISABLE_DRAWING_BOARDS) return;
 			if(NumNodesSelected)
 			{
 				if(nodeDrawingBoard)
@@ -495,6 +539,7 @@ package scenes.game.display
 		
 		public function intersects(viewRect:Rectangle):Boolean
 		{
+			if (!DISABLE_DRAWING_BOARDS) return false;
 			if (nodeDrawingBoard.bounds.intersects(viewRect) ||
 				edgeDrawingBoard.bounds.intersects(viewRect))
 					return true;
