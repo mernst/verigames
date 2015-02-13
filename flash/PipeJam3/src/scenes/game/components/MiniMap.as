@@ -386,7 +386,7 @@ package scenes.game.components
 				savedBB = currentLevel.m_boundingBox.clone();
 			}
 			var levelBB:Rectangle = currentLevel ? currentLevel.m_boundingBox.clone() : new Rectangle();
-			levelBB.inflate(0.1 * GridViewPanel.WIDTH / GridViewPanel.MIN_SCALE, 0.1 * GridViewPanel.HEIGHT / GridViewPanel.MIN_SCALE);
+			levelBB.inflate(0.1 * GridViewPanel.WIDTH * currentLevel.levelLayoutScale / GridViewPanel.MIN_SCALE, 0.1 * GridViewPanel.HEIGHT * currentLevel.levelLayoutScale / GridViewPanel.MIN_SCALE);
 			return levelBB;
 		}
 		

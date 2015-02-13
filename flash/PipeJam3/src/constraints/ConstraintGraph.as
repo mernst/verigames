@@ -6,7 +6,7 @@ package constraints
 	
 	import constraints.events.ErrorEvent;	
 	import utils.XString;
-
+	
 	public class ConstraintGraph extends EventDispatcher
 	{
 		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(1);
@@ -18,6 +18,7 @@ package constraints
 		private static const SCORING:String = "scoring";
 		private static const VARIABLES:String = "variables";
 		private static const CONSTRAINTS:String = "constraints";
+		private static const GROUPS:String = "groups";
 		// Variable fields:
 		private static const DEFAULT:String = "default";
 		private static const SCORE:String = "score";
@@ -32,9 +33,13 @@ package constraints
 		private static const NULL_SCORING:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
 		public var variableDict:Dictionary = new Dictionary();
+		public var nVars:uint = 0;
 		public var constraintsDict:Dictionary = new Dictionary();
+		public var nConstraints:uint = 0;
 		public var clauseDict:Dictionary = new Dictionary();
+		public var nClauses:uint = 0;
 		public var groupsArr:Array = new Array();
+		public var groupSizes:Vector.<uint> = new Vector.<uint>();
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
@@ -42,7 +47,7 @@ package constraints
 		public var currentScore:int = 0;
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
-		static public var m_maxScore:int = 0;
+		
 		public var qid:int = -1;
 		
 		static protected var updateCount:int = 0;
@@ -54,8 +59,8 @@ package constraints
 			
 			oldScore = prevScore;
 			prevScore = currentScore;
-//			if(updateCount++ % 200 == 0)
-//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
+			//			if(updateCount++ % 200 == 0)
+			//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
@@ -63,7 +68,7 @@ package constraints
 			var newSatisfiedConstraints:Dictionary = new Dictionary();
 			if (varIdChanged != null && propChanged != null) {
 				var varChanged:ConstraintVar = variableDict[varIdChanged] as ConstraintVar;
-
+				
 				var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
 				var prevConstraintPoints:int = 0;
 				// Recalc incoming/outgoing constraints
@@ -103,19 +108,19 @@ package constraints
 					}
 				}
 				// Offset score by change in bonus and new constraints satisfied/not
-//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+				//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 				currentScore += newConstraintPoints - prevConstraintPoints;
 				trace("new currentScore ", currentScore);
 			}
-			 else {
+			else {
 				currentScore = 0;
-//				for (var varId:String in variableDict) {
-//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
-//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
-//						// If there is a bonus for the current value of thisVar, add to score
-//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
-//					}
-//				}
+				//				for (var varId:String in variableDict) {
+				//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
+				//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
+				//						// If there is a bonus for the current value of thisVar, add to score
+				//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+				//					}
+				//				}
 				for (constraintId in constraintsDict) { // TODO: we are recalculating each clause for every edge, need only traverse clauses once
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
@@ -175,7 +180,6 @@ package constraints
 			var graph1:ConstraintGraph = new ConstraintGraph();
 			var ver:String = levelObj[VERSION];
 			var defaultValue:String = levelObj[DEFAULT_VAR];
-			m_maxScore = 0;
 			graph1.qid = parseInt(levelObj[QID]);
 			switch (ver) {
 				case "1": // Version 1
@@ -233,20 +237,85 @@ package constraints
 							graph1.variableDict[formattedId] = newVar;
 						}
 					}
-					// Build constraints (and add any uninitialized variables to graph.variableDict)
+					// Build constraints, add any uninitialized variables to graph.variableDict, and process groups
 					var constraintsArr:Array = levelObj[CONSTRAINTS];
 					var groupsArr:Array = levelObj.hasOwnProperty(GROUPS) ? levelObj[GROUPS] : new Array();
+					const GROUP_LEN:uint = groupsArr ? groupsArr.length : 0;
+					/**
+					 * "groups": [
+					 * 			{"var:1":["var:2"], "var:5":["var:7"],...},    <-- stage 1 of grouping
+					 * 			{"var:1":["var:2","var:8"], "var:5":["var:7","var:9"],...}, <-- stage 2 of grouping
+					 * 			{"var:1":["var:2","var:5","var:7","var:9"],...}, <-- stage 3 of grouping
+					 * 		... ]
+					 */
+					var groupsArrComplete:Array;
+					graph1.groupSizes = new Vector.<uint>();
+					if (groupsArr) {
+						groupsArrComplete = new Array();
+						for (var g:int = 0; g < GROUP_LEN; g++) {
+							var completeGroupDict:Dictionary = new Dictionary();
+							var groupSize:uint = 0;
+							for (var groupId:String in groupsArr[g]) {
+								var groupIdParts:Array = groupId.split(":");
+								if (groupIdParts[0] == "clause") groupIdParts[0] = "c";
+								var formattedGroupId:String = groupIdParts[0] + "_" + groupIdParts[1];
+								var groupedIds:Array = groupsArr[g][groupId] as Array;
+								for each (var groupedId:String in groupedIds) {
+									var groupedIdParts:Array = groupedId.split(":");
+									if (groupedIdParts[0] == "clause") groupedIdParts[0] = "c";
+									var formattedGroupedId:String = groupedIdParts[0] + "_" + groupedIdParts[1];
+									completeGroupDict[formattedGroupedId] = formattedGroupId;
+								}
+								groupSize++;
+							}
+							graph1.groupSizes.push(groupSize);
+							groupsArrComplete.push(completeGroupDict);
+						}
+					}
+					graph1.groupsArr = groupsArr;
+					graph1.nVars = graph1.nClauses = graph1.nConstraints = 0;
 					for (var c:int = 0; c < constraintsArr.length; c++) {
 						var newConstraint:Constraint;
 						if (getQualifiedClassName(constraintsArr[c]) == "String") {
 							// process as String, i.e. "var:1 <= c:2"
-							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1.variableDict, graph1.clauseDict, graphDefaultVal, graph1.graphScoringConfig);
+							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1, graphDefaultVal, graph1.graphScoringConfig);
 						} else {
 							throw new Error("Unknown constraint format: " + constraintsArr[c]);
 						}
 						if (newConstraint is ConstraintEdge) {
+							graph1.nConstraints++;
 							graph1.constraintsDict[newConstraint.id] = newConstraint;
-							m_maxScore++;
+							// Attach any groups
+							if (groupsArr && GROUP_LEN) {
+								var fillLeft:Boolean = (newConstraint.lhs.groups == null);
+								var fillRight:Boolean = (newConstraint.rhs.groups == null);
+								if (fillLeft) newConstraint.lhs.groups = new Vector.<String>();
+								if (fillRight) newConstraint.rhs.groups = new Vector.<String>();
+								if (fillLeft || fillRight) {
+									for (var g1:int = 0; g1 < GROUP_LEN; g1++) {
+										if (fillLeft) {
+											var leftGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.lhs.id) ? groupsArrComplete[g1][newConstraint.lhs.id] : "";
+											newConstraint.lhs.groups.push(leftGroupId);
+											if (newConstraint.lhs.id != "" && 
+												newConstraint.lhs.id != leftGroupId && 
+												newConstraint.lhs.rank == 0) {
+												// If grouped for the first time this round, rank = group depth
+												newConstraint.lhs.rank = newConstraint.lhs.groups.length;
+											}
+										}
+										if (fillRight) {
+											var rightGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.rhs.id) ? groupsArrComplete[g1][newConstraint.rhs.id] : "";
+											newConstraint.rhs.groups.push(rightGroupId);
+											if (newConstraint.rhs.id != "" && 
+												newConstraint.rhs.id != rightGroupId && 
+												newConstraint.rhs.rank == 0) {
+												// If grouped for the first time this round, rank = group depth
+												newConstraint.rhs.rank = newConstraint.rhs.groups.length;
+											}
+										}
+									}
+								}
+							}
 						} else {
 							throw new Error("Unknown constraint type:" + newConstraint);
 						}
@@ -256,11 +325,10 @@ package constraints
 					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + ver);
 					break;
 			}
-			
 			return graph1;
 		}
 		
-		private static function parseConstraintString(_str:String, _variableDictionary:Dictionary, _clauseDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
+		private static function parseConstraintString(_str:String, _graph:ConstraintGraph, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint
 		{
 			var pattern:RegExp = /(var|c):(.*) (<|=)= (var|c):(.*)/i;
 			var result:Object = pattern.exec(_str);
@@ -272,7 +340,7 @@ package constraints
 			var rhsType:String = result[4];
 			var rhsId:String = result[5];
 			var typeNumArray:Array;
- 			
+			
 			var lsuffix:String = "";
 			var rsuffix:String = "";
 			if (rhsType == VAR && lhsType == C) {
@@ -283,8 +351,8 @@ package constraints
 				trace("WARNING! Constraint found between two types (no var): " + JSON.stringify(_str));
 			}
 			
-			var lhs:ConstraintSide = parseConstraintSide(lhsType, lhsId, lsuffix, _variableDictionary, _clauseDictionary, _defaultVal, _defaultScoring.clone());
-			var rhs:ConstraintSide = parseConstraintSide(rhsType, rhsId, rsuffix, _variableDictionary, _clauseDictionary, _defaultVal, _defaultScoring.clone());
+			var lhs:ConstraintSide = parseConstraintSide(lhsType, lhsId, lsuffix, _graph, _defaultVal, _defaultScoring.clone());
+			var rhs:ConstraintSide = parseConstraintSide(rhsType, rhsId, rsuffix, _graph, _defaultVal, _defaultScoring.clone());
 			
 			var newConstraint:Constraint;
 			if(rhsType == 'c' || lhsType == 'c')
@@ -295,27 +363,29 @@ package constraints
 			{
 				throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
 			}
- 			return newConstraint;
- 		}
+			return newConstraint;
+		}
 		
-		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _variableDictionary:Dictionary, _clauseDictionary:Dictionary, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintSide
+		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _graph:ConstraintGraph, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintSide
 		{
 			var fullId:String = _type + "_" + _type_num + _typeSuffix;
 			var constrSide:ConstraintSide;
 			if (_type == VAR) {
-				if (_variableDictionary.hasOwnProperty(fullId)) {
-					constrSide = _variableDictionary[fullId] as ConstraintVar;
+				if (_graph.variableDict.hasOwnProperty(fullId)) {
+					constrSide = _graph.variableDict[fullId] as ConstraintVar;
 				} else {
 					constrSide = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
-					_variableDictionary[fullId] = constrSide;
+					_graph.variableDict[fullId] = constrSide;
+					_graph.nVars++;
 				}
 			} else if (_type == C) {
 				fullId = _type + "_" + _type_num;
-				if (_clauseDictionary.hasOwnProperty(fullId)) {
-					constrSide = _clauseDictionary[fullId] as ConstraintClause;
+				if (_graph.clauseDict.hasOwnProperty(fullId)) {
+					constrSide = _graph.clauseDict[fullId] as ConstraintClause;
 				} else {
 					constrSide = new ConstraintClause(fullId, _defaultScoring);
-					_clauseDictionary[fullId] = constrSide;
+					_graph.clauseDict[fullId] = constrSide;
+					_graph.nClauses++;
 				}
 			} else {
 				throw new Error("Invalid constraint element found: ('" + _type + "'). Expecting 'var' or 'c'");

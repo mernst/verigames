@@ -12,8 +12,6 @@ package scenes.game.display
 		public var id:String;
 		
 		public var layoutObject:Object;
-		public var x:Number;
-		public var y:Number;
 		
 		public var bb:Rectangle;
 		public var centerPoint:Point;
@@ -25,27 +23,19 @@ package scenes.game.display
 		
 		public var startingSelectionState:Boolean = false;
 		
-		public var parentGrid:GridSquare;
-		
 		public var connectedEdgeIds:Vector.<String> = new Vector.<String>();
+		public var outgoingEdgeIds:Vector.<String> = new Vector.<String>();
 		public var unused:Boolean = true;
-		
-		protected var gridOffset:Point;
 		
 		public var skin:NodeSkin;
 		public var backgroundSkin:NodeSkin;
+		public var currentGroupDepth:uint = 0;
 		
-		public function GridChild(_layoutObject:Object, _id:String, _bb:Rectangle, _parentGrid:GridSquare) 
+		public function GridChild(_id:String, _bb:Rectangle) 
 		{
-			layoutObject = _layoutObject;
 			id = _id;
 			bb = _bb;
 			
-			parentGrid = _parentGrid;
-			gridOffset = new Point(parentGrid.componentXDisplacement, parentGrid.componentYDisplacement);
-			
-			x = layoutObject["x"];
-			y = layoutObject["y"];
 			//calculate center point
 			var xCenter:Number = bb.x + bb.width * .5;
 			var yCenter:Number = bb.y + bb.height * .5;
@@ -64,7 +54,7 @@ package scenes.game.display
 		
 		public function scaleSkin(newScaleX:Number, newScaleY:Number):void
 		{
-
+			
 		}
 		
 		public function removeSkin():void
@@ -78,25 +68,22 @@ package scenes.game.display
 		public function select():void
 		{
 			isSelected = true;
-			parentGrid.NumNodesSelected++;
 		}
 		
 		public function unselect():void
 		{
 			isSelected = false;
-			parentGrid.NumNodesSelected--;
 		}
 		
 		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
 		{
-			parentGrid.isDirty = true;
 			isDirty = true;
 			if(dirtyEdges)
 			{
 				for each(var gameEdgeID:String in connectedEdgeIds)
 				{
 					// TODO: Circular dependency
-					var edgeObj:Object = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
+					var edgeObj:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
 					if (edgeObj) edgeObj.isDirty = true;
 				}
 			}
@@ -111,5 +98,5 @@ package scenes.game.display
 			}
 		}
 	}
-
+	
 }

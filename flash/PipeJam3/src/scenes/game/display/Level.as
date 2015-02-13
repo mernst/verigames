@@ -260,13 +260,13 @@ package scenes.game.display
 			}
 			
 			//for (var varId:String in levelGraph.variableDict) {
-				//var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
-				//graphVar.addEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onWidgetChange);
+			//var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
+			//graphVar.addEventListener(VarChangeEvent.VAR_CHANGED_IN_GRAPH, onWidgetChange);
 			//}
 			addEventListener(VarChangeEvent.VAR_CHANGE_USER, onWidgetChange);
-//			
-//			refreshTroublePoints();
-//			flatten();
+			//			
+			//			refreshTroublePoints();
+			//			flatten();
 			
 			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION,true));
 		}
@@ -289,7 +289,7 @@ package scenes.game.display
 			
 			//trace("load level time1", new Date().getTime()-time1);
 			this.alpha = .999;
-
+			
 			totalMoveDist = new Point();
 			loadLayout();
 			
@@ -491,7 +491,7 @@ package scenes.game.display
 		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
 		{
 			var newNodeScaleX:Number,
-				newNodeScaleY:Number;
+			newNodeScaleY:Number;
 			if (newScaleX < MIN_NODE_SCALE || newScaleY < MIN_NODE_SCALE) {
 				newNodeScaleX = MIN_NODE_SCALE / newScaleX;
 				newNodeScaleY = MIN_NODE_SCALE / newScaleY;
@@ -573,16 +573,16 @@ package scenes.game.display
 			);
 			
 			m_boundingBox = new Rectangle(	levelLayoutScale * (minX - Constants.SKIN_DIAMETER * .5), 
-											levelLayoutScale * (minY - Constants.SKIN_DIAMETER * .5),
-											levelLayoutScale * (maxX - minX + Constants.SKIN_DIAMETER),
-											levelLayoutScale * (maxY - minY + Constants.SKIN_DIAMETER)	);
+				levelLayoutScale * (minY - Constants.SKIN_DIAMETER * .5),
+				levelLayoutScale * (maxX - minX + Constants.SKIN_DIAMETER),
+				levelLayoutScale * (maxY - minY + Constants.SKIN_DIAMETER)	);
 			
 			m_groupGrids = new Vector.<GroupGrid>();
 			const MAX_GROUP_DEPTH:int = levelGraph.groupsArr.length;
 			for (var groupDepth:int = 0; groupDepth <= MAX_GROUP_DEPTH; groupDepth++)
 			{
 				var nodeDict:Object,
-					groupSize:uint;
+				groupSize:uint;
 				if (groupDepth == 0) {
 					nodeDict = m_levelLayoutObj["layout"]["vars"];
 					groupSize = levelGraph.nVars + levelGraph.nClauses;
@@ -690,7 +690,7 @@ package scenes.game.display
 			var encoder:Base64Encoder = new Base64Encoder();
 			encoder.encodeBytes(bytes);
 			var encodedString:String = encoder.toString();
-
+			
 			return encodedString;
 		}
 		
@@ -722,11 +722,11 @@ package scenes.game.display
 			PipeJamGame.levelInfo.hash = new Array();
 			
 			var assignmentsObj:Object = { "id": original_level_name, 
-									"hash": [], 
-									"target_score": this.m_targetScore,
-									"starting_score": this.levelGraph.currentScore,
-		//							"starting_jams": this.m_levelConflictEdges.length,
-									"assignments": { } };
+				"hash": [], 
+				"target_score": this.m_targetScore,
+					"starting_score": this.levelGraph.currentScore,
+					//							"starting_jams": this.m_levelConflictEdges.length,
+					"assignments": { } };
 			var count:int = 0;
 			var numWide:int = 0;
 			for (nodeId in nodeLayoutObjs) {
@@ -799,7 +799,7 @@ package scenes.game.display
 				//levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue, levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
-
+				
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			} else {
 				levelGraph.updateScore();
@@ -820,10 +820,10 @@ package scenes.game.display
 		
 		protected function refreshTroublePoints():void
 		{
-	//		for (var edgeId:String in m_gameEdgeDict) {
-	//			var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-	//			gameEdge.refreshConflicts();
-	//		}
+			//		for (var edgeId:String in m_gameEdgeDict) {
+			//			var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+			//			gameEdge.refreshConflicts();
+			//		}
 		}
 		
 		//data object should be in final selected/unselected state
@@ -932,7 +932,7 @@ package scenes.game.display
 			if (!value) return _defaultValue;
 			return XString.stringToBool(value);
 		}
-
+		
 		public function getNodes():Dictionary
 		{
 			return nodeLayoutObjs;
@@ -973,24 +973,24 @@ package scenes.game.display
 		
 		public function hideErrorText():void
 		{
-//			if (!m_hidingErrorText) {
-//				for (var edgeId:String in m_gameEdgeDict) {
-//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-//					gameEdge.hideErrorText();
-//				}
-//				m_hidingErrorText = true;
-//			}
+			//			if (!m_hidingErrorText) {
+			//				for (var edgeId:String in m_gameEdgeDict) {
+			//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+			//					gameEdge.hideErrorText();
+			//				}
+			//				m_hidingErrorText = true;
+			//			}
 		}
 		
 		public function showErrorText():void
 		{
-//			if (m_hidingErrorText) {
-//				for (var edgeId:String in m_gameEdgeDict) {
-//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
-//					gameEdge.showErrorText();
-//				}
-//				m_hidingErrorText = false;
-//			}
+			//			if (m_hidingErrorText) {
+			//				for (var edgeId:String in m_gameEdgeDict) {
+			//					var gameEdge:GameEdgeContainer = m_gameEdgeDict[edgeId] as GameEdgeContainer;
+			//					gameEdge.showErrorText();
+			//				}
+			//				m_hidingErrorText = false;
+			//			}
 		}
 		
 		/**
@@ -1075,7 +1075,7 @@ package scenes.game.display
 		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
 		public function onDeletePressed():void
 		{
-
+			
 		}
 		
 		
@@ -1152,7 +1152,7 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
-	
+		
 		public var updateCallback:Function;
 		public var doneCallback:Function;
 		private var constraintArray:Array;
@@ -1184,16 +1184,16 @@ package scenes.game.display
 			directNodeArray = new Array;
 			storedDirectEdgesDict = new Dictionary;
 			m_unsat_weight = int.MAX_VALUE;
-
+			
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			
 			createConstraintsForClauses(); 
-
+			
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
 			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
-
+			
 			if(constraintArray.length > 0)
 			{
 				//generate initvars array
@@ -1205,7 +1205,7 @@ package scenes.game.display
 					else
 						initvarsArray.push(1);
 				}
-
+				
 				//build in a delay to allow UI to change
 				World.m_world.showSolverState(true);
 				timer = new Timer(500,1);
