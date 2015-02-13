@@ -41,7 +41,7 @@ package constraints
 		public var currentScore:int = 0;
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
-		
+		static public var m_maxScore:int = 0;
 		public var qid:int = -1;
 		
 		static protected var updateCount:int = 0;
@@ -173,6 +173,7 @@ package constraints
 			var graph1:ConstraintGraph = new ConstraintGraph();
 			var ver:String = levelObj[VERSION];
 			var defaultValue:String = levelObj[DEFAULT_VAR];
+			m_maxScore = 0;
 			graph1.qid = parseInt(levelObj[QID]);
 			switch (ver) {
 				case "1": // Version 1
@@ -242,6 +243,7 @@ package constraints
 						}
 						if (newConstraint is ConstraintEdge) {
 							graph1.constraintsDict[newConstraint.id] = newConstraint;
+							m_maxScore++;
 						} else {
 							throw new Error("Unknown constraint type:" + newConstraint);
 						}
@@ -251,6 +253,7 @@ package constraints
 					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + ver);
 					break;
 			}
+			
 			return graph1;
 		}
 		

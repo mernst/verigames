@@ -4,8 +4,6 @@ package events
 	
 	public class MenuEvent extends Event 
 	{
-		public static const SAVE_LAYOUT:String = "save_layout";
-		public static const SET_NEW_LAYOUT:String = "set_new_layout";
 		public static const SUBMIT_LEVEL:String = "submit_level";
 		public static const SAVE_LEVEL:String = "save_level";
 		public static const POST_SAVE_DIALOG:String = "post_save_dialog";

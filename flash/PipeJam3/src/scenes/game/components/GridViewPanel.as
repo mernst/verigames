@@ -67,7 +67,7 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static var WIDTH:Number = Constants.GameWidth;
-		public static var HEIGHT:Number = Constants.GameHeight - GameControlPanel.HEIGHT + 10;
+		public static var HEIGHT:Number = Constants.GameHeight;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;
@@ -113,16 +113,19 @@ package scenes.game.components
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
-		protected static const RELEASE_SHIFT_MODE:int = 3;
+		protected static const HOVER_MODE:int = 3;
+		protected static const RELEASE_SHIFT_MODE:int = 4;
 		
 		//brush details
-		protected var m_solverBrush:Sprite;
+		protected var m_solver1Brush:Sprite;
+		protected var m_solver2Brush:Sprite;
 		protected var m_widenBrush:Sprite;
 		protected var m_narrowBrush:Sprite;
 	
-		public static const SOLVER_BRUSH:String = "SOLVER_BRUSH";
-		public static const WIDEN_BRUSH:String = "WIDEN_BRUSH";
-		public static const NARROW_BRUSH:String = "NARROW_BRUSH";
+		public static const SOLVER1_BRUSH:String = "BrushCircle";
+		public static const SOLVER2_BRUSH:String = "BrushDiamond";
+		public static const WIDEN_BRUSH:String = "BrushHexagon";
+		public static const NARROW_BRUSH:String = "BrushSquare";
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
@@ -153,7 +156,7 @@ package scenes.game.components
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
-			m_border.width = WIDTH - Constants.RightPanelWidth + 10;
+			m_border.width = WIDTH - 40;
 			m_border.height = HEIGHT + 10;
 			m_border.x = m_border.y = -5;
 			m_border.touchable = false;
@@ -165,11 +168,12 @@ package scenes.game.components
 			addChildAt(contentBarrier,0);
 			
 			// Create paintbrushes for menu, and for mouse cursor
-			m_solverBrush = createPaintBrush(SOLVER_BRUSH, true);
+			m_solver1Brush = createPaintBrush(SOLVER1_BRUSH, true);
+			m_solver2Brush = createPaintBrush(SOLVER2_BRUSH, true);
 			m_widenBrush = createPaintBrush(WIDEN_BRUSH, true);
 			m_narrowBrush = createPaintBrush(NARROW_BRUSH, true);
 			
-			m_paintBrush = m_solverBrush;
+			m_paintBrush = m_solver1Brush;
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
@@ -216,7 +220,7 @@ package scenes.game.components
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				
 			//create a clip rect for the window
-			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
+			clipRect = new Rectangle(x, y, m_border.width, m_border.height - 10);
 			
 			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -324,7 +328,7 @@ package scenes.game.components
 		}
 		
 		private var oldViewRect:Rectangle;
-		private function onEnterFrame(evt:EnterFrameEvent):void
+		public function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			if (!m_currentLevel) return;
 			
@@ -357,15 +361,16 @@ package scenes.game.components
 			//if we are near the edge, scroll
 			var xDelta:Number = 0;
 			var yDelta:Number = 0;
+			var farEdge:Number = clipRect.width + clipRect.x;
 			if(m_scrollEdgePoint && getPanZoomAllowed() && m_inBounds)
 			{
 				if(m_scrollEdgePoint.x < 10)
 				{
 					xDelta = 10 - m_scrollEdgePoint.x;
 				}
-				else if(m_scrollEdgePoint.x > clipRect.width - 10)
+				else if(m_scrollEdgePoint.x > farEdge - 20)
 				{
-					xDelta = -10 + (clipRect.width - m_scrollEdgePoint.x);
+					xDelta = -(20 - (farEdge - m_scrollEdgePoint.x));
 				}
 				
 				if(m_scrollEdgePoint.y < 10)
@@ -392,6 +397,28 @@ package scenes.game.components
 				else
 					m_scrollEdgePoint = null;
 			}
+		}
+		
+		public function outsideEventHandler(event:starling.events.Event):void
+		{
+			m_inBounds = true;
+			if(event.type == MouseEvent.MOUSE_MOVE)
+			{
+				movePaintBrush(event.data as Point);
+				m_scrollEdgePoint = event.data as Point;
+				onEnterFrame(null);
+			}
+			else if(event.type == TouchPhase.BEGAN)
+				currentMode = GridViewPanel.SELECTING_MODE;
+			else if(event.type == TouchPhase.MOVED)
+			{
+				movePaintBrush(event.data as Point);
+				handlePaint(event.data as Point);
+				m_scrollEdgePoint = event.data as Point;
+				onEnterFrame(null);
+			}
+			else if(event.type == TouchPhase.ENDED)
+				endSelectMode();
 		}
 		
 		public function onGameComponentsCreated():void
@@ -448,7 +475,7 @@ package scenes.game.components
 			//}
 		}
 		
-		private function endSelectMode():void
+		public function endSelectMode():void
 		{
 			if(m_currentLevel)
 			{
@@ -560,6 +587,7 @@ package scenes.game.components
 				 var location:Point;
 				 if(touch)
 				 {
+					 currentMode = HOVER_MODE;
 				 	location = touch.getLocation(this.stage);
 					if(location.x > WIDTH)
 						hidePaintBrush();
@@ -1417,7 +1445,7 @@ package scenes.game.components
 		{
 			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
 			{
-				changeBrush(GridViewPanel.SOLVER_BRUSH);
+				changeBrush(GridViewPanel.SOLVER1_BRUSH);
 				return;
 			}
 			
@@ -1438,9 +1466,14 @@ package scenes.game.components
 		{
 			var brush:Sprite;
 			
-			if(brushName == GridViewPanel.SOLVER_BRUSH)
+			if(brushName == GridViewPanel.SOLVER1_BRUSH)
 			{
-				brush = m_solverBrush;
+				brush = m_solver1Brush;
+			}
+			
+			if(brushName == GridViewPanel.SOLVER2_BRUSH)
+			{
+				brush = m_solver2Brush;
 			}
 			else if(brushName == GridViewPanel.NARROW_BRUSH)
 			{
@@ -1487,13 +1520,13 @@ package scenes.game.components
 		
 		private var m_nextPaintbrushLocation:Point;
 		private var m_nextPaintbrushLocationUpdated:Boolean = false;
-		public function movePaintBrush(pt:Point):void
+		protected function movePaintBrush(pt:Point):void
 		{
 			m_nextPaintbrushLocation = globalToLocal(pt);
 			m_nextPaintbrushLocationUpdated = true;
 		}
 		
-		public function showPaintBrush():void
+		protected function showPaintBrush():void
 		{
 			m_paintBrush.visible = true;
 			m_paintBrushInfoSprite.visible = true;
@@ -1505,7 +1538,7 @@ package scenes.game.components
 			m_paintBrushInfoSprite.visible = false;
 		}
 		
-		public function handlePaint(globPt:Point):void
+		protected function handlePaint(globPt:Point):void
 		{
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
 			const dX:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleX/content.scaleX;
@@ -1514,7 +1547,7 @@ package scenes.game.components
 			m_currentLevel.selectNodes(localPt, dX, dY);
 		}
 		
-		public function endPaint():void
+		protected function endPaint():void
 		{
 			//trace("endPaint()");
 			//m_paintBrush.removeFromParent();

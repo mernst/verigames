@@ -750,15 +750,6 @@ package scenes.game.components
 			if(m_currentLevel)
 				m_currentLevel.adjustSize(newWidth, newHeight);
 		}
-		
-		public function addSoundButton(m_sfxButton:SoundButton):void
-		{
-			m_sfxButton.x = 8;
-			//center in between buttons
-			m_sfxButton.y = (m_newLevelButton.bounds.bottom + m_resetButton.bounds.top)/2 - m_sfxButton.height/2;
-			addChild(m_sfxButton);
-			
-		}
 	}
 }
 

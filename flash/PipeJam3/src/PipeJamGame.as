@@ -1,11 +1,12 @@
 package
 {
 	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 	import flash.external.ExternalInterface;
+	import flash.geom.Point;
 	import flash.net.URLVariables;
 	import flash.system.System;
 	import flash.ui.Keyboard;
+	import flash.utils.Timer;
 	
 	import assets.AssetsAudio;
 	
@@ -14,7 +15,7 @@ package
 	import buildInfo.BuildInfo;
 	
 	import cgs.Cache.Cache;
-		
+	
 	import display.GameObjectBatch;
 	import display.MusicButton;
 	import display.NineSliceBatch;
@@ -32,6 +33,7 @@ package
 	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.splashscreen.SplashScreenScene;
 	
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
@@ -45,12 +47,14 @@ package
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
 				
+		public static var SET_SOUNDBUTTON_PARENT:String = "set_soundbutton_parent";
+
 		public static var SEPARATE_FILES:int = 1;
 		public static var ALL_IN_ONE:int = 2;
 				
 		private var m_musicButton:MusicButton;
 		private static var m_sfxButton:SoundButton;
-		
+		public static var soundButtonGlobalCoords:Point = new Point(400.5, 294);
 		private var m_gameObjectBatch:GameObjectBatch;
 		
 		/** this is the main holder of information about the level. */
@@ -78,11 +82,7 @@ package
 			//AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_MUSIC));
 			AudioManager.getInstance().audioDriver().sfxOn = AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_SFX));
 			
-			/*
-			m_musicButton = new MusicButton();
-			XSprite.setupDisplayObject(m_musicButton, 16.5, Constants.GameHeight - 14.5, 12.5);
-			AudioManager.getInstance().setMusicButton(m_musicButton, updateMusicState);
-			*/
+			
 			m_sfxButton = new SoundButton();
 			XSprite.setupDisplayObject(m_sfxButton, 8, Constants.GameHeight - 20, 12.5);
 			AudioManager.getInstance().setAllAudioButton(m_sfxButton, updateSfxState);
@@ -93,7 +93,21 @@ package
 			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
 			addEventListener(NavigationEvent.GET_RANDOM_LEVEL, onGetRandomLevel);
 			addEventListener(NavigationEvent.UPDATE_HIGH_SCORES, updateHighScoreList);
+			addEventListener(SET_SOUNDBUTTON_PARENT, handleSoundButtonParentEvent);
 		}	
+		
+		private function handleSoundButtonParentEvent(event:starling.events.Event):void
+		{
+			setSoundButtonParent(event.data as Sprite);
+		}
+		
+		public function setSoundButtonParent(_parent:Sprite):void
+		{
+			var localPoint:Point = _parent.globalToLocal(soundButtonGlobalCoords);
+			m_sfxButton.x = localPoint.x;
+			m_sfxButton.y = localPoint.y;
+			_parent.addChild(m_sfxButton);
+		}
 		
 		protected function addedToStage(event:starling.events.Event):void
 		{						
@@ -157,9 +171,6 @@ package
 
 				showScene("SplashScreen");				
 			}
-			
-			addChild(m_sfxButton);
-			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 		
@@ -171,8 +182,8 @@ package
 		
 		protected function loadLevel(result:int, objVector:Vector.<Object>):void
 		{
-			PipeJamGame.levelInfo = new objVector[0];		
-			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			levelInfo = new objVector[0];		
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
@@ -185,7 +196,7 @@ package
 		public function onGetRandomLevel(event:NavigationEvent = null):void
 		{
 			PipeJamGameScene.inTutorial = false;
-			PipeJamGame.levelInfo = GameFileHandler.getRandomLevelObject();
+			levelInfo = GameFileHandler.getRandomLevelObject();
 			if(PipeJamGame.levelInfo == null)
 			{
 				//assume level file is slow loading, and cycle back around after a while.
@@ -294,10 +305,12 @@ package
 			}
 		}
 		
-		static public function resetSoundButtonParent():void
+		public function resetSoundButtonParent():void
 		{
 			if(World.m_world)
-				World.m_world.addSoundButton(m_sfxButton);
+			{
+				setSoundButtonParent(World.m_world.sideControlPanel);
+			}
 		}
 		
 		public function changeFullScreen(newWidth:int, newHeight:int):void

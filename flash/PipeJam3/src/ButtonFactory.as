@@ -39,7 +39,7 @@ package
 		
 		public function createDefaultToggleButton(text:String, width:Number, height:Number):NineSliceToggleButton
 		{
-			return createToggleButton(text, width, height, height / 3.0, height / 3.0);
+			return createToggleButton(text, width, height, width / 3.0, height / 3.0);
 		}
 		
 		public function createToggleButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
@@ -54,6 +54,13 @@ package
 			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", 
 				"TabInactive", AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
 				"TabInactiveMouseover", "TabActive");
+		}
+		
+		public function createImageButton(imageName:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceButton
+		{
+			return new NineSliceButton("", width, height, cX, cY, "Game",  "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML", 
+				"Button"+imageName, AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
+				"Button"+imageName+"Over", "Button"+imageName+"Click");
 		}
 	}
 }

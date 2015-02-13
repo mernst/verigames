@@ -44,11 +44,11 @@ package scenes.splashscreen
 		
 		public var inputInfo:flash.text.TextField;
 
-		public function SplashScreenMenuBox(parent:SplashScreenScene)
+		public function SplashScreenMenuBox(_parent:SplashScreenScene)
 		{
 			super();
 			
-			parent = m_parent;
+			m_parent = _parent;
 			buildMainMenu();
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
@@ -70,8 +70,8 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
-			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
-			const TOP_BUTTON_Y:int = 205;
+			var BUTTON_CENTER_X:Number = m_parent.width/2; // center point to put Play and Log In buttons
+			var TOP_BUTTON_Y:int = 205;
 			
 			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;

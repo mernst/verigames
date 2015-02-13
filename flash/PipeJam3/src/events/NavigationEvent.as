@@ -12,7 +12,6 @@ package events
 		public static const START_OVER:String = "start_over";
 		public static const GET_RANDOM_LEVEL:String = "get_random_level";
 		public static var UPDATE_HIGH_SCORES:String = "update_high_scores";
-		
 		public var scene:String;
 		public var info:String;
 		public var fadeCallback:Function;

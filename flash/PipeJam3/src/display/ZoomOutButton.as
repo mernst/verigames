@@ -3,7 +3,6 @@ package display
 	import assets.AssetInterface;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
-	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
 	public class ZoomOutButton extends ImageStateButton
@@ -11,11 +10,12 @@ package display
 		public function ZoomOutButton()
 		{
 			m_toolTipText = "Zoom Out";
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+
 			super(
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ZoomOutButton))]),
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ZoomOutButtonOver))]),
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ZoomOutButtonSelected))])
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonZoomOut))]),
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonZoomOutOver))]),
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonZoomOutClick))])
 			);
 		}
 	}

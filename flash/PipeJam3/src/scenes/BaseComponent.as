@@ -8,6 +8,8 @@ package scenes
 	
 	import assets.AssetInterface;
 	
+	import display.BasicButton;
+	import display.NineSliceButton;
 	import display.ToolTippableSprite;
 	
 	import scenes.game.components.GridViewPanel;
@@ -22,6 +24,7 @@ package scenes
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
 	import starling.events.Event;
+	import starling.events.TouchEvent;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
@@ -160,42 +163,58 @@ package scenes
 			
 		}
 		
-		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
+		protected function createPaintBrushButton(style:String, onClickFunction:Function, offset:Boolean = false):Sprite
 		{
-			// Create paintbrush: TODO make higher res circle
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var circleTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_PaintCircle);
-			var circleImage:Image = new Image(circleTexture);
-			circleImage.width = circleImage.height = 2 * GridViewPanel.PAINT_RADIUS;
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			
+			var buttonTexture:Texture = atlas.getTexture("Button"+style);
+			var buttonOverTexture:Texture = atlas.getTexture("Button"+style+"Over");
+			var buttonClickTexture:Texture = atlas.getTexture("Button"+style+"Click");
+			
+			var buttonImage:Image = new Image(buttonTexture);
+			var buttonOverImage:Image = new Image(buttonOverTexture);
+			var buttonClickImage:Image = new Image(buttonClickTexture);
+			
+			var paintBrushButton:BasicButton = new BasicButton(buttonImage, buttonOverImage, buttonClickImage);
+			//			m_solver1Brush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+
+			paintBrushButton.useHandCursor = true;
+			paintBrushButton.addEventListener(Event.TRIGGERED, onClickFunction);
+			paintBrushButton.width = paintBrushButton.height = 2 * GridViewPanel.PAINT_RADIUS;
 			if(offset)
 			{
-				circleImage.x = -0.5 * circleImage.width;
-				circleImage.y = -0.5 * circleImage.height;
+				paintBrushButton.x = -0.5 * paintBrushButton.width;
+				paintBrushButton.y = -0.5 * paintBrushButton.height;
 			}
-			circleImage.alpha = 0.7;
+			paintBrushButton.alpha = 0.7;
 			
 			var paintBrush:Sprite = new Sprite;
-			paintBrush.addChild(circleImage);
+			paintBrush.addChild(paintBrushButton);
 			
-			var q:Quad;
-			switch(style)
+			paintBrushButton.name = style;
+					
+			return paintBrush;
+		}
+		
+		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
+		{
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var brushTexture:Texture = atlas.getTexture(style);			
+			var brushImage:Image = new Image(brushTexture);
+			
+			brushImage.width = brushImage.height = 2 * GridViewPanel.PAINT_RADIUS;
+			if(offset)
 			{
-				case GridViewPanel.SOLVER_BRUSH:
-					paintBrush.name = GridViewPanel.SOLVER_BRUSH;
-					break;
-				case GridViewPanel.NARROW_BRUSH:
-					paintBrush.name = GridViewPanel.NARROW_BRUSH;
-					q = new Quad(20, 20, Constants.NARROW_BLUE);
-					paintBrush.addChild(q);
-					break;
-				case GridViewPanel.WIDEN_BRUSH:
-					paintBrush.name = GridViewPanel.WIDEN_BRUSH;
-					q = new Quad(20, 20, Constants.WIDE_BLUE);
-					paintBrush.addChild(q);
-					break;
+				brushImage.x = -0.5 * brushImage.width;
+				brushImage.y = -0.5 * brushImage.height;
 			}
-			if(q)
-				q.x = q.y = offset ? (- q.width/2) : (paintBrush.width/2 - q.width/2);
+			brushImage.alpha = 0.7;
+			
+			var paintBrush:Sprite = new Sprite;
+			paintBrush.addChild(brushImage);
+			
+			paintBrush.name = style;
+			
 			return paintBrush;
 		}
 	}

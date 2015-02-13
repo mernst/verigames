@@ -4,7 +4,6 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import scenes.game.display.VariableNode;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -18,10 +17,10 @@ package scenes.game.components
 	
 	import events.MiniMapEvent;
 	import events.MoveEvent;
-	
-	import utils.PropDictionary;
+	import events.WidgetChangeEvent;
 	
 	import scenes.BaseComponent;
+	import scenes.game.display.ClauseNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.Node;
 	import scenes.game.display.NodeSkin;
@@ -39,17 +38,19 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
+	import utils.PropDictionary;
 	import utils.XMath;
 	
 	public class MiniMap extends BaseComponent
 	{
-		public static const WIDTH:Number = 0.8 * 140;
-		public static const HEIGHT:Number = 0.8 * 134;
+		public static const WIDTH:Number = 58;
+		public static const HEIGHT:Number = 58;
 		
 		public static const HIDDEN_Y:Number = HEIGHT * 60.0 / 268.0 - HEIGHT;
+		public static const TOP_Y:Number = 255;
 		public static const SHOWN_Y:Number = 0;
 		
-		public static const CLICK_AREA:Rectangle = new Rectangle(WIDTH * 44.0 / 280.0, 0.0, (1.0 - 44.0 / 280.0) * WIDTH, (1.0 - 62.0 / 268.0) * HEIGHT);
+		public static const CLICK_AREA:Rectangle = new Rectangle(0,0,WIDTH, HEIGHT);//WIDTH * 44.0 / 280.0, 0.0, (1.0 - 44.0 / 280.0) * WIDTH, (1.0 - 62.0 / 268.0) * HEIGHT);
 		public static const VIEW_AREA:Rectangle = CLICK_AREA.clone();
 		{
 			VIEW_AREA.inflate( -15.0 * WIDTH / 280.0, -15.0 * HEIGHT / 268.0);
@@ -90,14 +91,15 @@ package scenes.game.components
 		private var showNumConflicts:Boolean = false;
 		private var numConflictsTextField:TextFieldHack;
 		static public var numConflicts:int;
+		static public var maxNumConflicts:int;
 		
 		public function MiniMap()
 		{
 			super();
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
-			var background:Texture = atlas.getTexture("MapMaximized");
-			backgroundImage = new Image(background);
-			addChild(backgroundImage);
+//			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
+//			var background:Texture = atlas.getTexture("MapMaximized");
+//			backgroundImage = new Image(background);
+//			addChild(backgroundImage);
 			
 			width = WIDTH;
 			height = HEIGHT;
@@ -112,27 +114,27 @@ package scenes.game.components
 			viewRectLayer = new Sprite();
 			viewRectLayer.visible = false;
 			addChild(viewRectLayer);
-			m_clickPane = new Quad(112/*CLICK_AREA.width*/ / scaleX, CLICK_AREA.height / scaleY);
+			m_clickPane = new Quad(CLICK_AREA.width / scaleX, CLICK_AREA.height / scaleY);
 			m_clickPane.alpha = 0;
 			m_clickPane.x = CLICK_AREA.x / scaleX;
 			m_clickPane.y = CLICK_AREA.y / scaleY;
 			addChild(m_clickPane);
 			
-			m_showButton = new MapShowButton();
-			m_showButton.addEventListener(Event.TRIGGERED, showMap);
-			m_hideButton = new MapHideButton();
-			m_hideButton.addEventListener(Event.TRIGGERED, hideMap);
-			m_showButton.x = m_hideButton.x = HIDE_SHOW_BUTTON_LOC.x / scaleX;
-			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
-			addChild(m_showButton);
+//			m_showButton = new MapShowButton();
+//			m_showButton.addEventListener(Event.TRIGGERED, showMap);
+//			m_hideButton = new MapHideButton();
+//			m_hideButton.addEventListener(Event.TRIGGERED, hideMap);
+//			m_showButton.x = m_hideButton.x = HIDE_SHOW_BUTTON_LOC.x / scaleX;
+//			m_showButton.y = m_hideButton.y = HIDE_SHOW_BUTTON_LOC.y / scaleY;
+//			addChild(m_showButton);
 			
-			numConflictsTextField = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, 30,20, 18, 0xff0000) as TextFieldHack;
-			numConflictsTextField.touchable = false;
-			numConflictsTextField.x = 100;
-			numConflictsTextField.y = 215;
-			TextFactory.getInstance().updateAlign(numConflictsTextField, 2, 1);
-			if(showNumConflicts)
-				addChild(numConflictsTextField);
+//			numConflictsTextField = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, 30,20, 18, 0xff0000) as TextFieldHack;
+//			numConflictsTextField.touchable = false;
+//			numConflictsTextField.x = 100;
+//			numConflictsTextField.y = 215;
+//			TextFactory.getInstance().updateAlign(numConflictsTextField, 2, 1);
+//			if(showNumConflicts)
+//				addChild(numConflictsTextField);
 			
 			wideColor = 0xFF000000 ^ NodeSkin.WIDE_COLOR;
 			narrowColor = 0xFF000000 ^ NodeSkin.NARROW_COLOR;
@@ -175,7 +177,8 @@ package scenes.game.components
 			m_hiding = false;
 			m_showing = true;
 
-			Starling.juggler.tween(this, HIDE_SHOW_TIME_SEC, { y:SHOWN_Y, transition: Transitions.EASE_OUT, onComplete:onShowComplete } );
+	//		Starling.juggler.tween(this, HIDE_SHOW_TIME_SEC, { y:SHOWN_Y, transition: Transitions.EASE_OUT, onComplete:onShowComplete } );
+			onShowComplete();
 		}
 		
 		private function onShowComplete():void
@@ -263,7 +266,9 @@ package scenes.game.components
 						nodeBitmapData = null;
 					}
 				}
+				var oldNumConflicts:int = numConflicts;
 				numConflicts = 0;
+				maxNumConflicts = 0;
 				nodeErrorDict = new Dictionary();
 				for (var errorId:String in currentLevel.levelGraph.unsatisfiedConstraintDict) {
 				//	var constraint:Constraint = currentLevel.levelGraph.constraintsDict[errorId];
@@ -287,13 +292,14 @@ package scenes.game.components
 						}
 			
 						for (var nodeId:String in nodeDict) {
-							if (nodeDict[nodeId] is VariableNode)
+							if (nodeDict[nodeId] is ClauseNode)
 								addWidget(nodeDict[nodeId], false);
 						}
 						
 						bitmapTexture = Texture.fromBitmapData(nodeBitmapData);
 						bitmapImage = new Image(bitmapTexture);
 						dataNotValid = false;
+						
 					}
 					catch(e:Error)
 					{
@@ -306,8 +312,11 @@ package scenes.game.components
 			}
 			drawViewSpaceIndicator();
 			isDirty = false;
-			numConflictsTextField.text = String(numConflicts);
-		}
+
+			//Update score based on new numConflicts value
+			if(numConflicts != oldNumConflicts)
+				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, null, null));
+	}
 		
 		private function drawViewSpaceIndicator():void
 		{
@@ -413,7 +422,7 @@ package scenes.game.components
 			delete nodeErrorDict[toNode];
 		}
 		
-		public function addWidget(node:VariableNode, flatten:Boolean = true):void
+		public function addWidget(node:ClauseNode, flatten:Boolean = true):void
 		{
 			if (!gameNodeLayer) return;
 			var id:String = node.id;
@@ -428,20 +437,22 @@ package scenes.game.components
 			
 			var iconWidth:Number = Math.min(2 / scaleX, mapRightX - mapLeftX);
 			var iconHeight:Number = bb.height / 2.0; // keep constant height so widgets always visible
-			var constrVar:ConstraintVar = node.graphVar;
-			var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
+			//var constrVar:ConstraintVar = node.graphVar;
+			//var isNarrow:Boolean = constrVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			//var icon:Quad = new Quad(Math.max(MIN_ICON_SIZE, iconWidth), Math.max(MIN_ICON_SIZE, iconHeight), isNarrow ? GameComponent.NARROW_COLOR : GameComponent.WIDE_COLOR);
 			
 			var widgetLevelPt:Point = new Point(bb.x + 0.5 * bb.width, bb.y + 0.5 * bb.height);
 			var iconLoc:Point = level2map(widgetLevelPt);
 			var color:int = wideColor;
+			//just make them red or blue, don't care about wide and narrow distinction?
 			if(nodeErrorDict[id] != null)
 			{
 				color = errorColor;
 				numConflicts++;
 			}
-			else if(isNarrow)
-				color = narrowColor;
+			maxNumConflicts++;
+		//	else if(isNarrow)
+		//		color = narrowColor;
 			
 			//set the 2x2 square
 			var size:int = 2;

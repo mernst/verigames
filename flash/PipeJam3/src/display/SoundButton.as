@@ -10,10 +10,10 @@ package display
 	{
 		public function SoundButton()
 		{
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var soundUp:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_SoundButton);
-			var soundOver:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_SoundButtonOver);
-			var soundDown:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_SoundButtonSelected);
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var soundUp:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSound);
+			var soundOver:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSoundOver);
+			var soundDown:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSoundClick);
 			
 			var soundOnUp:Image = new Image(soundUp);
 			//soundOnUp.width = soundOnUp.height = 25;

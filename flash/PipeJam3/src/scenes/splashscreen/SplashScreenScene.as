@@ -5,6 +5,8 @@ package scenes.splashscreen
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.events.Event;
+	import starling.textures.TextureAtlas;
+	import starling.textures.Texture;
 	
 	public class SplashScreenScene extends Scene
 	{
@@ -25,13 +27,25 @@ package scenes.splashscreen
 		{
 			super.addedToStage(event);
 			
-			background = new Image(AssetInterface.getTexture("Game", "BoxesStartScreenImageClass"));
+			background = new Image(AssetInterface.getTexture("Game", "ParadoxStartScreenImageClass"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
 			addChild(background);
 			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var logoTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ParadoxLogoBlackLarge);
+			var logo:Image = new Image(logoTexture);
+			logo.scaleX = logo.scaleY = .6;
+			logo.x = (background.width - logo.width)/2 + 10; //looks better slightly off-center
+			logo.y = 150;
+			//logo.scaleX = stage.stageWidth/background.width;
+			//logo.scaleY = stage.stageHeight/background.height;
+			//logo.blendMode = BlendMode.NONE;
+			addChild(logo);
+			
 			addMenuBox();
+			dispatchEvent(new starling.events.Event(PipeJamGame.SET_SOUNDBUTTON_PARENT, true, this));
 		}
 			
 		public function addMenuBox():void

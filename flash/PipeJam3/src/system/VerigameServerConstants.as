@@ -27,7 +27,6 @@ package system
 		public static const VERIGAME_ACTION_REMOVE_PIPE_BUZZSAW:int    = 6;// deprecated
 		public static const VERIGAME_ACTION_CHANGE_PIPE_STAMPS:int     = 7;
 		// UI actions
-		public static const VERIGAME_ACTION_SAVE_LAYOUT:int            = 20;
 		public static const VERIGAME_ACTION_SUBMIT_SCORE:int           = 21;
 		public static const VERIGAME_ACTION_LOAD_LAYOUT:int            = 22;
 		

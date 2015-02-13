@@ -5,12 +5,14 @@ package scenes.game.display
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -18,11 +20,9 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	
 	import constraints.ConstraintGraph;
 	import constraints.events.ErrorEvent;
+	
 	import dialogs.SimpleAlertDialog;
 	
 	import display.SoundButton;
@@ -79,6 +79,8 @@ package scenes.game.display
 		protected var m_foregroundLayer:Sprite;
 		protected var m_splashLayer:Sprite;
 				
+		private var m_sfxButton:SoundButton;
+		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		
@@ -171,7 +173,7 @@ package scenes.game.display
 			m_initQueue.push(initBackground);
 			m_initQueue.push(initGridViewPanel);
 			m_initQueue.push(initForeground);
-			m_initQueue.push(initGameControlPanel);
+			//m_initQueue.push(initGameControlPanel);
 			m_initQueue.push(initSideControlPanel);
 			m_initQueue.push(initMiniMap);
 			m_initQueue.push(initTutorial);
@@ -219,45 +221,22 @@ package scenes.game.display
 			{
 	//			edgeSetGraphViewPanel.filter = new ColorMatrixFilter;
 	//			(edgeSetGraphViewPanel.filter as ColorMatrixFilter).adjustHue(.22);
-				gameControlPanel.startSolveAnimation();
+	//			gameControlPanel.startSolveAnimation();
 			}
 			else
 			{
 	//			edgeSetGraphViewPanel.filter = null;
-				gameControlPanel.stopSolveAnimation();
+	//			gameControlPanel.stopSolveAnimation();
 			}
-		}
-		
-		private function initGameControlPanel():void {
-			trace("Initializing GameControlPanel...");
-			gameControlPanel = new GameControlPanel();
-			//gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.HEIGHT;
-			if (edgeSetGraphViewPanel.atMaxZoom()) {
-				gameControlPanel.onMaxZoomReached();
-			} else if (edgeSetGraphViewPanel.atMinZoom()) {
-				gameControlPanel.onMinZoomReached();
-			} else {
-				gameControlPanel.onZoomReset();
-			}
-			gameControlPanel.setNavigationButtonVisibility(false);
-			gameControlPanel.setSolveButtonsVisibility(false);
-			addChild(gameControlPanel);
-			
-			setHighScores();
-			trace(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
-			gameControlPanel.adjustSize(Starling.current.nativeStage.stageWidth, Starling.current.nativeStage.stageHeight);
-			
-			PipeJamGame.resetSoundButtonParent();
-			
-			trace("Done initializing GameControlPanel.");
 		}
 		
 		private function initSideControlPanel():void {
 			trace("Initializing SideControlPanel...");
 			
 			sideControlPanel = new SideControlPanel(Constants.RightPanelWidth, Starling.current.nativeStage.stageHeight);
-			sideControlPanel.x = gameControlPanel.width - Constants.RightPanelWidth;
+			sideControlPanel.x = 480 - Constants.RightPanelWidth;
 			addChild(sideControlPanel);
+			dispatchEvent(new starling.events.Event(PipeJamGame.SET_SOUNDBUTTON_PARENT, true, sideControlPanel));
 			
 			addEventListener(SelectionEvent.BRUSH_CHANGED, changeBrush);
 			
@@ -266,16 +245,16 @@ package scenes.game.display
 		
 		private function changeBrush(event:SelectionEvent):void
 		{
-			edgeSetGraphViewPanel.changeBrush(event.component as String);
+			edgeSetGraphViewPanel.changeBrush(event.component.name);
 		}
 		
 		private function initMiniMap():void {
 			trace("Initializing Minimap....");
 			miniMap = new MiniMap();
-			miniMap.x = Constants.GameWidth - MiniMap.WIDTH;
-			miniMap.y = MiniMap.HIDDEN_Y;
+			miniMap.x = Constants.GameWidth - MiniMap.WIDTH - 3;
+			miniMap.y = MiniMap.TOP_Y;
 			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
-			miniMap.visible = false;
+		//	miniMap.visible = false;
 			addChild(miniMap);
 			trace("Done initializing Minimap.");
 		}
@@ -354,9 +333,9 @@ package scenes.game.display
 				}
 			}
 			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
-			var background:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundClass");
+			var background:Texture = AssetInterface.getTexture("Game", "ParadoxBackgroundClass");
 			m_backgroundImage = new Image(background);
-			var backgroundDark:Texture = AssetInterface.getTexture("Game", "GraphsBackgroundDarkClass");
+			var backgroundDark:Texture = AssetInterface.getTexture("Game", "ParadoxBackgroundDarkClass");
 			m_backgroundImageSolving = new Image(backgroundDark);
 			
 			if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN_INTERACTIVE)
@@ -401,7 +380,6 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
-			addEventListener(MenuEvent.RECENTER, onRecenter);
 			
 			addEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
 			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
@@ -412,6 +390,10 @@ package scenes.game.display
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
 			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
+			addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
+			addEventListener(TouchPhase.BEGAN, mouseMoveEventHandler);
+			addEventListener(TouchPhase.MOVED, mouseMoveEventHandler);
+			addEventListener(TouchPhase.ENDED, mouseMoveEventHandler);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
@@ -425,6 +407,12 @@ package scenes.game.display
 			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
 			
 			trace("Done initializing event listeners.");
+		}
+		
+		//handle transfering mouse moves from transparent part of sidebar to gridview
+		private function mouseMoveEventHandler(event:starling.events.Event):void
+		{
+			edgeSetGraphViewPanel.outsideEventHandler(event);
 		}
 		
 		public function loadAssignmentFile(assignmentID:String):void
@@ -444,14 +432,14 @@ package scenes.game.display
 
 			if(active_level && active_level.selectedNodes)
 			{
-				if(event.data == GridViewPanel.SOLVER_BRUSH)
+				if(event.data == GridViewPanel.SOLVER1_BRUSH || event.data == GridViewPanel.SOLVER2_BRUSH)
 				{
 					if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
 					if (m_backgroundImage) m_backgroundImage.removeFromParent();	
 					
 					waitIconDisplayed = false;
 					
-					active_level.solveSelection(solverUpdateCallback, solverDoneCallback, true);
+					active_level.solveSelection(solverUpdateCallback, solverDoneCallback, event.data as String);
 				}
 				else if(event.data == GridViewPanel.NARROW_BRUSH)
 				{
@@ -665,11 +653,6 @@ package scenes.game.display
 			edgeSetGraphViewPanel.zoomOutDiscrete();
 		}
 		
-		public function onRecenter(event:MenuEvent):void
-		{
-			edgeSetGraphViewPanel.recenter();
-		}
-		
 		public function onMaxZoomReached(event:MenuEvent):void
 		{
 			if (gameControlPanel) gameControlPanel.onMaxZoomReached();
@@ -702,7 +685,7 @@ package scenes.game.display
 		
 		public function onWidgetChange(evt:WidgetChangeEvent = null):void
 		{
-			var level_changed:Level = evt ? evt.level : active_level;
+			var level_changed:Level = evt ? (evt.level ? evt.level : active_level) : active_level;
 			if (level_changed != active_level) return;
 			
 			if (miniMap)
@@ -711,7 +694,6 @@ package scenes.game.display
 				miniMap.imageIsDirty = true;
 			}
 			
-			gameControlPanel.updateScore(active_level, false);
 			var oldScore:int = active_level.prevScore;
 			var newScore:int = active_level.currentScore;
 			if (evt) {
@@ -732,6 +714,8 @@ package scenes.game.display
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
 				}
+			
+				
 				if (oldScore != newScore && evt.pt != null) {
 					var thisPt:Point = globalToLocal(evt.pt);
 					TextPopup.popupText(evt.target as DisplayObjectContainer, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x008000 : 0x800000);
@@ -750,6 +734,7 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, active_level.getTimeMs());
 				}
 			}
+			sideControlPanel.updateScore(active_level, false);
 			
 			if(!PipeJamGameScene.inTutorial && evt)
 			{
@@ -1120,11 +1105,11 @@ package scenes.game.display
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			edgeSetGraphViewPanel.loadLevel();
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
-				gameControlPanel.onMaxZoomReached();
+				sideControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
-				gameControlPanel.onMinZoomReached();
+				sideControlPanel.onMinZoomReached();
 			} else {
-				gameControlPanel.onZoomReset();
+				sideControlPanel.onZoomReset();
 			}
 			trace("Level.start()");
 			active_level.start();
@@ -1133,8 +1118,8 @@ package scenes.game.display
 			active_level.resetBestScore();
 			setHighScores();
 			
-			trace("gameControlPanel.newLevelSelected");
-			gameControlPanel.newLevelSelected(active_level);
+			trace("sideControlPanel.newLevelSelected");
+			sideControlPanel.newLevelSelected(active_level);
 			miniMap.isDirty = true;
 
 			trace("World.onLevelLoaded complete");
@@ -1175,7 +1160,6 @@ package scenes.game.display
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
-			removeEventListener(MenuEvent.RECENTER, onRecenter);
 			removeEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
 			removeEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
 			removeEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
@@ -1248,11 +1232,6 @@ package scenes.game.display
 		{
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
 				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
-		}
-			
-		public function addSoundButton(m_sfxButton:SoundButton):void
-		{
-			gameControlPanel.addSoundButton(m_sfxButton);
 		}
 		
 		public function showVisibleBrushes():void

@@ -9,6 +9,35 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	
+	import assets.AssetInterface;
+	
+	import constraints.Constraint;
+	import constraints.ConstraintClause;
+	import constraints.ConstraintEdge;
+	import constraints.ConstraintGraph;
+	import constraints.ConstraintScoringConfig;
+	import constraints.ConstraintValue;
+	import constraints.ConstraintVar;
+	import constraints.events.ErrorEvent;
+	import constraints.events.VarChangeEvent;
+	
+	import deng.fzip.FZip;
+	
+	import events.MenuEvent;
+	import events.MiniMapEvent;
+	import events.PropertyModeChangeEvent;
+	import events.SelectionEvent;
+	import events.WidgetChangeEvent;
+	
+	import networking.GameFileHandler;
+	import networking.PlayerValidation;
+	
+	import scenes.BaseComponent;
+	import scenes.game.components.GridViewPanel;
+	import scenes.game.components.MiniMap;
+	import scenes.game.display.Node;
+	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -20,28 +49,8 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	import assets.AssetInterface;
-	import constraints.Constraint;
-	import constraints.ConstraintClause;
-	import constraints.ConstraintEdge;
-	import constraints.ConstraintGraph;
-	import constraints.ConstraintScoringConfig;
-	import constraints.ConstraintValue;
-	import constraints.ConstraintVar;
-	import constraints.events.ErrorEvent;
-	import constraints.events.VarChangeEvent;
-	import deng.fzip.FZip;
-	import events.MenuEvent;
-	import events.MiniMapEvent;
-	import events.PropertyModeChangeEvent;
-	import events.SelectionEvent;
-	import events.WidgetChangeEvent;
-	import networking.GameFileHandler;
-	import networking.PlayerValidation;
-	import scenes.BaseComponent;
-	import scenes.game.display.Node;
-	import scenes.game.PipeJamGameScene;
 	import system.MaxSatSolver;
+	
 	import utils.Base64Encoder;
 	import utils.PropDictionary;
 	import utils.XObject;
@@ -1065,6 +1074,7 @@ package scenes.game.display
 		
 		public function get currentScore():int { return levelGraph.currentScore; }
 		public function get bestScore():int { return m_bestScore; }
+		public function get maxScore():int { return MiniMap.maxNumConflicts; }
 		public function get startingScore():int { return levelGraph.startingScore; }
 		public function get prevScore():int { return levelGraph.prevScore; }
 		public function get oldScore():int { return levelGraph.oldScore; }
@@ -1123,57 +1133,6 @@ package scenes.game.display
 			unselectAll();
 		}
 		
-		protected var solverRunningTime:Number;
-		public function solverTimerCallback(evt:TimerEvent):void
-		{
-			solveSelection(solverUpdate, solverDone);
-		}
-		
-		public function solverLoopTimerCallback(evt:TimerEvent):void
-		{
-			for each(var node:Node in nodeLayoutObjs)
-			{
-				node.unused = true;
-			}
-			solveSelection(solverUpdate, solverDone);
-		}
-		
-		public var loopcount:int = 0;
-		public var looptimer:Timer;
-		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
-		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
-		{
-			if(firstRun)
-			{
-				solverRunningTime = new Date().getTime();
-			}
-			//if caps lock is down, start repeated solving using 'random' selection
-//			if(Keyboard.capsLock)
-//			{
-//				//loop through all nodes, finding ones with conflicts
-//				for each(var node:Node in nodeLayoutObjs)
-//				{
-//					if(node.hasError() && node.unused)
-//					{
-//						node.unused = false;
-//					//trace(node.id);
-//						onGroupSelection(new SelectionEvent("foo", node));
-//						solveSelection1(updateCallback, doneCallback);
-//						unselectAll();
-//						return;
-//					}
-//				}
-//				
-//				// if we make it this far start over
-//				//trace("new loop", loopcount);
-//				looptimer = new Timer(1000, 1);
-//				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
-//				looptimer.start();
-//			}
-//			else
-				solveSelection1(updateCallback, doneCallback);
-		}
-		
 		public function getEdgeContainer(edgeId:String):DisplayObject
 		{
 			var edge:Edge = edgeLayoutObjs[edgeId];
@@ -1195,7 +1154,8 @@ package scenes.game.display
 		private var storedDirectEdgesDict:Dictionary;
 		private var directNodeArray:Array;
 		private var counter:int;
-		public function solveSelection1(_updateCallback:Function, _doneCallback:Function):void
+		private var m_solverType:int;
+		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
@@ -1203,6 +1163,10 @@ package scenes.game.display
 			//run the solver, passing in the callback function		
 			updateCallback = _updateCallback;
 			doneCallback = _doneCallback;
+			
+			m_solverType = 1;
+			if(brushType != GridViewPanel.SOLVER1_BRUSH)
+				m_solverType = 2;
 			
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var storedConstraints:Dictionary = new Dictionary;
@@ -1442,7 +1406,7 @@ package scenes.game.display
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
-			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(m_solverType, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
@@ -1489,17 +1453,6 @@ package scenes.game.display
 			onScoreChange(true);
 			System.gc();
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
-			//trace("time elapsed", new Date().getTime()-solverRunningTime);
-			//trace("num conflicts", MiniMap.numConflicts);
-			//do it again?
-			if(Keyboard.capsLock && count < 3000)
-			{
-				count++;
-				//trace("count", count);
-				timer = new Timer(1000, 1);
-				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
-				timer.start();
-			}
 		}
 		
 		public function onViewSpaceChanged(event:MiniMapEvent):void

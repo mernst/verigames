@@ -13,6 +13,8 @@ package events
 		
 		public static var BRUSH_CHANGED:String = "brush_changed";
 		
+		public static var ITEM_CLICKED:String = "item_clicked";
+		
 		public var selection:Vector.<Object>;
 		public var component:Object;
 		

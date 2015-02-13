@@ -1,80 +1,339 @@
 package scenes.game.components
 {
-	import assets.AssetInterface;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
+	import display.BasicButton;
+	import display.NineSliceButton;
+	import display.RecenterButton;
+	import display.SoundButton;
+	import display.ZoomInButton;
+	import display.ZoomOutButton;
+	
+	import events.MenuEvent;
+	import events.NavigationEvent;
 	import events.SelectionEvent;
 	
 	import scenes.BaseComponent;
+	import scenes.game.display.Level;
+	import scenes.game.display.NodeSkin;
 	import scenes.game.display.TutorialLevelManager;
 	
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	
+	import utils.XSprite;
 	
 	public class SideControlPanel extends BaseComponent
 	{
 		protected var WIDTH:Number;
 		protected var HEIGHT:Number;
 		
-		protected var m_solverBrush:Sprite;
+		/** Button to bring the up the menu */
+		private var m_menuButton:NineSliceButton;
+		
+		protected var scoreCircleMiddleImage:Image;
+		protected var scoreCircleFrontImage:Image;
+		protected var scoreImageCenter:Point;
+		/** Navigation buttons */
+		private var m_zoomInButton:BasicButton;
+		private var m_zoomOutButton:BasicButton;
+		
+		protected var m_solver1Brush:Sprite;
+		protected var m_solver2Brush:Sprite;
 		protected var m_widenBrush:Sprite;
 		protected var m_narrowBrush:Sprite;
+		
+		/** Text showing current score */
+		private var m_scoreTextfield:TextFieldWrapper;
+
+		/** Text showing best score */
+		private var m_bestTextfield:TextFieldWrapper;
+
 		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
 			WIDTH = _width;
 			HEIGHT = _height;
 
-			var backgroundQuad:Quad = new Quad(WIDTH, HEIGHT, 0x785201);
-			addChild(backgroundQuad);
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
 			
-			m_solverBrush = createPaintBrush(GridViewPanel.SOLVER_BRUSH);
-			m_widenBrush = createPaintBrush(GridViewPanel.WIDEN_BRUSH);
-			m_narrowBrush = createPaintBrush(GridViewPanel.NARROW_BRUSH);
+			var scoreCircleBackTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleBack);
+			var scoreCircleMiddleTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleMiddle);
+			var scoreCircleFrontTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleFront);
 			
-			m_solverBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
-			m_widenBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
-			m_narrowBrush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			var scoreCircleBackImage:Image = new Image(scoreCircleBackTexture);
+			scoreCircleBackImage.scaleX = scoreCircleBackImage.scaleY = 0.5;
+			scoreCircleBackImage.x = 6.25;
+			scoreCircleBackImage.y = 18.75;
+			addChild(scoreCircleBackImage);
+			
+			scoreCircleMiddleImage = new Image(scoreCircleMiddleTexture);
+			scoreCircleMiddleImage.x = 6.25;
+			scoreCircleMiddleImage.y = 18.75;
+			scoreCircleMiddleImage.scaleX = scoreCircleMiddleImage.scaleY = 0.5;
+			addChild(scoreCircleMiddleImage);
+			
+			scoreCircleFrontImage = new Image(scoreCircleFrontTexture);
+			scoreCircleFrontImage.x = 19;
+			scoreCircleFrontImage.y = 32.5;
+			scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.5;
+			addChild(scoreCircleFrontImage);
+			
+			scoreImageCenter = new Point(scoreCircleFrontImage.x + scoreCircleFrontImage.width/2, 
+												scoreCircleFrontImage.y + scoreCircleFrontImage.height/2)
+			
+			var background:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_Sidebar);
+			var backgroundImage:Image = new Image(background);
+			backgroundImage.scaleX = backgroundImage.scaleY = 0.5;
+			addChild(backgroundImage);
+			
+			m_menuButton = ButtonFactory.getInstance().createButton(PipeJam3.TUTORIAL_DEMO ? "Level Select" : "Menu", 44, 14, 8, 8, "Return to the main menu");
+			m_menuButton.addEventListener(starling.events.Event.TRIGGERED, onMenuButtonTriggered);
+			m_menuButton.x = 59;
+			m_menuButton.y = 23;
+			m_menuButton.scaleX = .8;
+			//m_menuButton.scaleY = .8;
+			
+			var logo:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ParadoxLogoWhiteSmall);
+			var logoImage:Image = new Image(logo);
+			logoImage.x = m_menuButton.x;
+			logoImage.y = 5;
+			logoImage.width = m_menuButton.width;
+			logoImage.scaleY = logoImage.scaleX;
+			addChild(logoImage);
+			
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
+			m_scoreTextfield.touchable = false;
+			m_scoreTextfield.x = 44;
+			m_scoreTextfield.y = 44;
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			addChild(m_scoreTextfield);
+			
+			m_zoomInButton = new ZoomInButton();
+			m_zoomInButton.addEventListener(starling.events.Event.TRIGGERED, onZoomInButtonTriggered);
+			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.6;
+			XSprite.setPivotCenter(m_zoomInButton);
+			m_zoomInButton.x = 24;
+			m_zoomInButton.y = MiniMap.TOP_Y + 4.5;
+			
+			m_zoomOutButton = new ZoomOutButton();
+			m_zoomOutButton.addEventListener(starling.events.Event.TRIGGERED, onZoomOutButtonTriggered);
+			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = m_zoomInButton.scaleX;
+			XSprite.setPivotCenter(m_zoomOutButton);
+			m_zoomOutButton.x = m_zoomInButton.x;
+			m_zoomOutButton.y = m_zoomInButton.y + m_zoomInButton.height + 7;
+			
+			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush);
+			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush);
+			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush);
+			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush);
 
 
 			//set all to visible == false so that they don't flash on, before being turned off
-			m_solverBrush.scaleX = m_solverBrush.scaleY = .2;
-			m_solverBrush.x = (WIDTH - m_solverBrush.width)/2;
-			m_solverBrush.y = 120;
-			m_solverBrush.visible = false;
-			addChild(m_solverBrush);
-			m_widenBrush.x = m_solverBrush.x;
-			m_widenBrush.y = 160;
+			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .2;
+			m_solver1Brush.x = 65;
+			m_solver1Brush.y = 115;
+			m_solver1Brush.visible = false;
+			addChild(m_solver1Brush);
+			//brush icons are different widths, so line up centers
+			var brushCenter:Number = m_solver1Brush.x + m_solver1Brush.width/2;
+			m_solver2Brush.scaleX = m_solver2Brush.scaleY = .2;
+			m_solver2Brush.x = brushCenter - m_solver2Brush.width/2;
+			m_solver2Brush.y = 143;
+			m_solver2Brush.visible = false;
+			addChild(m_solver2Brush);
 			m_widenBrush.scaleX = m_widenBrush.scaleY = .2;
+			m_widenBrush.x = brushCenter - m_widenBrush.width/2;
+			m_widenBrush.y = 173;
 			m_widenBrush.visible = false;
 			addChild(m_widenBrush);
-			m_narrowBrush.x = m_solverBrush.x;
-			m_narrowBrush.y = 200;
 			m_narrowBrush.scaleX = m_narrowBrush.scaleY = .2;
+			m_narrowBrush.x = brushCenter - m_narrowBrush.width/2;
+			m_narrowBrush.y = 205;
 			m_narrowBrush.visible = false;
 			addChild(m_narrowBrush);
+			
+			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
+			//
 		}
 		
-		private function changeCurrentBrush(evt:starling.events.TouchEvent):void
+		public function addedToStage(event:starling.events.Event):void
 		{
-			if(evt.getTouches(this, TouchPhase.ENDED).length && evt.target is DisplayObject)
+			addChild(m_menuButton);
+			addChild(m_zoomInButton);
+			addChild(m_zoomOutButton);
+			addEventListener(TouchEvent.TOUCH, onTouch);
+			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
+		}
+		
+		public function addSoundButton(m_sfxButton:SoundButton):void
+		{
+			m_sfxButton.scaleX = m_sfxButton.scaleY = m_zoomInButton.scaleX;
+			m_sfxButton.x = m_zoomInButton.x - 3.5;
+			m_sfxButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 3.5;
+			var test:Point = localToGlobal(new Point(m_sfxButton.x, m_sfxButton.y));
+			addChild(m_sfxButton);
+			
+		}
+		
+		public function onMaxZoomReached():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = false;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+		}
+		
+		public function onMinZoomReached():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = true;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
+		}
+		
+		public function onZoomReset():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = true;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+		}
+		
+		public function newLevelSelected(level:Level):void 
+		{
+//			m_currentLevel = level;
+//			updateScore(level, true);
+//			TextFactory.getInstance().updateText(m_levelNameTextfield, level.level_name);
+//			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 1);
+//			setNavigationButtonVisibility(level.getPanZoomAllowed());
+//			setSolveButtonsVisibility(level.getAutoSolveAllowed());
+//			updateNumNodesSelectedDisplay();
+		}
+		
+		public function removedFromStage(event:starling.events.Event):void
+		{
+			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
+		}
+		
+		protected var inTransparentArea:Boolean = false;
+		override protected function onTouch(event:TouchEvent):void
+		{
+			//handle touches in transparent part, since starling doesn't
+			var touch:Touch;
+			var loc:Point;
+			var eventType:String;
+			if (event.getTouches(this, TouchPhase.HOVER).length)
 			{
-				var target:DisplayObject = (evt.target as DisplayObject).parent;
-				dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, target.name, null));
+				touch = event.getTouches(this, TouchPhase.HOVER)[0];
+				eventType = MouseEvent.MOUSE_MOVE;
 			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				touch = event.getTouches(this, TouchPhase.BEGAN)[0];
+				eventType =TouchPhase.BEGAN;
+			}
+			else if(event.getTouches(this, TouchPhase.MOVED).length)
+			{
+				touch = event.getTouches(this, TouchPhase.MOVED)[0];
+				eventType = TouchPhase.MOVED;
+			}
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
+			{
+				touch = event.getTouches(this, TouchPhase.ENDED)[0];
+				eventType = TouchPhase.ENDED;
+			}
+			
+			if(touch)
+				loc = new Point(touch.globalX, touch.globalY);
+			
+			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)))
+			{
+				inTransparentArea = true;
+				dispatchEvent(new starling.events.Event(eventType,  true,  loc));
+			}
+			else
+				inTransparentArea = false;
+			
+		}
+		
+		private function onMenuButtonTriggered():void
+		{
+			if (PipeJam3.TUTORIAL_DEMO) {
+				dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			} else {
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
+			}
+		}
+		
+		private function onZoomInButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_IN));
+		}
+		
+		private function onZoomOutButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_OUT));
+		}
+		
+		/**
+		 * Updates the score on the screen
+		 */
+		public function updateScore(level:Level, skipAnimatons:Boolean):void 
+		{
+			var maxConflicts:int = level.maxScore;
+			var currentConflicts:int = MiniMap.numConflicts;
+			var score:Number = ((maxConflicts-currentConflicts)/maxConflicts)*100;
+			var integerPart:int = Math.floor(score);
+			var decimalPart:int = (score - integerPart) * 100;
+			
+			var currentScore:String = score.toFixed(2) + '%';
+			trace("conflict count", maxConflicts, currentConflicts, currentScore);
+			
+			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore);
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			
+			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
+			var decimalRotation:Number = -(100-decimalPart)*1.8;
+			rotateAroundCenter(scoreCircleMiddleImage, integerRotation);
+			rotateAroundCenter(scoreCircleFrontImage, decimalRotation);
+			
+			
+		}
+		
+		protected var degConversion:Number = (Math.PI/180);
+		public function rotateAroundCenter (image:Image, angleDegrees:Number):void 
+		{
+			image.rotation = degConversion*angleDegrees;
+			var newXCenter:Number = image.bounds.left + (image.bounds.right - image.bounds.left)/2;
+			var newYCenter:Number = image.bounds.top + (image.bounds.bottom - image.bounds.top)/2;
+			image.x += scoreImageCenter.x - newXCenter;
+			image.y += scoreImageCenter.y - newYCenter;
+		}
+		
+		private function changeCurrentBrush(evt:starling.events.Event):void
+		{
+			dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, evt.target, null));
 		}
 		
 		public function showVisibleBrushes(visibleBrushes:int):void
 		{
 			var count:int = 0;
-			m_solverBrush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
-			if(m_solverBrush.visible) count++;
+			m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+			if(m_solver1Brush.visible) count++;
+			m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+			if(m_solver2Brush.visible) count++;
 			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
 			if(m_narrowBrush.visible) count++;
 			m_widenBrush.visible = visibleBrushes & TutorialLevelManager.NARROW_BRUSH ? true : false;
@@ -82,7 +341,7 @@ package scenes.game.components
 			
 			//if only one shows, hide them all
 			if(count == 1)
-				m_solverBrush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+				m_solver1Brush.visible = m_solver2Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
 		}
 	}
 }
