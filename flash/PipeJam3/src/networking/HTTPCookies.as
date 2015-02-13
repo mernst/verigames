@@ -13,6 +13,9 @@ package networking
 	{
 		public static function initialize():void
 		{
+			if (!ExternalInterface.available) {
+				return;
+			}
 			ExternalInterface.addCallback("loadAssignmentFile", loadAssignmentFile);
 			ExternalInterface.addCallback("loadLevel", loadLevel);
 		}

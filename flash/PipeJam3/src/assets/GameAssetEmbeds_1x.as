@@ -95,6 +95,9 @@ package assets
 		[Embed(source = "../../lib/assets/BorderVignette.png")]
 		public static const BorderVignetteClass:Class;
 		
+		[Embed(source = "../../lib/assets/grid.png")]
+		public static const GridClass:Class;
+		
 		[Embed(source = "../../lib/assets/shimmer.png")]
 		public static const ShimmerClass:Class;
 		

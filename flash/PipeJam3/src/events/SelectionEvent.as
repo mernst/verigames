@@ -4,8 +4,6 @@ package events
 	
 	public class SelectionEvent extends Event 
 	{
-		public static var GROUP_SELECTED:String = "group_selected";
-		public static var GROUP_UNSELECTED:String = "group_unselected";
 		public static var COMPONENT_SELECTED:String = "component_selected";
 		public static var COMPONENT_UNSELECTED:String = "component_unselected";
 		

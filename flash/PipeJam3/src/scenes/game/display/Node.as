@@ -15,28 +15,22 @@ package scenes.game.display
 		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
 		
-		public var connectors:Vector.<Quad>;
-		
-		public function Node(_layoutObject:Object, _id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide, _parentGrid:GridSquare)
+		public function Node(_id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide)
 		{
-			super(_layoutObject, _id, _bb, _parentGrid);
+			super(_id, _bb);
 			graphConstraintSide = _graphConstraintSide;
-			
-			connectors = new Vector.<Quad>;
 		}
 		
 		public override function select():void
 		{
 			super.select();
 			setDirty();
-			parentGrid.isDirty = (skin != null);
 		}
 		
 		public override function unselect():void
 		{
 			super.unselect();
 			setDirty();
-			parentGrid.isDirty = (skin != null);
 		}
 		
 		public override function createSkin():void
@@ -48,8 +42,8 @@ package scenes.game.display
 			newSkin.draw();
 			skin = newSkin;
 			
-			skin.x = centerPoint.x - gridOffset.x - 0.5 * skin.width;
-			skin.y = centerPoint.y - gridOffset.y - 0.5 * skin.height;
+			skin.x = centerPoint.x - 0.5 * skin.width;
+			skin.y = centerPoint.y - 0.5 * skin.height;
 			
 			setDirty(true);
 		}
@@ -90,19 +84,6 @@ package scenes.game.display
 				if(skin)
 					skin.flash();
 			}
-		}
-		
-		public function addConnector(edge:Edge):void
-		{
-			var rot:Number = edge.skin.rotation;
-			
-	//		var dir:Number = edge.
-			var connector:Image =  edge.skin.getConnectorTexture();
-			connector.width = connector.height = 10;
-			connector.alpha = .8;
-			connector.x =  -5 * Math.cos(rot) + 5;
-			connector.y = - 5 * Math.sin(rot) + 5;
-			connectors.push(connector);
 		}
 		
 	}

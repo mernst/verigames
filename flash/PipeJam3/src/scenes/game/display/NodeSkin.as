@@ -301,21 +301,16 @@ package scenes.game.display
 			isBackground = _isBackground;
 		}
 		
-		private var saveParent:DisplayObjectContainer;
 		private var tween:Tween;
 		private var q:Quad;
 		public function flash(color:int = 0xffff00):void
 		{
 			q = new Quad(50, 50, color);
 			if(parent)
-				saveParent = parent.parent;
-			else
-				saveParent = null;
-			if(saveParent)
 			{
-				q.x = x + parent.x;// + 25;
-				q.y = y + parent.y;// + 25;
-				saveParent.addChild(q);
+				q.x = x - 25;
+				q.y = y - 25;
+				parent.addChild(q);
 				tween = new Tween(q, 2);
 				tween.fadeTo(0);
 				tween.onComplete = flashComplete;
@@ -325,13 +320,19 @@ package scenes.game.display
 		
 		protected function flashComplete():void
 		{
+			var saveParent:Sprite
 			if (q)
 			{
 				q.visible = false;
-				if (q.parent) q.parent.removeChild(q);
+				if (q.parent != null)
+				{
+					saveParent = q.parent as Sprite;
+					q.removeFromParent(true);
+					if (saveParent) saveParent.flatten();
+				}
 			}
 			if (tween) Starling.juggler.remove(tween);
-			draw();
+			//draw();
 		}
 		
 		public function scaleConflictMarker(newScale:int):void

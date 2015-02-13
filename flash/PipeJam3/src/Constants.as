@@ -15,6 +15,7 @@ package
 		
 		public static const TOOL_TIP_DELAY_SEC:Number = 1.0;
 		public static const NUM_BACKGROUNDS:int = 12;
+		public static const SKIN_DIAMETER:Number = 20;
 		
 		public static const XML_ANNOT_IN:String = "__IN__";
 		public static const XML_ANNOT_OUT:String = "__OUT__";

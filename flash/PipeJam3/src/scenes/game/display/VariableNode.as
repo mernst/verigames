@@ -8,9 +8,9 @@ package scenes.game.display
 	public class VariableNode extends Node
 	{
 		
-		public function VariableNode(_layoutObject:Object, _id:String, _bb:Rectangle, _graphVar:ConstraintVar, _parentGrid:GridSquare)
+		public function VariableNode(_id:String, _bb:Rectangle, _graphVar:ConstraintVar)
 		{
-			super(_layoutObject, _id, _bb, _graphVar, _parentGrid);
+			super(_id, _bb, _graphVar);
 			//this is only intesting for non-clause Nodes
 			isNarrow = graphVar.getProps().hasProp(PropDictionary.PROP_NARROW);
 			isEditable = !graphVar.constant;
