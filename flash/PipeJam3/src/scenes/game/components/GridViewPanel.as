@@ -359,9 +359,6 @@ package scenes.game.components
 				System.gc();
 				endingMoveMode = false;
 			}
-			var farEdge:Number = clipRect.width + clipRect.x;
-				else if(m_scrollEdgePoint.x > farEdge - 20)
-					xDelta = -(20 - (farEdge - m_scrollEdgePoint.x));
 		}
 		
 		public function outsideEventHandler(event:starling.events.Event):void
@@ -370,7 +367,6 @@ package scenes.game.components
 			if(event.type == MouseEvent.MOUSE_MOVE)
 			{
 				movePaintBrush(event.data as Point);
-				m_scrollEdgePoint = event.data as Point;
 				onEnterFrame(null);
 			}
 			else if(event.type == TouchPhase.BEGAN)
@@ -379,7 +375,6 @@ package scenes.game.components
 			{
 				movePaintBrush(event.data as Point);
 				handlePaint(event.data as Point);
-				m_scrollEdgePoint = event.data as Point;
 				onEnterFrame(null);
 			}
 			else if(event.type == TouchPhase.ENDED)
