@@ -2911,7 +2911,7 @@ void dpl() {
       printf("o %lli\n", UB);
       for (i = 0; i < NB_VAR; i++)
 	var_best_value[i] = var_current_value[i];
-      do_callback();
+      do_callback(0);
       while (backtracking()==NONE);
       if (VARIABLE_STACK_fill_pointer==0)
 	break;
@@ -3000,7 +3000,7 @@ void ubcsat(char file[]) {
   }
 }
 
-#ifndef MAXSATZ2009LIB
+#ifdef MAXSATZ2009
 int main(int argc, char *argv[]) {
   char saved_input_file[WORD_LENGTH];
   //int i,  var;

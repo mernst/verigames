@@ -1,13 +1,21 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <sys/times.h>
+#include <sys/types.h>
+#include <limits.h>
+
+#include <unistd.h>
+
 #include "../maxsat.h"
 
 static CallbackFunction callback_function = 0;
-void do_callback();
 
-#define MAXSATZ2009LIB
-#include "maxsatz2009.c"
-
+#ifdef MAXSATZ2009
 void
-do_callbackm()
+do_callback(int new_best)
 {
   if (!callback_function) {
     return;
@@ -26,6 +34,7 @@ do_callbackm()
 
   callback_function(output, NB_VAR, UB);
 }
+#endif
 
 void
 runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
