@@ -13,7 +13,7 @@ else
 
     echo "Creating SWC..."
     #${FLASCC}/usr/bin/gcc maxsat.abc maxsat_swig.abc as_swig.c as_main.c  -emit-swc=maxsat_package -o maxsatz_util.swc
-    ${FLASCC}/usr/bin/gcc maxsat.abc maxsat_swig.abc as_swig.c as_main.c borchers/maxsat_borchers.c maxsatz2009/maxsat_maxsatz2009.c -emit-swc=maxsat_package -o maxsat_util.swc
+    ${FLASCC}/usr/bin/gcc maxsat.abc maxsat_swig.abc as_swig.c as_main.c borchers/maxsat_borchers.c borchers/wmaxsat.c maxsatz2009/maxsat_maxsatz2009.c maxsatz2009/maxsatz2009.c main.c -emit-swc=maxsat_package -o maxsat_util.swc
 
     echo "Installing..."
     cp maxsat_util.swc ../example/lib/

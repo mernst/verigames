@@ -1,3 +1,14 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <sys/times.h>
+#include <sys/types.h>
+#include <limits.h>
+
+#include <unistd.h>
+
 #include "../maxsat.h"
 
 static CallbackFunction callback_function = 0;
@@ -7,8 +18,6 @@ const int ALG_DPLL = 1;
 const int ALG_RAND = 2;
 
 int m_alg;
-
-#include "wmaxsat.c"
 
 static int callback_use_intermediate = 0;
 static int callback_need_call_best = 0;
@@ -31,6 +40,7 @@ get_time()
 }
 #endif
 
+#ifdef borchars
 void
 do_callback_now(int new_best)
 {
@@ -75,6 +85,7 @@ do_callback(int new_best)
   }
 }
 
+#endif
 // need to check that problem has each variable used in at least one clause, and there are not duplicated literals
 const char *
 check_problem(const int * clauses_ptr, int nclauses, int * nvars)
@@ -270,63 +281,4 @@ init_problem(int * initvars, int ninitvars, int nvars)
   return NULL;
 }
 
-void
-run(int algorithm, int * clauses, int nclauses, int * initvars, int ninitvars, int intermediate_callbacks, CallbackFunction callback)
-{
-  callback_function = callback;
-  callback_use_intermediate = intermediate_callbacks;
-  callback_need_call_best = 1;
-  callback_last_time = get_time();
 
-  const char * error = NULL;
-  int nvars = 0;
-
-  error = check_problem(clauses, nclauses, &nvars);
-  if (error) {
-    printf("Error in problem setup: %s\n", error);
-    return;
-  }
-
-  setup_problem(clauses, nclauses, nvars);
-
-  error = init_problem(initvars, ninitvars, nvars);
-  if (error) {
-    printf("Error in problem setup: %s\n", error);
-    return;
-  }
-
-  m_alg = algorithm;
-  if (algorithm == ALG_DPLL) {
-    dp();
-  } else {
-    runMaxSatz(clauses, nclauses, callback);
-  }
-
-  if (callback_need_call_best) {
-    do_callback_now(1);
-  }
-}
-
-/*
-int
-main()
-{
-  int clauses[] = {
-    76222, -1, 2, 0,
-    76222, 1, -2, 0,
-    41225, 2, 3, 0,
-    41225, -2, -3, 0,
-    50104, -3, 1, 0,
-    50104, 3, -1, 0,
-    125307, 4, 5, 0,
-    125307, -4, -5, 0,
-    51429, 5, 6, 0,
-    51429, -5, -6, 0
-  };
-  int nclauses = 10;
-
-  run(clauses, nclauses, NULL);
-
-  return 0;
-}
-*/

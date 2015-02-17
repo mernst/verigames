@@ -12,8 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-//#include <sys/time.h>
-
+#ifndef BUILD_LIB
+#include "../maxsat.h"
+#endif
 /*
  * Some important limits on the size of the problem.
  */
@@ -65,15 +66,7 @@ int             rand();
  * Define a record type for the entries in the satisfiability problem data
  * structure.
  */
-typedef struct entry *entry_ptr;
 
-struct entry {
-     int             clause_num;
-     int             var_num;
-     int             sense;
-     entry_ptr       next_in_var;
-     entry_ptr       next_in_clause;
-};
 
 /*
  * Information about the variables.
@@ -1158,7 +1151,7 @@ dp()
 /*
  * The main program.
  */
-#if 0
+#ifdef borchars
 void
 main(argc, argv)
      int             argc;
