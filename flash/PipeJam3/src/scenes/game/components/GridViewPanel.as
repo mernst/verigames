@@ -568,6 +568,7 @@ package scenes.game.components
 			handleMouseWheel(delta, localMouse);			
 		}
 		
+		private var lastScaleChanged:Boolean = false;
 		private function handleMouseWheel(delta:Number, localMouse:Point = null):void
 		{
 			if (!getPanZoomAllowed())
@@ -618,7 +619,24 @@ package scenes.game.components
 					m_currentLevel.updateLevelDisplay(currentViewRect);
 				}
 				checkGridSize();
+					
 			}
+			
+			if(lastScaleChanged == false || scaleChanged == false)
+			{
+				if(lastScaleChanged == false && scaleChanged != false)
+					dispatchEvent(new MenuEvent(MenuEvent.RESET_ZOOM, null));
+				else if(newScaleX == MIN_SCALE || newScaleY == MIN_SCALE)
+				{
+					dispatchEvent(new MenuEvent(MenuEvent.MAX_ZOOM_REACHED, null));
+				}
+				else
+				{
+					dispatchEvent(new MenuEvent(MenuEvent.MIN_ZOOM_REACHED, null));
+				}
+			}
+			
+			lastScaleChanged = scaleChanged;
 		}
 		
 		private function moveContent(newX:Number, newY:Number, useGrid:Boolean = true):void

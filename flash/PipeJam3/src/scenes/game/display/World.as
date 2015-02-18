@@ -653,19 +653,19 @@ package scenes.game.display
 			edgeSetGraphViewPanel.zoomOutDiscrete();
 		}
 		
-		public function onMaxZoomReached(event:MenuEvent):void
+		public function onMaxZoomReached(event:events.MenuEvent):void
 		{
-			if (gameControlPanel) gameControlPanel.onMaxZoomReached();
+			if (sideControlPanel) sideControlPanel.onMaxZoomReached();
 		}
 		
-		public function onMinZoomReached(event:MenuEvent):void
+		public function onMinZoomReached(event:events.MenuEvent):void
 		{
-			if (gameControlPanel) gameControlPanel.onMinZoomReached();
+			if (sideControlPanel) sideControlPanel.onMinZoomReached();
 		}
 		
-		public function onZoomReset(event:MenuEvent):void
+		public function onZoomReset(event:events.MenuEvent):void
 		{
-			if (gameControlPanel) gameControlPanel.onZoomReset();
+			if (sideControlPanel) sideControlPanel.onZoomReset();
 		}
 		
 		public function onErrorsMoved(event:MiniMapEvent):void
