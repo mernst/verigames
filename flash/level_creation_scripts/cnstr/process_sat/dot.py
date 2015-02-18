@@ -15,7 +15,7 @@ def add_layout_to_graph(G, node_layout):
         node['x'] = layout_info[0]
         node['y'] = layout_info[1]
         min_x = G.graph.get('min_x', layout_info[0])
-        max_X = G.graph.get('max_x', layout_info[0])
+        max_x = G.graph.get('max_x', layout_info[0])
         min_y = G.graph.get('min_y', layout_info[1])
         max_y = G.graph.get('max_y', layout_info[1])
         if layout_info[0] < min_x:
