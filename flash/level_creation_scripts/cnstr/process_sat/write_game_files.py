@@ -70,7 +70,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
         G.graph.get('min_x',0), 
         G.graph.get('min_y',0), 
         G.graph.get('max_x',0), 
-        G.graph.get('max_y',0))
+        G.graph.get('max_y',0)))
         comma = ''
         for node_id in G.nodes():
             node = G.node[node_id]
