@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import flash.utils.Dictionary;
+	import utils.XMath;
 	
 	import assets.AssetInterface;
 	
@@ -338,13 +339,14 @@ package scenes.game.display
 		
 		public function scale(newScale:Number):void
 		{
+			if (isBackground) return;
 			var currentWidth:Number;
 			var newWidth:Number;
 			if (textureImage != null)
 			{
 				currentWidth = textureImage.width;
 				textureImage.scaleX = textureImage.scaleY = newScale * (associatedNode.isNarrow ? 0.5 : 0.9);
-				newWidth = textureImage.width;
+				newWidth = XMath.clamp(textureImage.width, 5, 50);
 				textureImage.x -= (newWidth - currentWidth) / 2;
 				textureImage.y -= (newWidth - currentWidth) / 2;
 			}
@@ -352,7 +354,7 @@ package scenes.game.display
 			//{
 				//currentWidth = constraintImage.width;
 				//constraintImage.scaleX = constraintImage.scaleY = newScale;
-				//newWidth = constraintImage.width;
+				//newWidth = XMath.clamp(constraintImage.width, 5, 50);
 				//constraintImage.x -= (newWidth - currentWidth) / 2;
 				//constraintImage.y -= (newWidth - currentWidth) / 2;
 			//}

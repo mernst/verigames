@@ -136,6 +136,11 @@ package scenes.game.components
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		private static var m_gridTexture:Texture;
 		
+		private var m_gridTileImg:TiledImage;
+		private var m_gridContainer:Sprite;
+		private var m_zoomPanTimer:Timer;
+		private static const ZOOM_PAN_TIME_SEC:Number = 0.6;
+		
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
@@ -669,10 +674,6 @@ package scenes.game.components
 			}
 		}
 		
-		private var m_gridTileImg:TiledImage;
-		private var m_gridContainer:Sprite;
-		private var m_zoomPanTimer:Timer;
-		private static const ZOOM_PAN_TIME_SEC:Number = 1.6;
 		private function showZoomPanGrid():void
 		{
 			if (!m_gridTexture) m_gridTexture = AssetInterface.getTexture("Game", "GridClass");
@@ -713,7 +714,6 @@ package scenes.game.components
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 			if (m_currentLevel)
 			{
-				m_currentLevel.handleScaleChange(content.scaleX, content.scaleY);
 				var currentViewRect:Rectangle = getViewInContentSpace();
 				m_currentLevel.updateLevelDisplay(currentViewRect);
 			}
@@ -776,8 +776,6 @@ package scenes.game.components
 				inactiveContent.y = content.y;
 			}
 			//trace("newscale:" + contentToScale.scaleX + "new xy:" + contentToScale.x + " " + contentToScale.y);
-			
-			if (m_currentLevel && contentToScale == content) m_currentLevel.handleScaleChange(contentToScale.scaleX, contentToScale.scaleY);
 		}
 		
 		private function onContentScaleChanged(prevScale:Point):void

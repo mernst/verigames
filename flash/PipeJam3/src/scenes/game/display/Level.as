@@ -411,17 +411,14 @@ package scenes.game.display
 			while (m_nodesToRemove.length && (nodesProcessed <= ITEMS_PER_FRAME || m_tutorialTag))
 			{
 				var nodeToRemove:Node = m_nodesToRemove.shift();
-				if (nodeToRemove.isClause)
+				for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
 				{
-					for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
+					edge = edgeLayoutObjs[gameEdgeId];
+					if (edge.skin)
 					{
-						edge = edgeLayoutObjs[gameEdgeId];
-						if (edge.skin)
-						{
-							edge.skin.removeFromParent(true);
-							edge.skin = null;
-							touchedEdgeLayer = true;
-						}
+						edge.skin.removeFromParent(true);
+						edge.skin = null;
+						touchedEdgeLayer = true;
 					}
 				}
 				if (nodeToRemove.skin != null)
@@ -473,12 +470,19 @@ package scenes.game.display
 					if (nodeToDraw.skin != null)
 					{
 						m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
-						nodeToDraw.skin.scale(0.5 / parent.scaleX);
+						if (parent)
+						{
+							nodeToDraw.skin.scale(0.5 / parent.scaleX);
+						}
 						m_nodeLayer.addChild(nodeToDraw.skin);
 						touchedNodeLayer = true;
 						if (nodeToDraw.backgroundSkin)
 						{
 							m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
+							if (parent)
+							{
+								nodeToDraw.backgroundSkin.scale(0.5 / parent.scaleX);
+							}
 							touchedConflictLayer = true;
 						}
 					}
@@ -488,20 +492,6 @@ package scenes.game.display
 			if (touchedEdgeLayer) m_edgesLayer.flatten();
 			if (touchedNodeLayer) m_nodeLayer.flatten();
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
-		}
-		
-		public function handleScaleChange(newScaleX:Number, newScaleY:Number):void
-		{
-			var newNodeScaleX:Number,
-				newNodeScaleY:Number;
-			if (newScaleX < MIN_NODE_SCALE || newScaleY < MIN_NODE_SCALE) {
-				newNodeScaleX = MIN_NODE_SCALE / newScaleX;
-				newNodeScaleY = MIN_NODE_SCALE / newScaleY;
-			} else {
-				newNodeScaleX = newNodeScaleY = 1;
-			}
-			// TODO groups
-			
 		}
 		
 		protected function createGridChildFromLayoutObj(gridChildId:String, gridChildLayout:Object, isGroup:Boolean):GridChild
