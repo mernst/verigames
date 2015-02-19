@@ -216,6 +216,7 @@ package scenes.game.display
 				{
 					textureImage = new Image(LightBlueCircle);
 				}
+				
 				addChild(textureImage);
 				if(associatedNode.isNarrow)
 					textureImage.width = textureImage.height = 10;
@@ -335,15 +336,26 @@ package scenes.game.display
 			//draw();
 		}
 		
-		public function scaleConflictMarker(newScale:int):void
+		public function scale(newScale:Number):void
 		{
-			var currentWidth:Number = constraintImage.width;
-			constraintImage.scaleX = constraintImage.scaleY = newScale;
-			var newWidth:Number = constraintImage.width;
-			constraintImage.x -= (newWidth-currentWidth)/2;
-			constraintImage.y -= (newWidth-currentWidth)/2;
-			
-			
+			var currentWidth:Number;
+			var newWidth:Number;
+			if (textureImage != null)
+			{
+				currentWidth = textureImage.width;
+				textureImage.scaleX = textureImage.scaleY = newScale * (associatedNode.isNarrow ? 0.5 : 0.9);
+				newWidth = textureImage.width;
+				textureImage.x -= (newWidth - currentWidth) / 2;
+				textureImage.y -= (newWidth - currentWidth) / 2;
+			}
+			//if (constraintImage != null)
+			//{
+				//currentWidth = constraintImage.width;
+				//constraintImage.scaleX = constraintImage.scaleY = newScale;
+				//newWidth = constraintImage.width;
+				//constraintImage.x -= (newWidth - currentWidth) / 2;
+				//constraintImage.y -= (newWidth - currentWidth) / 2;
+			//}
 		}
 	}
 }

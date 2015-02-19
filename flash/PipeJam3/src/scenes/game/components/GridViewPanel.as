@@ -1126,7 +1126,7 @@ package scenes.game.components
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-				continueButton.x = WIDTH - continueButton.width - 50;
+				continueButton.x = WIDTH - continueButton.width - 50 - Constants.RightPanelWidth;
 				continueButton.y = HEIGHT - continueButton.height - 2;
 			}
 			
@@ -1137,7 +1137,7 @@ package scenes.game.components
 			removeFanfare();
 			if (showFanfare) {
 				m_fanfareLayer.addChild(m_fanfareContainer);
-				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
+				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
 				var levelCompleteText:String = PipeJamGameScene.inTutorial ? "Level Complete!" : "Great work!\nBut keep playing to further improve your score."

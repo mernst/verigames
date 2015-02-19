@@ -360,7 +360,8 @@ package scenes.game.display
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
 						if (node != null)
 						{
-							if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) m_nodesToDraw.push(node);
+							//if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) 
+							m_nodesToDraw.push(node);
 							if (candidatesToRemove.hasOwnProperty(nodeId)) delete candidatesToRemove[node.graphConstraintSide.id];
 						}
 					}
@@ -469,9 +470,10 @@ package scenes.game.display
 				else
 				{
 					nodeToDraw.createSkin();
-					if (nodeToDraw.skin)
+					if (nodeToDraw.skin != null)
 					{
 						m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
+						nodeToDraw.skin.scale(0.5 / parent.scaleX);
 						m_nodeLayer.addChild(nodeToDraw.skin);
 						touchedNodeLayer = true;
 						if (nodeToDraw.backgroundSkin)

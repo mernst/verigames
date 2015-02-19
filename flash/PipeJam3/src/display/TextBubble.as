@@ -245,7 +245,7 @@ package display
 				var newY:Number = height / 2 - m_paddingSz + m_inset;
 				switch (m_pointFrom) {
 					case Constants.CENTER:
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
+						newY = Constants.GameHeight / 2;
 						break;
 					case Constants.TOP_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
@@ -255,28 +255,28 @@ package display
 						break;
 					case Constants.LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
+						newY = Constants.GameHeight / 2;
 						break;
 					case Constants.RIGHT:
 						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
+						newY = Constants.GameHeight / 2;
 						break;
 					case Constants.BOTTOM:
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 					case Constants.BOTTOM_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 					case Constants.BOTTOM_RIGHT:
 						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
-						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 				}
 				x = newX;
 				y = newY;
 			} else {
-				x = Constants.GameWidth / 2;
+				x = (Constants.GameWidth - Constants.RightPanelWidth) / 2;
 				y = height / 2 - m_paddingSz + m_inset;
 			}
 		}

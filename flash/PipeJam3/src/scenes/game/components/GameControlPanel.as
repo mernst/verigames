@@ -51,9 +51,6 @@ package scenes.game.components
 	
 	public class GameControlPanel extends BaseComponent
 	{
-		private static var WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 60;// 82 - 20;
-		
 		public static const OVERLAP:Number = 2;// 72 - 10;
 		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(83, 3, 364, 30);//108, 18, 284 - 10, 34);
 		
@@ -104,9 +101,6 @@ package scenes.game.components
 		private var m_smallScreenButton:BasicButton;
 		private var menuShowing:Boolean = false;
 		
-		/** Goes over the scorebar but under the menu, transparent in scorebar area */
-		private var m_scorebarForeground:Image;
-		
 		/** Display the target score the player is looking to beat for the level */
 		private var m_targetScoreLine:TargetScoreDisplay;
 		
@@ -124,11 +118,6 @@ package scenes.game.components
 		public function GameControlPanel()
 		{
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
-			m_scorebarForeground = new Image(foregroundTexture);
-			m_scorebarForeground.touchable = false;
-			m_scorebarForeground.width = WIDTH;
-			m_scorebarForeground.height = HEIGHT;
 			
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
@@ -158,7 +147,7 @@ package scenes.game.components
 			const LEVEL_TEXT_WIDTH:Number = 200.0;
 			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, LEVEL_TEXT_WIDTH, 10, 10, NodeSkin.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;
-			m_levelNameTextfield.x = 0.25 * WIDTH - 0.5 * LEVEL_TEXT_WIDTH;
+			m_levelNameTextfield.x = - 2*Constants.RightPanelWidth;// 0.25 * Constants.GameWidth - 0.5 * LEVEL_TEXT_WIDTH;
 			m_levelNameTextfield.y = 36;
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 1, 0);
 			
@@ -176,7 +165,7 @@ package scenes.game.components
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = WIDTH - 92.5;
+			m_zoomInButton.x = Constants.GameWidth - 92.5;
 			m_zoomInButton.y = 36;
 			
 			m_zoomOutButton = new ZoomOutButton();
@@ -219,12 +208,12 @@ package scenes.game.components
 			
 			m_selectedTextfield = TextFactory.getInstance().createDefaultTextField("Selected: 0", 80, 10, 8, 0x0);
 			TextFactory.getInstance().updateAlign(m_selectedTextfield, 1, 1);
-			m_selectedTextfield.x = 0.5 * WIDTH - 40;
+			m_selectedTextfield.x = 0.5 * Constants.GameWidth - 40;
 			m_selectedTextfield.y = -11;
 			m_selectedTextfield.visible = false;
 			
 			m_selectedBarDisplay = new SelectedBarDisplay(0, 1, 40, 6);
-			m_selectedBarDisplay.x = 0.5 * WIDTH;
+			m_selectedBarDisplay.x = 0.5 * Constants.GameWidth;
 			m_selectedBarDisplay.y = -14;
 			m_selectedBarDisplay.visible = false;
 			
@@ -245,7 +234,6 @@ package scenes.game.components
 		
 		public function addedToStage(event:Event):void
 		{
-			addChild(m_scorebarForeground);
 			addChildAt(m_scorePanel, 0);
 			addChild(m_levelNameTextfield);
 			addChild(m_newLevelButton);
