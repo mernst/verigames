@@ -1414,14 +1414,14 @@ package scenes.game.display
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
-			MaxSatSolver.run_solver(m_solverType, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(2, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			var someNodeUpdated:Boolean = false;
-			//trace("update", unsat_weight);
+			trace("update", unsat_weight);
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
