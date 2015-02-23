@@ -170,30 +170,145 @@ package constraints
 		public static function fromString(_json:String):ConstraintGraph
 		{
 			var levelObj:Object = JSON.parse(_json);
-			return fromJSON(levelObj);
+			return initFromJSON(levelObj);
 		}
 		
-		public static function fromJSON(levelObj:Object):ConstraintGraph
+		public function buildVar(varId:String):void
+		{
+			var idParts:Array = varId.split(":");
+			var formattedId:String = idParts[0] + "_" + idParts[1];
+			var varParamsObj:Object = variablesToBuildObj[varId];
+			var isConstant:Boolean = false;
+			if (varParamsObj.hasOwnProperty(CONSTANT)) isConstant = XString.stringToBool(varParamsObj[CONSTANT] as String);
+			var typeValStr:String = varParamsObj[TYPE_VALUE];
+			var varScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
+			var scoreObj:Object = varParamsObj[SCORE];
+			if (scoreObj) {
+				var type0VarScore:int = scoreObj[ConstraintScoringConfig.TYPE_0_VALUE_KEY];
+				var type1VarScore:int = scoreObj[ConstraintScoringConfig.TYPE_1_VALUE_KEY];
+				varScoring.updateScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY, type0VarScore);
+				varScoring.updateScoringValue(ConstraintScoringConfig.TYPE_1_VALUE_KEY, type1VarScore);
+			}
+			var mergedVarScoring:ConstraintScoringConfig = ConstraintScoringConfig.merge(graphScoringConfig, varScoring);
+			var defaultValStr:String = varParamsObj[DEFAULT];
+			var defaultVal:ConstraintValue;
+			if (defaultValStr) defaultVal = ConstraintValue.fromVerboseStr(defaultValStr);
+			var typeVal:ConstraintValue;
+			if (typeValStr) {
+				typeVal = ConstraintValue.fromVerboseStr(typeValStr);
+			} else if (defaultVal) {
+				typeVal = defaultVal.clone();
+			} else {
+				typeVal = graphDefaultVal.clone();
+			}
+			var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring);
+			variableDict[formattedId] = newVar;
+			delete variablesToBuildObj[varId];
+		}
+		
+		public function buildCompleteGroup(g:int):void
+		{
+			currentGroupDict = new Dictionary();
+			var groupSize:uint = 0;
+			for (var groupId:String in groupsArr[g]) {
+				var groupIdParts:Array = groupId.split(":");
+				if (groupIdParts[0] == "clause") groupIdParts[0] = "c";
+				var formattedGroupId:String = groupIdParts[0] + "_" + groupIdParts[1];
+				var groupedIds:Array = groupsArr[g][groupId] as Array;
+				for each (var groupedId:String in groupedIds) {
+					var groupedIdParts:Array = groupedId.split(":");
+					if (groupedIdParts[0] == "clause") groupedIdParts[0] = "c";
+					var formattedGroupedId:String = groupedIdParts[0] + "_" + groupedIdParts[1];
+					currentGroupDict[formattedGroupedId] = formattedGroupId;
+				}
+				groupSize++;
+			}
+			groupSizes.push(groupSize);
+			groupsArrComplete.push(currentGroupDict);
+		}
+		
+		public function buildNextConstraint():void
+		{
+			if (constraintsToBuildArr.length == 0) return;
+			var newConstraint:Constraint;
+			
+			if (getQualifiedClassName(constraintsToBuildArr[0]) == "String") {
+				// process as String, i.e. "var:1 <= c:2"
+				var constrString:String = constraintsToBuildArr.shift() as String;
+				newConstraint = parseConstraintString(constrString, this, graphDefaultVal, graphScoringConfig);
+			} else {
+				throw new Error("Unknown constraint format: " + constraintsToBuildArr[0]);
+			}
+			if (newConstraint is ConstraintEdge) {
+				nConstraints++;
+				constraintsDict[newConstraint.id] = newConstraint;
+				m_maxScore++;
+				// Attach any groups
+				if (groupsArr && totalGroups) {
+					var fillLeft:Boolean = (newConstraint.lhs.groups == null);
+					var fillRight:Boolean = (newConstraint.rhs.groups == null);
+					if (fillLeft) newConstraint.lhs.groups = new Vector.<String>();
+					if (fillRight) newConstraint.rhs.groups = new Vector.<String>();
+					if (fillLeft || fillRight) {
+						for (var g1:int = 0; g1 < totalGroups; g1++) {
+							if (fillLeft) {
+								var leftGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.lhs.id) ? groupsArrComplete[g1][newConstraint.lhs.id] : "";
+								newConstraint.lhs.groups.push(leftGroupId);
+								if (newConstraint.lhs.id != "" && 
+									newConstraint.lhs.id != leftGroupId && 
+									newConstraint.lhs.rank == 0) {
+									// If grouped for the first time this round, rank = group depth
+									newConstraint.lhs.rank = newConstraint.lhs.groups.length;
+								}
+							}
+							if (fillRight) {
+								var rightGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.rhs.id) ? groupsArrComplete[g1][newConstraint.rhs.id] : "";
+								newConstraint.rhs.groups.push(rightGroupId);
+								if (newConstraint.rhs.id != "" && 
+									newConstraint.rhs.id != rightGroupId && 
+									newConstraint.rhs.rank == 0) {
+									// If grouped for the first time this round, rank = group depth
+									newConstraint.rhs.rank = newConstraint.rhs.groups.length;
+								}
+							}
+						}
+					}
+				}
+			} else {
+				throw new Error("Unknown constraint type:" + newConstraint);
+			}
+		}
+		
+		public var version:String;
+		public var variablesToBuildObj:Object;
+		public var constraintsToBuildArr:Array;
+		public var totalGroups:uint;
+		public var groupsArrComplete:Array;
+		public var currentGroupDict:Dictionary
+		public var graphDefaultVal:ConstraintValue = GAME_DEFAULT_VAR_VALUE;
+		
+		public static function initFromJSON(levelObj:Object):ConstraintGraph
 		{
 			//with the inclusion of the import graph.PropDictionary, FlashBuilder confuses the graph package with this var when 
 			//just named 'graph'. Add the one so things compile.
 			var graph1:ConstraintGraph = new ConstraintGraph();
 			var ver:String = levelObj[VERSION];
+			graph1.version = levelObj[VERSION];
 			var defaultValue:String = levelObj[DEFAULT_VAR];
 			m_maxScore = 0;
 			graph1.qid = parseInt(levelObj[QID]);
-			switch (ver) {
+			switch (graph1.version) {
 				case "1": // Version 1
 				case "2": // Version 2
 					// No "default" specified in json, use game default
-					var graphDefaultVal:ConstraintValue;
 					if (defaultValue == ConstraintScoringConfig.TYPE_0_VALUE_KEY) {
-						graphDefaultVal = new ConstraintValue(0);
+						graph1.graphDefaultVal = new ConstraintValue(0);
 					} else if (defaultValue == ConstraintScoringConfig.TYPE_1_VALUE_KEY) {
-						graphDefaultVal = new ConstraintValue(1);
+						graph1.graphDefaultVal = new ConstraintValue(1);
 					} else {
-						graphDefaultVal = GAME_DEFAULT_VAR_VALUE;
+						graph1.graphDefaultVal = GAME_DEFAULT_VAR_VALUE;
 					}
+					
 					// Build Scoring
 					var scoringObj:Object = levelObj[SCORING];
 					var constraintScore:int = scoringObj ? scoringObj[ConstraintScoringConfig.CONSTRAINT_VALUE_KEY] : 100;
@@ -205,43 +320,17 @@ package constraints
 					graph1.graphScoringConfig.updateScoringValue(ConstraintScoringConfig.TYPE_1_VALUE_KEY, type1Score);
 					
 					// Build variables (if any specified, this section is optional)
-					var variablesObj:Object = levelObj[VARIABLES];
-					if (variablesObj) {
-						for (var varId:String in variablesObj) {
-							var idParts:Array = varId.split(":");
-							var formattedId:String = idParts[0] + "_" + idParts[1];
-							var varParamsObj:Object = variablesObj[varId];
-							var isConstant:Boolean = false;
-							if (varParamsObj.hasOwnProperty(CONSTANT)) isConstant = XString.stringToBool(varParamsObj[CONSTANT] as String);
-							var typeValStr:String = varParamsObj[TYPE_VALUE];
-							var varScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
-							var scoreObj:Object = varParamsObj[SCORE];
-							if (scoreObj) {
-								var type0VarScore:int = scoreObj[ConstraintScoringConfig.TYPE_0_VALUE_KEY];
-								var type1VarScore:int = scoreObj[ConstraintScoringConfig.TYPE_1_VALUE_KEY];
-								varScoring.updateScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY, type0VarScore);
-								varScoring.updateScoringValue(ConstraintScoringConfig.TYPE_1_VALUE_KEY, type1VarScore);
-							}
-							var mergedVarScoring:ConstraintScoringConfig = ConstraintScoringConfig.merge(graph1.graphScoringConfig, varScoring);
-							var defaultValStr:String = varParamsObj[DEFAULT];
-							var defaultVal:ConstraintValue;
-							if (defaultValStr) defaultVal = ConstraintValue.fromVerboseStr(defaultValStr);
-							var typeVal:ConstraintValue;
-							if (typeValStr) {
-								typeVal = ConstraintValue.fromVerboseStr(typeValStr);
-							} else if (defaultVal) {
-								typeVal = defaultVal.clone();
-							} else {
-								typeVal = graphDefaultVal.clone();
-							}
-							var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring);
-							graph1.variableDict[formattedId] = newVar;
+					graph1.variablesToBuildObj = levelObj[VARIABLES];
+					if (graph1.variablesToBuildObj) {
+						for (var varId:String in graph1.variablesToBuildObj) {
+							graph1.buildVar(varId);
 						}
 					}
+					
 					// Build constraints, add any uninitialized variables to graph.variableDict, and process groups
-					var constraintsArr:Array = levelObj[CONSTRAINTS];
-					var groupsArr:Array = levelObj.hasOwnProperty(GROUPS) ? levelObj[GROUPS] : new Array();
-					const GROUP_LEN:uint = groupsArr ? groupsArr.length : 0;
+					graph1.constraintsToBuildArr = levelObj[CONSTRAINTS];
+					graph1.groupsArr = levelObj.hasOwnProperty(GROUPS) ? levelObj[GROUPS] : new Array();
+					graph1.totalGroups = graph1.groupsArr ? graph1.groupsArr.length : 0;
 					/**
 					 * "groups": [
 					 * 			{"var:1":["var:2"], "var:5":["var:7"],...},    <-- stage 1 of grouping
@@ -249,82 +338,23 @@ package constraints
 					 * 			{"var:1":["var:2","var:5","var:7","var:9"],...}, <-- stage 3 of grouping
 					 * 		... ]
 					 */
-					var groupsArrComplete:Array;
+					
 					graph1.groupSizes = new Vector.<uint>();
-					if (groupsArr) {
-						groupsArrComplete = new Array();
-						for (var g:int = 0; g < GROUP_LEN; g++) {
-							var completeGroupDict:Dictionary = new Dictionary();
-							var groupSize:uint = 0;
-							for (var groupId:String in groupsArr[g]) {
-								var groupIdParts:Array = groupId.split(":");
-								if (groupIdParts[0] == "clause") groupIdParts[0] = "c";
-								var formattedGroupId:String = groupIdParts[0] + "_" + groupIdParts[1];
-								var groupedIds:Array = groupsArr[g][groupId] as Array;
-								for each (var groupedId:String in groupedIds) {
-									var groupedIdParts:Array = groupedId.split(":");
-									if (groupedIdParts[0] == "clause") groupedIdParts[0] = "c";
-									var formattedGroupedId:String = groupedIdParts[0] + "_" + groupedIdParts[1];
-									completeGroupDict[formattedGroupedId] = formattedGroupId;
-								}
-								groupSize++;
-							}
-							graph1.groupSizes.push(groupSize);
-							groupsArrComplete.push(completeGroupDict);
+					if (graph1.groupsArr) {
+						graph1.groupsArrComplete = new Array();
+						for (var g:int = 0; g < graph1.totalGroups; g++) {
+							graph1.buildCompleteGroup(g);
 						}
 					}
-					graph1.groupsArr = groupsArr;
+					
 					graph1.nVars = graph1.nClauses = graph1.nConstraints = 0;
-					for (var c:int = 0; c < constraintsArr.length; c++) {
-						var newConstraint:Constraint;
-						if (getQualifiedClassName(constraintsArr[c]) == "String") {
-							// process as String, i.e. "var:1 <= c:2"
-							newConstraint = parseConstraintString(constraintsArr[c] as String, graph1, graphDefaultVal, graph1.graphScoringConfig);
-						} else {
-							throw new Error("Unknown constraint format: " + constraintsArr[c]);
-						}
-						if (newConstraint is ConstraintEdge) {
-							graph1.nConstraints++;
-							graph1.constraintsDict[newConstraint.id] = newConstraint;
-							m_maxScore++;
-							// Attach any groups
-							if (groupsArr && GROUP_LEN) {
-								var fillLeft:Boolean = (newConstraint.lhs.groups == null);
-								var fillRight:Boolean = (newConstraint.rhs.groups == null);
-								if (fillLeft) newConstraint.lhs.groups = new Vector.<String>();
-								if (fillRight) newConstraint.rhs.groups = new Vector.<String>();
-								if (fillLeft || fillRight) {
-									for (var g1:int = 0; g1 < GROUP_LEN; g1++) {
-										if (fillLeft) {
-											var leftGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.lhs.id) ? groupsArrComplete[g1][newConstraint.lhs.id] : "";
-											newConstraint.lhs.groups.push(leftGroupId);
-											if (newConstraint.lhs.id != "" && 
-												newConstraint.lhs.id != leftGroupId && 
-												newConstraint.lhs.rank == 0) {
-												// If grouped for the first time this round, rank = group depth
-												newConstraint.lhs.rank = newConstraint.lhs.groups.length;
-											}
-										}
-										if (fillRight) {
-											var rightGroupId:String = groupsArrComplete[g1].hasOwnProperty(newConstraint.rhs.id) ? groupsArrComplete[g1][newConstraint.rhs.id] : "";
-											newConstraint.rhs.groups.push(rightGroupId);
-											if (newConstraint.rhs.id != "" && 
-												newConstraint.rhs.id != rightGroupId && 
-												newConstraint.rhs.rank == 0) {
-												// If grouped for the first time this round, rank = group depth
-												newConstraint.rhs.rank = newConstraint.rhs.groups.length;
-											}
-										}
-									}
-								}
-							}
-						} else {
-							throw new Error("Unknown constraint type:" + newConstraint);
-						}
+					while (graph1.constraintsToBuildArr.length > 0) {
+						graph1.buildNextConstraint();
 					}
+					
 					break;
 				default:
-					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + ver);
+					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + graph1.version);
 					break;
 			}
 			

@@ -12,6 +12,7 @@ package tasks
 		public function ParseConstraintGraphTask(_levelObj:Object, _worldGraphDict:Dictionary, _dependentTaskIds:Vector.<String> = null) 
 		{
 			levelObj = _levelObj;
+			
 			worldGraphDict = _worldGraphDict
 			var _id:String = levelObj["id"];
 			super(_id, _dependentTaskIds);
@@ -19,7 +20,7 @@ package tasks
 		
 		public override function perform():void {
 			super.perform();
-			var levelGraph:ConstraintGraph = ConstraintGraph.fromJSON(levelObj);
+			var levelGraph:ConstraintGraph = ConstraintGraph.initFromJSON(levelObj);
 			worldGraphDict[id] = levelGraph;
 			complete = true;
 		}
