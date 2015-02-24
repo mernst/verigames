@@ -1225,13 +1225,13 @@ package scenes.game.display
 		
 		private function onNumSelectedNodesChanged(evt:SelectionEvent):void
 		{
-			if (gameControlPanel) gameControlPanel.updateNumNodesSelectedDisplay();
+		//	if (sideControlPanel) sideControlPanel.updateNumNodesSelectedDisplay();
 		}
 		
 		public function setHighScores():void
 		{
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
-				gameControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+		//	if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
+		//		sideControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
 		
 		public function showVisibleBrushes():void
