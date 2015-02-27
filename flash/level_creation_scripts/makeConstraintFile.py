@@ -41,11 +41,11 @@ def convertFile(infileName, outfileName):
 				reverse = False
 				case = 1
 				if c1 < 0 and c2 > 0:
-					sup = -c1
-					sub = c2
+					sub = -c1
+					sup = c2
 				elif c1 > 0 and c2 < 0:
-					sub = c1
-					sup = -c2
+					sup = c1
+					sub = -c2
 				else:
 					reverse = True
 					if c1 < 0:
