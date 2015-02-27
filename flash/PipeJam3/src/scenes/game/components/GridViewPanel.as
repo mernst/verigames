@@ -126,6 +126,7 @@ package scenes.game.components
 		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 		public static const WIDEN_BRUSH:String = "BrushHexagon";
 		public static const NARROW_BRUSH:String = "BrushSquare";
+		public static var FIRST_SOLVER_BRUSH:String;
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
@@ -661,16 +662,18 @@ package scenes.game.components
 			checkGridSize();
 		}
 		
+		//max scale == min zoom
 		public function atMinZoom(scale:Point = null):Boolean
 		{
 			if (!scale) scale = new Point(content.scaleX, content.scaleY);
-			return ((scale.x <= MIN_SCALE) || (scale.y <= MIN_SCALE));
+			return ((scale.x >= MAX_SCALE) || (scale.y >= MAX_SCALE));
 		}
 		
+		//min scale == max zoom
 		public function atMaxZoom(scale:Point = null):Boolean
 		{
 			if (!scale) scale = new Point(content.scaleX, content.scaleY);
-			return ((scale.x >= MAX_SCALE) || (scale.y >= MAX_SCALE));
+			return ((scale.x <= MIN_SCALE) || (scale.y <= MIN_SCALE));
 		}
 		
 		private function isGridUp():Boolean { return (m_gridContainer && m_gridContainer.parent); }
@@ -1405,7 +1408,7 @@ package scenes.game.components
 		{
 			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
 			{
-				changeBrush(GridViewPanel.SOLVER1_BRUSH);
+				changeBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
 				return;
 			}
 			

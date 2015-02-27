@@ -65,6 +65,8 @@ package scenes.game.components
 
 		/** Text showing best score */
 		private var m_bestTextfield:TextFieldWrapper;
+		
+		private var addSolverArray:Array = [1,0,1,1];
 
 		
 		public function SideControlPanel( _width:Number, _height:Number)
@@ -145,30 +147,49 @@ package scenes.game.components
 			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush);
 			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush);
 
-
+			
 			//set all to visible == false so that they don't flash on, before being turned off
+			var currentY:Number = 115;
 			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .2;
 			m_solver1Brush.x = 65;
-			m_solver1Brush.y = 115;
+			m_solver1Brush.y = currentY;
+			
 			m_solver1Brush.visible = false;
-			addChild(m_solver1Brush);
+			if(addSolverArray[0] == 1)
+			{
+				currentY += 30;
+				addChild(m_solver1Brush);
+				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
+			}
+			else
+				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
+			
 			//brush icons are different widths, so line up centers
 			var brushCenter:Number = m_solver1Brush.x + m_solver1Brush.width/2;
 			m_solver2Brush.scaleX = m_solver2Brush.scaleY = .2;
 			m_solver2Brush.x = brushCenter - m_solver2Brush.width/2;
-			m_solver2Brush.y = 143;
+			m_solver2Brush.y = currentY;
 			m_solver2Brush.visible = false;
-			addChild(m_solver2Brush);
+			if(addSolverArray[1] == 1)
+			{
+				addChild(m_solver2Brush);
+				currentY += 30;
+			}
 			m_widenBrush.scaleX = m_widenBrush.scaleY = .2;
 			m_widenBrush.x = brushCenter - m_widenBrush.width/2;
-			m_widenBrush.y = 173;
+			m_widenBrush.y = currentY;
 			m_widenBrush.visible = false;
-			addChild(m_widenBrush);
+			if(addSolverArray[2] == 1)
+			{
+				addChild(m_widenBrush);
+				currentY += 30;
+			}
 			m_narrowBrush.scaleX = m_narrowBrush.scaleY = .2;
 			m_narrowBrush.x = brushCenter - m_narrowBrush.width/2;
-			m_narrowBrush.y = 205;
+			m_narrowBrush.y = currentY;
 			m_narrowBrush.visible = false;
-			addChild(m_narrowBrush);
+			if(addSolverArray[3] == 1)
+				addChild(m_narrowBrush);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			//
@@ -193,16 +214,17 @@ package scenes.game.components
 			
 		}
 		
+		//min scale == max zoom
 		public function onMaxZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = false;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+			if (m_zoomInButton) m_zoomInButton.enabled = true;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
 		}
 		
 		public function onMinZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = true;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
+			if (m_zoomInButton) m_zoomInButton.enabled = false;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
 		}
 		
 		public function onZoomReset():void
