@@ -1,15 +1,11 @@
 package scenes
 {
-	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	
 	import assets.AssetInterface;
 	
-	import display.BasicButton;
-	import display.NineSliceButton;
 	import display.ToolTippableSprite;
 	
 	import scenes.game.components.GridViewPanel;
@@ -20,13 +16,13 @@ package scenes
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.MovieClip;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import display.RadioButton;
 
 	public class BaseComponent extends ToolTippableSprite
 	{	
@@ -163,7 +159,7 @@ package scenes
 			
 		}
 		
-		protected function createPaintBrushButton(style:String, onClickFunction:Function, offset:Boolean = false):Sprite
+		protected function createPaintBrushButton(style:String, onClickFunction:Function, offset:Boolean = false, toolTipText:String = ""):Sprite
 		{
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
 			
@@ -175,25 +171,27 @@ package scenes
 			var buttonOverImage:Image = new Image(buttonOverTexture);
 			var buttonClickImage:Image = new Image(buttonClickTexture);
 			
-			var paintBrushButton:BasicButton = new BasicButton(buttonImage, buttonOverImage, buttonClickImage);
+			var paintBrushButton:RadioButton = new RadioButton(buttonImage, buttonOverImage, buttonClickImage, toolTipText);
 			//			m_solver1Brush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
 
 			paintBrushButton.useHandCursor = true;
 			paintBrushButton.addEventListener(Event.TRIGGERED, onClickFunction);
 			paintBrushButton.width = paintBrushButton.height = 2 * GridViewPanel.PAINT_RADIUS;
+			paintBrushButton.alpha = 0.7;
+			paintBrushButton.name = style;
+			
 			if(offset)
 			{
 				paintBrushButton.x = -0.5 * paintBrushButton.width;
 				paintBrushButton.y = -0.5 * paintBrushButton.height;
+			
+				//why do I do this? I think so I can keep the cursor parts together, but that might not be the reason any more
+				var paintBrush:Sprite = new Sprite;
+				paintBrush.addChild(paintBrushButton);
+				return paintBrush;
 			}
-			paintBrushButton.alpha = 0.7;
-			
-			var paintBrush:Sprite = new Sprite;
-			paintBrush.addChild(paintBrushButton);
-			
-			paintBrushButton.name = style;
-					
-			return paintBrush;
+
+			return paintBrushButton;
 		}
 		
 		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite

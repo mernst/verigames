@@ -27,21 +27,32 @@ package display
 		{
 			if (event.getTouches(this, TouchPhase.HOVER).length) {
 				var touch:Touch = event.getTouches(this, TouchPhase.HOVER)[0];
-				m_hoverPointGlobal = new Point(touch.globalX, touch.globalY);
-				if (!m_hoverTimer) {
-					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 0);
-					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
-					m_hoverTimer.start();
-				}
+				showToolTipDisplay(touch);
 			} else {
-				if (m_hoverTimer) {
-					m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
-					m_hoverTimer.stop();
-					m_hoverTimer = null;
-				}
-				m_hoverPointGlobal = null;
-				onHoverEnd();
+				hideToolTipDisplay();
 			}
+		}
+		
+		protected function showToolTipDisplay(touch:Touch):void
+		{
+			m_hoverPointGlobal = new Point(touch.globalX, touch.globalY);
+			if (!m_hoverTimer) {
+				m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 0);
+				m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
+				m_hoverTimer.start();
+			}
+		}
+		
+		protected function hideToolTipDisplay():void
+		{
+			if (m_hoverTimer) {
+				m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
+				m_hoverTimer.stop();
+				m_hoverTimer = null;
+			}
+			m_hoverPointGlobal = null;
+			onHoverEnd();
+
 		}
 		
 		override public function dispose():void

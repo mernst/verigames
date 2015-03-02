@@ -33,11 +33,11 @@ package display
 		protected var m_up:DisplayObject;
 		protected var m_over:DisplayObject;
 		protected var m_down:DisplayObject;
-		private var m_current:DisplayObject;
+		protected var m_current:DisplayObject;
 
 		private var m_hitSubRect:Rectangle;
 
-		private var m_enabled:Boolean;
+		protected var m_enabled:Boolean;
 		private var m_useHandCursor:Boolean;
 
 		private var m_data:Object;

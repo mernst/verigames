@@ -11,6 +11,8 @@ package scenes.game.components
 	
 	import display.BasicButton;
 	import display.NineSliceButton;
+	import display.RadioButton;
+	import display.RadioButtonGroup;
 	import display.RecenterButton;
 	import display.SoundButton;
 	import display.ZoomInButton;
@@ -55,10 +57,11 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		
-		protected var m_solver1Brush:Sprite;
-		protected var m_solver2Brush:Sprite;
-		protected var m_widenBrush:Sprite;
-		protected var m_narrowBrush:Sprite;
+		protected var m_solver1Brush:RadioButton;
+		protected var m_solver2Brush:RadioButton;
+		protected var m_widenBrush:RadioButton;
+		protected var m_narrowBrush:RadioButton;
+		protected var m_brushButtonGroup:RadioButtonGroup;
 		
 		/** Text showing current score */
 		private var m_scoreTextfield:TextFieldWrapper;
@@ -142,54 +145,59 @@ package scenes.game.components
 			m_zoomOutButton.x = m_zoomInButton.x;
 			m_zoomOutButton.y = m_zoomInButton.y + m_zoomInButton.height + 7;
 			
-			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush);
-			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush);
-			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush);
-			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush);
+			m_brushButtonGroup = new RadioButtonGroup();
+			addChild(m_brushButtonGroup);
+			m_brushButtonGroup.y = 115;
+			m_brushButtonGroup.x = 40;
+			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, false, "Autosolve") as RadioButton;
+			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, false, "Autosolve") as RadioButton;
+			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, false, "Make Wide") as RadioButton;
+			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, false, "Make Narrow") as RadioButton;
 
 			
 			//set all to visible == false so that they don't flash on, before being turned off
-			var currentY:Number = 115;
-			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .2;
-			m_solver1Brush.x = 65;
+			var currentY:Number = 0;
+			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .5;
+			m_solver1Brush.x = 25;
 			m_solver1Brush.y = currentY;
 			
 			m_solver1Brush.visible = false;
 			if(addSolverArray[0] == 1)
 			{
 				currentY += 30;
-				addChild(m_solver1Brush);
+				m_brushButtonGroup.addChild(m_solver1Brush);
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
+				m_brushButtonGroup.makeActive(m_solver1Brush);
 			}
 			else
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
 			
 			//brush icons are different widths, so line up centers
 			var brushCenter:Number = m_solver1Brush.x + m_solver1Brush.width/2;
-			m_solver2Brush.scaleX = m_solver2Brush.scaleY = .2;
+			m_solver2Brush.scaleX = m_solver2Brush.scaleY = m_solver1Brush.scaleX;
 			m_solver2Brush.x = brushCenter - m_solver2Brush.width/2;
 			m_solver2Brush.y = currentY;
 			m_solver2Brush.visible = false;
 			if(addSolverArray[1] == 1)
 			{
-				addChild(m_solver2Brush);
+				m_brushButtonGroup.addChild(m_solver2Brush);
 				currentY += 30;
 			}
-			m_widenBrush.scaleX = m_widenBrush.scaleY = .2;
+			m_widenBrush.scaleX = m_widenBrush.scaleY = m_solver1Brush.scaleX;
 			m_widenBrush.x = brushCenter - m_widenBrush.width/2;
 			m_widenBrush.y = currentY;
 			m_widenBrush.visible = false;
 			if(addSolverArray[2] == 1)
 			{
-				addChild(m_widenBrush);
+				m_brushButtonGroup.addChild(m_widenBrush);
 				currentY += 30;
 			}
-			m_narrowBrush.scaleX = m_narrowBrush.scaleY = .2;
+			m_narrowBrush.scaleX = m_narrowBrush.scaleY = m_solver1Brush.scaleX;
 			m_narrowBrush.x = brushCenter - m_narrowBrush.width/2;
 			m_narrowBrush.y = currentY;
 			m_narrowBrush.visible = false;
 			if(addSolverArray[3] == 1)
-				addChild(m_narrowBrush);
+				m_brushButtonGroup.addChild(m_narrowBrush);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			//
@@ -201,6 +209,7 @@ package scenes.game.components
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 			addEventListener(TouchEvent.TOUCH, onTouch);
+			this.removeEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
 		}
 		
