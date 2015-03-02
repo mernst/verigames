@@ -91,7 +91,7 @@ for fname in files:
 					#print 'Warning! Multiple assignments found for %s' % constraint_id
 					continue
 				all_assignments[constraint_id] = constraint_value
-		with open('%s.out' % fprefix, 'w') as cnf_out:
+		with open('out/%s.out' % fprefix, 'w') as cnf_out:
 			for line in lines:
 				cnf_out.write(line)
 				if "Optimal" in line and not "= 0" in line:
