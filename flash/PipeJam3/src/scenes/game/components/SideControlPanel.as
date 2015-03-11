@@ -251,6 +251,8 @@ package scenes.game.components
 //			setNavigationButtonVisibility(level.getPanZoomAllowed());
 //			setSolveButtonsVisibility(level.getAutoSolveAllowed());
 //			updateNumNodesSelectedDisplay();
+			
+			m_brushButtonGroup.resetGroup();
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void

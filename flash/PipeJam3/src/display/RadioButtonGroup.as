@@ -50,5 +50,19 @@ package display
 					childButton.setState(false);
 			}
 		}
+		
+		public function resetGroup():void
+		{
+			//set first visible button to on
+			for(var i:int = 0; i< numChildren; i++)
+			{
+				var button:RadioButton = getChildAt(i) as RadioButton;
+				if(button && button.visible)
+				{
+					makeActive(button);
+					return;
+				}
+			}
+		}
 	}
 }

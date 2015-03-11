@@ -88,6 +88,8 @@ package scenes.game.components
 		private var m_nodeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
+		public var m_nameText:TextFieldWrapper;
+		
 		private var m_tutorialTextLayer:Sprite = new Sprite();
 		
 		private var m_paintBrushLayer:Sprite = new Sprite();
@@ -217,6 +219,13 @@ package scenes.game.components
 
 			addChild(m_buttonLayer);
 			addChild(m_fanfareLayer);
+			
+			m_nameText = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, 200, 18, 12, 0xc1a06d);
+			m_nameText.touchable = false;
+			m_nameText.x = 8;
+			m_nameText.y = HEIGHT - 30;
+			TextFactory.getInstance().updateAlign(m_nameText, 1, 1);
+			addChild(m_nameText);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -1001,6 +1010,9 @@ package scenes.game.components
 				var max:int = m_currentLevel.getMaxSelectableWidgets();
 				TextFactory.getInstance().updateText(m_selectionLimitText, String(max));
 				TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
+				
+				TextFactory.getInstance().updateText(m_nameText, m_currentLevel.level_name);
+				TextFactory.getInstance().updateAlign(m_nameText, 0, 1);
 			}
 			
 			inactiveContent.removeChildren();
