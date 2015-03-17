@@ -44,7 +44,9 @@ package display
 					dispatchEventWith(HOVER_OVER, true, dispatchEventWith);
 				}
 			} else if (touch.phase == TouchPhase.BEGAN) {
-				mIsDown = !mIsDown;
+				//if down, leave down, else flip
+				if(!mIsDown)
+					mIsDown = !mIsDown;
 				if(mIsDown)
 				{
 					toState(m_down);
@@ -55,9 +57,9 @@ package display
 			}
 		}
 		
-		public function setState(isOn:Boolean):void
+		public function setState(turnOn:Boolean):void
 		{
-			mIsDown = isOn;
+			mIsDown = turnOn;
 			if(mIsDown)
 			{
 				toState(m_down);

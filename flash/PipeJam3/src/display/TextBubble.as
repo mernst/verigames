@@ -8,8 +8,6 @@ package display
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	
-	import scenes.game.components.GameControlPanel;
-	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
