@@ -1123,7 +1123,7 @@ package scenes.game.components
 			
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
-			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
+			const VIEW_HEIGHT:Number = HEIGHT - SideControlPanel.OVERLAP;
 			
 			centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 			globPt = m_currentLevel.localToGlobal(centerPt);
