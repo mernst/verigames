@@ -47,6 +47,8 @@ package scenes.game.components
 		protected var WIDTH:Number;
 		protected var HEIGHT:Number;
 		
+		public static const OVERLAP:Number = 2;
+		
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
@@ -76,7 +78,7 @@ package scenes.game.components
 		{
 			WIDTH = _width;
 			HEIGHT = _height;
-
+			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
 			
 			var scoreCircleBackTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleBack);

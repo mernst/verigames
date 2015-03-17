@@ -45,7 +45,6 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
-	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
 	import scenes.game.components.SideControlPanel;
@@ -72,7 +71,6 @@ package scenes.game.display
 	public class World extends BaseComponent
 	{
 		public var edgeSetGraphViewPanel:GridViewPanel;
-		public var gameControlPanel:GameControlPanel;
 		public var sideControlPanel:SideControlPanel;
 		protected var miniMap:MiniMap;
 		protected var m_backgroundLayer:Sprite;
@@ -549,7 +547,7 @@ package scenes.game.display
 				m_backgroundLayer.scaleY = 1;
 			}	
 			edgeSetGraphViewPanel.adjustSize(newWidth, newHeight);
-			gameControlPanel.adjustSize(newWidth, newHeight);
+		//	gameControlPanel.adjustSize(newWidth, newHeight);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
