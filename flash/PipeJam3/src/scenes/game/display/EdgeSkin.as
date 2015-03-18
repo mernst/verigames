@@ -1,16 +1,16 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import constraints.ConstraintClause;
 	import constraints.ConstraintVar;
-	import utils.PropDictionary;
 	
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.display.Image;
+	
+	import utils.PropDictionary;
 	
 	public class EdgeSkin extends Sprite
 	{
@@ -23,9 +23,8 @@ package scenes.game.display
 		protected var skinWidth:Number;
 		
 		protected var textureImage:Image;
-		protected var skinQuad:Quad;
 		protected var preferenceQuad:Quad;
-		
+				
 		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
 		{
 //			super(width, height, color, premultipliedAlpha);
@@ -46,8 +45,9 @@ package scenes.game.display
 			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
 		}
 		
-		public function setColor():void
+		public function setColor(newGroup:Boolean = false):void
 		{
+			var skinQuad:Quad;
 			if (skinQuad) skinQuad.removeFromParent(true);
 			
 			var edgeMatch:Boolean = false;
@@ -61,15 +61,24 @@ package scenes.game.display
 			}
 			
 			//if we match, normal line. if not, bright red line
+			var edge1:Quad;
+			var edge2:Quad;
 			if (edgeMatch) //(parentEdge.graphConstraint.isSatisfied())
 			{
 				skinQuad = new Quad(skinWidth, skinHeight, Constants.SATISFIED_EDGE);
+				edge1 = new Quad(skinWidth, 1, Constants.SATISFIED_EDGE_HIGHLIGHT);
+				edge2 = new Quad(skinWidth, 1, Constants.SATISFIED_EDGE_HIGHLIGHT);
 			}
 			else
 			{
 				skinQuad = new Quad(skinWidth, skinHeight, Constants.UNSATISFIED_EDGE);
+				edge1 = new Quad(skinWidth, 1, Constants.UNSATISFIED_EDGE_HIGHLIGHT);
+				edge2 = new Quad(skinWidth, 1, Constants.UNSATISFIED_EDGE_HIGHLIGHT);
 			}
 			addChild(skinQuad);
+			addChild(edge1);
+			edge2.y = skinHeight - 1;
+			addChild(edge2);
 			
 			if (preferenceQuad) preferenceQuad.removeFromParent(true);
 			const PREF_LENGTH:Number = Math.min(0.5 * skinWidth, 10.0);
@@ -83,6 +92,7 @@ package scenes.game.display
 			}
 			preferenceQuad.x = skinWidth - PREF_LENGTH;
 			addChild(preferenceQuad);
+			this.flatten();
 		}
 		
 		public function getConnectorTexture():Image

@@ -38,6 +38,8 @@ package
 		
 		public static const SATISFIED_EDGE:uint = 0xb8a186;
 		public static const UNSATISFIED_EDGE:uint = 0xff834d;
+		public static const SATISFIED_EDGE_HIGHLIGHT:uint = 0xbabd82;
+		public static const UNSATISFIED_EDGE_HIGHLIGHT:uint = 0xf0c05b;
 		
 		//Nine slice
 		public static const TOP_LEFT:String = "TopLeft";

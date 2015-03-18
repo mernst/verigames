@@ -4,10 +4,6 @@ package scenes.game.display
 	
 	import constraints.Constraint;
 	
-	import starling.display.Quad;
-	import starling.display.Sprite;
-	import flash.geom.Matrix;
-	
 	public class Edge
 	{
 		public var id:String;
@@ -19,7 +15,6 @@ package scenes.game.display
 		public var parentYOffset:Number;
 		
 		public var skin:EdgeSkin;
-		public var isHighlighted:Boolean;
 		public var isDirty:Boolean;
 		
 		public static const LINE_THICKNESS:Number = 5;
@@ -135,46 +130,6 @@ package scenes.game.display
 				toColor = 0xff0000;
 			
 			skin.setColor();
-			
-			if(isHighlighted)
-			{
-				if(currentHoverNode)
-				{
-					var color:int = 0x0000ff;
-					if(currentHoverNode == fromNode)
-					{
-						if(fromNode.isNarrow && toNode.isNarrow)
-						{
-							color = 0xff0000;
-						}
-						else if(toColor == 0xff0000)
-						{
-							color = 0x00ff00;
-						}
-					}
-					else if(currentHoverNode == toNode)
-					{
-						if(!toNode.isNarrow && !fromNode.isNarrow)
-						{
-							color = 0xff0000;
-						}
-						else if(toColor == 0xff0000)
-						{
-							color = 0x00ff00;
-						}
-					}
-					else if(toColor == 0xff0000)
-					{
-						color = 0x00ff00;
-					}
-					
-					skin.setHighlight(color);
-				}
-			}
-			else
-			{
-				skin.removeHighlight();
-			}
 		}
 	}
 }
