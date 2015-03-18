@@ -654,7 +654,7 @@ package scenes.game.components
 			lastScaleChanged = scaleChanged;
 		}
 		
-		private function moveContent(newX:Number, newY:Number, useGrid:Boolean = true):void
+		private function moveContent(newX:Number, newY:Number, useGrid:Boolean = false):void
 		{
 			var contentToMove:DisplayObject = content;
 			if (useGrid)
