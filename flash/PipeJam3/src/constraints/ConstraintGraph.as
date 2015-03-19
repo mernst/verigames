@@ -2,11 +2,13 @@ package constraints
 {
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
+	
+	import constraints.events.ErrorEvent;
+	
 	import starling.events.EventDispatcher;
 	
-	import constraints.events.ErrorEvent;	
 	import utils.XString;
-
+	
 	public class ConstraintGraph extends EventDispatcher
 	{
 		public static const GAME_DEFAULT_VAR_VALUE:ConstraintValue = new ConstraintValue(1);
@@ -41,10 +43,14 @@ package constraints
 		public var groupsArr:Array = new Array();
 		public var groupSizes:Vector.<uint> = new Vector.<uint>();
 		public var unsatisfiedConstraintDict:Dictionary = new Dictionary();
+		public var m_conflictCount:int;
 		public var graphScoringConfig:ConstraintScoringConfig = new ConstraintScoringConfig();
 		
+		protected var m_UnsatisfiedConstraints:Dictionary = new Dictionary();
+		protected var m_SatisfiedConstraints:Dictionary = new Dictionary();
+		
 		public var startingScore:int = NaN;
-		public var currentScore:int = 0;
+		public var currentScore:int = 0;	
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
 		static public var m_maxScore:int = 0;
@@ -59,8 +65,8 @@ package constraints
 			
 			oldScore = prevScore;
 			prevScore = currentScore;
-//			if(updateCount++ % 200 == 0)
-//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
+			//			if(updateCount++ % 200 == 0)
+			//				trace("updateScore currentScore ", currentScore, " varIdChanged:",varIdChanged);
 			var constraintId:String;
 			var lhsConstraint:Constraint, rhsConstraint:Constraint;
 			var newUnsatisfiedConstraints:Dictionary = new Dictionary();
@@ -68,7 +74,7 @@ package constraints
 			var newSatisfiedConstraints:Dictionary = new Dictionary();
 			if (varIdChanged != null && propChanged != null) {
 				var varChanged:ConstraintVar = variableDict[varIdChanged] as ConstraintVar;
-
+				
 				var prevBonus:int = varChanged.scoringConfig.getScoringValue(varChanged.getValue().verboseStrVal);
 				var prevConstraintPoints:int = 0;
 				// Recalc incoming/outgoing constraints
@@ -108,19 +114,19 @@ package constraints
 					}
 				}
 				// Offset score by change in bonus and new constraints satisfied/not
-//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
+				//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 				currentScore += newConstraintPoints - prevConstraintPoints;
 				trace("new currentScore ", currentScore);
 			}
-			 else {
+			else {
 				currentScore = 0;
-//				for (var varId:String in variableDict) {
-//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
-//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
-//						// If there is a bonus for the current value of thisVar, add to score
-//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
-//					}
-//				}
+				//				for (var varId:String in variableDict) {
+				//					var thisVar:ConstraintVar = variableDict[varId] as ConstraintVar;
+				//					if (thisVar.getValue() != null && thisVar.scoringConfig != null) {
+				//						// If there is a bonus for the current value of thisVar, add to score
+				//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
+				//					}
+				//				}
 				for (constraintId in constraintsDict) { // TODO: we are recalculating each clause for every edge, need only traverse clauses once
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
@@ -137,10 +143,20 @@ package constraints
 							if(newSatisfiedConstraints[clauseID] == null)
 							{
 								currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
-								newSatisfiedConstraints[clauseID] = thisConstr;
+								if(m_SatisfiedConstraints[clauseID] == null)
+								{
+									newSatisfiedConstraints[clauseID] = thisConstr;
+									m_SatisfiedConstraints[clauseID] = thisConstr;
+									delete m_UnsatisfiedConstraints[clauseID];
+								}
 							}
 						} else {
-							newUnsatisfiedConstraints[clauseID] = thisConstr;
+							if(m_UnsatisfiedConstraints[clauseID] == null)
+							{
+								newUnsatisfiedConstraints[clauseID] = thisConstr;
+								m_UnsatisfiedConstraints[clauseID] = thisConstr;
+								delete m_SatisfiedConstraints[clauseID];
+							}
 						}
 					} 
 				}
@@ -149,13 +165,16 @@ package constraints
 			for (clauseID in newSatisfiedConstraints) {
 				if (unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
 					delete unsatisfiedConstraintDict[clauseID];
+					m_conflictCount--;
 				}
 			}
 			for (clauseID in newUnsatisfiedConstraints) {
 				if (!unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
 					unsatisfiedConstraintDict[clauseID] = newUnsatisfiedConstraints[clauseID];
+					m_conflictCount++;
 				}
 			}
+			
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints));
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints));
 			if (isNaN(startingScore)) startingScore = currentScore;
@@ -343,7 +362,7 @@ package constraints
 			var rhsType:String = result[4];
 			var rhsId:String = result[5];
 			var typeNumArray:Array;
- 			
+			
 			var lsuffix:String = "";
 			var rsuffix:String = "";
 			if (rhsType == VAR && lhsType == C) {
@@ -366,8 +385,8 @@ package constraints
 			{
 				throw new Error("Invalid constraint type found ('"+constType+"') in string: " + _str);
 			}
- 			return newConstraint;
- 		}
+			return newConstraint;
+		}
 		
 		private static function parseConstraintSide(_type:String, _type_num:String, _typeSuffix:String, _graph:ConstraintGraph, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):ConstraintSide
 		{
@@ -396,5 +415,9 @@ package constraints
 			return constrSide;
 		}
 		
+		public function dispatchUpdateEvents():void
+		{
+			updateScore();
+		}
 	}
 }
