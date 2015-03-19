@@ -143,7 +143,7 @@ package scenes.game.display
 							null, 
 							Constants.BOTTOM, null);
 						m_currentTutorialText = tip;
-						tips.push(tip)
+						tips.push(tip);
 						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, tips));
 					}
 					break;

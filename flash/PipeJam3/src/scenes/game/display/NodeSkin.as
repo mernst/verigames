@@ -218,6 +218,22 @@ package scenes.game.display
 					textureImage = new Image(LightBlueCircle);
 				}
 				
+				if(associatedNode.solved && associatedNode.isSelected)
+				{
+					textureImage.setVertexColor(0, 0x00ff00);
+					textureImage.setVertexColor(1, 0x00ff00);
+					textureImage.setVertexColor(2, 0x00ff00);
+					textureImage.setVertexColor(3, 0x00ff00);
+					associatedNode.solved = false;
+				}
+				else
+				{
+					textureImage.setVertexColor(0, 0xffffff);
+					textureImage.setVertexColor(1, 0xffffff);
+					textureImage.setVertexColor(2, 0xffffff);
+					textureImage.setVertexColor(3, 0xffffff);
+				}	
+				
 				addChild(textureImage);
 				if(associatedNode.isNarrow)
 					textureImage.width = textureImage.height = 10;
@@ -322,7 +338,7 @@ package scenes.game.display
 		
 		protected function flashComplete():void
 		{
-			var saveParent:Sprite
+			var saveParent:Sprite;
 			if (q)
 			{
 				q.visible = false;
@@ -334,7 +350,8 @@ package scenes.game.display
 				}
 			}
 			if (tween) Starling.juggler.remove(tween);
-			//draw();
+			associatedNode.solved = true;
+			draw();
 		}
 		
 		public function scale(newScale:Number):void

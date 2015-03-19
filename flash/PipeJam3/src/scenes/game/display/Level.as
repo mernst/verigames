@@ -49,12 +49,12 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import utils.XMath;
 	
 	import system.MaxSatSolver;
 	
 	import utils.Base64Encoder;
 	import utils.PropDictionary;
+	import utils.XMath;
 	import utils.XObject;
 	import utils.XString;
 	
@@ -135,6 +135,7 @@ package scenes.game.display
 		
 		public var m_inSolver:Boolean = false;
 		private var m_unsat_weight:int;
+		private var m_recentlySolved:Boolean;
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
@@ -196,6 +197,7 @@ package scenes.game.display
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
 			NodeSkin.InitializeSkins();
+			m_recentlySolved = false;
 		}
 		
 		public function loadBestScoringConfiguration():void
@@ -438,8 +440,42 @@ package scenes.game.display
 				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.graphConstraintSide.id)) delete m_nodeOnScreenDict[nodeToRemove.graphConstraintSide.id];
 				nodesProcessed++;
 			}
-			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)
+			if(m_nodesToDraw.length)
 			{
+				//make sure all clauses that are connected to these nodes redraw, so edges get updated correctly
+				var clausesNeeded:Dictionary = new Dictionary;
+				var clausesToDraw:Dictionary = new Dictionary;
+				for(var i:int = 0; i<m_nodesToDraw.length; i++)
+				{
+					var node:Node = m_nodesToDraw[i];
+					if(node is ClauseNode)
+					{
+						clausesToDraw[node.id] = node;
+					}
+					else
+					{
+						node.solved = m_recentlySolved;
+						//add all clauses connected to this node to Needed
+						for each(var edgeID:String in node.connectedEdgeIds)
+						{
+							var edgeFromID:Edge = edgeLayoutObjs[edgeID];
+							var clause:Node = edgeFromID.fromNode is ClauseNode ? edgeFromID.fromNode : edgeFromID.toNode;
+							clausesNeeded[clause.id] = clause;
+						}
+					}
+				}
+				for each(var cl:Node in clausesNeeded)
+				{
+					if(clausesToDraw[cl.id] == null)
+					{
+						m_nodesToDraw.push(cl);
+					}
+				}
+					
+			}
+			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)	
+			{
+
 				var nodeToDraw:Node = m_nodesToDraw.shift();
 				// At this time only clause changes (satisfied or not) affect the
 				// look of an edge, so draw all edges when clauses are redrawn and
@@ -449,6 +485,11 @@ package scenes.game.display
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
 						edge = edgeLayoutObjs[gameEdgeId];
+						if(edge.skin && edge.skin.parent)
+						{
+							edge.skin.removeFromParent();
+							edge.skin = null;
+						}
 						edge.createSkin(currentGroupDepth);
 						if (edge.skin) {
 							m_edgesLayer.addChild(edge.skin);
@@ -489,6 +530,7 @@ package scenes.game.display
 				}
 				nodesProcessed++;
 			}
+			m_recentlySolved = false;
 			if (touchedEdgeLayer) m_edgesLayer.flatten();
 			if (touchedNodeLayer) m_nodeLayer.flatten();
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
@@ -1125,12 +1167,12 @@ package scenes.game.display
 				if (!node.isClause)
 				{
 					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
-					m_nodesToDraw.push(node); // this will also redraw edges
+					m_nodesToDraw.push(node);
 				}
 			}
 			//update score
 			onWidgetChange();
-			unselectAll();
+			drawNodesAfterSolving();
 		}
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
@@ -1455,8 +1497,21 @@ package scenes.game.display
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
+			drawNodesAfterSolving();
 			System.gc();
+
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+		}
+		
+		//draw nodes in a different color to indicate solver is done
+		public function drawNodesAfterSolving():void
+		{
+			m_recentlySolved = true;
+			for each(var node:Node in selectedNodes)
+			{
+				node.solved = true;
+				m_nodesToDraw.push(node);
+			}
 		}
 		
 		public function onViewSpaceChanged(event:MiniMapEvent):void
@@ -1516,6 +1571,7 @@ package scenes.game.display
 							node.select();
 							//trace("select " + node.id);
 							selectedNodes.push(node);
+
 							m_nodesToDraw.push(node);
 							selectionChanged = true;
 						}

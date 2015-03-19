@@ -2,18 +2,21 @@ package scenes.game.display
 {
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import starling.display.Image;
-	import starling.display.Quad;
 	
 	import constraints.ConstraintGraph;
 	import constraints.ConstraintSide;
 	import constraints.ConstraintVar;
+	
+	import starling.display.Image;
+	import starling.display.Quad;
+	
 	import utils.PropDictionary;
 	
 	public class Node extends GridChild
 	{
 		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
+		public var solved:Boolean = false;
 		
 		public function Node(_id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide)
 		{
