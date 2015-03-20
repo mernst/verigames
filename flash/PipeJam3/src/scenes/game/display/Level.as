@@ -486,7 +486,7 @@ package scenes.game.display
 						}
 						edge.createSkin(currentGroupDepth);
 						if (edge.skin) {
-							m_edgesLayer.addChild(edge.skin);
+							if (edge.skin.parent != m_edgesLayer) m_edgesLayer.addChild(edge.skin);
 							touchedEdgeLayer = true;
 						}
 					}
@@ -509,11 +509,11 @@ package scenes.game.display
 						{
 							nodeToDraw.skin.scale(0.5 / parent.scaleX);
 						}
-						m_nodeLayer.addChild(nodeToDraw.skin);
+						if (nodeToDraw.skin.parent != m_nodeLayer) m_nodeLayer.addChild(nodeToDraw.skin);
 						touchedNodeLayer = true;
 						if (nodeToDraw.backgroundSkin)
 						{
-							m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
+							if (nodeToDraw.skin.parent != m_nodeLayer) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
 							if (parent)
 							{
 								nodeToDraw.backgroundSkin.scale(0.5 / parent.scaleX);
@@ -1466,6 +1466,7 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			drawNodesAfterSolving();
+			unselectAll();
 			System.gc();
 
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
@@ -1500,7 +1501,7 @@ package scenes.game.display
 			var topGridNumber:int = GroupGrid.getGridX(localPt.y - dY, GRID_DIM);
 			var bottomGridNumber:int = GroupGrid.getGridX(localPt.y + dY, GRID_DIM);
 			var selectionChanged:Boolean = false;
-			trace("localPt: ", localPt, " dX/Y: ", dX);
+			//trace("localPt: ", localPt, " dX/Y: ", dX);
 			for (var i:int = leftGridNumber; i <= rightGridNumber; i++)
 			{
 				for(var j:int = topGridNumber; j <= bottomGridNumber; j++)
@@ -1517,7 +1518,7 @@ package scenes.game.display
 							continue;
 						}
 						var diffX:Number = localPt.x - node.centerPoint.x;
-				//		trace("node.centerPoint: ", node.centerPoint);
+						//trace("node.centerPoint: ", node.centerPoint);
 						if (diffX > dX || -diffX > dX) continue;
 						var diffY:Number = localPt.y - node.centerPoint.y;
 						if (diffY > dY || -diffY > dY) continue;

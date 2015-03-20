@@ -52,11 +52,6 @@ package scenes.game.display
 			// implemented by children
 		}
 		
-		public function scaleSkin(newScaleX:Number, newScaleY:Number):void
-		{
-			
-		}
-		
 		public function removeSkin():void
 		{
 			if (skin) skin.removeFromParent();

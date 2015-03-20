@@ -58,18 +58,5 @@ package scenes.game.display
 			setDirty(true);
 		}
 		
-		public override function scaleSkin(newScaleX:Number, newScaleY:Number):void
-		{
-			//check to see if we have an error, and if so, scale our error marker at a lower rate
-			if(_hasError && backgroundSkin)
-			{
-				var currentWidth:Number = backgroundSkin.width;
- 				backgroundSkin.scaleX = backgroundSkin.scaleY = 1 / World.m_world.active_level.scaleX / World.m_world.active_level.parent.scaleX;
-				var newWidth:Number = backgroundSkin.width;
-				backgroundSkin.x -= (newWidth-currentWidth)/2;
-				backgroundSkin.y -= (newWidth-currentWidth)/2;
-			}
-		}
-		
 	}
 }
