@@ -28,9 +28,9 @@ package scenes.game.display
 			AudioManager.getInstance().reset(); // no replay music
 		}
 		
-		override protected function selectLevel(newLevel:Level, restart:Boolean = false):void
+		override protected function selectLevel(newLevel:Level):void
 		{
-			super.selectLevel(newLevel, restart);
+			super.selectLevel(newLevel);
 			PipeJam3.showReplayText("Replaying Level: " + active_level.original_level_name);
 		}
 		

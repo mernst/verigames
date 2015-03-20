@@ -178,6 +178,7 @@ package constraints
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints));
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints));
 			if (isNaN(startingScore)) startingScore = currentScore;
+			trace("Starting/Current Score", startingScore, currentScore);
 		}
 		
 		public function resetScoring():void

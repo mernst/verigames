@@ -411,7 +411,8 @@ package scenes.game.components
 				m_tutorialTextLayer.addChild(m_tutorialText);
 			}
 			
-			recenter();
+			center();
+			
 			var currentViewRect:Rectangle = getViewInContentSpace();
 			m_currentLevel.updateLevelDisplay(currentViewRect);
 			
@@ -844,9 +845,6 @@ package scenes.game.components
 		
 		override public function dispose():void
 		{
-			if (m_disposed) {
-				return;
-			}
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
@@ -944,7 +942,7 @@ package scenes.game.components
 					zoomOutDiscrete();
 					break;
 				case Keyboard.SPACE:
-					recenter();
+					center();
 					break;
 				case Keyboard.DELETE:
 					if (m_currentLevel) m_currentLevel.onDeletePressed();
@@ -1033,10 +1031,7 @@ package scenes.game.components
 			m_persistentToolTips = new Vector.<ToolTipText>();
 			
 			content.addChild(m_currentLevel);
-		}
-		
-		public function loadLevel():void
-		{
+
 			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 			m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 			if (m_currentLevel.tutorialManager) {
@@ -1092,7 +1087,7 @@ package scenes.game.components
 			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
-		public function recenter():void
+		public function center():void
 		{
 			// TODO: grid?
 			m_selectionUpdated = (currentMode == SELECTING_MODE);
@@ -1103,7 +1098,7 @@ package scenes.game.components
 			content.scaleX = content.scaleY = STARTING_SCALE;
 			inactiveContent.scaleX = inactiveContent.scaleY = STARTING_SCALE;
 			onContentScaleChanged(oldScale);
-			content.addChild(m_currentLevel);
+		//	content.addChild(m_currentLevel);
 			
 			if (DEBUG_BOUNDING_BOX) {
 				if (!m_boundingBoxDebug) {
@@ -1308,93 +1303,6 @@ package scenes.game.components
 			if (m_currentLevel) return m_currentLevel.getPanZoomAllowed();
 			return true;
 		}
-		
-		//returns ByteArray that contains bitmap that is the same aspect ratio as view, with maxwidth or maxheight (or both, if same as aspect ratio) respected
-		//byte array is compressed and contains it's width as as unsigned int at the start of the array
-		public function getThumbnail(_maxwidth:Number, _maxheight:Number):ByteArray
-		{
-			var  backgroundColor:Number = 0x262257;
-			//save current state
-			var savedClipRect:Rectangle = clipRect;
-			var currentX:Number = content.x;
-			var currentY:Number = content.y;
-			var currentXScale:Number = content.scaleX;
-			var currentYScale:Number = content.scaleY;
-			recenter();
-			this.clipRect = null;
-			//remove these to help with compression
-			m_border.removeFromParent();
-			
-			var bmpdata:BitmapData = drawToBitmapData(backgroundColor);
-	
-			var scaleWidth:Number = _maxwidth/bmpdata.width;
-			var scaleHeight:Number = _maxheight/bmpdata.height;
-			var newWidth:Number, newHeight:Number;
-			if(scaleWidth < scaleHeight)
-			{
-				scaleHeight = scaleWidth;
-				newWidth = _maxwidth;
-				newHeight = bmpdata.height*scaleHeight;
-			}
-			else
-			{
-				scaleWidth = scaleHeight;
-				newHeight = _maxheight;
-				newWidth = bmpdata.width*scaleWidth;
-			}
-			
-			//crashes on my machine in debug, even though should be supported in 11.3
-	//		var byteArray:ByteArray = new ByteArray;
-	//		bmpdata.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
-			
-			var m:Matrix = new Matrix();
-			m.scale(scaleWidth, scaleHeight);
-			var smallBMD:BitmapData = new BitmapData(newWidth, newHeight);
-			smallBMD.draw(bmpdata, m);
-		
-			//restore state
-			content.x = currentX;
-			content.y = currentY;
-			inactiveContent.x = content.x;
-			inactiveContent.x = content.y;
-			content.scaleX = currentXScale;
-			content.scaleY = currentYScale;
-			inactiveContent.scaleX = content.scaleX;
-			inactiveContent.scaleY = content.scaleY;
-			clipRect = savedClipRect;
-			addChildAt(this.m_border, 0);
-			
-			var bytes:ByteArray = new ByteArray;
-			bytes.writeUnsignedInt(smallBMD.width);
-			//fix bottom to be above score area
-			var fixedRect:Rectangle = smallBMD.rect.clone();
-			fixedRect.height = Math.floor(smallBMD.height*(clipRect.height/320));
-			bytes.writeBytes(smallBMD.getPixels(fixedRect));
-			bytes.compress();
-			
-			return bytes;
-		}
-		
-		public function drawToBitmapData(_backgroundColor:Number = 0x00000000, destination:BitmapData=null):BitmapData
-		{
-			var support:RenderSupport = new RenderSupport();
-			var star:Starling = Starling.current;
-
-			if (destination == null)
-				destination = new BitmapData(480, 320);
-
-			support.renderTarget = null;
-			support.setOrthographicProjection(0, 0, 960, 640);
-			support.clear(_backgroundColor, 1);
-			render(support, 1.0);
-			support.finishQuadBatch();
-
-			Starling.current.context.drawToBitmapData(destination);
-		//	Starling.current.context.present(); // required on some platforms to avoid flickering
-
-			return destination;
-		}
-		
 		
 		public function adjustSize(newWidth:Number, newHeight:Number):void
 		{

@@ -27,9 +27,7 @@ package scenes
 	public class BaseComponent extends ToolTippableSprite
 	{	
 		private var mClipRect:Rectangle;
-		
-		protected var m_disposed:Boolean;
-		
+				
 		//initalized in Game
 		static protected var loadingAnimationImages:Vector.<Texture> = null;
 		static protected var waitAnimationImages:Vector.<Texture> = null;
@@ -43,16 +41,11 @@ package scenes
 		public function BaseComponent()
 		{
 			objectIndex = nextIndex++;
-			m_disposed = false;
 			super();
 		}
 		
 		override public function dispose():void
 		{
-			if (m_disposed) {
-				return;
-			}
-			m_disposed = true;
 			disposeChildren();
 			super.dispose();
 		}

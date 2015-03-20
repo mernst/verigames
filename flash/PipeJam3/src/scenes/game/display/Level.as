@@ -255,11 +255,6 @@ package scenes.game.display
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
-			if (m_disposed) {
-				restart(); // undo progress if left the level and coming back
-			} else {
-				start();
-			}
 			
 			//for (var varId:String in levelGraph.variableDict) {
 				//var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
@@ -310,7 +305,6 @@ package scenes.game.display
 			// When level loaded, don't need this event listener anymore
 			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
 			//trace("load level time2", new Date().getTime() - time1);
-			m_disposed = false;
 		}
 		
 		protected function onEnterFrame(evt:EnterFrameEvent):void
@@ -685,29 +679,6 @@ package scenes.game.display
 			//trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
 		}
 		
-		public function restart():void
-		{
-			unselectAll();
-			if (!initialized) {
-				start();
-			} else {
-				if (tutorialManager) {
-					updateLevelDisplay(); // create any uncreated/disposed nodes
-					tutorialManager.startLevel();
-				}
-				m_levelStartTime = new Date().time;
-				m_currentConflictIndex = 0;
-			}
-			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
-			onPropertyModeChange(propChangeEvt);
-			dispatchEvent(propChangeEvt);
-			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			loadAssignments(m_levelAssignmentsObj);
-			
-			targetScoreReached = false;
-			//trace("Restarted: " + m_levelLayoutObj["id"]);
-		}
-		
 		public function zipJsonFile(jsonFile:Object, name:String):ByteArray
 		{
 			var newZip:FZip = new FZip();
@@ -792,9 +763,6 @@ package scenes.game.display
 		{
 			initialized = false;
 			//trace("Disposed of : " + m_levelLayoutObj["id"]);
-			if (m_disposed) {
-				return;
-			}
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
@@ -1519,11 +1487,6 @@ package scenes.game.display
 			
 		}
 		
-		public function adjustSize(newWidth:Number, newHeight:Number):void
-		{
-			
-		}
-		
 		public function selectNodes(localPt:Point, dX:Number, dY:Number):void
 		{
 			if (currentGroupDepth < 0) currentGroupDepth = 0;
@@ -1554,7 +1517,7 @@ package scenes.game.display
 							continue;
 						}
 						var diffX:Number = localPt.x - node.centerPoint.x;
-						trace("node.centerPoint: ", node.centerPoint);
+				//		trace("node.centerPoint: ", node.centerPoint);
 						if (diffX > dX || -diffX > dX) continue;
 						var diffY:Number = localPt.y - node.centerPoint.y;
 						if (diffY > dY || -diffY > dY) continue;
