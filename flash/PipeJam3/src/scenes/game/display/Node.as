@@ -62,11 +62,6 @@ package scenes.game.display
 			}
 		}
 		
-		override public function scaleSkin(newScaleX:Number, newScaleY:Number):void
-		{
-			// only used for ClauseNodes right now
-		}
-		
 		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			super.updateSelectionAssignment(_isWide, levelGraph);
