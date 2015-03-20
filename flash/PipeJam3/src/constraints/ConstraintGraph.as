@@ -206,15 +206,16 @@ package constraints
 			delete variablesToBuildObj[varId];
 		}
 		
-		public function buildCompleteGroup(g:int):void
+		public function buildNextCompleteGroup():void
 		{
+			if (nextGroupToBuild < 0 || nextGroupToBuild >= groupsArr.length) return;
 			currentGroupDict = new Dictionary();
 			var groupSize:uint = 0;
-			for (var groupId:String in groupsArr[g]) {
+			for (var groupId:String in groupsArr[nextGroupToBuild]) {
 				var groupIdParts:Array = groupId.split(":");
 				if (groupIdParts[0] == "clause") groupIdParts[0] = "c";
 				var formattedGroupId:String = groupIdParts[0] + "_" + groupIdParts[1];
-				var groupedIds:Array = groupsArr[g][groupId] as Array;
+				var groupedIds:Array = groupsArr[nextGroupToBuild][groupId] as Array;
 				for each (var groupedId:String in groupedIds) {
 					var groupedIdParts:Array = groupedId.split(":");
 					if (groupedIdParts[0] == "clause") groupedIdParts[0] = "c";
@@ -225,6 +226,7 @@ package constraints
 			}
 			groupSizes.push(groupSize);
 			groupsArrComplete.push(currentGroupDict);
+			nextGroupToBuild++;
 		}
 		
 		public function buildNextConstraint():void
@@ -282,6 +284,7 @@ package constraints
 		public var version:String;
 		public var variablesToBuildObj:Object;
 		public var constraintsToBuildArr:Array;
+		public var nextGroupToBuild:int = -1;
 		public var totalGroups:uint;
 		public var groupsArrComplete:Array;
 		public var currentGroupDict:Dictionary
@@ -321,11 +324,7 @@ package constraints
 					
 					// Build variables (if any specified, this section is optional)
 					graph1.variablesToBuildObj = levelObj[VARIABLES];
-					if (graph1.variablesToBuildObj) {
-						for (var varId:String in graph1.variablesToBuildObj) {
-							graph1.buildVar(varId);
-						}
-					}
+					// A
 					
 					// Build constraints, add any uninitialized variables to graph.variableDict, and process groups
 					graph1.constraintsToBuildArr = levelObj[CONSTRAINTS];
@@ -340,25 +339,63 @@ package constraints
 					 */
 					
 					graph1.groupSizes = new Vector.<uint>();
+					graph1.nextGroupToBuild = -1;
 					if (graph1.groupsArr) {
 						graph1.groupsArrComplete = new Array();
-						for (var g:int = 0; g < graph1.totalGroups; g++) {
-							graph1.buildCompleteGroup(g);
-						}
+						graph1.nextGroupToBuild = 0;
+						// B
 					}
 					
 					graph1.nVars = graph1.nClauses = graph1.nConstraints = 0;
-					while (graph1.constraintsToBuildArr.length > 0) {
-						graph1.buildNextConstraint();
-					}
+					// C
 					
 					break;
 				default:
-					throw new Error("ConstraintGraph.fromJSON:: Unknown version encountered: " + graph1.version);
+					throw new Error("ConstraintGraph.initFromJSON:: Unknown version encountered: " + graph1.version);
 					break;
 			}
 			
 			return graph1;
+		}
+		
+		/**
+		 * Incrementally continues to build graph to avoid freezing the game
+		 * @return complete: True if graph is completely constructed
+		 */
+		public function buildNextPartOfGraph():Boolean
+		{
+			switch (version) {
+				case "1": // Version 1
+				case "2": // Version 2
+					// A. Build any variables left to build
+					if (variablesToBuildObj) {
+						for (var varId:String in variablesToBuildObj) {
+							buildVar(varId);
+							return false;
+						}
+					}
+					
+					// B. Build any groups left to build
+					if (groupsArr) {
+						while (nextGroupToBuild < groupsArr.length) {
+							buildNextCompleteGroup();
+							return false;
+						}
+					}
+					
+					// C. Build any remaining constraints
+					while (constraintsToBuildArr.length > 0) {
+						buildNextConstraint();
+						return false;
+					}
+					
+					break;
+					
+				default:
+					throw new Error("ConstraintGraph.buildNextPartOfGraph: Unknown version encountered: " + version);
+					break;
+			}
+			return true;
 		}
 		
 		private static function parseConstraintString(_str:String, _graph:ConstraintGraph, _defaultVal:ConstraintValue, _defaultScoring:ConstraintScoringConfig):Constraint

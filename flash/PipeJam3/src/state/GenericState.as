@@ -1,6 +1,6 @@
 package state 
 {
-	import flash.events.Event;
+	import starling.events.Event
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	
@@ -20,10 +20,7 @@ package state
 		
 		/** Called when State is initialized/added to the screen */
 		public function stateLoad():void {
-			if (display) {
-				display.addChild(this);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
 		}
 		
 		/** Called when State is finished/to be removed from the screen */
