@@ -138,7 +138,7 @@ package scenes.game.display
 					if (num == 0) { // End of level, display summary
 						tip = new TutorialManagerTextInfo(
 							"Great work! The target score for this level was reached by\n" + 
-							"satisfying all the dox. Move on to the next level to learn more!",
+							"satisfying all the constraints. Move on to the next level to learn more!",
 							null, 
 							null, 
 							Constants.BOTTOM, null);
@@ -148,23 +148,9 @@ package scenes.game.display
 					}
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "constraint\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_3"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_2"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_1"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_1"), Constants.RIGHT, Constants.RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_5"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_8"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_7"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_6"] ? "dox\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_6"), Constants.LEFT, Constants.LEFT);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "constraint\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
@@ -469,48 +455,20 @@ package scenes.game.display
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
 				case "001":
-					tip = new TutorialManagerTextInfo("para", null, pointToNode("var_1"), Constants.BOTTOM_RIGHT, Constants.CENTER);
+					tip = new TutorialManagerTextInfo("variable", null, pointToNode("var_1"), Constants.BOTTOM_RIGHT, Constants.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("para", null, pointToNode("var_2"), Constants.BOTTOM_LEFT, Constants.CENTER);
+					tip = new TutorialManagerTextInfo("variable", null, pointToNode("var_2"), Constants.BOTTOM_LEFT, Constants.CENTER);
 					tips.push(tip);
 					
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("constraint", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_1"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox", null, pointToNode("c_6"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
+					tip = new TutorialManagerTextInfo("constraint", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("constraint\nwith\nconflict", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_3"), Constants.TOP_LEFT, Constants.TOP_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_2"), Constants.BOTTOM_LEFT, Constants.BOTTOM_LEFT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_1"), Constants.RIGHT, Constants.RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_5"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_8"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_7"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
-					tips.push(tip);
-					tip = new TutorialManagerTextInfo("dox\nwith\nconflict", null, pointToNode("c_6"), Constants.LEFT, Constants.LEFT);
+					tip = new TutorialManagerTextInfo("constraint\nwith\nconflict", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "01":
@@ -566,7 +524,7 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
-						"Paras can change states. Click and drag to paint paras.\nRelease the mouse to apply the state being painted.",
+						"Variabless can change states. Click and drag to paint variables.\nRelease the mouse to apply the state being painted.",
 						null,
 						null,
 						null, null);
@@ -585,7 +543,7 @@ package scenes.game.display
 						null, null);
 				case "004":
 					return new TutorialManagerTextInfo(
-						"New brush unlocked! The autosolver will automatically paint the\nselected paras to reduce the overall number of conflicts.",
+						"New brush unlocked! The autosolver will automatically paint the\nselected variables to reduce the overall number of conflicts.",
 						null,
 						null,
 						null, null);
