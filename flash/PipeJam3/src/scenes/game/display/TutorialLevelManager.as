@@ -322,7 +322,6 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "001":
-				case "002":
 				case "01":
 				case "004":
 				case "02":
@@ -330,6 +329,8 @@ package scenes.game.display
 				case "04":
 				case "1":
 					return new Point(0, 10); // shift level down by 10px
+				case "002":
+					return new Point(-50, 0); // shift level left by 50px
 				case "2":
 				case "3":
 				case "4":
@@ -524,17 +525,21 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
-						"Variabless can change states. Click and drag to paint variables.\nRelease the mouse to apply the state being painted.",
+						"Variables can change states. Click and drag to paint variables.\nRelease the mouse to apply the state being painted.",
 						null,
 						null,
 						null, null);
 				case "002":
 					return new TutorialManagerTextInfo(
-						"New paintbrush unlocked! Change paintbrushes by clicking\n" + 
-						"on one of the paintbrush previews on the right -->\n",
+						"New paintbrush\n" +
+						"unlocked! Change\n" +
+						"paintbrushes by\n" + 
+						"clicking on one\n" +
+						"of the paintbrush\n" + 
+						"    previews -->",
 						null,
 						null,
-						Constants.BOTTOM_RIGHT, null);
+						Constants.RIGHT, null);
 				case "01":
 					return new TutorialManagerTextInfo(
 						"Eliminate as many red conflicts as you can!",
@@ -567,7 +572,7 @@ package scenes.game.display
 						null, null);
 				case "2":
 					return new TutorialManagerTextInfo(
-						"Use the arrow keys or mouse to the edge of the screen to pan. Use +/- to zoom.",
+						"Use the arrow keys or right-click and drag to pan. Use +/- to zoom.",
 						null,
 						null,
 						null, null);

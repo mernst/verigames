@@ -256,19 +256,19 @@ package display
 						newY = Constants.GameHeight / 2;
 						break;
 					case Constants.RIGHT:
-						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
+						newX = (Constants.GameWidth - Constants.RightPanelWidth + 48) - (width / 2 - m_paddingSz + m_inset);
 						newY = Constants.GameHeight / 2;
 						break;
 					case Constants.BOTTOM:
-						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 52;
 						break;
 					case Constants.BOTTOM_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
-						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 52;
 						break;
 					case Constants.BOTTOM_RIGHT:
 						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
-						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 52;
 						break;
 				}
 				x = newX;
