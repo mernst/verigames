@@ -398,6 +398,8 @@ package scenes.game.components
 		
 		public function onGameComponentsCreated():void
 		{
+			center();
+			
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (var i:int = 0; i < toolTips.length; i++) {
 				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
@@ -411,10 +413,7 @@ package scenes.game.components
 				m_tutorialTextLayer.addChild(m_tutorialText);
 			}
 			
-			center();
-			
-			var currentViewRect:Rectangle = getViewInContentSpace();
-			m_currentLevel.updateLevelDisplay(currentViewRect);
+
 			
 			if (DEBUG_BOUNDING_BOX) {
 				if (!m_boundingBoxDebug) {
@@ -883,12 +882,7 @@ package scenes.game.components
 				case Keyboard.SHIFT:
 					hidePaintBrush();
 					break;
-				case Keyboard.TAB:
-					if (getPanZoomAllowed() && m_currentLevel) {
-						var conflictLoc:Point = m_currentLevel.getNextConflictLocation(!event.shiftKey);
-						if (conflictLoc != null) moveContent(conflictLoc.x, conflictLoc.y, false);
-					}
-					break;
+				
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
@@ -1014,13 +1008,14 @@ package scenes.game.components
 			}
 			
 			inactiveContent.removeChildren();
-			//inactiveContent.addChild(m_currentLevel.inactiveLayer); // deprecated
 			
 			// Remove old error text containers and place new ones
 			for (var errorEdgeId:String in m_errorTextBubbles) {
 				var errorSprite:Sprite = m_errorTextBubbles[errorEdgeId];
 				errorSprite.removeFromParent();
 			}
+			content.addChild(m_currentLevel);
+			
 			m_errorTextBubbles = new Dictionary();
 			
 			if (m_tutorialText) {
@@ -1030,7 +1025,6 @@ package scenes.game.components
 			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
 			m_persistentToolTips = new Vector.<ToolTipText>();
 			
-			content.addChild(m_currentLevel);
 
 			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 			m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
@@ -1040,16 +1034,6 @@ package scenes.game.components
 				m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 			}
 			
-			// Queue all nodes/edges to add (later we can refine to only on-screen
-			//for (var nodeId:String in m_currentLevel.nodeLayoutObjs) {
-				//var nodeLayoutObj:Object = m_currentLevel.nodeLayoutObjs[nodeId];
-				//m_nodeLayoutQueue.push(nodeLayoutObj);
-			//}
-			//var edgeId:String;
-			//for (edgeId in m_currentLevel.edgeLayoutObjs) {
-				//var edgeLayoutObj:Object = m_currentLevel.edgeLayoutObjs[edgeId];
-				//m_edgeLayoutQueue.push(edgeLayoutObj);
-			//}
 			onGameComponentsCreated();
 		}
 		

@@ -92,7 +92,7 @@ package scenes.game.display
 			}
 			preferenceQuad.x = skinWidth - PREF_LENGTH;
 			addChild(preferenceQuad);
-			this.flatten();
+		//	this.flatten();
 		}
 		
 		public function getConnectorTexture():Image

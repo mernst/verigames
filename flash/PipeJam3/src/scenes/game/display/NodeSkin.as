@@ -234,11 +234,13 @@ package scenes.game.display
 					textureImage.setVertexColor(3, 0xffffff);
 				}	
 				
-				addChild(textureImage);
 				if(associatedNode.isNarrow)
 					textureImage.width = textureImage.height = 10;
 				else
 					textureImage.width = textureImage.height = 14;
+				textureImage.x -= textureImage.width/2;
+				textureImage.y -= textureImage.width/2; 
+				addChild(textureImage);
 			}
 			else
 			{
@@ -253,13 +255,15 @@ package scenes.game.display
 					if (isBackground)
 					{
 						constraintImage = new Image(UnsatisfiedConstraintBackgroundTexture);
+						constraintImage.width = constraintImage.height = 40;
 					}
 					else
 					{
 						constraintImage = new Image(UnsatisfiedConstraintTexture);
+						constraintImage.width = constraintImage.height = 10;
 					}
 					
-					if(associatedClauseNode.hadError == false)
+					if(associatedClauseNode.hadError == false && associatedClauseNode == true)
 					{
 						//flash if changing
 						flash(0x00ff00);
@@ -277,22 +281,15 @@ package scenes.game.display
 					}
 					associatedClauseNode.hadError = false;
 				}
+				constraintImage.x -= constraintImage.width/2;
+				constraintImage.y -= constraintImage.width/2; 
 				addChild(constraintImage);
 			}
-			if(isBackground)
-			{
-				constraintImage.width = constraintImage.height = 40;
-				//constraintImage.scaleX = constraintImage.scaleY = ?;
-				//constraintIconImage.x = constraintIconImage.y = (constraintImage.width - constraintIconImage.width)/2;
-			}
-			else if(constraintImage)
-				constraintImage.width = constraintImage.height = 10;
 
-			//for each(var connectorImage:Image in associatedNode.connectors)
-			//{
-			////	addChild(connectorImage);
-			//}			
+				
 			
+
+
 		}
 		
 		override public function set scaleX(newScale:Number):void
@@ -346,7 +343,7 @@ package scenes.game.display
 				{
 					saveParent = q.parent as Sprite;
 					q.removeFromParent(true);
-					if (saveParent) saveParent.flatten();
+			//		if (saveParent) saveParent.flatten();
 				}
 			}
 			if (tween) Starling.juggler.remove(tween);

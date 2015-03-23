@@ -200,6 +200,7 @@ package scenes.game.display
 			else if (m_initQueue.length > 0) {
 				var time1:Number = new Date().getTime();
 				var func:Function = m_initQueue.shift();
+				
 				func.call();
 				trace("init", new Date().getTime() - time1);
 			}
@@ -1025,8 +1026,6 @@ package scenes.game.display
 			}
 			
 			active_level = newLevel;
-			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
 			if(miniMap)
 			{
@@ -1081,8 +1080,7 @@ package scenes.game.display
 			} else {
 				sideControlPanel.onZoomReset();
 			}
-			trace("Level.start()");
-			active_level.start();
+
 			trace("onScoreChange()");
 			active_level.onScoreChange();
 			active_level.resetBestScore();

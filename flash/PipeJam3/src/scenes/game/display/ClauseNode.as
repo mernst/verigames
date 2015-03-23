@@ -1,7 +1,6 @@
 package scenes.game.display
 {
-	import flash.geom.Rectangle;
-	
+	import flash.geom.Rectangle;	
 	import constraints.ConstraintClause;
 	
 	public class ClauseNode extends Node
@@ -47,15 +46,15 @@ package scenes.game.display
 		public override function createSkin():void
 		{
 			super.createSkin();
-			var newSkin:NodeSkin = NodeSkin.getNextSkin();
-			if (newSkin == null) return;
-			newSkin.setNode(this, true);
-			newSkin.draw();
-			backgroundSkin = newSkin;
+			
+			//create background
+			backgroundSkin = NodeSkin.getNextSkin();
+			if (backgroundSkin == null) return;
+			backgroundSkin.setNode(this, true);
 			backgroundSkin.x = centerPoint.x - 0.5 * backgroundSkin.width;
 			backgroundSkin.y = centerPoint.y - 0.5 * backgroundSkin.height;
 			
-			setDirty(true);
+			setEdgesDirty(true);
 		}
 		
 	}
