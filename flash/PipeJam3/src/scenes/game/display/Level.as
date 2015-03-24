@@ -130,17 +130,17 @@ package scenes.game.display
 		/** Tracks total distance components have been dragged since last visibile calculation */
 		public var totalMoveDist:Point = new Point();
 		
-		// The following is used for conflict scrolling purposes: (tracking list of current conflicts)
-		protected var m_currentConflictIndex:int = 0;
-		
 		public var m_inSolver:Boolean = false;
 		private var m_unsat_weight:int;
 		private var m_recentlySolved:Boolean;
+		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
 		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
+		
+		private var debugSolver:Boolean = false;
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -255,11 +255,6 @@ package scenes.game.display
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage); 
 			removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
-			if (m_disposed) {
-				restart(); // undo progress if left the level and coming back
-			} else {
-				start();
-			}
 			
 			//for (var varId:String in levelGraph.variableDict) {
 				//var graphVar:ConstraintVar = levelGraph.variableDict[varId] as ConstraintVar;
@@ -271,46 +266,6 @@ package scenes.game.display
 //			flatten();
 			
 			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION,true));
-		}
-		
-		public function initialize():void
-		{
-			if (initialized) return;
-			//trace("Level.initialize()...");
-			var time1:Number = new Date().getTime();
-			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
-				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
-				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-				background.repeat = true;
-				m_backgroundImage = new Image(background);
-				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
-				m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
-				m_backgroundImage.blendMode = BlendMode.NONE;
-				addChild(m_backgroundImage);
-			}
-			
-			//trace("load level time1", new Date().getTime()-time1);
-			this.alpha = .999;
-
-			totalMoveDist = new Point();
-			loadLayout();
-			
-			//trace("Level " + m_levelLayoutObj["id"] + " m_boundingBox = " + m_boundingBox, "load layout time", new Date().getTime()-time1);
-			
-			//addEventListener(WidgetChangeEvent.WIDGET_CHANGED, onEdgeSetChange); // do these per-box
-			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			addEventListener(SelectionEvent.COMPONENT_SELECTED, onComponentSelection);
-			addEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentUnselection);
-			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-			
-			loadInitialConfiguration();
-			initialized = true;
-			//trace("Level edges and nodes all created.");
-			// When level loaded, don't need this event listener anymore
-			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));
-			//trace("load level time2", new Date().getTime() - time1);
-			m_disposed = false;
 		}
 		
 		protected function onEnterFrame(evt:EnterFrameEvent):void
@@ -392,17 +347,17 @@ package scenes.game.display
 		{
 			if (!m_conflictsLayer) {
 				m_conflictsLayer = new Sprite();
-				m_conflictsLayer.flatten();
+			//	m_conflictsLayer.flatten();
 				addChild(m_conflictsLayer);
 			}
 			if (!m_edgesLayer) {
 				m_edgesLayer = new Sprite();
-				m_edgesLayer.flatten();
+			//	m_edgesLayer.flatten();
 				addChild(m_edgesLayer);
 			}
 			if (!m_nodeLayer) {
 				m_nodeLayer = new Sprite();
-				m_nodeLayer.flatten();
+			//	m_nodeLayer.flatten();
 				addChild(m_nodeLayer);
 			}
 			var nodesProcessed:uint = 0;
@@ -519,21 +474,22 @@ package scenes.game.display
 						touchedNodeLayer = true;
 						if (nodeToDraw.backgroundSkin)
 						{
-							if (nodeToDraw.skin.parent != m_nodeLayer) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
+							if (nodeToDraw.backgroundSkin.parent != m_conflictsLayer) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
 							if (parent)
 							{
 								nodeToDraw.backgroundSkin.scale(0.5 / parent.scaleX);
 							}
 							touchedConflictLayer = true;
 						}
+						nodeToDraw.draw();
 					}
 				}
 				nodesProcessed++;
 			}
 			m_recentlySolved = false;
 			if (touchedEdgeLayer) m_edgesLayer.flatten();
-			if (touchedNodeLayer) m_nodeLayer.flatten();
-			if (touchedConflictLayer) m_conflictsLayer.flatten();
+	//		if (touchedNodeLayer) m_nodeLayer.flatten();
+	//		if (touchedConflictLayer) m_conflictsLayer.flatten();
 		}
 		
 		protected function createGridChildFromLayoutObj(gridChildId:String, gridChildLayout:Object, isGroup:Boolean):GridChild
@@ -669,43 +625,34 @@ package scenes.game.display
 			
 		}
 		
-		public function start():void
+		public function initialize():void
 		{
 			// create all nodes, edges for tutorials so that the tutorial indicators/arrows have something to point at
-			if (tutorialManager) updateLevelDisplay();
-			initialize();
-			m_currentConflictIndex = 0;
+			if (initialized) return;
+			
+			this.alpha = .999;
+			
+			totalMoveDist = new Point();
+			loadLayout();
+			loadInitialConfiguration();
+
+			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			addEventListener(SelectionEvent.COMPONENT_SELECTED, onComponentSelection);
+			addEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentUnselection);
+			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			m_levelStartTime = new Date().time;
-			if (tutorialManager) tutorialManager.startLevel();
 			
 			levelGraph.resetScoring();
 			m_bestScore = levelGraph.currentScore;
 			levelGraph.startingScore = levelGraph.currentScore;
-			flatten();
-			//trace("Loaded: " + m_levelLayoutObj["id"] + " for display.");
-		}
-		
-		public function restart():void
-		{
-			unselectAll();
-			if (!initialized) {
-				start();
-			} else {
-				if (tutorialManager) {
-					updateLevelDisplay(); // create any uncreated/disposed nodes
-					tutorialManager.startLevel();
-				}
-				m_levelStartTime = new Date().time;
-				m_currentConflictIndex = 0;
-			}
-			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
-			onPropertyModeChange(propChangeEvt);
-			dispatchEvent(propChangeEvt);
-			m_levelAssignmentsObj = XObject.clone(m_levelOriginalAssignmentsObj);
-			loadAssignments(m_levelAssignmentsObj);
+			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));			
+			if (tutorialManager) tutorialManager.startLevel();
+			initialized = true;
 			
-			targetScoreReached = false;
-			//trace("Restarted: " + m_levelLayoutObj["id"]);
+	//		flatten();
+			
+
 		}
 		
 		public function zipJsonFile(jsonFile:Object, name:String):ByteArray
@@ -792,9 +739,6 @@ package scenes.game.display
 		{
 			initialized = false;
 			//trace("Disposed of : " + m_levelLayoutObj["id"]);
-			if (m_disposed) {
-				return;
-			}
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
@@ -1027,55 +971,6 @@ package scenes.game.display
 //			}
 		}
 		
-		/**
-		 * Get next conflict: used for conflict scrolling
-		 * @param	forward True to scroll forward, false to scroll backwards
-		 * @return Conflict DisplayObject (if any exist)
-		 */
-		public function getNextConflictLocation(forward:Boolean):Point
-		{
-			var i:int = 0;
-			var conflictIndex:int = m_currentConflictIndex + (forward ? 1 : -1);
-			//trace("m_currentConflictIndex:", m_currentConflictIndex, " conflictIndex:", conflictIndex);
-			var firstConflictLoc:Point;
-			var lastConflictLoc:Point;
-			for (var edgeId:String in levelGraph.unsatisfiedConstraintDict) {
-				var edgeLayout:Edge = edgeLayoutObjs[edgeId];
-				if (edgeLayout == null) {
-					//trace("Warning! getNextConflictLocation: Found edgeId with no layout: ", edgeId);
-					continue;
-				}
-				var edgeNode:Node = edgeLayout.toNode;
-				if (edgeNode == null) {
-					//trace("Warning! getNextConflictLocation: Found edge with no toNode: ", edgeNode);
-					continue;
-				}
-				if (!edgeNode.isEditable && edgeLayout.fromNode) {
-					edgeNode = edgeLayout.fromNode;
-				}
-				var conflictLoc:Point = edgeNode.centerPoint.clone();
-				if (i == conflictIndex) {
-					m_currentConflictIndex = i;
-					return conflictLoc;
-				} else if (i == 0) {
-					firstConflictLoc = conflictLoc;
-				} else if (firstConflictLoc == null) {
-					firstConflictLoc = conflictLoc;
-				}
-				i++;
-				lastConflictLoc = conflictLoc;
-			}
-			if (lastConflictLoc != null && conflictIndex < 0) {
-				m_currentConflictIndex = i - 1;
-				return lastConflictLoc;
-			}
-			if (firstConflictLoc != null) {
-				m_currentConflictIndex = 0;
-				return firstConflictLoc;
-			}
-			return null;
-		}
-		
 		public override function flatten():void
 		{
 			//super.flatten();
@@ -1254,6 +1149,12 @@ package scenes.game.display
 		{
 			for each(var node:Node in selectedNodes)
 			{
+				if(debugSolver)
+				{
+					node.solverSelected = true;
+					node.solverSelectedColor = 0xff00ff;
+					solverSelected.push(node);
+				}
 				if(node.isClause)
 				{
 					newSelectedClauses[node.id] = node;
@@ -1307,7 +1208,7 @@ package scenes.game.display
 				
 				for each(var edgeID:String in selectedVar.connectedEdgeIds)
 				{
-					var edgeToCheck:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+					var edgeToCheck:Edge = edgeLayoutObjs[edgeID];
 					var toNodeToCheck:Node = edgeToCheck.toNode;
 					if(newSelectedClauses[toNodeToCheck.id])
 					{
@@ -1320,13 +1221,21 @@ package scenes.game.display
 				{
 					for each(var unattachedEdgeID:String in selectedVar.connectedEdgeIds)
 					{
-						var unattachedEdge:Edge = World.m_world.active_level.edgeLayoutObjs[unattachedEdgeID];
+						var unattachedEdge:Edge = edgeLayoutObjs[unattachedEdgeID];
 						var toNode:Node = unattachedEdge.toNode;
+						
+						if(debugSolver)
+						{
+							toNode.solverSelected = true;
+							toNode.solverSelectedColor = 0x00ffff;
+							solverSelected.push(toNode);
+						}
+						
 						var clauseArray:Array = new Array();
 						clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
 						for each(var gameEdgeId:String in toNode.connectedEdgeIds)
 						{
-							var constraintEdge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeId];
+							var constraintEdge:Edge = edgeLayoutObjs[gameEdgeId];
 							var fromNode:Node = constraintEdge.fromNode;
 							//directNodeArray.push(fromNode1);
 							//directEdgeDict[gameEdgeId1] = edge3;
@@ -1395,7 +1304,7 @@ package scenes.game.display
 							usedEdgeArray.push(nextLayerEdgeID);
 							continue;
 						}
-						var nextLayerEdge:Edge = World.m_world.active_level.edgeLayoutObjs[nextLayerEdgeID];
+						var nextLayerEdge:Edge = edgeLayoutObjs[nextLayerEdgeID];
 						var nextLayerVar:Node = nextLayerEdge.fromNode;
 						
 						if(nextLayerEdgeID.indexOf('c') == 0 && !nextLayerVar.isNarrow)
@@ -1418,8 +1327,17 @@ package scenes.game.display
 						
 						for each(var edgeID:String in usedEdgeArray)
 						{
-							var nextLayerEdge1:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+							var nextLayerEdge1:Edge = edgeLayoutObjs[edgeID];
 							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
+							
+							if(debugSolver)
+							{
+								nextLayerVar1.solverSelected = true;
+								nextLayerVar1.solverSelectedColor = 0x0000ff;
+								solverSelected.push(nextLayerVar1);
+							}
+							
+							
 							var varArray:Array = new Array();
 							varArray.push(FIXED_CONSTRAINT_VALUE);
 							
@@ -1520,11 +1438,6 @@ package scenes.game.display
 			
 		}
 		
-		public function adjustSize(newWidth:Number, newHeight:Number):void
-		{
-			
-		}
-		
 		public function selectNodes(localPt:Point, dX:Number, dY:Number):void
 		{
 			if (currentGroupDepth < 0) currentGroupDepth = 0;
@@ -1584,6 +1497,20 @@ package scenes.game.display
 			if (selectionChanged) {
 				dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 			}
+		}
+		
+		public function unselectLast():void
+		{
+			if(debugSolver && selectedNodes.length == 0)
+			{
+				//reset flashing on previously solved nodes
+				if(solverSelected)
+					for each(var node:Node in solverSelected)
+						node.solverSelected = false;
+					
+				solverSelected = new Vector.<Node>;
+			}
+			
 		}
 	}
 	

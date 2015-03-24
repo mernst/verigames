@@ -202,6 +202,7 @@ package scenes.game.display
 			else if (m_initQueue.length > 0) {
 				var time1:Number = new Date().getTime();
 				var func:Function = m_initQueue.shift();
+				
 				func.call();
 				trace("init", new Date().getTime() - time1);
 			}
@@ -373,7 +374,6 @@ package scenes.game.display
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
-			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
@@ -767,24 +767,6 @@ package scenes.game.display
 			}
 		}
 		
-		private function onLevelStartOver(evt:NavigationEvent):void
-		{
-			var level:Level = active_level;
-			//forget that which we knew
-			PipeJamGameScene.levelContinued = false;
-			var callback:Function =
-				function():void
-				{
-					level.restart();
-					if (edgeSetGraphViewPanel) {
-						edgeSetGraphViewPanel.setupLevel(active_level);
-						edgeSetGraphViewPanel.onGameComponentsCreated();
-					}
-				};
-			
-			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
-		}
-		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
 			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.RaLevelID);
@@ -844,7 +826,7 @@ package scenes.game.display
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[m_currentLevelNumber], m_currentLevelNumber == prevLevelNumber);
+					selectLevel(levels[m_currentLevelNumber]);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 		}
@@ -983,11 +965,6 @@ package scenes.game.display
 			}
 		}
 		
-		public function getThumbnail(_maxwidth:Number, _maxheight:Number):ByteArray
-		{
-			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
-		}
-		
 		 protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
 			//added newest at the end, so start at the end
@@ -1014,7 +991,7 @@ package scenes.game.display
 			}
 		}
 		
-		protected function selectLevel(newLevel:Level, restart:Boolean = false):void
+		protected function selectLevel(newLevel:Level):void
 		{
 			if (!newLevel) {
 				return;
@@ -1047,10 +1024,7 @@ package scenes.game.display
 				qid = (newLevel.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelGraph.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
-			if (restart || newLevel == active_level) {
-				if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.hideContinueButton();
-				newLevel.restart();
-			} else if (active_level) {
+			if (active_level) {
 				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 				active_level.dispose();
@@ -1066,8 +1040,6 @@ package scenes.game.display
 			}
 			
 			active_level = newLevel;
-			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-			active_level.levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			
 			if(miniMap)
 			{
@@ -1115,7 +1087,6 @@ package scenes.game.display
 			
 			trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
-			edgeSetGraphViewPanel.loadLevel();
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				sideControlPanel.onMaxZoomReached();
 			} else if (edgeSetGraphViewPanel.atMinZoom()) {
@@ -1123,8 +1094,7 @@ package scenes.game.display
 			} else {
 				sideControlPanel.onZoomReset();
 			}
-			trace("Level.start()");
-			active_level.start();
+
 			trace("onScoreChange()");
 			active_level.onScoreChange();
 			active_level.resetBestScore();
@@ -1237,7 +1207,7 @@ package scenes.game.display
 		
 		private function onNumSelectedNodesChanged(evt:SelectionEvent):void
 		{
-		//	if (sideControlPanel) sideControlPanel.updateNumNodesSelectedDisplay();
+			if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.updateNumNodesSelectedDisplay();
 		}
 		
 		public function setHighScores():void

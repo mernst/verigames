@@ -178,6 +178,7 @@ package constraints
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints));
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints));
 			if (isNaN(startingScore)) startingScore = currentScore;
+			trace("Starting/Current Score", startingScore, currentScore);
 		}
 		
 		public function resetScoring():void
@@ -343,10 +344,12 @@ package constraints
 					
 					// Build variables (if any specified, this section is optional)
 					graph1.variablesToBuildObj = levelObj[VARIABLES];
-					// A
 					
 					// Build constraints, add any uninitialized variables to graph.variableDict, and process groups
-					graph1.constraintsToBuildArr = levelObj[CONSTRAINTS];
+					//the process eats the array, so create a copy
+					graph1.constraintsToBuildArr = new Array;
+					for each(var constraintStr:String in levelObj[CONSTRAINTS])
+						graph1.constraintsToBuildArr.push(constraintStr);
 					graph1.groupsArr = levelObj.hasOwnProperty(GROUPS) ? levelObj[GROUPS] : new Array();
 					graph1.totalGroups = graph1.groupsArr ? graph1.groupsArr.length : 0;
 					/**

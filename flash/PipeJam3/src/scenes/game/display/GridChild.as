@@ -1,11 +1,10 @@
 package scenes.game.display 
 {
-	import constraints.ConstraintGraph;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	import utils.PropDictionary;
-	import starling.display.Sprite;
+
+	import constraints.ConstraintGraph;
+
 	
 	public class GridChild 
 	{
@@ -19,7 +18,6 @@ package scenes.game.display
 		public var isSelected:Boolean = false;
 		public var isEditable:Boolean;
 		public var isNarrow:Boolean;
-		public var isDirty:Boolean = false;
 		
 		public var startingSelectionState:Boolean = false;
 		
@@ -30,7 +28,7 @@ package scenes.game.display
 		public var skin:NodeSkin;
 		public var backgroundSkin:NodeSkin;
 		public var currentGroupDepth:uint = 0;
-		
+				
 		public function GridChild(_id:String, _bb:Rectangle) 
 		{
 			id = _id;
@@ -42,8 +40,6 @@ package scenes.game.display
 			centerPoint = new Point(xCenter, yCenter);
 			isNarrow = false;
 			isEditable = true;
-			
-			isDirty = true;
 		}
 		
 		public function createSkin():void
@@ -70,9 +66,8 @@ package scenes.game.display
 			isSelected = false;
 		}
 		
-		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
+		public function setEdgesDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
 		{
-			isDirty = true;
 			if(dirtyEdges)
 			{
 				for each(var gameEdgeID:String in connectedEdgeIds)
@@ -84,12 +79,19 @@ package scenes.game.display
 			}
 		}
 		
+		public function draw():void
+		{
+			if(this.backgroundSkin)
+				backgroundSkin.draw();
+			if(skin)
+				skin.draw();
+		}
+		
 		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
 			if(isEditable)
 			{
 				isNarrow = !_isWide;
-				isDirty = true;
 			}
 		}
 	}

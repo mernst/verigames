@@ -7,8 +7,7 @@ package scenes.game.display
 	import constraints.ConstraintSide;
 	import constraints.ConstraintVar;
 	
-	import starling.display.Image;
-	import starling.display.Quad;
+	import starling.events.Event;
 	
 	import utils.PropDictionary;
 	
@@ -17,6 +16,8 @@ package scenes.game.display
 		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
 		public var solved:Boolean = false;
+		public var solverSelected:Boolean;
+		public var solverSelectedColor:int;
 		
 		public function Node(_id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide)
 		{
@@ -39,16 +40,13 @@ package scenes.game.display
 		public override function createSkin():void
 		{
 			super.createSkin();
-			var newSkin:NodeSkin = NodeSkin.getNextSkin();
-			if (newSkin == null) return;
-			newSkin.setNode(this);
-			newSkin.draw();
-			skin = newSkin;
-			
+			skin = NodeSkin.getNextSkin();
+			if (skin == null) return;
+			skin.setNode(this);
 			skin.x = centerPoint.x - 0.5 * skin.width;
 			skin.y = centerPoint.y - 0.5 * skin.height;
 			
-			setDirty(true);
+			setEdgesDirty(true);
 		}
 		
 		public override function removeSkin():void
@@ -73,9 +71,9 @@ package scenes.game.display
 			}
 		}
 		
-		override public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
+		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
 		{
-			super.setDirty(dirtyEdges);
+			super.setEdgesDirty(dirtyEdges);
 			
 			if(!isClause && flashChange)
 			{
