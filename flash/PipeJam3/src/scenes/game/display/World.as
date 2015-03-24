@@ -176,6 +176,7 @@ package scenes.game.display
 			m_initQueue.push(initSideControlPanel);
 			m_initQueue.push(initMiniMap);
 			m_initQueue.push(initTutorial);
+			m_initQueue.push(initHintController);
 			m_initQueue.push(initLevel);
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initEventListeners);
@@ -297,6 +298,12 @@ package scenes.game.display
 				}
 			}
 			trace("Done initializing TutorialController.", new Date().getTime()-time1);
+		}
+		
+		private function initHintController():void
+		{
+			if (edgeSetGraphViewPanel == null) throw new Error("GridViewPanel hint layer has not been initialized! Make sure that initGridViewPanel is called before initHintController.");
+			HintController.getInstance().hintLayer = edgeSetGraphViewPanel.hintLayer;
 		}
 		
 		private function initLevel():void {

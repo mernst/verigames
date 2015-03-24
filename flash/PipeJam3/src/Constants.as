@@ -52,6 +52,8 @@ package
 		public static const BOTTOM:String = "Bottom";
 		public static const BOTTOM_RIGHT:String = "BottomRight";
 		
+		public static const HINT_LOC:String = "HintLoc";
+		
 		public static const START_BUSY_ANIMATION:String = "startBusyAnimation";
 		public static const STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
     }

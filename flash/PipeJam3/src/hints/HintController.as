@@ -1,16 +1,21 @@
 package hints 
 {
+	import display.TextBubble;
 	import scenes.game.display.ClauseNode;
 	import scenes.game.display.Edge;
 	import scenes.game.display.Level;
 	import scenes.game.display.Node;
-	import scenes.game.display.VariableNode;
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	
 	public class HintController extends Sprite 
 	{
+		private static const FADE_SEC:Number = 0.3;
 		
 		private static var m_instance:HintController;
+		
+		private var hintBubble:TextBubble;
+		public var hintLayer:Sprite;
 		
 		public static function getInstance():HintController
 		{
@@ -55,9 +60,41 @@ package hints
 					}
 				}
 			}
+			popHint("Paint at least one\nconflict before optimizing", level);
 			return false;
 		}
 		
+		public function popHint(text:String, level:Level, secToShow:Number = 3.0):void
+		{
+			if (hintBubble != null) Starling.juggler.removeTweens(hintBubble);
+			removeHint(); // any existing hints
+			hintBubble = new TextBubble("Hint: " + text, 10, Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);
+			fadeInHint();
+			Starling.juggler.delayCall(fadeOutHint, secToShow + FADE_SEC);
+		}
+		
+		public function fadeInHint():void
+		{
+			if (hintBubble != null)
+			{
+				hintBubble.alpha = 0;
+				hintLayer.addChild(hintBubble);
+				Starling.juggler.tween(hintBubble, FADE_SEC, { alpha:1.0 } );
+			}
+		}
+		
+		public function fadeOutHint():void
+		{
+			if (hintBubble != null)
+			{
+				Starling.juggler.tween(hintBubble, FADE_SEC, { alpha:0, onComplete:removeHint } );
+			}
+		}
+		
+		public function removeHint():void
+		{
+			if (hintBubble != null) hintBubble.removeFromParent(true);
+		}
 	}
 
 }

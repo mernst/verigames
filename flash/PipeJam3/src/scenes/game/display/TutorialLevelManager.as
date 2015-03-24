@@ -233,11 +233,6 @@ package scenes.game.display
 			}
 		}
 		
-		public function onGameNodeMoved(updatedGameNodes:Vector.<Node>):void
-		{
-			
-		}
-		
 		public function getAutoSolveAllowed():Boolean
 		{
 			return true;

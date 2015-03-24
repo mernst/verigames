@@ -91,6 +91,7 @@ package scenes.game.components
 		public var m_nameText:TextFieldWrapper;
 		
 		private var m_tutorialTextLayer:Sprite = new Sprite();
+		private var m_hintLayer:Sprite = new Sprite();
 		
 		private var m_paintBrushLayer:Sprite = new Sprite();
 		protected var m_paintBrushInfoSprite:Sprite = new Sprite();
@@ -160,7 +161,7 @@ package scenes.game.components
 			addChild(errorBubbleContainer);
 			
 			addChild(m_tutorialTextLayer);
-			
+			addChild(m_hintLayer);
 			addChild(m_paintBrushLayer);
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
@@ -1085,6 +1086,8 @@ package scenes.game.components
 				m_persistentToolTips.push(tip);
 			}
 		}
+		
+		public function get hintLayer():Sprite { return m_hintLayer; }
 		
 		private function onLevelViewChanged(evt:MiniMapEvent):void
 		{

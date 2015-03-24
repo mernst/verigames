@@ -151,8 +151,8 @@ package scenes.game.components
 			addChild(m_brushButtonGroup);
 			m_brushButtonGroup.y = 115;
 			m_brushButtonGroup.x = 40;
-			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, false, "Autosolve") as RadioButton;
-			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, false, "Autosolve") as RadioButton;
+			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
+			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
 			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, false, "Make Wide") as RadioButton;
 			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, false, "Make Narrow") as RadioButton;
 
