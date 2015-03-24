@@ -1193,7 +1193,7 @@ package scenes.game.display
 		
 		private function onNumSelectedNodesChanged(evt:SelectionEvent):void
 		{
-		//	if (sideControlPanel) sideControlPanel.updateNumNodesSelectedDisplay();
+			if (edgeSetGraphViewPanel) edgeSetGraphViewPanel.updateNumNodesSelectedDisplay();
 		}
 		
 		public function setHighScores():void

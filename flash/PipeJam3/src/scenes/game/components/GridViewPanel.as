@@ -492,6 +492,7 @@ package scenes.game.components
 				if(currentMode == SELECTING_MODE)
 				{
 					endSelectMode();
+					m_nextPaintbrushLocationUpdated = true;
 				}
 				else if(currentMode == MOVING_MODE)
 				{
@@ -1442,6 +1443,12 @@ package scenes.game.components
 				rotation: 2*Math.PI,
 				delay: .2
 			});
+		}
+		
+		public function updateNumNodesSelectedDisplay():void
+		{
+			//cause count to update
+			m_nextPaintbrushLocationUpdated = true;
 		}
 	}
 }
