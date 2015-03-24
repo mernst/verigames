@@ -372,6 +372,31 @@ package scenes.game.display
 			return -1;
 		}
 		
+		public function getPerformSmallAutosolveGroupCheck():Boolean
+		{
+			switch (m_tutorialTag) {
+				case "001":
+				case "002":
+				case "01":
+				case "004":
+				case "02":
+					return false;
+				case "03":
+				case "04":
+				case "1":
+				case "2":
+				case "3":
+				case "4":
+				case "5":
+				case "6":
+				case "7":
+				case "8":
+				case "10":
+					return true;
+			}
+			return true;
+		}
+		
 		public function getVisibleBrushes():int
 		{
 			switch (m_tutorialTag) {
