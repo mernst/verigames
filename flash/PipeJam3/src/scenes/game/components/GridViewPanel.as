@@ -493,6 +493,7 @@ package scenes.game.components
 				{
 					endSelectMode();
 					m_nextPaintbrushLocationUpdated = true;
+					this.m_currentLevel.unselectLast();
 				}
 				else if(currentMode == MOVING_MODE)
 				{

@@ -181,6 +181,10 @@ package scenes.game.display
 				removeChild(textureImage, true);
 			}
 			
+			if(associatedNode.solverSelected)
+			{
+				flash(associatedNode.solverSelectedColor);
+			}
 			var wideScore:Number = 1;
 			var narrowScore:Number = 0;
 			if(!(associatedNode as ClauseNode))

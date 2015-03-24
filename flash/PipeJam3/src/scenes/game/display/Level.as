@@ -133,11 +133,14 @@ package scenes.game.display
 		public var m_inSolver:Boolean = false;
 		private var m_unsat_weight:int;
 		private var m_recentlySolved:Boolean;
+		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
 		protected static const BG_WIDTH:Number = 256;
 		protected static const MIN_BORDER:Number = 1000;
 		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
+		
+		private var debugSolver:Boolean = false;
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -1146,6 +1149,12 @@ package scenes.game.display
 		{
 			for each(var node:Node in selectedNodes)
 			{
+				if(debugSolver)
+				{
+					node.solverSelected = true;
+					node.solverSelectedColor = 0xff00ff;
+					solverSelected.push(node);
+				}
 				if(node.isClause)
 				{
 					newSelectedClauses[node.id] = node;
@@ -1199,7 +1208,7 @@ package scenes.game.display
 				
 				for each(var edgeID:String in selectedVar.connectedEdgeIds)
 				{
-					var edgeToCheck:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+					var edgeToCheck:Edge = edgeLayoutObjs[edgeID];
 					var toNodeToCheck:Node = edgeToCheck.toNode;
 					if(newSelectedClauses[toNodeToCheck.id])
 					{
@@ -1212,13 +1221,21 @@ package scenes.game.display
 				{
 					for each(var unattachedEdgeID:String in selectedVar.connectedEdgeIds)
 					{
-						var unattachedEdge:Edge = World.m_world.active_level.edgeLayoutObjs[unattachedEdgeID];
+						var unattachedEdge:Edge = edgeLayoutObjs[unattachedEdgeID];
 						var toNode:Node = unattachedEdge.toNode;
+						
+						if(debugSolver)
+						{
+							toNode.solverSelected = true;
+							toNode.solverSelectedColor = 0x00ffff;
+							solverSelected.push(toNode);
+						}
+						
 						var clauseArray:Array = new Array();
 						clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
 						for each(var gameEdgeId:String in toNode.connectedEdgeIds)
 						{
-							var constraintEdge:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeId];
+							var constraintEdge:Edge = edgeLayoutObjs[gameEdgeId];
 							var fromNode:Node = constraintEdge.fromNode;
 							//directNodeArray.push(fromNode1);
 							//directEdgeDict[gameEdgeId1] = edge3;
@@ -1287,7 +1304,7 @@ package scenes.game.display
 							usedEdgeArray.push(nextLayerEdgeID);
 							continue;
 						}
-						var nextLayerEdge:Edge = World.m_world.active_level.edgeLayoutObjs[nextLayerEdgeID];
+						var nextLayerEdge:Edge = edgeLayoutObjs[nextLayerEdgeID];
 						var nextLayerVar:Node = nextLayerEdge.fromNode;
 						
 						if(nextLayerEdgeID.indexOf('c') == 0 && !nextLayerVar.isNarrow)
@@ -1310,8 +1327,17 @@ package scenes.game.display
 						
 						for each(var edgeID:String in usedEdgeArray)
 						{
-							var nextLayerEdge1:Edge = World.m_world.active_level.edgeLayoutObjs[edgeID];
+							var nextLayerEdge1:Edge = edgeLayoutObjs[edgeID];
 							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
+							
+							if(debugSolver)
+							{
+								nextLayerVar1.solverSelected = true;
+								nextLayerVar1.solverSelectedColor = 0x0000ff;
+								solverSelected.push(nextLayerVar1);
+							}
+							
+							
 							var varArray:Array = new Array();
 							varArray.push(FIXED_CONSTRAINT_VALUE);
 							
@@ -1471,6 +1497,20 @@ package scenes.game.display
 			if (selectionChanged) {
 				dispatchEvent(new SelectionEvent(SelectionEvent.NUM_SELECTED_NODES_CHANGED, null, null));
 			}
+		}
+		
+		public function unselectLast():void
+		{
+			if(debugSolver && selectedNodes.length == 0)
+			{
+				//reset flashing on previously solved nodes
+				if(solverSelected)
+					for each(var node:Node in solverSelected)
+						node.solverSelected = false;
+					
+				solverSelected = new Vector.<Node>;
+			}
+			
 		}
 	}
 	

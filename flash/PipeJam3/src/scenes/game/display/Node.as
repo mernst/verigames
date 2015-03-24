@@ -16,6 +16,8 @@ package scenes.game.display
 		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
 		public var solved:Boolean = false;
+		public var solverSelected:Boolean;
+		public var solverSelectedColor:int;
 		
 		public function Node(_id:String, _bb:Rectangle, _graphConstraintSide:ConstraintSide)
 		{
