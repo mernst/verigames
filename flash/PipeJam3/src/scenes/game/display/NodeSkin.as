@@ -277,7 +277,7 @@ package scenes.game.display
 					if(associatedClauseNode.hadError == true)
 					{
 						//flash if changing
-						flash(0x00ff00);
+						flash();
 					}
 					associatedClauseNode.hadError = false;
 				}
@@ -318,7 +318,7 @@ package scenes.game.display
 		
 		private var tween:Tween;
 		private var q:Quad;
-		public function flash(color:int = 0xffff00):void
+		public function flash(color:int = 0x00ff00):void
 		{
 			q = new Quad(50, 50, color);
 			if(parent)
