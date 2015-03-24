@@ -270,6 +270,10 @@ package display
 						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
 						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 52;
 						break;
+					case Constants.HINT_LOC:
+						newX = (Constants.GameWidth - Constants.RightPanelWidth) - (width / 2 - m_paddingSz + m_inset);
+						newY = Constants.GameHeight - (height / 2 - m_paddingSz + m_inset) - 12;
+						break;
 				}
 				x = newX;
 				y = newY;

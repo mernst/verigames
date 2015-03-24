@@ -233,11 +233,6 @@ package scenes.game.display
 			}
 		}
 		
-		public function onGameNodeMoved(updatedGameNodes:Vector.<Node>):void
-		{
-			
-		}
-		
 		public function getAutoSolveAllowed():Boolean
 		{
 			return true;
@@ -548,13 +543,13 @@ package scenes.game.display
 						null, null);
 				case "004":
 					return new TutorialManagerTextInfo(
-						"New brush unlocked! The autosolver will automatically paint the\nselected variables to reduce the overall number of conflicts.",
+						"New brush unlocked! The optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.",
 						null,
 						null,
 						null, null);
 				case "02":
 					return new TutorialManagerTextInfo(
-						"The autosolver will optimize the selection to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!",
+						"The optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!",
 						null,
 						null,
 						null, null);
