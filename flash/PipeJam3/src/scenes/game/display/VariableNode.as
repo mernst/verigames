@@ -13,7 +13,6 @@ package scenes.game.display
 			super(_id, _bb, _graphVar);
 			//this is only intesting for non-clause Nodes
 			isNarrow = graphVar.getProps().hasProp(PropDictionary.PROP_NARROW);
-			isEditable = !graphVar.constant;
 		}
 		
 		public function get graphVar():ConstraintVar { return graphConstraintSide as ConstraintVar; }

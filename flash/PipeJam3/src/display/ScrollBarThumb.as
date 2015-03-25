@@ -29,9 +29,9 @@ package display
 		public function ScrollBarThumb(minYPos:Number, maxYPos:Number)
 		{
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
-			var thumbUp:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_Thumb);
-			var thumbOver:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbOver);
-			var thumbDown:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbSelected);
+			var thumbUp:Texture = atlas.getTexture(AssetInterface.LevelSelectSubTexture_ScrollbarButton);
+			var thumbOver:Texture = atlas.getTexture(AssetInterface.LevelSelectSubTexture_ScrollbarButtonMouseover);
+			var thumbDown:Texture = atlas.getTexture(AssetInterface.LevelSelectSubTexture_ScrollbarButtonClick);
 			
 			var thumbUpImage:Image = new Image(thumbUp);
 			var thumbOnOverImage:Image = new Image(thumbOver);

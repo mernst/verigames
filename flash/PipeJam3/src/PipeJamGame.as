@@ -17,7 +17,6 @@ package
 	import cgs.Cache.Cache;
 	
 	import display.GameObjectBatch;
-	import display.MusicButton;
 	import display.NineSliceBatch;
 	import display.SoundButton;
 	
@@ -51,8 +50,7 @@ package
 
 		public static var SEPARATE_FILES:int = 1;
 		public static var ALL_IN_ONE:int = 2;
-				
-		private var m_musicButton:MusicButton;
+		
 		private static var m_sfxButton:SoundButton;
 		public static var soundButtonGlobalCoords:Point = new Point(400.5, 294);
 		private var m_gameObjectBatch:GameObjectBatch;
@@ -261,13 +259,6 @@ package
 				trace(buildId);
 				System.setClipboard(buildId);
 			}
-		}
-		
-		private function updateMusicState(musicOn:Boolean):void
-		{
-			m_musicButton.musicOn = musicOn;
-			var result:Boolean = Cache.setSave(Constants.CACHE_MUTE_MUSIC, !musicOn)
-			trace("Cache updateMusicState: " + result);
 		}
 		
 		private function updateSfxState(sfxOn:Boolean):void

@@ -91,11 +91,11 @@ package hints
 				var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
 				if (level.selectedNodes.length <= SMALL_NODE_CHECK_VAL)
 				{
-					m_playerStatus.setSmallGroupAttempts(level, smallGroupAttempts + 1);
+					incrementSmallGroupAttempts(level);
 				}
 				else
 				{
-					m_playerStatus.setSmallGroupAttempts(level, 0);
+					resetSmallGroupAttempts(level);
 				}
 				
 				if (smallGroupAttempts + 1 == 3)
@@ -107,6 +107,17 @@ package hints
 				}
 			}
 			return true;
+		}
+		
+		public function incrementSmallGroupAttempts(level:Level):void
+		{
+			var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
+			m_playerStatus.setSmallGroupAttempts(level, smallGroupAttempts + 1);
+		}
+		
+		public function resetSmallGroupAttempts(level:Level):void
+		{
+			m_playerStatus.setSmallGroupAttempts(level, 0);
 		}
 		
 		public function popHint(text:String, level:Level, secToShow:Number = 3.0):void

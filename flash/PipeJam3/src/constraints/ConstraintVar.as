@@ -8,17 +8,15 @@ package constraints
 	{
 		
 		public var defaultVal:ConstraintValue;
-		public var constant:Boolean;
 		
 		private var m_props:PropDictionary;
 		private var m_value:ConstraintValue;
 		
-		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _constant:Boolean, _scoringConfig:ConstraintScoringConfig)
+		public function ConstraintVar(_id:String, _val:ConstraintValue, _defaultVal:ConstraintValue, _scoringConfig:ConstraintScoringConfig)
 		{
 			super(_id, _scoringConfig);
 			m_value = _val;
 			defaultVal = _defaultVal;
-			constant = _constant;
 			m_props = new PropDictionary();
 			if (m_value.intVal == 0) m_props.setProp(PropDictionary.PROP_NARROW, true);
 		}
