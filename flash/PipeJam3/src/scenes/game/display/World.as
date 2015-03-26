@@ -442,6 +442,8 @@ package scenes.game.display
 				{
 					// Only allow autosolve if conflicts are selected, give user feedback if not
 					var conflictsInSelection:Boolean = HintController.getInstance().checkForConflictsInAutosolve(active_level);
+					if(Level.debugSolver)
+						conflictsInSelection = true;
 					trace("conflictsInSelection: " + conflictsInSelection);
 					if (conflictsInSelection)
 					{

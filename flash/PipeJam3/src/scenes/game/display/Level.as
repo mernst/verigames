@@ -122,7 +122,7 @@ package scenes.game.display
 		private var m_groupGrids:Vector.<GroupGrid>
 		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
 		
-		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
+		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
 		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
 		static public var NARROW_NODE_SIZE_CONSTRAINT_VALUE:Number = 0.0;
@@ -140,7 +140,9 @@ package scenes.game.display
 		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
 		
-		private var debugSolver:Boolean = false;
+		static public var debugSolver:Boolean = false;
+		public var extendSolver:Boolean = false;
+		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -1089,7 +1091,7 @@ package scenes.game.display
 		private var newSelectedVars:Vector.<Node>;
 		private var newSelectedClauses:Dictionary;
 		private var storedDirectEdgesDict:Dictionary;
-		private var directNodeArray:Array;
+		private var directNodeDict:Dictionary;
 		private var counter:int;
 		private var m_solverType:int;
 		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
@@ -1110,7 +1112,7 @@ package scenes.game.display
 			counter = 1;
 			constraintArray = new Array;
 			initvarsArray = new Array;
-			directNodeArray = new Array;
+			directNodeDict = new Dictionary;
 			storedDirectEdgesDict = new Dictionary;
 			m_unsat_weight = int.MAX_VALUE;
 
@@ -1121,7 +1123,8 @@ package scenes.game.display
 
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
-			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
+			if(extendSolver)
+				fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
 
 			if(constraintArray.length > 0)
 			{
@@ -1186,7 +1189,7 @@ package scenes.game.display
 						else
 							clauseArray.push(-constraintID);
 						
-						directNodeArray.push(fromNode);
+						directNodeDict[fromNode.id] = fromNode;
 						
 					}
 					constraintArray.push(clauseArray);
@@ -1281,84 +1284,79 @@ package scenes.game.display
 			//now, find all the other constraints associated with the directly connected variables,
 			//add the nodes connected to those constraints as fixed values,
 			//so the score doesn't go down.
-			for each(var directNode:Node in directNodeArray)
+			for each(var directNode:Node in directNodeDict)
 			{
+				//var directNode:Node = directNodeDict[id];
 				for each(var conEdgeID:String in directNode.connectedEdgeIds)
 				{
 					//have we already dealt with this edge?
 					if(storedDirectEdgesDict[conEdgeID])
 						continue;
 					
-					var conEdge:Edge = World.m_world.active_level.edgeLayoutObjs[conEdgeID];
+					var conEdge:Edge = edgeLayoutObjs[conEdgeID];
 					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
 					var nextLayerClause:Node = conEdge.toNode;
+					var currentVar:Node = conEdge.fromNode;
+					//add this node to clauseArray to fix its value
+					var clauseArray:Array = new Array();
+					clauseArray.push(FIXED_CONSTRAINT_VALUE);
 					
-					//check to see if this clause is satisfied by the remaining connections, and if it is, ignore it
-					var satisfied:Boolean = false;
-					var usedEdgeArray:Array = new Array;
-					for each(var nextLayerEdgeID:String in nextLayerClause.connectedEdgeIds)
-					{				
-						if(storedDirectEdgesDict[nextLayerEdgeID])
-						{
-							usedEdgeArray.push(nextLayerEdgeID);
-							continue;
-						}
-						var nextLayerEdge:Edge = edgeLayoutObjs[nextLayerEdgeID];
-						var nextLayerVar:Node = nextLayerEdge.fromNode;
-						
-						if(nextLayerEdgeID.indexOf('c') == 0 && !nextLayerVar.isNarrow)
-						{
-							satisfied = true;
-							break;
-						}
-						else if(nextLayerVar.isNarrow)
-						{
-							satisfied = true;
-							break;
-						}
-					}
+					var varArray:Array = new Array();
+					varArray.push(FIXED_CONSTRAINT_VALUE);
 					
-					//follow these out one more layer
-					if(!satisfied)
+					var nextLevelConstraintID:int;
+					if(nodeIDToConstraintsTwoWayMap[currentVar.id] == null)
 					{
-						var clauseArray:Array = new Array();
-						clauseArray.push(FIXED_CONSTRAINT_VALUE);
-						
-						for each(var edgeID:String in usedEdgeArray)
-						{
-							var nextLayerEdge1:Edge = edgeLayoutObjs[edgeID];
-							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
-							
-							if(debugSolver)
-							{
-								nextLayerVar1.solverSelected = true;
-								nextLayerVar1.solverSelectedColor = 0x0000ff;
-								solverSelected.push(nextLayerVar1);
-							}
-							
-							
-							var varArray:Array = new Array();
-							varArray.push(FIXED_CONSTRAINT_VALUE);
-							
-							var nextLevelConstraintID:int;
-							if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
-							{
-								nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] = counter;
-								nodeIDToConstraintsTwoWayMap[counter] = nextLayerVar1;
-								nextLevelConstraintID = counter;
-								counter++;
-							}
-							else
-								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[nextLayerVar1.id];
-							
-							if(edgeID.indexOf('c') == 0)
-								clauseArray.push(nextLevelConstraintID);
-							else
-								clauseArray.push(-nextLevelConstraintID);
-						}
-						constraintArray.push(clauseArray);
+						nodeIDToConstraintsTwoWayMap[currentVar.id] = counter;
+						nodeIDToConstraintsTwoWayMap[counter] = currentVar;
+						nextLevelConstraintID = counter;
+						counter++;
 					}
+					else
+						nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[currentVar.id];
+					
+					if(conEdgeID.indexOf('c') == 0)
+						clauseArray.push(nextLevelConstraintID);
+					else
+						clauseArray.push(-nextLevelConstraintID);
+					
+					constraintArray.push(clauseArray);
+						
+					
+					if(debugSolver)
+					{
+						nextLayerClause.solverSelected = true;
+						nextLayerClause.solverSelectedColor = 0xff0000;
+						solverSelected.push(nextLayerClause);
+					}
+					
+					selectedNodes.push(nextLayerClause);
+					
+					//add these to the solver
+//					var clauseArray:Array = new Array();
+//					clauseArray.push(FIXED_CONSTRAINT_VALUE);
+//					
+//					var varArray:Array = new Array();
+//					varArray.push(FIXED_CONSTRAINT_VALUE);
+//					
+//					var nextLevelConstraintID:int;
+//					if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
+//					{
+//						nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] = counter;
+//						nodeIDToConstraintsTwoWayMap[counter] = nextLayerVar1;
+//						nextLevelConstraintID = counter;
+//						counter++;
+//					}
+//					else
+//						nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[nextLayerVar1.id];
+//					
+//					if(edgeID.indexOf('c') == 0)
+//						clauseArray.push(nextLevelConstraintID);
+//					else
+//						clauseArray.push(-nextLevelConstraintID);
+//					
+//					constraintArray.push(clauseArray);
 				}
 			}
 		}
