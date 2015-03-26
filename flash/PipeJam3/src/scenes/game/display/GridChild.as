@@ -16,7 +16,6 @@ package scenes.game.display
 		public var centerPoint:Point;
 		
 		public var isSelected:Boolean = false;
-		public var isEditable:Boolean;
 		public var isNarrow:Boolean;
 		
 		public var startingSelectionState:Boolean = false;
@@ -39,7 +38,6 @@ package scenes.game.display
 			var yCenter:Number = bb.y + bb.height * .5;
 			centerPoint = new Point(xCenter, yCenter);
 			isNarrow = false;
-			isEditable = true;
 		}
 		
 		public function createSkin():void
@@ -89,10 +87,7 @@ package scenes.game.display
 		
 		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
-			if(isEditable)
-			{
-				isNarrow = !_isWide;
-			}
+			isNarrow = !_isWide;
 		}
 	}
 	

@@ -22,7 +22,6 @@ package display
 	
 	public class SelectList extends BaseComponent
 	{
-		protected var mainAtlas:TextureAtlas;
 		protected var levelAtlas:TextureAtlas;
 		
 		protected var icon:Texture;
@@ -58,17 +57,16 @@ package display
 						
 			var scrollbarWidth:Number = 10.0;
 			
-			mainAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			
-			upArrow = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			upArrow = new Image(levelAtlas.getTexture(AssetInterface.LevelSelectSubTexture_ScrollbarArrowUp));
 			addChild(upArrow);
 			upArrow.scaleX = .5;
 			upArrow.scaleY = .5;
 			upArrow.x = _width - upArrow.width - 3.5;
 			upArrow.addEventListener(TouchEvent.TOUCH, onTouchUpArrow);
 			
-			downArrow = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			downArrow = new Image(levelAtlas.getTexture(AssetInterface.LevelSelectSubTexture_ScrollbarArrowUp));
 			addChild(downArrow);
 			downArrow.scaleX = .5;
 			downArrow.scaleY = -.5;
@@ -76,7 +74,7 @@ package display
 			downArrow.y = _height;
 			downArrow.addEventListener(TouchEvent.TOUCH, onTouchDownArrow);
 			
-			scrollbarBackground = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
+			scrollbarBackground = new Image(levelAtlas.getTexture(AssetInterface.LevelSelectSubTexture_Scrollbar));
 			addChild(scrollbarBackground);
 			scrollbarBackground.x = _width - scrollbarWidth-4;
 			scrollbarBackground.y = upArrow.height + 1;

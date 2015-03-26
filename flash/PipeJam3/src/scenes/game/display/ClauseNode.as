@@ -13,7 +13,6 @@ package scenes.game.display
 		{
 			super(_id, _bb, _graphClause);
 			
-			isEditable = false;
 			isClause = true;
 		}
 		

@@ -715,7 +715,6 @@ package scenes.game.display
 			for (nodeId in nodeLayoutObjs) {
 				if (nodeId.substr(0, 1) == "c") continue;
 				var constraintVar:ConstraintVar = levelGraph.variableDict[nodeId];
-				if (constraintVar.constant) continue;
 				if (!assignmentsObj["assignments"].hasOwnProperty(constraintVar.formattedId)) assignmentsObj["assignments"][constraintVar.formattedId] = { };
 				assignmentsObj["assignments"][constraintVar.formattedId][ConstraintGraph.TYPE_VALUE] = constraintVar.getValue().verboseStrVal;
 				

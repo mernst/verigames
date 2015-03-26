@@ -16,8 +16,6 @@ package scenes.game.display
 	{
 		public var parentEdge:Edge;
 		static protected var mAtlas:TextureAtlas;	
-		static protected var DarkConnector:Texture;
-		static protected var LightConnector:Texture;
 		
 		protected var skinHeight:Number;
 		protected var skinWidth:Number;
@@ -40,9 +38,7 @@ package scenes.game.display
 //			mVertexData.setUniformColor(color);
 			
 //			onVertexDataChanged();
-			mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			DarkConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_DarkConnector);
-			LightConnector = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_LightConnector);
+			mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetPNG");
 		}
 		
 		public function setColor(newGroup:Boolean = false):void
@@ -93,14 +89,6 @@ package scenes.game.display
 			preferenceQuad.x = skinWidth - PREF_LENGTH;
 			addChild(preferenceQuad);
 		//	this.flatten();
-		}
-		
-		public function getConnectorTexture():Image
-		{
-			if(parentEdge.graphConstraint.lhs.id.indexOf('c') == 0)
-				return new Image(DarkConnector);
-			else
-				return new Image(LightConnector);
 		}
 		
 		public function setHighlight(highlightColor:uint):void

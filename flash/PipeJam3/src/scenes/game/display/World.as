@@ -441,11 +441,11 @@ package scenes.game.display
 				if(event.data == GridViewPanel.SOLVER1_BRUSH || event.data == GridViewPanel.SOLVER2_BRUSH)
 				{
 					// Only allow autosolve if conflicts are selected, give user feedback if not
-					var conflictsInSelection:Boolean = HintController.getInstance().checkForConflictsInAutosolve(active_level);
+					var continueWithAutosolve:Boolean = HintController.getInstance().checkAutosolveSelection(active_level);
 					if(Level.debugSolver)
-						conflictsInSelection = true;
-					trace("conflictsInSelection: " + conflictsInSelection);
-					if (conflictsInSelection)
+						continueWithAutosolve = true;
+					trace("conflictsInSelection: " + continueWithAutosolve);
+					if (continueWithAutosolve)
 					{
 						if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
 						if (m_backgroundImage) m_backgroundImage.removeFromParent();	

@@ -11,10 +11,12 @@ package hints
 	public class HintController extends Sprite 
 	{
 		private static const FADE_SEC:Number = 0.3;
+		private static const SMALL_NODE_CHECK_VAL:int = 14;
 		
 		private static var m_instance:HintController;
 		
-		private var hintBubble:TextBubble;
+		private var m_hintBubble:TextBubble;
+		private var m_playerStatus:PlayerHintStatus = new PlayerHintStatus();
 		public var hintLayer:Sprite;
 		
 		public static function getInstance():HintController
@@ -29,14 +31,25 @@ package hints
 		{
 		}
 		
-		public function checkForConflictsInAutosolve(level:Level):Boolean
+		/**
+		 * Checks the selected nodes to see whether hints should be given
+		 * @param	level
+		 * @return true if autosolve should continue, false if autosolve should halt (to display hint, for example)
+		 */
+		public function checkAutosolveSelection(level:Level):Boolean
 		{
+			var performSmallSelectionCheck:Boolean = (level.tutorialManager != null) ? level.tutorialManager.getPerformSmallAutosolveGroupCheck() : true;
+			var atLeastOneConflictFound:Boolean = false;
 			for each(var selectedNode:Node in level.selectedNodes)
 			{
 				if (selectedNode is ClauseNode)
 				{
 					var clauseNode:ClauseNode = selectedNode as ClauseNode;
-					if (clauseNode.hasError()) return true;
+					if (clauseNode.hasError())
+					{
+						atLeastOneConflictFound = true;
+						break;
+					}
 				}
 				else
 				{
@@ -49,54 +62,134 @@ package hints
 							if (edge.fromNode is ClauseNode)
 							{
 								clause = edge.fromNode as ClauseNode;
-								if (clause.hasError()) return true;
+								if (clause.hasError())
+								{
+									atLeastOneConflictFound = true;
+									break;
+								}
 							}
 							if (edge.toNode is ClauseNode)
 							{
 								clause = edge.toNode as ClauseNode;
-								if (clause.hasError()) return true;
+								if (clause.hasError())
+								{
+									atLeastOneConflictFound = true;
+									break;
+								}
 							}
 						}
 					}
 				}
 			}
-			popHint("Paint at least one\nconflict before optimizing", level);
-			return false;
+			if (!atLeastOneConflictFound)
+			{
+				popHint("Paint at least one\nconflict before optimizing", level);
+				return false;
+			}
+			else if (performSmallSelectionCheck)
+			{
+				var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
+				if (level.selectedNodes.length <= SMALL_NODE_CHECK_VAL)
+				{
+					incrementSmallGroupAttempts(level);
+				}
+				else
+				{
+					resetSmallGroupAttempts(level);
+				}
+				
+				if (smallGroupAttempts + 1 == 3)
+				{
+					// After three consecutive small attempts, assume the user is not click+dragging properly and prompt them to do so
+					popHint("Try holding the left mouse button and\ndragging to select many variables at once.", level);
+					m_playerStatus.setSmallGroupAttempts(level, 0);
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		public function incrementSmallGroupAttempts(level:Level):void
+		{
+			var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
+			m_playerStatus.setSmallGroupAttempts(level, smallGroupAttempts + 1);
+		}
+		
+		public function resetSmallGroupAttempts(level:Level):void
+		{
+			m_playerStatus.setSmallGroupAttempts(level, 0);
 		}
 		
 		public function popHint(text:String, level:Level, secToShow:Number = 3.0):void
 		{
-			if (hintBubble != null) Starling.juggler.removeTweens(hintBubble);
+			if (m_hintBubble != null) Starling.juggler.removeTweens(m_hintBubble);
 			removeHint(); // any existing hints
-			hintBubble = new TextBubble("Hint: " + text, 10, Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);
+			m_hintBubble = new TextBubble("Hint: " + text, 10, Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);
 			fadeInHint();
 			Starling.juggler.delayCall(fadeOutHint, secToShow + FADE_SEC);
 		}
 		
 		public function fadeInHint():void
 		{
-			if (hintBubble != null)
+			if (m_hintBubble != null)
 			{
-				hintBubble.alpha = 0;
-				hintLayer.addChild(hintBubble);
-				Starling.juggler.tween(hintBubble, FADE_SEC, { alpha:1.0 } );
+				m_hintBubble.alpha = 0;
+				hintLayer.addChild(m_hintBubble);
+				Starling.juggler.tween(m_hintBubble, FADE_SEC, { alpha:1.0 } );
 			}
 		}
 		
 		public function fadeOutHint():void
 		{
-			if (hintBubble != null)
+			if (m_hintBubble != null)
 			{
-				Starling.juggler.tween(hintBubble, FADE_SEC, { alpha:0, onComplete:removeHint } );
+				Starling.juggler.tween(m_hintBubble, FADE_SEC, { alpha:0, onComplete:removeHint } );
 			}
 		}
 		
 		public function removeHint():void
 		{
-			if (hintBubble != null) hintBubble.removeFromParent(true);
+			if (m_hintBubble != null) m_hintBubble.removeFromParent(true);
 		}
 	}
 
 }
 
-internal class SingletonLock {} // to prevent outside construction of singleton
+internal class SingletonLock { } // to prevent outside construction of singleton
+
+import flash.utils.Dictionary;
+import scenes.game.display.Level;
+internal class PlayerHintStatus
+{
+	private var m_levelStatusDict:Dictionary = new Dictionary();
+	public function PlayerHintStatus():void
+	{
+	}
+	
+	public function getSmallGroupAttempts(level:Level):int
+	{
+		var levelStatus:LevelHintStatus = getLevelStatus(level.name);
+		return levelStatus.smallGroupSelectionAttempts;
+	}
+	
+	public function setSmallGroupAttempts(level:Level, val:int):void
+	{
+		var levelStatus:LevelHintStatus = getLevelStatus(level.name);
+		levelStatus.smallGroupSelectionAttempts = val;
+	}
+	
+	private function getLevelStatus(levelName:String):LevelHintStatus
+	{
+		if (!m_levelStatusDict.hasOwnProperty(levelName)) m_levelStatusDict[levelName] = new LevelHintStatus();
+		return (m_levelStatusDict[levelName] as LevelHintStatus);
+	}
+}
+
+internal class LevelHintStatus
+{
+	public var smallGroupSelectionAttempts:int = 0;
+	
+	public function LevelHintStatus():void
+	{
+	}
+}

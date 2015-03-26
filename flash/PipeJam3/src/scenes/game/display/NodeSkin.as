@@ -29,12 +29,8 @@ package scenes.game.display
 		public var isBackground:Boolean = false;
 		
 		static protected var mAtlas:TextureAtlas;	
-		static protected var DarkGrayCircle:Texture;
-		static protected var LightGrayCircle:Texture;
 		static public var DarkBlueCircle:Texture;
 		static public var LightBlueCircle:Texture;
-		static protected var DarkBlueCircleWithOutline:Texture;
-		static protected var LightBlueCircleWithOutline:Texture;
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
 		
@@ -49,8 +45,6 @@ package scenes.game.display
 		
 		static protected var levelAtlas:TextureAtlas;
 		
-		static public const WIDE_NONEDITABLE_COLOR:int = 0x30302D;
-		static public const NARROW_NONEDITABLE_COLOR:int = 0xA3A097;
 		static public const WIDE_COLOR:int = 0x0B80FF;
 		static public const NARROW_COLOR:int = 0xABFFF2;
 
@@ -118,15 +112,7 @@ package scenes.game.display
 				else
 					return NARROW_COLOR;
 			}
-			if(!node.isNarrow && !node.isEditable)
-			{
-				return WIDE_NONEDITABLE_COLOR;
-			}
-			else if(node.isNarrow && !node.isEditable)
-			{
-				return NARROW_NONEDITABLE_COLOR;
-			}
-			else if(!node.isNarrow && node.isEditable)
+			if(!node.isNarrow)
 			{
 				return WIDE_COLOR;
 			}
@@ -159,18 +145,14 @@ package scenes.game.display
 			
 			if(!mAtlas)
 			{
-				mAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				DarkGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkStart);
-				LightGrayCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_GrayLightStart);
-				DarkBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableWide);
-				LightBlueCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableNarrow);
-				DarkBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueDarkOutline);
-				LightBlueCircleWithOutline = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_BlueLightOutline);
-				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableNarrowSelected);
-				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_VariableWideSelected);
-				UnsatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_ErrorConstraint);
-				SatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_SatisfiedConstraint);
-				UnsatisfiedConstraintBackgroundTexture = mAtlas.getTexture(AssetInterface.PipeJamSubTexture_Conflict);
+				mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+				DarkBlueCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableWide);
+				LightBlueCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableNarrow);
+				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableNarrowSelected);
+				DarkBlueSelectedCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableWideSelected);
+				UnsatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_ConstraintConflict);
+				SatisfiedConstraintTexture = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_ConstraintCorrected);
+				UnsatisfiedConstraintBackgroundTexture = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_Conflict);
 			}
 		}
 		
@@ -185,8 +167,7 @@ package scenes.game.display
 			{
 				flash(associatedNode.solverSelectedColor);
 			}
-			var wideScore:Number = 1;
-			var narrowScore:Number = 0;
+			
 			if(!(associatedNode as ClauseNode))
 			{
 				if (associatedNode.isNarrow && associatedNode.isSelected)
@@ -197,27 +178,11 @@ package scenes.game.display
 				{
 					textureImage = new Image(DarkBlueSelectedCircle);
 				}
-				else if (wideScore > narrowScore && associatedNode.isNarrow && associatedNode.isEditable)
-				{
-					textureImage = new Image(DarkBlueCircleWithOutline);
-				}
-				else if (narrowScore > wideScore && !associatedNode.isNarrow && associatedNode.isEditable)
-				{
-					textureImage = new Image(LightBlueCircleWithOutline);
-				}
-				else if(!associatedNode.isNarrow && !associatedNode.isEditable)
-				{
-					textureImage = new Image(DarkGrayCircle);
-				}
-				else if(associatedNode.isNarrow && !associatedNode.isEditable)
-				{
-					textureImage = new Image(LightGrayCircle);
-				}
-				else if(!associatedNode.isNarrow && associatedNode.isEditable)
+				else if(!associatedNode.isNarrow)
 				{
 					textureImage = new Image(DarkBlueCircle);
 				}
-				else if(associatedNode.isNarrow && associatedNode.isEditable)
+				else // narrow, unselected
 				{
 					textureImage = new Image(LightBlueCircle);
 				}

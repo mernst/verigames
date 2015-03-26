@@ -24,10 +24,7 @@ package constraints
 		// Variable fields:
 		private static const DEFAULT:String = "default";
 		private static const SCORE:String = "score";
-		private static const POSSIBLE_KEYFORS:String = "possible_keyfor";
 		public static const TYPE_VALUE:String = "type_value";
-		public static const KEYFOR_VALUES:String = "keyfor_value";
-		private static const CONSTANT:String = "constant";
 		// Constraint side types:
 		private static const VAR:String = "var";
 		private static const C:String = "c";
@@ -198,8 +195,6 @@ package constraints
 			var idParts:Array = varId.split(":");
 			var formattedId:String = idParts[0] + "_" + idParts[1];
 			var varParamsObj:Object = variablesToBuildObj[varId];
-			var isConstant:Boolean = false;
-			if (varParamsObj.hasOwnProperty(CONSTANT)) isConstant = XString.stringToBool(varParamsObj[CONSTANT] as String);
 			var typeValStr:String = varParamsObj[TYPE_VALUE];
 			var varScoring:ConstraintScoringConfig = new ConstraintScoringConfig();
 			var scoreObj:Object = varParamsObj[SCORE];
@@ -221,7 +216,7 @@ package constraints
 			} else {
 				typeVal = graphDefaultVal.clone();
 			}
-			var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, isConstant, isConstant ? NULL_SCORING : mergedVarScoring);
+			var newVar:ConstraintVar = new ConstraintVar(formattedId, typeVal, defaultVal, mergedVarScoring);
 			variableDict[formattedId] = newVar;
 			delete variablesToBuildObj[varId];
 		}
@@ -466,7 +461,7 @@ package constraints
 				if (_graph.variableDict.hasOwnProperty(fullId)) {
 					constrSide = _graph.variableDict[fullId] as ConstraintVar;
 				} else {
-					constrSide = new ConstraintVar(fullId, _defaultVal, _defaultVal, false, _defaultScoring);
+					constrSide = new ConstraintVar(fullId, _defaultVal, _defaultVal, _defaultScoring);
 					_graph.variableDict[fullId] = constrSide;
 					_graph.nVars++;
 				}
