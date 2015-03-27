@@ -1285,7 +1285,6 @@ package scenes.game.display
 			//so the score doesn't go down.
 			for each(var directNode:Node in directNodeDict)
 			{
-				//var directNode:Node = directNodeDict[id];
 				for each(var conEdgeID:String in directNode.connectedEdgeIds)
 				{
 					//have we already dealt with this edge?
@@ -1296,66 +1295,68 @@ package scenes.game.display
 					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
 					var nextLayerClause:Node = conEdge.toNode;
-					var currentVar:Node = conEdge.fromNode;
-					//add this node to clauseArray to fix its value
-					var clauseArray:Array = new Array();
-					clauseArray.push(FIXED_CONSTRAINT_VALUE);
 					
-					var varArray:Array = new Array();
-					varArray.push(FIXED_CONSTRAINT_VALUE);
-					
-					var nextLevelConstraintID:int;
-					if(nodeIDToConstraintsTwoWayMap[currentVar.id] == null)
+					if(newSelectedClauses[nextLayerClause.id] == null)
 					{
-						nodeIDToConstraintsTwoWayMap[currentVar.id] = counter;
-						nodeIDToConstraintsTwoWayMap[counter] = currentVar;
-						nextLevelConstraintID = counter;
-						counter++;
-					}
-					else
-						nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[currentVar.id];
-					
-					if(conEdgeID.indexOf('c') == 0)
-						clauseArray.push(nextLevelConstraintID);
-					else
-						clauseArray.push(-nextLevelConstraintID);
-					
-					constraintArray.push(clauseArray);
+						//add to redraw if needed
+						selectedNodes.push(nextLayerClause);
+						newSelectedClauses[nextLayerClause.id] = nextLayerClause;					
 						
-					
-					if(debugSolver)
-					{
-						nextLayerClause.solverSelected = true;
-						nextLayerClause.solverSelectedColor = 0xff0000;
-						solverSelected.push(nextLayerClause);
+						if(debugSolver)
+						{
+							nextLayerClause.solverSelected = true;
+							nextLayerClause.solverSelectedColor = 0x00ff00;
+							solverSelected.push(nextLayerClause);
+						}		
+								
+						var clauseArray:Array = new Array();
+						clauseArray.push(FIXED_CONSTRAINT_VALUE);
+						
+						for each(var edgeID:String in nextLayerClause.connectedEdgeIds)
+						{
+							//create constraint for clause connected to edge node
+							var cEdge:Edge = edgeLayoutObjs[edgeID];						
+							var connectedNode:Node = cEdge.fromNode;
+							selectedNodes.push(connectedNode);
+							var nextLevelConstraintID:int;
+							if(nodeIDToConstraintsTwoWayMap[connectedNode.id] == null)
+							{
+								nodeIDToConstraintsTwoWayMap[connectedNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = connectedNode;
+								nextLevelConstraintID = counter;
+								counter++;
+							}
+							else
+								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[connectedNode.id];
+							
+							if(edgeID.indexOf('c') == 0)
+								clauseArray.push(nextLevelConstraintID);
+							else
+								clauseArray.push(-nextLevelConstraintID);
+							
+							
+							
+							if(debugSolver)
+							{
+								connectedNode.solverSelected = true;
+								connectedNode.solverSelectedColor = 0xff0000;
+								solverSelected.push(connectedNode);
+							}
+							
+							if(storedDirectEdgesDict[edgeID])
+								continue;
+							
+							var varArray:Array = new Array();
+							varArray.push(FIXED_CONSTRAINT_VALUE);
+							//set constraint with current value of connectedNode, not constraint direction
+							if(connectedNode.isNarrow)
+								varArray.push(-nextLevelConstraintID);
+							else
+								varArray.push(nextLevelConstraintID);						
+							constraintArray.push(varArray);
+						}
+						constraintArray.push(clauseArray);
 					}
-					
-					selectedNodes.push(nextLayerClause);
-					
-					//add these to the solver
-//					var clauseArray:Array = new Array();
-//					clauseArray.push(FIXED_CONSTRAINT_VALUE);
-//					
-//					var varArray:Array = new Array();
-//					varArray.push(FIXED_CONSTRAINT_VALUE);
-//					
-//					var nextLevelConstraintID:int;
-//					if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
-//					{
-//						nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] = counter;
-//						nodeIDToConstraintsTwoWayMap[counter] = nextLayerVar1;
-//						nextLevelConstraintID = counter;
-//						counter++;
-//					}
-//					else
-//						nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[nextLayerVar1.id];
-//					
-//					if(edgeID.indexOf('c') == 0)
-//						clauseArray.push(nextLevelConstraintID);
-//					else
-//						clauseArray.push(-nextLevelConstraintID);
-//					
-//					constraintArray.push(clauseArray);
 				}
 			}
 		}
