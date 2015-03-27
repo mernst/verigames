@@ -7,7 +7,6 @@ package scenes.game.display
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
-	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
 	import utils.PropDictionary;
@@ -23,21 +22,13 @@ package scenes.game.display
 		protected var textureImage:Image;
 		protected var preferenceQuad:Quad;
 				
-		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge, color:uint=0xffffff, premultipliedAlpha:Boolean=true)
+		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge)
 		{
-//			super(width, height, color, premultipliedAlpha);
 			skinHeight = _height;
 			skinWidth = _width;
 			
 			parentEdge = _parentEdge;
-			//move position 1 to make an isoceles triangle
-//			mVertexData.setPosition(1,width, height/2);
-//			//Move vertex 2 to the center of the from side, 3 to the old 2 position
-//			mVertexData.setPosition(2, -3, height/2);
-//			mVertexData.setPosition(3, 0, height);
-//			mVertexData.setUniformColor(color);
-			
-//			onVertexDataChanged();
+
 			mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetPNG");
 		}
 		
