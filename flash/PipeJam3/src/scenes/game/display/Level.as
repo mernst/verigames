@@ -131,7 +131,7 @@ package scenes.game.display
 		public var totalMoveDist:Point = new Point();
 		
 		public var m_inSolver:Boolean = false;
-		private var m_unsat_weight:int;
+		private var m_unsat_weight:int = -1;
 		private var m_recentlySolved:Boolean;
 		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
@@ -275,6 +275,15 @@ package scenes.game.display
 			draw();
 		}
 		
+		protected function countDictItems(dict:Dictionary):int
+		{
+			var count:int = 0;
+			for each(var i:Object in dict)
+				count++;
+				
+			return count;
+		}
+		
 		//called on when GridViewPanel content is moving
 		public function updateLevelDisplay(viewRect:Rectangle = null):void
 		{
@@ -306,6 +315,7 @@ package scenes.game.display
 			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
 			var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
 			var origNodes:int = m_nodesToDraw.length;
+			var count:int = 0;
 			for (i = minX; i <= maxX; i++)
 			{
 				for (j = minY; j <= maxY; j++)
@@ -314,9 +324,11 @@ package scenes.game.display
 					if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
 					// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
 					var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
+					trace(gridKey, countDictItems(gridNodeDict));
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
+						count++
 						if (node != null)
 						{
 							//if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) 
@@ -325,6 +337,7 @@ package scenes.game.display
 						}
 					}
 				}
+				trace("count", count);
 			}
 			for (var nodeToRemoveId:String in candidatesToRemove)
 			{
@@ -1113,7 +1126,8 @@ package scenes.game.display
 			initvarsArray = new Array;
 			directNodeDict = new Dictionary;
 			storedDirectEdgesDict = new Dictionary;
-			m_unsat_weight = int.MAX_VALUE;
+			if(m_unsat_weight < 0)
+				m_unsat_weight = int.MAX_VALUE;
 
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
@@ -1529,11 +1543,20 @@ internal class GroupGrid
 	public function GroupGrid(m_boundingBox:Rectangle, levelScale:Number, nodeDict:Object, layoutDict:Object, nodeSize:uint)
 	{
 		// Note: this assumes a uniform distribution of nodes, which is not a good estimate, but it will do for now
-		var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
+	//	var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
 		// use right, bottom instead of width, height to ignore (presumably) negligible x or y value that would need to be subtracted from each node.x,y
-		var totalDim:Number = Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
-		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
-		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
+//		var totalDim:Number = 2048;//Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
+//		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
+//		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
+//		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
+		
+		//per above comment, the above fails on non-uniform distribution, so this time just set a max size for grids, and derive
+		//the number of grid from there. Pointing Fingers was failing.
+		var scaleFactor:int = 3; //just a guess
+		var maxWidth:Number = 440 * scaleFactor;
+		var maxHeight:Number = 320*scaleFactor;
+		var gridsWide:int = Math.ceil(m_boundingBox.right / maxWidth);
+		var gridsHigh:int = Math.ceil(m_boundingBox.bottom / maxHeight);
 		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
 		
 		// Put all node ids in the grid
