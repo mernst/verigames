@@ -357,7 +357,7 @@ package scenes.game.display
 				case "3":
 				case "4":
 				case "5":
-					return 200;
+					return 225;
 				case "6":
 				case "7":
 				case "8":

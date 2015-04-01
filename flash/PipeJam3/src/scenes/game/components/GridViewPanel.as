@@ -145,7 +145,7 @@ package scenes.game.components
 		private var m_zoomPanTimer:Timer;
 		private static const ZOOM_PAN_TIME_SEC:Number = 0.6;
 		
-		var m_updateDisplay:Boolean = true;
+		public var m_updateDisplay:Boolean = true;
 		
 		public function GridViewPanel(world:World)
 		{

@@ -34,10 +34,14 @@ package networking
 		
 		static public var validationObject:PlayerValidation = new PlayerValidation;
 		
-		static public var authURL:String = "http://oauth.verigames.org/oauth2/authorize";
-		static public var redirect_uri:String ="http://paradox.verigames.org/game/PipeJam3.html";
-		static public var client_id:String = "54b97ebee0da42ff17b927c5";
-		static public var oauthURL:String = "http://oauth.verigames.org/oauth2/token";
+		static public var production_authURL:String = "http://oauth.verigames.com/oauth2/authorize";
+		static public var staging_authURL:String = "http://oauth.verigames.org/oauth2/authorize";
+		static public var production_redirect_uri:String ="http://paradox.verigames.com/game/Paradox.html";
+		static public var staging_redirect_uri:String ="http://paradox.verigames.org/game/Paradox.html";
+		static public var staging_client_id:String = "54b97ebee0da42ff17b927c5";
+		static public var production_client_id:String = "551b0d8e998171ae18cd94ac";
+		static public var production_oauthURL:String = "http://oauth.verigames.com/oauth2/token";
+		static public var staging_oauthURL:String = "http://oauth.verigames.org/oauth2/token";
 		
 		public static var playerInfoQueue:Array = new Array;
 		
@@ -53,9 +57,17 @@ package networking
 			//this call is missing the client secret, which is added at the server level.
 			var obj:Object = new Object;
 			obj.code = accessCode;
-			obj.client_id = client_id;
+			if(PipeJam3.PRODUCTION_BUILD)
+			{
+				obj.client_id = production_client_id;
+				obj.redirect_uri = production_redirect_uri;
+			}
+			else
+			{
+				obj.client_id = staging_client_id;
+				obj.redirect_uri = staging_redirect_uri;
+			}
 			obj.grant_type = "authorization_code";
-			obj.redirect_uri = redirect_uri;
 			var objStr:String = JSON.stringify(obj);
 			sendMessage(GET_ACCESS_TOKEN, tokenCallback, objStr);
 		}

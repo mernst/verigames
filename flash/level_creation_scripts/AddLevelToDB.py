@@ -24,7 +24,7 @@ def addLevelToDB(infile, description_file):
 	version = fileElem[0].getAttribute("version")
 	property = fileElem[0].getAttribute("property")
 
-	client = Connection('api.paradox.verigames.org', 27017)
+	client = Connection('api.paradox.verigames.com', 27017)
 	db = client.game2api
 	description = None
 	print "finding files"

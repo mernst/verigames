@@ -130,7 +130,10 @@ package scenes.splashscreen
 		{			
 			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
 			{
-				navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/PipeJam3.html&client_id=" + PlayerValidation.client_id), "");
+				if(PipeJam3.PRODUCTION_BUILD)
+					navigateToURL(new URLRequest("http://oauth.verigames.com/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.com/game/Paradox.html&client_id=" + PlayerValidation.production_client_id), "");
+				else
+					navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/Paradox.html&client_id=" + PlayerValidation.staging_client_id), "");
 			}
 			else
 				getNextRandomLevel(null);

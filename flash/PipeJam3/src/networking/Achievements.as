@@ -20,7 +20,7 @@ package networking
 		Run this from the command line to enter into the verigame system (I usually do from the server):
 		
 			curl -X POST -H "Content-Type: application/json" -d '{"name" : "Test123", "type":"AWARD",
-			"description" : "some description", : 1}' http://api.paradox.verigames.org/api/achievement
+			"description" : "some description", : 1}' http://api.paradox.verigames.com/api/achievement
 		
 		Get the ID, and create a new ID and STRING pair, using the ID returned from the above call.
 		
