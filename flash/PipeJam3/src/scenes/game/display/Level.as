@@ -1343,7 +1343,8 @@ package scenes.game.display
 							else
 								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[connectedNode.id];
 							
-							if(edgeID.indexOf('c') == 0)
+							//if(edgeID.indexOf('c') == 0)
+							if(connectedNode.isNarrow)
 								clauseArray.push(nextLevelConstraintID);
 							else
 								clauseArray.push(-nextLevelConstraintID);
