@@ -46,6 +46,8 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		
+		public static var PRODUCTION_BUILD:Boolean = false;
+		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = false;
 		
@@ -150,8 +152,16 @@ package
 			}
 			else
 			{
-				NetworkConnection.productionInterop = "http://paradox.verigames.org/cgi-bin/interop.php";
-				NetworkConnection.baseURL = "http://paradox.verigames.org";
+				if(PRODUCTION_BUILD)
+				{
+					NetworkConnection.productionInterop = "http://paradox.verigames.com/cgi-bin/interop.php";
+					NetworkConnection.baseURL = "http://paradox.verigames.com";
+				}
+				else
+				{
+					NetworkConnection.productionInterop = "http://paradox.verigames.org/cgi-bin/interop.php";
+					NetworkConnection.baseURL = "http://paradox.verigames.org";
+				}
 			}
 			//get level info
 			GameFileHandler.retrieveLevelMetadata();

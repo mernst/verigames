@@ -441,7 +441,8 @@ package scenes.game.display
 				{
 					// Only allow autosolve if conflicts are selected, give user feedback if not
 					var continueWithAutosolve:Boolean = HintController.getInstance().checkAutosolveSelection(active_level);
-					//trace("conflictsInSelection: " + continueWithAutosolve);
+					if(Level.debugSolver)
+						continueWithAutosolve = true;
 					if (continueWithAutosolve)
 					{
 						if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);

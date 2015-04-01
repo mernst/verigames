@@ -35,15 +35,15 @@ public class MongoTestBed {
 
 
         //staging game level server
-       //  Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
-       Mongo mongo = new Mongo( "api.paradox.verigames.org", 27017 );
+       //    Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
+     Mongo mongo = new Mongo( "api.paradox.verigames.com", 27017 );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
         String dbName = "game2api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-         listEntries(db, "GameSolvedLevels");
+         listEntries(db, "ActiveLevels");
 
         listCollectionNames(db);
  //      HashMap<String, String> map = new HashMap();
@@ -63,6 +63,14 @@ public class MongoTestBed {
 	
 	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)
 	{
+		//PrintWriter writer = null;
+    	DBCursor cursor = null;
+    	try 
+    	{
+    		//writer = new PrintWriter("Entries.txt", "UTF-8");
+
+        	   
+        	  
 		BasicDBObject field = new BasicDBObject();
 		if(searchKeys != null)
 		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
@@ -72,19 +80,24 @@ public class MongoTestBed {
 		}
 		
 		DBCollection collection = db.getCollection(collectionName);
-		DBCursor cursor = null;
-		 try { 
+//		 try { 
 			 cursor = collection.find(field);
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
                System.out.println(obj);
+        //       writer.println(obj);
                if(remove)
             	   collection.remove(obj);
            }
+    	}catch (Exception e)
+    	{
+    		
         } finally {
         	if(cursor != null)
         		cursor.close();
         }
+    	
+    	// writer.close();
 			
 		
 	}

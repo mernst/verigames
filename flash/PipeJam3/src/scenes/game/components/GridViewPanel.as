@@ -145,6 +145,8 @@ package scenes.game.components
 		private var m_zoomPanTimer:Timer;
 		private static const ZOOM_PAN_TIME_SEC:Number = 0.6;
 		
+		public var m_updateDisplay:Boolean = true;
+		
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
@@ -666,7 +668,7 @@ package scenes.game.components
 		//	trace("PAN ", newX, newY);
 			panTo(newX, newY, contentToMove);
 			var currentViewRect:Rectangle = getViewInContentSpace(contentToMove);
-			if (contentToMove == content) m_currentLevel.updateLevelDisplay(currentViewRect);
+			if (contentToMove == content && m_updateDisplay) m_currentLevel.updateLevelDisplay(currentViewRect);
 			checkGridSize();
 		}
 		
@@ -808,6 +810,7 @@ package scenes.game.components
 			}
 			// zzz
 			//trace("newscale:" + contentToScale.scaleX + "new xy:" + contentToScale.x + " " + contentToScale.y);
+			if (contentToScale == content  && m_updateDisplay) m_currentLevel.updateLevelDisplay(newViewCoords);
 		}
 		
 		private function onContentScaleChanged(prevScale:Point):void
@@ -1111,7 +1114,9 @@ package scenes.game.components
 			centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 			globPt = m_currentLevel.localToGlobal(centerPt);
 			localPt = content.globalToLocal(globPt);
+			m_updateDisplay = false;
 			moveContent(localPt.x, localPt.y, false);
+			m_updateDisplay = true;
 			trace("center to: " + localPt);
 			
 			const BUFFER:Number = 1.5;

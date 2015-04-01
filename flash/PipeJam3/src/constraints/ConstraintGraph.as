@@ -113,7 +113,6 @@ package constraints
 				// Offset score by change in bonus and new constraints satisfied/not
 				//				trace("newBonus ", newBonus, " prevBonus ", prevBonus, " newConstraintPoints ", newConstraintPoints, " prevConstraintPoints ", prevConstraintPoints);
 				currentScore += newConstraintPoints - prevConstraintPoints;
-				trace("new currentScore ", currentScore);
 			}
 			else {
 				currentScore = 0;
@@ -124,6 +123,7 @@ package constraints
 				//						currentScore += thisVar.scoringConfig.getScoringValue(thisVar.getValue().verboseStrVal);
 				//					}
 				//				}
+				var scoredConstraints:Dictionary = new Dictionary;
 				for (constraintId in constraintsDict) { // TODO: we are recalculating each clause for every edge, need only traverse clauses once
 					//old style - scoring per constraint
 					//new style - scoring per satisfied clause (might be multiple unsatisfied constraints per clause, but one satisfied one is enough)
@@ -139,7 +139,11 @@ package constraints
 							//get clauseID
 							if(newSatisfiedConstraints[clauseID] == null)
 							{
-								currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+								if(scoredConstraints[clauseID] == null)
+								{
+									currentScore += thisConstr.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
+									scoredConstraints[clauseID] = thisConstr;
+								}
 								if(m_SatisfiedConstraints[clauseID] == null)
 								{
 									newSatisfiedConstraints[clauseID] = thisConstr;
@@ -158,7 +162,7 @@ package constraints
 					} 
 				}
 			}
-			
+
 			for (clauseID in newSatisfiedConstraints) {
 				if (unsatisfiedConstraintDict.hasOwnProperty(clauseID)) {
 					delete unsatisfiedConstraintDict[clauseID];
@@ -175,7 +179,6 @@ package constraints
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, newSatisfiedConstraints));
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, newUnsatisfiedConstraints));
 			if (isNaN(startingScore)) startingScore = currentScore;
-			trace("Starting/Current Score", startingScore, currentScore);
 		}
 		
 		public function resetScoring():void

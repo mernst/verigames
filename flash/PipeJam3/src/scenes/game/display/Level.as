@@ -129,7 +129,7 @@ package scenes.game.display
 		private var m_groupGrids:Vector.<GroupGrid>
 		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
 		
-		static public var CONFLICT_CONSTRAINT_VALUE:Number = 100.0;
+		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
 		static public var WIDE_NODE_SIZE_CONSTRAINT_VALUE:Number = 1.0;
 		static public var NARROW_NODE_SIZE_CONSTRAINT_VALUE:Number = 0.0;
@@ -138,7 +138,7 @@ package scenes.game.display
 		public var totalMoveDist:Point = new Point();
 		
 		public var m_inSolver:Boolean = false;
-		private var m_unsat_weight:int;
+		private var m_unsat_weight:int = -1;
 		private var m_recentlySolved:Boolean;
 		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
@@ -147,7 +147,9 @@ package scenes.game.display
 		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
 		
 		
-		private var debugSolver:Boolean = false;
+		static public var debugSolver:Boolean = false;
+		public var extendSolver:Boolean = false;
+		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -280,6 +282,15 @@ package scenes.game.display
 			draw();
 		}
 		
+		protected function countDictItems(dict:Dictionary):int
+		{
+			var count:int = 0;
+			for each(var i:Object in dict)
+				count++;
+				
+			return count;
+		}
+		
 		//called on when GridViewPanel content is moving
 		public function updateLevelDisplay(viewRect:Rectangle = null):void
 		{
@@ -311,6 +322,7 @@ package scenes.game.display
 			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
 			var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
 			var origNodes:int = m_nodesToDraw.length;
+			var count:int = 0;
 			for (i = minX; i <= maxX; i++)
 			{
 				for (j = minY; j <= maxY; j++)
@@ -319,9 +331,11 @@ package scenes.game.display
 					if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
 					// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
 					var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
+					trace(gridKey, countDictItems(gridNodeDict));
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
+						count++
 						if (node != null)
 						{
 							//if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) 
@@ -330,6 +344,7 @@ package scenes.game.display
 						}
 					}
 				}
+				trace("count", count);
 			}
 			for (var nodeToRemoveId:String in candidatesToRemove)
 			{
@@ -1128,7 +1143,7 @@ package scenes.game.display
 		private var newSelectedVars:Vector.<Node>;
 		private var newSelectedClauses:Dictionary;
 		private var storedDirectEdgesDict:Dictionary;
-		private var directNodeArray:Array;
+		private var directNodeDict:Dictionary;
 		private var counter:int;
 		private var m_solverType:int;
 		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
@@ -1149,9 +1164,10 @@ package scenes.game.display
 			counter = 1;
 			constraintArray = new Array;
 			initvarsArray = new Array;
-			directNodeArray = new Array;
+			directNodeDict = new Dictionary;
 			storedDirectEdgesDict = new Dictionary;
-			m_unsat_weight = int.MAX_VALUE;
+			if(m_unsat_weight < 0)
+				m_unsat_weight = int.MAX_VALUE;
 
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
@@ -1160,7 +1176,8 @@ package scenes.game.display
 
 			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
-			fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
+			if(extendSolver)
+				fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
 
 			if(constraintArray.length > 0)
 			{
@@ -1225,7 +1242,7 @@ package scenes.game.display
 						else
 							clauseArray.push(-constraintID);
 						
-						directNodeArray.push(fromNode);
+						directNodeDict[fromNode.id] = fromNode;
 						
 					}
 					constraintArray.push(clauseArray);
@@ -1320,7 +1337,7 @@ package scenes.game.display
 			//now, find all the other constraints associated with the directly connected variables,
 			//add the nodes connected to those constraints as fixed values,
 			//so the score doesn't go down.
-			for each(var directNode:Node in directNodeArray)
+			for each(var directNode:Node in directNodeDict)
 			{
 				for each(var conEdgeID:String in directNode.connectedEdgeIds)
 				{
@@ -1328,73 +1345,70 @@ package scenes.game.display
 					if(storedDirectEdgesDict[conEdgeID])
 						continue;
 					
-					var conEdge:Edge = World.m_world.active_level.edgeLayoutObjs[conEdgeID];
+					var conEdge:Edge = edgeLayoutObjs[conEdgeID];
 					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
 					var nextLayerClause:Node = conEdge.toNode;
 					
-					//check to see if this clause is satisfied by the remaining connections, and if it is, ignore it
-					var satisfied:Boolean = false;
-					var usedEdgeArray:Array = new Array;
-					for each(var nextLayerEdgeID:String in nextLayerClause.connectedEdgeIds)
-					{				
-						if(storedDirectEdgesDict[nextLayerEdgeID])
-						{
-							usedEdgeArray.push(nextLayerEdgeID);
-							continue;
-						}
-						var nextLayerEdge:Edge = edgeLayoutObjs[nextLayerEdgeID];
-						var nextLayerVar:Node = nextLayerEdge.fromNode;
-						
-						if(nextLayerEdgeID.indexOf('c') == 0 && !nextLayerVar.isNarrow)
-						{
-							satisfied = true;
-							break;
-						}
-						else if(nextLayerVar.isNarrow)
-						{
-							satisfied = true;
-							break;
-						}
-					}
-					
-					//follow these out one more layer
-					if(!satisfied)
+					if(newSelectedClauses[nextLayerClause.id] == null)
 					{
+						//add to redraw if needed
+						selectedNodes.push(nextLayerClause);
+						newSelectedClauses[nextLayerClause.id] = nextLayerClause;					
+						
+						if(debugSolver)
+						{
+							nextLayerClause.solverSelected = true;
+							nextLayerClause.solverSelectedColor = 0x00ff00;
+							solverSelected.push(nextLayerClause);
+						}		
+								
 						var clauseArray:Array = new Array();
 						clauseArray.push(FIXED_CONSTRAINT_VALUE);
 						
-						for each(var edgeID:String in usedEdgeArray)
+						for each(var edgeID:String in nextLayerClause.connectedEdgeIds)
 						{
-							var nextLayerEdge1:Edge = edgeLayoutObjs[edgeID];
-							var nextLayerVar1:Node = nextLayerEdge1.fromNode;
-							
-							if(debugSolver)
-							{
-								nextLayerVar1.solverSelected = true;
-								nextLayerVar1.solverSelectedColor = 0x0000ff;
-								solverSelected.push(nextLayerVar1);
-							}
-							
-							
-							var varArray:Array = new Array();
-							varArray.push(FIXED_CONSTRAINT_VALUE);
-							
+							//create constraint for clause connected to edge node
+							var cEdge:Edge = edgeLayoutObjs[edgeID];						
+							var connectedNode:Node = cEdge.fromNode;
+							selectedNodes.push(connectedNode);
 							var nextLevelConstraintID:int;
-							if(nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] == null)
+							if(nodeIDToConstraintsTwoWayMap[connectedNode.id] == null)
 							{
-								nodeIDToConstraintsTwoWayMap[nextLayerVar1.id] = counter;
-								nodeIDToConstraintsTwoWayMap[counter] = nextLayerVar1;
+								nodeIDToConstraintsTwoWayMap[connectedNode.id] = counter;
+								nodeIDToConstraintsTwoWayMap[counter] = connectedNode;
 								nextLevelConstraintID = counter;
 								counter++;
 							}
 							else
-								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[nextLayerVar1.id];
+								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[connectedNode.id];
 							
-							if(edgeID.indexOf('c') == 0)
+							//if(edgeID.indexOf('c') == 0)
+							if(connectedNode.isNarrow)
 								clauseArray.push(nextLevelConstraintID);
 							else
 								clauseArray.push(-nextLevelConstraintID);
+							
+							
+							
+							if(debugSolver)
+							{
+								connectedNode.solverSelected = true;
+								connectedNode.solverSelectedColor = 0xff0000;
+								solverSelected.push(connectedNode);
+							}
+							
+							if(storedDirectEdgesDict[edgeID])
+								continue;
+							
+							var varArray:Array = new Array();
+							varArray.push(FIXED_CONSTRAINT_VALUE);
+							//set constraint with current value of connectedNode, not constraint direction
+							if(connectedNode.isNarrow)
+								varArray.push(-nextLevelConstraintID);
+							else
+								varArray.push(nextLevelConstraintID);						
+							constraintArray.push(varArray);
 						}
 						constraintArray.push(clauseArray);
 					}
@@ -1572,11 +1586,20 @@ internal class GroupGrid
 	public function GroupGrid(m_boundingBox:Rectangle, levelScale:Number, nodeDict:Object, layoutDict:Object, nodeSize:uint)
 	{
 		// Note: this assumes a uniform distribution of nodes, which is not a good estimate, but it will do for now
-		var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
+	//	var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
 		// use right, bottom instead of width, height to ignore (presumably) negligible x or y value that would need to be subtracted from each node.x,y
-		var totalDim:Number = Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
-		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
-		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
+//		var totalDim:Number = 2048;//Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
+//		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
+//		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
+//		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
+		
+		//per above comment, the above fails on non-uniform distribution, so this time just set a max size for grids, and derive
+		//the number of grid from there. Pointing Fingers was failing.
+		var scaleFactor:int = 3; //just a guess
+		var maxWidth:Number = 440 * scaleFactor;
+		var maxHeight:Number = 320*scaleFactor;
+		var gridsWide:int = Math.ceil(m_boundingBox.right / maxWidth);
+		var gridsHigh:int = Math.ceil(m_boundingBox.bottom / maxHeight);
 		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
 		
 		// Put all node ids in the grid
