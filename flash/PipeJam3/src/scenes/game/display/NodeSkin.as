@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import constraints.INodeProps;
 	import flash.utils.Dictionary;
 	import utils.XMath;
 	
@@ -19,31 +20,24 @@ package scenes.game.display
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	public class NodeSkin extends Sprite
+	public class NodeSkin extends Sprite implements INodeProps
 	{
 		static protected var availableGameNodeSkins:Vector.<NodeSkin>;
 		static protected var activeGameNodeSkins:Dictionary;
-		
-		// TODO: Circular dependency
-		public var associatedNode:Node;
-		public var isBackground:Boolean = false;
 		
 		static protected var mAtlas:TextureAtlas;	
 		static public var DarkBlueCircle:Texture;
 		static public var LightBlueCircle:Texture;
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
-		
 		static protected var SatisfiedConstraintTexture:Texture;
 		static protected var UnsatisfiedConstraintTexture:Texture;
 		static protected var UnsatisfiedConstraintBackgroundTexture:Texture;
 		
+		public var isBackground:Boolean = false;
+		public var isDirty:Boolean = true;
 		protected var textureImage:Image;
 		protected var constraintImage:Image;
-		
-		protected var isInitialized:Boolean;
-		
-		static protected var levelAtlas:TextureAtlas;
 		
 		static public const WIDE_COLOR:int = 0x0B80FF;
 		static public const NARROW_COLOR:int = 0xABFFF2;
@@ -64,8 +58,6 @@ package scenes.game.display
 			{
 				availableGameNodeSkins.push(new NodeSkin(numSkin));
 			}
-			
-			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 		}
 		
 		private static var nextId:int = 0;
@@ -88,7 +80,12 @@ package scenes.game.display
 					}
 					nextSkin = activeGameNodeSkins[nextId];
 					nextId++;
-					if (nextSkin) nextSkin.disableSkin();
+					if (nextSkin)
+					{
+						nextSkin.removeFromParent(true);
+						nextSkin.disableSkin();
+						// TODO: Node's skin is non-null still
+					}
 				}
 				else
 				{
@@ -98,7 +95,7 @@ package scenes.game.display
 			}
 
 			if (nextSkin) activeGameNodeSkins[nextSkin.id] = nextSkin;
-
+			nextSkin.isDirty =  true;
 			return nextSkin;
 		}
 		
@@ -130,7 +127,7 @@ package scenes.game.display
 				return NARROW_COLOR_COMPLEMENT;
 		}
 		
-		public static function countKeys(myDictionary:flash.utils.Dictionary):int 
+		public static function countKeys(myDictionary:Dictionary):int 
 		{
 			var n:int = 0;
 			for (var key:* in myDictionary) {
@@ -158,27 +155,23 @@ package scenes.game.display
 		
 		public function draw():void
 		{
-			if(textureImage)
-			{
-				removeChild(textureImage, true);
-			}
+			if (!isDirty) return;
+			isDirty = false;
 			
-			if(associatedNode.solverSelected)
-			{
-				flash(associatedNode.solverSelectedColor);
-			}
+			if(textureImage) textureImage.removeFromParent(true);
+			if(constraintImage) constraintImage.removeFromParent(true);
 			
-			if(!(associatedNode as ClauseNode))
+			if(!isClause())
 			{
-				if (associatedNode.isNarrow && associatedNode.isSelected)
+				if (isNarrow() && isSelected())
 				{
 					textureImage = new Image(LightBlueSelectedCircle);
 				}
-				else if (!associatedNode.isNarrow && associatedNode.isSelected)
+				else if (!isNarrow() && isSelected())
 				{
 					textureImage = new Image(DarkBlueSelectedCircle);
 				}
-				else if(!associatedNode.isNarrow)
+				else if(!isNarrow())
 				{
 					textureImage = new Image(DarkBlueCircle);
 				}
@@ -187,13 +180,12 @@ package scenes.game.display
 					textureImage = new Image(LightBlueCircle);
 				}
 				
-				if(associatedNode.solved && associatedNode.isSelected)
+				if(isSolved() && isSelected())
 				{
 					textureImage.setVertexColor(0, 0x00ff00);
 					textureImage.setVertexColor(1, 0x00ff00);
 					textureImage.setVertexColor(2, 0x00ff00);
 					textureImage.setVertexColor(3, 0x00ff00);
-					associatedNode.solved = false;
 				}
 				else
 				{
@@ -203,23 +195,15 @@ package scenes.game.display
 					textureImage.setVertexColor(3, 0xffffff);
 				}	
 				
-				if(associatedNode.isNarrow)
-					textureImage.width = textureImage.height = 10;
-				else
-					textureImage.width = textureImage.height = 14;
-				textureImage.x -= textureImage.width/2;
-				textureImage.y -= textureImage.width/2; 
+				textureImage.width = textureImage.height = 14;
+				textureImage.x = -textureImage.width/2;
+				textureImage.y = -textureImage.width/2; 
 				addChild(textureImage);
 			}
 			else
 			{
 				// Is clause
-				var associatedClauseNode:ClauseNode = associatedNode as ClauseNode;
-				if(constraintImage)
-				{
-					constraintImage.removeFromParent(true);
-				}
-				if(associatedClauseNode.hasError())
+				if(hasError())
 				{
 					if (isBackground)
 					{
@@ -231,46 +215,31 @@ package scenes.game.display
 						constraintImage = new Image(UnsatisfiedConstraintTexture);
 						constraintImage.width = constraintImage.height = 10;
 					}
-					
-					if(associatedClauseNode.hadError == false && associatedClauseNode == true)
-					{
-						//flash if changing
-						flash(0x00ff00);
-					}
-					associatedClauseNode.hadError = true;
 				}
 				else
 				{
 					if (isBackground) return; // no background image for satisfied conflicts
 					constraintImage = new Image(SatisfiedConstraintTexture);
-					if(associatedClauseNode.hadError == true)
-					{
-						//flash if changing
-						flash();
-					}
-					associatedClauseNode.hadError = false;
+					constraintImage.width = constraintImage.height = 10;
 				}
-				constraintImage.x -= constraintImage.width/2;
-				constraintImage.y -= constraintImage.width/2; 
+				constraintImage.x = -constraintImage.width/2;
+				constraintImage.y = -constraintImage.width/2; 
 				addChild(constraintImage);
 			}
-
-				
-			
-
-
 		}
 		
-		override public function set scaleX(newScale:Number):void
+		public override function dispose():void
 		{
-			super.scaleX = newScale;
+			if (textureImage != null) textureImage.removeFromParent(true);
+			if (constraintImage != null) constraintImage.removeFromParent(true);
+			alpha = scaleX = scaleY = 1;
+			removeChildren(0, -1, true);
+			super.dispose();
 		}
 		
 		public function disableSkin():void
 		{
 			availableGameNodeSkins.push(this);
-			associatedNode.skin = null;
-			if (tween) Starling.juggler.remove(tween);
 			delete activeGameNodeSkins[id];
 		}
 		
@@ -279,68 +248,55 @@ package scenes.game.display
 			return super.removeChild(_child, dispose);
 		}
 		
-		public function setNode(_associatedNode:Node, _isBackground:Boolean = false):void
+		public function setNodeProps(_isClause:Boolean = false, 
+								_isNarrow:Boolean = false, 
+								_isSelected:Boolean = false, 
+								_isSolved:Boolean = false, 
+								_hasError:Boolean = false,
+								_isBackground:Boolean = false):void
 		{
-			associatedNode = _associatedNode;
+			m_isClause = _isClause;
+			m_isNarrow = _isNarrow;
+			m_isSelected = _isSelected;
+			m_isSolved = _isSolved;
+			m_hasError = _hasError;
 			isBackground = _isBackground;
-		}
-		
-		private var tween:Tween;
-		private var q:Quad;
-		public function flash(color:int = 0x00ff00):void
-		{
-			q = new Quad(50, 50, color);
-			if(parent)
-			{
-				q.x = x - 25;
-				q.y = y - 25;
-				parent.addChild(q);
-				tween = new Tween(q, 2);
-				tween.fadeTo(0);
-				tween.onComplete = flashComplete;
-				Starling.juggler.add(tween);
-			}
-		}
-		
-		protected function flashComplete():void
-		{
-			var saveParent:Sprite;
-			if (q)
-			{
-				q.visible = false;
-				if (q.parent != null)
-				{
-					saveParent = q.parent as Sprite;
-					q.removeFromParent(true);
-			//		if (saveParent) saveParent.flatten();
-				}
-			}
-			if (tween) Starling.juggler.remove(tween);
-			associatedNode.solved = true;
-			draw();
+			isDirty = true;
 		}
 		
 		public function scale(newScale:Number):void
 		{
-			if (isBackground) return;
 			var currentWidth:Number;
 			var newWidth:Number;
 			if (textureImage != null)
 			{
-				currentWidth = textureImage.width;
-				textureImage.scaleX = textureImage.scaleY = newScale * (associatedNode.isNarrow ? 0.5 : 0.9);
+				textureImage.scaleX = textureImage.scaleY = newScale;
 				newWidth = XMath.clamp(textureImage.width, 5, 50);
-				textureImage.x -= (newWidth - currentWidth) / 2;
-				textureImage.y -= (newWidth - currentWidth) / 2;
+				textureImage.width = textureImage.height = newWidth;
+				textureImage.x = -newWidth / 2;
+				textureImage.y = -newWidth / 2;
 			}
-			//if (constraintImage != null)
-			//{
-				//currentWidth = constraintImage.width;
-				//constraintImage.scaleX = constraintImage.scaleY = newScale;
-				//newWidth = XMath.clamp(constraintImage.width, 5, 50);
-				//constraintImage.x -= (newWidth - currentWidth) / 2;
-				//constraintImage.y -= (newWidth - currentWidth) / 2;
-			//}
+			if (constraintImage != null)
+			{
+				constraintImage.scaleX = constraintImage.scaleY = newScale;
+				newWidth = XMath.clamp(constraintImage.width, isBackground ? 10 : 5, isBackground ? 500 : 50);
+				constraintImage.width = constraintImage.height = newWidth;
+				constraintImage.x = -newWidth / 2;
+				constraintImage.y = -newWidth / 2;
+			}
 		}
+		
+		// --- INodeProps --->
+		private var m_isClause:Boolean = false;
+		private var m_isNarrow:Boolean = false;
+		private var m_isSelected:Boolean = false;
+		private var m_isSolved:Boolean = false;
+		private var m_hasError:Boolean = false;
+		public function isClause():Boolean { return m_isClause; }
+		public function isNarrow():Boolean { return m_isNarrow; }
+		public function isSelected():Boolean { return m_isSelected; }
+		public function isSolved():Boolean { return m_isSolved; }
+		public function hasError():Boolean { return m_hasError; }
+		// <--- INodeProps ---
 	}
 }

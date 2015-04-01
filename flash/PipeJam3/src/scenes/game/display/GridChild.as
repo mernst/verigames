@@ -27,7 +27,7 @@ package scenes.game.display
 		public var skin:NodeSkin;
 		public var backgroundSkin:NodeSkin;
 		public var currentGroupDepth:uint = 0;
-				
+		
 		public function GridChild(_id:String, _bb:Rectangle) 
 		{
 			id = _id;
@@ -42,7 +42,6 @@ package scenes.game.display
 		
 		public function createSkin():void
 		{
-			removeSkin();
 			// implemented by children
 		}
 		
@@ -52,6 +51,16 @@ package scenes.game.display
 			if (backgroundSkin) backgroundSkin.removeFromParent();
 			skin = null;
 			backgroundSkin = null;
+		}
+		
+		public function setupSkin():void
+		{
+			// implemented by children
+		}
+		
+		public function setupBackgroundSkin():void
+		{
+			// implemented by children
 		}
 		
 		public function select():void
@@ -79,10 +88,17 @@ package scenes.game.display
 		
 		public function draw():void
 		{
-			if(this.backgroundSkin)
-				backgroundSkin.draw();
-			if(skin)
-				skin.draw();
+			// implemented by children
+		}
+		
+		public function backgroundIsDirty():Boolean
+		{
+			return false; // implemented by children
+		}
+		
+		public function skinIsDirty():Boolean
+		{
+			return false; // implemented by children
 		}
 		
 		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void

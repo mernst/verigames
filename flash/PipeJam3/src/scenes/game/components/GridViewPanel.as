@@ -632,12 +632,8 @@ package scenes.game.components
 				{
 					inactiveContent.x = content.x;
 					inactiveContent.y = content.y;
-					dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
-					var currentViewRect:Rectangle = getViewInContentSpace();
-					m_currentLevel.updateLevelDisplay(currentViewRect);
 				}
 				checkGridSize();
-					
 			}
 			
 			if(lastScaleChanged == false || scaleChanged == false)
@@ -807,7 +803,10 @@ package scenes.game.components
 			{
 				inactiveContent.x = content.x;
 				inactiveContent.y = content.y;
+				dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
+				m_currentLevel.updateLevelDisplay(newViewCoords);
 			}
+			// zzz
 			//trace("newscale:" + contentToScale.scaleX + "new xy:" + contentToScale.x + " " + contentToScale.y);
 		}
 		

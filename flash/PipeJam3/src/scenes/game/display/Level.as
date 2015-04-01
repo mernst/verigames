@@ -9,6 +9,9 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import starling.animation.Transitions;
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	
 	import assets.AssetInterface;
 	
@@ -113,11 +116,15 @@ package scenes.game.display
 		
 		public var currentGroupDepth:int = -1;
 		public var levelLayoutScale:Number = 1.0;
+		private var m_nodeAnimationLayer:Sprite;
 		private var m_nodeLayer:Sprite;
 		private var m_edgesLayer:Sprite;
+		private var m_conflictAnimationLayer:Sprite;
 		private var m_conflictsLayer:Sprite;
 		private var m_nodesToRemove:Vector.<Node> = new Vector.<Node>();
 		private var m_nodesToDraw:Vector.<Node> = new Vector.<Node>();
+		private var m_solvedConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
+		private var m_createdConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
 		private var m_groupGrids:Vector.<GroupGrid>
 		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
@@ -330,7 +337,6 @@ package scenes.game.display
 				if (nodeToRemove != null) m_nodesToRemove.push(nodeToRemove);
 			}
 			
-			
 			var addedNodes:int = m_nodesToDraw.length - origNodes;
 			if (addedNodes >= 2000)
 			{
@@ -347,18 +353,28 @@ package scenes.game.display
 		{
 			if (!m_conflictsLayer) {
 				m_conflictsLayer = new Sprite();
-			//	m_conflictsLayer.flatten();
+				m_conflictsLayer.flatten();
 				addChild(m_conflictsLayer);
+			}
+			if (!m_conflictAnimationLayer)
+			{
+				m_conflictAnimationLayer = new Sprite();
+				addChild(m_conflictAnimationLayer);
 			}
 			if (!m_edgesLayer) {
 				m_edgesLayer = new Sprite();
-			//	m_edgesLayer.flatten();
+				m_edgesLayer.flatten();
 				addChild(m_edgesLayer);
 			}
 			if (!m_nodeLayer) {
 				m_nodeLayer = new Sprite();
-			//	m_nodeLayer.flatten();
+				m_nodeLayer.flatten();
 				addChild(m_nodeLayer);
+			}
+			if (!m_nodeAnimationLayer)
+			{
+				m_nodeAnimationLayer = new Sprite();
+				addChild(m_nodeAnimationLayer);
 			}
 			var nodesProcessed:uint = 0;
 			var edge:Edge, gameEdgeId:String;
@@ -397,6 +413,7 @@ package scenes.game.display
 			}
 			if(m_nodesToDraw.length)
 			{
+				trace("drawing parent scale:" + parent.scaleX);
 				//make sure all clauses that are connected to these nodes redraw, so edges get updated correctly
 				var clausesNeeded:Dictionary = new Dictionary;
 				var clausesToDraw:Dictionary = new Dictionary;
@@ -426,11 +443,9 @@ package scenes.game.display
 						m_nodesToDraw.push(cl);
 					}
 				}
-					
 			}
 			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)	
 			{
-
 				var nodeToDraw:Node = m_nodesToDraw.shift();
 				// At this time only clause changes (satisfied or not) affect the
 				// look of an edge, so draw all edges when clauses are redrawn and
@@ -452,44 +467,58 @@ package scenes.game.display
 						}
 					}
 				}
-				if (false)
+				nodeToDraw.createSkin();
+				if (nodeToDraw.skin != null)
 				{
-					var nq:Quad = new Quad(8, 8, 0x0);
-					nq.x = nodeToDraw.centerPoint.x;
-					nq.y = nodeToDraw.centerPoint.y;
-					m_nodeLayer.addChild(nq);
-					touchedNodeLayer = true;
-				}
-				else
-				{
-					nodeToDraw.createSkin();
-					if (nodeToDraw.skin != null)
+					m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
+					nodeToDraw.draw();
+					if (parent)
 					{
-						m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
+						nodeToDraw.skin.scale(0.5 / parent.scaleX);
+					}
+					if (nodeToDraw.skin.parent != m_nodeLayer) m_nodeLayer.addChild(nodeToDraw.skin);
+					touchedNodeLayer = true;
+					if (nodeToDraw.backgroundSkin)
+					{
+						if (nodeToDraw.backgroundSkin.parent != m_conflictsLayer) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
 						if (parent)
 						{
-							nodeToDraw.skin.scale(0.5 / parent.scaleX);
+							nodeToDraw.backgroundSkin.scale(0.5 / parent.scaleX);
 						}
-						if (nodeToDraw.skin.parent != m_nodeLayer) m_nodeLayer.addChild(nodeToDraw.skin);
-						touchedNodeLayer = true;
-						if (nodeToDraw.backgroundSkin)
-						{
-							if (nodeToDraw.backgroundSkin.parent != m_conflictsLayer) m_conflictsLayer.addChild(nodeToDraw.backgroundSkin);
-							if (parent)
-							{
-								nodeToDraw.backgroundSkin.scale(0.5 / parent.scaleX);
-							}
-							touchedConflictLayer = true;
-						}
-						nodeToDraw.draw();
+						touchedConflictLayer = true;
 					}
 				}
 				nodesProcessed++;
 			}
+			while (m_solvedConflictsToAnimate.length && nodesProcessed <= ITEMS_PER_FRAME)	
+			{
+				var solvedClauseToAnimate:ClauseNode = m_solvedConflictsToAnimate.shift();
+				if (solvedClauseToAnimate.backgroundSkin == null) continue; // only animate onscreen clauses
+				var animateSkin:NodeSkin = NodeSkin.getNextSkin();
+				animateSkin.setNodeProps(true, false, false, false, true, true);
+				animateSkin.draw();
+				animateSkin.scaleX = solvedClauseToAnimate.backgroundSkin.scaleX;
+				animateSkin.scaleY = solvedClauseToAnimate.backgroundSkin.scaleY;
+				animateSkin.x = solvedClauseToAnimate.backgroundSkin.x;
+				animateSkin.y = solvedClauseToAnimate.backgroundSkin.y;
+				m_conflictAnimationLayer.addChild(animateSkin);
+				var tween:Tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
+				tween.scaleTo(0);
+				tween.onComplete = animationComplete;
+				tween.onCompleteArgs = new Array(animateSkin);
+				Starling.juggler.add(tween);
+				nodesProcessed++;
+			}
 			m_recentlySolved = false;
 			if (touchedEdgeLayer) m_edgesLayer.flatten();
-	//		if (touchedNodeLayer) m_nodeLayer.flatten();
-	//		if (touchedConflictLayer) m_conflictsLayer.flatten();
+			if (touchedNodeLayer) m_nodeLayer.flatten();
+			if (touchedConflictLayer) m_conflictsLayer.flatten();
+		}
+		
+		private function animationComplete(skin:NodeSkin):void
+		{
+			skin.removeFromParent(true);
+			skin.disableSkin();
 		}
 		
 		protected function createGridChildFromLayoutObj(gridChildId:String, gridChildLayout:Object, isGroup:Boolean):GridChild
@@ -501,7 +530,10 @@ package scenes.game.display
 			
 			if (nodeLayoutObjs.hasOwnProperty(gridChildId)) {
 				var prevNode:Node = nodeLayoutObjs[gridChildId] as Node;
-				if (prevNode.skin) prevNode.skin.disableSkin();
+				if (prevNode.skin) {
+					prevNode.skin.disableSkin();
+					prevNode.skin = null;
+				}
 			}
 			
 			var nodeBB:Rectangle = new Rectangle(layoutX - Constants.SKIN_DIAMETER * .5, layoutY - Constants.SKIN_DIAMETER * .5, Constants.SKIN_DIAMETER, Constants.SKIN_DIAMETER);
@@ -872,7 +904,11 @@ package scenes.game.display
 					if (clauseNode != null)
 					{
 						clauseNode.addError(true);
-						if (clauseNode.skin != null) m_nodesToDraw.push(clauseNode);
+						if (clauseNode.skin != null)
+						{
+							m_nodesToDraw.push(clauseNode);
+							m_createdConflictsToAnimate.push(clauseNode);
+						}
 					}
 				}
 			}
@@ -897,7 +933,11 @@ package scenes.game.display
 					if (clauseNode != null)
 					{
 						clauseNode.addError(false);
-						if (clauseNode.skin != null) m_nodesToDraw.push(clauseNode);
+						if (clauseNode.skin != null)
+						{
+							m_nodesToDraw.push(clauseNode);
+							m_solvedConflictsToAnimate.push(clauseNode);
+						}
 					}
 				}
 			}
@@ -1379,7 +1419,8 @@ package scenes.game.display
 			//trace(levelGraph.currentScore);
 			for (var ii:int = 0; ii < vars.length; ++ ii) 
 			{
-				var node:Node = nodeIDToConstraintsTwoWayMap[ii+1];
+				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
+				node.solved = true;
 				var nodeUpdated:Boolean = false;
 				var constraintVar:ConstraintVar = node["graphVar"];
 				var currentVal:Boolean = node.isNarrow;
@@ -1392,7 +1433,8 @@ package scenes.game.display
 				{
 					if (node.skin != null)
 					{
-						node.setDirty(true, true);
+						//zzz
+						node.setDirty(true);
 						m_nodesToDraw.push(node);
 					}
 					if(constraintVar != null) 
