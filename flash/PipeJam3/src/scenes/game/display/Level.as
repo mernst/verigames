@@ -127,7 +127,7 @@ package scenes.game.display
 		private var m_createdConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
 		private var m_groupGrids:Vector.<GroupGrid>
-		private static const ITEMS_PER_FRAME:uint = 1000; // limit on nodes/edges to remove/add per frame
+		private static const ITEMS_PER_FRAME:uint = 50; // limit on nodes/edges to remove/add per frame
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
@@ -505,6 +505,7 @@ package scenes.game.display
 				}
 				nodesProcessed++;
 			}
+			var n:int = 0;
 			while (m_solvedConflictsToAnimate.length && nodesProcessed <= ITEMS_PER_FRAME)	
 			{
 				var solvedClauseToAnimate:ClauseNode = m_solvedConflictsToAnimate.shift();
@@ -512,17 +513,20 @@ package scenes.game.display
 				var animateSkin:NodeSkin = NodeSkin.getNextSkin();
 				animateSkin.setNodeProps(true, false, false, false, true, true);
 				animateSkin.draw();
-				animateSkin.scaleX = solvedClauseToAnimate.backgroundSkin.scaleX;
-				animateSkin.scaleY = solvedClauseToAnimate.backgroundSkin.scaleY;
-				animateSkin.x = solvedClauseToAnimate.backgroundSkin.x;
-				animateSkin.y = solvedClauseToAnimate.backgroundSkin.y;
+				animateSkin.x = solvedClauseToAnimate.centerPoint.x;
+				animateSkin.y = solvedClauseToAnimate.centerPoint.y;
+				animateSkin.scale(0.5 / parent.scaleX);
 				m_conflictAnimationLayer.addChild(animateSkin);
 				var tween:Tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
 				tween.scaleTo(0);
-				tween.onComplete = animationComplete;
-				tween.onCompleteArgs = new Array(animateSkin);
+				tween.delay = n * 0.05;
+				solvedClauseToAnimate.animating = true;
+				solvedClauseToAnimate.backgroundSkin.removeFromParent(true);
+				solvedClauseToAnimate.backgroundSkin.disableSkin();
+				tween.onComplete = conflictRemovedTweenComplete;
+				tween.onCompleteArgs = new Array(solvedClauseToAnimate, animateSkin);
 				Starling.juggler.add(tween);
-				nodesProcessed++;
+				n++; // do all at once, don't increment nodesProcessed just stagger delay times
 			}
 			m_recentlySolved = false;
 			if (touchedEdgeLayer) m_edgesLayer.flatten();
@@ -530,8 +534,10 @@ package scenes.game.display
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
 		}
 		
-		private function animationComplete(skin:NodeSkin):void
+		private function conflictRemovedTweenComplete(clauseNode:ClauseNode, skin:NodeSkin):void
 		{
+			clauseNode.animating = false;
+			m_nodesToDraw.push(clauseNode);
 			skin.removeFromParent(true);
 			skin.disableSkin();
 		}
@@ -950,7 +956,7 @@ package scenes.game.display
 						clauseNode.addError(false);
 						if (clauseNode.skin != null)
 						{
-							m_nodesToDraw.push(clauseNode);
+							//m_nodesToDraw.push(clauseNode);
 							m_solvedConflictsToAnimate.push(clauseNode);
 						}
 					}

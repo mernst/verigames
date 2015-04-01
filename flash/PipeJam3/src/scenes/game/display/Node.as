@@ -75,6 +75,7 @@ package scenes.game.display
 		
 		public override function draw():void
 		{
+			if (animating) return;
 			if (backgroundIsDirty())
 			{
 				if (backgroundSkin == null) createSkin();

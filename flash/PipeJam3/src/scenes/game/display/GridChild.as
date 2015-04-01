@@ -27,6 +27,7 @@ package scenes.game.display
 		public var skin:NodeSkin;
 		public var backgroundSkin:NodeSkin;
 		public var currentGroupDepth:uint = 0;
+		public var animating:Boolean = false;
 		
 		public function GridChild(_id:String, _bb:Rectangle) 
 		{
