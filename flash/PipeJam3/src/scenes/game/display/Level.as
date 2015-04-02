@@ -142,11 +142,6 @@ package scenes.game.display
 		private var m_recentlySolved:Boolean;
 		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
-		protected static const BG_WIDTH:Number = 256;
-		protected static const MIN_BORDER:Number = 1000;
-		protected static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
-		
-		
 		static public var debugSolver:Boolean = false;
 		public var extendSolver:Boolean = false;
 		
@@ -331,7 +326,7 @@ package scenes.game.display
 					if (!groupGrid.grid.hasOwnProperty(gridKey)) continue; // no nodes in grid
 					// TODO groups: check for existing on screen grids m_gridsOnScreen[gridKey] = groupGrid;
 					var gridNodeDict:Dictionary = groupGrid.grid[gridKey] as Dictionary;
-					trace(gridKey, countDictItems(gridNodeDict));
+					//trace(gridKey, countDictItems(gridNodeDict));
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
@@ -344,12 +339,15 @@ package scenes.game.display
 						}
 					}
 				}
-				trace("count", count);
+				//trace("count", count);
 			}
 			for (var nodeToRemoveId:String in candidatesToRemove)
 			{
 				var nodeToRemove:Node = nodeLayoutObjs[nodeToRemoveId] as Node;
-				if (nodeToRemove != null) m_nodesToRemove.push(nodeToRemove);
+				if (nodeToRemove != null)
+				{
+					m_nodesToRemove.push(nodeToRemove);
+				}
 			}
 			
 			var addedNodes:int = m_nodesToDraw.length - origNodes;
@@ -428,7 +426,6 @@ package scenes.game.display
 			}
 			if(m_nodesToDraw.length)
 			{
-				trace("drawing parent scale:" + parent.scaleX);
 				//make sure all clauses that are connected to these nodes redraw, so edges get updated correctly
 				var clausesNeeded:Dictionary = new Dictionary;
 				var clausesToDraw:Dictionary = new Dictionary;
@@ -462,6 +459,7 @@ package scenes.game.display
 			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)	
 			{
 				var nodeToDraw:Node = m_nodesToDraw.shift();
+				if (nodeToDraw.animating) continue;
 				// At this time only clause changes (satisfied or not) affect the
 				// look of an edge, so draw all edges when clauses are redrawn and
 				// ignore var nodes
@@ -520,7 +518,6 @@ package scenes.game.display
 				var tween:Tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
 				tween.scaleTo(0);
 				tween.delay = n * 0.05;
-				solvedClauseToAnimate.animating = true;
 				solvedClauseToAnimate.backgroundSkin.removeFromParent(true);
 				solvedClauseToAnimate.backgroundSkin.disableSkin();
 				tween.onComplete = conflictRemovedTweenComplete;
@@ -957,6 +954,7 @@ package scenes.game.display
 						if (clauseNode.skin != null)
 						{
 							//m_nodesToDraw.push(clauseNode);
+							clauseNode.animating = true;
 							m_solvedConflictsToAnimate.push(clauseNode);
 						}
 					}
@@ -1453,7 +1451,6 @@ package scenes.game.display
 				{
 					if (node.skin != null)
 					{
-						//zzz
 						node.setDirty(true);
 						m_nodesToDraw.push(node);
 					}
@@ -1546,7 +1543,6 @@ package scenes.game.display
 							node.select();
 							//trace("select " + node.id);
 							selectedNodes.push(node);
-
 							m_nodesToDraw.push(node);
 							selectionChanged = true;
 						}

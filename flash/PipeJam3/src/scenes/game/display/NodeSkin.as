@@ -158,8 +158,8 @@ package scenes.game.display
 			if (!isDirty) return;
 			isDirty = false;
 			
-			if(textureImage) textureImage.removeFromParent(true);
-			if(constraintImage) constraintImage.removeFromParent(true);
+			if (textureImage) textureImage.removeFromParent(true);
+			if (constraintImage) constraintImage.removeFromParent(true);
 			
 			if(!isClause())
 			{
