@@ -488,6 +488,12 @@ package scenes.game.components
 		
 		override protected function onTouch(event:TouchEvent):void
 		{
+			if(buttonHit == true)
+			{
+				//next level button bleeds its hit into the system, so need to exit
+				buttonHit = false;
+				return;
+			}
 			//trace("Mode:" + event.type);
 			var touches:Vector.<Touch>;
 			if(event.getTouches(this, TouchPhase.ENDED).length)
@@ -1237,8 +1243,10 @@ package scenes.game.components
 			}
 		}
 		
+		private var buttonHit:Boolean = false;
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
+			buttonHit = true;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		

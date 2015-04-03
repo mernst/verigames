@@ -39,11 +39,11 @@ public class MongoTestBed {
      Mongo mongo = new Mongo( "api.paradox.verigames.com", 27017 );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
-        String dbName = "game2api";
+        String dbName = "game3api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-         listEntries(db, "ActiveLevels");
+         listEntries(db, "GameSolvedLevels");
 
         listCollectionNames(db);
  //      HashMap<String, String> map = new HashMap();

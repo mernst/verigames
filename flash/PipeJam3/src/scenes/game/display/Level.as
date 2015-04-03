@@ -953,11 +953,12 @@ package scenes.game.display
 			return m_targetScore;
 		}
 		
+
 		public function setTargetScore(score:int):void
 		{
 			m_targetScore = score;
 		}
-		
+			
 		public function getTimeMs():Number
 		{
 			return new Date().time - m_levelStartTime;
