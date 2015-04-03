@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <math.h>
 #ifndef BUILD_LIB
-#include "../maxsat.h"
+#include "../borchers.h"
 #endif
 /*
  * Some important limits on the size of the problem.
@@ -259,6 +259,19 @@ read_prob(char * filename)
      };
 }
 
+
+void getCurrentSolutionBorchers(int* output)
+{
+	int i;
+	for (i = 0; i < num_vars; i++) {
+	  if (best_soln[i] == FALSE) {
+		output[i] = 0;
+	  } else {
+		output[i] = 1;
+	  }
+	}
+}
+	
 /*
  * Produce a random solution.
  */
@@ -1055,16 +1068,63 @@ unit_track()
      };
 }
 
+
+const char *
+init_problem(int * initvars, int ninitvars, int nvars)
+{
+  int ii;
+
+  // important to reset upper bound!
+  best_num_sat = best_best_num_sat = 0;
+  pick_var_iter = 0;
+
+  // initialize all the variables
+  if (initvars) {
+    if (ninitvars != nvars) {
+      return "Mismatch in variable initialization count.";
+    }
+
+    for (ii = 0; ii < nvars; ++ ii) {
+      cur_soln[ii] = initvars[ii];
+      pick_first[ii] = initvars[ii];
+    }
+  } else {
+    for (ii = 0; ii < nvars; ++ ii) {
+      cur_soln[ii] = FALSE;
+      pick_first[ii] = FALSE;
+    }
+  }
+
+  // this call to slm() and the following initializes the upper bound
+  slm(0);
+  if (best_num_sat > best_best_num_sat) {
+    best_best_num_sat = best_num_sat;
+  };
+  if (best_best_num_sat == total_weight) {
+    return NULL; // nothing to do, could skip optimization
+  };
+  
+  return NULL;
+}
+
+
 /*
  * The main DP routine.
  */
 
 void 
-dp()
+runBorchers(int ninitvars, int nvars)
 {
      int             i;
      int             j;
      clause_ptr      ptr;
+	 const char * error = NULL;
+	 
+	error = init_problem(NULL, ninitvars, nvars);
+	  if (error) {
+		printf("Error in problem setup: %s\n", error);
+		return;
+	  }
      /*
       * First, initialize the counts.
       */

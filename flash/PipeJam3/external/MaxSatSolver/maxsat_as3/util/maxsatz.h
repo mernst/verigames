@@ -1,6 +1,6 @@
-//#define borchars
-//define MAXSATZ2009
-#define BUILD_LIB
+//#define borchers
+#define MAXSATZ2009
+//#define BUILD_LIB
 
 extern const int ALG_DPLL;
 extern const int ALG_RAND;
@@ -36,7 +36,7 @@ extern lli_type ini_clause_weight[tab_clause_size]; // Initial clause weights
 extern my_type clause_state[tab_clause_size]; // Clause status
 extern int clause_length[tab_clause_size]; // Clause length
 extern int CMTR[2];
-
+/*
 #define WORD_LENGTH 1024
 #define TRUE 1
 #define FALSE 0
@@ -68,24 +68,25 @@ extern int             ub;
 extern entry_ptr       clauses[MAX_CLAUSES];
 extern int             num_clauses;
 extern int             total_weight;
+extern int             max_weight;
+extern int             min_weight;
+extern int             col_count[MAX_VARS];
+extern int             row_count[MAX_CLAUSES];
+extern int             clause_weights[MAX_CLAUSES];
 extern int             num_improve[MAX_VARS];
 extern int             best_list[MAX_VARS];
 extern int             best_count;
 extern int             best_improve;
-extern int             col_count[MAX_VARS];
 extern int             best_num_sat;
 extern int             best_best_num_sat;
 extern int             pick_var_iter;
-/*
- * Information about the clauses.
- */
+
+
 extern entry_ptr       clauses[MAX_CLAUSES];
 extern int             num_clauses;
 extern int             sat_count[MAX_CLAUSES];
-extern int             row_count[MAX_CLAUSES];
-extern int             clause_weights[MAX_CLAUSES];
-extern int             max_weight;
-extern int             min_weight;
+
+
 
 extern int             pick_first[MAX_VARS];
 extern int             btrackcount;
@@ -99,3 +100,4 @@ extern const char *
 check_problem(const int * clauses_ptr, int nclauses, int * nvars);
 extern void runMaxSatz(int * clauses, int nclauses, CallbackFunction callback);
 extern void do_callback(int new_best);
+*/
