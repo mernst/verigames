@@ -123,6 +123,7 @@ package scenes.game.display
 		private var m_conflictsLayer:Sprite;
 		private var m_nodesToRemove:Vector.<Node> = new Vector.<Node>();
 		private var m_nodesToDraw:Vector.<Node> = new Vector.<Node>();
+		private var m_solvingNodesToAnimate:Vector.<VariableNode> = new Vector.<VariableNode>();
 		private var m_solvedConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_createdConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
@@ -480,16 +481,22 @@ package scenes.game.display
 						}
 					}
 				}
+				if (nodeToDraw.skin != null && nodeToDraw.skin.parent != m_nodeLayer)
+				{
+					nodeToDraw.skin.removeFromParent();
+				}
 				nodeToDraw.createSkin();
 				if (nodeToDraw.skin != null)
 				{
 					m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
-					nodeToDraw.draw();
 					if (parent)
 					{
 						nodeToDraw.skin.scale(0.5 / parent.scaleX);
 					}
-					if (nodeToDraw.skin.parent != m_nodeLayer) m_nodeLayer.addChild(nodeToDraw.skin);
+					if (nodeToDraw.skin.parent != m_nodeLayer)
+					{
+						m_nodeLayer.addChild(nodeToDraw.skin);
+					}
 					touchedNodeLayer = true;
 					if (nodeToDraw.backgroundSkin)
 					{
@@ -503,7 +510,26 @@ package scenes.game.display
 				}
 				nodesProcessed++;
 			}
+			var tween:Tween;
 			var n:int = 0;
+			while (m_solvingNodesToAnimate.length && nodesProcessed <= ITEMS_PER_FRAME)
+			{
+				var solvingNodeToAnimate:VariableNode = m_solvingNodesToAnimate.shift();
+				if (solvingNodeToAnimate.skin != null)
+				{
+					solvingNodeToAnimate.skin.removeFromParent();
+					touchedNodeLayer = true;
+					m_nodeAnimationLayer.addChild(solvingNodeToAnimate.skin);
+					tween = new Tween(solvingNodeToAnimate.skin, 0.25, Transitions.EASE_OUT);
+					tween.moveTo(solvingNodeToAnimate.centerPoint.x, solvingNodeToAnimate.centerPoint.y - 12);
+					tween.delay = (n * 0.025) % 0.25;
+					tween.repeatCount = 0;
+					tween.reverse = true;
+					Starling.juggler.add(tween);
+				}
+				n++; // do all at once, don't increment nodesProcessed
+			}
+			n = 0;
 			while (m_solvedConflictsToAnimate.length && nodesProcessed <= ITEMS_PER_FRAME)	
 			{
 				var solvedClauseToAnimate:ClauseNode = m_solvedConflictsToAnimate.shift();
@@ -515,11 +541,12 @@ package scenes.game.display
 				animateSkin.y = solvedClauseToAnimate.centerPoint.y;
 				animateSkin.scale(0.5 / parent.scaleX);
 				m_conflictAnimationLayer.addChild(animateSkin);
-				var tween:Tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
+				tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
 				tween.scaleTo(0);
 				tween.delay = n * 0.05;
 				solvedClauseToAnimate.backgroundSkin.removeFromParent(true);
 				solvedClauseToAnimate.backgroundSkin.disableSkin();
+				solvedClauseToAnimate.backgroundSkin = null;
 				tween.onComplete = conflictRemovedTweenComplete;
 				tween.onCompleteArgs = new Array(solvedClauseToAnimate, animateSkin);
 				Starling.juggler.add(tween);
@@ -1117,6 +1144,8 @@ package scenes.game.display
 			
 			for each(var node:Node in selectedNodes)
 			{
+				node.solved = true;
+				node.unselect();
 				if (!node.isClause)
 				{
 					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
@@ -1125,7 +1154,6 @@ package scenes.game.display
 			}
 			//update score
 			onWidgetChange();
-			drawNodesAfterSolving();
 		}
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
@@ -1188,7 +1216,7 @@ package scenes.game.display
 				//generate initvars array
 				for(var ii:int = 1;ii<counter;ii++)
 				{
-					var gameNode:Object = nodeIDToConstraintsTwoWayMap[ii];
+					var gameNode:VariableNode = nodeIDToConstraintsTwoWayMap[ii];
 					if(gameNode.isNarrow)
 						initvarsArray.push(0);
 					else
@@ -1254,6 +1282,8 @@ package scenes.game.display
 				else
 				{
 					newSelectedVars.push(node);
+					node.animating = true;
+					m_solvingNodesToAnimate.push(node as VariableNode);
 				}
 			}
 		}
@@ -1474,9 +1504,7 @@ package scenes.game.display
 			levelGraph.updateScore();
 			onScoreChange(true);
 			drawNodesAfterSolving();
-			unselectAll();
 			System.gc();
-
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 		}
 		
@@ -1487,7 +1515,14 @@ package scenes.game.display
 			for each(var node:Node in selectedNodes)
 			{
 				node.solved = true;
-				m_nodesToDraw.push(node);
+				node.unselect();
+				if (node.isClause) continue;
+				node.animating = false;
+				if (node.skin)
+				{
+					Starling.juggler.removeTweens(node.skin);
+					m_nodesToDraw.push(node);
+				}
 			}
 		}
 		
