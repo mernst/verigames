@@ -44,16 +44,52 @@ package scenes.game.display
 		
 		public override function createSkin():void
 		{
-			super.createSkin();
+			if (skin == null) skin = NodeSkin.getNextSkin();
+			if (skin != null)
+			{
+				setupSkin();
+				skin.draw();
+				skin.x = centerPoint.x;
+				skin.y = centerPoint.y;
+			}
 			
 			//create background
-			backgroundSkin = NodeSkin.getNextSkin();
-			if (backgroundSkin == null) return;
-			backgroundSkin.setNode(this, true);
-			backgroundSkin.x = centerPoint.x - 0.5 * backgroundSkin.width;
-			backgroundSkin.y = centerPoint.y - 0.5 * backgroundSkin.height;
+			if (backgroundSkin == null) backgroundSkin = NodeSkin.getNextSkin();
+			if (backgroundSkin != null)
+			{
+				setupBackgroundSkin();
+				backgroundSkin.draw();
+				backgroundSkin.x = centerPoint.x;
+				backgroundSkin.y = centerPoint.y;
+			}
 			
 			setEdgesDirty(true);
+		}
+		
+		public override function setupSkin():void
+		{
+			if (skin != null) skin.setNodeProps(true, false, isSelected, solved, hasError(), false);
+		}
+		
+		public override function setupBackgroundSkin():void
+		{
+			if (backgroundSkin != null) backgroundSkin.setNodeProps(true, false, isSelected, false, hasError(), true);
+		}
+		
+		public override function skinIsDirty():Boolean
+		{
+			if (skin == null) return false;
+			if (skin.isDirty) return true;
+			if (skin.hasError() != hasError()) return true;
+			return false;
+		}
+		
+		public override function backgroundIsDirty():Boolean
+		{
+			if (backgroundSkin == null) return false;
+			if (backgroundSkin.isDirty) return true;
+			if (backgroundSkin.hasError() != hasError()) return true;
+			return false;
 		}
 		
 	}

@@ -11,7 +11,7 @@ package scenes.game.display
 	
 	import utils.PropDictionary;
 	
-	public class Node extends GridChild
+	public class Node extends GridChild // TODO: implements INodeProps
 	{
 		public var graphConstraintSide:ConstraintSide;
 		public var isClause:Boolean = false;
@@ -39,14 +39,17 @@ package scenes.game.display
 		
 		public override function createSkin():void
 		{
-			super.createSkin();
-			skin = NodeSkin.getNextSkin();
+			if (skin == null) skin = NodeSkin.getNextSkin();
 			if (skin == null) return;
-			skin.setNode(this);
-			skin.x = centerPoint.x - 0.5 * skin.width;
-			skin.y = centerPoint.y - 0.5 * skin.height;
-			
-			setEdgesDirty(true);
+			setupSkin();
+			skin.draw();
+			skin.x = centerPoint.x;
+			skin.y = centerPoint.y;
+		}
+		
+		public override function setupSkin():void
+		{
+			if (skin != null) skin.setNodeProps(false, isNarrow, isSelected, solved, false, false);
 		}
 		
 		public override function removeSkin():void
@@ -60,6 +63,39 @@ package scenes.game.display
 			}
 		}
 		
+		public override function skinIsDirty():Boolean
+		{
+			if (skin == null) return false;
+			if (skin.isDirty) return true;
+			if (skin.isNarrow() != isNarrow) return true;
+			if (skin.isSelected() != isSelected) return true;
+			if (skin.isSolved() != solved) return true;
+			return false;
+		}
+		
+		public override function draw():void
+		{
+			if (animating) return;
+			if (backgroundIsDirty())
+			{
+				if (backgroundSkin == null) createSkin();
+				if (backgroundSkin != null)
+				{
+					setupBackgroundSkin();
+					backgroundSkin.draw();
+				}
+			}
+			if (skinIsDirty())
+			{
+				if (skin == null) createSkin();
+				if (skin != null)
+				{
+					setupSkin();
+					skin.draw();
+				}
+			}
+		}
+		
 		// TODO: move to VariableNode
 		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
 		{
@@ -69,15 +105,9 @@ package scenes.game.display
 			if (constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW) == _isWide) constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
 		}
 		
-		public function setDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
+		public function setDirty(dirtyEdges:Boolean = false):void
 		{
 			super.setEdgesDirty(dirtyEdges);
-			
-			if(!isClause && flashChange)
-			{
-				if(skin)
-					skin.flash();
-			}
 		}
 	}
 }

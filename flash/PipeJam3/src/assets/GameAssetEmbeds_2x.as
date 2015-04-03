@@ -98,24 +98,6 @@ package assets
 		[Embed(source = "../../lib/assets/grid.png")]
 		public static const GridClass:Class;
 		
-		[Embed(source = "../../lib/assets/shimmer.png")]
-		public static const ShimmerClass:Class;
-		
-		[Embed(source = "../../lib/assets/spotlight.png")]
-		public static const SpotlightClass:Class;
-		
-		[Embed(source = "../../lib/assets/spotlight_beam.png")]
-		public static const SpotlightBeamClass:Class;
-		
-		[Embed(source = "../../lib/assets/menus/stars.png")]
-		public static const RatingStarsClass:Class;
-		
-		[Embed(source = "../../lib/assets/socialmedia/FB-f-Logo__white_512.png")]
-		public static const FacebookLogoWhiteClass:Class;
-		
-		[Embed(source = "../../lib/assets/socialmedia/twitter-bird-dark-bgs.png")]
-		public static const TwitterLogoWhiteClass:Class;
-		
 		[Embed(source = "../../lib/assets/checkmark.png")]
 		public static const CheckmarkClass:Class;
 		

@@ -157,7 +157,7 @@ package scenes.game.display
 					firstLevel = my_level; //grab first one..
 				}
 			}
-			trace("Done creating World...");
+			//trace("Done creating World...");
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -167,7 +167,7 @@ package scenes.game.display
 		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			trace("Start Init Time", new Date().getTime() - PipeJamGameScene.startLoadTime);
+			//trace("Start Init Time", new Date().getTime() - PipeJamGameScene.startLoadTime);
 			m_initQueue = new Vector.<Function>();
 			m_initQueue.push(initBackground);
 			m_initQueue.push(initGridViewPanel);
@@ -193,7 +193,7 @@ package scenes.game.display
 			{
 				removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				loadTime = new Date().getTime() - PipeJamGameScene.startLoadTime;
-				trace("Complete Time", loadTime);
+				//trace("Complete Time", loadTime);
 				if(miniMap && !active_level.tutorialManager)
 				{
 					miniMap.centerMap();
@@ -204,16 +204,15 @@ package scenes.game.display
 				var func:Function = m_initQueue.shift();
 				
 				func.call();
-				trace("init", new Date().getTime() - time1);
+				//trace("init", new Date().getTime() - time1);
 			}
 		}
 		
 		private function initGridViewPanel():void {
-			trace("Initializing GridViewPanel...");
+			//trace("Initializing GridViewPanel...");
 			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
-			trace("Done initializing GridViewPanel.");
-			
+			//trace("Done initializing GridViewPanel.");
 		}
 		
 		public function showSolverState(running:Boolean):void
@@ -232,7 +231,7 @@ package scenes.game.display
 		}
 		
 		private function initSideControlPanel():void {
-			trace("Initializing SideControlPanel...");
+			//trace("Initializing SideControlPanel...");
 			
 			sideControlPanel = new SideControlPanel(Constants.RightPanelWidth, Starling.current.nativeStage.stageHeight);
 			sideControlPanel.x = 480 - Constants.RightPanelWidth;
@@ -241,7 +240,7 @@ package scenes.game.display
 			
 			addEventListener(SelectionEvent.BRUSH_CHANGED, changeBrush);
 			
-			trace("Done initializing SideControlPanel.");
+			//trace("Done initializing SideControlPanel.");
 		}
 		
 		private function changeBrush(event:SelectionEvent):void
@@ -250,25 +249,25 @@ package scenes.game.display
 		}
 		
 		private function initMiniMap():void {
-			trace("Initializing Minimap....");
+			//trace("Initializing Minimap....");
 			miniMap = new MiniMap();
 			miniMap.x = Constants.GameWidth - MiniMap.WIDTH - 3;
 			miniMap.y = MiniMap.TOP_Y;
 			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
 		//	miniMap.visible = false;
 			addChild(miniMap);
-			trace("Done initializing Minimap.");
+			//trace("Done initializing Minimap.");
 		}
 		
 		private function initScoring():void {
-			trace("Initializing score...");
+			//trace("Initializing score...");
 			var time1:Number = new Date().getTime();
 			onWidgetChange(); //update score
-			trace("Done initializing score.", new Date().getTime()-time1);
+			//trace("Done initializing score.", new Date().getTime()-time1);
 		}
 		
 		private function initTutorial():void {
-			trace("Initializing TutorialController...");
+			//trace("Initializing TutorialController...");
 			var time1:Number = new Date().getTime();
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
@@ -298,7 +297,7 @@ package scenes.game.display
 					}
 				}
 			}
-			trace("Done initializing TutorialController.", new Date().getTime()-time1);
+			//trace("Done initializing TutorialController.", new Date().getTime()-time1);
 		}
 		
 		private function initHintController():void
@@ -308,10 +307,10 @@ package scenes.game.display
 		}
 		
 		private function initLevel():void {
-			trace("Initializing Level...");
+			//trace("Initializing Level...");
 			var time1:Number = new Date().getTime();
 			selectLevel(firstLevel);
-			trace("Done initializing Level.", new Date().getTime()-time1);
+			//trace("Done initializing Level.", new Date().getTime()-time1);
 		}
 		
 		public function initBackground(isWide:Boolean = false, newWidth:Number = 0, newHeight:Number = 0):void
@@ -370,7 +369,7 @@ package scenes.game.display
 		}
 		
 		private function initEventListeners():void {
-			trace("Initializing event listeners...");
+			//trace("Initializing event listeners...");
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
@@ -412,7 +411,7 @@ package scenes.game.display
 			
 			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
 			
-			trace("Done initializing event listeners.");
+			//trace("Done initializing event listeners.");
 		}
 		
 		//handle transfering mouse moves from transparent part of sidebar to gridview
@@ -444,7 +443,6 @@ package scenes.game.display
 					var continueWithAutosolve:Boolean = HintController.getInstance().checkAutosolveSelection(active_level);
 					if(Level.debugSolver)
 						continueWithAutosolve = true;
-					trace("conflictsInSelection: " + continueWithAutosolve);
 					if (continueWithAutosolve)
 					{
 						if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImageSolving);
@@ -519,7 +517,7 @@ package scenes.game.display
 		private function initMusic():void {
 			AudioManager.getInstance().reset();
 			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
-			trace("Playing music...");
+			//trace("Playing music...");
 		}
 		
 		private function initUpdateTimer():void {
@@ -1090,7 +1088,7 @@ package scenes.game.display
 				addChild(m_splashLayer);
 			}
 			
-			trace("edgeSetGraphViewPanel.loadLevel()");
+			//trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				sideControlPanel.onMaxZoomReached();
@@ -1100,16 +1098,16 @@ package scenes.game.display
 				sideControlPanel.onZoomReset();
 			}
 
-			trace("onScoreChange()");
+			//trace("onScoreChange()");
 			active_level.onScoreChange();
 			active_level.resetBestScore();
 			setHighScores();
 			
-			trace("sideControlPanel.newLevelSelected");
+			//trace("sideControlPanel.newLevelSelected");
 			sideControlPanel.newLevelSelected(active_level);
 			miniMap.isDirty = true;
 
-			trace("World.onLevelLoaded complete");
+			//trace("World.onLevelLoaded complete");
 		}
 		
 		private function onTouchSplashScreen(evt:TouchEvent):void
