@@ -271,7 +271,7 @@ package scenes.game.display
 			var time1:Number = new Date().getTime();
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				var obj:Object = PipeJamGame.levelInfo;
+				var obj:Object;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
 				if(!obj)
@@ -755,6 +755,9 @@ package scenes.game.display
 				{
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
+				
+				Achievements.checkAchievements(Achievements.CHECK_SCORE, newScore - active_level.startingScore);
+
 			}
 		}
 		
@@ -1212,8 +1215,8 @@ package scenes.game.display
 		
 		public function setHighScores():void
 		{
-		//	if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
-		//		sideControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
+				sideControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
 		
 		public function showVisibleBrushes():void

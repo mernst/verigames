@@ -17,16 +17,28 @@ package networking
 		
 		/*
 		to add an achievement:
-		Run this from the command line to enter into the verigame system (I usually do from the server):
+		Run this from the command line to enter an achievement into the verigame system:
 		
-			curl -X POST -H "Content-Type: application/json" -d '{"name" : "Test123", "type":"AWARD",
-			"description" : "some description", : 1}' http://api.paradox.verigames.com/api/achievement
+			curl -X POST -H "Content-Type: application/json" -H "Authorization:Bearer authtoken" -d '{"name" : "Test123", "type":"AWARD",
+			"description" : "some description", gameId : 1}' http://api.paradox.verigames.com/api/achievement
+		
+		authtoken - needs to be an authorization token supplied from a run of game. to get one, build game with RELEASE_BUILD=true (production or staging, 
+			depending on what you want), debug the game, log in to verigames, steal the code=number end of the redirected url, add it to
+			url for your debug version, debug that, and look for the console line:
+				{"access_token": "authtoken", "token_type": "bearer"}
 		
 		Get the ID, and create a new ID and STRING pair, using the ID returned from the above call.
 		
 		Add a new set to checkAchievements at the bottom of this file. 
 		
 		Call that routine where appropriate.
+		
+		To list all current achievements:
+		curl -X GET -H "Authorization:Bearer authtoken" "http://api.paradox.verigames.com/api/achievements
+		
+		To delete an achievement:
+			curl -X DELETE -H "Authorization:Bearer authtoken" -F 'id=51c6dfe85042b6e7a5000027' http://localhost:3000/api/achievement
+		
 		*/
 		
 		public static var TUTORIAL_FINISHED_ID:String = "54c96d07677ea4b705d666a3";

@@ -3,19 +3,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <sys/times.h>
+//#include <sys/times.h>
 #include <sys/types.h>
 #include <limits.h>
 
-#include <unistd.h>
+//#include <unistd.h>
 
-#include "../maxsat.h"
+#include "../borchers.h"
 
-static CallbackFunction callback_function = 0;
 void do_callback(int new_best);
-
-const int ALG_DPLL = 1;
-const int ALG_RAND = 2;
 
 int m_alg;
 
@@ -27,258 +23,63 @@ static double callback_last_time = 0.0;
 
 static const double CALLBACK_SPACING = 1.0;
 
-#ifndef CUSTOM_GET_TIME
 
-#include <sys/time.h>
 
-double
-get_time()
+int setupBorchers(char* input_file)
 {
-  struct timeval tv = {0, 0};
-  gettimeofday(&tv, NULL);
-  return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
-}
-#endif
-
-#ifdef borchars
-void
-do_callback_now(int new_best)
-{
-  if (!callback_function) {
-    return;
-  }
-
-  if (new_best || callback_need_call_best) {
-    int i;
-    int output[MAX_VARS];
-    for (i = 0; i < num_vars; i++) {
-      if (best_soln[i] == FALSE) {
-	output[i] = 0;
-      } else {
-	output[i] = 1;
-      }
-    }
-
-    callback_need_call_best = 0;
-    callback_function(output, num_vars, ub);
-  } else if (callback_use_intermediate) {
-    callback_function(NULL, 0, 0);
-  }
-}
-
-void
-do_callback(int new_best)
-{
-  if (new_best) {
-    callback_need_call_best = 1;
-  }
-
-  if (!callback_function) {
-    return;
-  }
-
-  double this_time = get_time();
-  if (this_time - callback_last_time >= CALLBACK_SPACING) {
-    callback_last_time = this_time;
-
-    do_callback_now(new_best);
-  }
-}
-
-#endif
-// need to check that problem has each variable used in at least one clause, and there are not duplicated literals
-const char *
-check_problem(const int * clauses_ptr, int nclauses, int * nvars)
-{
-  *nvars = 0;
-
-  if (nclauses > MAX_CLAUSES) {
-    return "Too many clauses.";
-  }
-
-  char used[MAX_VARS];
-  int i, j;
-
-  for (i = 0; i < MAX_VARS; ++ i) {
-    used[i] = 0;
-  }
-
-  const int * clauses_curr = clauses_ptr;
-  int is_weight = 1;
-  int clauses_proc = 0;
-
-  int this_clause[MAX_VARS];
-  int this_clause_len = 0;
-
-  while (clauses_proc < nclauses) {
-    int this_var = abs(*clauses_ptr);
-
-    if (this_var == 0) {
-      ++ clauses_proc;
-      is_weight = 1;
-      this_clause_len = 0;
-    } else if (is_weight) {
-      is_weight = 0;
-    } else {
-      used[this_var - 1] = 1;
-      if (this_var > *nvars) {
-	*nvars = this_var;
-      }
-
-      // check for duplicate literals in clause
-      for (j = 0; j < this_clause_len; ++ j) {
-	if (this_clause[j] == *clauses_ptr) {
-	  return "Duplicate literal in clause.";
-	}
-      }
-      this_clause[this_clause_len] = *clauses_ptr;
-      ++ this_clause_len;
-    }
-
-    ++ clauses_ptr;
-  }
-
-  if (*nvars > MAX_VARS) {
-    return "Too many variables.";
-  }
-
-  // check all variables were used
-  for (i = 0; i < *nvars; ++ i) {
-    if (!used[i]) {
-      return "Not all variables used.";
-    }
-  }
-
-  return NULL;
-}
-
-void
-setup_problem(const int * clauses_ptr, int nclauses, int nvars)
-{
-     int             temp;
+     int             max_tries;
+     int             max_flips;
+     int             seed;
      int             i;
-     entry_ptr       ptr;
 
-     num_vars = nvars;
-     num_clauses = nclauses;
+	 callback_function = callbackFunction;
+     /*
+      * Take the first argument as the name of the problem file to read.
+      * Call read_prob() to read in the problem.
+      */
+     num_vars = read_prob(input_file);
+
+     printf("The total weight of all clauses is %d \n", total_weight);
 
      /*
-      * Initialize the arrays of pointers.
+      * Now, call the slm routine to try to solve the problem.
       */
-     for (i = 0; i <= num_vars - 1; i++) {
-	  vars[i] = (entry_ptr) NULL;
-	  col_count[i] = 0;
-     };
-     for (i = 0; i <= num_clauses - 1; i++) {
-	  clauses[i] = (entry_ptr) NULL;
-	  row_count[i] = 0;
-     };
-
-     total_weight = 0;
+     max_tries = 100;
+     max_flips = 100 * num_vars;
+     printf("max_tries %d \n ", max_tries);
+     printf("max_flips %d \n", max_flips);
 
      /*
-      * Now, read in the clauses, one at a time.
+      * Get a random number seed.
       */
-     for (i = 0; i <= num_clauses - 1; i++) {
-	  clause_weights[i] = *(clauses_ptr ++);
-	  if (clause_weights[i] > max_weight) {
-	       max_weight = clause_weights[i];
+     printf("Random number seed=1 \n");
+     seed = 1;
+     srand(seed);
+
+     for (i = 1; i <= max_tries; i++) {
+	  rand_soln();
+	  slm(max_flips);
+	  printf("Best weight of satisfied clauses is %d \n", best_num_sat);
+	  if (best_num_sat > best_best_num_sat) {
+	       best_best_num_sat = best_num_sat;
           };
-	  if (clause_weights[i] < min_weight) {
-	       min_weight = clause_weights[i];
+	  if (best_best_num_sat == total_weight) {
+	       break;
           };
-	  total_weight = total_weight + clause_weights[i];
-	  temp = *(clauses_ptr ++);
-	  while (temp != 0) {
-
-	    /*
-	      Make sure that this literal isn't already in the clause.
-	      If it is, then just ignore it- keeping it in causes problems 
-	      with the gsat heuristic.
-	      */
-
-	    ptr=clauses[i];
-	    while (ptr != (entry_ptr) NULL)
-	      {
-		if (ptr->var_num == abs(temp)-1)
-		  {
-		    if ((ptr->sense == 1) && (temp > 0))
-		      goto NEXT_LITERAL;
-		    if ((ptr->sense == 0) && (temp < 0))
-		      goto NEXT_LITERAL;
-		  };
-		ptr=ptr->next_in_clause;
-	      };
-
-
-
-	       /*
-	        * Allocate an entry for this literal.
-	        */
-	       ptr = (entry_ptr) malloc(sizeof(struct entry));
-	       ptr->clause_num = i;
-	       ptr->var_num = abs(temp) - 1;
-	       col_count[ptr->var_num] = col_count[ptr->var_num] + 1;
-	       if (temp > 0) {
-		    ptr->sense = 1;
-	       } else {
-		    ptr->sense = 0;
-	       };
-	       /*
-	        * Now, link it into the data structure.
-	        */
-	       ptr->next_in_clause = clauses[i];
-	       clauses[i] = ptr;
-	       row_count[i] = row_count[i] + 1;
-
-	       ptr->next_in_var = vars[ptr->var_num];
-	       vars[ptr->var_num] = ptr;
-
-	       /*
-	        * Finally, get the next number out of the file.
-	        */
-	  NEXT_LITERAL:
-	       temp = *(clauses_ptr ++);
-	  };
      };
+     /*
+      * Next, print out information about the solution.
+      */
+     printf("Best GSAT solution: weight %d of satisfied clauses, out of a possible %d \n", best_best_num_sat, total_weight);
+
+     /*
+      * Now, call the Davis-Putnam routine.
+      */
+
+     runBorchers(num_vars, num_vars);
+
+     printf("Done with Davis-Putnam.  The current solution is optimal!\n");
+     printf("The best solution had weight %d of unsatisfied clauses \n", ub);
+     printf("The solution took %d backtracks \n", btrackcount);
 }
-
-const char *
-init_problem(int * initvars, int ninitvars, int nvars)
-{
-  int ii;
-
-  // important to reset upper bound!
-  best_num_sat = best_best_num_sat = 0;
-  pick_var_iter = 0;
-
-  // initialize all the variables
-  if (initvars) {
-    if (ninitvars != nvars) {
-      return "Mismatch in variable initialization count.";
-    }
-
-    for (ii = 0; ii < nvars; ++ ii) {
-      cur_soln[ii] = initvars[ii];
-      pick_first[ii] = initvars[ii];
-    }
-  } else {
-    for (ii = 0; ii < nvars; ++ ii) {
-      cur_soln[ii] = FALSE;
-      pick_first[ii] = FALSE;
-    }
-  }
-
-  // this call to slm() and the following initializes the upper bound
-  slm(0);
-  if (best_num_sat > best_best_num_sat) {
-    best_best_num_sat = best_num_sat;
-  };
-  if (best_best_num_sat == total_weight) {
-    return NULL; // nothing to do, could skip optimization
-  };
-  
-  return NULL;
-}
-
 

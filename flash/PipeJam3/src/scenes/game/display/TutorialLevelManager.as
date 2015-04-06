@@ -365,9 +365,10 @@ package scenes.game.display
 				case "10":
 					return 400;
 				case "12":
+					return 1000;
 				case "13":
 				case "14":
-					return 500;
+					return 2000;
 			}
 			return -1;
 		}
