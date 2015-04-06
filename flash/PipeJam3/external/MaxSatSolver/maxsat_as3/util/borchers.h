@@ -1,26 +1,7 @@
-//#define borchers
-#define MAXSATZ2009
-//#define BUILD_LIB
+#include "main.h"
 
-extern const int ALG_DPLL;
-extern const int ALG_RAND;
-
-typedef int(*CallbackFunction)(int * vars, int nvars, int unsat_weight);
-extern int callbackFunction(int * vars, int nvars, int unsat_weight);
-
-//for borchars
-#define MAX_CLAUSES 50000
-#define MAX_VARS    20000
 
 typedef struct entry *entry_ptr;
-
-struct entry {
-     int             clause_num;
-     int             var_num;
-     int             sense;
-     entry_ptr       next_in_var;
-     entry_ptr       next_in_clause;
-};
 
 extern int             cur_soln[MAX_VARS];
 extern entry_ptr       vars[MAX_VARS];
@@ -51,3 +32,5 @@ extern int             min_weight;
 
 extern int             pick_first[MAX_VARS];
 extern int             btrackcount;
+
+extern CallbackFunction callback_function;

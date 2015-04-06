@@ -1,7 +1,6 @@
+#define BUILD_LIB
 //#define borchers
-#define MAXSATZ2009
-//#define BUILD_LIB
-
+//#define MAXSATZ2009
 extern const int ALG_DPLL;
 extern const int ALG_RAND;
 
@@ -57,3 +56,5 @@ void runBorchers(int ninitvars, int nvars);
 extern void getCurrentSolutionBorchers(int* output);
 
 extern void do_callback(int new_best);
+
+extern CallbackFunction callback_function;

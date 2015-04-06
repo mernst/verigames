@@ -43,13 +43,13 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-         listEntries(db, "GameSolvedLevels");
+   //      listEntries(db, "ActiveLevels");
 
-        listCollectionNames(db);
- //      HashMap<String, String> map = new HashMap();
-//       map.put("playerID", "51e5b3460240288229000026");
+  //      listCollectionNames(db);
+       HashMap<String, String> map = new HashMap();
+  //     map.put("name", "p_062629_00000000");
   //     map.put("levelID", "12");
-//       listEntries(db, "CompletedTutorials", map, false);
+       listEntries(db, "ActiveLevels", map, false);
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
         

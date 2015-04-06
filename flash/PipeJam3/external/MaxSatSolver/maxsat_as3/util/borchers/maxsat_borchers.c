@@ -3,19 +3,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <sys/times.h>
+//#include <sys/times.h>
 #include <sys/types.h>
 #include <limits.h>
 
-#include <unistd.h>
+//#include <unistd.h>
 
 #include "../borchers.h"
 
-static CallbackFunction callback_function = 0;
 void do_callback(int new_best);
-
-const int ALG_DPLL = 1;
-const int ALG_RAND = 2;
 
 int m_alg;
 
@@ -36,7 +32,7 @@ int setupBorchers(char* input_file)
      int             seed;
      int             i;
 
-
+	 callback_function = callbackFunction;
      /*
       * Take the first argument as the name of the problem file to read.
       * Call read_prob() to read in the problem.
@@ -48,7 +44,7 @@ int setupBorchers(char* input_file)
      /*
       * Now, call the slm routine to try to solve the problem.
       */
-     max_tries = 10;
+     max_tries = 100;
      max_flips = 100 * num_vars;
      printf("max_tries %d \n ", max_tries);
      printf("max_flips %d \n", max_flips);
@@ -59,8 +55,8 @@ int setupBorchers(char* input_file)
      printf("Random number seed=1 \n");
      seed = 1;
      srand(seed);
-printf("ddd");
-     for (i = 1; i <= max_tries; i++) {printf("sss");
+
+     for (i = 1; i <= max_tries; i++) {
 	  rand_soln();
 	  slm(max_flips);
 	  printf("Best weight of satisfied clauses is %d \n", best_num_sat);
@@ -80,12 +76,10 @@ printf("ddd");
       * Now, call the Davis-Putnam routine.
       */
 
-     runBorchers();
+     runBorchers(num_vars, num_vars);
 
      printf("Done with Davis-Putnam.  The current solution is optimal!\n");
      printf("The best solution had weight %d of unsatisfied clauses \n", ub);
      printf("The solution took %d backtracks \n", btrackcount);
-     exit(0);
-
 }
 

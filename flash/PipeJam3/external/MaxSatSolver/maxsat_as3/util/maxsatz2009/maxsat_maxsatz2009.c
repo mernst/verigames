@@ -3,27 +3,25 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <sys/times.h>
+//#include <sys/times.h>
 #include <sys/types.h>
 #include <limits.h>
 
-#include <unistd.h>
+//#include <unistd.h>
 
 #include "../maxsatz.h"
-
-static CallbackFunction callback_function = 0;
 
 int setupMaxSatz(char* input_file)
 {
 	int i;
   long begintime, endtime, mess;
-  struct tms *a_tms;
+//  struct tms *a_tms;
   FILE *fp_time;
   
   callback_function = callbackFunction;
   
-  a_tms = ( struct tms *) malloc( sizeof (struct tms));
-  mess=times(a_tms); begintime = a_tms->tms_utime;
+//  a_tms = ( struct tms *) malloc( sizeof (struct tms));
+//  mess=times(a_tms); begintime = a_tms->tms_utime;
 
   printf("c ----------------------------\n");
   printf("c - Weighted Partial MaxSATZ -\n");
@@ -39,7 +37,7 @@ int setupMaxSatz(char* input_file)
       dpl();
 	  do_callback(0);
     
-  mess=times(a_tms); endtime = a_tms->tms_utime;
+ // mess=times(a_tms); endtime = a_tms->tms_utime;
   
   printf("c Learned clauses = %i\n", INIT_BASE_NB_CLAUSE - BASE_NB_CLAUSE);
   printf("c NB_MONO= %lli, NB_BRANCHE= %lli, NB_BACK= %lli \n", 
@@ -58,32 +56,36 @@ int setupMaxSatz(char* input_file)
     printf(" 0\n");
   }
 
-  printf ("Program terminated in %5.3f seconds.\n",
-	  ((double)(endtime-begintime)/CLK_TCK));
+ // printf ("Program terminated in %5.3f seconds.\n",
+//	  ((double)(endtime-begintime)/CLK_TCK));
 
-  fp_time = fopen("resulttable", "a");
-  fprintf(fp_time, "wpmsz-2.5 %s %5.3f %lld %lld %lld %d %d %d %d\n", 
-	  input_file, ((double)(endtime-begintime)/CLK_TCK), 
-	  NB_BRANCHE, NB_BACK,  
-	  UB, NB_VAR, INIT_NB_CLAUSE, NB_CLAUSE-INIT_NB_CLAUSE, CMTR[0]+CMTR[1]);
-  printf("wpmsz-2.5 %s %5.3f %lld %lld %lld %d %d %d %d\n", 
-	 	 input_file, ((double)(endtime-begintime)/CLK_TCK), 
-	 NB_BRANCHE, NB_BACK,
-	 UB, NB_VAR, INIT_NB_CLAUSE, NB_CLAUSE-INIT_NB_CLAUSE, CMTR[0]+CMTR[1]);
-  fclose(fp_time);
+//  fp_time = fopen("resulttable", "a");
+//  fprintf(fp_time, "wpmsz-2.5 %s %5.3f %lld %lld %lld %d %d %d %d\n", 
+//	  input_file, ((double)(endtime-begintime)/CLK_TCK), 
+//	  NB_BRANCHE, NB_BACK,  
+//	  UB, NB_VAR, INIT_NB_CLAUSE, NB_CLAUSE-INIT_NB_CLAUSE, CMTR[0]+CMTR[1]);
+//  printf("wpmsz-2.5 %s %5.3f %lld %lld %lld %d %d %d %d\n", 
+//	 	 input_file, ((double)(endtime-begintime)/CLK_TCK), 
+//	 NB_BRANCHE, NB_BACK,
+//	 UB, NB_VAR, INIT_NB_CLAUSE, NB_CLAUSE-INIT_NB_CLAUSE, CMTR[0]+CMTR[1]);
+//  fclose(fp_time);
 }
 
 void
 runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
 {
-  callback_function = callback;
 
   int nclauses_processed = 0;
   const int * clauses_ptr = clauses;
+  int i = BASE_NB_CLAUSE;
+  int j;
+  int weight = 0;
+  int lits[10000];
+  int length = 0; 
+  int next_is_weight = 1;
+ callback_function = callback;
 
   NB_VAR = 0;
-
-  int next_is_weight = 1;
   while (nclauses_processed < nclauses) {
     int entry = *clauses_ptr;
 
@@ -117,11 +119,7 @@ runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
 
 
 
-  int i = BASE_NB_CLAUSE;
-  int j;
-  int weight = 0;
-  int lits[10000];
-  int length = 0;
+
 
   nclauses_processed = 0;
   clauses_ptr = clauses;

@@ -151,7 +151,7 @@ int pick_first_val_opp(int ii) { if (pick_first[ii] == TRUE) return FALSE; else 
 /*
  * Read in the problem.
  */
-void
+int 
 read_prob(char * filename)
 {
      FILE           *fp;
@@ -257,6 +257,8 @@ read_prob(char * filename)
 	       fscanf(fp, "%d", &temp);
 	  };
      };
+
+	 return num_vars;
 }
 
 
@@ -306,7 +308,7 @@ slm(int max_flips)
      int             flipvar;
      entry_ptr       ptr;
      entry_ptr       ptr2;
-
+//printf("slm");
      /*
       * Figure out how good the current solution is.  First, figure out how
       * many satisfying literals are in each clause.  Keep track of the
@@ -314,6 +316,7 @@ slm(int max_flips)
       */
      num_sat = 0;
      for (j = 0; j <= num_clauses - 1; j++) {
+	//	 printf("slm1");
 	  ptr = clauses[j];
 	  sat_count[j] = 0;
 	  while (ptr != ((entry_ptr) NULL)) {
@@ -337,7 +340,8 @@ slm(int max_flips)
       * Next, figure out how much improvement we would get by flipping each
       * variable.
       */
-     for (j = 0; j <= num_vars - 1; j++) {
+
+    for (j = 0; j <= num_vars - 1; j++) {
 	  num_improve[j] = 0;
 	  ptr = vars[j];
 	  while (ptr != ((entry_ptr) NULL)) {
@@ -368,17 +372,19 @@ slm(int max_flips)
      /*
       * Save the current solution as the best solution found so far.
       */
+	printf("%d %d %d\n", cur_soln[0], cur_soln[1], cur_soln[2]);
      for (j = 0; j <= num_vars - 1; j++) {
 	  best_soln[j] = cur_soln[j];
      };
      best_num_sat = num_sat;
+
      /*
       * Next, loop through max_flips times, flipping a variable each time.
       */
-     ///for (j = 1; j <= max_flips; j++) {
-     if (max_flips > 0) 
-       while (1) {
-
+     for (j = 1; j <= max_flips; j++) {
+   //  if (max_flips > 0) 
+     //  while (1) {
+//printf("slm3");
 	  if ((rand() % (BIG + 1)) / ((float) BIG) < WALK_PROB) {
 	       /*
 	        * In this case, do a random walk.
@@ -433,7 +439,7 @@ slm(int max_flips)
 	       var = ptr->var_num;
 	       clause = ptr->clause_num;
 	       sense = ptr->sense;
-
+//printf("slm4");
 	       if (sense == 1) {
 		    if (cur_soln[flipvar] == 1) {
 			 /*
@@ -601,6 +607,7 @@ slm(int max_flips)
 	   * Update best_soln if necessary.
 	   */
 	  if (num_sat > best_num_sat) {
+		//  printf("slm5");
 	       best_num_sat = num_sat;
 	       for (k = 0; k <= num_vars; k++) {
 		    best_soln[k] = cur_soln[k];
@@ -632,7 +639,6 @@ update_best_soln()
 {
      int             i;
      int             j;
-
 
      for (i=0; i <= num_vars-1; i++) {
        best_soln[i]=FALSE;
@@ -846,7 +852,6 @@ pick_var()
       * variable.  This is a bit of a kludge, but it is fast, and this will
       * only happen in rare circumstances.
       */
-
      if (small_count == 0) {
 	  if (unsat < ub) {
 	       ub = unsat;
@@ -1125,6 +1130,8 @@ runBorchers(int ninitvars, int nvars)
 		printf("Error in problem setup: %s\n", error);
 		return;
 	  }
+	   callbackFunction(best_soln, num_vars, ub);
+
      /*
       * First, initialize the counts.
       */
@@ -1179,7 +1186,6 @@ runBorchers(int ninitvars, int nvars)
 	  if (ub - unsat <= max_weight) {
 	       unit_track();
           };
-
 	  if ((cur_level == num_vars - 1) && (unsat < ub)) {
 	       ub = unsat;
 	       printf("New Best Solution Found, %d \n", ub);
@@ -1201,6 +1207,7 @@ runBorchers(int ninitvars, int nvars)
      /*
       * We're all done with the search.
       */
+//	   update_best_soln();
      printf("The solution took %d backtracks \n", btrackcount);
 
 }
@@ -1211,7 +1218,7 @@ runBorchers(int ninitvars, int nvars)
 /*
  * The main program.
  */
-#ifdef borchars
+#ifdef borchers
 void
 main(argc, argv)
      int             argc;
@@ -1265,7 +1272,9 @@ main(argc, argv)
       * Now, call the Davis-Putnam routine.
       */
 
-     dp();
+     runBorchers(num_vars, num_vars);
+	 
+	 callbackFunction(best_soln, num_vars, ub);
 
      printf("Done with Davis-Putnam.  The current solution is optimal!\n");
      printf("The best solution had weight %d of unsatisfied clauses \n", ub);
