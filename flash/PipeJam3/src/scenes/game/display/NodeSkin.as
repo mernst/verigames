@@ -180,20 +180,20 @@ package scenes.game.display
 					textureImage = new Image(LightBlueCircle);
 				}
 				
-				if(isSolved() && isSelected())
-				{
-					textureImage.setVertexColor(0, 0x00ff00);
-					textureImage.setVertexColor(1, 0x00ff00);
-					textureImage.setVertexColor(2, 0x00ff00);
-					textureImage.setVertexColor(3, 0x00ff00);
-				}
-				else
-				{
-					textureImage.setVertexColor(0, 0xffffff);
-					textureImage.setVertexColor(1, 0xffffff);
-					textureImage.setVertexColor(2, 0xffffff);
-					textureImage.setVertexColor(3, 0xffffff);
-				}	
+				//if(isSolved() && isSelected())
+				//{
+					//textureImage.setVertexColor(0, 0x00ff00);
+					//textureImage.setVertexColor(1, 0x00ff00);
+					//textureImage.setVertexColor(2, 0x00ff00);
+					//textureImage.setVertexColor(3, 0x00ff00);
+				//}
+				//else
+				//{
+					//textureImage.setVertexColor(0, 0xffffff);
+					//textureImage.setVertexColor(1, 0xffffff);
+					//textureImage.setVertexColor(2, 0xffffff);
+					//textureImage.setVertexColor(3, 0xffffff);
+				//}	
 				
 				textureImage.width = textureImage.height = 14;
 				textureImage.x = -textureImage.width/2;

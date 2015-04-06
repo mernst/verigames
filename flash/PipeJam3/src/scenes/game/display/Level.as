@@ -128,7 +128,7 @@ package scenes.game.display
 		private var m_createdConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
 		private var m_groupGrids:Vector.<GroupGrid>
-		private static const ITEMS_PER_FRAME:uint = 50; // limit on nodes/edges to remove/add per frame
+		private static const ITEMS_PER_FRAME:uint = 300; // limit on nodes/edges to remove/add per frame
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
@@ -395,6 +395,7 @@ package scenes.game.display
 			var touchedEdgeLayer:Boolean = false;
 			var touchedNodeLayer:Boolean = false;
 			var touchedConflictLayer:Boolean = false;
+			if (m_nodesToRemove.length) trace("m_nodesToRemove: ", m_nodesToRemove.length);
 			while (m_nodesToRemove.length && (nodesProcessed <= ITEMS_PER_FRAME || m_tutorialTag))
 			{
 				var nodeToRemove:Node = m_nodesToRemove.shift();
@@ -425,53 +426,22 @@ package scenes.game.display
 				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.graphConstraintSide.id)) delete m_nodeOnScreenDict[nodeToRemove.graphConstraintSide.id];
 				nodesProcessed++;
 			}
-			if(m_nodesToDraw.length)
-			{
-				//make sure all clauses that are connected to these nodes redraw, so edges get updated correctly
-				var clausesNeeded:Dictionary = new Dictionary;
-				var clausesToDraw:Dictionary = new Dictionary;
-				for(var i:int = 0; i<m_nodesToDraw.length; i++)
-				{
-					var node:Node = m_nodesToDraw[i];
-					if(node is ClauseNode)
-					{
-						clausesToDraw[node.id] = node;
-					}
-					else
-					{
-						node.solved = m_recentlySolved;
-						//add all clauses connected to this node to Needed
-						for each(var edgeID:String in node.connectedEdgeIds)
-						{
-							var edgeFromID:Edge = edgeLayoutObjs[edgeID];
-							var clause:Node = edgeFromID.fromNode is ClauseNode ? edgeFromID.fromNode : edgeFromID.toNode;
-							clausesNeeded[clause.id] = clause;
-						}
-					}
-				}
-				for each(var cl:Node in clausesNeeded)
-				{
-					if(clausesToDraw[cl.id] == null)
-					{
-						m_nodesToDraw.push(cl);
-					}
-				}
-			}
+			if (m_nodesToDraw.length) trace("m_nodesToDraw: ", m_nodesToDraw.length);
 			while (m_nodesToDraw.length && nodesProcessed <= ITEMS_PER_FRAME)	
 			{
 				var nodeToDraw:Node = m_nodesToDraw.shift();
 				if (nodeToDraw.animating) continue;
-				// At this time only clause changes (satisfied or not) affect the
-				// look of an edge, so draw all edges when clauses are redrawn and
+				// At this time only VAR changes affect the look of an edge,
+				// so draw all edges when clauses are redrawn and
 				// ignore var nodes
-				if (nodeToDraw.isClause)
+				if (!nodeToDraw.isClause)
 				{
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
 						edge = edgeLayoutObjs[gameEdgeId];
 						if(edge.skin && edge.skin.parent)
 						{
-							edge.skin.removeFromParent();
+							edge.skin.removeFromParent(true);
 							edge.skin = null;
 						}
 						edge.createSkin(currentGroupDepth);
@@ -543,7 +513,7 @@ package scenes.game.display
 				m_conflictAnimationLayer.addChild(animateSkin);
 				tween = new Tween(animateSkin, 0.4, Transitions.EASE_IN_BACK);
 				tween.scaleTo(0);
-				tween.delay = n * 0.05;
+				tween.delay = (n * 0.05) % 0.5;
 				solvedClauseToAnimate.backgroundSkin.removeFromParent(true);
 				solvedClauseToAnimate.backgroundSkin.disableSkin();
 				solvedClauseToAnimate.backgroundSkin = null;
@@ -980,7 +950,6 @@ package scenes.game.display
 						clauseNode.addError(false);
 						if (clauseNode.skin != null)
 						{
-							//m_nodesToDraw.push(clauseNode);
 							clauseNode.animating = true;
 							m_solvedConflictsToAnimate.push(clauseNode);
 						}
@@ -1623,20 +1592,11 @@ internal class GroupGrid
 	public function GroupGrid(m_boundingBox:Rectangle, levelScale:Number, nodeDict:Object, layoutDict:Object, nodeSize:uint)
 	{
 		// Note: this assumes a uniform distribution of nodes, which is not a good estimate, but it will do for now
-	//	var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
+		var gridsTotal:int = Math.ceil(nodeSize / NODE_PER_GRID_ESTIMATE);
 		// use right, bottom instead of width, height to ignore (presumably) negligible x or y value that would need to be subtracted from each node.x,y
-//		var totalDim:Number = 2048;//Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
-//		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
-//		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
-//		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
-		
-		//per above comment, the above fails on non-uniform distribution, so this time just set a max size for grids, and derive
-		//the number of grid from there. Pointing Fingers was failing.
-		var scaleFactor:int = 3; //just a guess
-		var maxWidth:Number = 440 * scaleFactor;
-		var maxHeight:Number = 320*scaleFactor;
-		var gridsWide:int = Math.ceil(m_boundingBox.right / maxWidth);
-		var gridsHigh:int = Math.ceil(m_boundingBox.bottom / maxHeight);
+		var totalDim:Number = 2048;//Math.max(1, m_boundingBox.right + m_boundingBox.bottom);
+		var gridsWide:int = Math.ceil(gridsTotal * m_boundingBox.right / totalDim);
+		var gridsHigh:int = Math.ceil(gridsTotal * m_boundingBox.bottom / totalDim);
 		gridDimensions = new Point(m_boundingBox.right / gridsWide, m_boundingBox.bottom / gridsHigh);
 		
 		// Put all node ids in the grid
