@@ -699,7 +699,7 @@ package scenes.game.display
 			// create all nodes, edges for tutorials so that the tutorial indicators/arrows have something to point at
 			if (initialized) return;
 			
-			this.alpha = .999;
+			//this.alpha = .999;
 			
 			totalMoveDist = new Point();
 			loadLayout();
@@ -1115,6 +1115,7 @@ package scenes.game.display
 		{
 			for each(var node:Node in selectedNodes)
 			{
+				node.animating = false;
 				node.unselect();
 				if (node.skin != null)
 				{
@@ -1136,6 +1137,7 @@ package scenes.game.display
 			for each(var node:Node in selectedNodes)
 			{
 				node.solved = true;
+				node.animating = false;
 				node.unselect();
 				if (!node.isClause)
 				{
@@ -1561,7 +1563,9 @@ package scenes.game.display
 						if (diffXSq + diffYSq <= RAD_SQUARED && !node.isSelected) {
 							if (false) { // use this branch for actively unselecting when max is reached 
 								while (selectedNodes.length >= MAX_SEL) {
-									selectedNodes.shift().unselect();
+									var unselNode:Node = selectedNodes.shift();
+									unselNode.animating = false;
+									unselNode.unselect();
 								}
 							} else if (selectedNodes.length >= MAX_SEL) {
 								break; // done selecting

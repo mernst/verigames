@@ -157,6 +157,7 @@ package scenes.game.display
 		{
 			if (!isDirty) return;
 			isDirty = false;
+			Starling.juggler.removeTweens(this);
 			
 			if (textureImage) textureImage.removeFromParent(true);
 			if (constraintImage) constraintImage.removeFromParent(true);
@@ -230,6 +231,7 @@ package scenes.game.display
 		
 		public override function dispose():void
 		{
+			Starling.juggler.removeTweens(this);
 			if (textureImage != null) textureImage.removeFromParent(true);
 			if (constraintImage != null) constraintImage.removeFromParent(true);
 			alpha = scaleX = scaleY = 1;
