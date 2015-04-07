@@ -272,6 +272,8 @@ package scenes.game.display
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				var obj:Object;
+				if(PipeJam3.TUTORIAL_DEMO)
+					obj = PipeJamGame.levelInfo;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
 				if(!obj)
