@@ -1,8 +1,5 @@
 #include "main.h"
 
-
-typedef struct entry *entry_ptr;
-
 extern int             cur_soln[MAX_VARS];
 extern entry_ptr       vars[MAX_VARS];
 extern int             num_vars;
@@ -33,4 +30,4 @@ extern int             min_weight;
 extern int             pick_first[MAX_VARS];
 extern int             btrackcount;
 
-extern CallbackFunction callback_function;
+extern void print_best_solution();

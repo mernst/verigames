@@ -27,17 +27,18 @@ int algType;
 
 #ifndef CUSTOM_GET_TIME
 
-//#include <sys/time.h>
+#include <sys/time.h>
 
 double
 get_time()
 {
- // struct timeval tv = {0, 0};
- // gettimeofday(&tv, NULL);
- // return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
-	return 3;
+  struct timeval tv = {0, 0};
+  gettimeofday(&tv, NULL);
+  return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
 }
 #endif
+
+int count = 1;
 
 void
 do_callback_now(int  new_best)
@@ -52,15 +53,16 @@ do_callback_now(int  new_best)
 
 	if(algType == 1)
 	{
-		getCurrentSolutionMaxSatz(output);
+		getCurrentSolutionBorchers(output);
 	}
 	else if(algType == 2)
 	{
-		getCurrentSolutionBorchers(output);
+		getCurrentSolutionMaxSatz(output);
 	}
 		
     callback_need_call_best = 0;
     callback_function(output, num_vars, ub);
+	count++;
 
 }
 
@@ -75,21 +77,22 @@ do_callback(int new_best)
     return;
   }
 
-//  double this_time = get_time();
-//  if (this_time - callback_last_time >= CALLBACK_SPACING) {
-//    callback_last_time = this_time;
+  double this_time = get_time();
+  if (this_time - callback_last_time >= CALLBACK_SPACING) {
+    callback_last_time = this_time;
 
 	if (new_best || callback_need_call_best)
 		do_callback_now(new_best);
 	else if (callback_use_intermediate)
 		callback_function(NULL, 0, 0);
-//  }
+  }
 }
 
 
 int callbackFunction(int * vars, int nvars, int unsat_weight)
 {
 	int i;
+	printf("ub %d ", unsat_weight);
 	for (i = 0; i < nvars; i++)
 	{
 		if(vars[i])
@@ -263,7 +266,7 @@ void run(int algorithm, int * clauses, int nclauses, int * initvars, int ninitva
 
   const char * error = NULL;
   int nvars = 0; 
-  
+  algType = algorithm;
   callback_function = callback;
   callback_use_intermediate = intermediate_callbacks;
   callback_need_call_best = 1;
@@ -283,48 +286,47 @@ void run(int algorithm, int * clauses, int nclauses, int * initvars, int ninitva
   if (algorithm == ALG_DPLL) {
     runBorchers(ninitvars, nvars);
   } else {
-    runMaxSatz(clauses, nclauses, callback);
+    runMaxSatz(clauses, nclauses);
   }
-  if (callback_need_call_best) {
+  if (1) {
     do_callback_now(0);
   }
 }
 
-int callFromFile(int algType, char *inputFile) {
-  char saved_input_file[WORD_LENGTH];
-  //int i,  var;
-  int i;
+void callFromFile(int algType, char *inputFile) {
+	char saved_input_file[WORD_LENGTH];
+	//int i,  var;
+	int i;
 
-  for (i=0; i<WORD_LENGTH; i++)
-    saved_input_file[i]=inputFile[i];
+	for (i=0; i<WORD_LENGTH; i++)
+		saved_input_file[i]=inputFile[i];
 
-  if(algType == ALG_DPLL)
-	  return setupMaxSatz(saved_input_file);
+	if(algType == ALG_DPLL)
+		setupBorchers(saved_input_file);
 	else
-		return setupBorchers(saved_input_file);
-  
-  return TRUE;
+		setupMaxSatz(saved_input_file);
 }
 
-int
-callRun(int algType)
+void callRun(int algType)
 {
-  int nclauses = 6;
+  int nclauses = 10;
   
   int clauses[] = {
-    10, -1, 2, 0,
-    10, 1, -2, 0,
-    10, 2, 3, 0,
-    10, -2, -3, 0,
-    10, 3, 1, 0,
-    10, 3, -1, 0
+1, -1, 0,
+1000, 2, 0,
+2, -1, 2, 0,
+1000, 3, 0,
+2, -1, 3, 0,
+1000, 4, 0,
+2, -4, 1, 0,
+2, 1, 0,
+1000, 4, 0,
+2, 4, -1, 0
   };
 
   printf("Running alg %s from internal set\n", algNames[algType-1]);
 
   run(algType, clauses, nclauses, NULL, 0, 0, callbackFunction);
-
-  return 0;
 }
 
 #ifndef BUILD_LIB
@@ -335,7 +337,7 @@ main(int argc, char *argv[])
 {
   int useFile = 2;
     
-  algType = 2; //= strtol(argv[2], (char **)NULL, 10);
+  algType = 1; //= strtol(argv[2], (char **)NULL, 10);
   if(useFile == 1)
 	  callRun(algType);
   else

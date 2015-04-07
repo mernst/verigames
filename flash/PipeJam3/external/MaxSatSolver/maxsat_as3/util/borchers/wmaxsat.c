@@ -266,11 +266,7 @@ void getCurrentSolutionBorchers(int* output)
 {
 	int i;
 	for (i = 0; i < num_vars; i++) {
-	  if (best_soln[i] == FALSE) {
-		output[i] = 0;
-	  } else {
-		output[i] = 1;
-	  }
+	  output[i] = best_soln[i];
 	}
 }
 	
@@ -372,7 +368,6 @@ slm(int max_flips)
      /*
       * Save the current solution as the best solution found so far.
       */
-	printf("%d %d %d\n", cur_soln[0], cur_soln[1], cur_soln[2]);
      for (j = 0; j <= num_vars - 1; j++) {
 	  best_soln[j] = cur_soln[j];
      };
@@ -607,7 +602,6 @@ slm(int max_flips)
 	   * Update best_soln if necessary.
 	   */
 	  if (num_sat > best_num_sat) {
-		//  printf("slm5");
 	       best_num_sat = num_sat;
 	       for (k = 0; k <= num_vars; k++) {
 		    best_soln[k] = cur_soln[k];
@@ -643,11 +637,9 @@ update_best_soln()
      for (i=0; i <= num_vars-1; i++) {
        best_soln[i]=FALSE;
      };
-
-     for (i=0; i<= cur_level; i++) {
+    for (i=0; i<= cur_level; i++) {
        best_soln[order[i]]=cur_soln[order[i]];
      };
-
      do_callback(1);
 }
 

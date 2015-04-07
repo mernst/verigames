@@ -713,8 +713,8 @@ package scenes.game.display
 				if (newScore >= active_level.getTargetScore()) {
 					if (!active_level.targetScoreReached) {
 						active_level.targetScoreReached = true;
-						if(active_level.m_inSolver)
-							solverDoneCallback("");
+						//if(active_level.m_inSolver)
+						//	solverDoneCallback("");
 						var continueDelay:Number = 0;
 						var showFanfare:Boolean = true;
 						if (active_level && active_level.tutorialManager) {

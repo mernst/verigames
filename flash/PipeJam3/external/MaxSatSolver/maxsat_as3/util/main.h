@@ -48,7 +48,7 @@ run(int algorithm, int * clauses, int nclauses, int * initvars, int ninitvars, i
 extern const char *
 check_problem(const int * clauses_ptr, int nclauses, int * nvars);
 extern int setupMaxSatz(char* input_file);
-extern void runMaxSatz(int * clauses, int nclauses, CallbackFunction callback);
+extern void runMaxSatz(int * clauses, int nclauses);
 extern void getCurrentSolutionMaxSatz(int* output);
 
 extern int setupBorchers(char* input_file);

@@ -144,7 +144,7 @@ package scenes.game.display
 		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
 		static public var debugSolver:Boolean = false;
-		public var extendSolver:Boolean = false;
+		public var extendSolver:Boolean = true;
 		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
@@ -1248,6 +1248,7 @@ package scenes.game.display
 						
 					}
 					constraintArray.push(clauseArray);
+					trace("1", clauseArray[1], clauseArray[2], 0);
 				}
 				else
 				{
@@ -1328,9 +1329,11 @@ package scenes.game.display
 								else
 									nodeClauseArray.push(constraintID);
 								constraintArray.push(nodeClauseArray);
+								trace("1", clauseArray[1], 0);
 							}	
 						}
 						constraintArray.push(clauseArray);
+						trace("1", clauseArray[1], clauseArray[2], 0);
 					}
 				}
 			}
@@ -1352,7 +1355,10 @@ package scenes.game.display
 					var conEdge:Edge = edgeLayoutObjs[conEdgeID];
 					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
-					var nextLayerClause:Node = conEdge.toNode;
+					var nextLayerClause:ClauseNode = conEdge.toNode as ClauseNode;
+					
+					if(nextLayerClause.hasError()) //ignore if I don't care if the value changes
+						continue;
 					
 					if(newSelectedClauses[nextLayerClause.id] == null)
 					{
@@ -1368,7 +1374,7 @@ package scenes.game.display
 						}		
 								
 						var clauseArray:Array = new Array();
-						clauseArray.push(FIXED_CONSTRAINT_VALUE);
+						clauseArray.push(CONFLICT_CONSTRAINT_VALUE*2); //multiply just so this is slightly higher value
 						
 						for each(var edgeID:String in nextLayerClause.connectedEdgeIds)
 						{
@@ -1387,8 +1393,8 @@ package scenes.game.display
 							else
 								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[connectedNode.id];
 							
-							//if(edgeID.indexOf('c') == 0)
-							if(connectedNode.isNarrow)
+							if(edgeID.indexOf('c') == 0)
+							//if(connectedNode.isNarrow)
 								clauseArray.push(nextLevelConstraintID);
 							else
 								clauseArray.push(-nextLevelConstraintID);
@@ -1406,15 +1412,17 @@ package scenes.game.display
 								continue;
 							
 							var varArray:Array = new Array();
-							varArray.push(FIXED_CONSTRAINT_VALUE);
+							varArray.push(FIXED_CONSTRAINT_VALUE); //FIXED value cause we really don't want this to change, it might add conflicts
 							//set constraint with current value of connectedNode, not constraint direction
 							if(connectedNode.isNarrow)
 								varArray.push(-nextLevelConstraintID);
 							else
 								varArray.push(nextLevelConstraintID);						
 							constraintArray.push(varArray);
+							trace(varArray[0], varArray[1],0);
 						}
 						constraintArray.push(clauseArray);
+						trace(clauseArray[0], clauseArray[1], clauseArray[2],0);
 					}
 				}
 			}
@@ -1423,40 +1431,53 @@ package scenes.game.display
 		public function solverStartCallback(evt:TimerEvent):void
 		{
 			m_inSolver = true;
-			MaxSatSolver.run_solver(2, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
+		var m_lastVars:Array;
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var someNodeUpdated:Boolean = false;
-			trace("update", unsat_weight);
+			trace("update", unsat_weight, vars[0], vars[1], vars[2], vars[3]);
+			trace(m_inSolver, m_unsat_weight);
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
+			m_lastVars = vars;
+			
+		}
+		
+		protected function updateNodes():void
+		{
+			if(!m_lastVars)
+				return;
+			var someNodeUpdated:Boolean = false;
 			//trace(levelGraph.currentScore);
-			for (var ii:int = 0; ii < vars.length; ++ ii) 
+			for (var ii:int = 0; ii < m_lastVars.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
-				node.solved = true;
-				var nodeUpdated:Boolean = false;
-				var constraintVar:ConstraintVar = node["graphVar"];
-				var currentVal:Boolean = node.isNarrow;
-				node.isNarrow = true;
-				if(vars[ii] == 1)
-					node.isNarrow = false;
-				someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
-				nodeUpdated = currentVal != node.isNarrow; 
-				if(currentVal != node.isNarrow)
+				if(node)
 				{
-					if (node.skin != null)
+					node.solved = true;
+					var nodeUpdated:Boolean = false;
+					var constraintVar:ConstraintVar = node["graphVar"];
+					var currentVal:Boolean = node.isNarrow;
+					node.isNarrow = true;
+					if(m_lastVars[ii] == 1)
+						node.isNarrow = false;
+					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
+					nodeUpdated = currentVal != node.isNarrow; 
+					if(currentVal != node.isNarrow)
 					{
-						node.setDirty(true);
-						m_nodesToDraw.push(node);
+						if (node.skin != null)
+						{
+							node.setDirty(true);
+							m_nodesToDraw.push(node);
+						}
+						if(constraintVar != null) 
+							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+						if (tutorialManager != null) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 					}
-					if(constraintVar != null) 
-						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
-					if (tutorialManager != null) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 				}
 			}
 			if(someNodeUpdated)
@@ -1469,6 +1490,7 @@ package scenes.game.display
 		public function solverDone(errMsg:String):void
 		{
 			//trace("solver done " + errMsg);
+			updateNodes();
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();

@@ -76,11 +76,6 @@ a cycle structure do not form a chain).
 
 #include "../maxsatz.h"
 
-typedef signed char my_type;
-typedef unsigned char my_unsigned_type;
-
-typedef long long int lli_type;
-
 // #define DEBUG
 
 #define WORD_LENGTH 1024

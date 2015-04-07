@@ -72,7 +72,7 @@ int setupMaxSatz(char* input_file)
 }
 
 void
-runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
+runMaxSatz(int * clauses, int nclauses)
 {
 
   int nclauses_processed = 0;
@@ -83,7 +83,6 @@ runMaxSatz(int * clauses, int nclauses, CallbackFunction callback)
   int lits[10000];
   int length = 0; 
   int next_is_weight = 1;
- callback_function = callback;
 
   NB_VAR = 0;
   while (nclauses_processed < nclauses) {
@@ -173,10 +172,7 @@ void getCurrentSolutionMaxSatz(int* output)
 {
 	int i;
 	for (i = 0; i < num_vars; i++) {
-	  if (var_best_value[i] == FALSE) {
-		output[i] = 0;
-	  } else {
-		output[i] = 1;
-	  }
+	  if (var_best_value[i] == FALSE)
+		 output[i] = var_best_value[i];
 	}
 }

@@ -1,7 +1,7 @@
 %module maxsat
 
 %{
-#include "maxsat.h"
+#include "main.h"
 %}
 
-%include "maxsat.h"
+%include "main.h"
