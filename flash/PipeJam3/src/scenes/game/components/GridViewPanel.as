@@ -938,6 +938,11 @@ package scenes.game.components
 						World.m_world.solverDoneCallback("");
 					}
 					break;
+				case Keyboard.Z:
+					if (event.ctrlKey) {
+						m_currentLevel.undo();
+					}
+					break;
 				case Keyboard.EQUAL:
 				case Keyboard.NUMPAD_ADD:
 					zoomInDiscrete();

@@ -9,9 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import starling.animation.Transitions;
-	import starling.animation.Tween;
-	import starling.core.Starling;
 	
 	import assets.AssetInterface;
 	
@@ -41,6 +38,9 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.display.Node;
 	
+	import starling.animation.Transitions;
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -1459,7 +1459,8 @@ package scenes.game.display
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
-		var m_lastVars:Array;
+		protected var m_lastVarValues:Array;
+		protected var m_previousVarValues:Array;
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			trace("update", unsat_weight, vars[0], vars[1], vars[2], vars[3]);
@@ -1467,30 +1468,35 @@ package scenes.game.display
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
-			m_lastVars = vars;
+			m_lastVarValues = vars;
 			
 		}
 		
 		protected function updateNodes():void
 		{
-			if(!m_lastVars)
+			if(!m_lastVarValues)
 				return;
+			
+			m_previousVarValues = new Array;
 			var someNodeUpdated:Boolean = false;
 			//trace(levelGraph.currentScore);
-			for (var ii:int = 0; ii < m_lastVars.length; ++ ii) 
+			for (var ii:int = 0; ii < m_lastVarValues.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
 				if(node)
 				{
 					node.solved = true;
-					var nodeUpdated:Boolean = false;
 					var constraintVar:ConstraintVar = node["graphVar"];
 					var currentVal:Boolean = node.isNarrow;
-					node.isNarrow = true;
-					if(m_lastVars[ii] == 1)
+					var currentNumValue:int = (currentVal == true) ? 0 : 1;
+					m_previousVarValues.push(currentNumValue);
+					
+					if(m_lastVarValues[ii] == 1)
 						node.isNarrow = false;
+					else
+						node.isNarrow = true;
+					
 					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
-					nodeUpdated = currentVal != node.isNarrow; 
 					if(currentVal != node.isNarrow)
 					{
 						if (node.skin != null)
@@ -1634,6 +1640,14 @@ package scenes.game.display
 			return null;
 		}
 		
+		public function undo():void
+		{
+			//switch last with previous settings, and then update
+			var temp:Array = m_lastVarValues;
+			m_lastVarValues = m_previousVarValues;
+			m_previousVarValues = m_lastVarValues;
+			updateNodes();
+		}
 	}
 	
 }

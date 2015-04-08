@@ -2,7 +2,7 @@ package scenes.game.components
 {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-
+	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
@@ -18,13 +18,14 @@ package scenes.game.components
 	import events.NavigationEvent;
 	import events.SelectionEvent;
 	
+	import networking.HTTPCookies;
+	import networking.PlayerValidation;
+	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
 	import scenes.game.display.TutorialLevelManager;
 	import scenes.game.display.World;
-	import networking.PlayerValidation;
-	import networking.HTTPCookies;
-
+	
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -402,6 +403,10 @@ package scenes.game.components
 					scoreObj['score'] = scoreInstance[0];
 					scoreObj['assignmentsID'] = scoreInstance[2];
 					scoreObj['score_improvement'] = scoreInstance[3];
+					var maxConflicts:int = level.maxScore;
+					var intScore:int = maxConflicts - int(scoreInstance[0]);
+					var value:Number = ((maxConflicts-intScore)/maxConflicts)*100;
+					scoreObj['percent'] = value.toFixed(2) + '%';
 					if(scoreInstance[1] == PlayerValidation.playerID)
 						scoreObj.activePlayer = 1;
 					else
