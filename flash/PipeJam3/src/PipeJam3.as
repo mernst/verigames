@@ -44,7 +44,7 @@ package
 		
 		/** At most one of these two should be true. They can both be false. */
 		public static var RELEASE_BUILD:Boolean = false;
-		public static var TUTORIAL_DEMO:Boolean = true;
+		public static var TUTORIAL_DEMO:Boolean = false;
 		
 		//if release build is true, true if using production machine db/info, false if using staging
 		public static var PRODUCTION_BUILD:Boolean = true;

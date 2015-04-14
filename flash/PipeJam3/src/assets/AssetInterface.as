@@ -62,6 +62,9 @@ package assets
 		public static const LevelSelectSubTexture_ScrollbarButtonClick:String = "ScrollbarButtonClick";
 		
 		//paradox atlas textures, might be possible to get rid of all the above, at some point
+		public static const ParadoxSubTexture_BrushSelectionMask:String = "BrushSelectionMask";
+		public static const ParadoxSubTexture_BrushSelectionColor:String = "BrushSelectionColor";
+		
 		public static const ParadoxSubTexture_BrushCircle:String = "BrushCircle";
 		public static const ParadoxSubTexture_BrushCircleClick:String = "BrushCircleClick";
 		public static const ParadoxSubTexture_BrushDiamond:String = "BrushDiamond";

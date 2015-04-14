@@ -1,6 +1,5 @@
 package scenes.game.components
 {
-	import feathers.display.TiledImage;
 	import flash.display.BitmapData;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
@@ -31,6 +30,8 @@ package scenes.game.components
 	import events.SelectionEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
+	
+	import feathers.display.TiledImage;
 	
 	import networking.TutorialController;
 	
@@ -94,9 +95,9 @@ package scenes.game.components
 		private var m_hintLayer:Sprite = new Sprite();
 		
 		private var m_paintBrushLayer:Sprite = new Sprite();
-		protected var m_paintBrushInfoSprite:Sprite = new Sprite();
+		protected var m_paintBrushSelectionCountSprite:Sprite = new Sprite();
+		protected var m_paintBrushTotalSelectionLimitSprite:Sprite = new Sprite();
 		protected var m_paintBrush:Sprite = new Sprite();
-		protected var m_selectionCount:Sprite = new Sprite();
 		protected var m_selectedText:TextFieldWrapper;
 		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
@@ -129,6 +130,7 @@ package scenes.game.components
 		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 		public static const WIDEN_BRUSH:String = "BrushHexagon";
 		public static const NARROW_BRUSH:String = "BrushSquare";
+
 		public static var FIRST_SOLVER_BRUSH:String;
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
@@ -180,45 +182,41 @@ package scenes.game.components
 			addChildAt(contentBarrier,0);
 			
 			// Create paintbrushes for menu, and for mouse cursor
-			m_solver1Brush = createPaintBrush(SOLVER1_BRUSH, true);
-			m_solver2Brush = createPaintBrush(SOLVER2_BRUSH, true);
-			m_widenBrush = createPaintBrush(WIDEN_BRUSH, true);
-			m_narrowBrush = createPaintBrush(NARROW_BRUSH, true);
+			m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
+			m_solver2Brush = createPaintBrush(SOLVER1_BRUSH);
+			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
+			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
 			
 			m_paintBrush = m_solver1Brush;
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
-			var scoreBoxImage:Image = new Image(scoreBoxTexture);
-			scoreBoxImage.width = scoreBoxImage.height = .6 * PAINT_RADIUS;
-			m_selectionCount.addChild(scoreBoxImage);
-			m_selectionCount.x = m_paintBrushInfoSprite.bounds.left;
-			m_selectionCount.y = m_paintBrushInfoSprite.bounds.left;
+			var selectionCountImage:Image = new Image(scoreBoxTexture);
+			selectionCountImage.width = 40;
+			selectionCountImage.height = 25;
+			m_paintBrushSelectionCountSprite.addChild(selectionCountImage);
 			
-			m_paintBrushInfoSprite.addChild(m_selectionCount);
+			var selectionLimitImage:Image = new Image(scoreBoxTexture);
+			selectionLimitImage.width = 40;
+			selectionLimitImage.height = 25;
+			m_paintBrushTotalSelectionLimitSprite.addChild(selectionLimitImage);
 			
-			m_selectedText = TextFactory.getInstance().createTextField("000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
+			m_selectedText = TextFactory.getInstance().createTextField("0000", AssetsFont.FONT_UBUNTU, selectionCountImage.width - 4, selectionCountImage.height-4, 12, 0xc1a06d);
 			m_selectedText.touchable = false;
-			m_selectedText.x = m_selectionCount.x + 2;
-			m_selectedText.y = m_selectionCount.y + 1;
+			m_selectedText.x =  2;
+			m_selectedText.y =  2;
 			TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+			m_paintBrushSelectionCountSprite.addChild(m_selectedText);
 			
-			m_paintBrushInfoSprite.addChild(m_selectedText);
-			
-			var divisionLineQuad:Quad = new Quad(m_selectedText.width - 6, 2, 0xc1a06d);
-			divisionLineQuad.touchable = false;
-			divisionLineQuad.x = m_selectedText.x + 3;
-			divisionLineQuad.y = m_selectedText.y + m_selectedText.height - 3;
-			m_paintBrushInfoSprite.addChild(divisionLineQuad);
-			
-			m_selectionLimitText = TextFactory.getInstance().createTextField("1000", AssetsFont.FONT_UBUNTU, m_selectionCount.width - 4, m_selectionCount.height/2, 10, 0xc1a06d);
+			m_selectionLimitText = TextFactory.getInstance().createTextField("1000", AssetsFont.FONT_UBUNTU, selectionLimitImage.width - 4, selectionLimitImage.height-4, 12, 0xc1a06d);
 			m_selectionLimitText.touchable = false;
-			m_selectionLimitText.x = m_selectedText.x;
-			m_selectionLimitText.y = divisionLineQuad.y;
+			m_selectionLimitText.x = 2;
+			m_selectionLimitText.y = 2;
 			TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
+			m_paintBrushTotalSelectionLimitSprite.addChild(m_selectionLimitText);
 			
-			m_paintBrushInfoSprite.addChild(m_selectionLimitText);
-			m_paintBrushInfoSprite.flatten();
+			m_paintBrushSelectionCountSprite.flatten();
+			m_paintBrushTotalSelectionLimitSprite.flatten();
 
 			addChild(m_buttonLayer);
 			addChild(m_fanfareLayer);
@@ -319,7 +317,8 @@ package scenes.game.components
 					m_MouseMoveListenerInstalled = true;
 				}
 				m_paintBrush.visible = false;
-				m_paintBrushInfoSprite.visible = false;
+				m_paintBrushSelectionCountSprite.visible = false;
+				m_paintBrushTotalSelectionLimitSprite.visible = false;
 				m_rightMouseDown = true;
 				currentLocation = new Point(event.stageX, event.stageY);
 			}
@@ -335,7 +334,8 @@ package scenes.game.components
 					m_MouseMoveListenerInstalled = false;
 				}
 				m_paintBrush.visible = true;
-				m_paintBrushInfoSprite.visible = true;
+				m_paintBrushSelectionCountSprite.visible = true;
+				m_paintBrushTotalSelectionLimitSprite.visible = true;
 				m_rightMouseDown = false;
 				currentLocation = null;
 			}
@@ -355,13 +355,24 @@ package scenes.game.components
 				
 				m_paintBrush.x = m_nextPaintbrushLocation.x;
 				m_paintBrush.y =  m_nextPaintbrushLocation.y; 
-				m_paintBrushInfoSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/2;
-				m_paintBrushInfoSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/2; 
-				var num:int = m_currentLevel.selectedNodes.length;
+				m_paintBrushSelectionCountSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/4 - 5;
+				m_paintBrushSelectionCountSprite.y =  m_nextPaintbrushLocation.y + m_paintBrush.height/4 + 3; 
+				m_paintBrushTotalSelectionLimitSprite.x = m_nextPaintbrushLocation.x + m_paintBrush.width/4 + 2;
+				m_paintBrushTotalSelectionLimitSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/4; 
+				var numSelected:int = m_currentLevel.selectedNodes.length;
+				var numTotal:int = m_currentLevel.m_numNodes;
+				var maxSelectable:int = m_currentLevel.getMaxSelectableWidgets();
+				var numSelectable:int = Math.min(maxSelectable, numTotal);
+				var percent:Number = (numSelected/numSelectable) * 100;
+				displayPercentSelected(percent);
 				if (m_selectedText) {
-					TextFactory.getInstance().updateText(m_selectedText, String(num));
+					var selectedNumString:String = String(numSelected);
+					for(var i:int = selectedNumString.length; i<4;i++)
+						selectedNumString = " " + selectedNumString;
+					TextFactory.getInstance().updateText(m_selectedText, String(numSelected));
 					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
-					m_paintBrushInfoSprite.flatten();
+					m_paintBrushSelectionCountSprite.flatten();
+					m_paintBrushTotalSelectionLimitSprite.flatten();
 				}
 				m_nextPaintbrushLocationUpdated = false;
 			}
@@ -377,6 +388,40 @@ package scenes.game.components
 				System.gc();
 				endingMoveMode = false;
 			}
+		}
+		
+		//Takes absolute percent to display
+		private function displayPercentSelected(percent:Number, segmentIndex:int = 0):void
+		{
+			if(percent > 100)
+				percent = 99.9;
+			
+			//get slice (by index) we are moving
+			//figure out it's move percentage 
+			//	if % < 10, slice zero moves that percent
+			//	if % > 10, slice zero moves 10 %, if < 20, slice 1 moves that percent, etc.
+			var maxSliceMovePercent:Number = (segmentIndex+1)*10;
+			var actualMovePercent:Number = percent < maxSliceMovePercent ? percent : maxSliceMovePercent;
+			
+			var paintArc:Image = m_paintBrush.getChildAt(segmentIndex) as Image;
+			
+			var index:int = 0;
+			var rotationValue:Number = actualMovePercent * ROTATION_MULTIPLIER; //multipler to get full coverage
+			//make relative to starting rotation
+			rotationValue += STARTING_ROTATION;
+			rotateToDegree (paintArc, helperPoint, rotationValue);
+			if(actualMovePercent < percent)
+				displayPercentSelected(percent, segmentIndex+1);
+			else
+			{
+				//reset the rest
+				for(var i:int = segmentIndex+1; i<10; i++)
+				{
+					paintArc = m_paintBrush.getChildAt(i) as Image;
+					rotateToDegree (paintArc, helperPoint, STARTING_ROTATION);
+				}
+			}
+			
 		}
 		
 		public function outsideEventHandler(event:starling.events.Event):void
@@ -882,7 +927,8 @@ package scenes.game.components
 		{
 			handleMouseWheel(-5);
 		}
-		
+		protected var currentDegree:Number = 0;
+
 		private function onKeyDown(event:KeyboardEvent):void
 		{
 			var viewRect:Rectangle, newX:Number, newY:Number;
@@ -1385,25 +1431,23 @@ package scenes.game.components
 		
 		public function installPaintBrush(currentVisibility:Boolean):void
 		{
-			//trace("handlePaint(", globPt, ")");
 			if (!parent) return;
-			m_paintBrush.scaleX = m_paintBrushInfoSprite.scaleX = .5;
-			m_paintBrush.scaleY = m_paintBrushInfoSprite.scaleY = .5;
+			m_paintBrush.scaleX = m_paintBrushSelectionCountSprite.scaleX = m_paintBrushTotalSelectionLimitSprite.scaleX = .5;
+			m_paintBrush.scaleY = m_paintBrushSelectionCountSprite.scaleY = m_paintBrushTotalSelectionLimitSprite.scaleY = .5;
 			m_paintBrushLayer.addChild(m_paintBrush);
-			m_paintBrushLayer.addChild(m_paintBrushInfoSprite);
-			m_paintBrush.flatten();
-			m_paintBrushInfoSprite.flatten();
+			m_paintBrushLayer.addChild(m_paintBrushSelectionCountSprite);
+			m_paintBrushLayer.addChild(m_paintBrushTotalSelectionLimitSprite);
+			m_paintBrushSelectionCountSprite.flatten();
+			m_paintBrushTotalSelectionLimitSprite.flatten();
 			m_paintBrush.visible = currentVisibility;
-			m_paintBrushInfoSprite.visible = currentVisibility;
+			m_paintBrushSelectionCountSprite.visible = currentVisibility;
+			m_paintBrushTotalSelectionLimitSprite.visible = currentVisibility;
 			m_nextPaintbrushLocationUpdated = true;
 		}
 		
 		private function setPaintBrushSize(size:int):void
 		{
 			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
-			m_paintBrushInfoSprite.scaleX = m_paintBrushInfoSprite.scaleY = size*.20;
-			m_paintBrush.flatten();
-			m_paintBrushInfoSprite.flatten();
 		}
 		
 		
@@ -1418,21 +1462,23 @@ package scenes.game.components
 		protected function showPaintBrush():void
 		{
 			m_paintBrush.visible = true;
-			m_paintBrushInfoSprite.visible = true;
+			m_paintBrushSelectionCountSprite.visible = true;
+			m_paintBrushTotalSelectionLimitSprite.visible = true;
 		}
 		
 		public function hidePaintBrush():void
 		{
 			m_paintBrush.visible = false;
-			m_paintBrushInfoSprite.visible = false;
+			m_paintBrushSelectionCountSprite.visible = false;
+			m_paintBrushTotalSelectionLimitSprite.visible = false;
 		}
 		
 		protected function handlePaint(globPt:Point):void
 		{
 			// TODO grid?
 			var localPt:Point = m_currentLevel.globalToLocal(globPt);
-			const dX:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleX/content.scaleX;
-			const dY:Number = PAINT_RADIUS * m_paintBrushInfoSprite.scaleY/content.scaleY;
+			const dX:Number = PAINT_RADIUS * m_paintBrush.scaleX/content.scaleX;
+			const dY:Number = PAINT_RADIUS * m_paintBrush.scaleY/content.scaleY;
 			
 			m_currentLevel.selectNodes(localPt, dX, dY);
 		}
@@ -1464,6 +1510,8 @@ package scenes.game.components
 				rotation: 2*Math.PI,
 				delay: .2
 			});
+			
+			updateNumNodesSelectedDisplay();
 		}
 		
 		public function updateNumNodesSelectedDisplay():void

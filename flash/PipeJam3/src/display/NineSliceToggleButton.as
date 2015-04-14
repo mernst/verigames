@@ -27,9 +27,9 @@ package display
 		protected var text:String;
 		protected var secondaryText:String;
 		
-		public function NineSliceToggleButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, _atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String="", _atlasXMLButtonClickTexturePrefix:String="", _fontColorOver:uint=0xFFFFFF, _fontColorClick:uint=0xFFFFFF)
+		public function NineSliceToggleButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _toolTipText:String, _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, _atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String="", _atlasXMLButtonClickTexturePrefix:String="", _fontColorOver:uint=0xFFFFFF, _fontColorClick:uint=0xFFFFFF)
 		{
-			super(_text, _width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix, _fontName, _fontColor, _atlasXMLButtonOverTexturePrefix, _atlasXMLButtonClickTexturePrefix, _fontColorOver, _fontColorClick);
+			super(_text, _width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix, _fontName, _fontColor, _atlasXMLButtonOverTexturePrefix, _atlasXMLButtonClickTexturePrefix, _fontColorOver, _fontColorClick, _toolTipText);
 			
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
@@ -68,6 +68,10 @@ package display
 					if (!mIsDown) {
 						dispatchEventWith(Event.TRIGGERED, true);
 					}
+					
+					//only toggle if off before
+					if(!mIsDown)
+						mIsDown = true;
 				}
 			}
 			else
@@ -101,18 +105,26 @@ package display
 		public function setIcon(_upIcon:Image, _downIcon:Image, _overIcon:Image):void
 		{
 			upIcon = _upIcon;
+			upIcon.name = "up";
 			downIcon = _downIcon;
+			downIcon.name = "down";
 			overIcon = _overIcon;
+			overIcon.name = "over";
 			setCurrentIcon(upIcon);
 		}
 		
 		public function setCurrentIcon(icon:Image):void
 		{
+			if(currentIcon)
+			{
+				currentIcon.removeFromParent();
+			}
 			currentIcon = icon;
 			if(currentIcon)
 			{
 				addChild(currentIcon);
 			}
+			
 		}
 		
 		public function setText(_text:String):void
@@ -144,6 +156,13 @@ package display
 				secondaryLabel.y = (height - secondaryLabel.height)/2;
 				
 			}
+		}
+		
+		protected override function showButton(_skin:Sprite):void
+		{
+			this.removeChildren();
+			addChild(_skin);
+			setCurrentIcon(currentIcon);
 		}
 	}
 }

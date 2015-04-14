@@ -95,6 +95,7 @@ package scenes.game.display
 		protected var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
 		
+		public var m_numNodes:uint = 0;
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
 		public var groupLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
@@ -597,8 +598,6 @@ package scenes.game.display
 			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			// Process layout nodes (vars)
-			var visibleNodes:int = 0;
-			var n:uint = 0;
 			var gridChild:GridChild;
 			var boundsArr:Array = m_levelLayoutObj["layout"]["bounds"] as Array;
 			if (boundsArr)
@@ -658,14 +657,14 @@ package scenes.game.display
 				var nodeLayout:Object = m_levelLayoutObj["layout"]["vars"][varId];
 				gridChild = createGridChildFromLayoutObj(varId, nodeLayout, false);
 				if (gridChild == null) continue;
-				n++;
+				m_numNodes++;
 			}
 			
 			//trace("node count = " + n);
 			
 			// Process layout edges (constraints)
 			var visibleLines:int = 0;
-			n = 0;
+			m_numNodes = 0;
 			
 			for (var constraintId:String in levelGraph.constraintsDict)
 			{
@@ -688,7 +687,7 @@ package scenes.game.display
 				endNode.connectedEdgeIds.push(constraintId);
 				edgeLayoutObjs[constraintId] = edge;
 				
-				n++;
+				m_numNodes++;
 			}
 			//trace("edge count = " + n);
 			
@@ -1004,10 +1003,14 @@ package scenes.game.display
 		
 		public function getMaxSelectableWidgets():int
 		{
-			var num:int = -1;
-			if (tutorialManager != null) num = tutorialManager.getMaxSelectableWidgets();
-			if (num > 0) return num;
-			return 10000;
+			if (tutorialManager != null)
+			{
+				var num:int = tutorialManager.getMaxSelectableWidgets();
+				return Math.min(m_numNodes, num);
+			}
+			else
+				//get the min of total number of node, or 1000
+				return Math.min(m_numNodes, 1000);
 		}
 		
 		public function getTargetScore():int
@@ -1046,11 +1049,6 @@ package scenes.game.display
 //				}
 //				m_hidingErrorText = false;
 //			}
-		}
-		
-		public override function flatten():void
-		{
-			//super.flatten();
 		}
 		
 		public override function unflatten():void
@@ -1148,6 +1146,7 @@ package scenes.game.display
 			}
 			//update score
 			onWidgetChange();
+			unselectAll();
 		}
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
@@ -1272,7 +1271,6 @@ package scenes.game.display
 						
 					}
 					constraintArray.push(clauseArray);
-					trace("1", clauseArray[1], clauseArray[2], 0);
 				}
 				else
 				{
@@ -1353,11 +1351,9 @@ package scenes.game.display
 								else
 									nodeClauseArray.push(constraintID);
 								constraintArray.push(nodeClauseArray);
-								trace("1", clauseArray[1], 0);
 							}	
 						}
 						constraintArray.push(clauseArray);
-						trace("1", clauseArray[1], clauseArray[2], 0);
 					}
 				}
 			}
@@ -1443,10 +1439,8 @@ package scenes.game.display
 							else
 								varArray.push(nextLevelConstraintID);						
 							constraintArray.push(varArray);
-							trace(varArray[0], varArray[1],0);
 						}
 						constraintArray.push(clauseArray);
-						trace(clauseArray[0], clauseArray[1], clauseArray[2],0);
 					}
 				}
 			}
@@ -1463,8 +1457,7 @@ package scenes.game.display
 		protected var m_previousVarValues:Array;
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			trace("update", unsat_weight, vars[0], vars[1], vars[2], vars[3]);
-			trace(m_inSolver, m_unsat_weight);
+			trace("update", unsat_weight);
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
@@ -1520,6 +1513,7 @@ package scenes.game.display
 		public function solverDone(errMsg:String):void
 		{
 			//trace("solver done " + errMsg);
+			unselectAll();
 			updateNodes();
 			m_inSolver = false;
 			MaxSatSolver.stop_solver();

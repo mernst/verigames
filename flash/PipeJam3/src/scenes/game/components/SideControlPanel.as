@@ -35,6 +35,7 @@ package scenes.game.components
 	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
+	import display.NineSliceToggleButton;
 	
 	public class SideControlPanel extends BaseComponent
 	{
@@ -53,10 +54,10 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		
-		protected var m_solver1Brush:RadioButton;
-		protected var m_solver2Brush:RadioButton;
-		protected var m_widenBrush:RadioButton;
-		protected var m_narrowBrush:RadioButton;
+		protected var m_solver1Brush:NineSliceToggleButton;
+		protected var m_solver2Brush:NineSliceToggleButton;
+		protected var m_widenBrush:NineSliceToggleButton;
+		protected var m_narrowBrush:NineSliceToggleButton;
 		protected var m_brushButtonGroup:RadioButtonGroup;
 		
 		/** Text showing current score */
@@ -143,24 +144,21 @@ package scenes.game.components
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);
-			m_brushButtonGroup.y = 115;
-			m_brushButtonGroup.x = 40;
-			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
-			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
-			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, false, "Make Wide") as RadioButton;
-			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, false, "Make Narrow") as RadioButton;
-
+			m_brushButtonGroup.y = 130;
+			m_brushButtonGroup.x = 65;
 			
-			//set all to visible == false so that they don't flash on, before being turned off
-			var currentY:Number = 0;
-			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .5;
-			m_solver1Brush.x = 25;
-			m_solver1Brush.y = currentY;
+			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+		//	m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
+			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
+
+			m_solver1Brush.y = 0;
+			m_widenBrush.y = 30;
+			m_narrowBrush.y = 60;
 			
 			m_solver1Brush.visible = false;
 			if(addSolverArray[0] == 1)
 			{
-				currentY += 30;
 				m_brushButtonGroup.addChild(m_solver1Brush);
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
 				m_brushButtonGroup.makeActive(m_solver1Brush);
@@ -168,29 +166,12 @@ package scenes.game.components
 			else
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
 			
-			//brush icons are different widths, so line up centers
-			var brushCenter:Number = m_solver1Brush.x + m_solver1Brush.width/2;
-			m_solver2Brush.scaleX = m_solver2Brush.scaleY = m_solver1Brush.scaleX;
-			m_solver2Brush.x = brushCenter - m_solver2Brush.width/2;
-			m_solver2Brush.y = currentY;
-			m_solver2Brush.visible = false;
-			if(addSolverArray[1] == 1)
-			{
-				m_brushButtonGroup.addChild(m_solver2Brush);
-				currentY += 30;
-			}
-			m_widenBrush.scaleX = m_widenBrush.scaleY = m_solver1Brush.scaleX;
-			m_widenBrush.x = brushCenter - m_widenBrush.width/2;
-			m_widenBrush.y = currentY;
 			m_widenBrush.visible = false;
 			if(addSolverArray[2] == 1)
 			{
 				m_brushButtonGroup.addChild(m_widenBrush);
-				currentY += 30;
 			}
-			m_narrowBrush.scaleX = m_narrowBrush.scaleY = m_solver1Brush.scaleX;
-			m_narrowBrush.x = brushCenter - m_narrowBrush.width/2;
-			m_narrowBrush.y = currentY;
+
 			m_narrowBrush.visible = false;
 			if(addSolverArray[3] == 1)
 				m_brushButtonGroup.addChild(m_narrowBrush);
@@ -335,24 +316,15 @@ package scenes.game.components
 			
 			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
 			var decimalRotation:Number = -(100-decimalPart)*1.8;
-			rotateAroundCenter(scoreCircleMiddleImage, integerRotation);
-			rotateAroundCenter(scoreCircleFrontImage, decimalRotation);
+			rotateToDegree(scoreCircleMiddleImage, scoreImageCenter, integerRotation);
+			rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
 			
 			
-		}
-		
-		protected var degConversion:Number = (Math.PI/180);
-		public function rotateAroundCenter (image:Image, angleDegrees:Number):void 
-		{
-			image.rotation = degConversion*angleDegrees;
-			var newXCenter:Number = image.bounds.left + (image.bounds.right - image.bounds.left)/2;
-			var newYCenter:Number = image.bounds.top + (image.bounds.bottom - image.bounds.top)/2;
-			image.x += scoreImageCenter.x - newXCenter;
-			image.y += scoreImageCenter.y - newYCenter;
 		}
 		
 		private function changeCurrentBrush(evt:starling.events.Event):void
 		{
+			m_brushButtonGroup.makeActive(evt.target as NineSliceToggleButton);
 			dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, evt.target, null));
 		}
 		
@@ -361,8 +333,8 @@ package scenes.game.components
 			var count:int = 0;
 			m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
 			if(m_solver1Brush.visible) count++;
-			m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
-			if(m_solver2Brush.visible) count++;
+		//	m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+		//	if(m_solver2Brush.visible) count++;
 			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
 			if(m_narrowBrush.visible) count++;
 			m_widenBrush.visible = visibleBrushes & TutorialLevelManager.NARROW_BRUSH ? true : false;
@@ -370,7 +342,7 @@ package scenes.game.components
 			
 			//if only one shows, hide them all
 			if(count == 1)
-				m_solver1Brush.visible = m_solver2Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+				m_solver1Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
 		}
 		
 //		private function onTouchHighScore(evt:TouchEvent):void

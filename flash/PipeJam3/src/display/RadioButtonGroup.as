@@ -11,21 +11,6 @@ package display
 		{
 			super();
 			
-			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
-		}
-		
-		public function addedToStage(event:starling.events.Event):void
-		{
-			this.removeEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
-			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
-			this.addEventListener(Event.TRIGGERED, buttonClicked);
-		}
-		
-
-		public function removedFromStage(event:starling.events.Event):void
-		{
-			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
-			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 		}
 		
 		public override function addChild(_child:DisplayObject):DisplayObject
@@ -36,18 +21,18 @@ package display
 		
 		private function buttonClicked(event:Event):void
 		{
-			var button:RadioButton = event.target as RadioButton;
+			var button:NineSliceToggleButton = event.target as NineSliceToggleButton;
 			makeActive(button);
 		}
 		
-		public function makeActive(button:RadioButton):void
+		public function makeActive(button:NineSliceToggleButton):void
 		{
-			button.setState(true);
+			button.setToggleState(true);
 			for(var i:int = 0; i< numChildren; i++)
 			{
-				var childButton:RadioButton = getChildAt(i) as RadioButton;
+				var childButton:NineSliceToggleButton = getChildAt(i) as NineSliceToggleButton;
 				if(childButton && childButton != button)
-					childButton.setState(false);
+					childButton.setToggleState(false);
 			}
 		}
 		
@@ -56,7 +41,7 @@ package display
 			//set first visible button to on
 			for(var i:int = 0; i< numChildren; i++)
 			{
-				var button:RadioButton = getChildAt(i) as RadioButton;
+				var button:NineSliceToggleButton = getChildAt(i) as NineSliceToggleButton;
 				if(button && button.visible)
 				{
 					makeActive(button);
