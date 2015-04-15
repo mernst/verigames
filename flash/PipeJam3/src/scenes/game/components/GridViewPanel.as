@@ -388,6 +388,7 @@ package scenes.game.components
 				m_selectionUpdated = false;
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
 				handlePaint(globalCurrentPt);
+				m_currentTouchPoint = null;
 			}
 			
 			if(endingMoveMode) //force gc after dragging
@@ -415,7 +416,6 @@ package scenes.game.components
 			//	if % > 10, slice zero moves 10 %, if < 20, slice 1 moves that percent, etc.
 			var maxSliceMovePercent:Number = (segmentIndex+1)*10;
 			var actualMovePercent:Number = percent < maxSliceMovePercent ? percent : maxSliceMovePercent;
-			trace(segmentIndex, offset, actualMovePercent);
 			var paintArc:Image = m_paintBrush.getChildAt(segmentIndex+offset) as Image;
 			
 			var index:int = 0;
@@ -1090,7 +1090,7 @@ package scenes.game.components
 				errorSprite.removeFromParent();
 			}
 			content.addChild(m_currentLevel);
-			
+			m_selectionUpdated = false;
 			m_errorTextBubbles = new Dictionary();
 			
 			if (m_tutorialText) {
