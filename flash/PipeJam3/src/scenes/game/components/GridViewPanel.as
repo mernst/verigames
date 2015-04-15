@@ -136,6 +136,12 @@ package scenes.game.components
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
+		protected var keyDownCombination:int;
+		protected static const KEY_UP:int = 1;
+		protected static const KEY_DOWN:int = 2;
+		protected static const KEY_LEFT:int = 4;
+		protected static const KEY_RIGHT:int = 8;
+		
 		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
@@ -352,6 +358,31 @@ package scenes.game.components
 		public function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			if (!m_currentLevel) return;
+			
+			if(keyDownCombination)
+			{
+				var moveLeft:Number = 0;
+				var moveUp:Number = 0;
+				var viewRect:Rectangle, newX:Number, newY:Number;
+				const MOVE_PX:Number = 5; // pixels to move when arrow keys pressed
+				var contentToUse:DisplayObject = isGridUp() ? m_gridContainer : content;
+				
+				if(keyDownCombination & KEY_UP)
+					moveUp = MOVE_PX / contentToUse.scaleY;
+				else if(keyDownCombination & KEY_DOWN)
+					moveUp = - MOVE_PX / contentToUse.scaleY;
+				
+				if(keyDownCombination & KEY_RIGHT)
+					moveLeft = - MOVE_PX / contentToUse.scaleY;
+				else if(keyDownCombination & KEY_LEFT)
+					moveLeft = MOVE_PX / contentToUse.scaleY;
+						
+				viewRect = getViewInContentSpace(contentToUse);
+				newX = viewRect.x + viewRect.width / 2 + moveLeft;
+				newY = viewRect.y + viewRect.height / 2 + moveUp;
+				moveContent(newX, newY);
+				
+			}
 			
 			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
 				
@@ -941,12 +972,9 @@ package scenes.game.components
 			handleMouseWheel(-5);
 		}
 		protected var currentDegree:Number = 0;
-
+	
 		private function onKeyDown(event:KeyboardEvent):void
 		{
-			var viewRect:Rectangle, newX:Number, newY:Number;
-			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
-			var contentToUse:DisplayObject = isGridUp() ? m_gridContainer : content;
 			switch(event.keyCode)
 			{
 				case Keyboard.SHIFT:
@@ -957,39 +985,28 @@ package scenes.game.components
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
-						moveContent(newX, newY);
+						keyDownCombination |= KEY_UP;
 					}
 					break;
 				case Keyboard.DOWN:
 				case Keyboard.NUMPAD_2:
+				case Keyboard.S:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
-						moveContent(newX, newY);
+						keyDownCombination |= KEY_DOWN;
 					}
 					break;
 				case Keyboard.LEFT:
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
-						newY = viewRect.y + viewRect.height / 2;
-						moveContent(newX, newY);
+						keyDownCombination |= KEY_LEFT;
 					}
 					break;
 				case Keyboard.RIGHT:
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
-						newY = viewRect.y + viewRect.height / 2;
-						moveContent(newX, newY);
+						keyDownCombination |= KEY_RIGHT;
 					}
 					break;
 				case Keyboard.C:
@@ -1046,6 +1063,26 @@ package scenes.game.components
 				case Keyboard.NUMBER_4:
 				case Keyboard.NUMBER_5:
 					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
+					break;
+				case Keyboard.UP:
+				case Keyboard.W:
+				case Keyboard.NUMPAD_8:
+					keyDownCombination &= ~KEY_UP;
+					break;
+				case Keyboard.DOWN:
+				case Keyboard.NUMPAD_2:
+				case Keyboard.S:
+					keyDownCombination &= ~KEY_DOWN;
+					break;
+				case Keyboard.LEFT:
+				case Keyboard.A:
+				case Keyboard.NUMPAD_4:
+					keyDownCombination &= ~KEY_LEFT;
+					break;
+				case Keyboard.RIGHT:
+				case Keyboard.D:
+				case Keyboard.NUMPAD_6:
+				keyDownCombination &= ~KEY_RIGHT;
 					break;
 			}
 		}
