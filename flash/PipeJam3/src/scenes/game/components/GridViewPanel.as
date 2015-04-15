@@ -366,16 +366,20 @@ package scenes.game.components
 				var maxSelectable:int = m_currentLevel.getMaxSelectableWidgets();
 				var numSelectable:int = Math.min(maxSelectable, numTotal);
 				selectedPercent = (numSelected/numSelectable) * 100;
+				if(numSelected > 30)
+					numSelected = numSelected;
 				if(!m_currentLevel.m_inSolver)
+				{
 					displayPercentSelected(selectedPercent);
-				if (m_selectedText) {
-					var selectedNumString:String = String(numSelected);
-					for(var i:int = selectedNumString.length; i<4;i++)
-						selectedNumString = " " + selectedNumString;
-					TextFactory.getInstance().updateText(m_selectedText, String(numSelected));
-					TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
-					m_paintBrushSelectionCountSprite.flatten();
-					m_paintBrushTotalSelectionLimitSprite.flatten();
+					if (m_selectedText) {
+						var selectedNumString:String = String(numSelected);
+						for(var i:int = selectedNumString.length; i<4;i++)
+							selectedNumString = " " + selectedNumString;
+						TextFactory.getInstance().updateText(m_selectedText, String(numSelected));
+						TextFactory.getInstance().updateAlign(m_selectedText, 1, 1);
+						m_paintBrushSelectionCountSprite.flatten();
+						m_paintBrushTotalSelectionLimitSprite.flatten();
+					}
 				}
 				m_nextPaintbrushLocationUpdated = false;
 			}
@@ -400,8 +404,10 @@ package scenes.game.components
 				percent = 99.9;
 			
 			//use solver colors if solving
+			var offset:int = 0;
 			if(m_currentLevel.m_inSolver)
-				segmentIndex += 10;
+				offset = 10;
+			
 			
 			//get slice (by index) we are moving
 			//figure out it's move percentage 
@@ -409,8 +415,8 @@ package scenes.game.components
 			//	if % > 10, slice zero moves 10 %, if < 20, slice 1 moves that percent, etc.
 			var maxSliceMovePercent:Number = (segmentIndex+1)*10;
 			var actualMovePercent:Number = percent < maxSliceMovePercent ? percent : maxSliceMovePercent;
-			
-			var paintArc:Image = m_paintBrush.getChildAt(segmentIndex) as Image;
+			trace(segmentIndex, offset, actualMovePercent);
+			var paintArc:Image = m_paintBrush.getChildAt(segmentIndex+offset) as Image;
 			
 			var index:int = 0;
 			var rotationValue:Number = actualMovePercent * ROTATION_MULTIPLIER; //multipler to get full coverage
@@ -422,7 +428,7 @@ package scenes.game.components
 			else
 			{
 				//reset the rest
-				for(var i:int = segmentIndex+1; i<10; i++)
+				for(var i:int = segmentIndex+1+offset; i<10+offset; i++)
 				{
 					paintArc = m_paintBrush.getChildAt(i) as Image;
 					rotateToDegree (paintArc, helperPoint, STARTING_ROTATION);
@@ -1500,31 +1506,35 @@ package scenes.game.components
 		private function onSolverStarted():void
 		{
 			//start rotating
-			var reverse:Boolean = false; //(Math.random() > .7) ? true : false; //just for variation..?
-			Starling.juggler.tween(m_paintBrush, 4, {
-				repeatCount: 0,
-				reverse: reverse,
-				rotation: 2*Math.PI
-			});
+//			var reverse:Boolean = false; //(Math.random() > .7) ? true : false; //just for variation..?
+//			Starling.juggler.tween(m_paintBrush, 4, {
+//				repeatCount: 0,
+//				reverse: reverse,
+//				rotation: 2*Math.PI
+//			});
 		}
 		
 		private function onSolverStopped():void
 		{
-			Starling.juggler.removeTweens(m_paintBrush);
-			Starling.juggler.tween(m_paintBrush, 0.2, {
-				repeatCount: 1,
-				reverse: false,
-				rotation: 2*Math.PI,
-				delay: .2
-			});
-			
+//			Starling.juggler.removeTweens(m_paintBrush);
+//			Starling.juggler.tween(m_paintBrush, 0.2, {
+//				repeatCount: 1,
+//				reverse: false,
+//				rotation: 2*Math.PI,
+//				delay: .2
+//			});
+			displayPercentSelected(0);
 			updateNumNodesSelectedDisplay();
 		}
 		
 		private function onSolverUpdated(evt:starling.events.Event):void
 		{
 			//only color up to selected percent
-			var percent:Number = selectedPercent/100 * (evt.data as Number);
+			var maxSelectable:int = m_currentLevel.getMaxSelectableWidgets();
+			var numTotal:int = m_currentLevel.m_numNodes;
+			var numSelectable:int = Math.min(maxSelectable, numTotal);
+			var startingPercentSelected:Number = (m_currentLevel.startingSelectedNodeCount/numSelectable) * 100;
+			var percent:Number = startingPercentSelected/100 * (evt.data as Number);
 			displayPercentSelected(percent);
 		}
 		

@@ -1009,8 +1009,8 @@ package scenes.game.display
 				return Math.min(m_numNodes, num);
 			}
 			else
-				//get the min of total number of node, or 10000
-				return Math.min(m_numNodes, 10000);
+				//get the min of total number of node, or 1000
+				return Math.min(m_numNodes, 1000);
 		}
 		
 		public function getTargetScore():int
@@ -1191,6 +1191,7 @@ package scenes.game.display
 		private var counter:int;
 		private var m_solverType:int;
 		private var selectedConstraintValue:int;
+		public var startingSelectedNodeCount:int;
 		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1199,8 +1200,8 @@ package scenes.game.display
 			//run the solver, passing in the callback function		
 			updateCallback = _updateCallback;
 			doneCallback = _doneCallback;
-			
-			selectedConstraintValue = 0
+			startingSelectedNodeCount = selectedNodes.length;
+			selectedConstraintValue = 0;
 			m_solverType = 1;
 			if(brushType != GridViewPanel.SOLVER1_BRUSH)
 				m_solverType = 2;
@@ -1212,11 +1213,11 @@ package scenes.game.display
 			initvarsArray = new Array;
 			directNodeDict = new Dictionary;
 			storedDirectEdgesDict = new Dictionary;
-			if(m_unsat_weight < 0)
-				m_unsat_weight = int.MAX_VALUE;
+			m_unsat_weight = int.MAX_VALUE;
 
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
+			m_inSolver = true;
 			
 			createConstraintsForClauses(); 
 
@@ -1472,7 +1473,6 @@ package scenes.game.display
 		
 		public function solverStartCallback(evt:TimerEvent):void
 		{
-			m_inSolver = true;
 			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
@@ -1540,12 +1540,15 @@ package scenes.game.display
 			//trace("solver done " + errMsg);
 			unselectAll();
 			updateNodes();
-			m_inSolver = false;
+			
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
 			drawNodesAfterSolving();
 			System.gc();
+			//do this twice, once to reset solver color, again after setting inSolver to false to reset selection color
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 		}
 		

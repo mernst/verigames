@@ -208,13 +208,13 @@ package scenes
 				selectionColorImage.x = brushImage.x;
 				selectionColorImage.y = brushImage.y;			
 				paintBrush.addChild(selectionColorImage);
-				rotateToDegree (selectionColorImage, helperPoint, STARTING_ROTATION);
+				rotateToDegree(selectionColorImage, helperPoint, STARTING_ROTATION);
 			}
 			
 			//do same thing with solver color
 			var solverColorTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_BrushSolverColor);	
 			//Assume these are about 10% of the total length, so make 10
-			for(var ii:int = 0; ii<1; ii++)
+			for(var ii:int = 0; ii<10; ii++)
 			{
 				var solverColorImage:Image = new Image(solverColorTexture);
 				solverColorImage.width = solverColorImage.height = 2 * GridViewPanel.PAINT_RADIUS;
@@ -231,7 +231,7 @@ package scenes
 			return paintBrush;
 		}
 		
-		protected var degConversion:Number = (Math.PI/180);
+		public var degConversion:Number = (Math.PI/180);
 		public function rotateToDegree (image:Image,  currentCenter:Point, angleDegrees:Number):void 
 		{
 			image.rotation = degConversion*angleDegrees;
