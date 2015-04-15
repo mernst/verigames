@@ -1009,8 +1009,8 @@ package scenes.game.display
 				return Math.min(m_numNodes, num);
 			}
 			else
-				//get the min of total number of node, or 1000
-				return Math.min(m_numNodes, 1000);
+				//get the min of total number of node, or 10000
+				return Math.min(m_numNodes, 10000);
 		}
 		
 		public function getTargetScore():int
@@ -1127,11 +1127,23 @@ package scenes.game.display
 		
 		public function onUseSelectionPressed(choice:String):void
 		{
+			//save selection for undo
+			nodeIDToConstraintsTwoWayMap = new Dictionary;
+			var count:int = 1;
+			var newAssignmentValue:int;
+			m_previousVarValues = new Array;
+			m_lastVarValues = new Array;
 			var assignmentIsWide:Boolean = false;
 			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
+			{
 				assignmentIsWide = true;
+				newAssignmentValue = 1;
+			}
 			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
+			{
 				assignmentIsWide = false;
+				newAssignmentValue = 1;
+			}
 			
 			for each(var node:Node in selectedNodes)
 			{
@@ -1140,6 +1152,13 @@ package scenes.game.display
 				node.unselect();
 				if (!node.isClause)
 				{
+					nodeIDToConstraintsTwoWayMap[count] = node;
+					count++;
+					if(node.isNarrow)
+						m_previousVarValues.push(0);
+					else
+						m_previousVarValues.push(1);
+					m_lastVarValues.push(newAssignmentValue);
 					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
 					m_nodesToDraw[node.id] = node;
 				}
@@ -1171,6 +1190,7 @@ package scenes.game.display
 		private var directNodeDict:Dictionary;
 		private var counter:int;
 		private var m_solverType:int;
+		private var selectedConstraintValue:int;
 		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1180,6 +1200,7 @@ package scenes.game.display
 			updateCallback = _updateCallback;
 			doneCallback = _doneCallback;
 			
+			selectedConstraintValue = 0
 			m_solverType = 1;
 			if(brushType != GridViewPanel.SOLVER1_BRUSH)
 				m_solverType = 2;
@@ -1241,7 +1262,7 @@ package scenes.game.display
 					newSelectedClauses[node.id] = node;
 					var clauseArray:Array = new Array();
 					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
-					
+					selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
 					//find all variables connected to the constraint, and add them to the array
 					for each(var gameEdgeId:String in node.connectedEdgeIds)
 					{
@@ -1305,18 +1326,19 @@ package scenes.game.display
 					for each(var unattachedEdgeID:String in selectedVar.connectedEdgeIds)
 					{
 						var unattachedEdge:Edge = edgeLayoutObjs[unattachedEdgeID];
-						var toNode:Node = unattachedEdge.toNode;
+						var toClause:ClauseNode = unattachedEdge.toNode as ClauseNode;
 						
 						if(debugSolver)
 						{
-							toNode.solverSelected = true;
-							toNode.solverSelectedColor = 0x00ffff;
-							solverSelected.push(toNode);
+							toClause.solverSelected = true;
+							toClause.solverSelectedColor = 0x00ffff;
+							solverSelected.push(toClause);
 						}
 						
 						var clauseArray:Array = new Array();
 						clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
-						for each(var gameEdgeId:String in toNode.connectedEdgeIds)
+						selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
+						for each(var gameEdgeId:String in toClause.connectedEdgeIds)
 						{
 							var constraintEdge:Edge = edgeLayoutObjs[gameEdgeId];
 							var fromNode:Node = constraintEdge.fromNode;
@@ -1345,6 +1367,7 @@ package scenes.game.display
 								//create a separate clause here for this one node, based on it's current size
 								var nodeClauseArray:Array = new Array();
 								nodeClauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+								selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
 								
 								if(fromNode.isNarrow)
 									nodeClauseArray.push(-constraintID);
@@ -1395,7 +1418,7 @@ package scenes.game.display
 								
 						var clauseArray:Array = new Array();
 						clauseArray.push(CONFLICT_CONSTRAINT_VALUE*2); //multiply just so this is slightly higher value
-						
+						selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE*2;
 						for each(var edgeID:String in nextLayerClause.connectedEdgeIds)
 						{
 							//create constraint for clause connected to edge node
@@ -1432,6 +1455,7 @@ package scenes.game.display
 								continue;
 							
 							var varArray:Array = new Array();
+							selectedConstraintValue += FIXED_CONSTRAINT_VALUE;
 							varArray.push(FIXED_CONSTRAINT_VALUE); //FIXED value cause we really don't want this to change, it might add conflicts
 							//set constraint with current value of connectedNode, not constraint direction
 							if(connectedNode.isNarrow)
@@ -1462,7 +1486,8 @@ package scenes.game.display
 				return;
 			m_unsat_weight = unsat_weight;
 			m_lastVarValues = vars;
-			
+			var percentDone:Number = ((selectedConstraintValue - unsat_weight)/selectedConstraintValue)*100;
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_UPDATED, true, percentDone));
 		}
 		
 		protected function updateNodes():void
@@ -1476,7 +1501,7 @@ package scenes.game.display
 			for (var ii:int = 0; ii < m_lastVarValues.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
-				if(node)
+				if(node && !(node is ClauseNode))
 				{
 					node.solved = true;
 					var constraintVar:ConstraintVar = node["graphVar"];
@@ -1636,10 +1661,10 @@ package scenes.game.display
 		
 		public function undo():void
 		{
-			//switch last with previous settings, and then update
+			//switch last with previous settings, and then update from Last
 			var temp:Array = m_lastVarValues;
 			m_lastVarValues = m_previousVarValues;
-			m_previousVarValues = m_lastVarValues;
+			m_previousVarValues = temp;
 			updateNodes();
 		}
 	}

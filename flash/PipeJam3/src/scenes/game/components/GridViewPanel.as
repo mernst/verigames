@@ -101,6 +101,7 @@ package scenes.game.components
 		protected var m_selectedText:TextFieldWrapper;
 		protected var m_selectionLimitText:TextFieldWrapper;
 		static public var PAINT_RADIUS:int = 60;
+		public var selectedPercent:Number;
 		
 		private var m_fanfareLayer:Sprite = new Sprite();
 		private var m_buttonLayer:Sprite = new Sprite();
@@ -258,7 +259,8 @@ package scenes.game.components
 
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
-
+			addEventListener(MaxSatSolver.SOLVER_UPDATED, onSolverUpdated);
+			
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_CLICK, function(e:MouseEvent):void{});
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightClickDownEventHandler);
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
@@ -363,8 +365,9 @@ package scenes.game.components
 				var numTotal:int = m_currentLevel.m_numNodes;
 				var maxSelectable:int = m_currentLevel.getMaxSelectableWidgets();
 				var numSelectable:int = Math.min(maxSelectable, numTotal);
-				var percent:Number = (numSelected/numSelectable) * 100;
-				displayPercentSelected(percent);
+				selectedPercent = (numSelected/numSelectable) * 100;
+				if(!m_currentLevel.m_inSolver)
+					displayPercentSelected(selectedPercent);
 				if (m_selectedText) {
 					var selectedNumString:String = String(numSelected);
 					for(var i:int = selectedNumString.length; i<4;i++)
@@ -395,6 +398,10 @@ package scenes.game.components
 		{
 			if(percent > 100)
 				percent = 99.9;
+			
+			//use solver colors if solving
+			if(m_currentLevel.m_inSolver)
+				segmentIndex += 10;
 			
 			//get slice (by index) we are moving
 			//figure out it's move percentage 
@@ -1512,6 +1519,13 @@ package scenes.game.components
 			});
 			
 			updateNumNodesSelectedDisplay();
+		}
+		
+		private function onSolverUpdated(evt:starling.events.Event):void
+		{
+			//only color up to selected percent
+			var percent:Number = selectedPercent/100 * (evt.data as Number);
+			displayPercentSelected(percent);
 		}
 		
 		public function updateNumNodesSelectedDisplay():void

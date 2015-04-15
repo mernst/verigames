@@ -4,7 +4,7 @@
 
 <TextureAtlas imagePath="ParadoxSpriteSheet.png">
 	<SubTexture name="BrushCircle" x="222" y="11" width="200" height="200" />
-	<SubTexture name="BrushSelectionMask" x="222" y="220" width="200" height="200" />
+	<SubTexture name="BrushSolverColor" x="222" y="220" width="200" height="200" />
 	<SubTexture name="BrushNotUsed" x="430" y="12" width="200" height="200" />
 	<SubTexture name="BrushSelectionColor" x="430" y="220" width="200" height="200" />
 	<SubTexture name="BrushHexagon" x="428" y="427" width="200" height="200" />

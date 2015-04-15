@@ -9,6 +9,7 @@ package system
 		
 		static public var SOLVER_STARTED:String = "solver_started";
 		static public var SOLVER_STOPPED:String = "solver_stopped";
+		static public var SOLVER_UPDATED:String = "solver_updated";
 		
 		public static function test():void
 		{
