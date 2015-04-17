@@ -152,9 +152,9 @@ package scenes.game.components
 			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
 			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
 
-			m_solver1Brush.y = 0;
-			m_widenBrush.y = 30;
-			m_narrowBrush.y = 60;
+			m_widenBrush.y = 00;
+			m_narrowBrush.y = 30;
+			m_solver1Brush.y = 60;
 			
 			m_solver1Brush.visible = false;
 			if(addSolverArray[0] == 1)
