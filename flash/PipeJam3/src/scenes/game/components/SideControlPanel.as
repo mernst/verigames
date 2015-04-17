@@ -2,7 +2,8 @@ package scenes.game.components
 {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	
+	import flash.display.StageDisplayState;
+	import flash.external.ExternalInterface;
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
@@ -33,9 +34,11 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import starling.core.Starling;
 	
 	import utils.XSprite;
 	import display.NineSliceToggleButton;
+	import display.FullScreenButton;
 	
 	public class SideControlPanel extends BaseComponent
 	{
@@ -53,6 +56,7 @@ package scenes.game.components
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
+		private var m_fullScreenButton:BasicButton;
 		
 		protected var m_solver1Brush:NineSliceToggleButton;
 		protected var m_solver2Brush:NineSliceToggleButton;
@@ -140,7 +144,18 @@ package scenes.game.components
 			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = m_zoomInButton.scaleX;
 			XSprite.setPivotCenter(m_zoomOutButton);
 			m_zoomOutButton.x = m_zoomInButton.x;
-			m_zoomOutButton.y = m_zoomInButton.y + m_zoomInButton.height + 7;
+			m_zoomOutButton.y = m_zoomInButton.y + m_zoomInButton.height + 5;
+			
+			
+			// Note: this button is for display only, we listen for native touch events below on the stage and
+			// see whether this button was clicked because Flash requires native MouseEvents to trigger fullScreen
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_DOWN, checkForTriggerFullScreen);
+			m_fullScreenButton = new FullScreenButton();
+			m_fullScreenButton.addEventListener(starling.events.Event.TRIGGERED, onFullScreenButtonTriggered);
+			m_fullScreenButton.scaleX = m_fullScreenButton.scaleY = m_zoomInButton.scaleX;
+			XSprite.setPivotCenter(m_fullScreenButton);
+			m_fullScreenButton.x = m_zoomOutButton.x;
+			m_fullScreenButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 5;
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);
@@ -185,6 +200,7 @@ package scenes.game.components
 			addChild(m_menuButton);
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
+		//	addChild(m_fullScreenButton); not quite ready. Next Tutorials don't draw, occasional 'too big' crashes
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			this.removeEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
@@ -235,6 +251,7 @@ package scenes.game.components
 		public function removedFromStage(event:starling.events.Event):void
 		{
 			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, checkForTriggerFullScreen);
 		}
 		
 		protected var inTransparentArea:Boolean = false;
@@ -295,6 +312,54 @@ package scenes.game.components
 		private function onZoomOutButtonTriggered():void
 		{
 			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_OUT));
+		}
+		
+		protected function checkForTriggerFullScreen(event:MouseEvent):void
+		{
+			if (!m_fullScreenButton) return;
+			if (!m_fullScreenButton.parent) return;
+			var buttonTopLeft:Point = m_fullScreenButton.parent.localToGlobal(new Point(m_fullScreenButton.x - 0.5 * m_fullScreenButton.width, m_fullScreenButton.y - 0.5 * m_fullScreenButton.height));
+			var buttonBottomRight:Point = m_fullScreenButton.parent.localToGlobal(new Point(m_fullScreenButton.x + 0.5 * m_fullScreenButton.width, m_fullScreenButton.y + 0.5 * m_fullScreenButton.height));
+			// Need to use viewport to convert to native stage
+			if (ExternalInterface.available) {
+				ExternalInterface.call("console.log", "buttonTopLeft:" + buttonTopLeft);
+				ExternalInterface.call("console.log", "buttonBottomRight:" + buttonBottomRight);
+				ExternalInterface.call("console.log", "Starling.contentScaleFactor:" + Starling.contentScaleFactor);
+				ExternalInterface.call("console.log", "Starling.current.viewPort:" + Starling.current.viewPort);
+				ExternalInterface.call("console.log", "event.stageX,Y:" + event.stageX + ", " + event.stageY);
+			}
+			buttonTopLeft.x *= Starling.contentScaleFactor;
+			buttonBottomRight.x *= Starling.contentScaleFactor;
+			buttonTopLeft.y *= Starling.contentScaleFactor;
+			buttonBottomRight.y *= Starling.contentScaleFactor;
+			buttonTopLeft.x += Starling.current.viewPort.x;
+			buttonBottomRight.x += Starling.current.viewPort.x;
+			buttonTopLeft.y += Starling.current.viewPort.y;
+			buttonBottomRight.y += Starling.current.viewPort.y;
+			if (ExternalInterface.available) {
+				ExternalInterface.call("console.log", "adjbuttonTopLeft:" + buttonTopLeft);
+				ExternalInterface.call("console.log", "adjbuttonBottomRight:" + buttonBottomRight);
+			}
+			if (event.stageX >= buttonTopLeft.x && event.stageX <= buttonBottomRight.x && event.stageY >= buttonTopLeft.y && event.stageY <= buttonBottomRight.y)
+			{
+				//need to mark that we are doing this, so we don't lose the selection
+				World.changingFullScreenState = true;
+				
+				if(Starling.current.nativeStage.displayState != StageDisplayState.FULL_SCREEN)
+				{
+					Starling.current.nativeStage.displayState = StageDisplayState.FULL_SCREEN;
+				}
+				else
+				{
+					Starling.current.nativeStage.displayState = StageDisplayState.NORMAL;
+					
+				}
+			}
+		}
+		
+		//ignore what this does, as I handle it in the above method
+		private function onFullScreenButtonTriggered(event:Event):void
+		{
 		}
 		
 		/**
