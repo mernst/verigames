@@ -18,6 +18,9 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
+	import dialogs.InfoDialog;
+	import dialogs.InfoDialogInfo;
+	
 	import display.NineSliceButton;
 	import display.ToolTipText;
 	
@@ -1551,7 +1554,7 @@ package scenes.game.components
 //			});
 		}
 		
-		private function onSolverStopped():void
+		private function onSolverStopped(event:starling.events.Event):void
 		{
 //			Starling.juggler.removeTweens(m_paintBrush);
 //			Starling.juggler.tween(m_paintBrush, 0.2, {
@@ -1562,6 +1565,29 @@ package scenes.game.components
 //			});
 			displayPercentSelected(0);
 			updateNumNodesSelectedDisplay();
+			
+			if(m_currentLevel.m_inSolver && (event.data as Boolean))
+			{
+				var revertInfo:InfoDialogInfo = new InfoDialogInfo("Your score went down.\n Revert to last?\n\n\n", 4, "Revert", undo, "Ignore", ignore);
+				revertDialog = new InfoDialog(m_currentLevel, revertInfo);
+				addChild(revertDialog);
+				revertDialog.x = 500 - revertDialog.width;
+				revertDialog.y = 400 - revertDialog.height;
+			}
+		}
+		
+		protected var revertDialog:InfoDialog;
+		protected function undo(event:starling.events.Event):void
+		{
+			buttonHit = true;
+			m_currentLevel.undo();
+			revertDialog.closeDialog();
+		}
+		
+		protected function ignore(event:starling.events.Event):void
+		{
+			buttonHit = true;
+			revertDialog.closeDialog();
 		}
 		
 		private function onSolverUpdated(evt:starling.events.Event):void

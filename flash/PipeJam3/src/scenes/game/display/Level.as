@@ -24,6 +24,9 @@ package scenes.game.display
 	
 	import deng.fzip.FZip;
 	
+	import dialogs.InfoDialog;
+	import dialogs.InfoDialogInfo;
+	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
 	import events.PropertyModeChangeEvent;
@@ -36,6 +39,7 @@ package scenes.game.display
 	import scenes.BaseComponent;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
+	import scenes.game.components.TutorialText;
 	import scenes.game.display.Node;
 	
 	import starling.animation.Transitions;
@@ -1546,8 +1550,11 @@ package scenes.game.display
 			onScoreChange(true);
 			drawNodesAfterSolving();
 			System.gc();
+			var scoreWentDown:Boolean = true;
+			if(levelGraph.oldScore <= levelGraph.currentScore)
+				scoreWentDown = false;
 			//do this twice, once to reset solver color, again after setting inSolver to false to reset selection color
-			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true, scoreWentDown));
 			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 		}
