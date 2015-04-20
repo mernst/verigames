@@ -4,10 +4,7 @@ package events
 	
 	public class MenuEvent extends Event 
 	{
-		public static const SUBMIT_LEVEL:String = "submit_level";
 		public static const SAVE_LEVEL:String = "save_level";
-		public static const POST_SAVE_DIALOG:String = "post_save_dialog";
-		public static const POST_SUBMIT_DIALOG:String = "post_submit_dialog";
 		public static const ZOOM_IN:String = "zoom_in";
 		public static const ZOOM_OUT:String = "zoom_out";
 		public static const MAX_ZOOM_REACHED:String = "max_zoom";
@@ -30,7 +27,6 @@ package events
 		{
 			super(_type, true, _eventData);
 		}
-		
 	}
 
 }

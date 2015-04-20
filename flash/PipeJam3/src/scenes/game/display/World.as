@@ -378,7 +378,6 @@ package scenes.game.display
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			
 			addEventListener(MenuEvent.POST_DIALOG, postDialog);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
@@ -566,11 +565,6 @@ package scenes.game.display
 		//	gameControlPanel.adjustSize(newWidth, newHeight);
 		}
 		
-		private function onShowGameMenuEvent(evt:NavigationEvent):void
-		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
-		}
-		
 		public function onPutLevelInDatabase(event:MenuEvent):void
 		{
 			//type:String, currentScore:int = event.type, currentScore
@@ -619,7 +613,7 @@ package scenes.game.display
 			
 			var alert:SimpleAlertDialog;
 			if(achievementID == Achievements.TUTORIAL_FINISHED_ID)
-				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, switchToLevelSelect);
+				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, onShowGameMenuEvent);
 			else
 				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
 			addChild(alert);
@@ -645,6 +639,11 @@ package scenes.game.display
 		protected function switchToLevelSelect():void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
+		}
+		
+		protected function onShowGameMenuEvent(evt:NavigationEvent = null):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
 		public function updateAssignments(currentLevelOnly:Boolean = false):Object
@@ -799,12 +798,18 @@ package scenes.game.display
 				if(tutorialsDone)
 				{
 					if(!Achievements.checkAchievements(Achievements.TUTORIAL_FINISHED_ID))
-						switchToLevelSelect();
+						if(PipeJam3.TUTORIAL_DEMO)
+							switchToLevelSelect();
+						else
+							onShowGameMenuEvent();
 					return;
 				}
 				else if (tutorialController.isLastTutorialLevel())
 				{
-					switchToLevelSelect();
+					if(PipeJam3.TUTORIAL_DEMO)
+						switchToLevelSelect();
+					else
+						onShowGameMenuEvent();
 					return;
 				}
 				else
@@ -1135,7 +1140,6 @@ package scenes.game.display
 			removeEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 
 			removeEventListener(MenuEvent.POST_DIALOG, postDialog);
