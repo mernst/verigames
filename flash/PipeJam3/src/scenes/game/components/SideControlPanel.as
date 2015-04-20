@@ -1,10 +1,7 @@
 package scenes.game.components
 {
-	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -13,7 +10,6 @@ package scenes.game.components
 	import display.NineSliceButton;
 	import display.RadioButton;
 	import display.RadioButtonGroup;
-	import display.RecenterButton;
 	import display.SoundButton;
 	import display.ZoomInButton;
 	import display.ZoomOutButton;
@@ -22,17 +18,15 @@ package scenes.game.components
 	import events.NavigationEvent;
 	import events.SelectionEvent;
 	
+	import networking.HTTPCookies;
+	import networking.PlayerValidation;
+	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
-	import scenes.game.display.NodeSkin;
 	import scenes.game.display.TutorialLevelManager;
+	import scenes.game.display.World;
 	
-	import starling.animation.Transitions;
-	import starling.core.Starling;
-	import starling.display.DisplayObject;
 	import starling.display.Image;
-	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -41,6 +35,7 @@ package scenes.game.components
 	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
+	import display.NineSliceToggleButton;
 	
 	public class SideControlPanel extends BaseComponent
 	{
@@ -59,10 +54,10 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		
-		protected var m_solver1Brush:RadioButton;
-		protected var m_solver2Brush:RadioButton;
-		protected var m_widenBrush:RadioButton;
-		protected var m_narrowBrush:RadioButton;
+		protected var m_solver1Brush:NineSliceToggleButton;
+		protected var m_solver2Brush:NineSliceToggleButton;
+		protected var m_widenBrush:NineSliceToggleButton;
+		protected var m_narrowBrush:NineSliceToggleButton;
 		protected var m_brushButtonGroup:RadioButtonGroup;
 		
 		/** Text showing current score */
@@ -149,24 +144,21 @@ package scenes.game.components
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);
-			m_brushButtonGroup.y = 115;
-			m_brushButtonGroup.x = 40;
-			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
-			m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, false, "Optimize") as RadioButton;
-			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, false, "Make Wide") as RadioButton;
-			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, false, "Make Narrow") as RadioButton;
-
+			m_brushButtonGroup.y = 130;
+			m_brushButtonGroup.x = 65;
 			
-			//set all to visible == false so that they don't flash on, before being turned off
-			var currentY:Number = 0;
-			m_solver1Brush.scaleX = m_solver1Brush.scaleY = .5;
-			m_solver1Brush.x = 25;
-			m_solver1Brush.y = currentY;
+			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+		//	m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
+			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
+
+			m_solver1Brush.y = 0;
+			m_widenBrush.y = 30;
+			m_narrowBrush.y = 60;
 			
 			m_solver1Brush.visible = false;
 			if(addSolverArray[0] == 1)
 			{
-				currentY += 30;
 				m_brushButtonGroup.addChild(m_solver1Brush);
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
 				m_brushButtonGroup.makeActive(m_solver1Brush);
@@ -174,29 +166,12 @@ package scenes.game.components
 			else
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
 			
-			//brush icons are different widths, so line up centers
-			var brushCenter:Number = m_solver1Brush.x + m_solver1Brush.width/2;
-			m_solver2Brush.scaleX = m_solver2Brush.scaleY = m_solver1Brush.scaleX;
-			m_solver2Brush.x = brushCenter - m_solver2Brush.width/2;
-			m_solver2Brush.y = currentY;
-			m_solver2Brush.visible = false;
-			if(addSolverArray[1] == 1)
-			{
-				m_brushButtonGroup.addChild(m_solver2Brush);
-				currentY += 30;
-			}
-			m_widenBrush.scaleX = m_widenBrush.scaleY = m_solver1Brush.scaleX;
-			m_widenBrush.x = brushCenter - m_widenBrush.width/2;
-			m_widenBrush.y = currentY;
 			m_widenBrush.visible = false;
 			if(addSolverArray[2] == 1)
 			{
 				m_brushButtonGroup.addChild(m_widenBrush);
-				currentY += 30;
 			}
-			m_narrowBrush.scaleX = m_narrowBrush.scaleY = m_solver1Brush.scaleX;
-			m_narrowBrush.x = brushCenter - m_narrowBrush.width/2;
-			m_narrowBrush.y = currentY;
+
 			m_narrowBrush.visible = false;
 			if(addSolverArray[3] == 1)
 				m_brushButtonGroup.addChild(m_narrowBrush);
@@ -341,24 +316,15 @@ package scenes.game.components
 			
 			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
 			var decimalRotation:Number = -(100-decimalPart)*1.8;
-			rotateAroundCenter(scoreCircleMiddleImage, integerRotation);
-			rotateAroundCenter(scoreCircleFrontImage, decimalRotation);
+			rotateToDegree(scoreCircleMiddleImage, scoreImageCenter, integerRotation);
+			rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
 			
 			
-		}
-		
-		protected var degConversion:Number = (Math.PI/180);
-		public function rotateAroundCenter (image:Image, angleDegrees:Number):void 
-		{
-			image.rotation = degConversion*angleDegrees;
-			var newXCenter:Number = image.bounds.left + (image.bounds.right - image.bounds.left)/2;
-			var newYCenter:Number = image.bounds.top + (image.bounds.bottom - image.bounds.top)/2;
-			image.x += scoreImageCenter.x - newXCenter;
-			image.y += scoreImageCenter.y - newYCenter;
 		}
 		
 		private function changeCurrentBrush(evt:starling.events.Event):void
 		{
+			m_brushButtonGroup.makeActive(evt.target as NineSliceToggleButton);
 			dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, evt.target, null));
 		}
 		
@@ -367,8 +333,8 @@ package scenes.game.components
 			var count:int = 0;
 			m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
 			if(m_solver1Brush.visible) count++;
-			m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
-			if(m_solver2Brush.visible) count++;
+		//	m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+		//	if(m_solver2Brush.visible) count++;
 			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
 			if(m_narrowBrush.visible) count++;
 			m_widenBrush.visible = visibleBrushes & TutorialLevelManager.NARROW_BRUSH ? true : false;
@@ -376,7 +342,133 @@ package scenes.game.components
 			
 			//if only one shows, hide them all
 			if(count == 1)
-				m_solver1Brush.visible = m_solver2Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+				m_solver1Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+		}
+		
+//		private function onTouchHighScore(evt:TouchEvent):void
+//		{
+//			if (!m_bestScoreLine) return;
+//			if (evt.getTouches(m_bestScoreLine, TouchPhase.ENDED).length) {
+//				// Clicked, load best score!
+//				dispatchEvent(new MenuEvent(MenuEvent.LOAD_HIGH_SCORE));
+//			} else if (evt.getTouches(m_bestScoreLine, TouchPhase.HOVER).length) {
+//				// Hover over
+//				m_bestScoreLine.alpha = 1;
+//			} else {
+//				// Hover out
+//				m_bestScoreLine.alpha = 0.8;
+//			}
+//		}
+		
+		public function setHighScores(highScoreArray:Array):void
+		{
+			var level:Level = World.m_world.active_level;
+			if(level != null && highScoreArray != null)
+			{
+				var htmlString:String = "";
+				var count:int = 1;
+				var scoreObjArray:Array = new Array;
+				for each(var scoreInstance:Object in highScoreArray)
+				{
+					var scoreObj:Object = new Object;
+					scoreObj['name'] = PlayerValidation.getUserName(scoreInstance[1], count);
+					scoreObj['score'] = scoreInstance[0];
+					scoreObj['assignmentsID'] = scoreInstance[2];
+					scoreObj['score_improvement'] = scoreInstance[3];
+					var maxConflicts:int = level.maxScore;
+					var intScore:int = maxConflicts - int(scoreInstance[0]);
+					var value:Number = ((maxConflicts-intScore)/maxConflicts)*100;
+					scoreObj['percent'] = value.toFixed(2) + '%';
+					if(scoreInstance[1] == PlayerValidation.playerID)
+						scoreObj.activePlayer = 1;
+					else
+						scoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(scoreObj);
+					count++;
+				}
+				if(scoreObjArray.length > 0)
+				{
+					scoreObjArray.sort(orderHighScoresByScore);
+					var scoreStr:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr);
+					
+					scoreObjArray.sort(orderHighScoresByDifference);
+					var scoreStr1:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addScoreImprovementTotals(scoreStr1);
+				}
+				else
+				{
+					var nonScoreObj:Object = new Object;
+					nonScoreObj['name'] = 'Not played yet';
+					nonScoreObj['score'] = "";
+					nonScoreObj['assignmentsID'] = "";
+					nonScoreObj['score_improvement'] = "";
+					nonScoreObj.activePlayer = 0;
+					
+					scoreObjArray.push(nonScoreObj);
+					var scoreStr2:String = JSON.stringify(scoreObjArray);
+					HTTPCookies.addHighScores(scoreStr2);
+					scoreObjArray[0]['name'] = "";
+					var scoreStr3:String = JSON.stringify(scoreObjArray)
+					HTTPCookies.addScoreImprovementTotals(scoreStr3);
+					
+				}
+				
+				var currentScore:int = level.currentScore;
+				var bestScore:int = level.bestScore;
+				var targetScore:int = level.getTargetScore();
+				var maxScoreShown:Number = Math.max(currentScore, targetScore);
+				var score:String = "0";
+				if(highScoreArray.length > 0)
+					score = highScoreArray[0].current_score;
+				
+				
+//				if (!m_bestScoreLine) {
+//					m_bestScoreLine = new TargetScoreDisplay(score, 0.05 * GameControlPanel.SCORE_PANEL_AREA.height, Constants.RED, Constants.RED, "High Score");
+//					m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchHighScore);
+//				} else {
+//					m_bestScoreLine.update(score);
+//				}
+//				m_bestScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * parseInt(score) / maxScoreShown;
+//				m_scoreBarContainer.addChild(m_bestScoreLine);
+			}
+		}
+		
+		static public function orderHighScoresByScore(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['score']); 
+			var score2:int = parseInt(b['score']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
+		} 
+		
+		static public function orderHighScoresByDifference(a:Object, b:Object):int 
+		{ 
+			var score1:int = parseInt(a['difference']); 
+			var score2:int = parseInt(b['difference']); 
+			if (score1 < score2) 
+			{ 
+				return 1; 
+			} 
+			else if (score1 > score2) 
+			{ 
+				return -1; 
+			} 
+			else 
+			{ 
+				return 0; 
+			} 
 		}
 	}
 }

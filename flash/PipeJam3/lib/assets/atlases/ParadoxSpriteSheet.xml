@@ -4,24 +4,24 @@
 
 <TextureAtlas imagePath="ParadoxSpriteSheet.png">
 	<SubTexture name="BrushCircle" x="222" y="11" width="200" height="200" />
-	<SubTexture name="BrushCircleClick" x="222" y="220" width="200" height="200" />
-	<SubTexture name="BrushDiamond" x="430" y="12" width="200" height="200" />
-	<SubTexture name="BrushDiamondClick" x="430" y="221" width="200" height="200" />
+	<SubTexture name="BrushSolverColor" x="222" y="220" width="200" height="200" />
+	<SubTexture name="BrushNotUsed" x="430" y="12" width="200" height="200" />
+	<SubTexture name="BrushSelectionColor" x="430" y="220" width="200" height="200" />
 	<SubTexture name="BrushHexagon" x="428" y="427" width="200" height="200" />
 	<SubTexture name="BrushHexagonClick" x="428" y="634" width="200" height="200" />
 	<SubTexture name="BrushSquare" x="223" y="427" width="200" height="200" />
 	<SubTexture name="BrushSquareClick" x="223" y="636" width="200" height="200" />
 	<SubTexture name="ButtonBrushCircle" x="664" y="257" width="45" height="45" />
-	<SubTexture name="ButtonBrushCircleClick" x="761" y="258" width="45" height="45" />
-	<SubTexture name="ButtonBrushCircleOver" x="713" y="258" width="45" height="45" />
-	<SubTexture name="ButtonBrushDiamond" x="665" y="354" width="45" height="45" />
+	<SubTexture name="ButtonBrushCircleClick" x="761" y="257" width="45" height="45" />
+	<SubTexture name="ButtonBrushCircleOver" x="713" y="257" width="45" height="45" />
+	<SubTexture name="ButtonBrushDiamond" x="664" y="354" width="45" height="45" />
 	<SubTexture name="ButtonBrushDiamondClick" x="761" y="355" width="45" height="45" />
-	<SubTexture name="ButtonBrushDiamondOver" x="712" y="354" width="45" height="45" />
+	<SubTexture name="ButtonBrushDiamondOver" x="713" y="354" width="45" height="45" />
 	<SubTexture name="ButtonBrushHexagon" x="664" y="402" width="45" height="45" />
-	<SubTexture name="ButtonBrushHexagonClick" x="760" y="403" width="45" height="45" />
+	<SubTexture name="ButtonBrushHexagonClick" x="761" y="403" width="45" height="45" />
 	<SubTexture name="ButtonBrushHexagonOver" x="713" y="402" width="45" height="45" />
 	<SubTexture name="ButtonBrushSquare" x="664" y="306" width="45" height="45" />
-	<SubTexture name="ButtonBrushSquareClick" x="762" y="307" width="45" height="45" />
+	<SubTexture name="ButtonBrushSquareClick" x="761" y="307" width="45" height="45" />
 	<SubTexture name="ButtonBrushSquareOver" x="713" y="306" width="45" height="45" />
 	<SubTexture name="ButtonCenter" x="651" y="506" width="20" height="20" />
 	<SubTexture name="ButtonCenterClick" x="698" y="503" width="20" height="20" />

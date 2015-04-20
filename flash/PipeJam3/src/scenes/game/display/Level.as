@@ -9,9 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import starling.animation.Transitions;
-	import starling.animation.Tween;
-	import starling.core.Starling;
 	
 	import assets.AssetInterface;
 	
@@ -41,6 +38,9 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.display.Node;
 	
+	import starling.animation.Transitions;
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -95,6 +95,7 @@ package scenes.game.display
 		protected var m_layoutFixed:Boolean = false;
 		public var m_targetScore:int;
 		
+		public var m_numNodes:uint = 0;
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
 		public var groupLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
@@ -145,7 +146,7 @@ package scenes.game.display
 		public var solverSelected:Vector.<Node> = new Vector.<Node>();
 		
 		static public var debugSolver:Boolean = false;
-		public var extendSolver:Boolean = false;
+		public var extendSolver:Boolean = true;
 		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
@@ -616,8 +617,6 @@ package scenes.game.display
 			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			// Process layout nodes (vars)
-			var visibleNodes:int = 0;
-			var n:uint = 0;
 			var gridChild:GridChild;
 			var boundsArr:Array = m_levelLayoutObj["layout"]["bounds"] as Array;
 			if (boundsArr)
@@ -677,14 +676,14 @@ package scenes.game.display
 				var nodeLayout:Object = m_levelLayoutObj["layout"]["vars"][varId];
 				gridChild = createGridChildFromLayoutObj(varId, nodeLayout, false);
 				if (gridChild == null) continue;
-				n++;
+				m_numNodes++;
 			}
 			
 			//trace("node count = " + n);
 			
 			// Process layout edges (constraints)
 			var visibleLines:int = 0;
-			n = 0;
+			m_numNodes = 0;
 			
 			for (var constraintId:String in levelGraph.constraintsDict)
 			{
@@ -707,7 +706,7 @@ package scenes.game.display
 				endNode.connectedEdgeIds.push(constraintId);
 				edgeLayoutObjs[constraintId] = edge;
 				
-				n++;
+				m_numNodes++;
 			}
 			//trace("edge count = " + n);
 			
@@ -1023,10 +1022,14 @@ package scenes.game.display
 		
 		public function getMaxSelectableWidgets():int
 		{
-			var num:int = -1;
-			if (tutorialManager != null) num = tutorialManager.getMaxSelectableWidgets();
-			if (num > 0) return num;
-			return 10000;
+			if (tutorialManager != null)
+			{
+				var num:int = tutorialManager.getMaxSelectableWidgets();
+				return Math.min(m_numNodes, num);
+			}
+			else
+				//get the min of total number of node, or 1000
+				return Math.min(m_numNodes, 1000);
 		}
 		
 		public function getTargetScore():int
@@ -1034,11 +1037,12 @@ package scenes.game.display
 			return m_targetScore;
 		}
 		
+
 		public function setTargetScore(score:int):void
 		{
 			m_targetScore = score;
 		}
-		
+			
 		public function getTimeMs():Number
 		{
 			return new Date().time - m_levelStartTime;
@@ -1064,11 +1068,6 @@ package scenes.game.display
 //				}
 //				m_hidingErrorText = false;
 //			}
-		}
-		
-		public override function flatten():void
-		{
-			//super.flatten();
 		}
 		
 		public override function unflatten():void
@@ -1147,11 +1146,23 @@ package scenes.game.display
 		
 		public function onUseSelectionPressed(choice:String):void
 		{
+			//save selection for undo
+			nodeIDToConstraintsTwoWayMap = new Dictionary;
+			var count:int = 1;
+			var newAssignmentValue:int;
+			m_previousVarValues = new Array;
+			m_lastVarValues = new Array;
 			var assignmentIsWide:Boolean = false;
 			if(choice == MenuEvent.MAKE_SELECTION_WIDE)
+			{
 				assignmentIsWide = true;
+				newAssignmentValue = 1;
+			}
 			else if(choice == MenuEvent.MAKE_SELECTION_NARROW)
+			{
 				assignmentIsWide = false;
+				newAssignmentValue = 1;
+			}
 			
 			for each(var node:Node in selectedNodes)
 			{
@@ -1160,12 +1171,20 @@ package scenes.game.display
 				node.unselect();
 				if (!node.isClause)
 				{
+					nodeIDToConstraintsTwoWayMap[count] = node;
+					count++;
+					if(node.isNarrow)
+						m_previousVarValues.push(0);
+					else
+						m_previousVarValues.push(1);
+					m_lastVarValues.push(newAssignmentValue);
 					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
 					m_nodesToDraw[node.id] = node;
 				}
 			}
 			//update score
 			onWidgetChange();
+			unselectAll();
 		}
 		
 		public function getEdgeContainer(edgeId:String):DisplayObject
@@ -1190,6 +1209,8 @@ package scenes.game.display
 		private var directNodeDict:Dictionary;
 		private var counter:int;
 		private var m_solverType:int;
+		private var selectedConstraintValue:int;
+		public var startingSelectedNodeCount:int;
 		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
@@ -1198,7 +1219,8 @@ package scenes.game.display
 			//run the solver, passing in the callback function		
 			updateCallback = _updateCallback;
 			doneCallback = _doneCallback;
-			
+			startingSelectedNodeCount = selectedNodes.length;
+			selectedConstraintValue = 0;
 			m_solverType = 1;
 			if(brushType != GridViewPanel.SOLVER1_BRUSH)
 				m_solverType = 2;
@@ -1210,11 +1232,11 @@ package scenes.game.display
 			initvarsArray = new Array;
 			directNodeDict = new Dictionary;
 			storedDirectEdgesDict = new Dictionary;
-			if(m_unsat_weight < 0)
-				m_unsat_weight = int.MAX_VALUE;
+			m_unsat_weight = int.MAX_VALUE;
 
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
+			m_inSolver = true;
 			
 			createConstraintsForClauses(); 
 
@@ -1260,7 +1282,7 @@ package scenes.game.display
 					newSelectedClauses[node.id] = node;
 					var clauseArray:Array = new Array();
 					clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
-					
+					selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
 					//find all variables connected to the constraint, and add them to the array
 					for each(var gameEdgeId:String in node.connectedEdgeIds)
 					{
@@ -1324,18 +1346,19 @@ package scenes.game.display
 					for each(var unattachedEdgeID:String in selectedVar.connectedEdgeIds)
 					{
 						var unattachedEdge:Edge = edgeLayoutObjs[unattachedEdgeID];
-						var toNode:Node = unattachedEdge.toNode;
+						var toClause:ClauseNode = unattachedEdge.toNode as ClauseNode;
 						
 						if(debugSolver)
 						{
-							toNode.solverSelected = true;
-							toNode.solverSelectedColor = 0x00ffff;
-							solverSelected.push(toNode);
+							toClause.solverSelected = true;
+							toClause.solverSelectedColor = 0x00ffff;
+							solverSelected.push(toClause);
 						}
 						
 						var clauseArray:Array = new Array();
 						clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
-						for each(var gameEdgeId:String in toNode.connectedEdgeIds)
+						selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
+						for each(var gameEdgeId:String in toClause.connectedEdgeIds)
 						{
 							var constraintEdge:Edge = edgeLayoutObjs[gameEdgeId];
 							var fromNode:Node = constraintEdge.fromNode;
@@ -1364,6 +1387,7 @@ package scenes.game.display
 								//create a separate clause here for this one node, based on it's current size
 								var nodeClauseArray:Array = new Array();
 								nodeClauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+								selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
 								
 								if(fromNode.isNarrow)
 									nodeClauseArray.push(-constraintID);
@@ -1394,7 +1418,10 @@ package scenes.game.display
 					var conEdge:Edge = edgeLayoutObjs[conEdgeID];
 					storedDirectEdgesDict[conEdgeID] = conEdge;
 					
-					var nextLayerClause:Node = conEdge.toNode;
+					var nextLayerClause:ClauseNode = conEdge.toNode as ClauseNode;
+					
+					if(nextLayerClause.hasError()) //ignore if I don't care if the value changes
+						continue;
 					
 					if(newSelectedClauses[nextLayerClause.id] == null)
 					{
@@ -1410,8 +1437,8 @@ package scenes.game.display
 						}		
 								
 						var clauseArray:Array = new Array();
-						clauseArray.push(FIXED_CONSTRAINT_VALUE);
-						
+						clauseArray.push(CONFLICT_CONSTRAINT_VALUE*2); //multiply just so this is slightly higher value
+						selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE*2;
 						for each(var edgeID:String in nextLayerClause.connectedEdgeIds)
 						{
 							//create constraint for clause connected to edge node
@@ -1429,8 +1456,8 @@ package scenes.game.display
 							else
 								nextLevelConstraintID = nodeIDToConstraintsTwoWayMap[connectedNode.id];
 							
-							//if(edgeID.indexOf('c') == 0)
-							if(connectedNode.isNarrow)
+							if(edgeID.indexOf('c') == 0)
+							//if(connectedNode.isNarrow)
 								clauseArray.push(nextLevelConstraintID);
 							else
 								clauseArray.push(-nextLevelConstraintID);
@@ -1448,7 +1475,8 @@ package scenes.game.display
 								continue;
 							
 							var varArray:Array = new Array();
-							varArray.push(FIXED_CONSTRAINT_VALUE);
+							selectedConstraintValue += FIXED_CONSTRAINT_VALUE;
+							varArray.push(FIXED_CONSTRAINT_VALUE); //FIXED value cause we really don't want this to change, it might add conflicts
 							//set constraint with current value of connectedNode, not constraint direction
 							if(connectedNode.isNarrow)
 								varArray.push(-nextLevelConstraintID);
@@ -1464,41 +1492,59 @@ package scenes.game.display
 		
 		public function solverStartCallback(evt:TimerEvent):void
 		{
-			m_inSolver = true;
-			MaxSatSolver.run_solver(2, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
+		protected var m_lastVarValues:Array;
+		protected var m_previousVarValues:Array;
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
-			var someNodeUpdated:Boolean = false;
 			trace("update", unsat_weight);
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
+			m_lastVarValues = vars;
+			var percentDone:Number = ((selectedConstraintValue - unsat_weight)/selectedConstraintValue)*100;
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_UPDATED, true, percentDone));
+		}
+		
+		protected function updateNodes():void
+		{
+			if(!m_lastVarValues)
+				return;
+			
+			m_previousVarValues = new Array;
+			var someNodeUpdated:Boolean = false;
 			//trace(levelGraph.currentScore);
-			for (var ii:int = 0; ii < vars.length; ++ ii) 
+			for (var ii:int = 0; ii < m_lastVarValues.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
-				node.solved = true;
-				var nodeUpdated:Boolean = false;
-				var constraintVar:ConstraintVar = node["graphVar"];
-				var currentVal:Boolean = node.isNarrow;
-				node.isNarrow = true;
-				if(vars[ii] == 1)
-					node.isNarrow = false;
-				someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
-				nodeUpdated = currentVal != node.isNarrow; 
-				if(currentVal != node.isNarrow)
+				if(node && !(node is ClauseNode))
 				{
-					if (node.skin != null)
+					node.solved = true;
+					var constraintVar:ConstraintVar = node["graphVar"];
+					var currentVal:Boolean = node.isNarrow;
+					var currentNumValue:int = (currentVal == true) ? 0 : 1;
+					m_previousVarValues.push(currentNumValue);
+					
+					if(m_lastVarValues[ii] == 1)
+						node.isNarrow = false;
+					else
+						node.isNarrow = true;
+					
+					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
+					if(currentVal != node.isNarrow)
 					{
-						node.setDirty(true);
+						if (node.skin != null)
+						{
+							node.setDirty(true);
 						m_nodesToDraw[node.id] = node;
+						}
+						if(constraintVar != null) 
+							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
+						if (tutorialManager != null) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 					}
-					if(constraintVar != null) 
-						constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
-					if (tutorialManager != null) tutorialManager.onWidgetChange(constraintVar.id, PropDictionary.PROP_NARROW, node.isNarrow, levelGraph);
 				}
 			}
 			if(someNodeUpdated)
@@ -1511,12 +1557,17 @@ package scenes.game.display
 		public function solverDone(errMsg:String):void
 		{
 			//trace("solver done " + errMsg);
-			m_inSolver = false;
+			unselectAll();
+			updateNodes();
+			
 			MaxSatSolver.stop_solver();
 			levelGraph.updateScore();
 			onScoreChange(true);
 			drawNodesAfterSolving();
 			System.gc();
+			//do this twice, once to reset solver color, again after setting inSolver to false to reset selection color
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 		}
 		
@@ -1630,6 +1681,14 @@ package scenes.game.display
 			return null;
 		}
 		
+		public function undo():void
+		{
+			//switch last with previous settings, and then update from Last
+			var temp:Array = m_lastVarValues;
+			m_lastVarValues = m_previousVarValues;
+			m_previousVarValues = temp;
+			updateNodes();
+		}
 	}
 	
 }

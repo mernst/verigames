@@ -68,16 +68,13 @@ a cycle structure do not form a chain).
 #include <stdlib.h>
 #include <time.h>
 
-#include <sys/times.h>
+//#include <sys/times.h>
 #include <sys/types.h>
 #include <limits.h>
 
-#include <unistd.h>
+//#include <unistd.h>
 
-typedef signed char my_type;
-typedef unsigned char my_unsigned_type;
-
-typedef long long int lli_type;
+#include "../maxsatz.h"
 
 // #define DEBUG
 
@@ -3000,15 +2997,15 @@ void ubcsat(char file[]) {
   }
 }
 
-#ifdef MAXSATZ2009
+#if MAXSATZ2009
 int main(int argc, char *argv[]) {
   char saved_input_file[WORD_LENGTH];
   //int i,  var;
   int i;
   long begintime, endtime, mess;
-  struct tms *a_tms;
+//  struct tms *a_tms;
   FILE *fp_time;
-  
+
   if (argc <= 1) {
     printf("Using format: %s input_instance [-l]\n\t-l: without local search.", argv[0]);
     return FALSE;
@@ -3016,8 +3013,8 @@ int main(int argc, char *argv[]) {
   for (i=0; i<WORD_LENGTH; i++)
     saved_input_file[i]=argv[1][i];
   
-  a_tms = ( struct tms *) malloc( sizeof (struct tms));
-  mess=times(a_tms); begintime = a_tms->tms_utime;
+ // a_tms = ( struct tms *) malloc( sizeof (struct tms));
+ // mess=times(a_tms); begintime = a_tms->tms_utime;
 
   printf("c ----------------------------\n");
   printf("c - Weighted Partial MaxSATZ -\n");
@@ -3045,7 +3042,7 @@ int main(int argc, char *argv[]) {
   case NONE:
     printf("An empty resolvant is found!\n"); break;
   }
-  mess=times(a_tms); endtime = a_tms->tms_utime;
+ // mess=times(a_tms); endtime = a_tms->tms_utime;
   
   printf("c Learned clauses = %i\n", INIT_BASE_NB_CLAUSE - BASE_NB_CLAUSE);
   printf("c NB_MONO= %lli, NB_BRANCHE= %lli, NB_BACK= %lli \n", 

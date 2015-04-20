@@ -121,8 +121,7 @@ package networking
 			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
 			if (!currentLevel) return 0;
 			var currentPosition:int = currentLevel["position"];
-			currentPosition++;
-			var nextPosition:int = currentPosition;
+			var nextPosition:int = currentPosition + 1;
 			
 			var levelFound:Boolean = false;
 			while(!levelFound)
@@ -170,6 +169,7 @@ package networking
 		public function clearPlayedTutorials():void
 		{
 			completedTutorialDictionary = new Dictionary;
+			PipeJamGame.levelInfo = null;
 		}
 		
 		public function resetTutorialStatus():void

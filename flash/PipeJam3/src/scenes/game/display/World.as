@@ -271,7 +271,9 @@ package scenes.game.display
 			var time1:Number = new Date().getTime();
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				var obj:Object = PipeJamGame.levelInfo;
+				var obj:Object;
+				if(PipeJam3.TUTORIAL_DEMO)
+					obj = PipeJamGame.levelInfo;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
 				if(!obj)
@@ -713,8 +715,8 @@ package scenes.game.display
 				if (newScore >= active_level.getTargetScore()) {
 					if (!active_level.targetScoreReached) {
 						active_level.targetScoreReached = true;
-						if(active_level.m_inSolver)
-							solverDoneCallback("");
+						//if(active_level.m_inSolver)
+						//	solverDoneCallback("");
 						var continueDelay:Number = 0;
 						var showFanfare:Boolean = true;
 						if (active_level && active_level.tutorialManager) {
@@ -755,6 +757,9 @@ package scenes.game.display
 				{
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
+				
+				Achievements.checkAchievements(Achievements.CHECK_SCORE, newScore - active_level.startingScore);
+
 			}
 		}
 		
@@ -1212,8 +1217,8 @@ package scenes.game.display
 		
 		public function setHighScores():void
 		{
-		//	if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
-		//		sideControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.highScores)
+				sideControlPanel.setHighScores(PipeJamGame.levelInfo.highScores);
 		}
 		
 		public function showVisibleBrushes():void

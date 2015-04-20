@@ -46,6 +46,7 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		
+		//if release build is true, true if using production machine db/info, false if using staging
 		public static var PRODUCTION_BUILD:Boolean = false;
 		
 		/** turn on logging of game play. */

@@ -6,6 +6,8 @@ package scenes
 	
 	import assets.AssetInterface;
 	
+	import display.NineSliceToggleButton;
+	import display.RadioButton;
 	import display.ToolTippableSprite;
 	
 	import scenes.game.components.GridViewPanel;
@@ -19,11 +21,9 @@ package scenes
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
 	import starling.events.Event;
-	import starling.events.TouchEvent;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import display.RadioButton;
-
+	
 	public class BaseComponent extends ToolTippableSprite
 	{	
 		private var mClipRect:Rectangle;
@@ -33,6 +33,11 @@ package scenes
 		static protected var waitAnimationImages:Vector.<Texture> = null;
 		
 		protected var busyAnimationMovieClip:MovieClip;
+		
+		//for selection color
+		protected var helperPoint:Point = new Point(0,0);
+		protected var STARTING_ROTATION:Number = -54;
+		protected var ROTATION_MULTIPLIER:Number = 2.05;
 		
 		//useful for debugging resource issues
 		public static var nextIndex:int = 0;
@@ -152,61 +157,88 @@ package scenes
 			
 		}
 		
-		protected function createPaintBrushButton(style:String, onClickFunction:Function, offset:Boolean = false, toolTipText:String = ""):Sprite
+		protected function createPaintBrushButton(style:String, onClickFunction:Function, toolTipText:String = ""):Sprite
 		{
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
-			
-			var buttonTexture:Texture = atlas.getTexture("Button"+style);
-			var buttonOverTexture:Texture = atlas.getTexture("Button"+style+"Over");
-			var buttonClickTexture:Texture = atlas.getTexture("Button"+style+"Click");
-			
-			var buttonImage:Image = new Image(buttonTexture);
-			var buttonOverImage:Image = new Image(buttonOverTexture);
-			var buttonClickImage:Image = new Image(buttonClickTexture);
-			
-			var paintBrushButton:RadioButton = new RadioButton(buttonImage, buttonOverImage, buttonClickImage, toolTipText);
-			//			m_solver1Brush.addEventListener(TouchEvent.TOUCH, changeCurrentBrush);
+			var paintBrushButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("", 25, 25, toolTipText);
 
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var buttonTexture:Texture = atlas.getTexture("Button"+style);
+			var image:Image = new Image(buttonTexture);
+			image.width = image.height = 25;
+			image.x = image.y = -.5;
+			var sbuttonTexture:Texture = atlas.getTexture("Button"+style+"Over"); // "Click" and "Over" are the same icon
+																				//just use one, so I don't have to line them both up exactly
+			var simage:Image = new Image(sbuttonTexture);
+			simage.width = simage.height = 25;
+			simage.x = simage.y = -.5;
+			var obuttonTexture:Texture = atlas.getTexture("Button"+style+"Over");
+			var oimage:Image = new Image(obuttonTexture);
+			oimage.width = oimage.height = 25;
+			oimage.x = oimage.y = -.5;
+			paintBrushButton.setIcon(image, simage, oimage);
+			
 			paintBrushButton.useHandCursor = true;
 			paintBrushButton.addEventListener(Event.TRIGGERED, onClickFunction);
-			paintBrushButton.width = paintBrushButton.height = 2 * GridViewPanel.PAINT_RADIUS;
-			paintBrushButton.alpha = 0.7;
+
 			paintBrushButton.name = style;
-			
-			if(offset)
-			{
-				paintBrushButton.x = -0.5 * paintBrushButton.width;
-				paintBrushButton.y = -0.5 * paintBrushButton.height;
-			
-				//why do I do this? I think so I can keep the cursor parts together, but that might not be the reason any more
-				var paintBrush:Sprite = new Sprite;
-				paintBrush.addChild(paintBrushButton);
-				return paintBrush;
-			}
 
 			return paintBrushButton;
 		}
-		
-		protected function createPaintBrush(style:String, offset:Boolean = false):Sprite
+
+		protected function createPaintBrush(style:String):Sprite
 		{
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
 			var brushTexture:Texture = atlas.getTexture(style);			
 			var brushImage:Image = new Image(brushTexture);
-			
 			brushImage.width = brushImage.height = 2 * GridViewPanel.PAINT_RADIUS;
-			if(offset)
-			{
-				brushImage.x = -0.5 * brushImage.width;
-				brushImage.y = -0.5 * brushImage.height;
-			}
-			brushImage.alpha = 0.7;
+			brushImage.x = -0.5 * brushImage.width;
+			brushImage.y = -0.5 * brushImage.height;
+			brushImage.alpha = 0.9;			
+			var selectionDisplayArc:Sprite = new Sprite;
 			
 			var paintBrush:Sprite = new Sprite;
-			paintBrush.addChild(brushImage);
+		
+			var selectionColorTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_BrushSelectionColor);	
+			//Assume these are about 10% of the total length, so make 10
+			for(var i:int = 0; i<10; i++)
+			{
+				var selectionColorImage:Image = new Image(selectionColorTexture);
+				selectionColorImage.width = selectionColorImage.height = 2 * GridViewPanel.PAINT_RADIUS;
 			
+				selectionColorImage.x = brushImage.x;
+				selectionColorImage.y = brushImage.y;			
+				paintBrush.addChild(selectionColorImage);
+				rotateToDegree(selectionColorImage, helperPoint, STARTING_ROTATION);
+			}
+			
+			//do same thing with solver color
+			var solverColorTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_BrushSolverColor);	
+			//Assume these are about 10% of the total length, so make 10
+			for(var ii:int = 0; ii<10; ii++)
+			{
+				var solverColorImage:Image = new Image(solverColorTexture);
+				solverColorImage.width = solverColorImage.height = 2 * GridViewPanel.PAINT_RADIUS;
+				
+				solverColorImage.x = brushImage.x;
+				solverColorImage.y = brushImage.y;			
+				paintBrush.addChild(solverColorImage);
+				rotateToDegree (solverColorImage, helperPoint, STARTING_ROTATION);
+			}
+			//add last
+			paintBrush.addChild(brushImage);	
 			paintBrush.name = style;
 			
 			return paintBrush;
+		}
+		
+		public var degConversion:Number = (Math.PI/180);
+		public function rotateToDegree (image:Image,  currentCenter:Point, angleDegrees:Number):void 
+		{
+			image.rotation = degConversion*angleDegrees;
+			var newXCenter:Number = image.bounds.left + (image.bounds.right - image.bounds.left)/2;
+			var newYCenter:Number = image.bounds.top + (image.bounds.bottom - image.bounds.top)/2;
+			image.x += currentCenter.x - newXCenter;
+			image.y += currentCenter.y - newYCenter;
 		}
 	}
 }
