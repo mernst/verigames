@@ -404,12 +404,8 @@ package scenes.game.display
 				for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
 				{
 					edge = edgeLayoutObjs[gameEdgeId];
-					if (edge.skin)
-					{
-						edge.skin.removeFromParent(true);
-						edge.skin = null;
-						touchedEdgeLayer = true;
-					}
+					adjustEdgeContainer(edge);
+					touchedEdgeLayer = true;
 				}
 				if (nodeToRemove.skin != null)
 				{
@@ -425,7 +421,7 @@ package scenes.game.display
 					nodeToRemove.backgroundSkin = null;
 					touchedConflictLayer = true;
 				}
-				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.graphConstraintSide.id)) delete m_nodeOnScreenDict[nodeToRemove.graphConstraintSide.id];
+				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) delete m_nodeOnScreenDict[nodeToRemove.id];
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 				nodeToRemove = popNode(m_nodesToRemove);
@@ -434,6 +430,7 @@ package scenes.game.display
 			var nodeToDraw:Node = popNode(m_nodesToDraw);
 			while (nodeToDraw != null)	
 			{
+				var alreadyOnScreen:Boolean = m_nodeOnScreenDict.hasOwnProperty(nodeToDraw.id);
 				if (nodeToDraw.animating)
 				{
 					nodeToDraw = popNode(m_nodesToDraw);
@@ -442,7 +439,7 @@ package scenes.game.display
 				// At this time only VAR changes affect the look of an edge,
 				// so draw all edges when clauses are redrawn and
 				// ignore var nodes
-				if (!nodeToDraw.isClause)
+				if (!nodeToDraw.isClause || !alreadyOnScreen)
 				{
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
@@ -454,7 +451,7 @@ package scenes.game.display
 						}
 						edge.createSkin(currentGroupDepth);
 						if (edge.skin) {
-							if (edge.skin.parent != m_edgesLayer) m_edgesLayer.addChild(edge.skin);
+							adjustEdgeContainer(edge);
 							touchedEdgeLayer = true;
 						}
 					}
@@ -466,7 +463,7 @@ package scenes.game.display
 				nodeToDraw.createSkin();
 				if (nodeToDraw.skin != null)
 				{
-					m_nodeOnScreenDict[nodeToDraw.graphConstraintSide.id] = true;
+					m_nodeOnScreenDict[nodeToDraw.id] = true;
 					if (parent)
 					{
 						nodeToDraw.skin.scale(0.5 / parent.scaleX);
@@ -489,8 +486,6 @@ package scenes.game.display
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 				nodeToDraw = popNode(m_nodesToDraw);
-				if (Math.random() < 0.001)
-					trace("m_nodesToDraw");
 			}
 			
 			if (nodesProcessed <= ITEMS_PER_FRAME) // enqueue animations only once all other nodes have been drawn/removed
@@ -545,9 +540,33 @@ package scenes.game.display
 				}
 			}
 			m_recentlySolved = false;
-			if (touchedEdgeLayer) m_edgesLayer.flatten();
+			if (touchedEdgeLayer)
+			{
+				m_edgesLayer.flatten();
+				m_offscreenEdgesLayer.flatten();
+			}
 			if (touchedNodeLayer) m_nodeLayer.flatten();
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
+		}
+		
+		private function adjustEdgeContainer(edge:Edge):void
+		{
+			if (edge.skin == null) return;
+			var fromOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.fromNode.id) || m_nodesToDraw.hasOwnProperty(edge.fromNode.id));
+			var toOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.toNode.id) || m_nodesToDraw.hasOwnProperty(edge.toNode.id));
+			if (fromOnscreen && toOnscreen)
+			{
+				if (edge.skin.parent != m_edgesLayer) m_edgesLayer.addChildAt(edge.skin, 0);
+			}
+			else if (fromOnscreen || toOnscreen)
+			{
+				if (edge.skin.parent != m_offscreenEdgesLayer) m_offscreenEdgesLayer.addChildAt(edge.skin, 0);
+			}
+			else
+			{
+				edge.skin.removeFromParent(true);
+				edge.skin = null;
+			}
 		}
 		
 		private function conflictRemovedTweenComplete(clauseNode:ClauseNode, skin:NodeSkin):void
