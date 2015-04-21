@@ -26,8 +26,8 @@ package scenes.game.display
 		static protected var activeGameNodeSkins:Dictionary;
 		
 		static protected var mAtlas:TextureAtlas;	
-		static public var DarkBlueCircle:Texture;
-		static public var LightBlueCircle:Texture;
+		static protected var DarkBlueCircle:Texture;
+		static protected var LightBlueCircle:Texture;
 		static protected var LightBlueSelectedCircle:Texture;
 		static protected var DarkBlueSelectedCircle:Texture;
 		static protected var SatisfiedConstraintTexture:Texture;

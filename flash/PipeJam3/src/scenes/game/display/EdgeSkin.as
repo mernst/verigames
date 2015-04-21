@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import constraints.ConstraintVar;
+	import starling.textures.Texture;
 	
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -13,93 +14,90 @@ package scenes.game.display
 	
 	public class EdgeSkin extends Sprite
 	{
+		static protected var mAtlas:TextureAtlas;
+		static protected var EdgeNarrowSatisfiedSelected:Texture;
+		static protected var EdgeNarrowSatisfiedUnselected:Texture;
+		static protected var EdgeNarrowUnsatisfiedSelected:Texture;
+		static protected var EdgeNarrowUnsatisfiedUnselected:Texture;
+		static protected var EdgeWideSatisfiedSelected:Texture;
+		static protected var EdgeWideSatisfiedUnselected:Texture;
+		static protected var EdgeWideUnsatisfiedSelected:Texture;
+		static protected var EdgeWideUnsatisfiedUnselected:Texture;
+		
 		public var parentEdge:Edge;
-		static protected var mAtlas:TextureAtlas;	
 		
 		protected var skinHeight:Number;
 		protected var skinWidth:Number;
 		
 		protected var textureImage:Image;
-		protected var preferenceQuad:Quad;
-				
+		
 		public function EdgeSkin(_width:Number, _height:Number, _parentEdge:Edge)
 		{
 			skinHeight = _height;
 			skinWidth = _width;
 			
 			parentEdge = _parentEdge;
-
-			mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetPNG");
+			
+			if (mAtlas == null)
+			{
+				mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetPNG");
+				EdgeNarrowSatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowSatisfiedSelected);
+				EdgeNarrowSatisfiedUnselected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowSatisfiedUnselected);
+				EdgeNarrowUnsatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowUnsatisfiedSelected);
+				EdgeNarrowUnsatisfiedUnselected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowUnsatisfiedUnselected);
+				EdgeWideSatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeWideSatisfiedSelected);
+				EdgeWideSatisfiedUnselected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeWideSatisfiedUnselected);
+				EdgeWideUnsatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeWideUnsatisfiedSelected);
+				EdgeWideUnsatisfiedUnselected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeWideUnsatisfiedUnselected);
+			}
 		}
 		
-		public function setColor(newGroup:Boolean = false):void
+		private function getText(edgeIsNarrow:Boolean, edgeIsSatisfied:Boolean, edgeIsSelected:Boolean):Texture
 		{
-			var skinQuad:Quad;
-			if (skinQuad) skinQuad.removeFromParent(true);
+			if (edgeIsNarrow)
+			{
+				if (edgeIsSatisfied)
+				{
+					return edgeIsSelected ? EdgeNarrowSatisfiedSelected : EdgeNarrowSatisfiedUnselected;
+				}
+				else
+				{
+					return edgeIsSelected ? EdgeNarrowUnsatisfiedSelected : EdgeNarrowUnsatisfiedUnselected;
+				}
+			}
+			else
+			{
+				if (edgeIsSatisfied)
+				{
+					return edgeIsSelected ? EdgeWideSatisfiedSelected : EdgeWideSatisfiedUnselected;
+				}
+				else
+				{
+					return edgeIsSelected ? EdgeWideUnsatisfiedSelected : EdgeWideUnsatisfiedUnselected;
+				}
+			}
+		}
+		
+		public function draw():void
+		{
+			if (textureImage) textureImage.removeFromParent(true);
 			
-			var edgeMatch:Boolean = false;
+			var edgeIsNarrow:Boolean = (parentEdge.graphConstraint.lhs is ConstraintVar);
+			var edgeIsSatisfied:Boolean = false;
 			if (parentEdge.graphConstraint.lhs is ConstraintVar)
 			{
-				edgeMatch = (parentEdge.graphConstraint.lhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
+				edgeIsSatisfied = (parentEdge.graphConstraint.lhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
 			}
 			else if (parentEdge.graphConstraint.rhs is ConstraintVar)
 			{
-				edgeMatch = !(parentEdge.graphConstraint.rhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
+				edgeIsSatisfied = !(parentEdge.graphConstraint.rhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
 			}
-			
-			//if we match, normal line. if not, bright red line
-			var edge1:Quad;
-			var edge2:Quad;
-			if (edgeMatch) //(parentEdge.graphConstraint.isSatisfied())
-			{
-				skinQuad = new Quad(skinWidth, skinHeight, Constants.SATISFIED_EDGE);
-				edge1 = new Quad(skinWidth, 1, Constants.SATISFIED_EDGE_HIGHLIGHT);
-				edge2 = new Quad(skinWidth, 1, Constants.SATISFIED_EDGE_HIGHLIGHT);
-			}
-			else
-			{
-				skinQuad = new Quad(skinWidth, skinHeight, Constants.UNSATISFIED_EDGE);
-				edge1 = new Quad(skinWidth, 1, Constants.UNSATISFIED_EDGE_HIGHLIGHT);
-				edge2 = new Quad(skinWidth, 1, Constants.UNSATISFIED_EDGE_HIGHLIGHT);
-			}
-			addChild(skinQuad);
-			addChild(edge1);
-			edge2.y = skinHeight - 1;
-			addChild(edge2);
-			
-			if (preferenceQuad) preferenceQuad.removeFromParent(true);
-			const PREF_LENGTH:Number = Math.min(0.5 * skinWidth, 10.0);
-			if (parentEdge.graphConstraint.lhs.id.substr(0, 1) == "c")
-			{
-				preferenceQuad = new Quad(PREF_LENGTH, skinHeight, Constants.WIDE_BLUE);
-			}
-			else
-			{
-				preferenceQuad = new Quad(PREF_LENGTH, skinHeight, Constants.NARROW_BLUE);
-			}
-			preferenceQuad.x = skinWidth - PREF_LENGTH;
-			addChild(preferenceQuad);
-		//	this.flatten();
-		}
-		
-		public function setHighlight(highlightColor:uint):void
-		{
-			filter = BlurFilter.createGlow(highlightColor);
-//			trace("skin", x,y);
-		}
-		
-		public function removeHighlight():void
-		{
-			if(filter)
-			{
-				filter.dispose();
-				filter = null;
-			}
-		}
-		
-		public override function set x(newX:Number):void
-		{
-			super.x = newX;
+			var edgeIsSelected:Boolean = false;
+			var text:Texture = getText(edgeIsNarrow, edgeIsSatisfied, edgeIsSelected);
+			textureImage = new Image(text);
+			textureImage.width = skinWidth;
+			textureImage.height = skinHeight;
+			addChild(textureImage);
 		}
 		
 	}
