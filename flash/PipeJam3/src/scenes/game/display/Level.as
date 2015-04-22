@@ -37,6 +37,7 @@ package scenes.game.display
 	import networking.PlayerValidation;
 	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
 	import scenes.game.components.TutorialText;
@@ -101,7 +102,6 @@ package scenes.game.display
 		
 		public var m_numNodes:uint = 0;
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
-		public var groupLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
 		
 		protected var m_hidingErrorText:Boolean = false;
@@ -194,16 +194,17 @@ package scenes.game.display
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
-				
-				//now check to see if we have a higher target
-				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
-					m_targetScore = PipeJamGame.levelInfo.target_score;
+				//now check to see if we have a higher target if not in tutorial
+				if(!PipeJamGameScene.inTutorial)
+				{
+					if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
+						m_targetScore = PipeJamGame.levelInfo.target_score;
+				}
 			}
 			else
 			{
 				m_targetScore = PipeJamGame.levelInfo.target_score;
 			}
-			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
@@ -294,7 +295,7 @@ package scenes.game.display
 		}
 		
 		//called on when GridViewPanel content is moving
-		public function updateLevelDisplay(viewRect:Rectangle = null):void
+		public function updateLevelDisplay(viewRect:Rectangle = null):int
 		{
 			var nGroups:int = (levelGraph.groupsArr ? levelGraph.groupsArr.length : 0);
 			var newGroupDepth:int = 0;
@@ -315,6 +316,7 @@ package scenes.game.display
 				}
 				trace("newGroupDepth: ", newGroupDepth);
 			}
+			
 			var candidatesToRemove:Dictionary = new Dictionary();
 			for (var nodeOnScreenId:String in m_nodeOnScreenDict) candidatesToRemove[nodeOnScreenId] = true;
 			
@@ -365,6 +367,8 @@ package scenes.game.display
 				draw(); // for relatively small tutorials, add items right away
 			}
 			currentGroupDepth = newGroupDepth;
+			
+			return newGroupDepth;
 		}
 		
 		private var m_initLayers:Boolean = false;
@@ -594,7 +598,6 @@ package scenes.game.display
 		protected function loadLayout():void
 		{
 			nodeLayoutObjs = new Dictionary();
-			groupLayoutObjs = new Dictionary();
 			edgeLayoutObjs = new Dictionary();
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
@@ -839,7 +842,7 @@ package scenes.game.display
 		}
 		
 		//assume this only generates on toggle width events
-		public function onWidgetChange(evt:VarChangeEvent = null):void
+		public function onWidgetChange(evt:VarChangeEvent = null, reportScore:Boolean = false):void
 		{
 			//trace("Level: onWidgetChange");
 			if (evt && evt.graphVar) {
@@ -855,7 +858,7 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.afterScoreUpdate(levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			onScoreChange(true);
+			onScoreChange(reportScore);
 		}
 		
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1108,7 +1111,7 @@ package scenes.game.display
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0  && PlayerValidation.accessGranted())
-					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+					dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
 			dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
@@ -1168,7 +1171,7 @@ package scenes.game.display
 				}
 			}
 			//update score
-			onWidgetChange();
+			onWidgetChange(null, true);
 			unselectAll();
 		}
 		
@@ -1633,6 +1636,24 @@ package scenes.game.display
 							selectedNodes.push(node);
 							m_nodesToDraw[node.id] = node;
 							selectionChanged = true;
+							
+							//select attached nodes?
+							if(node is ClauseNode)
+							{
+								for each(var edgeID:String in node.connectedEdgeIds)
+								{
+									var edge:Edge = this.edgeLayoutObjs[edgeID];
+									var connectedNode:Node = edge.fromNode;
+									if(m_nodesToDraw[connectedNode.id] == null)
+									{
+										connectedNode.select();
+										//trace("select " + node.id);
+										selectedNodes.push(connectedNode);
+										m_nodesToDraw[connectedNode.id] = connectedNode;
+									}
+								}
+							
+							}
 						}
 					}
 					if (selectedNodes.length >= MAX_SEL) break;

@@ -298,7 +298,7 @@ package scenes.game.components
 		private function onMenuButtonTriggered():void
 		{
 			if (PipeJam3.TUTORIAL_DEMO) {
-				dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 			} else {
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 			}
@@ -433,6 +433,7 @@ package scenes.game.components
 				var htmlString:String = "";
 				var count:int = 1;
 				var scoreObjArray:Array = new Array;
+				var highScoreObjArray:Array = new Array;
 				for each(var scoreInstance:Object in highScoreArray)
 				{
 					var scoreObj:Object = new Object;
@@ -443,13 +444,17 @@ package scenes.game.components
 					var maxConflicts:int = level.maxScore;
 					var intScore:int = maxConflicts - int(scoreInstance[0]);
 					var value:Number = ((maxConflicts-intScore)/maxConflicts)*100;
-					scoreObj['percent'] = value.toFixed(2) + '%';
+					if(maxConflicts != 0 && value < 101)
+						scoreObj['percent'] = value.toFixed(2) + '%';
+					else
+						scoreObj['percent'] = "Calculating...";
 					if(scoreInstance[1] == PlayerValidation.playerID)
 						scoreObj.activePlayer = 1;
 					else
 						scoreObj.activePlayer = 0;
 					
 					scoreObjArray.push(scoreObj);
+					highScoreObjArray.push(scoreObj);
 					count++;
 				}
 				if(scoreObjArray.length > 0)
@@ -458,8 +463,8 @@ package scenes.game.components
 					var scoreStr:String = JSON.stringify(scoreObjArray);
 					HTTPCookies.addHighScores(scoreStr);
 					
-					scoreObjArray.sort(orderHighScoresByDifference);
-					var scoreStr1:String = JSON.stringify(scoreObjArray);
+					highScoreObjArray.sort(orderHighScoresByDifference);
+					var scoreStr1:String = JSON.stringify(highScoreObjArray);
 					HTTPCookies.addScoreImprovementTotals(scoreStr1);
 				}
 				else
@@ -520,8 +525,8 @@ package scenes.game.components
 		
 		static public function orderHighScoresByDifference(a:Object, b:Object):int 
 		{ 
-			var score1:int = parseInt(a['difference']); 
-			var score2:int = parseInt(b['difference']); 
+			var score1:int = parseInt(a['score_improvement']); 
+			var score2:int = parseInt(b['score_improvement']); 
 			if (score1 < score2) 
 			{ 
 				return 1; 
