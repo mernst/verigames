@@ -23,6 +23,7 @@ package scenes.game.components
 	
 	import display.NineSliceButton;
 	import display.ToolTipText;
+	import hints.HintController;
 	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -303,6 +304,7 @@ package scenes.game.components
 				var viewRect:Rectangle = getViewInContentSpace();
 				var newX:Number = viewRect.x + viewRect.width / 2 - (deltaX / content.scaleX/2);
 				var newY:Number = viewRect.y + viewRect.height / 2 - (deltaY / content.scaleY/2);
+			//	trace("move",newX, newY);
 				moveContent(newX, newY);
 				currentLocation.x = event.stageX;
 				currentLocation.y = event.stageY;
@@ -379,10 +381,13 @@ package scenes.game.components
 					moveLeft = - MOVE_PX / contentToUse.scaleY;
 				else if(keyDownCombination & KEY_LEFT)
 					moveLeft = MOVE_PX / contentToUse.scaleY;
+				
+		//		trace(moveUp, moveLeft);
 						
 				viewRect = getViewInContentSpace(contentToUse);
 				newX = viewRect.x + viewRect.width / 2 + moveLeft;
 				newY = viewRect.y + viewRect.height / 2 + moveUp;
+		//		trace(newX, newY);
 				moveContent(newX, newY);
 				
 			}
@@ -651,6 +656,7 @@ package scenes.game.components
 								var viewRect:Rectangle = getViewInContentSpace();
 								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
+								
 								moveContent(newX, newY);
 							}
 						}
@@ -853,6 +859,7 @@ package scenes.game.components
 		 * Scale the content by the given scale factor (sizeDiff of 1.5 = 150% the original size)
 		 * @param	sizeDiff Size difference factor, 1.5 = 150% of original size
 		 */
+		protected var zoomDialogPosted:Boolean = false;
 		private function scaleContent(sizeDiffX:Number, sizeDiffY:Number, contentToScale:DisplayObject = null):void
 		{
 			if (contentToScale == null) contentToScale = content;
@@ -904,7 +911,13 @@ package scenes.game.components
 				inactiveContent.x = content.x;
 				inactiveContent.y = content.y;
 				dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
-				m_currentLevel.updateLevelDisplay(newViewCoords);
+				var newZoomLevel:int = m_currentLevel.updateLevelDisplay(newViewCoords);
+				
+				if(newZoomLevel > 0 && zoomDialogPosted == false)
+				{
+					HintController.getInstance().popHint("Zoom in for more detail.", m_currentLevel);
+					zoomDialogPosted = true;
+				}
 			}
 			// zzz
 			//trace("newscale:" + contentToScale.scaleX + "new xy:" + contentToScale.x + " " + contentToScale.y);
@@ -1227,7 +1240,7 @@ package scenes.game.components
 			m_updateDisplay = false;
 			moveContent(localPt.x, localPt.y, false);
 			m_updateDisplay = true;
-			trace("center to: " + localPt);
+	//		trace("center to: " + localPt);
 			
 			const BUFFER:Number = 1.5;
 			var newScale:Number = Math.min((WIDTH - Constants.RightPanelWidth) / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
@@ -1545,34 +1558,20 @@ package scenes.game.components
 		
 		private function onSolverStarted():void
 		{
-			//start rotating
-//			var reverse:Boolean = false; //(Math.random() > .7) ? true : false; //just for variation..?
-//			Starling.juggler.tween(m_paintBrush, 4, {
-//				repeatCount: 0,
-//				reverse: reverse,
-//				rotation: 2*Math.PI
-//			});
+
 		}
 		
+		private var scoreUndoHintGiven:Boolean = false;
 		private function onSolverStopped(event:starling.events.Event):void
 		{
-//			Starling.juggler.removeTweens(m_paintBrush);
-//			Starling.juggler.tween(m_paintBrush, 0.2, {
-//				repeatCount: 1,
-//				reverse: false,
-//				rotation: 2*Math.PI,
-//				delay: .2
-//			});
+
 			displayPercentSelected(0);
 			updateNumNodesSelectedDisplay();
 			
-			if(m_currentLevel.m_inSolver && (event.data as Boolean))
+			if(!scoreUndoHintGiven && m_currentLevel.m_inSolver && (event.data as Boolean))
 			{
-				var revertInfo:InfoDialogInfo = new InfoDialogInfo("Your score went down.\n Revert to last?\n\n\n", 4, "Revert", undo, "Ignore", ignore);
-				revertDialog = new InfoDialog(m_currentLevel, revertInfo);
-				addChild(revertDialog);
-				revertDialog.x = 500 - revertDialog.width;
-				revertDialog.y = 400 - revertDialog.height;
+				HintController.getInstance().popHint("Your score went down.\n You can undo to revert.", m_currentLevel);
+				scoreUndoHintGiven = true;
 			}
 		}
 		
