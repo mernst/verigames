@@ -4,25 +4,25 @@
 
 <TextureAtlas imagePath="ParadoxSpriteSheet.png">
 	<SubTexture name="BrushCircle" x="222" y="11" width="200" height="200" />
-	<SubTexture name="BrushSolverColor" x="222" y="220" width="200" height="200" />
-	<SubTexture name="BrushNotUsed" x="430" y="12" width="200" height="200" />
-	<SubTexture name="BrushSelectionColor" x="430" y="220" width="200" height="200" />
+	<SubTexture name="BrushDiamond" x="430" y="12" width="200" height="200" />
 	<SubTexture name="BrushHexagon" x="428" y="427" width="200" height="200" />
 	<SubTexture name="BrushHexagonClick" x="428" y="634" width="200" height="200" />
+	<SubTexture name="BrushSelectionColor" x="430" y="221" width="200" height="200" />
+	<SubTexture name="BrushSolverColor" x="222" y="220" width="200" height="200" />
 	<SubTexture name="BrushSquare" x="223" y="427" width="200" height="200" />
 	<SubTexture name="BrushSquareClick" x="223" y="636" width="200" height="200" />
-	<SubTexture name="ButtonBrushCircle" x="664" y="257" width="45" height="45" />
-	<SubTexture name="ButtonBrushCircleClick" x="761" y="257" width="45" height="45" />
-	<SubTexture name="ButtonBrushCircleOver" x="713" y="257" width="45" height="45" />
-	<SubTexture name="ButtonBrushDiamond" x="664" y="354" width="45" height="45" />
+	<SubTexture name="ButtonBrushCircle" x="664" y="258" width="45" height="45" />
+	<SubTexture name="ButtonBrushCircleClick" x="761" y="258" width="45" height="45" />
+	<SubTexture name="ButtonBrushCircleOver" x="713" y="258" width="45" height="45" />
+	<SubTexture name="ButtonBrushDiamond" x="664" y="355" width="45" height="45" />
 	<SubTexture name="ButtonBrushDiamondClick" x="761" y="355" width="45" height="45" />
-	<SubTexture name="ButtonBrushDiamondOver" x="713" y="354" width="45" height="45" />
-	<SubTexture name="ButtonBrushHexagon" x="664" y="402" width="45" height="45" />
+	<SubTexture name="ButtonBrushDiamondOver" x="713" y="355" width="45" height="45" />
+	<SubTexture name="ButtonBrushHexagon" x="664" y="403" width="45" height="45" />
 	<SubTexture name="ButtonBrushHexagonClick" x="761" y="403" width="45" height="45" />
-	<SubTexture name="ButtonBrushHexagonOver" x="713" y="402" width="45" height="45" />
-	<SubTexture name="ButtonBrushSquare" x="664" y="306" width="45" height="45" />
+	<SubTexture name="ButtonBrushHexagonOver" x="713" y="403" width="45" height="45" />
+	<SubTexture name="ButtonBrushSquare" x="664" y="307" width="45" height="45" />
 	<SubTexture name="ButtonBrushSquareClick" x="761" y="307" width="45" height="45" />
-	<SubTexture name="ButtonBrushSquareOver" x="713" y="306" width="45" height="45" />
+	<SubTexture name="ButtonBrushSquareOver" x="713" y="307" width="45" height="45" />
 	<SubTexture name="ButtonCenter" x="651" y="506" width="20" height="20" />
 	<SubTexture name="ButtonCenterClick" x="698" y="503" width="20" height="20" />
 	<SubTexture name="ButtonCenterOver" x="674" y="504" width="20" height="20" />
@@ -57,6 +57,14 @@
 	<SubTexture name="ConstraintConflict" x="556" y="976" width="30" height="30" />
 	<SubTexture name="ConstraintCorrected" x="600" y="976" width="30" height="30" />
 	<SubTexture name="ConstraintWorking" x="687" y="976" width="30" height="30" />
+	<SubTexture name="EdgeNarrowSatisfiedSelected" x="2" y="726" width="32" height="32" />
+	<SubTexture name="EdgeNarrowSatisfiedUnselected" x="36" y="726" width="32" height="32" />
+	<SubTexture name="EdgeNarrowUnsatisfiedSelected" x="70" y="726" width="32" height="32" />
+	<SubTexture name="EdgeNarrowUnsatisfiedUnselected" x="104" y="726" width="32" height="32" />
+	<SubTexture name="EdgeWideSatisfiedSelected" x="2" y="692" width="32" height="32" />
+	<SubTexture name="EdgeWideSatisfiedUnselected" x="36" y="692" width="32" height="32" />
+	<SubTexture name="EdgeWideUnsatisfiedSelected" x="70" y="692" width="32" height="32" />
+	<SubTexture name="EdgeWideUnsatisfiedUnselected" x="104" y="692" width="32" height="32" />
 	<SubTexture name="MenuBottomCenter" x="717" y="166" width="74" height="74" />
 	<SubTexture name="MenuBottomLeft" x="639" y="166" width="74" height="74" />
 	<SubTexture name="MenuBottomRight" x="795" y="166" width="74" height="74" />
@@ -81,10 +89,10 @@
 	<SubTexture name="TextInput" x="730" y="524" width="246" height="28" />
 	<SubTexture name="TextInputOver" x="730" y="461" width="246" height="28" />
 	<SubTexture name="TextInputSelected" x="730" y="492" width="246" height="28" />
-	<SubTexture name="VariableNarrow" x="899" y="872" width="20" height="20" />
-	<SubTexture name="VariableNarrowSelected" x="938" y="872" width="20" height="20" />
-	<SubTexture name="VariableNarrowWorking" x="978" y="872" width="20" height="20" />
-	<SubTexture name="VariableWide" x="893" y="913" width="30" height="30" />
-	<SubTexture name="VariableWideSelected" x="934" y="913" width="30" height="30" />
-	<SubTexture name="VariableWideWorking" x="974" y="913" width="30" height="30" />
+	<SubTexture name="VariableNarrow" x="898" y="871" width="22" height="22" />
+	<SubTexture name="VariableNarrowSelected" x="937" y="871" width="22" height="22" />
+	<SubTexture name="VariableNarrowWorking" x="978" y="870" width="22" height="22" />
+	<SubTexture name="VariableWide" x="893" y="911" width="32" height="32" />
+	<SubTexture name="VariableWideSelected" x="934" y="911" width="32" height="32" />
+	<SubTexture name="VariableWideWorking" x="974" y="911" width="32" height="32" />
 </TextureAtlas>

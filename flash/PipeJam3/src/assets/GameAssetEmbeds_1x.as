@@ -89,7 +89,7 @@ package assets
 		[Embed(source="../../lib/assets/Backgrounds/ParadoxBackgroundDark.jpg")]
 		public static const ParadoxBackgroundDarkClass:Class;
 		
-		[Embed(source="../../lib/assets/splash/ConstraintRules.jpg")]
+		[Embed(source="../../lib/assets/splash/ConstraintRules.png")]
 		public static const ConstraintsSplashClass:Class;
 		
 		[Embed(source = "../../lib/assets/BorderVignette.png")]

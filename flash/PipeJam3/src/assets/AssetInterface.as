@@ -119,6 +119,14 @@ package assets
 		public static const ParadoxSubTexture_ConstraintConflict:String = "ConstraintConflict";
 		public static const ParadoxSubTexture_ConstraintCorrected:String = "ConstraintCorrected";
 		public static const ParadoxSubTexture_ConstraintWorking:String = "ConstraintWorking";
+		public static const ParadoxSubTexture_EdgeNarrowSatisfiedSelected:String = "EdgeNarrowSatisfiedSelected";
+		public static const ParadoxSubTexture_EdgeNarrowSatisfiedUnselected:String = "EdgeNarrowSatisfiedUnselected";
+		public static const ParadoxSubTexture_EdgeNarrowUnsatisfiedSelected:String = "EdgeNarrowUnsatisfiedSelected";
+		public static const ParadoxSubTexture_EdgeNarrowUnsatisfiedUnselected:String = "EdgeNarrowUnsatisfiedUnselected";
+		public static const ParadoxSubTexture_EdgeWideSatisfiedSelected:String = "EdgeWideSatisfiedSelected";
+		public static const ParadoxSubTexture_EdgeWideSatisfiedUnselected:String = "EdgeWideSatisfiedUnselected";
+		public static const ParadoxSubTexture_EdgeWideUnsatisfiedSelected:String = "EdgeWideUnsatisfiedSelected";
+		public static const ParadoxSubTexture_EdgeWideUnsatisfiedUnselected:String = "EdgeWideUnsatisfiedUnselected";
 		public static const ParadoxSubTexture_MenuBottomCenter:String = "MenuBottomCenter";
 		public static const ParadoxSubTexture_MenuBottomLeft:String = "MenuBottomLeft";
 		public static const ParadoxSubTexture_MenuBottomRight:String = "MenuBottomRight";
@@ -149,7 +157,6 @@ package assets
 		public static const ParadoxSubTexture_VariableWide:String = "VariableWide";
 		public static const ParadoxSubTexture_VariableWideSelected:String = "VariableWideSelected";
 		public static const ParadoxSubTexture_VariableWideWorking:String = "VariableWideWorking";
-
 		
         public static function getTexture(file:String, name:String):Texture
         {

@@ -32,7 +32,7 @@ package scenes.game.display
 			if(skin && skin.parent)
 			{					
 				//(skin.parent as Sprite).unflatten();
-				setLineColor(currentHoverNode);
+				drawSkin();
 				//toNode.updateConnector();
 				//(skin.parent as Sprite).flatten();
 				isDirty = false;
@@ -72,7 +72,7 @@ package scenes.game.display
 				//draw the quad flat, rotate later
 				skin = new EdgeSkin(hyp, Edge.LINE_THICKNESS, this);
 				
-				setLineColor(null);
+				drawSkin();
 				rotateLine(p1, p2, theta);
 			}
 			isDirty = false;
@@ -120,16 +120,9 @@ package scenes.game.display
 			skin.y = -skin.bounds.top + Math.min(p1.y, p2.y) + centerDy;
 		}
 		
-		private function setLineColor(currentHoverNode:Node):void
+		private function drawSkin():void
 		{
-			var fromColor:int = NodeSkin.getColor(fromNode);
-			var toColor:int = NodeSkin.getColor(toNode, this);
-			var fromColorComplement:int = NodeSkin.getComplementColor(fromNode);
-			
-			if(!fromNode.isNarrow && toNode.isNarrow)
-				toColor = 0xff0000;
-			
-			skin.setColor();
+			if (skin != null) skin.draw();
 		}
 	}
 }
