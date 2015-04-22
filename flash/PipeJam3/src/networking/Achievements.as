@@ -23,9 +23,9 @@ package networking
 			"description" : "some description", gameId : 1}' http://api.paradox.verigames.com/api/achievement
 		
 		authtoken - needs to be an authorization token supplied from a run of game. to get one, build game with RELEASE_BUILD=true (production or staging, 
-			depending on what you want), debug the game, log in to verigames, steal the code=number end of the redirected url, add it to
+			depending on what you want), debug the game, log in to verigames, steal the 'code=number' end of the redirected url, add it to
 			url for your debug version, debug that, and look for the console line:
-				{"access_token": "authtoken", "token_type": "bearer"}
+				{"response": "authtoken"}
 		
 		Get the ID, and create a new ID and STRING pair, using the ID returned from the above call.
 		
