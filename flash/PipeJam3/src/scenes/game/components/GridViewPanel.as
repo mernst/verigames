@@ -103,6 +103,11 @@ package scenes.game.components
 		static public var PAINT_RADIUS:int = 60;
 		public var selectedPercent:Number;
 		
+		private var m_keyPanLeft:Boolean;
+		private var m_keyPanRight:Boolean;
+		private var m_keyPanUp:Boolean;
+		private var m_keyPanDown:Boolean;
+		
 		private var m_fanfareLayer:Sprite = new Sprite();
 		private var m_buttonLayer:Sprite = new Sprite();
 		
@@ -257,6 +262,8 @@ package scenes.game.components
 			installPaintBrush(true);
 			m_nextPaintbrushLocation = new Point(width/2, height/2);
 
+			resetKeysDown();
+
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			addEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
 			addEventListener(MaxSatSolver.SOLVER_UPDATED, onSolverUpdated);
@@ -265,6 +272,14 @@ package scenes.game.components
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightClickDownEventHandler);
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
 			Starling.current.nativeStage.addEventListener(flash.events.Event.MOUSE_LEAVE, mouseLeaveHandler);
+		}
+		
+		private function resetKeysDown():void
+		{
+			m_keyPanLeft = false;
+			m_keyPanRight = false;
+			m_keyPanUp = false;
+			m_keyPanDown = false;
 		}
 		
 		protected function mouseLeaveHandler(event:flash.events.Event):void
@@ -352,6 +367,37 @@ package scenes.game.components
 		public function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			if (!m_currentLevel) return;
+			
+			if (getPanZoomAllowed()) {
+				var viewRect:Rectangle, newX:Number, newY:Number;
+				const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
+				var contentToUse:DisplayObject = isGridUp() ? m_gridContainer : content;
+
+				if (m_keyPanUp && !m_keyPanDown) {
+					viewRect = getViewInContentSpace(contentToUse);
+					newX = viewRect.x + viewRect.width / 2;
+					newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
+					moveContent(newX, newY);
+				}
+				if (m_keyPanDown && !m_keyPanUp) {
+					viewRect = getViewInContentSpace(contentToUse);
+					newX = viewRect.x + viewRect.width / 2;
+					newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
+					moveContent(newX, newY);
+				}
+				if (m_keyPanLeft && !m_keyPanRight) {
+					viewRect = getViewInContentSpace(contentToUse);
+					newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
+					newY = viewRect.y + viewRect.height / 2;
+					moveContent(newX, newY);
+				}
+				if (m_keyPanRight && !m_keyPanLeft) {
+					viewRect = getViewInContentSpace(contentToUse);
+					newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
+					newY = viewRect.y + viewRect.height / 2;
+					moveContent(newX, newY);
+				}
+			}
 			
 			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
 				
@@ -906,6 +952,7 @@ package scenes.game.components
 		
 		private function onRemovedFromStage():void
 		{
+			resetKeysDown();
 			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			removeEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
 			removeEventListener(MaxSatSolver.SOLVER_STOPPED, onSolverStopped);
@@ -928,6 +975,8 @@ package scenes.game.components
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
+			resetKeysDown();
+			
 			super.dispose();
 		}
 		
@@ -944,54 +993,40 @@ package scenes.game.components
 
 		private function onKeyDown(event:KeyboardEvent):void
 		{
-			var viewRect:Rectangle, newX:Number, newY:Number;
-			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
-			var contentToUse:DisplayObject = isGridUp() ? m_gridContainer : content;
 			switch(event.keyCode)
 			{
-				case Keyboard.SHIFT:
-					hidePaintBrush();
-					break;
-				
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
-						moveContent(newX, newY);
+						m_keyPanUp = true;
 					}
 					break;
 				case Keyboard.DOWN:
+				case Keyboard.S:
 				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2;
-						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
-						moveContent(newX, newY);
+						m_keyPanDown = true;
 					}
 					break;
 				case Keyboard.LEFT:
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
-						newY = viewRect.y + viewRect.height / 2;
-						moveContent(newX, newY);
+						m_keyPanLeft = true;
 					}
 					break;
 				case Keyboard.RIGHT:
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) {
-						viewRect = getViewInContentSpace(contentToUse);
-						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
-						newY = viewRect.y + viewRect.height / 2;
-						moveContent(newX, newY);
+						m_keyPanRight = true;
 					}
 					break;
+					
+				case Keyboard.SHIFT:
+					hidePaintBrush();
+					break;				
 				case Keyboard.C:
 					if (event.ctrlKey) {
 						World.m_world.solverDoneCallback("");
@@ -1037,6 +1072,27 @@ package scenes.game.components
 			}
 			switch(event.keyCode)
 			{
+				case Keyboard.UP:
+				case Keyboard.W:
+				case Keyboard.NUMPAD_8:
+					m_keyPanUp = false;
+					break;
+				case Keyboard.DOWN:
+				case Keyboard.S:
+				case Keyboard.NUMPAD_2:
+					m_keyPanDown = false;
+					break;
+				case Keyboard.LEFT:
+				case Keyboard.A:
+				case Keyboard.NUMPAD_4:
+					m_keyPanLeft = false;
+					break;
+				case Keyboard.RIGHT:
+				case Keyboard.D:
+				case Keyboard.NUMPAD_6:
+					m_keyPanRight = false;
+					break;
+					
 				case Keyboard.SHIFT:
 					showPaintBrush();
 					break;
