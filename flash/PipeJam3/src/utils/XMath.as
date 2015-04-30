@@ -273,5 +273,25 @@ package utils
 		{
 			return x * 180.0 / Math.PI;
 		}
+		
+		/**
+		 * Square a number.
+		 * @param x Number to be squared.
+		 * @return Number squared.
+		 */
+		public static function square(x:Number):Number
+		{
+			return x * x;
+		}
+		
+		/**
+		 * Cube a number.
+		 * @param x Number to be cubed.
+		 * @return Number cubed.
+		 */
+		public static function cube(x:Number):Number
+		{
+			return x * x * x;
+		}
 	}
 }

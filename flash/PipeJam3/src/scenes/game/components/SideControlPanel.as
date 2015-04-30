@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import utils.XMath;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -274,16 +275,19 @@ package scenes.game.components
 			}
 			
 			if(touch)
+			{
 				loc = new Point(touch.globalX, touch.globalY);
+			}
 			
-			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)))
+			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)) && (XMath.square(loc.x - 431) + XMath.square(loc.y - 64) > 50 * 50))
 			{
 				inTransparentArea = true;
 				dispatchEvent(new starling.events.Event(eventType,  true,  loc));
 			}
 			else
+			{
 				inTransparentArea = false;
-			
+			}
 		}
 		
 		private function onMenuButtonTriggered():void
