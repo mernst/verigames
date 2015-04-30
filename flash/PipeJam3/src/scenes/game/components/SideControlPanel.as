@@ -261,7 +261,7 @@ package scenes.game.components
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
 				touch = event.getTouches(this, TouchPhase.BEGAN)[0];
-				eventType =TouchPhase.BEGAN;
+				eventType = TouchPhase.BEGAN;
 			}
 			else if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
@@ -287,6 +287,9 @@ package scenes.game.components
 			else
 			{
 				inTransparentArea = false;
+				if (touch) {
+					dispatchEvent(new MenuEvent(MenuEvent.MOUSE_OVER_CONTROL_PANEL));
+				}
 			}
 		}
 		

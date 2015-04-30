@@ -103,6 +103,7 @@ package scenes.game.components
 		static public var PAINT_RADIUS:int = 60;
 		public var selectedPercent:Number;
 		
+		private var m_keyPanMouse:Boolean;
 		private var m_keyPanLeft:Boolean;
 		private var m_keyPanRight:Boolean;
 		private var m_keyPanUp:Boolean;
@@ -116,6 +117,8 @@ package scenes.game.components
 		private var m_currentTouchPoint:Point;
 		private var m_inBounds:Boolean = true;
 		private var m_wasOutOfBounds:Boolean = true;
+		private var m_inControlPanel:Boolean = false;
+		private var m_gameComponentsCreated:Boolean = false;
 		private var m_rightMouseDown:Boolean = false;
 		private var m_MouseMoveListenerInstalled:Boolean = false;
 		
@@ -262,6 +265,9 @@ package scenes.game.components
 			installPaintBrush(true);
 			m_nextPaintbrushLocation = new Point(width/2, height/2);
 
+			// this will hide the brush until the game components are created
+			checkPaintBrushVisibility();
+			
 			resetKeysDown();
 
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
@@ -276,6 +282,7 @@ package scenes.game.components
 		
 		private function resetKeysDown():void
 		{
+			m_keyPanMouse = false;
 			m_keyPanLeft = false;
 			m_keyPanRight = false;
 			m_keyPanUp = false;
@@ -291,6 +298,7 @@ package scenes.game.components
 				Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
 				m_MouseMoveListenerInstalled = true;
 			}
+			checkPaintBrushVisibility();
 		}
 		
 		protected var currentLocation:Point = null;
@@ -300,7 +308,11 @@ package scenes.game.components
 				event.stageX < 960 &&
 				event.stageY > 0 &&
 				event.stageY < 640)
-					m_inBounds = true;
+			{
+				m_inBounds = true;
+				m_inControlPanel = false;
+				checkPaintBrushVisibility();
+			}
 
 			if(m_rightMouseDown && currentLocation)
 			{
@@ -333,11 +345,9 @@ package scenes.game.components
 					Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
 					m_MouseMoveListenerInstalled = true;
 				}
-				m_paintBrush.visible = false;
-				m_paintBrushSelectionCountSprite.visible = false;
-				m_paintBrushTotalSelectionLimitSprite.visible = false;
 				m_rightMouseDown = true;
 				currentLocation = new Point(event.stageX, event.stageY);
+				checkPaintBrushVisibility();
 			}
 		}
 		
@@ -350,11 +360,9 @@ package scenes.game.components
 					Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
 					m_MouseMoveListenerInstalled = false;
 				}
-				m_paintBrush.visible = true;
-				m_paintBrushSelectionCountSprite.visible = true;
-				m_paintBrushTotalSelectionLimitSprite.visible = true;
 				m_rightMouseDown = false;
 				currentLocation = null;
+				checkPaintBrushVisibility();
 			}
 		}
 		
@@ -483,9 +491,18 @@ package scenes.game.components
 			
 		}
 		
+		public function mouseOverControlPanel():void
+		{
+			m_inControlPanel = true;
+			checkPaintBrushVisibility();
+		}
+		
 		public function outsideEventHandler(event:starling.events.Event):void
 		{
 			m_inBounds = true;
+			m_inControlPanel = false;
+			checkPaintBrushVisibility();
+			
 			if(event.type == MouseEvent.MOUSE_MOVE)
 			{
 				movePaintBrush(event.data as Point);
@@ -537,6 +554,12 @@ package scenes.game.components
 			} else if (m_boundingBoxDebug) {
 				m_boundingBoxDebug.removeFromParent(true);
 			}
+			
+			if (Starling.current && Starling.current.nativeStage) {
+				movePaintBrush(new Point(Starling.current.nativeStage.mouseX / Starling.contentScaleFactor, Starling.current.nativeStage.mouseY / Starling.contentScaleFactor));
+			}
+			m_gameComponentsCreated = true;
+			checkPaintBrushVisibility();
 		}
 		
 		private static function isOnScreen(bb:Rectangle, view:Rectangle):Boolean
@@ -592,6 +615,9 @@ package scenes.game.components
 		
 		override protected function onTouch(event:TouchEvent):void
 		{
+			m_inControlPanel = false;
+			checkPaintBrushVisibility();
+
 			if(buttonHit == true)
 			{
 				//next level button bleeds its hit into the system, so need to exit
@@ -649,7 +675,7 @@ package scenes.game.components
 				}
 				else
 				{
-					hidePaintBrush();
+					checkPaintBrushVisibility();
 					if (currentMode != SELECTING_MODE)
 					{
 						// Don't allow user to go straight from painting to moving with shift, if 
@@ -680,10 +706,10 @@ package scenes.game.components
 					 currentMode = HOVER_MODE;
 				location = touch.getLocation(this.stage);
 				if(location.x > WIDTH)
-					hidePaintBrush();
+					checkPaintBrushVisibility();
 				else
 					if(!event.shiftKey && !m_rightMouseDown)
-						showPaintBrush();
+						checkPaintBrushVisibility();
 				}
 				else
 					location = touches[0].getLocation(this.stage);
@@ -1025,7 +1051,8 @@ package scenes.game.components
 					break;
 					
 				case Keyboard.SHIFT:
-					hidePaintBrush();
+					m_keyPanMouse = true;
+					checkPaintBrushVisibility();
 					break;				
 				case Keyboard.C:
 					if (event.ctrlKey) {
@@ -1094,7 +1121,8 @@ package scenes.game.components
 					break;
 					
 				case Keyboard.SHIFT:
-					showPaintBrush();
+					m_keyPanMouse = false;
+					checkPaintBrushVisibility();
 					break;
 				case Keyboard.NUMBER_1:
 				case Keyboard.NUMBER_2:
@@ -1528,18 +1556,17 @@ package scenes.game.components
 			m_nextPaintbrushLocationUpdated = true;
 		}
 		
-		protected function showPaintBrush():void
+		protected function checkPaintBrushVisibility():void
 		{
-			m_paintBrush.visible = true;
-			m_paintBrushSelectionCountSprite.visible = true;
-			m_paintBrushTotalSelectionLimitSprite.visible = true;
-		}
-		
-		public function hidePaintBrush():void
-		{
-			m_paintBrush.visible = false;
-			m_paintBrushSelectionCountSprite.visible = false;
-			m_paintBrushTotalSelectionLimitSprite.visible = false;
+			if (m_inBounds && !m_inControlPanel && !m_keyPanMouse && !m_rightMouseDown && m_gameComponentsCreated) {
+				m_paintBrush.visible = true;
+				m_paintBrushSelectionCountSprite.visible = true;
+				m_paintBrushTotalSelectionLimitSprite.visible = true;
+			} else {
+				m_paintBrush.visible = false;
+				m_paintBrushSelectionCountSprite.visible = false;
+				m_paintBrushTotalSelectionLimitSprite.visible = false;
+			}
 		}
 		
 		protected function handlePaint(globPt:Point):void
@@ -1557,7 +1584,6 @@ package scenes.game.components
 			//trace("endPaint()");
 			//m_paintBrush.removeFromParent();
 		}
-		
 		
 		private function onSolverStarted():void
 		{
