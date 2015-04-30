@@ -50,6 +50,7 @@ package scenes.game.components
 		protected var scoreCircleMiddleImage:Image;
 		protected var scoreCircleFrontImage:Image;
 		protected var scoreImageCenter:Point;
+		
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
@@ -65,6 +66,9 @@ package scenes.game.components
 
 		/** Text showing best score */
 		private var m_bestTextfield:TextFieldWrapper;
+		
+		/** display control variables */
+		private var m_panZoomAllowed:Boolean;
 		
 		private var addSolverArray:Array = [1,0,1,1];
 
@@ -197,26 +201,25 @@ package scenes.game.components
 			m_sfxButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 3.5;
 			var test:Point = localToGlobal(new Point(m_sfxButton.x, m_sfxButton.y));
 			addChild(m_sfxButton);
-			
 		}
 		
 		//min scale == max zoom
 		public function onMaxZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = true;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
+			if (m_zoomInButton) m_zoomInButton.enabled = true && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = false && m_panZoomAllowed;
 		}
 		
 		public function onMinZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = false;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+			if (m_zoomInButton) m_zoomInButton.enabled = false && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true && m_panZoomAllowed;
 		}
 		
 		public function onZoomReset():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = true;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+			if (m_zoomInButton) m_zoomInButton.enabled = true && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true && m_panZoomAllowed;
 		}
 		
 		public function newLevelSelected(level:Level):void 
@@ -230,6 +233,11 @@ package scenes.game.components
 //			updateNumNodesSelectedDisplay();
 			
 			m_brushButtonGroup.resetGroup();
+			
+			m_panZoomAllowed = level.getPanZoomAllowed();
+			// NOTE: this assumes you start at a zoom that is not the min or max zoom!
+			if (m_zoomInButton) m_zoomInButton.enabled = m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = m_panZoomAllowed;
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void
