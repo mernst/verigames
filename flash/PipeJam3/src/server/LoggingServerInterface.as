@@ -8,8 +8,6 @@ package server
 	
 	import flash.display.Stage;
 	
-	import mochi.as3.MochiServices;
-	
 	import system.VerigameServerConstants;
 	
 	public class LoggingServerInterface
@@ -21,7 +19,6 @@ package server
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
 		
 		private var m_cgsServer:CGSServer;
-		private var m_useMochi:Boolean = PipeJam3.LOGGING_ON;
 		private var m_props:CGSServerProps;
 		public var uid:String;
 		public var serverInitialized:Boolean = false;
@@ -34,10 +31,6 @@ package server
 			setupServer(_setupKey, _stage, _forceUid);
 			if (!_replay) {
 				m_cgsServer.initialize(m_props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
-				
-				if (m_useMochi) {
-					MochiServices.connect(VerigameServerConstants.MOCHI_GAME_ID, _stage, onMochiError);
-				}
 			}
 		}
 		
@@ -73,10 +66,6 @@ package server
 		}
 		
 		public function get cgsServer():CGSServer { return m_cgsServer; }
-		
-		private function onMochiError(errorCode:String):void {
-			trace("MOCHI errorCode: " + errorCode);
-		}
 		
 		private function onServerInit(failed:Boolean):void
 		{

@@ -7,8 +7,6 @@ package system
 		public static const VERIGAME_DEV_SKEY:String = "8847ab6e6908697ada1c8ac27287cd02";
 		public static const VERIGAME_SKEY:String = "bde9564c55a99a60bf0deb0f5be44b6f";
 		
-		public static var MOCHI_GAME_ID:String = "953dee7d3049e1a3";
-		
 		public static const VERIGAME_GAME_NAME:String = "pipejam";
 		
 		public static const VERIGAME_VERSION_SEEDLING_BETA:int   = 4;
