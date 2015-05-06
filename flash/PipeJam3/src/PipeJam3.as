@@ -50,7 +50,7 @@ package
 		public static var PRODUCTION_BUILD:Boolean = false;
 		
 		/** turn on logging of game play. */
-		public static var LOGGING_ON:Boolean = false;
+		public static var LOGGING_ON:Boolean = true;
 		
 		/** to be hosted on the installer dvd. Changes location of scripts on server */
 		public static var INSTALL_DVD:Boolean = false;
@@ -78,7 +78,7 @@ package
 			
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
-			if (REPLAY_DQID || LoggingServerInterface.LOGGING_ON) 
+			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 
 			{
 				logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage, "", REPLAY_DQID != null);
 				if (REPLAY_DQID) {

@@ -12,10 +12,8 @@ package server
 	
 	public class LoggingServerInterface
 	{
-		/** True to log to the CGS server */
-		public static var LOGGING_ON:Boolean = PipeJam3.LOGGING_ON;
-		
 		public static const SETUP_KEY_FRIENDS_AND_FAMILY_BETA:String = "SETUP_KEY_FRIENDS_AND_FAMILY_BETA";
+		
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
 		
 		private var m_cgsServer:CGSServer;
@@ -41,7 +39,7 @@ package server
 			var cid:int = VerigameServerConstants.VERIGAME_CATEGORY_SEEDLING_BETA;
 			switch (_setupKey) {
 				case SETUP_KEY_FRIENDS_AND_FAMILY_BETA:
-					cid = VerigameServerConstants.VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013;
+					cid = VerigameServerConstants.VERIGAME_CATEGORY_PARADOX_FRIENDS_FAMILY_BETA_MAY_15_2015;
 					saveCacheToServer = true;
 					provideIp = false;
 					break;

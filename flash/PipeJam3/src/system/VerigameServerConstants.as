@@ -12,41 +12,43 @@ package system
 		public static const VERIGAME_VERSION_SEEDLING_BETA:int   = 4;
 		public static const VERIGAME_VERSION_GRID_WORLD_BETA:int = 5;
 		
-		public static const VERIGAME_CATEGORY_SEEDLING_BETA:int                         = 19;
-		public static const VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013:int = 20;
+		public static const VERIGAME_CATEGORY_SEEDLING_BETA:int                           = 19;
+		public static const VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013:int   = 20;
+		public static const VERIGAME_CATEGORY_PARADOX_FRIENDS_FAMILY_BETA_MAY_15_2015:int = 21;
 		
 		public static const VERIGAME_QUEST_ID_UNDEFINED_WORLD:int = 66;
 		
-		public static const VERIGAME_ACTION_START_LEVEL:int            = 1;
-		public static const VERIGAME_ACTION_SWITCH_BOARDS:int          = 2;// deprecated
-		public static const VERIGAME_ACTION_SAVE_LEVEL_PROGRESS:int    = 3;
-		public static const VERIGAME_ACTION_CHANGE_EDGESET_WIDTH:int   = 4;
-		public static const VERIGAME_ACTION_ADD_PIPE_BUZZSAW:int       = 5;// deprecated
-		public static const VERIGAME_ACTION_REMOVE_PIPE_BUZZSAW:int    = 6;// deprecated
-		public static const VERIGAME_ACTION_CHANGE_PIPE_STAMPS:int     = 7;
-		// UI actions
-		public static const VERIGAME_ACTION_SUBMIT_SCORE:int           = 21;
-		public static const VERIGAME_ACTION_LOAD_LAYOUT:int            = 22;
-		
 		public static const QUEST_PARAMETER_LEVEL_INFO:String          = "levelInfo";
 		
+		// ACTIONS
+		public static const VERIGAME_ACTION_PAINT_NARROW:int           = 1;
+		public static const VERIGAME_ACTION_PAINT_WIDE:int             = 2;
+		public static const VERIGAME_ACTION_PAINT_AUTOSOLVE:int        = 3;
+		
+		public static const VERIGAME_ACTION_AUTOSOLVE_COMPLETE:int     = 5;
+		
+		public static const VERIGAME_ACTION_UNDO:int                   = 8;
+		public static const VERIGAME_ACTION_REDO:int                   = 9;
+		public static const VERIGAME_ACTION_DISPLAY_HINT:int           = 10;
+		
+		public static const VERIGAME_ACTION_SUBMIT_SCORE:int           = 21; //automatic on score increase
+		public static const VERIGAME_ACTION_LOAD_ASSIGNMENTS:int       = 22;
+		public static const VERIGAME_ACTION_LOAD_BEST_ASSIGNMENTS:int  = 23;
+		
+		// ACTION PARAMS
 		public static const ACTION_PARAMETER_START_INFO:String         = "startInfo";
-		public static const ACTION_PARAMETER_BOARD_NAME:String         = "boardName";// deprecated
 		public static const ACTION_PARAMETER_LEVEL_NAME:String         = "levelName";
-		public static const ACTION_PARAMETER_EDGESET_WIDTH:String      = "edgeWidth";
-		public static const ACTION_PARAMETER_PROP_CHANGED:String       = "propChanged";
-		public static const ACTION_PARAMETER_PROP_VALUE:String         = "propValue";
-		public static const ACTION_PARAMETER_EDGE_ID:String            = "edgeId";
-		public static const ACTION_PARAMETER_VAR_ID:String             = "varId";
-		public static const ACTION_PARAMETER_STAMP_DICTIONARY:String   = "stampDict";
-		// UI action fields
+		public static const ACTION_PARAMETER_VAR_IDS:String            = "varIds";
+		public static const ACTION_PARAMETER_NARROW_VAR_IDS:String     = "narrowIds"; // if only specifying narrow ids (others presumed wide)
+		public static const ACTION_PARAMETER_WIDE_VAR_IDS:String       = "wideIds";   // if only specifying wide ids (others presumed narrow)
+		public static const ACTION_PARAMETER_VAR_VALUES:String         = "values";
 		public static const ACTION_PARAMETER_LAYOUT_NAME:String        = "layoutName";
 		public static const ACTION_PARAMETER_START_SCORE:String        = "start_score";
 		public static const ACTION_PARAMETER_TARGET_SCORE:String       = "target_score";
 		public static const ACTION_PARAMETER_SCORE:String              = "score";
 		public static const ACTION_PARAMETER_SCORE_CHANGE:String       = "score_chg";
-		public static const ACTION_VALUE_EDGE_WIDTH_WIDE:String        = "w";
-		public static const ACTION_VALUE_EDGE_WIDTH_NARROW:String      = "n";
+		public static const ACTION_PARAMETER_TYPE:String               = "type";
+		public static const ACTION_PARAMETER_TEXT:String               = "txt";
 	}
 
 }

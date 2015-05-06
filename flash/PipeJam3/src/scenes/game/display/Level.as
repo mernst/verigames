@@ -9,6 +9,7 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import system.VerigameServerConstants;
 	
 	import assets.AssetInterface;
 	
@@ -209,7 +210,7 @@ package scenes.game.display
 		
 		public function loadBestScoringConfiguration():void
 		{
-			loadAssignments(m_levelBestScoreAssignmentsObj, true);
+			loadAssignments(m_levelBestScoreAssignmentsObj, true, true);
 		}
 		
 		public function loadInitialConfiguration():void
@@ -222,19 +223,51 @@ package scenes.game.display
 			loadAssignments(assignmentsObj);
 		}
 		
-		protected function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		protected function loadAssignments(assignmentsObj:Object, updateTutorialManager:Boolean = false, isBest:Boolean = false):void
 		{
 			var graphVar:ConstraintVar;
+			var narrowIds:String = "";
+			var wideIds:String = "";
 			for (var varId:String in levelGraph.variableDict) {
 				graphVar = levelGraph.variableDict[varId] as ConstraintVar;
-				setGraphVarFromAssignments(graphVar, assignmentsObj, updateTutorialManager);
+				var wasSetWide:Boolean = setGraphVarFromAssignments(graphVar, assignmentsObj, updateTutorialManager);
+				if (PipeJam3.logging)
+				{
+					var simpleId:String = varId;
+					var idArr:Array = varId.split("var_");
+					if (idArr.length == 2) simpleId = idArr[1] as String;
+					if (wasSetWide)
+					{
+						wideIds += (wideIds.length == 0) ? simpleId : ("," + simpleId);
+					}
+					else
+					{
+						narrowIds += (narrowIds.length == 0) ? simpleId : ("," + simpleId);
+					}
+				}
 			}
 			if(graphVar != null) dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, graphVar, PropDictionary.PROP_NARROW, graphVar.getProps().hasProp(PropDictionary.PROP_NARROW), this, null));
 			refreshTroublePoints();
 			onScoreChange();
+			if (PipeJam3.logging)
+			{
+				var details:Object = new Object();
+				if (wideIds.length < narrowIds.length) // log whichever is less burdensome
+				{
+					details[VerigameServerConstants.ACTION_PARAMETER_WIDE_VAR_IDS] = wideIds;
+				}
+				else
+				{
+					details[VerigameServerConstants.ACTION_PARAMETER_NARROW_VAR_IDS] = narrowIds;
+				}
+				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
+				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				PipeJam3.logging.logQuestAction(isBest ? VerigameServerConstants.VERIGAME_ACTION_LOAD_BEST_ASSIGNMENTS : VerigameServerConstants.VERIGAME_ACTION_LOAD_ASSIGNMENTS, details, getTimeMs());
+			}
 		}
 		
-		protected function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):void
+		protected function setGraphVarFromAssignments(graphVar:ConstraintVar, assignmentsObj:Object, updateTutorialManager:Boolean = false):Boolean
 		{
 			// By default, reset gameNode to default value, then if contained in "assignments" obj, use that value instead
 			var assignmentIsWide:Boolean = (graphVar.defaultVal.verboseStrVal == ConstraintValue.VERBOSE_TYPE_1);
@@ -255,6 +288,7 @@ package scenes.game.display
 				gameNode.isNarrow = !assignmentIsWide;
 				gameNode.setDirty(true);
 			}
+			return assignmentIsWide;
 		}
 		
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -860,10 +894,8 @@ package scenes.game.display
 			if (evt && evt.graphVar) {
 				levelGraph.updateScore(evt.graphVar.id, evt.prop, evt.newValue);
 				//evt.graphVar.setProp(evt.prop, evt.newValue);
-				//levelGraph.updateScore();
 				if (tutorialManager) tutorialManager.onWidgetChange(evt.graphVar.id, evt.prop, evt.newValue, levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, evt.graphVar, evt.prop, evt.newValue, this, evt.pt));
-
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			} else {
 				levelGraph.updateScore();
@@ -1163,7 +1195,7 @@ package scenes.game.display
 				assignmentIsWide = false;
 				newAssignmentValue = 1;
 			}
-			
+			var selectedVarIds:String = "";
 			for each(var node:Node in selectedNodes)
 			{
 				node.solved = true;
@@ -1180,10 +1212,27 @@ package scenes.game.display
 					m_lastVarValues.push(newAssignmentValue);
 					node.updateSelectionAssignment(assignmentIsWide, levelGraph);
 					m_nodesToDraw[node.id] = node;
+					if (PipeJam3.logging)
+					{
+						var simpleId:String = node.id;
+						var idArr:Array = node.id.split("var_");
+						if (idArr.length == 2) simpleId = idArr[1] as String;
+						selectedVarIds += (selectedVarIds.length == 0) ? simpleId : ("," + simpleId);
+					}
 				}
 			}
 			//update score
 			onWidgetChange();
+			if (PipeJam3.logging && selectedNodes.length > 0)
+			{
+				var details:Object = new Object();
+				details[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = selectedVarIds;
+				details[VerigameServerConstants.ACTION_PARAMETER_TYPE] = m_solverType;
+				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
+				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				PipeJam3.logging.logQuestAction(assignmentIsWide ? VerigameServerConstants.VERIGAME_ACTION_PAINT_WIDE : VerigameServerConstants.VERIGAME_ACTION_PAINT_NARROW, details, getTimeMs());
+			}
 			unselectAll();
 		}
 		
@@ -1237,6 +1286,26 @@ package scenes.game.display
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			m_inSolver = true;
+			
+			if (PipeJam3.logging)
+			{
+				var details:Object = new Object();
+				var selectedVarIds:String = "";
+				for each(var node:Node in selectedNodes)
+				{
+					if (node.isClause) continue;
+					var simpleId:String = node.id;
+					var idArr:Array = node.id.split("var_");
+					if (idArr.length == 2) simpleId = idArr[1] as String;
+					selectedVarIds += (selectedVarIds.length == 0) ? simpleId : ("," + simpleId);
+				}
+				details[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = selectedVarIds;
+				details[VerigameServerConstants.ACTION_PARAMETER_TYPE] = m_solverType;
+				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
+				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_PAINT_AUTOSOLVE, details, getTimeMs());
+			}
 			
 			createConstraintsForClauses(); 
 
@@ -1505,11 +1574,12 @@ package scenes.game.display
 				return;
 			m_unsat_weight = unsat_weight;
 			m_lastVarValues = vars;
-			var percentDone:Number = ((selectedConstraintValue - unsat_weight)/selectedConstraintValue)*100;
+			var percentDone:Number = ((selectedConstraintValue - unsat_weight) / selectedConstraintValue) * 100;
+			
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_UPDATED, true, percentDone));
 		}
 		
-		protected function updateNodes():void
+		protected function updateNodes(undo:Boolean = false):void
 		{
 			if(!m_lastVarValues)
 				return;
@@ -1517,6 +1587,8 @@ package scenes.game.display
 			m_previousVarValues = new Array;
 			var someNodeUpdated:Boolean = false;
 			//trace(levelGraph.currentScore);
+			var updatedVarIds:String = "";
+			var updatedValues:String = "";
 			for (var ii:int = 0; ii < m_lastVarValues.length; ++ ii) 
 			{
 				var node:Node = nodeIDToConstraintsTwoWayMap[ii + 1];
@@ -1536,6 +1608,14 @@ package scenes.game.display
 					someNodeUpdated = someNodeUpdated || (currentVal != node.isNarrow);
 					if(currentVal != node.isNarrow)
 					{
+						if (PipeJam3.logging)
+						{
+							var simpleId:String = node.id;
+							var idArr:Array = node.id.split("var_");
+							if (idArr.length == 2) simpleId = idArr[1] as String;
+							updatedVarIds += (updatedVarIds.length == 0) ? simpleId : ("," + simpleId);
+							updatedValues += (updatedValues.length == 0) ? String(currentNumValue) : ("," + currentNumValue);
+						}
 						if (node.skin != null)
 						{
 							node.setDirty(true);
@@ -1547,8 +1627,20 @@ package scenes.game.display
 					}
 				}
 			}
+			
 			if(someNodeUpdated)
 				onWidgetChange();
+			
+			if (PipeJam3.logging)
+			{
+				var details:Object = new Object();
+				details[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = updatedVarIds;
+				details[VerigameServerConstants.ACTION_PARAMETER_VAR_VALUES] = updatedValues;
+				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
+				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				PipeJam3.logging.logQuestAction(undo ? VerigameServerConstants.VERIGAME_ACTION_UNDO : VerigameServerConstants.VERIGAME_ACTION_AUTOSOLVE_COMPLETE, details, getTimeMs());
+			}
 		}
 		
 		public var count:int = 0;
@@ -1687,7 +1779,7 @@ package scenes.game.display
 			var temp:Array = m_lastVarValues;
 			m_lastVarValues = m_previousVarValues;
 			m_previousVarValues = temp;
-			updateNodes();
+			updateNodes(true);
 		}
 	}
 	

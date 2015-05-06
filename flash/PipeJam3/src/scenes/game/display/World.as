@@ -459,6 +459,19 @@ package scenes.game.display
 						
 						waitIconDisplayed = false;
 						
+						if (PipeJam3.logging)
+						{
+							var details:Object = new Object();
+							//details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
+							if (PipeJamGame.levelInfo) {
+								var jsonString:String = JSON.stringify(PipeJamGame.levelInfo);
+								var newObject:Object =  JSON.parse(jsonString);
+								details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = newObject;
+							}
+							var qid:int = (active_level.levelGraph.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelGraph.qid;
+							//PipeJam3.logging.logQuestAction(, details, active_level.getTimeMs());
+						}
+						
 						active_level.solveSelection(solverUpdateCallback, solverDoneCallback, event.data as String);
 					}
 				}
@@ -735,24 +748,17 @@ package scenes.game.display
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
 				}
-			
-				
 				if (oldScore != newScore && evt.pt != null) {
 					var thisPt:Point = globalToLocal(evt.pt);
 					TextPopup.popupText(evt.target as DisplayObjectContainer, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x008000 : 0x800000);
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
-					if (evt.varChanged) {
-						details[VerigameServerConstants.ACTION_PARAMETER_VAR_ID] = evt.varChanged.id;
-						details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
-						details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
-						details[VerigameServerConstants.ACTION_PARAMETER_SCORE_CHANGE] = newScore - oldScore;
-						details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
-						details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
-						details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
-					}
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, active_level.getTimeMs());
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE_CHANGE] = newScore - oldScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_START_SCORE] = active_level.startingScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = active_level.m_targetScore;
+					// TODO logging: PipeJam3.logging.logQuestAction(VerigameServerConstants.verigame_ac, details, active_level.getTimeMs());
 				}
 			}
 			sideControlPanel.updateScore(active_level, false);

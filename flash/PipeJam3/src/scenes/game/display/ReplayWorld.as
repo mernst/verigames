@@ -52,6 +52,7 @@ package scenes.game.display
 		
 		public function performAction(action:ClientAction, isUndo:Boolean = false):void
 		{
+			/* TODO logging: refactor
 			if (!action.detailObject) return;
 			if (!active_level) return;
 			var varId:String, propChanged:String, newPropValue:Boolean;
@@ -75,6 +76,7 @@ package scenes.game.display
 			} else {
 				PipeJam3.showReplayText("Replay action failed, varId: " + varId + " propChanged: " + propChanged);
 			}
+			*/
 		}
 		
 		public function previewAction(action:ClientAction, isUndo:Boolean = false):void
