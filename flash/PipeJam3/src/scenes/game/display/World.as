@@ -393,6 +393,8 @@ package scenes.game.display
 			addEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
 			addEventListener(MenuEvent.STOP_SOLVER, onStopSolving);
 			
+			addEventListener(MenuEvent.MOUSE_OVER_CONTROL_PANEL, overControlPanelHandler);
+			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
 			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
@@ -419,6 +421,11 @@ package scenes.game.display
 		private function mouseMoveEventHandler(event:starling.events.Event):void
 		{
 			edgeSetGraphViewPanel.outsideEventHandler(event);
+		}
+		
+		private function overControlPanelHandler(event:starling.events.Event):void
+		{
+			edgeSetGraphViewPanel.mouseOverControlPanel();
 		}
 		
 		public function loadAssignmentFile(assignmentID:String):void

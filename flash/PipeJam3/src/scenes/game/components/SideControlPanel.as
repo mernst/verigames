@@ -4,6 +4,7 @@ package scenes.game.components
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Point;
+	import utils.XMath;
 	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -54,6 +55,7 @@ package scenes.game.components
 		protected var scoreCircleMiddleImage:Image;
 		protected var scoreCircleFrontImage:Image;
 		protected var scoreImageCenter:Point;
+		
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
@@ -70,6 +72,9 @@ package scenes.game.components
 
 		/** Text showing best score */
 		private var m_bestTextfield:TextFieldWrapper;
+		
+		/** display control variables */
+		private var m_panZoomAllowed:Boolean;
 		
 		private var addSolverArray:Array = [1,0,1,1];
 		public static const OPTIMIZER1_BRUSH_CONTROL:int = 0;
@@ -217,26 +222,25 @@ package scenes.game.components
 			m_sfxButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 3.5;
 			var test:Point = localToGlobal(new Point(m_sfxButton.x, m_sfxButton.y));
 			addChild(m_sfxButton);
-			
 		}
 		
 		//min scale == max zoom
 		public function onMaxZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = true;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
+			if (m_zoomInButton) m_zoomInButton.enabled = true && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = false && m_panZoomAllowed;
 		}
 		
 		public function onMinZoomReached():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = false;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+			if (m_zoomInButton) m_zoomInButton.enabled = false && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true && m_panZoomAllowed;
 		}
 		
 		public function onZoomReset():void
 		{
-			if (m_zoomInButton) m_zoomInButton.enabled = true;
-			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+			if (m_zoomInButton) m_zoomInButton.enabled = true && m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true && m_panZoomAllowed;
 		}
 		
 		public function newLevelSelected(level:Level):void 
@@ -250,6 +254,11 @@ package scenes.game.components
 //			updateNumNodesSelectedDisplay();
 			
 			m_brushButtonGroup.resetGroup();
+			
+			m_panZoomAllowed = level.getPanZoomAllowed();
+			// NOTE: this assumes you start at a zoom that is not the min or max zoom!
+			if (m_zoomInButton) m_zoomInButton.enabled = m_panZoomAllowed;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = m_panZoomAllowed;
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void
@@ -273,7 +282,7 @@ package scenes.game.components
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
 				touch = event.getTouches(this, TouchPhase.BEGAN)[0];
-				eventType =TouchPhase.BEGAN;
+				eventType = TouchPhase.BEGAN;
 			}
 			else if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
@@ -287,16 +296,22 @@ package scenes.game.components
 			}
 			
 			if(touch)
+			{
 				loc = new Point(touch.globalX, touch.globalY);
+			}
 			
-			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)))
+			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)) && (XMath.square(loc.x - 431) + XMath.square(loc.y - 64) > 50 * 50))
 			{
 				inTransparentArea = true;
 				dispatchEvent(new starling.events.Event(eventType,  true,  loc));
 			}
 			else
+			{
 				inTransparentArea = false;
-			
+				if (touch) {
+					dispatchEvent(new MenuEvent(MenuEvent.MOUSE_OVER_CONTROL_PANEL));
+				}
+			}
 		}
 		
 		private function onMenuButtonTriggered():void
