@@ -119,6 +119,7 @@ package scenes.game.display
 		public var targetScoreReached:Boolean;
 		public var original_level_name:String;
 		
+		public var brushesToActivate:int;
 		public var currentGroupDepth:int = -1;
 		public var levelLayoutScale:Number = 1.0;
 		private var m_nodeAnimationLayer:Sprite;
@@ -647,6 +648,29 @@ package scenes.game.display
 				}
 			}
 			
+			//check on brush specifications
+			var brushArr:Array = m_levelLayoutObj["layout"]["brushes"] as Array;
+			brushesToActivate = 0xffffff;
+			if (brushArr)
+			{
+				brushesToActivate = 0;
+				for each(var brush:String in brushArr)
+				{
+					switch(brush)
+					{
+						case 'wide':
+							brushesToActivate += TutorialLevelManager.WIDEN_BRUSH;
+							break;
+						case 'narrow':
+							brushesToActivate += TutorialLevelManager.NARROW_BRUSH;
+							break;
+						case 'auto':
+							brushesToActivate += TutorialLevelManager.SOLVER_BRUSH;
+							break;
+					}
+				}
+			}
+			
 			var bbWidth:Number = maxX - minX + Constants.SKIN_DIAMETER;
 			var bbHeight:Number = maxY - minY + Constants.SKIN_DIAMETER;
 			
@@ -735,6 +759,9 @@ package scenes.game.display
 			addEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentUnselection);
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			
+			addEventListener(TouchEvent.TOUCH, onTouch);
+			
 			m_levelStartTime = new Date().time;
 			
 			levelGraph.resetScoring();
@@ -848,17 +875,7 @@ package scenes.game.display
 			super.dispose();		
 		}
 		
-		override protected function onTouch(event:TouchEvent):void
-		{
-			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					// one finger touching -> move
-					var x:int = 3;
-				}
-			}
-		}
+
 		
 		//assume this only generates on toggle width events
 		public function onWidgetChange(evt:VarChangeEvent = null, reportScore:Boolean = false):void

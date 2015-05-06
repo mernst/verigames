@@ -1,14 +1,17 @@
 package scenes.game.components
 {
-	import flash.events.MouseEvent;
-	import flash.geom.Point;
 	import flash.display.StageDisplayState;
+	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	import flash.geom.Point;
+	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
 	import display.BasicButton;
+	import display.FullScreenButton;
 	import display.NineSliceButton;
+	import display.NineSliceToggleButton;
 	import display.RadioButton;
 	import display.RadioButtonGroup;
 	import display.SoundButton;
@@ -27,6 +30,7 @@ package scenes.game.components
 	import scenes.game.display.TutorialLevelManager;
 	import scenes.game.display.World;
 	
+	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -34,11 +38,8 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.core.Starling;
 	
 	import utils.XSprite;
-	import display.NineSliceToggleButton;
-	import display.FullScreenButton;
 	
 	public class SideControlPanel extends BaseComponent
 	{
@@ -71,7 +72,10 @@ package scenes.game.components
 		private var m_bestTextfield:TextFieldWrapper;
 		
 		private var addSolverArray:Array = [1,0,1,1];
-
+		public static const OPTIMIZER1_BRUSH_CONTROL:int = 0;
+		public static const OPTIMIZER2_BRUSH_CONTROL:int = 1;
+		public static const WIDE_BRUSH_CONTROL:int = 2;
+		public static const NARROW_BRUSH_CONTROL:int = 3;
 		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
@@ -172,7 +176,7 @@ package scenes.game.components
 			m_solver1Brush.y = 60;
 			
 			m_solver1Brush.visible = false;
-			if(addSolverArray[0] == 1)
+			if(addSolverArray[OPTIMIZER1_BRUSH_CONTROL] == 1)
 			{
 				m_brushButtonGroup.addChild(m_solver1Brush);
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
@@ -182,13 +186,13 @@ package scenes.game.components
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
 			
 			m_widenBrush.visible = false;
-			if(addSolverArray[2] == 1)
+			if(addSolverArray[WIDE_BRUSH_CONTROL] == 1)
 			{
 				m_brushButtonGroup.addChild(m_widenBrush);
 			}
 
 			m_narrowBrush.visible = false;
-			if(addSolverArray[3] == 1)
+			if(addSolverArray[NARROW_BRUSH_CONTROL] == 1)
 				m_brushButtonGroup.addChild(m_narrowBrush);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);

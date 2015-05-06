@@ -1062,11 +1062,11 @@ package scenes.game.display
 				miniMap.visible = true;
 			}
 			if (miniMap) miniMap.setLevel(active_level);
-			showVisibleBrushes();
-			showCurrentBrush();
 					
 			active_level.addEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			active_level.initialize();
+			showVisibleBrushes();
+			showCurrentBrush();
 		}
 		
 		private function onLevelLoaded(evt:MenuEvent):void
@@ -1233,7 +1233,7 @@ package scenes.game.display
 				sideControlPanel.showVisibleBrushes(visibleBrushes);
 			}
 			else
-				sideControlPanel.showVisibleBrushes(0xffffff);
+				sideControlPanel.showVisibleBrushes(active_level.brushesToActivate);
 		}
 		
 		public function showCurrentBrush():void
@@ -1244,7 +1244,7 @@ package scenes.game.display
 				edgeSetGraphViewPanel.setFirstBrush(visibleBrushes);
 			}
 			else
-				edgeSetGraphViewPanel.setFirstBrush(0xffffff);
+				edgeSetGraphViewPanel.setFirstBrush(active_level.brushesToActivate);
 		}
 	}
 }
