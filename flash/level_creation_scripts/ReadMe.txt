@@ -1,4 +1,31 @@
-Files in this directory
+Standard tasks:
+(Read the files for more detail)
+
+Create a level from a wcnf, cnf, or json file:
+
+	From wcnf or cnf, run makeConstraintFile.py to create a json file.
+	
+	From a json file created by Mike's team, run cnstr/process_constraint_json.py foo, where foo is the root name of the json file
+	
+	From a level file (constraint of the type "c1 <= v1")
+
+Add a level to the database:
+	
+	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py
+	
+	With the description file, run addLevelToDB.py
+	
+Autosolve levels:
+
+	Use autosolve_wcnfs.py
+	
+	If you have json files, use json_to_wcnf.py to convert them.
+	
+makeConstraints.py
+
+Makes a global constraint file from a wcnf or cnf file.	
+
+Obsolete files in this directory
 
 classic2grid.py
 layoutgrid.ph
@@ -7,9 +34,7 @@ layoutgridall.py
 
 These files will create and layout a level. classic2grid calls layoutgrid. Run classic2grid/layoutgrid on single levels, classic2gridall/layoutgridall on a directory. These last two are unix only.
 
-makeConstraints.py
 
-Makes a global constraint file for a world.
 
 obfuscateNames.py
 
