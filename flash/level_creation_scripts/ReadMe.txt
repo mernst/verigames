@@ -5,10 +5,11 @@ Create a level from a wcnf, cnf, or json file:
 
 	From wcnf or cnf, run makeConstraintFile.py to create a json file.
 	
-	From a json file created by Mike's team, run cnstr/process_constraint_json.py foo, where foo is the root name of the json file
+	From a json file created by Mike's team
+		run cnstr/process_constraint_json.py foo, where foo is the root name of the json file
 	
 	From a level file (constraint of the type "c1 <= v1")
-
+		run ... (not finished...)
 Add a level to the database:
 	
 	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py
