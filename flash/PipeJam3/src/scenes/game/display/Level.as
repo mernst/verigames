@@ -474,21 +474,27 @@ package scenes.game.display
 				// At this time only VAR changes affect the look of an edge,
 				// so draw all edges when clauses are redrawn and
 				// ignore var nodes
-				if (!nodeToDraw.isClause || !alreadyOnScreen)
+				if (!nodeToDraw.isClause)
 				{
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
 						edge = edgeLayoutObjs[gameEdgeId];
-						if(edge.skin && edge.skin.parent)
+						if (!alreadyOnScreen)
 						{
-							edge.skin.removeFromParent(true);
-							edge.skin = null;
+							if(edge.skin && edge.skin.parent)
+							{
+								edge.skin.removeFromParent(true);
+								edge.skin = null;
+							}
+							edge.createSkin(currentGroupDepth);
 						}
-						edge.createSkin(currentGroupDepth);
-						if (edge.skin) {
+						if (edge.skin)
+						{
+							if (alreadyOnScreen) edge.updateEdge();
 							adjustEdgeContainer(edge);
 							touchedEdgeLayer = true;
 						}
+						
 					}
 				}
 				if (nodeToDraw.skin != null && nodeToDraw.skin.parent != m_nodeLayer)

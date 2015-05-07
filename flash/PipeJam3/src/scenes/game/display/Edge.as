@@ -27,14 +27,11 @@ package scenes.game.display
 			toNode = _toNode;
 		}
 		
-		public function updateEdge(currentHoverNode:Node = null):void
+		public function updateEdge():void
 		{
 			if(skin && skin.parent)
 			{					
-				//(skin.parent as Sprite).unflatten();
 				drawSkin();
-				//toNode.updateConnector();
-				//(skin.parent as Sprite).flatten();
 				isDirty = false;
 			}
 		}
