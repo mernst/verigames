@@ -460,6 +460,8 @@ package scenes.game.display
 						
 						active_level.solveSelection(solverUpdateCallback, solverDoneCallback, event.data as String);
 					}
+					else
+						active_level.unselectAll();
 				}
 				else if(event.data == GridViewPanel.NARROW_BRUSH)
 				{
