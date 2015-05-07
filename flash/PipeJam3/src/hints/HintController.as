@@ -7,6 +7,7 @@ package hints
 	import scenes.game.display.Node;
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import system.VerigameServerConstants;
 	
 	public class HintController extends Sprite 
 	{
@@ -122,6 +123,12 @@ package hints
 		
 		public function popHint(text:String, level:Level, secToShow:Number = 3.0):void
 		{
+			if (PipeJam3.logging)
+			{
+				var details:Object = new Object();
+				details[VerigameServerConstants.ACTION_PARAMETER_TEXT] = text;
+				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_DISPLAY_HINT, details, level.getTimeMs());
+			}
 			if (m_hintBubble != null) Starling.juggler.removeTweens(m_hintBubble);
 			removeHint(); // any existing hints
 			m_hintBubble = new TextBubble("Hint: " + text, 10, Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);

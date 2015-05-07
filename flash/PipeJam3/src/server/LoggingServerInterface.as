@@ -8,20 +8,15 @@ package server
 	
 	import flash.display.Stage;
 	
-	import mochi.as3.MochiServices;
-	
 	import system.VerigameServerConstants;
 	
 	public class LoggingServerInterface
 	{
-		/** True to log to the CGS server */
-		public static var LOGGING_ON:Boolean = PipeJam3.LOGGING_ON;
-		
 		public static const SETUP_KEY_FRIENDS_AND_FAMILY_BETA:String = "SETUP_KEY_FRIENDS_AND_FAMILY_BETA";
+		
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
 		
 		private var m_cgsServer:CGSServer;
-		private var m_useMochi:Boolean = PipeJam3.LOGGING_ON;
 		private var m_props:CGSServerProps;
 		public var uid:String;
 		public var serverInitialized:Boolean = false;
@@ -34,10 +29,6 @@ package server
 			setupServer(_setupKey, _stage, _forceUid);
 			if (!_replay) {
 				m_cgsServer.initialize(m_props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
-				
-				if (m_useMochi) {
-					MochiServices.connect(VerigameServerConstants.MOCHI_GAME_ID, _stage, onMochiError);
-				}
 			}
 		}
 		
@@ -48,7 +39,7 @@ package server
 			var cid:int = VerigameServerConstants.VERIGAME_CATEGORY_SEEDLING_BETA;
 			switch (_setupKey) {
 				case SETUP_KEY_FRIENDS_AND_FAMILY_BETA:
-					cid = VerigameServerConstants.VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013;
+					cid = VerigameServerConstants.VERIGAME_CATEGORY_PARADOX_FRIENDS_FAMILY_BETA_MAY_15_2015;
 					saveCacheToServer = true;
 					provideIp = false;
 					break;
@@ -73,10 +64,6 @@ package server
 		}
 		
 		public function get cgsServer():CGSServer { return m_cgsServer; }
-		
-		private function onMochiError(errorCode:String):void {
-			trace("MOCHI errorCode: " + errorCode);
-		}
 		
 		private function onServerInit(failed:Boolean):void
 		{

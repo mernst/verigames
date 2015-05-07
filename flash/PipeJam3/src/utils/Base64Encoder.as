@@ -14,8 +14,6 @@ package utils
 	
 	import flash.utils.ByteArray;
 	
-	import mochi.as3.Base64Encoder;
-	
 	/**
 	 * A utility class to encode a String or ByteArray as a Base64 encoded String.
 	 *  

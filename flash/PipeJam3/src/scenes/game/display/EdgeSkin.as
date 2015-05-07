@@ -84,6 +84,7 @@ package scenes.game.display
 			
 			var edgeIsNarrow:Boolean = (parentEdge.graphConstraint.lhs is ConstraintVar);
 			var edgeIsSatisfied:Boolean = false;
+			var edgeIsSelected:Boolean = (parentEdge.toNode is VariableNode) ? parentEdge.toNode.isSelected : parentEdge.fromNode.isSelected;
 			if (parentEdge.graphConstraint.lhs is ConstraintVar)
 			{
 				edgeIsSatisfied = (parentEdge.graphConstraint.lhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
@@ -92,7 +93,6 @@ package scenes.game.display
 			{
 				edgeIsSatisfied = !(parentEdge.graphConstraint.rhs as ConstraintVar).getProps().hasProp(PropDictionary.PROP_NARROW);
 			}
-			var edgeIsSelected:Boolean = false;
 			var text:Texture = getText(edgeIsNarrow, edgeIsSatisfied, edgeIsSelected);
 			textureImage = new Image(text);
 			textureImage.width = skinWidth;
