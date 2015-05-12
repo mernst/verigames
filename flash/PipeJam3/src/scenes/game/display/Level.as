@@ -9,7 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import system.VerigameServerConstants;
 	
 	import assets.AssetInterface;
 	
@@ -60,6 +59,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
+	import system.VerigameServerConstants;
 	
 	import utils.Base64Encoder;
 	import utils.PropDictionary;
@@ -357,10 +357,11 @@ package scenes.game.display
 			
 			groupGrid = m_groupGrids[newGroupDepth];
 			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-			var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
+			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
 			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-			var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
 			var count:int = 0;
+
 			for (i = minX; i <= maxX; i++)
 			{
 				for (j = minY; j <= maxY; j++)
@@ -1887,6 +1888,16 @@ internal class GroupGrid
 	public static function getGridY(_y:Number,  gridDimensions:Point):int
 	{
 		return Math.max(0, Math.floor(_y / gridDimensions.y));
+	}
+	
+	public static function getGridXRight(_x:Number,  gridDimensions:Point):int
+	{
+		return Math.max(0, Math.ceil(_x / gridDimensions.x));
+	}
+	
+	public static function getGridYBottom(_y:Number,  gridDimensions:Point):int
+	{
+		return Math.max(0, Math.ceil(_y / gridDimensions.y));
 	}
 	
 	private static function _getGridKey(_x:Number, _y:Number, gridDimensions:Point):String
