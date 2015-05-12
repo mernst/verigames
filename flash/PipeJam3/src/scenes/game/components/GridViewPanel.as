@@ -1,5 +1,6 @@
 package scenes.game.components
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
@@ -23,7 +24,6 @@ package scenes.game.components
 	
 	import display.NineSliceButton;
 	import display.ToolTipText;
-	import hints.HintController;
 	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -36,6 +36,8 @@ package scenes.game.components
 	import events.UndoEvent;
 	
 	import feathers.display.TiledImage;
+	
+	import hints.HintController;
 	
 	import networking.TutorialController;
 	
@@ -57,6 +59,7 @@ package scenes.game.components
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
+	import starling.display.Stage;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
@@ -160,7 +163,7 @@ package scenes.game.components
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		private static var m_gridTexture:Texture;
-		
+		private var contentChanged:Boolean = true;
 		private var m_gridTileImg:TiledImage;
 		private var m_gridContainer:Sprite;
 		private var m_zoomPanTimer:Timer;
@@ -853,6 +856,7 @@ package scenes.game.components
 			}
 		}
 		
+		
 		private function showZoomPanGrid():void
 		{
 			if (!m_gridTexture) m_gridTexture = AssetInterface.getTexture("Game", "GridClass");
@@ -861,6 +865,9 @@ package scenes.game.components
 			{
 				m_gridContainer = new Sprite();
 				m_gridContainer.addChild(m_gridTileImg);
+				createGridImage();
+				m_gridContainer.addChild(gridImage);
+
 			}
 			if (!isGridUp()) // if not showing grid, show now and start the timer
 			{
@@ -874,12 +881,54 @@ package scenes.game.components
 				m_gridContainer.scaleY = content.scaleY;
 				m_gridContainer.x = content.x;
 				m_gridContainer.y = content.y;
+				createGridImage();
+				m_gridContainer.addChild(gridImage);
+				
 				addChildAt(m_gridContainer, getChildIndex(content) + 1);
 				if (!m_zoomPanTimer) m_zoomPanTimer = new Timer(ZOOM_PAN_TIME_SEC * 1000.0, 1);
 				m_zoomPanTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hideZoomPanGridAndApplyChanges);
 			}
-			m_zoomPanTimer.reset(); // reset the timer (even if grid was already being shown)
-			m_zoomPanTimer.start();
+
+			if (m_zoomPanTimer)
+			{
+				m_zoomPanTimer.reset(); // reset the timer (even if grid was already being shown)
+				m_zoomPanTimer.start();
+			}
+		}
+		
+		protected var gridImage:Image;
+		protected var gridTexture:Texture;
+		protected function createGridImage():void
+		{
+			if(gridImage && gridImage.parent)
+			{
+				gridImage.removeFromParent(true);
+			}
+			if(gridTexture)
+				gridTexture.dispose();
+			 
+			var stage:Stage = Starling.current.stage;
+			var rs:RenderSupport = new RenderSupport();
+			rs.clear();
+			
+			var cornerPt:Point = content.globalToLocal(new Point());
+			
+			rs.setOrthographicProjection(0, 0, clipRect.width*2, clipRect.height*2);
+			// .91 is an experential constant, that works, but I don't know why...
+			rs.scaleMatrix(.91, 1);
+			render(rs, 1.0);
+			rs.finishQuadBatch();
+			var outBmp:BitmapData = new BitmapData(clipRect.width, clipRect.height, true);
+			Starling.context.drawToBitmapData(outBmp);
+			var bitmap:Bitmap=new Bitmap(outBmp);
+			gridTexture = Texture.fromBitmap(bitmap);
+			outBmp.dispose();
+			gridImage = new Image(gridTexture);
+			gridImage.scaleX = 1/content.scaleX;
+			gridImage.scaleY = 1/content.scaleY;
+			gridImage.x = cornerPt.x;
+			gridImage.y = cornerPt.y;
+			gridImage.alpha = .8;
 		}
 		
 		private function hideZoomPanGridAndApplyChanges(evt:TimerEvent):void
