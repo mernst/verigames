@@ -914,7 +914,7 @@ package scenes.game.components
 			var cornerPt:Point = content.globalToLocal(new Point());
 			
 			rs.setOrthographicProjection(0, 0, clipRect.width*2, clipRect.height*2);
-			// .91 is an experential constant, that works, but I don't know why...
+			// .91 is an experential constant that works, but I don't know why...
 			rs.scaleMatrix(.91, 1);
 			render(rs, 1.0);
 			rs.finishQuadBatch();

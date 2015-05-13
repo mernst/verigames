@@ -25,18 +25,6 @@ package scenes.game.display
 			graphConstraintSide = _graphConstraintSide;
 		}
 		
-		public override function select():void
-		{
-			super.select();
-			setDirty();
-		}
-		
-		public override function unselect():void
-		{
-			super.unselect();
-			setDirty();
-		}
-		
 		public override function createSkin():void
 		{
 			if (skin == null) skin = NodeSkin.getNextSkin();
@@ -97,17 +85,11 @@ package scenes.game.display
 		}
 		
 		// TODO: move to VariableNode
-		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
+		public override function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph):void
 		{
 			super.updateSelectionAssignment(_isWide, levelGraph);
-			setDirty(setEdgesDirty);
 			var constraintVar:ConstraintVar = levelGraph.variableDict[id];
 			if (constraintVar.getProps().hasProp(PropDictionary.PROP_NARROW) == _isWide) constraintVar.setProp(PropDictionary.PROP_NARROW, !_isWide);
-		}
-		
-		public function setDirty(dirtyEdges:Boolean = false):void
-		{
-			super.setEdgesDirty(dirtyEdges);
 		}
 	}
 }

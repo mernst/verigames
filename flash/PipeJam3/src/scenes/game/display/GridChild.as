@@ -74,19 +74,6 @@ package scenes.game.display
 			isSelected = false;
 		}
 		
-		public function setEdgesDirty(dirtyEdges:Boolean = false, flashChange:Boolean = false):void
-		{
-			if(dirtyEdges)
-			{
-				for each(var gameEdgeID:String in connectedEdgeIds)
-				{
-					// TODO: Circular dependency
-					var edgeObj:Edge = World.m_world.active_level.edgeLayoutObjs[gameEdgeID];
-					if (edgeObj) edgeObj.isDirty = true;
-				}
-			}
-		}
-		
 		public function draw():void
 		{
 			// implemented by children
@@ -102,7 +89,7 @@ package scenes.game.display
 			return false; // implemented by children
 		}
 		
-		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph, setEdgesDirty:Boolean = false):void
+		public function updateSelectionAssignment(_isWide:Boolean, levelGraph:ConstraintGraph):void
 		{
 			isNarrow = !_isWide;
 		}

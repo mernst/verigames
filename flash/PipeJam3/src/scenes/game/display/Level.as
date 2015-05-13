@@ -292,7 +292,6 @@ package scenes.game.display
 			var gameNode:Node = nodeLayoutObjs[graphVar.id] as Node;
 			if (gameNode && gameNode.isNarrow == assignmentIsWide) {
 				gameNode.isNarrow = !assignmentIsWide;
-				gameNode.setDirty(true);
 			}
 			return assignmentIsWide;
 		}
@@ -500,8 +499,9 @@ package scenes.game.display
 						}
 						if (edge.skin)
 						{
+							trace("nodeID", nodeToDraw.id);
 							if (alreadyOnScreen) edge.updateEdge();
-							adjustEdgeContainer(edge);
+							adjustEdgeContainer(edge, true);
 							touchedEdgeLayer = true;
 						}
 						
@@ -512,6 +512,12 @@ package scenes.game.display
 					nodeToDraw.skin.removeFromParent();
 				}
 				nodeToDraw.createSkin();
+				for each(var gameEdgeID:String in nodeToDraw.connectedEdgeIds)
+				{
+					var edgeObj:Edge = edgeLayoutObjs[gameEdgeID];
+					if (edgeObj) edgeObj.isDirty = true;
+				}
+				
 				if (nodeToDraw.skin != null)
 				{
 					m_nodeOnScreenDict[nodeToDraw.id] = true;
@@ -600,12 +606,12 @@ package scenes.game.display
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
 		}
 		
-		private function adjustEdgeContainer(edge:Edge):void
+		private function adjustEdgeContainer(edge:Edge, forceDrawing:Boolean = false):void
 		{
 			if (edge.skin == null) return;
 			var fromOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.fromNode.id) || m_nodesToDraw.hasOwnProperty(edge.fromNode.id));
 			var toOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.toNode.id) || m_nodesToDraw.hasOwnProperty(edge.toNode.id));
-			if (fromOnscreen && toOnscreen)
+			if (fromOnscreen && toOnscreen || forceDrawing)
 			{
 				if (edge.skin.parent != m_edgesLayer) m_edgesLayer.addChildAt(edge.skin, 0);
 			}
@@ -1649,8 +1655,7 @@ package scenes.game.display
 						}
 						if (node.skin != null)
 						{
-							node.setDirty(true);
-						m_nodesToDraw[node.id] = node;
+							m_nodesToDraw[node.id] = node;
 						}
 						if(constraintVar != null) 
 							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
