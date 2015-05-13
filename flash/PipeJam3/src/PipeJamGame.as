@@ -98,7 +98,7 @@ package
 		
 		private function handleSoundButtonParentEvent(event:starling.events.Event):void
 		{
-			var _parent = event.data as Sprite;
+			var _parent:Sprite = event.data as Sprite;
 			
 			//have we been disposed? recreate if needed
 			if(!m_sfxButton.hasEventListener(TouchEvent.TOUCH))

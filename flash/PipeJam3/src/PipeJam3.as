@@ -66,7 +66,7 @@ package
 		public static const SELECT_ONLY_VARIABLES:Boolean = true;
 
 		public static var logging:LoggingServerInterface;
-		
+		public static const loggingKey:String = LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var isFullScreen:Boolean = false;
 
@@ -82,7 +82,7 @@ package
 			
 			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 
 			{
-				logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage, "", REPLAY_DQID != null);
+				logging = new LoggingServerInterface(loggingKey, stage, "", REPLAY_DQID != null);
 				if (REPLAY_DQID) {
 					ReplayController.getInstance().loadQuestData(REPLAY_DQID, logging.cgsServer, onReplayQuestDataLoaded);
 				}

@@ -4,12 +4,6 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
-	import events.MenuEvent;
-	
-	import scenes.Scene;
-	
-	import server.LoggingServerInterface;
-	
 	import utils.XMath;
 
 	//the steps are: 
@@ -104,6 +98,7 @@ package networking
 					playerID = jsonResponseObj.userId;
 					playerInfoQueue.push(playerID);
 					getPlayerInfo();
+					PipeJam3.logging.addPLayerID(playerID);
 					Achievements.checkForFinishedTutorialAchievement();
 					Achievements.getAchievementsEarnedForPlayer();
 				}
