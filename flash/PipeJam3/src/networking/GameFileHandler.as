@@ -170,7 +170,6 @@ package networking
 			fileHandler.m_levelFilesString = _levelFilesString;
 			fileHandler.saveLevel(saveType);
 			GameFileHandler.reportScore();
-			World.m_world.dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES, null));
 		}	
 		
 		static public function reportScore():void
@@ -443,10 +442,10 @@ package networking
 		public function saveLevel(saveType:String):void
 		{
 			if(PipeJam3.RELEASE_BUILD)
-				sendMessage(SAVE_LEVEL, onLevelSubmitted, saveType, m_levelFilesString);
+				sendMessage(SAVE_LEVEL, onLevelSaved, saveType, m_levelFilesString);
 		}
 		
-		public function onLevelSubmitted(result:int, e:flash.events.Event):void
+		public function onLevelSaved(result:int, e:flash.events.Event):void
 		{
 			World.m_world.dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES,null));
 		}

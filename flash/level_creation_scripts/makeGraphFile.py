@@ -86,10 +86,10 @@ def convertWCNFFile(infileName, outfileName):
 ### Command line interface ###
 if __name__ == "__main__":
 	if len(sys.argv) != 3:
-		print ('\n\nUsage: %s input_file [output_file]\n\n'
+		print ('\n\nUsage: %s input_file output_file\n\n'
 		'  input_file: name of INPUT constraint .json to be laid out,\n'
 		'    omitting ".json" extension\n\n'
-		'  output_file: (optional) OUTPUT (Constraints/Layout) .json \n'
+		'  output_file:  OUTPUT (Constraints/Layout) .json \n'
 		'    file name prefix, if none provided use input_file name'
 		'\n' % sys.argv[0])
 		quit()

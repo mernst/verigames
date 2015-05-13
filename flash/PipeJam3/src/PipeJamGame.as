@@ -24,6 +24,7 @@ package
 	import events.NavigationEvent;
 	
 	import networking.GameFileHandler;
+	import networking.HTTPCookies;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
@@ -35,6 +36,7 @@ package
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.events.TouchEvent;
 	
 	import utils.XSprite;
 	
@@ -96,14 +98,19 @@ package
 		
 		private function handleSoundButtonParentEvent(event:starling.events.Event):void
 		{
-			setSoundButtonParent(event.data as Sprite);
-		}
-		
-		public function setSoundButtonParent(_parent:Sprite):void
-		{
+			var _parent:Sprite = event.data as Sprite;
+			
+			//have we been disposed? recreate if needed
+			if(!m_sfxButton.hasEventListener(TouchEvent.TOUCH))
+			{
+				m_sfxButton = new SoundButton();
+				XSprite.setupDisplayObject(m_sfxButton, 8, Constants.GameHeight - 20, 12.5);
+				AudioManager.getInstance().setAllAudioButton(m_sfxButton, updateSfxState);
+			}
 			var localPoint:Point = _parent.globalToLocal(soundButtonGlobalCoords);
 			m_sfxButton.x = localPoint.x;
 			m_sfxButton.y = localPoint.y;
+			
 			_parent.addChild(m_sfxButton);
 		}
 		
@@ -293,14 +300,6 @@ package
 					//var reply:String = ExternalInterface.call("navTo", URLBASE + "browsing/card.php?id=" + quiz_card_asked + "&topic=" + TOPIC_NUM);
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
-			}
-		}
-		
-		public function resetSoundButtonParent():void
-		{
-			if(World.m_world)
-			{
-				setSoundButtonParent(World.m_world.sideControlPanel);
 			}
 		}
 		

@@ -4,12 +4,6 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
-	import events.MenuEvent;
-	
-	import scenes.Scene;
-	
-	import server.LoggingServerInterface;
-	
 	import utils.XMath;
 
 	//the steps are: 
@@ -79,9 +73,9 @@ package networking
 				var response:String = e.target.data;
 				var jsonResponseObj:Object = JSON.parse(response);
 				
-				if(jsonResponseObj.access_token != null)
+				if(jsonResponseObj.response != null)
 				{
-					accessToken = jsonResponseObj.access_token;
+					accessToken = jsonResponseObj.response;
 					getCurrentPlayerID(accessToken);
 				}
 			}
@@ -104,6 +98,7 @@ package networking
 					playerID = jsonResponseObj.userId;
 					playerInfoQueue.push(playerID);
 					getPlayerInfo();
+					PipeJam3.logging.addPLayerID(playerID);
 					Achievements.checkForFinishedTutorialAchievement();
 					Achievements.getAchievementsEarnedForPlayer();
 				}
@@ -169,8 +164,8 @@ package networking
 			var url:String = null;
 			switch(type)
 			{
-				case GET_ACCESS_TOKEN:
-					url = NetworkConnection.productionInterop + "?function=getAccessToken&data_id='/token'&data2='" + data +"'";
+				case GET_ACCESS_TOKEN: //don't call the function 'getAccessToken,, as that's too explicit
+					url = NetworkConnection.productionInterop + "?function=reportData&data_id='/token'&data2='" + data +"'";
 					method = URLRequestMethod.GET; 
 					break;
 				case GET_PLAYER_ID:

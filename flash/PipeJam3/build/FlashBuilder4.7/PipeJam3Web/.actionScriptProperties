@@ -5,7 +5,6 @@
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Dynamic-Texture-Atlas-Generator-master/dynamicTextureAtlasGenerator/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/FZip"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Hi-ReS-Stats-master/src"/>
-      <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/MochiAPI_v4_1_2"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/MouseWheelTrap"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/pixelmask-master-2e968c9fd2/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${ROOT}/external/Starling-Extension-Graphics-master-606972f814/extension/src"/>

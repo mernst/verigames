@@ -38,6 +38,14 @@ package display
 		protected var touchState:String;
 		protected override function onTouch(event:TouchEvent):void
 		{			
+			
+			if (event.getTouches(this, TouchPhase.HOVER).length) {
+				var touch:Touch = event.getTouches(this, TouchPhase.HOVER)[0];
+				showToolTipDisplay(touch);
+			} else {
+				hideToolTipDisplay();
+			}
+			
 			var touches:Vector.<Touch> = event.touches;
 			if (touches.length == 0) {
 				return;

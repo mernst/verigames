@@ -38,12 +38,12 @@ package scenes.game.display
 			if(isClause && _hasError != _error)
 			{
 				_hasError = _error;
-				setDirty(true);
 			}			
 		}
 		
 		public override function createSkin():void
 		{
+			trace('create node skin', id);
 			if (skin == null) skin = NodeSkin.getNextSkin();
 			if (skin != null)
 			{
@@ -62,8 +62,6 @@ package scenes.game.display
 				backgroundSkin.x = centerPoint.x;
 				backgroundSkin.y = centerPoint.y;
 			}
-			
-			setEdgesDirty(true);
 		}
 		
 		public override function setupSkin():void

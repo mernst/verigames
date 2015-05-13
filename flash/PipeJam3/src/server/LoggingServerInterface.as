@@ -63,6 +63,11 @@ package server
 			m_cgsServer.setup(m_props);
 		}
 		
+		public function addPLayerID(playerID:String):void
+		{
+			setupServer(PipeJam3.loggingKey, null, playerID);
+		}
+		
 		public function get cgsServer():CGSServer { return m_cgsServer; }
 		
 		private function onServerInit(failed:Boolean):void

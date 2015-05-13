@@ -340,35 +340,65 @@ package scenes.game.display
 		
 		public function getMaxSelectableWidgets():int
 		{
-			switch (m_tutorialTag) {
-				case "001":
-				case "002":
-				case "01":
-				case "004":
-				case "02":
-					return 10;
-				case "03":
-				case "04":
-					return 50;
-				case "1":
-					return 100;
-				case "2":
-					return 150;
-				case "3":
-				case "4":
-				case "5":
-					return 225;
-				case "6":
-				case "7":
-				case "8":
-					return 350;
-				case "10":
-					return 400;
-				case "12":
-					return 1000;
-				case "13":
-				case "14":
-					return 2000;
+			if (PipeJam3.SELECT_ONLY_VARIABLES) {
+				switch (m_tutorialTag) {
+					case "001":
+					case "002":
+						return 2;
+					case "01":
+					case "004":
+					case "02":
+						return 5;
+					case "03":
+					case "04":
+						return 20;
+					case "1":
+						return 30;
+					case "2":
+						return 50;
+					case "3":
+					case "4":
+					case "5":
+						return 75;
+					case "6":
+					case "7":
+					case "8":
+						return 100;
+					case "10":
+						return 125;
+				}
+				return 250;
+			} else {
+				switch (m_tutorialTag) {
+					case "001":
+					case "002":
+					case "01":
+					case "004":
+					case "02":
+						return 10;
+					case "03":
+					case "04":
+						return 50;
+					case "1":
+						return 100;
+					case "2":
+						return 150;
+					case "3":
+					case "4":
+					case "5":
+						return 225;
+					case "6":
+					case "7":
+					case "8":
+						return 350;
+					case "10":
+						return 400;
+					case "12":
+						return 1000;
+					case "13":
+					case "14":
+						return 2000;
+				}
 			}
 			return -1;
 		}

@@ -36,11 +36,6 @@
 			<locationURI>ROOT/external/Hi-ReS-Stats-master/src</locationURI>
 		</link>
 		<link>
-			<name>[source path] MochiAPI_v4_1_2</name>
-			<type>2</type>
-			<locationURI>ROOT/external/MochiAPI_v4_1_2</locationURI>
-		</link>
-		<link>
 			<name>[source path] MouseWheelTrap</name>
 			<type>2</type>
 			<locationURI>ROOT/external/MouseWheelTrap</locationURI>
