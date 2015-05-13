@@ -365,13 +365,9 @@ package scenes.game.display
 					case "8":
 						return 100;
 					case "10":
-						return 130;
-					case "12":
-						return 250;
-					case "13":
-					case "14":
-						return 400;
+						return 125;
 				}
+				return 250;
 			} else {
 				switch (m_tutorialTag) {
 					case "001":

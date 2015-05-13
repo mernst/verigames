@@ -1070,12 +1070,19 @@ package scenes.game.display
 		{
 			if (tutorialManager != null)
 			{
-				var num:int = tutorialManager.getMaxSelectableWidgets();
-				return Math.min(m_numNodes, num);
+				return tutorialManager.getMaxSelectableWidgets();
 			}
 			else
-				//get the min of total number of node, or 1000
-				return Math.min(m_numNodes, 1000);
+			{
+				if (PipeJam3.SELECT_ONLY_VARIABLES)
+				{
+					return 250;
+				}
+				else
+				{
+					return 1000;
+				}
+			}
 		}
 		
 		public function getTargetScore():int
