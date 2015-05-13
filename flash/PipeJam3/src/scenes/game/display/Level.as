@@ -1313,12 +1313,16 @@ package scenes.game.display
 				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_PAINT_AUTOSOLVE, details, getTimeMs());
 			}
 			
-			createConstraintsForClauses(); 
+			if (PipeJam3.SELECT_ONLY_VARIABLES) {
+				createConstriantsBasedOnVariables();
+			} else {
+				createConstraintsForClauses();
 
-			findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
+				findIsolatedSelectedVars(); //handle one-offs so something gets done in minimal cases
 			
-			if(extendSolver)
-				fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
+				if(extendSolver)
+					fixEdgeVarValues(); //find nodes just off selection map, and fix their values so they don't change
+			}
 
 			if(constraintArray.length > 0)
 			{
@@ -1339,9 +1343,123 @@ package scenes.game.display
 				timer.start();
 			}
 			else //just end
+			{
 				doneCallback("");
+			}
 		}
-		
+
+		private function createConstriantsBasedOnVariables():void
+		{
+			var node:Node, edge:Edge, toNode:Node, fromNode:Node;
+			
+			// start variable nodes animating
+			for each(node in selectedNodes)
+			{
+				if (node.isClause) {
+					continue;
+				}
+				
+				node.animating = true;
+				m_solvingNodesToAnimate[node.id] = node;
+			}
+
+			// find all the possibly relevant clauses
+			var selectedNodesDict:Dictionary = new Dictionary;
+			var connectedClausesDict:Dictionary = new Dictionary;
+			var gameEdgeId:String
+			for each(node in selectedNodes)
+			{
+				if (node.isClause) {
+					continue;
+				}
+				
+				// remember that this node was selected
+				selectedNodesDict[node.id] = node;
+				
+				// remember all the clauses connected to this node
+				for each(gameEdgeId in node.connectedEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					toNode = edge.toNode;
+					
+					connectedClausesDict[toNode.id] = toNode;
+				}
+			}
+			
+			// now go through all those clauses
+			for each (node in connectedClausesDict)
+			{
+				// check if this clause is satisfied by some variable that is not being optimized
+				var clauseConstSat:Boolean = false;
+				for each(gameEdgeId in node.connectedEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					fromNode = edge.fromNode;
+				
+					// is this variable a constant?
+					if (selectedNodesDict[fromNode.id] == null)
+					{
+						// does it satisfy the clause?
+						var wantValue:Boolean = (gameEdgeId.indexOf('c') == 0);
+						var hasValue:Boolean = (!nodeLayoutObjs[edge.fromNode.id].isNarrow);
+						if (wantValue == hasValue)
+						{
+							clauseConstSat = true;
+						}
+					}
+				}
+				
+				// this clause is always satisfied so we don't need to optimize it
+				if (clauseConstSat) {
+					continue;
+				}
+				
+				
+				// now make the clause array
+				var clauseArray:Array = new Array();
+				clauseArray.push(CONFLICT_CONSTRAINT_VALUE);
+				selectedConstraintValue += CONFLICT_CONSTRAINT_VALUE;
+
+				// find all variables connected to the constraint, and add them to the array
+				for each(gameEdgeId in node.connectedEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					fromNode = edge.fromNode;
+					
+					// is this variable a constant?
+					if (selectedNodesDict[fromNode.id] == null)
+					{
+						// then skip
+						continue;
+					}
+
+					// get the solver id for this variable
+					var constraintID:int;
+					if (nodeIDToConstraintsTwoWayMap[fromNode.id] == null)
+					{
+						nodeIDToConstraintsTwoWayMap[fromNode.id] = counter;
+						nodeIDToConstraintsTwoWayMap[counter] = fromNode;
+						constraintID = counter;
+						counter++;
+					}
+					else
+					{
+						constraintID = nodeIDToConstraintsTwoWayMap[fromNode.id];
+					}
+						
+					//if the constraint starts from the clause, it's a positive var, else it's negative.
+					if(gameEdgeId.indexOf('c') == 0)
+						clauseArray.push(constraintID);
+					else
+						clauseArray.push(-constraintID);
+					
+				}
+				
+				constraintArray.push(clauseArray);
+			}
+		}	
+				
+
 		private function createConstraintsForClauses():void
 		{
 			for each(var node:Node in selectedNodes)
@@ -1720,6 +1838,11 @@ package scenes.game.display
 						{
 							trace("WARNING! Node id not found: " + nodeId);
 							continue;
+						}
+						if (PipeJam3.SELECT_ONLY_VARIABLES) {
+							if (node.isClause) {
+								continue;
+							}
 						}
 						var diffX:Number = localPt.x - node.centerPoint.x;
 						//trace("node.centerPoint: ", node.centerPoint);
