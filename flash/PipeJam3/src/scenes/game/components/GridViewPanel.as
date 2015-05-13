@@ -410,11 +410,8 @@ package scenes.game.components
 			if (m_nextPaintbrushLocationUpdated && m_nextPaintbrushLocation) {
 				
 				m_paintBrush.x = m_nextPaintbrushLocation.x;
-				m_paintBrush.y =  m_nextPaintbrushLocation.y; 
-				m_paintBrushSelectionCountSprite.x = m_nextPaintbrushLocation.x - m_paintBrush.width/4 - 5;
-				m_paintBrushSelectionCountSprite.y =  m_nextPaintbrushLocation.y + m_paintBrush.height/4 + 3; 
-				m_paintBrushTotalSelectionLimitSprite.x = m_nextPaintbrushLocation.x + m_paintBrush.width/4 + 2;
-				m_paintBrushTotalSelectionLimitSprite.y =  m_nextPaintbrushLocation.y - m_paintBrush.height/4; 
+				m_paintBrush.y = m_nextPaintbrushLocation.y; 
+				updatePaintBrushSubSprites();
 				var numSelected:int = m_currentLevel.selectedNodes.length;
 				var numTotal:int = m_currentLevel.m_numNodes;
 				var maxSelectable:int = m_currentLevel.getMaxSelectableWidgets();
@@ -1526,6 +1523,14 @@ package scenes.game.components
 			installPaintBrush(currentVisibility);
 		}
 		
+		private function updatePaintBrushSubSprites():void
+		{
+			m_paintBrushSelectionCountSprite.x = m_paintBrush.x - m_paintBrush.width/4 - 5;
+			m_paintBrushSelectionCountSprite.y = m_paintBrush.y + m_paintBrush.height/4 + 3; 
+			m_paintBrushTotalSelectionLimitSprite.x = m_paintBrush.x + m_paintBrush.width/4 + 2;
+			m_paintBrushTotalSelectionLimitSprite.y = m_paintBrush.y - m_paintBrush.height/4; 
+		}
+		
 		public function installPaintBrush(currentVisibility:Boolean):void
 		{
 			if (!parent) return;
@@ -1544,7 +1549,9 @@ package scenes.game.components
 		
 		private function setPaintBrushSize(size:int):void
 		{
-			m_paintBrush.scaleX = m_paintBrush.scaleY = size * .20;
+			// size of 3 is original size
+			m_paintBrush.scaleX = m_paintBrush.scaleY = size * 0.33333 * 0.5;
+			updatePaintBrushSubSprites();
 		}
 		
 		
