@@ -62,7 +62,9 @@ package
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
 		public static const DISABLE_FILTERS:Boolean = true;
-		
+
+		public static const SELECT_ONLY_VARIABLES:Boolean = true;
+
 		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
