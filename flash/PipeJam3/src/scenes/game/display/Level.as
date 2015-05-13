@@ -442,15 +442,10 @@ package scenes.game.display
 			var touchedNodeLayer:Boolean = false;
 			var touchedConflictLayer:Boolean = false;
 			
-			var nodeToRemove:Node = popNode(m_nodesToRemove);
-			while (nodeToRemove != null)
+			var nodeToRemove:Node;
+			//remove node now, edges later
+			for each (nodeToRemove in m_nodesToRemove)
 			{
-				for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
-				{
-					edge = edgeLayoutObjs[gameEdgeId];
-					adjustEdgeContainer(edge);
-					touchedEdgeLayer = true;
-				}
 				if (nodeToRemove.skin != null)
 				{
 					nodeToRemove.skin.removeFromParent(true);
@@ -468,7 +463,6 @@ package scenes.game.display
 				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) delete m_nodeOnScreenDict[nodeToRemove.id];
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
-				nodeToRemove = popNode(m_nodesToRemove);
 			}
 			
 			var nodeToDraw:Node = popNode(m_nodesToDraw);
@@ -480,10 +474,8 @@ package scenes.game.display
 					nodeToDraw = popNode(m_nodesToDraw);
 					continue;
 				}
-				// At this time only VAR changes affect the look of an edge,
-				// so draw all edges when clauses are redrawn and
-				// ignore var nodes
-				if (!nodeToDraw.isClause)
+				// This breaks initial drawing
+			//	if (!nodeToDraw.isClause)
 				{
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
@@ -543,6 +535,19 @@ package scenes.game.display
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 				nodeToDraw = popNode(m_nodesToDraw);
+			}
+			
+			//remove old edges last, since we need node out of nodesToDraw and m_nodeOnScreenDict arrays
+			var nodeToRemove1:Node = popNode(m_nodesToRemove);
+			while (nodeToRemove1 != null)
+			{
+				for each(gameEdgeId in nodeToRemove1.connectedEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					adjustEdgeContainer(edge);
+					touchedEdgeLayer = true;
+				}
+				nodeToRemove1 = popNode(m_nodesToRemove);
 			}
 			
 			if (nodesProcessed <= ITEMS_PER_FRAME) // enqueue animations only once all other nodes have been drawn/removed
