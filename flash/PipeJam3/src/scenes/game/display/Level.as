@@ -120,6 +120,8 @@ package scenes.game.display
 		public var levelLayoutScale:Number = 1.0;
 		private var m_nodeAnimationLayer:Sprite;
 		private var m_nodeLayer:Sprite;
+		private var m_nodeClauseSubLayer:Sprite;
+		private var m_nodeVarSubLayer:Sprite;
 		private var m_edgesLayer:Sprite;
 		private var m_conflictAnimationLayer:Sprite;
 		private var m_conflictsLayer:Sprite;
@@ -421,6 +423,10 @@ package scenes.game.display
 				addChild(m_edgesLayer);
 				
 				m_nodeLayer = new Sprite();
+				m_nodeClauseSubLayer = new Sprite();
+				m_nodeLayer.addChild(m_nodeClauseSubLayer);
+				m_nodeVarSubLayer = new Sprite();
+				m_nodeLayer.addChild(m_nodeVarSubLayer);
 				m_nodeLayer.flatten();
 				addChild(m_nodeLayer);
 				
@@ -497,7 +503,9 @@ package scenes.game.display
 						
 					}
 				}
-				if (nodeToDraw.skin != null && nodeToDraw.skin.parent != m_nodeLayer)
+				
+				var desiredLayer:Sprite = nodeToDraw.isClause ? m_nodeClauseSubLayer : m_nodeVarSubLayer;
+				if (nodeToDraw.skin != null && nodeToDraw.skin.parent != desiredLayer)
 				{
 					nodeToDraw.skin.removeFromParent();
 				}
@@ -509,9 +517,9 @@ package scenes.game.display
 					{
 						nodeToDraw.skin.scale(0.5 / parent.scaleX);
 					}
-					if (nodeToDraw.skin.parent != m_nodeLayer)
+					if (nodeToDraw.skin.parent != desiredLayer)
 					{
-						m_nodeLayer.addChild(nodeToDraw.skin);
+						desiredLayer.addChild(nodeToDraw.skin);
 					}
 					touchedNodeLayer = true;
 					if (nodeToDraw.backgroundSkin)
