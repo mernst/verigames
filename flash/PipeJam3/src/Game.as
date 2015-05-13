@@ -1,15 +1,16 @@
 package 
 {
-    import assets.AssetInterface;
-	import starling.display.Quad;
-    
-    import events.NavigationEvent;
-    
     import flash.external.ExternalInterface;
     import flash.ui.Keyboard;
     import flash.utils.Dictionary;
     import flash.utils.getDefinitionByName;
     import flash.utils.getQualifiedClassName;
+    
+    import assets.AssetInterface;
+    
+    import events.NavigationEvent;
+    
+    import networking.HTTPCookies;
     
     import scenes.BaseComponent;
     import scenes.Scene;
@@ -19,6 +20,7 @@ package
     import starling.display.Button;
     import starling.display.Image;
     import starling.display.MovieClip;
+    import starling.display.Quad;
     import starling.display.Sprite;
     import starling.events.Event;
     import starling.text.TextField;
@@ -147,6 +149,8 @@ package
         protected function showScene(name:String):void
         {
             if (mCurrentScene) return;
+			
+			clearHTMLScores();
             
 			mCurrentScene = sceneDictionary[name];
 			if(mCurrentScene == null)
@@ -195,6 +199,24 @@ package
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
 			}
+		}
+		
+		public function clearHTMLScores():void
+		{
+			var nonScoreObj:Object = new Object;
+			nonScoreObj['name'] = 'Not played yet';
+			nonScoreObj['score'] = "";
+			nonScoreObj['assignmentsID'] = "";
+			nonScoreObj['score_improvement'] = "";
+			nonScoreObj.activePlayer = 0;
+			
+			var scoreObjArray:Array = new Array;
+			scoreObjArray.push(nonScoreObj);
+			var scoreStr2:String = JSON.stringify(scoreObjArray);
+			HTTPCookies.addHighScores(scoreStr2);
+			scoreObjArray[0]['name'] = "";
+			var scoreStr3:String = JSON.stringify(scoreObjArray)
+			HTTPCookies.addScoreImprovementTotals(scoreStr3);
 		}
 		
     }

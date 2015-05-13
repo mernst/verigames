@@ -9,7 +9,6 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import system.VerigameServerConstants;
 	
 	import assets.AssetInterface;
 	
@@ -25,6 +24,9 @@ package scenes.game.display
 	
 	import deng.fzip.FZip;
 	
+	import dialogs.InfoDialog;
+	import dialogs.InfoDialogInfo;
+	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
 	import events.PropertyModeChangeEvent;
@@ -35,8 +37,10 @@ package scenes.game.display
 	import networking.PlayerValidation;
 	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.MiniMap;
+	import scenes.game.components.TutorialText;
 	import scenes.game.display.Node;
 	
 	import starling.animation.Transitions;
@@ -55,6 +59,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.MaxSatSolver;
+	import system.VerigameServerConstants;
 	
 	import utils.Base64Encoder;
 	import utils.PropDictionary;
@@ -98,7 +103,6 @@ package scenes.game.display
 		
 		public var m_numNodes:uint = 0;
 		public var nodeLayoutObjs:Dictionary = new Dictionary();
-		public var groupLayoutObjs:Dictionary = new Dictionary();
 		public var edgeLayoutObjs:Dictionary = new Dictionary();
 		
 		protected var m_hidingErrorText:Boolean = false;
@@ -116,6 +120,7 @@ package scenes.game.display
 		public var targetScoreReached:Boolean;
 		public var original_level_name:String;
 		
+		public var brushesToActivate:int;
 		public var currentGroupDepth:int = -1;
 		public var levelLayoutScale:Number = 1.0;
 		private var m_nodeAnimationLayer:Sprite;
@@ -193,16 +198,17 @@ package scenes.game.display
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
 				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
-				
-				//now check to see if we have a higher target
-				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
-					m_targetScore = PipeJamGame.levelInfo.target_score;
+				//now check to see if we have a higher target if not in tutorial
+				if(!PipeJamGameScene.inTutorial)
+				{
+					if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
+						m_targetScore = PipeJamGame.levelInfo.target_score;
+				}
 			}
 			else
 			{
 				m_targetScore = PipeJamGame.levelInfo.target_score;
 			}
-			
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			
@@ -288,7 +294,6 @@ package scenes.game.display
 			var gameNode:Node = nodeLayoutObjs[graphVar.id] as Node;
 			if (gameNode && gameNode.isNarrow == assignmentIsWide) {
 				gameNode.isNarrow = !assignmentIsWide;
-				gameNode.setDirty(true);
 			}
 			return assignmentIsWide;
 		}
@@ -326,7 +331,7 @@ package scenes.game.display
 		}
 		
 		//called on when GridViewPanel content is moving
-		public function updateLevelDisplay(viewRect:Rectangle = null):void
+		public function updateLevelDisplay(viewRect:Rectangle = null):int
 		{
 			var nGroups:int = (levelGraph.groupsArr ? levelGraph.groupsArr.length : 0);
 			var newGroupDepth:int = 0;
@@ -347,15 +352,17 @@ package scenes.game.display
 				}
 				trace("newGroupDepth: ", newGroupDepth);
 			}
+			
 			var candidatesToRemove:Dictionary = new Dictionary();
 			for (var nodeOnScreenId:String in m_nodeOnScreenDict) candidatesToRemove[nodeOnScreenId] = true;
 			
 			groupGrid = m_groupGrids[newGroupDepth];
 			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-			var maxX:int = GroupGrid.getGridX((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
+			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
 			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-			var maxY:int = GroupGrid.getGridY((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
 			var count:int = 0;
+
 			for (i = minX; i <= maxX; i++)
 			{
 				for (j = minY; j <= maxY; j++)
@@ -397,6 +404,8 @@ package scenes.game.display
 				draw(); // for relatively small tutorials, add items right away
 			}
 			currentGroupDepth = newGroupDepth;
+			
+			return newGroupDepth;
 		}
 		
 		private var m_initLayers:Boolean = false;
@@ -439,15 +448,10 @@ package scenes.game.display
 			var touchedNodeLayer:Boolean = false;
 			var touchedConflictLayer:Boolean = false;
 			
-			var nodeToRemove:Node = popNode(m_nodesToRemove);
-			while (nodeToRemove != null)
+			var nodeToRemove:Node;
+			//remove node now, edges later
+			for each (nodeToRemove in m_nodesToRemove)
 			{
-				for each(gameEdgeId in nodeToRemove.connectedEdgeIds)
-				{
-					edge = edgeLayoutObjs[gameEdgeId];
-					adjustEdgeContainer(edge);
-					touchedEdgeLayer = true;
-				}
 				if (nodeToRemove.skin != null)
 				{
 					nodeToRemove.skin.removeFromParent(true);
@@ -465,7 +469,6 @@ package scenes.game.display
 				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) delete m_nodeOnScreenDict[nodeToRemove.id];
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
-				nodeToRemove = popNode(m_nodesToRemove);
 			}
 			
 			var nodeToDraw:Node = popNode(m_nodesToDraw);
@@ -477,10 +480,8 @@ package scenes.game.display
 					nodeToDraw = popNode(m_nodesToDraw);
 					continue;
 				}
-				// At this time only VAR changes affect the look of an edge,
-				// so draw all edges when clauses are redrawn and
-				// ignore var nodes
-				if (!nodeToDraw.isClause)
+				// This breaks initial drawing
+			//	if (!nodeToDraw.isClause)
 				{
 					for each(gameEdgeId in nodeToDraw.connectedEdgeIds)
 					{
@@ -496,8 +497,9 @@ package scenes.game.display
 						}
 						if (edge.skin)
 						{
+							trace("nodeID", nodeToDraw.id);
 							if (alreadyOnScreen) edge.updateEdge();
-							adjustEdgeContainer(edge);
+							adjustEdgeContainer(edge, true);
 							touchedEdgeLayer = true;
 						}
 						
@@ -510,6 +512,12 @@ package scenes.game.display
 					nodeToDraw.skin.removeFromParent();
 				}
 				nodeToDraw.createSkin();
+				for each(var gameEdgeID:String in nodeToDraw.connectedEdgeIds)
+				{
+					var edgeObj:Edge = edgeLayoutObjs[gameEdgeID];
+					if (edgeObj) edgeObj.isDirty = true;
+				}
+				
 				if (nodeToDraw.skin != null)
 				{
 					m_nodeOnScreenDict[nodeToDraw.id] = true;
@@ -535,6 +543,19 @@ package scenes.game.display
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 				nodeToDraw = popNode(m_nodesToDraw);
+			}
+			
+			//remove old edges last, since we need node out of nodesToDraw and m_nodeOnScreenDict arrays
+			var nodeToRemove1:Node = popNode(m_nodesToRemove);
+			while (nodeToRemove1 != null)
+			{
+				for each(gameEdgeId in nodeToRemove1.connectedEdgeIds)
+				{
+					edge = edgeLayoutObjs[gameEdgeId];
+					adjustEdgeContainer(edge);
+					touchedEdgeLayer = true;
+				}
+				nodeToRemove1 = popNode(m_nodesToRemove);
 			}
 			
 			if (nodesProcessed <= ITEMS_PER_FRAME) // enqueue animations only once all other nodes have been drawn/removed
@@ -598,12 +619,12 @@ package scenes.game.display
 			if (touchedConflictLayer) m_conflictsLayer.flatten();
 		}
 		
-		private function adjustEdgeContainer(edge:Edge):void
+		private function adjustEdgeContainer(edge:Edge, forceDrawing:Boolean = false):void
 		{
 			if (edge.skin == null) return;
 			var fromOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.fromNode.id) || m_nodesToDraw.hasOwnProperty(edge.fromNode.id));
 			var toOnscreen:Boolean = (m_nodeOnScreenDict.hasOwnProperty(edge.toNode.id) || m_nodesToDraw.hasOwnProperty(edge.toNode.id));
-			if (fromOnscreen && toOnscreen)
+			if (fromOnscreen && toOnscreen || forceDrawing)
 			{
 				if (edge.skin.parent != m_edgesLayer) m_edgesLayer.addChildAt(edge.skin, 0);
 			}
@@ -657,7 +678,6 @@ package scenes.game.display
 		protected function loadLayout():void
 		{
 			nodeLayoutObjs = new Dictionary();
-			groupLayoutObjs = new Dictionary();
 			edgeLayoutObjs = new Dictionary();
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
@@ -685,6 +705,29 @@ package scenes.game.display
 					minY = Math.min(minY, layoutY);
 					maxX = Math.max(maxX, layoutX);
 					maxY = Math.max(maxY, layoutY);
+				}
+			}
+			
+			//check on brush specifications
+			var brushArr:Array = m_levelLayoutObj["layout"]["brushes"] as Array;
+			brushesToActivate = 0xffffff;
+			if (brushArr)
+			{
+				brushesToActivate = 0;
+				for each(var brush:String in brushArr)
+				{
+					switch(brush)
+					{
+						case 'wide':
+							brushesToActivate += TutorialLevelManager.WIDEN_BRUSH;
+							break;
+						case 'narrow':
+							brushesToActivate += TutorialLevelManager.NARROW_BRUSH;
+							break;
+						case 'auto':
+							brushesToActivate += TutorialLevelManager.SOLVER_BRUSH;
+							break;
+					}
 				}
 			}
 			
@@ -776,6 +819,9 @@ package scenes.game.display
 			addEventListener(SelectionEvent.COMPONENT_UNSELECTED, onComponentUnselection);
 			levelGraph.addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
 			levelGraph.addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			
+			addEventListener(TouchEvent.TOUCH, onTouch);
+			
 			m_levelStartTime = new Date().time;
 			
 			levelGraph.resetScoring();
@@ -889,20 +935,10 @@ package scenes.game.display
 			super.dispose();		
 		}
 		
-		override protected function onTouch(event:TouchEvent):void
-		{
-			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					// one finger touching -> move
-					var x:int = 3;
-				}
-			}
-		}
+
 		
 		//assume this only generates on toggle width events
-		public function onWidgetChange(evt:VarChangeEvent = null):void
+		public function onWidgetChange(evt:VarChangeEvent = null, reportScore:Boolean = false):void
 		{
 			//trace("Level: onWidgetChange");
 			if (evt && evt.graphVar) {
@@ -916,7 +952,7 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.afterScoreUpdate(levelGraph);
 				dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
 			}
-			onScoreChange(true);
+			onScoreChange(reportScore);
 		}
 		
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1176,7 +1212,7 @@ package scenes.game.display
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
 				if(levelGraph.oldScore != 0  && PlayerValidation.accessGranted())
-					dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+					dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)
 			dispatchEvent(new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, this, null));
@@ -1243,7 +1279,7 @@ package scenes.game.display
 				}
 			}
 			//update score
-			onWidgetChange();
+			onWidgetChange(null, true);
 			if (PipeJam3.logging && selectedNodes.length > 0)
 			{
 				var details:Object = new Object();
@@ -1757,8 +1793,7 @@ package scenes.game.display
 						}
 						if (node.skin != null)
 						{
-							node.setDirty(true);
-						m_nodesToDraw[node.id] = node;
+							m_nodesToDraw[node.id] = node;
 						}
 						if(constraintVar != null) 
 							constraintVar.setProp(PropDictionary.PROP_NARROW, node.isNarrow);
@@ -1796,8 +1831,11 @@ package scenes.game.display
 			onScoreChange(true);
 			drawNodesAfterSolving();
 			System.gc();
+			var scoreWentDown:Boolean = true;
+			if(levelGraph.oldScore <= levelGraph.currentScore)
+				scoreWentDown = false;
 			//do this twice, once to reset solver color, again after setting inSolver to false to reset selection color
-			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true, scoreWentDown));
 			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 		}
@@ -1881,6 +1919,24 @@ package scenes.game.display
 							selectedNodes.push(node);
 							m_nodesToDraw[node.id] = node;
 							selectionChanged = true;
+							
+							//select attached nodes?
+							if(node is ClauseNode)
+							{
+								for each(var edgeID:String in node.connectedEdgeIds)
+								{
+									var edge:Edge = this.edgeLayoutObjs[edgeID];
+									var connectedNode:Node = edge.fromNode;
+									if(m_nodesToDraw[connectedNode.id] == null)
+									{
+										connectedNode.select();
+										//trace("select " + node.id);
+										selectedNodes.push(connectedNode);
+										m_nodesToDraw[connectedNode.id] = connectedNode;
+									}
+								}
+							
+							}
 						}
 					}
 					if (selectedNodes.length >= MAX_SEL) break;
@@ -1980,6 +2036,16 @@ internal class GroupGrid
 	public static function getGridY(_y:Number,  gridDimensions:Point):int
 	{
 		return Math.max(0, Math.floor(_y / gridDimensions.y));
+	}
+	
+	public static function getGridXRight(_x:Number,  gridDimensions:Point):int
+	{
+		return Math.max(0, Math.ceil(_x / gridDimensions.x));
+	}
+	
+	public static function getGridYBottom(_y:Number,  gridDimensions:Point):int
+	{
+		return Math.max(0, Math.ceil(_y / gridDimensions.y));
 	}
 	
 	private static function _getGridKey(_x:Number, _y:Number, gridDimensions:Point):String
