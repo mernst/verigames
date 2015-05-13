@@ -8,18 +8,20 @@ if __name__ == "__main__":
         print usage
         quit()
     file_pref = sys.argv[1]
-
+    
+    node_min = int(raw_input('Enter minimum number of vars required to process level (or -1 to process all levels): '))
+    node_max = int(raw_input('Enter maximum number of vars required to process level (or -1 to process all levels): '))
+    group_min = int(raw_input('Enter minimum number of vars required to perform grouping on a level (or -1 to process all levels): '))
+    if node_max == -1:
+        node_max = sys.maxsize
+    
     constr_fn = '%s.json' % file_pref
     graph_fn = '%s.graph' % file_pref
     version = input_cnstr.run(constr_fn, graph_fn)
 
     graphs_fn = '%s.graphs' % file_pref
     connected.run(graph_fn, graphs_fn)
-
-    node_min = int(raw_input('Enter minimum number of vars required to process level (or -1 to process all levels): '))
-    node_max = int(raw_input('Enter maximum number of vars required to process level (or -1 to process all levels): '))
-    if node_max == -1:
-        node_max = sys.maxsize
+    
     dot_dirn = '%s_dot_files' % file_pref
     suf_i = 0
     while os.path.exists(dot_dirn):
@@ -30,7 +32,7 @@ if __name__ == "__main__":
     dot.run(graphs_fn, dot_dirn, node_min, node_max)
     
     groups_fn = '%s.groups' % file_pref
-    group.run(graphs_fn, groups_fn, node_min, node_max)
+    group.run(graphs_fn, groups_fn, group_min, node_max)
     
     # wcnf_dirn = '%s_wcnf_files' % file_pref
     # suf_i = 0

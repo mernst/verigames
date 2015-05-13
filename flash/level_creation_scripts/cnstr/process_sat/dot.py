@@ -12,31 +12,37 @@ def add_layout_to_graph(G, node_layout):
         if not layout_info:
             print 'Warning! No layout info found for node %s' % node_id_
             continue
-        node['x'] = layout_info[0]
-        node['y'] = layout_info[1]
-        min_x = G.graph.get('min_x', layout_info[0])
-        max_x = G.graph.get('max_x', layout_info[0])
-        min_y = G.graph.get('min_y', layout_info[1])
-        max_y = G.graph.get('max_y', layout_info[1])
-        if layout_info[0] < min_x:
-            G.graph['min_x'] = layout_info[0]
-        if layout_info[0] > max_x:
-            G.graph['max_x'] = layout_info[0]
-        if layout_info[1] < min_y:
-            G.graph['min_y'] = layout_info[1]
-        if layout_info[1] > max_y:
-            G.graph['max_y'] = layout_info[1]
-        
+        try:
+            this_x = float(layout_info[0])
+            this_y = float(layout_info[1])
+        except:
+            print 'Warning! Non-float x/y values found for node %s = (%s, %s)' % (node_id_, layout_info[0], layout_info[1])
+            continue
+        node['x'] = this_x
+        node['y'] = this_y
+        min_x = G.graph.get('min_x', this_x)
+        max_x = G.graph.get('max_x', this_x)
+        min_y = G.graph.get('min_y', this_y)
+        max_y = G.graph.get('max_y', this_y)
+        if this_x < min_x or G.graph.get('min_x') is None:
+            G.graph['min_x'] = this_x
+        if this_x > max_x or G.graph.get('max_x') is None:
+            G.graph['max_x'] = this_x
+        if this_y < min_y or G.graph.get('min_y') is None:
+            G.graph['min_y'] = this_y
+        if this_y > max_y or G.graph.get('max_y') is None:
+            G.graph['max_y'] = this_y
+    print 'Bounds: [%s, %s, %s, %s]' % (G.graph['min_x'], G.graph['min_y'], G.graph['max_x'], G.graph['max_y'])
 
 def layout_with_sfdp(dot_filename, Gs):
-    print 'Running dot -y -Kfdp -Tplain -o%s.out %s ...' % (dot_filename, dot_filename)
-    with os.popen('dot -y -Kfdp -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
+    print 'Running sfdp -y -Tplain -o%s.out %s ...' % (dot_filename, dot_filename)
+    with os.popen('sfdp -y -Tplain -o%s.out %s' % (dot_filename, dot_filename)) as sfdpcmd:
         _util.print_step('Laying out %s' % dot_filename)
         sfdpcmd.read()
     node_layout = {}
     with open('%s.out' % dot_filename) as dot_output:
         for line in dot_output:
-            data = line.split(' ')
+            data = line.split() # split whitespace
             if not data or len(data) < 4 or data[0] != 'node':
                 continue
             if node_layout.get(data[1]):
@@ -44,7 +50,7 @@ def layout_with_sfdp(dot_filename, Gs):
             try:
                 node_layout[data[1]] = [float(data[2]), float(data[3])]
             except Exception as e:
-                print 'Warning! Error parsing layout for %s in %s:\n\n%s' % (data[1], dot_filename, e)
+                print 'Warning! Error parsing layout for %s in %s.out:\n\n%s' % (data[1], dot_filename, e)
     for G in Gs:
         add_layout_to_graph(G, node_layout)
             
