@@ -1110,7 +1110,7 @@ package scenes.game.display
 			}
 			else
 			{
-				if (PipeJam3.SELECT_ONLY_VARIABLES)
+				if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC)
 				{
 					return 250;
 				}
@@ -1364,7 +1364,7 @@ package scenes.game.display
 				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_PAINT_AUTOSOLVE, details, getTimeMs());
 			}
 			
-			if (PipeJam3.SELECT_ONLY_VARIABLES) {
+			if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC) {
 				createConstriantsBasedOnVariables();
 			} else {
 				createConstraintsForClauses();
@@ -1892,11 +1892,12 @@ package scenes.game.display
 							trace("WARNING! Node id not found: " + nodeId);
 							continue;
 						}
-						if (PipeJam3.SELECT_ONLY_VARIABLES) {
-							if (node.isClause) {
-								continue;
-							}
+						
+						// early out if we're not going to select clause nodes
+						if (PipeJam3.SELECTION_STYLE == PipeJam3.SELECTION_STYLE_VAR_BY_VAR && node.isClause) {
+							continue;
 						}
+						
 						var diffX:Number = localPt.x - node.centerPoint.x;
 						//trace("node.centerPoint: ", node.centerPoint);
 						if (diffX > dX || -diffX > dX) continue;
@@ -1914,11 +1915,16 @@ package scenes.game.display
 							} else if (selectedNodes.length >= MAX_SEL) {
 								break; // done selecting
 							}
-							node.select();
-							//trace("select " + node.id);
-							selectedNodes.push(node);
-							m_nodesToDraw[node.id] = node;
-							selectionChanged = true;
+							
+							if (PipeJam3.SELECTION_STYLE == PipeJam3.SELECTION_STYLE_CLASSIC || !node.isClause) {
+								if (!node.isSelected) {
+									//trace("select direct " + node.id);
+									node.select();
+									selectedNodes.push(node);
+									m_nodesToDraw[node.id] = node;
+									selectionChanged = true;
+								}
+							}
 							
 							//select attached nodes?
 							if(node is ClauseNode)
@@ -1927,15 +1933,16 @@ package scenes.game.display
 								{
 									var edge:Edge = this.edgeLayoutObjs[edgeID];
 									var connectedNode:Node = edge.fromNode;
-									if(m_nodesToDraw[connectedNode.id] == null)
+									if(!connectedNode.isSelected)
 									{
+										//trace("select connect " + connectedNode.id);
 										connectedNode.select();
-										//trace("select " + node.id);
 										selectedNodes.push(connectedNode);
 										m_nodesToDraw[connectedNode.id] = connectedNode;
+										selectionChanged = true;
 									}
+									if (selectedNodes.length >= MAX_SEL) break;
 								}
-							
 							}
 						}
 					}
