@@ -340,7 +340,7 @@ package scenes.game.display
 		
 		public function getMaxSelectableWidgets():int
 		{
-			if (PipeJam3.SELECT_ONLY_VARIABLES) {
+			if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC) {
 				switch (m_tutorialTag) {
 					case "001":
 					case "002":

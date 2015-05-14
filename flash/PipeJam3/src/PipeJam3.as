@@ -63,7 +63,10 @@ package
 		
 		public static const DISABLE_FILTERS:Boolean = true;
 
-		public static const SELECT_ONLY_VARIABLES:Boolean = true;
+		public static const SELECTION_STYLE_CLASSIC:uint                = 0;
+		public static const SELECTION_STYLE_VAR_BY_VAR:uint             = 1;
+		public static const SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR:uint   = 2;
+		public static const SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 
 		public static var logging:LoggingServerInterface;
 		public static const loggingKey:String = LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;
