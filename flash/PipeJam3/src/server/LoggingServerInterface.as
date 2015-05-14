@@ -1,5 +1,6 @@
 package server
 {
+	import cgs.Cache.Cache;
 	import cgs.server.logging.CGSServer;
 	import cgs.server.logging.CGSServerConstants;
 	import cgs.server.logging.CGSServerProps;
@@ -13,12 +14,13 @@ package server
 	public class LoggingServerInterface
 	{
 		public static const SETUP_KEY_FRIENDS_AND_FAMILY_BETA:String = "SETUP_KEY_FRIENDS_AND_FAMILY_BETA";
-		
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
+		public static const CACHE_PREV_UID:String = "prev_uid"; // used to track play sessions before a player was logged in
 		
 		private var m_cgsServer:CGSServer;
 		private var m_props:CGSServerProps;
 		public var uid:String;
+		public var prevUid:String;
 		public var serverInitialized:Boolean = false;
 		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
 		public var saveCacheToServer:Boolean = false;
@@ -80,17 +82,30 @@ package server
 		{
 			trace("onUidSet uid:" + _uid + " failed:" + failed);
 			uid = _uid;
+			prevUid = Cache.getSave(CACHE_PREV_UID) as String;
+			if (!prevUid)
+			{
+				Cache.setSave(CACHE_PREV_UID, uid);
+			}
 		}
 		
 		public function logQuestStart(questId:int = VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, questDetails:Object = null):void
 		{
 			trace("Logging quest start, qid:" + questId);
+			if (prevUid != uid)
+			{
+				questDetails = add2det(questDetails, CACHE_PREV_UID, prevUid);
+			}
 			m_cgsServer.logQuestStart(questId, questDetails, onLogQuestStart);
 		}
 		
 		public function logQuestEnd(questId:int = VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, questDetails:Object = null):void
 		{
 			trace("Logging quest end, qid:" + questId);
+			if (prevUid != uid)
+			{
+				questDetails = add2det(questDetails, CACHE_PREV_UID, prevUid);
+			}
 			m_cgsServer.logQuestEnd(questId, questDetails);
 		}
 		
@@ -102,18 +117,31 @@ package server
 		public function logQuestAction(actionId:int, actionDetails:Object, levelTimeMs:Number):void
 		{
 			var clientAction:ClientAction = new ClientAction(actionId, levelTimeMs);
+			if (prevUid != uid)
+			{
+				actionDetails = add2det(actionDetails, CACHE_PREV_UID, prevUid);
+			}
 			clientAction.setDetail(actionDetails);
 			trace("logQuestAction actionId:" + actionId + " details:" + obj2str(actionDetails) + " levelTimeMs:" + levelTimeMs);
 			m_cgsServer.logQuestAction(clientAction);
 		}
 		
-		private static function obj2str(obj:Object):String {
+		private static function obj2str(obj:Object):String
+		{
 			var str:String = "{\n"
-			for (var key:String in obj) {
+			for (var key:String in obj)
+			{
 				str = str + key + ":" + obj[key] + "\n";
 			}
 			str = str + "}";
 			return str;
+		}
+		
+		private static function add2det(obj:Object, key:String, value:Object):Object
+		{
+			if (obj == null) obj = new Object();
+			obj[key] = value;
+			return obj;
 		}
 	}
 }
