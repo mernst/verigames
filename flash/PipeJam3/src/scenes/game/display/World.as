@@ -115,8 +115,8 @@ package scenes.game.display
 		
 		static public var altKeyDown:Boolean;
 		
-		public var updateTimer:Timer;
-
+		public var updateTimer1:Timer;
+		public var updateTimer2:Timer;
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
@@ -181,7 +181,7 @@ package scenes.game.display
 			m_initQueue.push(initScoring);
 			m_initQueue.push(initEventListeners);
 			m_initQueue.push(initMusic);
-			initUpdateTimer();
+			initUpdateTimers();
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -543,13 +543,18 @@ package scenes.game.display
 			//trace("Playing music...");
 		}
 		
-		private function initUpdateTimer():void {
+		private function initUpdateTimers():void {
 			//once every ten seconds, maybe?
 			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
 			{
-				updateTimer = new Timer(10000, 0);
-				updateTimer.addEventListener(TimerEvent.TIMER, updateHighScores);
-				updateTimer.start();
+				//start at 1 second to get quick initial info update into panel, then switch to 10 seconds afterwards
+				updateTimer1 = new Timer(1000, 9);
+				updateTimer1.addEventListener(TimerEvent.TIMER, updateHighScores);
+				updateTimer1.start();
+				
+				updateTimer2 = new Timer(10000, 0);
+				updateTimer2.addEventListener(TimerEvent.TIMER, updateHighScores);
+				updateTimer2.start();
 			}
 		}
 		
@@ -558,12 +563,14 @@ package scenes.game.display
 			dispatchEvent(new NavigationEvent(NavigationEvent.UPDATE_HIGH_SCORES, null));
 		}
 		
-		private function removeUpdateTimer():void
+		private function removeUpdateTimers():void
 		{
-			if(PipeJam3.RELEASE_BUILD) //don't annoy tim by having this update every 10 seconds
+			if(PipeJam3.RELEASE_BUILD) 
 			{
-				if(updateTimer)
-					updateTimer.stop();
+				if(updateTimer1)
+					updateTimer1.stop();
+				if(updateTimer2)
+					updateTimer2.stop();
 			}
 			
 		}
@@ -1178,7 +1185,7 @@ package scenes.game.display
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			
-			removeUpdateTimer();
+			removeUpdateTimers();
 			
 			if(active_level)
 				removeChild(active_level, true);
