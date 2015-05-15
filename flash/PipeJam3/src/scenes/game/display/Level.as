@@ -1933,7 +1933,7 @@ package scenes.game.display
 								{
 									var edge:Edge = this.edgeLayoutObjs[edgeID];
 									var connectedNode:Node = edge.fromNode;
-									if(!connectedNode.isSelected)
+									if(!connectedNode.isSelected && connectedNode.id in m_nodeOnScreenDict)
 									{
 										//trace("select connect " + connectedNode.id);
 										connectedNode.select();
