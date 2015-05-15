@@ -10,6 +10,7 @@ Create a level from a wcnf, cnf, or json file:
 	
 	From a level file (constraint of the type "c1 <= v1")
 		run ... (not finished...)
+
 Add a level to the database:
 	
 	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py

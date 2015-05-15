@@ -75,8 +75,7 @@ def addDirectoryToDB(indir, description_file):
 ### Command line interface ###
 if __name__ == "__main__":
 	if (len(sys.argv) < 3) or (len(sys.argv) > 3):
-		print ('\n\nUsage: %s input_file description_file\n\n  input_file: name of base json '
-			'file, omitting ".zip" extension\n  description_file : zip file with file entry describing file') % (sys.argv[0], sys.argv[0])
+		print ('\n\nUsage: %s input_file description_file\n\n  input_file: name of base json file, omitting ".zip" extension\n  description_file : zip file with file entry describing file') % (sys.argv[0], sys.argv[0])
 		quit()
 
 	infile = sys.argv[1]

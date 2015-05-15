@@ -37,9 +37,7 @@ public class MongoTestBed {
         //staging game level server
        //    Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
      Mongo mongo = new Mongo( "api.paradox.verigames.com", 27017 );
-      //  staging RA server
-     //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
-        String dbName = "game3api";
+       String dbName = "game3api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
@@ -47,9 +45,9 @@ public class MongoTestBed {
 
         listCollectionNames(db);
        HashMap<String, String> map = new HashMap();
-       map.put("playerID", "");
+       map.put("name", "p_000249_00011614");
   //     map.put("levelID", "12");
-       listEntries(db, "GameSolvedLevels", map, true);
+       listEntries(db, "ActiveLevels", map, false);
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
         
