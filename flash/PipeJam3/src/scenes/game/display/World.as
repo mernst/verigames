@@ -370,7 +370,8 @@ package scenes.game.display
 			
 		}
 		
-		private function initEventListeners():void {
+		private function initEventListeners():void
+		{
 			//trace("Initializing event listeners...");
 			addEventListener(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, onWidgetChange);
 			addEventListener(MoveEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
@@ -398,10 +399,6 @@ package scenes.game.display
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
 			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
-			addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
-			addEventListener(TouchPhase.BEGAN, mouseMoveEventHandler);
-			addEventListener(TouchPhase.MOVED, mouseMoveEventHandler);
-			addEventListener(TouchPhase.ENDED, mouseMoveEventHandler);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
@@ -415,12 +412,6 @@ package scenes.game.display
 			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
 			
 			//trace("Done initializing event listeners.");
-		}
-		
-		//handle transfering mouse moves from transparent part of sidebar to gridview
-		private function mouseMoveEventHandler(event:starling.events.Event):void
-		{
-			edgeSetGraphViewPanel.outsideEventHandler(event);
 		}
 		
 		private function overControlPanelHandler(event:starling.events.Event):void

@@ -314,6 +314,7 @@ package scenes.game.components
 			checkPaintBrushVisibility();
 		}
 		
+		
 		protected var currentLocation:Point = null;
 		protected function mouseMoveEventHandler(event:MouseEvent):void
 		{
@@ -508,29 +509,6 @@ package scenes.game.components
 			checkPaintBrushVisibility();
 		}
 		
-		public function outsideEventHandler(event:starling.events.Event):void
-		{
-			m_inBounds = true;
-			m_inControlPanel = false;
-			checkPaintBrushVisibility();
-			
-			if(event.type == MouseEvent.MOUSE_MOVE)
-			{
-				movePaintBrush(event.data as Point);
-				onEnterFrame(null);
-			}
-			else if(event.type == TouchPhase.BEGAN)
-				currentMode = GridViewPanel.SELECTING_MODE;
-			else if(event.type == TouchPhase.MOVED)
-			{
-				movePaintBrush(event.data as Point);
-				handlePaint(event.data as Point);
-				onEnterFrame(null);
-			}
-			else if(event.type == TouchPhase.ENDED)
-				endSelectMode();
-		}
-		
 		public function onGameComponentsCreated():void
 		{
 			center();
@@ -623,7 +601,7 @@ package scenes.game.components
 				endingMoveMode = true;
 			}
 		}
-		
+
 		override protected function onTouch(event:TouchEvent):void
 		{
 			m_inControlPanel = false;

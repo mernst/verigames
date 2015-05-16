@@ -4,6 +4,7 @@ package scenes.game.components
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Point;
+	import starling.display.DisplayObject;
 	import utils.XMath;
 	
 	import assets.AssetInterface;
@@ -266,52 +267,25 @@ package scenes.game.components
 			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
 			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_DOWN, checkForTriggerFullScreen);
 		}
-		
-		protected var inTransparentArea:Boolean = false;
+
+		public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
+		{
+			if (forTouch && (!visible || !touchable))
+			{
+				return null;
+			}
+
+			if ((localPoint.x < 18 || (localPoint.x < 51 && localPoint.y < 250)) && (XMath.square(localPoint.x - 51) + XMath.square(localPoint.y - 64) > 50 * 50))
+			{
+				return null;
+			}
+			
+			return super.hitTest(localPoint, forTouch);
+		}
+
 		override protected function onTouch(event:TouchEvent):void
 		{
-			//handle touches in transparent part, since starling doesn't
-			var touch:Touch;
-			var loc:Point;
-			var eventType:String;
-			if (event.getTouches(this, TouchPhase.HOVER).length)
-			{
-				touch = event.getTouches(this, TouchPhase.HOVER)[0];
-				eventType = MouseEvent.MOUSE_MOVE;
-			}
-			else if(event.getTouches(this, TouchPhase.BEGAN).length)
-			{
-				touch = event.getTouches(this, TouchPhase.BEGAN)[0];
-				eventType = TouchPhase.BEGAN;
-			}
-			else if(event.getTouches(this, TouchPhase.MOVED).length)
-			{
-				touch = event.getTouches(this, TouchPhase.MOVED)[0];
-				eventType = TouchPhase.MOVED;
-			}
-			else if(event.getTouches(this, TouchPhase.ENDED).length)
-			{
-				touch = event.getTouches(this, TouchPhase.ENDED)[0];
-				eventType = TouchPhase.ENDED;
-			}
-			
-			if(touch)
-			{
-				loc = new Point(touch.globalX, touch.globalY);
-			}
-			
-			if(touch && loc && (loc.x < 398 || (loc.x < 431 && loc.y < 250)) && (XMath.square(loc.x - 431) + XMath.square(loc.y - 64) > 50 * 50))
-			{
-				inTransparentArea = true;
-				dispatchEvent(new starling.events.Event(eventType,  true,  loc));
-			}
-			else
-			{
-				inTransparentArea = false;
-				if (touch) {
-					dispatchEvent(new MenuEvent(MenuEvent.MOUSE_OVER_CONTROL_PANEL));
-				}
-			}
+			dispatchEvent(new MenuEvent(MenuEvent.MOUSE_OVER_CONTROL_PANEL));
 		}
 		
 		private function onMenuButtonTriggered():void
