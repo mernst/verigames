@@ -1632,7 +1632,7 @@ package scenes.game.components
 		
 		protected function checkPaintBrushVisibility():void
 		{
-			if (m_inBounds && !m_inControlPanel && !m_keyPanMouse && !m_rightMouseDown && m_gameComponentsCreated) {
+			if (m_inBounds && !m_inControlPanel && !(m_keyPanMouse && currentMode == HOVER_MODE) && currentMode != MOVING_MODE && !m_rightMouseDown && m_gameComponentsCreated) {
 				m_paintBrush.visible = true;
 				m_paintBrushSelectionCountSprite.visible = true;
 				m_paintBrushTotalSelectionLimitSprite.visible = true;
