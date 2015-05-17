@@ -150,12 +150,6 @@ package scenes.game.components
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
-		protected var keyDownCombination:int;
-		protected static const KEY_UP:int = 1;
-		protected static const KEY_DOWN:int = 2;
-		protected static const KEY_LEFT:int = 4;
-		protected static const KEY_RIGHT:int = 8;
-		
 		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
@@ -1116,7 +1110,16 @@ package scenes.game.components
 						m_keyPanMouse = true;
 						checkPaintBrushVisibility();
 					}
-					break;				
+					break;
+					
+				case Keyboard.NUMBER_1:
+				case Keyboard.NUMBER_2:
+				case Keyboard.NUMBER_3:
+				case Keyboard.NUMBER_4:
+				case Keyboard.NUMBER_5:
+					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
+					break;
+					
 				case Keyboard.C:
 					if (event.ctrlKey) {
 						World.m_world.solverDoneCallback("");
@@ -1178,33 +1181,6 @@ package scenes.game.components
 				case Keyboard.SHIFT:
 					m_keyPanMouse = false;
 					checkPaintBrushVisibility();
-					break;
-				case Keyboard.NUMBER_1:
-				case Keyboard.NUMBER_2:
-				case Keyboard.NUMBER_3:
-				case Keyboard.NUMBER_4:
-				case Keyboard.NUMBER_5:
-					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
-					break;
-				case Keyboard.UP:
-				case Keyboard.W:
-				case Keyboard.NUMPAD_8:
-					keyDownCombination &= ~KEY_UP;
-					break;
-				case Keyboard.DOWN:
-				case Keyboard.NUMPAD_2:
-				case Keyboard.S:
-					keyDownCombination &= ~KEY_DOWN;
-					break;
-				case Keyboard.LEFT:
-				case Keyboard.A:
-				case Keyboard.NUMPAD_4:
-					keyDownCombination &= ~KEY_LEFT;
-					break;
-				case Keyboard.RIGHT:
-				case Keyboard.D:
-				case Keyboard.NUMPAD_6:
-				keyDownCombination &= ~KEY_RIGHT;
 					break;
 			}
 		}
