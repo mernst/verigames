@@ -25,9 +25,11 @@ package server
 		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
 		public var saveCacheToServer:Boolean = false;
 		public var provideIp:Boolean = true;
+		public var stage:Stage;
 		
 		public function LoggingServerInterface(_setupKey:String, _stage:Stage = null, _forceUid:String = "", _replay:Boolean = false)
 		{
+			stage = _stage;
 			setupServer(_setupKey, _stage, _forceUid);
 			if (!_replay) {
 				m_cgsServer.initialize(m_props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
@@ -65,9 +67,14 @@ package server
 			m_cgsServer.setup(m_props);
 		}
 		
-		public function addPLayerID(playerID:String):void
+		public function addPlayerID(playerID:String):void
 		{
-			setupServer(PipeJam3.loggingKey, null, playerID);
+			//setupServer(PipeJam3.loggingKey, null, playerID);
+			
+			if (PipeJam3.LOGGING_ON) 
+			{
+				PipeJam3.logging = new LoggingServerInterface(PipeJam3.loggingKey, stage, CGS_VERIGAMES_PREFIX + playerID, PipeJam3.REPLAY_DQID != null);
+			}	
 		}
 		
 		public function get cgsServer():CGSServer { return m_cgsServer; }
