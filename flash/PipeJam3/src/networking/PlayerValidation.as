@@ -16,11 +16,14 @@ package networking
 		public static var GET_ACCESS_TOKEN:int = 1;
 		public static var GET_PLAYER_ID:int = 2;
 		public static var GET_PLAYER_INFO:int = 3;
+		public static var GET_PLAYER_ACTIVITY:int = 4;
+		public static var SET_PLAYER_ACTIVITY:int = 5;
 		
 		public static var AuthorizationAttempted:Boolean = false;
 		public static var accessToken:String = null;
 		
 		public static var playerID:String = "";
+		public static var playerActivity:Object;
 		public static var playerIDForTesting:String = "51e5b3460240288229000026"; //hard code one for local testing
 		public static var userNames:Dictionary = new Dictionary;
 		public static var outstandingUserNamesRequests:int = 0;
@@ -76,6 +79,7 @@ package networking
 				if(jsonResponseObj.response != null)
 				{
 					accessToken = jsonResponseObj.response;
+					trace("accessToken", accessToken);
 					getCurrentPlayerID(accessToken);
 				}
 			}
@@ -98,7 +102,8 @@ package networking
 					playerID = jsonResponseObj.userId;
 					playerInfoQueue.push(playerID);
 					getPlayerInfo();
-					PipeJam3.logging.addPLayerID(playerID);
+					getPlayerActivityInfo();
+					PipeJam3.logging.addPlayerID(playerID);
 					Achievements.checkForFinishedTutorialAchievement();
 					Achievements.getAchievementsEarnedForPlayer();
 				}
@@ -141,6 +146,43 @@ package networking
 			}
 		}
 		
+		
+		public function getPlayerActivityInfo():void
+		{
+			if(!playerID) 
+				return;
+			
+			sendMessage(GET_PLAYER_ACTIVITY, playerActivityInfoCallback, playerID);
+		}
+		
+		public function playerActivityInfoCallback(result:int, e:flash.events.Event):void
+		{
+			if(result == NetworkConnection.EVENT_COMPLETE)
+			{
+				var response:String = e.target.data;
+				playerActivity = JSON.parse(response);
+			}
+		}
+		
+		public function setPlayerActivityInfo(scoreDiff:Number, levelID:String):void
+		{
+			var score:int = parseInt(playerActivity['cummulative_score']) + scoreDiff;
+			playerActivity['cummulative_score'] = String(score);
+			var currentNumSubmissions:int = parseInt(playerActivity['submitted_boards']) + 1;
+			playerActivity['submitted_boards'] = String(currentNumSubmissions);
+			if(levelID)
+			{
+				var completedBoards:Array = playerActivity['completed_boards'];
+				if(!completedBoards)
+					completedBoards = new Array;
+				if(completedBoards.indexOf(levelID) == -1)
+					completedBoards.push(levelID);
+				playerActivity['completed_boards'] = completedBoards;
+			}
+			var info:String = JSON.stringify(playerActivity);
+			sendMessage(SET_PLAYER_ACTIVITY, null, info);
+		}
+		
 		//?? do this or update, and/or limit list size??
 		public static function countNeededUserNameRequests():void
 		{
@@ -176,6 +218,14 @@ package networking
 					url = NetworkConnection.productionInterop + "?function=passURL2&data_id='/api/users/" + data +"'&data2='" + PlayerValidation.accessToken +"'";
 					method = URLRequestMethod.GET; 
 					request = "authorize";
+					break;
+				case GET_PLAYER_ACTIVITY:
+					url = NetworkConnection.productionInterop + "?function=getPlayerActivityInfo&data_id="+ data;
+					method = URLRequestMethod.GET; 
+					break;
+				case SET_PLAYER_ACTIVITY:
+					url = NetworkConnection.productionInterop + "?function=setPlayerActivityInfoPOST&data_id='/foo'";
+					method = URLRequestMethod.POST; 
 					break;
 
 			}

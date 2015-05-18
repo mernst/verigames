@@ -497,7 +497,6 @@ package scenes.game.display
 						}
 						if (edge.skin)
 						{
-							trace("nodeID", nodeToDraw.id);
 							if (alreadyOnScreen) edge.updateEdge();
 							adjustEdgeContainer(edge, true);
 							touchedEdgeLayer = true;

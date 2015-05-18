@@ -384,7 +384,7 @@ package scenes.game.components
 		/**
 		 * Updates the score on the screen
 		 */
-		public function updateScore(level:Level, skipAnimatons:Boolean):void 
+		public function updateScore(level:Level, skipAnimatons:Boolean):Number 
 		{
 			var maxConflicts:int = level.maxScore;
 			var currentConflicts:int = MiniMap.numConflicts;
@@ -403,7 +403,7 @@ package scenes.game.components
 			rotateToDegree(scoreCircleMiddleImage, scoreImageCenter, integerRotation);
 			rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
 			
-			
+			return score;
 		}
 		
 		private function changeCurrentBrush(evt:starling.events.Event):void

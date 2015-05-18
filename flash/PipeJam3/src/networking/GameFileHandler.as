@@ -500,28 +500,36 @@ package networking
 				case REPORT_LEADERBOARD_SCORE:
 					if(PlayerValidation.playerID == "")
 						return;
-					var leaderboardScore:int = 1;
-					var levelScore:int = World.m_world.active_level.currentScore;
-					var targetScore:int = PipeJamGame.levelInfo.targetScore;
-					if(levelScore > targetScore)
-						leaderboardScore = 2;
-					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&data2='"+ PlayerValidation.accessToken + "'";
-					var dataObj:Object = new Object;
-					dataObj.playerId = PlayerValidation.playerID;
-					dataObj.gameId = PipeJam3.GAME_ID;
-					var i:Object = PipeJamGame.levelInfo;
-					dataObj.levelId = PipeJamGame.levelInfo.levelID;
-					var parameters:Array = new Array;
-					var paramScoreObj:Object = new Object;
-					paramScoreObj.name = "score";
-					paramScoreObj.value = levelScore;
-					var paramLeaderScoreObj:Object = new Object;
-					paramLeaderScoreObj.name = "leaderboardScore";
-					paramLeaderScoreObj.value = leaderboardScore;
-					parameters.push(paramScoreObj);
-					parameters.push(paramLeaderScoreObj);
-					dataObj.parameter = parameters;
-					data = JSON.stringify(dataObj);
+					var scoreDifference:Number = World.m_world.active_level.currentScore - World.m_world.active_level.oldScore;
+					var levelID:String;
+					var percent:Number = World.m_world.currentPercent;
+					if(World.m_world.currentPercent >=100)
+						levelID = PipeJamGame.levelInfo.levelID;
+						
+					PlayerValidation.validationObject.setPlayerActivityInfo(scoreDifference, levelID);
+					
+//					var leaderboardScore:int = 1;
+//					var levelScore:int = World.m_world.active_level.currentScore;
+//					var targetScore:int = PipeJamGame.levelInfo.targetScore;
+//					if(levelScore > targetScore)
+//						leaderboardScore = 2;
+//					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&data2='"+ PlayerValidation.accessToken + "'";
+//					var dataObj:Object = new Object;
+//					dataObj.playerId = PlayerValidation.playerID;
+//					dataObj.gameId = PipeJam3.GAME_ID;
+//					var i:Object = PipeJamGame.levelInfo;
+//					dataObj.levelId = PipeJamGame.levelInfo.levelID;
+//					var parameters:Array = new Array;
+//					var paramScoreObj:Object = new Object;
+//					paramScoreObj.name = "score";
+//					paramScoreObj.value = levelScore;
+//					var paramLeaderScoreObj:Object = new Object;
+//					paramLeaderScoreObj.name = "leaderboardScore";
+//					paramLeaderScoreObj.value = leaderboardScore;
+//					parameters.push(paramScoreObj);
+//					parameters.push(paramLeaderScoreObj);
+//					dataObj.parameter = parameters;
+//					data = JSON.stringify(dataObj);
 					break;
 			}
 			

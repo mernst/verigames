@@ -43,11 +43,11 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = false;
+		public static var RELEASE_BUILD:Boolean = true;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		
 		//if release build is true, true if using production machine db/info, false if using staging
-		public static var PRODUCTION_BUILD:Boolean = false;
+		public static var PRODUCTION_BUILD:Boolean = true;
 		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = true;

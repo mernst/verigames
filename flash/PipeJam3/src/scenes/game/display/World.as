@@ -90,7 +90,8 @@ package scenes.game.display
 		protected var firstLevel:Level = null;
 		
 		protected var m_currentLevelNumber:int;
-
+		public var currentPercent:Number;
+		
 		protected var undoStack:Vector.<UndoEvent>;
 		protected var redoStack:Vector.<UndoEvent>;
 		
@@ -769,8 +770,11 @@ package scenes.game.display
 					// TODO logging: PipeJam3.logging.logQuestAction(VerigameServerConstants.verigame_ac, details, active_level.getTimeMs());
 				}
 			}
-			sideControlPanel.updateScore(active_level, false);
-			
+			currentPercent = sideControlPanel.updateScore(active_level, false);
+			if(currentPercent >= 100)
+			{
+				GameFileHandler.reportScore();
+			}
 			if(!PipeJamGameScene.inTutorial && evt)
 			{
 				//beat the target score?
