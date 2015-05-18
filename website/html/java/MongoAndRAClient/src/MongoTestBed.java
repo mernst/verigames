@@ -44,10 +44,11 @@ public class MongoTestBed {
      //    listEntries(db, "GameSolvedLevels");
 
         listCollectionNames(db);
-       HashMap<String, String> map = new HashMap();
+       HashMap<String, String> map = new HashMap<String, String>();
        map.put("name", "p_000249_00011614");
   //     map.put("levelID", "12");
-       listEntries(db, "ActiveLevels", map, false);
+   //    
+       listEntries(db, "PlayerActivity");
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
         
@@ -87,6 +88,68 @@ public class MongoTestBed {
                if(remove)
             	   collection.remove(obj);
            }
+    	}catch (Exception e)
+    	{
+    		
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+    	
+    	// writer.close();
+			
+		
+	}
+	
+	static void groupSubmittedLevelsByPlayerID(DB db)
+	{
+    	DBCursor cursor = null;
+    	try 
+    	{
+    		HashMap<String, Object[]> playerIDMap = new HashMap<String, Object[]>();
+    		//playerIDMap.put("name", "p_000249_00011614");
+    		String collectionName = "GameSolvedLevels";	   
+        	  
+			BasicDBObject field = new BasicDBObject();
+			
+			DBCollection collection = db.getCollection(collectionName);
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+	           	DBObject obj = cursor.next();
+	           	String playerID = (String)obj.get("playerID");
+			   if(playerID != null)
+			   {
+				   if(playerIDMap.containsKey(playerID) == false)
+		           	{
+		               Object[] arr = new Object[3];
+		               arr[0] = 1;
+		               arr[1] = Integer.parseInt((String)obj.get("current_score")) - Integer.parseInt((String)obj.get("prev_score"));
+		               arr[2] = (String)obj.get("username");
+		               playerIDMap.put(playerID, arr);
+		           	}
+				   else
+				   {
+					   Object[] arr = playerIDMap.get(playerID);
+					   arr[0] = ((Integer)arr[0]).intValue() + 1;
+					   arr[1] = ((Integer)arr[1]).intValue() + Integer.parseInt((String)obj.get("current_score")) - Integer.parseInt((String)obj.get("prev_score"));
+				   }
+			   }
+           }
+			String playerActivityCollectionName = "PlayerActivity";
+			DBCollection playerActivityCollection = db.getCollection(playerActivityCollectionName);
+			
+			 for (Map.Entry<String, Object[]> entry : playerIDMap.entrySet()) {
+				    String key = entry.getKey();
+				    Object[] value = entry.getValue();
+				    
+				    System.out.println(key + " " + value[2] + " " + value[0] + " " + value[1]);
+				    
+				    DBObject playerObj = new BasicDBObject();
+				    playerObj.put("playerID", key);
+				    playerObj.put("submitted_boards", value[0].toString());
+				    playerObj.put("cummulative_score", value[1].toString());
+				    playerActivityCollection.save(playerObj);
+				}
     	}catch (Exception e)
     	{
     		
