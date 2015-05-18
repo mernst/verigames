@@ -85,7 +85,7 @@ package scenes.game.components
 		private var contentBarrier:Quad;
 		private var content:BaseComponent;
 		private var errorBubbleContainer:Sprite;
-		private var currentMode:int;
+		private var m_currentMode:int;
 		private var endingMoveMode:Boolean;
 		private var continueButton:NineSliceButton;
 		private var m_border:Image;
@@ -126,15 +126,14 @@ package scenes.game.components
 		private var m_wasOutOfBounds:Boolean = true;
 		private var m_inControlPanel:Boolean = false;
 		private var m_gameComponentsCreated:Boolean = false;
-		private var m_rightMouseDown:Boolean = false;
 		private var m_MouseMoveListenerInstalled:Boolean = false;
 		
 		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
-		protected static const NORMAL_MODE:int = 0;
-		protected static const MOVING_MODE:int = 1;
-		protected static const SELECTING_MODE:int = 2;
-		protected static const HOVER_MODE:int = 3;
-		protected static const RELEASE_SHIFT_MODE:int = 4;
+		
+		protected static const MODE_HOVER:int          = 0;
+		protected static const MODE_SELECTING:int      = 1;
+		protected static const MODE_MOVING:int         = 2;
+		protected static const MODE_MOVING_RIGHT:int   = 3;
 		
 		//brush details
 		protected var m_solver1Brush:Sprite;
@@ -150,12 +149,6 @@ package scenes.game.components
 		public static var FIRST_SOLVER_BRUSH:String;
 		
 		public static const CHANGE_BRUSH:String = "change_brush";
-		
-		protected var keyDownCombination:int;
-		protected static const KEY_UP:int = 1;
-		protected static const KEY_DOWN:int = 2;
-		protected static const KEY_LEFT:int = 4;
-		protected static const KEY_RIGHT:int = 8;
 		
 		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
@@ -175,7 +168,7 @@ package scenes.game.components
 		{
 			this.alpha = .999;
 
-			currentMode = NORMAL_MODE;
+			setMode(MODE_HOVER);
 			
 			inactiveContent = new Sprite();
 			addChild(inactiveContent);
@@ -314,6 +307,7 @@ package scenes.game.components
 			checkPaintBrushVisibility();
 		}
 		
+		
 		protected var currentLocation:Point = null;
 		protected function mouseMoveEventHandler(event:MouseEvent):void
 		{
@@ -327,7 +321,7 @@ package scenes.game.components
 				checkPaintBrushVisibility();
 			}
 
-			if(m_rightMouseDown && currentLocation)
+			if(m_currentMode == MODE_MOVING_RIGHT && currentLocation)
 			{
 				var deltaX:Number = event.stageX - currentLocation.x;
 				var deltaY:Number = event.stageY - currentLocation.y;
@@ -352,14 +346,14 @@ package scenes.game.components
 		
 		private function mouseRightClickDownEventHandler(event:MouseEvent):void
 		{
-			if(getPanZoomAllowed())
+			if (getPanZoomAllowed() && m_currentMode == MODE_HOVER)
 			{
-				if(!m_MouseMoveListenerInstalled)
+				if (!m_MouseMoveListenerInstalled)
 				{
 					Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
 					m_MouseMoveListenerInstalled = true;
 				}
-				m_rightMouseDown = true;
+				setMode(MODE_MOVING_RIGHT);
 				currentLocation = new Point(event.stageX, event.stageY);
 				checkPaintBrushVisibility();
 			}
@@ -367,14 +361,14 @@ package scenes.game.components
 		
 		private function mouseRightClickUpEventHandler(event:MouseEvent):void
 		{
-			if(getPanZoomAllowed())
+			if (getPanZoomAllowed() && m_currentMode == MODE_MOVING_RIGHT)
 			{
-				if(m_MouseMoveListenerInstalled)
+				if (m_MouseMoveListenerInstalled)
 				{
 					Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEventHandler);
 					m_MouseMoveListenerInstalled = false;
 				}
-				m_rightMouseDown = false;
+				setMode(MODE_HOVER);
 				currentLocation = null;
 				checkPaintBrushVisibility();
 			}
@@ -449,7 +443,7 @@ package scenes.game.components
 				m_nextPaintbrushLocationUpdated = false;
 			}
 			
-			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && currentMode == SELECTING_MODE) {
+			if (m_selectionUpdated && m_currentLevel && m_currentTouchPoint && m_currentMode == MODE_SELECTING) {
 				m_selectionUpdated = false;
 				var globalCurrentPt:Point = localToGlobal(m_currentTouchPoint);
 				handlePaint(globalCurrentPt);
@@ -506,29 +500,6 @@ package scenes.game.components
 		{
 			m_inControlPanel = true;
 			checkPaintBrushVisibility();
-		}
-		
-		public function outsideEventHandler(event:starling.events.Event):void
-		{
-			m_inBounds = true;
-			m_inControlPanel = false;
-			checkPaintBrushVisibility();
-			
-			if(event.type == MouseEvent.MOUSE_MOVE)
-			{
-				movePaintBrush(event.data as Point);
-				onEnterFrame(null);
-			}
-			else if(event.type == TouchPhase.BEGAN)
-				currentMode = GridViewPanel.SELECTING_MODE;
-			else if(event.type == TouchPhase.MOVED)
-			{
-				movePaintBrush(event.data as Point);
-				handlePaint(event.data as Point);
-				onEnterFrame(null);
-			}
-			else if(event.type == TouchPhase.ENDED)
-				endSelectMode();
 		}
 		
 		public function onGameComponentsCreated():void
@@ -593,12 +564,16 @@ package scenes.game.components
 		
 		public function endSelectMode():void
 		{
-			if(m_currentLevel)
+			if (m_currentLevel)
 			{
-				if(!m_currentLevel.m_inSolver)
+				if (!m_currentLevel.m_inSolver)
+				{
 					dispatchEvent(new MenuEvent(MenuEvent.SOLVE_SELECTION, m_paintBrush.name));
+				}
 				else
+				{
 					dispatchEvent(new MenuEvent(MenuEvent.STOP_SOLVER));
+				}
 				endPaint();
 			}
 		}
@@ -606,7 +581,7 @@ package scenes.game.components
 		private function beginMoveMode():void
 		{
 			m_startingTouchPoint = new Point(content.x, content.y);
-			currentMode = MOVING_MODE;
+			setMode(MODE_MOVING);
 		}
 		
 		private function endMoveMode():void
@@ -623,7 +598,7 @@ package scenes.game.components
 				endingMoveMode = true;
 			}
 		}
-		
+
 		override protected function onTouch(event:TouchEvent):void
 		{
 			m_inControlPanel = false;
@@ -639,44 +614,54 @@ package scenes.game.components
 			var touches:Vector.<Touch>;
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
-				if(currentMode == SELECTING_MODE)
+				if(m_currentMode == MODE_SELECTING)
 				{
 					endSelectMode();
 					m_nextPaintbrushLocationUpdated = true;
 					this.m_currentLevel.unselectLast();
 				}
-				else if(currentMode == MOVING_MODE)
+				else if(m_currentMode == MODE_MOVING)
 				{
 					endMoveMode();
 				}
-				if (currentMode != NORMAL_MODE)
+				if (m_currentMode != MODE_HOVER && m_currentMode != MODE_MOVING_RIGHT)
 				{
-					currentMode = NORMAL_MODE;
+					setMode(MODE_HOVER);
 				}
 				else
 				{
-					if (m_currentLevel && event.target == contentBarrier && World.changingFullScreenState == false) {
+					if (m_currentLevel && event.target == contentBarrier && World.changingFullScreenState == false)
+					{
 						m_currentLevel.unselectAll();
 						var evt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
 						m_currentLevel.onPropertyModeChange(evt);
 					}
 					else
+					{
 						World.changingFullScreenState = false;
+					}
 				}
+				checkPaintBrushVisibility();
 			}
 			else if (event.getTouches(this, TouchPhase.BEGAN).length || event.getTouches(this, TouchPhase.MOVED).length)
 			{
 				touches = event.getTouches(this, TouchPhase.BEGAN);
-				if (!touches.length) touches = event.getTouches(this, TouchPhase.MOVED);
-				if(!event.shiftKey)
+				var isBegan:Boolean = true;
+				if (!touches.length)
+				{
+					touches = event.getTouches(this, TouchPhase.MOVED);
+					isBegan = false;
+				}
+				
+				if (!event.shiftKey)
 				{
 					if (m_currentLevel && m_currentLevel.getAutoSolveAllowed())
 					{
 						// Only allow painting/selecting if autosolve is enabled
-						if(currentMode != SELECTING_MODE)
+						if(m_currentMode == MODE_HOVER && isBegan)
 						{
-							if (currentMode == MOVING_MODE) endMoveMode();
-							currentMode = SELECTING_MODE;
+							//if (currentMode == MODE_MOVING) endMoveMode();
+							setMode(MODE_SELECTING);
 							m_startingTouchPoint = touches[0].getPreviousLocation(this);
 							if (m_currentLevel) beginPaint();
 						}
@@ -686,46 +671,50 @@ package scenes.game.components
 				}
 				else
 				{
-					checkPaintBrushVisibility();
-					if (currentMode != SELECTING_MODE)
-					{
-						// Don't allow user to go straight from painting to moving with shift, if 
-						if(currentMode != MOVING_MODE) beginMoveMode();
-						if (touches[0].target == contentBarrier && currentMode == MOVING_MODE)
+					if (getPanZoomAllowed()) {
+						if (m_currentMode == MODE_HOVER && isBegan)
 						{
-							var loc:Point = touches[0].getLocation(m_currentLevel);
-							if (getPanZoomAllowed())
+							// Don't allow user to go straight from painting to moving with shift, if 
+							//if(currentMode != MODE_MOVING)
+							beginMoveMode();
+						}
+						if (m_currentMode == MODE_MOVING)
+						{
+							if (touches[0].target == contentBarrier && m_currentMode == MODE_MOVING)
 							{
-								var delta:Point = touches[0].getMovement(parent);
-								var viewRect:Rectangle = getViewInContentSpace();
-								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
-								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
-								
-								moveContent(newX, newY);
+								var loc:Point = touches[0].getLocation(m_currentLevel);
+								if (getPanZoomAllowed())
+								{
+									var delta:Point = touches[0].getMovement(parent);
+									var viewRect:Rectangle = getViewInContentSpace();
+									var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
+									var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
+									
+									moveContent(newX, newY);
+								}
 							}
 						}
+						checkPaintBrushVisibility();
 					}
 				}
 			}
 			
 			// see if the mouse has moved
 			var touch:Touch = event.getTouch(this, TouchPhase.HOVER);
-			if(touch || touches)
+			if (touch || touches)
 			{
 				var location:Point;
-				if(touch)
+				if (touch)
 				{
-					 currentMode = HOVER_MODE;
-				location = touch.getLocation(this.stage);
-				if(location.x > WIDTH)
-					checkPaintBrushVisibility();
-				else
-					if(!event.shiftKey && !m_rightMouseDown)
-						checkPaintBrushVisibility();
+					//currentMode = HOVER_MODE;
+					location = touch.getLocation(this.stage);
 				}
 				else
+				{
 					location = touches[0].getLocation(this.stage);
+				}
 				movePaintBrush(location);
+				checkPaintBrushVisibility();
 			}
 		}
 
@@ -953,7 +942,7 @@ package scenes.game.components
 		private function scaleContent(sizeDiffX:Number, sizeDiffY:Number, contentToScale:DisplayObject = null):void
 		{
 			if (contentToScale == null) contentToScale = content;
-			m_selectionUpdated = (currentMode == SELECTING_MODE);
+			m_selectionUpdated = (m_currentMode == MODE_SELECTING);
 			var newScaleX:Number = XMath.clamp(contentToScale.scaleX * sizeDiffX, MIN_SCALE, MAX_SCALE);
 			var newScaleY:Number = XMath.clamp(contentToScale.scaleY * sizeDiffY, MIN_SCALE, MAX_SCALE);
 			
@@ -1117,9 +1106,20 @@ package scenes.game.components
 					break;
 					
 				case Keyboard.SHIFT:
-					m_keyPanMouse = true;
-					checkPaintBrushVisibility();
-					break;				
+					if (getPanZoomAllowed()) {
+						m_keyPanMouse = true;
+						checkPaintBrushVisibility();
+					}
+					break;
+					
+				case Keyboard.NUMBER_1:
+				case Keyboard.NUMBER_2:
+				case Keyboard.NUMBER_3:
+				case Keyboard.NUMBER_4:
+				case Keyboard.NUMBER_5:
+					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
+					break;
+					
 				case Keyboard.C:
 					if (event.ctrlKey) {
 						World.m_world.solverDoneCallback("");
@@ -1155,14 +1155,6 @@ package scenes.game.components
 		
 		private function onKeyUp(event:KeyboardEvent):void
 		{
-			// Release shift, temporarily enter this mode until next touch
-			// (this prevents the user from un-selecting when they perform
-			// a shift + click + drag + unshift + unclick sequence
-			if(currentMode == SELECTING_MODE && !event.shiftKey)
-			{
-				endSelectMode();
-				currentMode = RELEASE_SHIFT_MODE; // this will reset on next touch event
-			}
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
@@ -1190,33 +1182,6 @@ package scenes.game.components
 					m_keyPanMouse = false;
 					checkPaintBrushVisibility();
 					break;
-				case Keyboard.NUMBER_1:
-				case Keyboard.NUMBER_2:
-				case Keyboard.NUMBER_3:
-				case Keyboard.NUMBER_4:
-				case Keyboard.NUMBER_5:
-					setPaintBrushSize(event.keyCode - Keyboard.NUMBER_1 + 1);
-					break;
-				case Keyboard.UP:
-				case Keyboard.W:
-				case Keyboard.NUMPAD_8:
-					keyDownCombination &= ~KEY_UP;
-					break;
-				case Keyboard.DOWN:
-				case Keyboard.NUMPAD_2:
-				case Keyboard.S:
-					keyDownCombination &= ~KEY_DOWN;
-					break;
-				case Keyboard.LEFT:
-				case Keyboard.A:
-				case Keyboard.NUMPAD_4:
-					keyDownCombination &= ~KEY_LEFT;
-					break;
-				case Keyboard.RIGHT:
-				case Keyboard.D:
-				case Keyboard.NUMPAD_6:
-				keyDownCombination &= ~KEY_RIGHT;
-					break;
 			}
 		}
 		
@@ -1224,12 +1189,15 @@ package scenes.game.components
 		private static const DEBUG_BOUNDING_BOX:Boolean = false;
 		public function setupLevel(level:Level):void
 		{
+			// would be good to check this is already the case and clean up if not
+			setMode(MODE_HOVER);
+
 			m_continueButtonForced = false;
 			removeFanfare();
 			hideContinueButton();
 			if (m_gridContainer) m_gridContainer.removeFromParent();
 			if (m_zoomPanTimer) m_zoomPanTimer.stop();
-			if(m_currentLevel != level)
+			if (m_currentLevel != level)
 			{
 				if(m_currentLevel)
 				{
@@ -1321,7 +1289,7 @@ package scenes.game.components
 		public function center():void
 		{
 			// TODO: grid?
-			m_selectionUpdated = (currentMode == SELECTING_MODE);
+			m_selectionUpdated = (m_currentMode == MODE_SELECTING);
 			content.x = 0;
 			content.y = 0;
 			inactiveContent.x = inactiveContent.y = 0;
@@ -1642,7 +1610,12 @@ package scenes.game.components
 			m_paintBrush.scaleX = m_paintBrush.scaleY = size * 0.33333 * 0.5;
 			updatePaintBrushSubSprites();
 		}
-		
+
+		private function setMode(mode:int):void
+		{
+			//trace("***** SETTING MODE TO", mode, "from", m_currentMode);
+			m_currentMode = mode;
+		}
 		
 		private var m_nextPaintbrushLocation:Point;
 		private var m_nextPaintbrushLocationUpdated:Boolean = false;
@@ -1654,7 +1627,7 @@ package scenes.game.components
 		
 		protected function checkPaintBrushVisibility():void
 		{
-			if (m_inBounds && !m_inControlPanel && !m_keyPanMouse && !m_rightMouseDown && m_gameComponentsCreated) {
+			if (m_inBounds && !m_inControlPanel && !(m_keyPanMouse && m_currentMode == MODE_HOVER) && m_currentMode != MODE_MOVING && m_currentMode != MODE_MOVING_RIGHT && m_gameComponentsCreated) {
 				m_paintBrush.visible = true;
 				m_paintBrushSelectionCountSprite.visible = true;
 				m_paintBrushTotalSelectionLimitSprite.visible = true;
