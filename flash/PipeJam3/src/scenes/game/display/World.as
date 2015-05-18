@@ -764,7 +764,8 @@ package scenes.game.display
 			currentPercent = sideControlPanel.updateScore(active_level, false);
 			if(currentPercent >= 100)
 			{
-				GameFileHandler.reportScore();
+				if(!PipeJamGameScene.inTutorial)
+					GameFileHandler.reportScore();
 			}
 			if(!PipeJamGameScene.inTutorial && evt)
 			{

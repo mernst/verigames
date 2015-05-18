@@ -166,6 +166,9 @@ package networking
 		
 		public function setPlayerActivityInfo(scoreDiff:Number, levelID:String):void
 		{
+			if(!playerID) 
+				return;
+			
 			var score:int = parseInt(playerActivity['cummulative_score']) + scoreDiff;
 			playerActivity['cummulative_score'] = String(score);
 			var currentNumSubmissions:int = parseInt(playerActivity['submitted_boards']) + 1;
