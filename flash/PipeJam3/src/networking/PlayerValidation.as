@@ -172,19 +172,39 @@ package networking
 		{
 			if(!playerID) 
 				return;
-			
-			var score:int = parseInt(playerActivity['cummulative_score']) + scoreDiff;
-			playerActivity['cummulative_score'] = String(score);
-			var currentNumSubmissions:int = parseInt(playerActivity['submitted_boards']) + 1;
-			playerActivity['submitted_boards'] = String(currentNumSubmissions);
+			if (!playerActivity)
+				return;
+			var score:int = scoreDiff;
+			var cumScore:int = 0;
+			if (playerActivity.hasOwnProperty("cummulative_score"))
+			{
+				cumScore = parseInt(playerActivity["cummulative_score"]);
+				if (isNaN(cumScore))
+					cumScore = 0;
+			}
+			score += cumScore;
+			if (isNaN(score))
+				score = scoreDiff;
+			playerActivity["cummulative_score"] = String(score);
+			if (playerActivity.hasOwnProperty("submitted_boards"))
+			{
+				var currentNumSubmissions:int = parseInt(playerActivity["submitted_boards"]) + 1;
+				if (isNaN(currentNumSubmissions))
+					currentNumSubmissions = 1;
+				playerActivity["submitted_boards"] = String(currentNumSubmissions);
+			}
+			else
+			{
+				playerActivity["submitted_boards"] = "1";
+			}
 			if(levelID)
 			{
-				var completedBoards:Array = playerActivity['completed_boards'];
+				var completedBoards:Array = playerActivity["completed_boards"];
 				if(!completedBoards)
 					completedBoards = new Array;
 				if(completedBoards.indexOf(levelID) == -1)
 					completedBoards.push(levelID);
-				playerActivity['completed_boards'] = completedBoards;
+				playerActivity["completed_boards"] = completedBoards;
 				if(GameFileHandler.levelPlayedDict)
 					GameFileHandler.levelPlayedDict[levelID] = 1;
 			}
