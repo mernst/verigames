@@ -43,7 +43,7 @@ package scenes.game.display
 		
 		public override function createSkin():void
 		{
-			trace('create node skin', id);
+		//	trace('create node skin', id);
 			if (skin == null) skin = NodeSkin.getNextSkin();
 			if (skin != null)
 			{

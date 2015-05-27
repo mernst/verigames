@@ -83,9 +83,9 @@ for fname in files:
 					constraint_value = 'type:1'
 				else:
 					constraint_value = 'type:0'
-				if sat_id > len(keys):
-					#print 'Warning! Found sat variable id out of range given in keys from .%s file: %s len(keys): %s' % (ext, sat_id, len(keys))
-					continue
+				#if sat_id > len(keys):
+				#	print 'Warning! Found sat variable id out of range given in keys from .%s file: %s len(keys): %s' % (ext, sat_id, len(keys))
+				#	continue
 				constraint_id = 'var:%s' % keys[sat_id-1]
 				if all_assignments.get(constraint_id) is not None:
 					#print 'Warning! Multiple assignments found for %s' % constraint_id

@@ -19,8 +19,8 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
-	import dialogs.InfoDialog;
-	import dialogs.InfoDialogInfo;
+	import dialogs.RankProgressDialog;
+	import dialogs.RankProgressDialogInfo;
 	
 	import display.NineSliceButton;
 	import display.ToolTipText;
@@ -345,7 +345,7 @@ package scenes.game.components
 		}
 		
 		private function mouseRightClickDownEventHandler(event:MouseEvent):void
-		{
+		{		
 			if (getPanZoomAllowed() && m_currentMode == MODE_HOVER)
 			{
 				if (!m_MouseMoveListenerInstalled)
@@ -494,6 +494,38 @@ package scenes.game.components
 				}
 			}
 			
+		}
+		
+		protected var messageArray:Array = new Array(
+			"Moving Up!\n\n\n\n\n", 
+			"Another one bites the dust.\n\n\n\n\n",
+			"You think you're good, don't you.\n\n\n\n\n",
+			"Another Einstein in the making.\n\n\n\n\n",
+			"No longer a Newbie, not yet a Genius.\n\n\n\n\n",
+			"Yet again, you think you can win?\n\n\n\n\n",
+			"Happenstance and Balderdash.\n\n\n\n\n",
+			"Just maybe you are second best.\n\n\n\n\n", 
+			"You again?\n\n\n\n\n",
+			"I love the smell of victory.\n\n\n\n\n",
+			"Down Goes Frasier!\n\n\n\n\n",
+			"What took you so long?\n\n\n\n\n",
+			"Bwahahaha, You'll never succeed!\n\n\n\n\n",
+			"You're the penultimatist.\n\n\n\n\n",
+			"It's Inconceivable!\n\n\n\n\n",
+			""
+			);
+		
+		public function showProgressDialog(numLevelsFinished:int):void
+		{
+			if(numLevelsFinished > 15)
+				return;
+			
+			var dialogSize:Point = new Point(200, 70);
+			var info:RankProgressDialogInfo = new RankProgressDialogInfo(messageArray[numLevelsFinished-1], 10, dialogSize, "Next!");
+			var dialog:RankProgressDialog = new RankProgressDialog(m_currentLevel, info, numLevelsFinished);
+			dialog.x = clipRect.width/2;
+			dialog.y = clipRect.height/2;
+			addChild(dialog);
 		}
 		
 		public function mouseOverControlPanel():void
@@ -892,7 +924,9 @@ package scenes.game.components
 			}
 			if(gridTexture)
 				gridTexture.dispose();
-			 
+			m_nameText.visible = false;
+			m_paintBrushLayer.visible = false;
+			m_tutorialTextLayer.visible = false;
 			var stage:Stage = Starling.current.stage;
 			var rs:RenderSupport = new RenderSupport();
 			rs.clear();
@@ -915,6 +949,9 @@ package scenes.game.components
 			gridImage.x = cornerPt.x;
 			gridImage.y = cornerPt.y;
 			gridImage.alpha = .8;
+			m_nameText.visible = true;
+			m_paintBrushLayer.visible = true;
+			m_tutorialTextLayer.visible = true;
 		}
 		
 		private function hideZoomPanGridAndApplyChanges(evt:TimerEvent):void
@@ -1367,7 +1404,7 @@ package scenes.game.components
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
-				var levelCompleteText:String = PipeJamGameScene.inTutorial ? "Level Complete!" : "Great work!\nBut keep playing to further improve your score."
+				var levelCompleteText:String = PipeJamGameScene.inTutorial ? "Level Complete!" : "Great work!"
 				var textWidth:Number = PipeJamGameScene.inTutorial ? continueButton.width : 208;
 				
 				for (var i:int = 5; i <= textWidth - 5; i += 10) {
@@ -1673,7 +1710,7 @@ package scenes.game.components
 			}
 		}
 		
-		protected var revertDialog:InfoDialog;
+		protected var revertDialog:RankProgressDialog;
 		protected function undo(event:starling.events.Event):void
 		{
 			buttonHit = true;

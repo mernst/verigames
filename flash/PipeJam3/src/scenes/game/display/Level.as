@@ -24,8 +24,8 @@ package scenes.game.display
 	
 	import deng.fzip.FZip;
 	
-	import dialogs.InfoDialog;
-	import dialogs.InfoDialogInfo;
+	import dialogs.RankProgressDialog;
+	import dialogs.RankProgressDialogInfo;
 	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -1111,7 +1111,12 @@ package scenes.game.display
 			{
 				if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC)
 				{
-					return 250;
+					switch(PlayerValidation.currentActivityLevel)
+					{
+						case 2: return 250;
+						case 3: return 500;
+						default: return 100;
+					}
 				}
 				else
 				{

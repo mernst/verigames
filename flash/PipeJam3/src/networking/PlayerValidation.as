@@ -4,6 +4,8 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	
+	import scenes.game.display.World;
+	
 	import utils.XMath;
 
 	//the steps are: 
@@ -28,6 +30,7 @@ package networking
 		public static var userNames:Dictionary = new Dictionary;
 		public static var outstandingUserNamesRequests:int = 0;
 		
+		public static var currentActivityLevel:int = 1;
 		
 		static public var validationObject:PlayerValidation = new PlayerValidation;
 		
@@ -66,6 +69,7 @@ package networking
 			}
 			obj.grant_type = "authorization_code";
 			var objStr:String = JSON.stringify(obj);
+			trace(objStr);
 			sendMessage(GET_ACCESS_TOKEN, tokenCallback, objStr);
 		}
 		
@@ -181,17 +185,11 @@ package networking
 				if(completedBoards.indexOf(levelID) == -1)
 					completedBoards.push(levelID);
 				playerActivity['completed_boards'] = completedBoards;
+				if(GameFileHandler.levelPlayedDict)
+					GameFileHandler.levelPlayedDict[levelID] = 1;
 			}
 			var info:String = JSON.stringify(playerActivity);
 			sendMessage(SET_PLAYER_ACTIVITY, null, info);
-		}
-		
-		//?? do this or update, and/or limit list size??
-		public static function countNeededUserNameRequests():void
-		{
-			
-		//	outstandingUserNamesRequests
-			
 		}
 		
 		public static function getUserName(playerID:String, defaultNumber:int):String
@@ -209,7 +207,7 @@ package networking
 			var url:String = null;
 			switch(type)
 			{
-				case GET_ACCESS_TOKEN: //don't call the function 'getAccessToken,, as that's too explicit
+				case GET_ACCESS_TOKEN: //don't call the function 'getAccessToken', as that's too explicit
 					url = NetworkConnection.productionInterop + "?function=reportData&data_id='/token'&data2='" + data +"'";
 					method = URLRequestMethod.GET; 
 					break;

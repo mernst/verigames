@@ -6,6 +6,7 @@ package networking
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
 	import deng.fzip.FZip;
@@ -47,6 +48,15 @@ package networking
 		static public var completedLevelVector:Vector.<Object> = null;
 		
 		static public var numLevels:int = 10;
+		
+		//divide levels into three set of hardness, based on numConstraint range values
+		static public var level1TopRangeNumConstraint:int = 200;
+		static public var level1TopRangeLevelIndex:int = 0;
+		static public var level2TopRangeNumConstraint:int = 600;
+		static public var level2TopRangeLevelIndex:int = 0;
+		
+		static public var range1PlayerActivityMarker:int = 5;
+		static public var range2PlayerActivityMarker:int = 10;
 		
 		static protected var m_name:String;
 		static protected var m_loadCallback:Function;
@@ -143,12 +153,85 @@ package networking
 			return null;
 		}
 		
+		static public var levelPlayedDict:Dictionary;
 		static public function getRandomLevelObject():Object
 		{
-			if(levelInfoVector != null && levelInfoVector.length >0)
+			var currentIndex:int;
+			var i:int = 0;
+			if(levelInfoVector != null && levelInfoVector.length >0 && PlayerValidation.playerActivity != null)
 			{
-				var randNum:int = XMath.randomInt(0, levelInfoVector.length-1);
-				return levelInfoVector[randNum];
+				var levelPlayedArray:Array = PlayerValidation.playerActivity['completed_boards'];
+				if(levelPlayedArray == null)
+					levelPlayedArray = new Array;
+				if(!levelPlayedDict)
+				{
+					levelPlayedDict = new Dictionary;
+					for(i = 0; i<levelPlayedArray.length; i++)
+					{
+						levelPlayedDict[levelPlayedArray[i]] = 1;
+					}
+				}
+				
+				var topRange:int;
+				var bottomRange:int;
+				if(levelPlayedArray.length >= range2PlayerActivityMarker)
+				{
+					bottomRange = level2TopRangeLevelIndex + 1;
+					topRange = levelInfoVector.length - 1;
+					PlayerValidation.currentActivityLevel = 3;
+				}
+				else if (levelPlayedArray.length >= range1PlayerActivityMarker)
+				{
+					bottomRange = level1TopRangeLevelIndex + 1;
+					topRange = level2TopRangeLevelIndex;
+					PlayerValidation.currentActivityLevel = 2;
+				}
+				else
+				{
+					bottomRange = 0;
+					topRange = level1TopRangeLevelIndex;
+					PlayerValidation.currentActivityLevel = 1;
+				}
+				
+				//grab a random unplayed one from the specified interval
+				var found:Boolean = false;
+				var levelInfo:Object;
+				for(i = 0; i < 20; i++)
+				{
+					currentIndex = XMath.randomInt(bottomRange, topRange);
+					levelInfo = levelInfoVector[currentIndex];
+					if(levelPlayedDict[levelInfo.levelID] != 1)
+					{
+						found = true;
+						break;
+					}
+				}
+				
+				//if we didn't find an unplayed one, expand the range downward, and try again
+				if(found == false)
+				{
+					for(i = 0; i < 20; i++)
+					{
+						currentIndex = XMath.randomInt(0, topRange);
+						levelInfo = levelInfoVector[currentIndex];
+						if(levelPlayedDict[levelInfo.levelID] != 1)
+						{
+							found = true;
+							break;
+						}
+					}
+				}
+				
+				//didn't find unplayed one in our ranges, so just grab one
+				if(found == false)
+				{
+					currentIndex = XMath.randomInt(0, levelInfoVector.length-1);
+					levelInfo = levelInfoVector[currentIndex];
+				}
+				
+				//mark this one played, too
+				levelPlayedDict[levelInfo.levelID] = 1;
+				return levelInfoVector[currentIndex];
 			}
 			else
 				return null;
@@ -423,13 +506,52 @@ package networking
 								entry.id = entry._id.$oid;
 						}
 					}
+					var lastUnderscore:int = (entry.name as String).lastIndexOf('_');
+					var firstUnderscore:int = (entry.name as String).indexOf('_');
+					if(lastUnderscore != -1 && firstUnderscore != lastUnderscore)
+					{
+						var countString:String = (entry.name as String).substring(firstUnderscore+1, lastUnderscore);
+						var constraintCount:int = parseInt(countString);
+						if(constraintCount > 0)
+							entry['constraintCount'] = constraintCount;
+						else
+							entry['constraintCount'] = 0;
+					}
+					
 					vector.push(entry);
 				}
 			}
-
+			vector.sort(sortOnConstraints);
 			levelInfoVector = vector;
+			
+			//now that they are sorted, figure out the ranges
+			for(var index:int = 0; index<levelInfoVector.length;index++)
+			{
+				var levelInfo:Object = levelInfoVector[index];
+				if(levelInfo.constraintCount < level1TopRangeNumConstraint)
+				{
+					level1TopRangeLevelIndex++;
+					level2TopRangeLevelIndex++;
+				}
+				else if(levelInfo.constraintCount < level2TopRangeNumConstraint)
+				{
+					level2TopRangeLevelIndex++;
+				}
+				else
+					break;
+			}
+			
 			if(m_callback != null)
 				m_callback(result);
+		}
+		
+		protected function sortOnConstraints(itemA:Object, itemB:Object):Number
+		{
+			if (itemA['constraintCount'] < itemB['constraintCount']) 
+				return -1; 
+			else if (itemA['constraintCount'] > itemB['constraintCount'])
+				return 1; 
+			else return 0; 
 		}
 		
 		//called when level metadata is loaded 
@@ -508,28 +630,34 @@ package networking
 						
 					PlayerValidation.validationObject.setPlayerActivityInfo(scoreDifference, levelID);
 					
-//					var leaderboardScore:int = 1;
-//					var levelScore:int = World.m_world.active_level.currentScore;
-//					var targetScore:int = PipeJamGame.levelInfo.targetScore;
-//					if(levelScore > targetScore)
-//						leaderboardScore = 2;
-//					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&data2='"+ PlayerValidation.accessToken + "'";
-//					var dataObj:Object = new Object;
-//					dataObj.playerId = PlayerValidation.playerID;
-//					dataObj.gameId = PipeJam3.GAME_ID;
-//					var i:Object = PipeJamGame.levelInfo;
-//					dataObj.levelId = PipeJamGame.levelInfo.levelID;
-//					var parameters:Array = new Array;
-//					var paramScoreObj:Object = new Object;
-//					paramScoreObj.name = "score";
-//					paramScoreObj.value = levelScore;
-//					var paramLeaderScoreObj:Object = new Object;
-//					paramLeaderScoreObj.name = "leaderboardScore";
-//					paramLeaderScoreObj.value = leaderboardScore;
-//					parameters.push(paramScoreObj);
-//					parameters.push(paramLeaderScoreObj);
-//					dataObj.parameter = parameters;
-//					data = JSON.stringify(dataObj);
+					var playerID:String = PlayerValidation.playerID;
+					//report to website scoreDifference + starting count
+					var total:int = scoreDifference;
+					for each(var person:Object in PipeJamGame.levelInfo.highScores)
+					{
+						if(person[1] == PlayerValidation.playerID)
+						{
+							total = total + person[3];
+							break;
+						}
+					}
+					var leaderboardScore:int = 1;
+					var levelScore:int = World.m_world.active_level.currentScore;
+					var targetScore:int = PipeJamGame.levelInfo.targetScore;
+					if(levelScore > targetScore)
+						leaderboardScore = 2;
+					url = NetworkConnection.productionInterop + "?function=jsonPOST&data_id='/api/score'&data2='"+ PlayerValidation.accessToken + "'";
+					var dataObj:Object = new Object;
+					dataObj.playerId = PlayerValidation.playerID;
+					dataObj.gameId = PipeJam3.GAME_ID;
+					dataObj.levelId = PipeJamGame.levelInfo.levelID;
+					var parameters:Array = new Array;
+					var paramScoreObj:Object = new Object;
+					paramScoreObj.name = "points";
+					paramScoreObj.value = total;
+					parameters.push(paramScoreObj);
+					dataObj.parameter = parameters;
+					data = JSON.stringify(dataObj);
 					break;
 			}
 			

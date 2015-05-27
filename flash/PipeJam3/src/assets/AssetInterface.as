@@ -157,6 +157,7 @@ package assets
 		public static const ParadoxSubTexture_VariableWide:String = "VariableWide";
 		public static const ParadoxSubTexture_VariableWideSelected:String = "VariableWideSelected";
 		public static const ParadoxSubTexture_VariableWideWorking:String = "VariableWideWorking";
+		public static const ParadoxSubTexture_ProgressMarkerPrefix:String = "ProgressMarker";
 		
         public static function getTexture(file:String, name:String):Texture
         {

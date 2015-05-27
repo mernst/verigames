@@ -41,14 +41,17 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
-     //    listEntries(db, "GameSolvedLevels");
 
         listCollectionNames(db);
        HashMap<String, String> map = new HashMap<String, String>();
-       map.put("name", "p_000249_00011614");
-  //     map.put("levelID", "12");
-   //    
-       listEntries(db, "PlayerActivity");
+  //     map.put("levelID", "551ec321b0044206887210a8");//551ec321b0044206887210a8,551ec31fb0044206887210a0
+       map.put("playerID", "555b7cd234359e8c18e3e644");//
+      
+       listEntries(db, "GameSolvedLevels", map, true);
+       listEntries(db, "PlayerActivity", map, true);
+   //    listFiles(fs);
+    //   
+    //   writeFileLocally(fs, "555f64fff882c00238313b40", "assignments.json" );
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
         
@@ -60,13 +63,18 @@ public class MongoTestBed {
 		listEntries(db, collectionName, null, false);
 	}
 	
+	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys)
+	{
+		listEntries(db, collectionName, searchKeys, false);
+	}
+	
 	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)
 	{
-		//PrintWriter writer = null;
+		PrintWriter writer = null;
     	DBCursor cursor = null;
     	try 
     	{
-    		//writer = new PrintWriter("Entries.txt", "UTF-8");
+    	//	writer = new PrintWriter("Entries.txt", "UTF-8");
 
         	   
         	  
@@ -84,7 +92,7 @@ public class MongoTestBed {
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
                System.out.println(obj);
-        //       writer.println(obj);
+     //          writer.println(obj);
                if(remove)
             	   collection.remove(obj);
            }
@@ -96,7 +104,7 @@ public class MongoTestBed {
         		cursor.close();
         }
     	
-    	// writer.close();
+    //	 writer.close();
 			
 		
 	}
@@ -433,29 +441,18 @@ public class MongoTestBed {
         }
     }
     
-    static void writeFileLocally(GridFS fs, String objectID ) throws Exception
+    static void writeFileLocally(GridFS fs, String objectID, String filename ) throws Exception
     {
         BasicDBObject field = new BasicDBObject();
-        field.put("xmlID", objectID);
+        field.put("_id", new ObjectId(objectID));
 		List<GridFSDBFile> cursor = fs.find(field);
         try {
            for(int i=0; i<cursor.size();i++) {
         	   GridFSDBFile obj = cursor.get(i);	   
 
-        	   if(i ==  cursor.size()-2)
-        	   {
-        		   FileOutputStream outputImage = new FileOutputStream("here.zip");
-        		    obj.writeTo( outputImage );
-        		    outputImage.close();
-        	   }
-        	   if(i ==  1)
-        	   {
-        		   FileOutputStream outputImage = new FileOutputStream("here2.zip");
-        		    obj.writeTo( outputImage );
-        		    outputImage.close();
-        	   }
-//        	if(i>0)
-//        		fs.remove(obj);
+        	   FileOutputStream outputImage = new FileOutputStream(filename);
+        	   obj.writeTo( outputImage );
+        	   outputImage.close();
            }
         } finally {
         }

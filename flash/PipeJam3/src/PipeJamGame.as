@@ -231,7 +231,6 @@ package
 		protected function handleHighScoreList(result:int, list:Vector.<Object>):void
 		{
 			var highScoreArray:Array = new Array; 
-			PlayerValidation.countNeededUserNameRequests();
 			for each(var level:Object in list)
 			{
 				level.numericScore = int(level[0]);
