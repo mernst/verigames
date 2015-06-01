@@ -12,10 +12,18 @@ Create a level from a wcnf, cnf, or json file:
 		run ... (not finished...)
 
 Add a level to the database:
+
+	Think about which files to delete. Game info is retrieved from the ActiveLevels table, and the PlayerActivity table. The latter is used to track progress, so I wouldn't remove it,
+	but the former is used to choose the next level out of, and so should be removed for all levels not wanted any more. You can also remove the GameSolvedLevels table info, but 
+	I'd save that as it might be wanted to track submissions for prior levels.
 	
 	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py
 	
 	With the description file, run addLevelToDB.py
+
+zipall.py
+
+Zips a directory of files into individual zip files. Unix only. Usually I upload the json files to a server (upload the zipped collection is far faster, then unzip them) and then run this, as I don't have a Windows equivalent.
 	
 Autosolve levels:
 
@@ -27,6 +35,7 @@ makeConstraints.py
 
 Makes a global constraint file from a wcnf or cnf file.	
 
+
 Obsolete files in this directory
 
 classic2grid.py
@@ -35,8 +44,6 @@ classic2gridall.py
 layoutgridall.py
 
 These files will create and layout a level. classic2grid calls layoutgrid. Run classic2grid/layoutgrid on single levels, classic2gridall/layoutgridall on a directory. These last two are unix only.
-
-
 
 obfuscateNames.py
 
@@ -50,7 +57,5 @@ separateLevelsInWorld.py
 
 Separates a world into disjoint worlds. Copies the varID-sets into each file.
 
-zipall.py
 
-Zips a directory of files into individual zip files. Unix only.
 

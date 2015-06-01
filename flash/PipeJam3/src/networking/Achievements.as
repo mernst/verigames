@@ -137,9 +137,7 @@ package networking
 					dataObj.earnedOn = (new Date()).time;
 					
 					data = JSON.stringify(dataObj);
-					//var enc:Base64Encoder = Base64Encoder.getEncoder();
-					//enc.encode(data);
-					//data = enc.toString();
+
 					method = URLRequestMethod.POST; 
 					break;
 			}
