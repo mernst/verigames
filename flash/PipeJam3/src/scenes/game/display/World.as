@@ -1106,7 +1106,7 @@ package scenes.game.display
 					m_splashLayer.removeChildren(0, -1, true);
 				}
 				var backQ:Quad = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
-				backQ.alpha = 0.4;
+				backQ.alpha = 0.9;
 				m_splashLayer.addChild(backQ);
 				levelSplash.x = 0.5 * (Constants.GameWidth - levelSplash.width);
 				levelSplash.y = 0.5 * (Constants.GameHeight - levelSplash.height);
@@ -1263,10 +1263,34 @@ package scenes.game.display
 			if(active_level && active_level.tutorialManager) 
 			{
 				var visibleBrushes:int = active_level.tutorialManager.getVisibleBrushes();
-				edgeSetGraphViewPanel.setFirstBrush(visibleBrushes);
+				setFirstBrush(visibleBrushes);
 			}
 			else
-				edgeSetGraphViewPanel.setFirstBrush(active_level.brushesToActivate);
+				setFirstBrush(active_level.brushesToActivate);
+		}
+		
+		public function setFirstBrush(visibleBrushes:int):void
+		{
+			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			{
+				edgeSetGraphViewPanel.changeBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
+				sideControlPanel.changeSelectedBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
+				return;
+			}
+			
+			if(visibleBrushes & TutorialLevelManager.WIDEN_BRUSH)
+			{
+				edgeSetGraphViewPanel.changeBrush(GridViewPanel.WIDEN_BRUSH);
+				sideControlPanel.changeSelectedBrush(GridViewPanel.WIDEN_BRUSH);
+				return;
+			}
+			
+			if(visibleBrushes & TutorialLevelManager.NARROW_BRUSH)
+			{
+				edgeSetGraphViewPanel.changeBrush(GridViewPanel.NARROW_BRUSH);
+				sideControlPanel.changeSelectedBrush(GridViewPanel.NARROW_BRUSH);
+				return;
+			}
 		}
 	}
 }
