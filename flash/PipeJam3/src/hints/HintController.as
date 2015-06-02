@@ -12,7 +12,7 @@ package hints
 	public class HintController extends Sprite 
 	{
 		private static const FADE_SEC:Number = 0.3;
-		private static const SMALL_NODE_CHECK_VAL:int = 14;
+		private static const SMALL_NODE_CHECK_VAL:int = 9;
 		
 		private static var m_instance:HintController;
 		
