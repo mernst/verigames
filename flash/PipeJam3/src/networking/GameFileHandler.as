@@ -81,6 +81,31 @@ package networking
 			fileHandler.sendMessage(GET_LEVEL, fileHandler.defaultJSONCallback, null, id);
 		}
 		
+		static public function loadLevelInfoFromID(id:String, callback:Function):void
+		{
+			//look up name in metadata list
+			if(levelInfoVector)
+			{
+				PipeJamGame.levelInfo = findLevelObject(id);
+				PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				
+			}
+			else
+			{
+				GameFileHandler.m_name = id;
+				GameFileHandler.m_loadCallback = callback;
+				//set a timer, and try again
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
+				timer.start();
+			}
+		}
+		
+		public static function getLevelCallback(e:TimerEvent = null):void
+		{
+			GameFileHandler.loadLevelInfoFromID(GameFileHandler.m_name, GameFileHandler.m_loadCallback);
+		}		
+		
 		static public function loadLevelInfoFromName(name:String, callback:Function):void
 		{
 			//look up name in metadata list
@@ -95,13 +120,14 @@ package networking
 				GameFileHandler.m_name = name;
 				GameFileHandler.m_loadCallback = callback;
 				//set a timer, and try again
-				var timer:Timer = new Timer(250, 0);
-				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER, getLevelFromNameCallback);
 				timer.start();
 			}
 		}
-		
-		public static function getLevelCallback(e:TimerEvent = null):void
+
+				
+		public static function getLevelFromNameCallback(e:TimerEvent = null):void
 		{
 			GameFileHandler.loadLevelInfoFromName(GameFileHandler.m_name, GameFileHandler.m_loadCallback);
 		}
@@ -132,7 +158,7 @@ package networking
 		{
 			for each(var level:Object in levelInfoVector)
 			{
-				if(level.id == id)
+				if(level.levelID == id)
 				{
 					return level;
 				}

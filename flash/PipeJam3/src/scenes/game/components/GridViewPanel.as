@@ -493,32 +493,36 @@ package scenes.game.components
 					rotateToDegree (paintArc, helperPoint, STARTING_ROTATION);
 				}
 			}
-			
 		}
 		
 		protected var messageArray:Array = new Array(
-			"Moving Up!\n\n\n\n\n", 
-			"Another one bites the dust.\n\n\n\n\n",
-			"You think you're good, don't you.\n\n\n\n\n",
-			"Another Einstein in the making.\n\n\n\n\n",
-			"No longer a Newbie, not yet a Genius.\n\n\n\n\n",
-			"Yet again, you think you can win?\n\n\n\n\n",
-			"Happenstance and Balderdash.\n\n\n\n\n",
-			"Just maybe you are second best.\n\n\n\n\n", 
-			"You again?\n\n\n\n\n",
-			"I love the smell of victory.\n\n\n\n\n",
-			"Down Goes Frasier!\n\n\n\n\n",
-			"What took you so long?\n\n\n\n\n",
-			"Bwahahaha, You'll never succeed!\n\n\n\n\n",
-			"You're the penultimatist.\n\n\n\n\n",
-			"It's Inconceivable!\n\n\n\n\n",
-			""
-			);
+			"Nice work!\n\n\n\n\n", 
+			"Keep it up!\n\n\n\n\n", 
+			"Great work!\n\n\n\n\n", 
+			
+			"Solved and solved!\n\n\n\n\n", 
+			"Moving ever forward!\n\n\n\n\n", 
+			"Keep on solvin'!\n\n\n\n\n", 
+			
+			"Nicely done!\n\n\n\n\n", 
+			"Keep calm and solve on!\n\n\n\n\n", 
+			"You're a solving master!\n\n\n\n\n", 
+			
+			"Keep persevering!\n\n\n\n\n", 
+			"Impressive!\n\n\n\n\n", 
+			"That's some fancy solving!\n\n\n\n\n", 
+			
+			"Intense!\n\n\n\n\n", 
+			"Masterful!\n\n\n\n\n", 
+			"Genius!\n\n\n\n\n");
+		
 		
 		public function showProgressDialog(numLevelsFinished:int):void
 		{
-			if(numLevelsFinished > 15)
+			if(numLevelsFinished > messageArray.length)
 				return;
+			if(numLevelsFinished > 15)
+				numLevelsFinished = 15;
 			
 			var dialogSize:Point = new Point(200, 70);
 			var info:RankProgressDialogInfo = new RankProgressDialogInfo(messageArray[numLevelsFinished-1], 10, dialogSize, "Next!");
@@ -966,7 +970,7 @@ package scenes.game.components
 			if (m_currentLevel)
 			{
 				var currentViewRect:Rectangle = getViewInContentSpace();
-				m_currentLevel.updateLevelDisplay(currentViewRect);
+				m_currentLevel.updateLevelDisplay(currentViewRect, content);
 			}
 			m_gridContainer.removeFromParent();
 		}
@@ -1031,7 +1035,7 @@ package scenes.game.components
 				
 				if(newZoomLevel > 0 && zoomDialogPosted == false)
 				{
-					HintController.getInstance().popHint("Zoom in for more detail.", m_currentLevel);
+					HintController.getInstance().popHint("Zoom in for more detail.", m_currentLevel, 6);
 					zoomDialogPosted = true;
 				}
 			}
@@ -1064,6 +1068,7 @@ package scenes.game.components
 		private function getViewInContentSpace(contentToUse:DisplayObject = null):Rectangle
 		{
 			if (contentToUse == null) contentToUse = content;
+			trace(-contentToUse.x / contentToUse.scaleX, -contentToUse.y / contentToUse.scaleY, clipRect.width / contentToUse.scaleX, clipRect.height / contentToUse.scaleY);
 			return new Rectangle(-contentToUse.x / contentToUse.scaleX, -contentToUse.y / contentToUse.scaleY, clipRect.width / contentToUse.scaleX, clipRect.height / contentToUse.scaleY);
 		}
 		

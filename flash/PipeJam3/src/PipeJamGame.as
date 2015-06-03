@@ -64,7 +64,7 @@ package
 		public static var m_pipeJamGame:PipeJamGame;
 		
 		public var m_fileName:String;
-
+		public var m_levelID:String;
 		
 		public function PipeJamGame()
 		{
@@ -139,6 +139,15 @@ package
 					{
 						m_fileName = vars.dbfile;
 					}
+					else if(vars.levelID)
+					{
+						m_levelID = vars.levelID;
+
+					}
+					else if(vars.name)
+					{
+						m_fileName = vars.name;
+					}
 					else if(vars.tutorial)
 					{
 						m_fileName = "tutorial";
@@ -147,7 +156,8 @@ package
 						PipeJamGame.levelInfo.id = vars.tutorial; 
 						PipeJamGame.levelInfo.tutorialLevelID = vars.tutorial; 
 					}
-					else if(vars.code)
+					
+					if(vars.code)
 					{
 						var accessCode:String = vars.code;
 						PlayerValidation.initiateAccessTokenAccess(accessCode);
@@ -160,10 +170,12 @@ package
 			}
 			
 			// use file if set in url, else create and show menu screen
-			if(m_fileName || PlayerValidation.AuthorizationAttempted)
+			if(m_fileName || m_levelID || PlayerValidation.AuthorizationAttempted)
 			{ 
 				if(PipeJamGame.levelInfo) //local file
 					showScene("PipeJamGame");
+				else if(m_levelID)
+					loadLevelFromID(m_levelID);
 				else if(m_fileName)
 					loadLevelFromName(m_fileName);
 				else
@@ -177,6 +189,12 @@ package
 				showScene("SplashScreen");				
 			}
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		//load file from db based on level id
+		public function loadLevelFromID(levelName:String):void
+		{
+			GameFileHandler.loadLevelInfoFromID(levelName, loadLevel);
 		}
 		
 		//load file from db based on level name i.e. L120_V60
