@@ -63,7 +63,9 @@ for fname in files:
 					nodes_constraints = input_line[7:].split(' ')
 					n_total_nodes += int(nodes_constraints[0])
 					n_total_constraints += int(nodes_constraints[1])
+		#use one of these
 		with os.popen('%s/maxsatz.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
+		#with os.popen('%s/borchers.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
 			lines = sat_cmd.readlines()
 			max_score = None
 			penalty = None

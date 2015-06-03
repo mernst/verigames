@@ -29,6 +29,12 @@ int algType;
 
 #include <sys/time.h>
 
+#ifdef borchers
+void getCurrentSolutionMaxSatz(int* foo) {}
+void runMaxSatz(int * clauses, int nclauses) {}
+int setupMaxSatz(char* temp) {}
+#endif
+
 double
 get_time()
 {
