@@ -43,7 +43,7 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		
 		//if release build is true, true if using production machine db/info, false if using staging
@@ -66,7 +66,7 @@ package
 		public static const SELECTION_STYLE_CLASSIC:uint                = 0;
 		public static const SELECTION_STYLE_VAR_BY_VAR:uint             = 1;
 		public static const SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR:uint   = 2;
-		public static const SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
+		public static var SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 
 		public static var logging:LoggingServerInterface;
 		public static const loggingKey:String = LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;

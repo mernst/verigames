@@ -156,6 +156,8 @@ package scenes.game.display
 		static public var debugSolver:Boolean = false;
 		public var extendSolver:Boolean = true;
 		
+		public static var numNodesOnScreen:int = 0;
+		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -331,7 +333,7 @@ package scenes.game.display
 		}
 		
 		//called on when GridViewPanel content is moving
-		public function updateLevelDisplay(viewRect:Rectangle = null):int
+		public function updateLevelDisplay(viewRect:Rectangle = null, content:DisplayObject = null):int
 		{
 			var nGroups:int = (levelGraph.groupsArr ? levelGraph.groupsArr.length : 0);
 			var newGroupDepth:int = 0;
@@ -354,13 +356,17 @@ package scenes.game.display
 			}
 			
 			var candidatesToRemove:Dictionary = new Dictionary();
-			for (var nodeOnScreenId:String in m_nodeOnScreenDict) candidatesToRemove[nodeOnScreenId] = true;
+			for (var nodeOnScreenId:String in m_nodeOnScreenDict) { candidatesToRemove[nodeOnScreenId] = true; numNodesOnScreen--; }
 			
 			groupGrid = m_groupGrids[newGroupDepth];
-			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
-			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+			var scaledDimensions:Point= groupGrid.gridDimensions.clone();
+		//	if(content)
+		//		scaledDimensions.normalize(content.scaleX);
+			
+			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, scaledDimensions);
+			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, scaledDimensions);
+			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, scaledDimensions) -1;
+			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, scaledDimensions);
 			var count:int = 0;
 
 			for (i = minX; i <= maxX; i++)
@@ -375,7 +381,7 @@ package scenes.game.display
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
-						count++
+						count++;
 						if (node != null)
 						{
 							//if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) 
@@ -409,7 +415,6 @@ package scenes.game.display
 		}
 		
 		private var m_initLayers:Boolean = false;
-		
 		public function draw():void
 		{
 			if (!m_initLayers)
@@ -466,7 +471,7 @@ package scenes.game.display
 					nodeToRemove.backgroundSkin = null;
 					touchedConflictLayer = true;
 				}
-				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) delete m_nodeOnScreenDict[nodeToRemove.id];
+				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) {delete m_nodeOnScreenDict[nodeToRemove.id]; numNodesOnScreen--; }
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 			}
@@ -520,6 +525,7 @@ package scenes.game.display
 				if (nodeToDraw.skin != null)
 				{
 					m_nodeOnScreenDict[nodeToDraw.id] = true;
+					numNodesOnScreen++;
 					if (parent)
 					{
 						nodeToDraw.skin.scale(0.5 / parent.scaleX);
@@ -768,6 +774,11 @@ package scenes.game.display
 				if (gridChild == null) continue;
 				m_numNodes++;
 			}
+			//quick fix to make large level actually playable
+			if(m_numNodes > 50000)
+				PipeJam3.SELECTION_STYLE = PipeJam3.SELECTION_STYLE_CLASSIC;
+			else
+				PipeJam3.SELECTION_STYLE = PipeJam3.SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 			
 			//trace("node count = " + n);
 			
