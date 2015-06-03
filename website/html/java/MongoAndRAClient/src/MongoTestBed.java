@@ -47,8 +47,8 @@ public class MongoTestBed {
   //     map.put("levelID", "551ec321b0044206887210a8");//551ec321b0044206887210a8,551ec31fb0044206887210a0
        map.put("playerID", "555b7cd234359e8c18e3e644");//
       
-       listEntries(db, "GameSolvedLevels", map, true);
-       listEntries(db, "PlayerActivity", map, true);
+    //   listEntriesToFile(db, "GameSolvedLevels", "GameSolvedLevels.txt");
+       listEntries(db, "ActiveLevels");
    //    listFiles(fs);
     //   
     //   writeFileLocally(fs, "555f64fff882c00238313b40", "assignments.json" );
@@ -107,6 +107,49 @@ public class MongoTestBed {
     //	 writer.close();
 			
 		
+	}
+	
+	static void listEntriesToFile(DB db, String collectionName, String filename)
+	{
+		listEntriesToFile(db, collectionName, filename, null);
+	}
+	
+	static void listEntriesToFile(DB db, String collectionName, String filename, HashMap<String, String> searchKeys)
+	{
+		PrintWriter writer = null;
+    	DBCursor cursor = null;
+    	try 
+    	{
+    		writer = new PrintWriter(filename, "UTF-8");
+
+        	   
+        	  
+			BasicDBObject field = new BasicDBObject();
+			if(searchKeys != null)
+			for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+			    String key = entry.getKey();
+			    String value = entry.getValue();
+			    field.put(key, value);
+			}
+			
+			DBCollection collection = db.getCollection(collectionName);
+
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+				DBObject obj = cursor.next();
+               System.out.println(obj);
+               writer.println(obj);
+			 }
+
+    	}catch (Exception e)
+    	{
+    		
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+    	
+    	 writer.close();
 	}
 	
 	static void groupSubmittedLevelsByPlayerID(DB db)
