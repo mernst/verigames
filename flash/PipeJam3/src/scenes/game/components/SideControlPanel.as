@@ -386,6 +386,25 @@ package scenes.game.components
 			dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, evt.target, null));
 		}
 		
+		public function changeSelectedBrush(brush:String):void
+		{
+			switch(brush)
+			{
+				case GridViewPanel.SOLVER1_BRUSH:
+					m_brushButtonGroup.makeActive(m_solver1Brush);
+					break;
+				case GridViewPanel.SOLVER2_BRUSH:
+					m_brushButtonGroup.makeActive(m_solver2Brush);
+					break;
+				case GridViewPanel.WIDEN_BRUSH:
+					m_brushButtonGroup.makeActive(m_widenBrush);
+					break;
+				case GridViewPanel.NARROW_BRUSH:
+					m_brushButtonGroup.makeActive(m_narrowBrush);
+					break;
+			}
+		}
+		
 		public function showVisibleBrushes(visibleBrushes:int):void
 		{
 			var count:int = 0;

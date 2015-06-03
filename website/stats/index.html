@@ -145,6 +145,7 @@
 	var sessionsPerDayData = [['Day', 'Logged in sessions', 'Anonymous sessions']];
 	var playersPerDayData = [['Day', 'Logged in unique players', 'Anonymous unique players']];
 	var playersPerWeekData = [['Week starting', 'Logged in unique players', 'Anonymous unique players']];
+	var playerRetentionData = [['Unique Days played', 'Logged in unique players', 'Label']];
 	var newPlayersPerWeekData = [['Week starting', 'New logged in players', 'New anonymous players']];
 	var hoursPlayedPerWeekData = [['Week starting', 'Logged in player hours', 'Anonymous player hours']];
 	var levelsPerDayData = [['Day', 'Logged in levels', 'Anonymous levels']];
@@ -165,8 +166,8 @@
 		progressPct = 0;
 		progressTask = "Filtering data...";
 		dataDict = {
-			'anon':      { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} },
-			'logged_in': { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} }
+			'anon':      { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'player_days': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} },
+			'logged_in': { 'levels_uids':{}, 'n_level_uids': {}, 'day_sessions': {}, 'day_plays': {}, 'day_players': {}, 'player_days': {}, 'level_plays': {}, 'hour_user_plays': {}, 'level_moves': {}, 'hosts': {} }
 		};
 		startDatePickerVal = $("#datadatestart")[0].value;
 		startDate = Date.parse(startDatePickerVal);
@@ -245,13 +246,16 @@
 				if (!dataDict['anon']['day_sessions'].hasOwnProperty(sessionDateKey)) dataDict['anon']['day_sessions'][sessionDateKey] = {};
 				dataDict[dataKey]['day_sessions'][sessionDateKey][sessionid] = true;
 			}
-			// Players/day processing
+			// Players/day processing and retention processing
 			if (queststarttime && uid) {
 				var startdate = new Date(queststarttime * 1000.0);
 				var dateKey = startdate.toLocaleDateString();
 				if (!dataDict['logged_in']['day_players'].hasOwnProperty(dateKey)) dataDict['logged_in']['day_players'][dateKey] = {};
 				if (!dataDict['anon']['day_players'].hasOwnProperty(dateKey)) dataDict['anon']['day_players'][dateKey] = {};
 				dataDict[dataKey]['day_players'][dateKey][uid] = true;
+				if (!dataDict['logged_in']['player_days'].hasOwnProperty(uid)) dataDict['logged_in']['player_days'][uid] = {};
+				if (!dataDict['anon']['player_days'].hasOwnProperty(uid)) dataDict['anon']['player_days'][uid] = {};
+				dataDict[dataKey]['player_days'][uid][dateKey] = true;
 			}
 			// Plays/day processing
 			if (queststarttime) {
@@ -303,9 +307,9 @@
 		var nAnonPlayersTotal = 0;
 		for (var dateKey in dataDict['logged_in']['day_players']) {
 			var nLoggedInPlayers = 0;
-			for (var sessionKey in dataDict['logged_in']['day_players'][dateKey]) nLoggedInPlayers++;
+			for (var uidKey in dataDict['logged_in']['day_players'][dateKey]) nLoggedInPlayers++;
 			var nAnonPlayers = 0;
-			for (var sessionKey in dataDict['anon']['day_players'][dateKey]) nAnonPlayers++;
+			for (var uidKey in dataDict['anon']['day_players'][dateKey]) nAnonPlayers++;
 			nLoggedInPlayersTotal += nLoggedInPlayers;
 			nAnonPlayersTotal += nAnonPlayers;
 			playersPerDayData.push([dateKey, nLoggedInPlayers, nAnonPlayers]);
@@ -319,6 +323,23 @@
 			hourlyDataArr.push([hourKey, dataDict['logged_in']['hour_user_plays'][hourKey], dataDict['anon']['hour_user_plays'][hourKey]]);
 		}
 		hourlyDataArr.sort(hourKeySort);
+		
+		// Retention calculation: use logged in players, chart # players playing for 1 day, 2 days, etc
+		playerRetentionData = [['Unique Days played', 'Logged in unique players', 'Label']];
+		for (var uidKey in dataDict['logged_in']['player_days']) {
+			nUniqueDaysPlayedForThisPlayer = 0;
+			for (var dateKey in dataDict['logged_in']['player_days'][uidKey]) nUniqueDaysPlayedForThisPlayer++;
+			// Use nUniqueDaysPlayedForThisPlayer for indexing. The first row (0) is the column labels, the next row is 
+			if (nUniqueDaysPlayedForThisPlayer == 0) continue; // this shouldn't be possible
+			if (playerRetentionData[nUniqueDaysPlayedForThisPlayer] === undefined) playerRetentionData[nUniqueDaysPlayedForThisPlayer] = ["" + nUniqueDaysPlayedForThisPlayer, 0, ""];
+			playerRetentionData[nUniqueDaysPlayedForThisPlayer][1]++; // increment the number of players in this days_played bin
+			playerRetentionData[nUniqueDaysPlayedForThisPlayer][2] = "" + playerRetentionData[nUniqueDaysPlayedForThisPlayer][1];
+		}
+		// Fill in empty rows
+		for (var i=0; i < playerRetentionData.length; i++) {
+			if (playerRetentionData[i] == undefined) playerRetentionData[i] = ["" + i, 0, ""];
+		}
+		
 		// Find previous sunday, start weeks from there, move week by week
 		var firstDay = new Date(earliestDate * 1000.0);
 		var prevSunday = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
@@ -512,6 +533,10 @@
 	function drawCharts() {
 		console.log("Drawing Dropoff chart...");
 		drawDropoffChart();
+		
+		console.log("Drawing Player Retention...");
+		drawAnnotatedChart(playerRetentionData, "playerretention", "Number of days played", "# Unique Logged In Players", "Player Retention");
+		
 		console.log("Drawing Sessions/day chart...");
 		drawColumnChart(sessionsPerDayData, "sessionsperday", "Sessions", "Sessions per Day", true);
 		console.log("Drawing Players/day chart...");
@@ -526,6 +551,7 @@
 		drawColumnChart(levelsPerDayData, "levelsperday", "Levels played", "Total Levels Played per Day", true);
 		console.log("Drawing Plays/day chart...");
 		drawColumnChart(playsPerLevelData, "playsperlevel", "Total Plays", "Total Plays per Level", true);
+		
 		console.log("Drawing moves charts...");
 		drawMovesCharts();
 		// add more charts here
@@ -573,6 +599,19 @@
 			isStacked: true
 		};
 		chart.draw(data, options);
+	}
+	
+	function drawAnnotatedChart(array_data, prefix, xlabel, ylabel, chart_title) {
+		var data = google.visualization.arrayToDataTable(array_data);
+		var view = new google.visualization.DataView(data);
+		view.setColumns([0, 1, {sourceColumn: 2, type: 'string', role: 'annotation'}]);
+		var chart = new google.visualization.ColumnChart(document.getElementById(prefix + '_chart_div'));
+		var options = {
+	    	title: chart_title,
+	    	hAxis: {title: xlabel},
+			vAxis: {title: ylabel}
+		};
+		chart.draw(view, options);
 	}
 	
 	function drawColumnChart(array_data, prefix, ylabel, chart_title, can_stack) {
@@ -666,6 +705,12 @@
               <input type="checkbox" id="dropoff_stacked" checked="true"> Stacked
             </span>
           </div>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="margin:10px">
+      <div class="panel-heading">Player retention:</div>
+      <div class="panel-body">
+      	  <div id="playerretention_chart_div" style="width: 1200px; height: 500px;"></div>
       </div>
     </div>
     <div class="panel panel-primary" style="margin:10px">
