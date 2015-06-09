@@ -88,7 +88,7 @@ package audio
 			var xmlVec:Vector.<XML> = new Vector.<XML>();
 			xmlVec.push(new XML(xml));
 			m_audioDriver.init(xmlVec, new AudioResource());
-			m_audioDriver.globalVolume = 0.3;
+			m_audioDriver.globalVolume = PipeJam3.ASSET_SUFFIX ? 0 : 0.3;
 			m_audioLoaded = true;
 		}
 		
@@ -108,7 +108,7 @@ package audio
 		
 		private function onMusicClick(ev:starling.events.Event):void
 		{
-			audioDriver().musicOn = !audioDriver().musicOn;
+			audioDriver().musicOn = PipeJam3.ASSET_SUFFIX ? false : !audioDriver().musicOn;
 			
 			updateMusicState();
 		}
@@ -136,7 +136,7 @@ package audio
 		
 		private function onSfxClick(ev:starling.events.Event):void
 		{
-			audioDriver().sfxOn = !audioDriver().sfxOn;
+			audioDriver().sfxOn = PipeJam3.ASSET_SUFFIX ? false : !audioDriver().sfxOn;
 			
 			updateSfxState();
 		}
@@ -144,7 +144,7 @@ package audio
 		private function updateSfxState():void
 		{
 			if (m_sfxCallback != null) {
-				m_sfxCallback(audioDriver().sfxOn);
+				m_sfxCallback(PipeJam3.ASSET_SUFFIX ? false : audioDriver().sfxOn);
 			}
 		}
 		
@@ -164,14 +164,14 @@ package audio
 		
 		private function onAllAudioClick(ev:starling.events.Event):void
 		{
-			audioDriver().musicOn = audioDriver().sfxOn = !audioDriver().sfxOn;  // this way they are sure to be both on or both off
+			audioDriver().musicOn = PipeJam3.ASSET_SUFFIX ? false : (audioDriver().sfxOn = !audioDriver().sfxOn);  // this way they are sure to be both on or both off
 			updateAllAudioState();
 		}
 		
 		private function updateAllAudioState():void
 		{
 			if (m_audioCallback != null) {
-				m_audioCallback(audioDriver().sfxOn);
+				m_audioCallback(PipeJam3.ASSET_SUFFIX ? false : audioDriver().sfxOn);
 			}
 		}
 		

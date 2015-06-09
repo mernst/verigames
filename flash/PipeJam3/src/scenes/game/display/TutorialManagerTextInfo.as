@@ -12,7 +12,7 @@ package scenes.game.display
 		
 		public function TutorialManagerTextInfo(_text:String, _size:Point, _pointAtFn:Function, _pointFrom:String, _pointTo:String)
 		{
-			text = _text;
+			text = PipeJam3.ASSET_SUFFIX ? _text.split("!").join(".") : _text;
 			size = _size;
 			pointAtFn = _pointAtFn;
 			pointFrom = _pointFrom;

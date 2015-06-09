@@ -458,6 +458,32 @@ package scenes.game.display
 					return SOLVER_BRUSH + WIDEN_BRUSH + NARROW_BRUSH;
 			}
 		}
+		
+		public function getStartingBrush():Number
+		{
+			switch (m_tutorialTag) {
+				case "002":
+				case "01":
+				case "004":
+				case "02":
+					return WIDEN_BRUSH
+			}
+			return NaN;
+		}
+		
+		public function emphasizeBrushes():int
+		{
+			switch(m_tutorialTag) {
+				case "002":
+				case "01":
+					return NARROW_BRUSH;
+				case "004":
+				case "02":
+					return SOLVER_BRUSH;
+			}
+			return 0x0;
+		}
+		
 		private function pointToNode(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name).skin; };

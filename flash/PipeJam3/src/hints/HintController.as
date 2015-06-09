@@ -131,7 +131,7 @@ package hints
 			}
 			if (m_hintBubble != null) Starling.juggler.removeTweens(m_hintBubble);
 			removeHint(); // any existing hints
-			m_hintBubble = new TextBubble("Hint: " + text, 10, Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);
+			m_hintBubble = new TextBubble("Hint: " + text, 10, PipeJam3.ASSET_SUFFIX ? Constants.NARROW_GRAY : Constants.NARROW_BLUE, null, level, Constants.HINT_LOC, null, null, false);
 			fadeInHint();
 			Starling.juggler.delayCall(fadeOutHint, secToShow + FADE_SEC);
 		}

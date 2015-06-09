@@ -2,6 +2,7 @@ package display
 {
 	import assets.AssetsAudio;
 	import events.ToolTipEvent;
+	import starling.textures.TextureAtlas;
 	
 	import audio.AudioManager;
 	
@@ -38,8 +39,7 @@ package display
 		//allow for setting other values
 		public var alphaValue:Number = 0.3;
 		
-		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, 
-		                                _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
+		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _atlas:TextureAtlas, 
 										_atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String = "", 
 										_atlasXMLButtonClickTexturePrefix:String = "", _fontColorOver:uint = 0xFFFFFF, _fontColorClick:uint = 0xFFFFFF,
 										_toolTipText:String = "")
@@ -48,7 +48,7 @@ package display
 			fontColor =  _fontColor;
 			m_toolTipText = _toolTipText;
 			
-			m_buttonBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix);
+			m_buttonBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlas, _atlasXMLButtonTexturePrefix);
 			m_textField = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColor);
 			m_textField.x = (1.0 - TXT_PCT) * _width / 2;
 			m_textField.y = (1.0 - TXT_PCT) * _height / 2;
@@ -58,7 +58,7 @@ package display
 			m_buttonSkin.addChild(m_textField);
 			
 			if (_atlasXMLButtonOverTexturePrefix) {
-				m_buttonOverBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonOverTexturePrefix);
+				m_buttonOverBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlas, _atlasXMLButtonOverTexturePrefix);
 				m_textFieldOver = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColorOver);
 				m_textFieldOver.x = (1.0 - TXT_PCT) * _width / 2;
 				m_textFieldOver.y = (1.0 - TXT_PCT) * _height / 2;
@@ -69,7 +69,7 @@ package display
 			}
 			
 			if (_atlasXMLButtonClickTexturePrefix) {
-				m_buttonClickBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonClickTexturePrefix);
+				m_buttonClickBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlas, _atlasXMLButtonClickTexturePrefix);
 				m_textFieldClick = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColorClick);
 				m_textFieldClick.x = (1.0 - TXT_PCT) * _width / 2;
 				m_textFieldClick.y = (1.0 - TXT_PCT) * _height / 2;

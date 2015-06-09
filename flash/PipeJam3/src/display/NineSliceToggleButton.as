@@ -2,6 +2,9 @@ package display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import starling.animation.DelayedCall;
+	import starling.core.Starling;
+	import starling.textures.TextureAtlas;
 	
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
@@ -27,9 +30,12 @@ package display
 		protected var text:String;
 		protected var secondaryText:String;
 		
-		public function NineSliceToggleButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _toolTipText:String, _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, _atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String="", _atlasXMLButtonClickTexturePrefix:String="", _fontColorOver:uint=0xFFFFFF, _fontColorClick:uint=0xFFFFFF)
+		private var m_emphasizeOn:DelayedCall;
+		private var m_emphasizeOff:DelayedCall;
+		
+		public function NineSliceToggleButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _toolTipText:String, _atlas:TextureAtlas, _atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String="", _atlasXMLButtonClickTexturePrefix:String="", _fontColorOver:uint=0xFFFFFF, _fontColorClick:uint=0xFFFFFF)
 		{
-			super(_text, _width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix, _fontName, _fontColor, _atlasXMLButtonOverTexturePrefix, _atlasXMLButtonClickTexturePrefix, _fontColorOver, _fontColorClick, _toolTipText);
+			super(_text, _width, _height, _cX, _cY, _atlas, _atlasXMLButtonTexturePrefix, _fontName, _fontColor, _atlasXMLButtonOverTexturePrefix, _atlasXMLButtonClickTexturePrefix, _fontColorOver, _fontColorClick, _toolTipText);
 			
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
@@ -74,6 +80,7 @@ package display
 				else if(touchState == TouchPhase.BEGAN)
 				{
 					if (!mIsDown) {
+						deemphasize();
 						dispatchEventWith(Event.TRIGGERED, true);
 					}
 					
@@ -172,5 +179,30 @@ package display
 			addChild(_skin);
 			setCurrentIcon(currentIcon);
 		}
+		
+		private function emphasizeOnDelayOff():void
+		{
+			showButton(m_buttonClickSkin);
+			m_emphasizeOff = Starling.juggler.delayCall(emphasizeOffDelayOn, 0.5);
+		}
+		
+		private function emphasizeOffDelayOn():void
+		{
+			showButton(m_buttonSkin);
+			m_emphasizeOn = Starling.juggler.delayCall(emphasizeOnDelayOff, 0.5);
+		}
+		
+		public function emphasize():void
+		{
+			deemphasize();
+			emphasizeOnDelayOff();
+		}
+		
+		public function deemphasize():void
+		{
+			if (m_emphasizeOn != null) Starling.juggler.remove(m_emphasizeOn);
+			if (m_emphasizeOff != null) Starling.juggler.remove(m_emphasizeOff);
+		}
+		
 	}
 }

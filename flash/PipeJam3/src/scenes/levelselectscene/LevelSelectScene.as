@@ -75,14 +75,14 @@ package scenes.levelselectscene
 			
 			var levelSelectWidth:Number = 305;
 			var levelSelectHeight:Number =  320;
-			levelSelectBackground = new NineSliceBatch(levelSelectWidth, levelSelectHeight, levelSelectWidth /6.0, levelSelectHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
+			levelSelectBackground = new NineSliceBatch(levelSelectWidth, levelSelectHeight, levelSelectWidth /6.0, levelSelectHeight / 6.0, AssetInterface.PipeJamSpriteSheetAtlas, "LevelSelectWindow");
 			levelSelectBackground.x = 10;
 			levelSelectBackground.y = 5;
 			addChild(levelSelectBackground);
 			
 			var levelSelectInfoWidth:Number = 150;
 			var levelSelectInfoHeight:Number =  320;
-			levelSelectInfoPanel = new NineSliceBatch(levelSelectInfoWidth, levelSelectInfoHeight, levelSelectInfoWidth /6.0, levelSelectInfoHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
+			levelSelectInfoPanel = new NineSliceBatch(levelSelectInfoWidth, levelSelectInfoHeight, levelSelectInfoWidth /6.0, levelSelectInfoHeight / 6.0, AssetInterface.PipeJamSpriteSheetAtlas, "LevelSelectWindow");
 			levelSelectInfoPanel.x = width - levelSelectInfoWidth - 10;
 			levelSelectInfoPanel.y = 5;
 			addChild(levelSelectInfoPanel);

@@ -33,7 +33,7 @@ package scenes.splashscreen
 			background.blendMode = BlendMode.NONE;
 			addChild(background);
 			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			var logoTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ParadoxLogoBlackLarge);
 			var logo:Image = new Image(logoTexture);
 			logo.scaleX = logo.scaleY = .6;

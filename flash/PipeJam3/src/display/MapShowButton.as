@@ -11,7 +11,7 @@ package display
 		public function MapShowButton()
 		{
 			m_toolTipText = "Show Map";
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.PipeJamLevelSelectAtlas;
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.LevelSelectSubTexture_MapMaximizeButton))]),
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.LevelSelectSubTexture_MapMaximizeButtonMouseover))]),

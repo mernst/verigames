@@ -58,12 +58,18 @@ package assets
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/FlowJamWait8.png")]
 		public static const Wait8Class:Class;		
-
+		
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
 		public static const PipeJamSpriteSheetPNG:Class;
 		
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamSpriteSheetXML:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheetTurk.png")]
+		public static const PipeJamSpriteSheetPNGTurk:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheetTurk.xml", mimeType = "application/octet-stream")]
+		public static const PipeJamSpriteSheetXMLTurk:Class;
 		
 		[Embed(source = "../../lib/assets/atlases/DialogWindow.png")]
 		public static const DialogWindowPNG:Class;
@@ -83,6 +89,12 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const ParadoxSpriteSheetXML:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheetTurk.png")]
+		public static const ParadoxSpriteSheetPNGTurk:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheetTurk.xml", mimeType = "application/octet-stream")]
+		public static const ParadoxSpriteSheetXMLTurk:Class;
+		
 		[Embed(source="../../lib/assets/Backgrounds/ParadoxBackground.jpg")]
 		public static const ParadoxBackgroundClass:Class;
 		
@@ -100,7 +112,7 @@ package assets
 		
 		[Embed(source = "../../lib/assets/checkmark.png")]
 		public static const CheckmarkClass:Class;
-		
+
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]

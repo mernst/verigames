@@ -16,8 +16,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="ParadoxSpriteSheet.svg"
-   inkscape:export-filename="C:\Users\pavlik\Documents\Flash\verigames\flash\PipeJam3\lib\assets\atlases\ParadoxSpriteSheet.png"
+   sodipodi:docname="ParadoxSpriteSheetTurk.svg"
+   inkscape:export-filename="C:\Users\pavlik\Documents\Flash\verigames\flash\PipeJam3\lib\assets\atlases\ParadoxSpriteSheetTurk.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <metadata
@@ -35,6 +35,60 @@
   <defs
      id="defs7178">
     <linearGradient
+       id="linearGradient10152">
+      <stop
+         id="stop10154"
+         offset="0"
+         style="stop-color:#000000;stop-opacity:0;" />
+      <stop
+         style="stop-color:#ab3e27;stop-opacity:1;"
+         offset="0.1"
+         id="stop10156" />
+      <stop
+         style="stop-color:#ab3e27;stop-opacity:1;"
+         offset="0.25"
+         id="stop10158" />
+      <stop
+         style="stop-color:#ffff7e;stop-opacity:1;"
+         offset="0.25"
+         id="stop10160" />
+      <stop
+         id="stop10162"
+         offset="0.75"
+         style="stop-color:#ffff7e;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ab3e27;stop-opacity:1;"
+         offset="0.75"
+         id="stop10164" />
+      <stop
+         style="stop-color:#ab3e27;stop-opacity:1;"
+         offset="0.89999998"
+         id="stop10166" />
+      <stop
+         id="stop10168"
+         offset="1"
+         style="stop-color:#ab3e27;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient10136">
+      <stop
+         id="stop10138"
+         offset="0"
+         style="stop-color:#ffff7e;stop-opacity:0;" />
+      <stop
+         id="stop10146"
+         offset="0.1"
+         style="stop-color:#ffff7e;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ffff7e;stop-opacity:1;"
+         offset="0.89999998"
+         id="stop10148" />
+      <stop
+         id="stop10144"
+         offset="1"
+         style="stop-color:#ffff7e;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient7471">
       <stop
          style="stop-color:#ab3e27;stop-opacity:0;"
@@ -51,15 +105,15 @@
       <stop
          id="stop7479"
          offset="0.25"
-         style="stop-color:#6cb0cf;stop-opacity:1;" />
+         style="stop-color:#a4a4a4;stop-opacity:1" />
       <stop
-         style="stop-color:#6cb0cf;stop-opacity:1;"
+         style="stop-color:#a4a4a4;stop-opacity:1;"
          offset="0.75"
          id="stop7481" />
       <stop
          id="stop7483"
          offset="0.75"
-         style="stop-color:#ab3e27;stop-opacity:1;" />
+         style="stop-color:#a4a4a4;stop-opacity:1" />
       <stop
          id="stop7485"
          offset="0.89999998"
@@ -157,13 +211,13 @@
          offset="0.25"
          id="stop7380" />
       <stop
-         style="stop-color:#5875a6;stop-opacity:1;"
+         style="stop-color:#606060;stop-opacity:1;"
          offset="0.25"
          id="stop7382" />
       <stop
          id="stop7384"
          offset="0.75"
-         style="stop-color:#5875a6;stop-opacity:1;" />
+         style="stop-color:#606060;stop-opacity:1;" />
       <stop
          style="stop-color:#ab3e27;stop-opacity:1;"
          offset="0.75"
@@ -194,9 +248,9 @@
       <stop
          id="stop7355"
          offset="0.25"
-         style="stop-color:#ffa300;stop-opacity:1;" />
+         style="stop-color:#f8f800;stop-opacity:1;" />
       <stop
-         style="stop-color:#ffa300;stop-opacity:1;"
+         style="stop-color:#f8f800;stop-opacity:1;"
          offset="0.75"
          id="stop7357" />
       <stop
@@ -250,19 +304,19 @@
     <linearGradient
        id="linearGradient7291">
       <stop
-         style="stop-color:#ffa300;stop-opacity:0;"
+         style="stop-color:#f8f800;stop-opacity:0;"
          offset="0"
          id="stop7293" />
       <stop
          id="stop7307"
          offset="0.1"
-         style="stop-color:#ffa300;stop-opacity:1;" />
+         style="stop-color:#f8f800;stop-opacity:1;" />
       <stop
          id="stop7299"
          offset="0.89999998"
-         style="stop-color:#ffa300;stop-opacity:1;" />
+         style="stop-color:#f8f800;stop-opacity:1;" />
       <stop
-         style="stop-color:#ffa300;stop-opacity:0;"
+         style="stop-color:#f8f800;stop-opacity:0;"
          offset="1"
          id="stop7295" />
     </linearGradient>
@@ -13461,7 +13515,7 @@
        gradientTransform="translate(588,-828)" />
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient7291"
+       xlink:href="#linearGradient10136"
        id="linearGradient7398"
        x1="2"
        y1="742"
@@ -13481,7 +13535,7 @@
        gradientTransform="translate(690,-794)" />
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient7346"
+       xlink:href="#linearGradient10152"
        id="linearGradient7443"
        x1="70"
        y1="742"
@@ -13499,6 +13553,1453 @@
        y2="742"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(622.00001,-861.99999)" />
+    <filter
+       id="filter8996"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix8998"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9000"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9002"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9004"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9006"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9008"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9010"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9012"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9014"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9016"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9018"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9020"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9022"
+         type="saturate"
+         values="0"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix10289" />
+      <feColorMatrix
+         id="feColorMatrix10291"
+         type="saturate"
+         values="0"
+         in="fbSourceGraphic"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix10293" />
+      <feColorMatrix
+         id="feColorMatrix10295"
+         type="saturate"
+         values="0"
+         in="fbSourceGraphic" />
+    </filter>
+    <filter
+       id="filter9024"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9026"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9028"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9030"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9032"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9034"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9036"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9038"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9040"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9042"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9044"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9046"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9048"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9050"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9052"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9054"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9056"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9058"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9060"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9062"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9064"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9066"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9068"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9070"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9072"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9074"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9076"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9078"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9080"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9082"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9084"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9086"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9088"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9090"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9092"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9094"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9096"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9098"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9100"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9102"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9104"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9106"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9108"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9110"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9112"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9114"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9116"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9118"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9120"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9122"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9124"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9126"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9128"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9130"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9132"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9134"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9136"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9138"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9140"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9142"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9144"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9146"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9148"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9150"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9152"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9154"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9156"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9158"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9160"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9162"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9164"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9166"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9168"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9170"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9172"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9174"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9176"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9178"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9180"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9182"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9184"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9186"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9188"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9190"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9192"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9194"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9196"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9198"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9200"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9202"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9204"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9206"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9208"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9210"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9212"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9214"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9216"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9218"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9220"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9222"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9224"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9226"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9228"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9230"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9232"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9234"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9236"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9238"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9240"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9242"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9244"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9246"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9248"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9250"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9252"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9254"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9256"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9258"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9260"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9262"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9264"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9266"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9268"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9270"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9272"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9274"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9276"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9278"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9280"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9282"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9284"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9286"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9288"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9290"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9292"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9294"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9296"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9298"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9300"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9302"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9304"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9306"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9308"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9310"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9312"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9314"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9316"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9318"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9320"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9322"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9324"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9326"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9328"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9330"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9332"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9334"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9336"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9338"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9340"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9342"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9344"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9346"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9348"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9350"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9352"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9354"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9356"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9358"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9360"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9362"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9364"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9366"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9064-1"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9066-7"
+         type="saturate"
+         values="0" />
+    </filter>
+    <filter
+       id="filter9064-4"
+       inkscape:label="Desaturate"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Render in shades of gray by reducing saturation to zero"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix9066-8"
+         type="saturate"
+         values="0" />
+    </filter>
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -13514,10 +15015,10 @@
      id="namedview7176"
      showgrid="false"
      inkscape:zoom="0.8838835"
-     inkscape:cx="30.10573"
-     inkscape:cy="453.03048"
-     inkscape:window-x="712"
-     inkscape:window-y="79"
+     inkscape:cx="234.8"
+     inkscape:cy="437.43558"
+     inkscape:window-x="1349"
+     inkscape:window-y="70"
      inkscape:window-maximized="0"
      inkscape:current-layer="layerguide" />
   <g
@@ -13757,6 +15258,14 @@
        x="430"
        y="220.65134"
        inkscape:label="#rect4110" />
+    <rect
+       style="fill:#ff00ff;fill-opacity:1;stroke:none;display:inline"
+       id="ProgressMarker"
+       width="183.1071"
+       height="13.387869"
+       x="8.4585781"
+       y="786.68292"
+       inkscape:label="#rect4112" />
     <rect
        style="fill:#ff00ff;fill-opacity:1;stroke:none;display:inline"
        id="ButtonBrushCircleOver"
@@ -14247,19 +15756,11 @@
        inkscape:label="#rect4107" />
     <rect
        style="fill:#ff00ff;fill-opacity:1;stroke:none;display:inline"
-       id="ProgressMarker"
-       width="183.1071"
-       height="13.387869"
-       x="8.4000053"
-       y="786.67755"
-       inkscape:label="#rect4112" />
-    <rect
-       style="fill:#ff00ff;fill-opacity:1;stroke:none;display:inline"
        id="ProgressMarkerBackground"
        width="183.24852"
        height="13.387869"
-       x="8.3020592"
-       y="766.70203"
+       x="8.3606339"
+       y="766.7074"
        inkscape:label="#rect4112" />
   </g>
   <g
@@ -14268,7 +15769,7 @@
      inkscape:label="Sprite"
      style="display:inline">
     <rect
-       style="fill:#fff0df;fill-opacity:1;stroke:#e3c7a5;stroke-width:1.43681633;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:3;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="fill:#fff0df;fill-opacity:1;stroke:#e3c7a5;stroke-width:1.43681633;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:3;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;filter:url(#filter9364)"
        id="rect7410"
        width="181.60001"
        height="11.767315"
@@ -14822,11 +16323,11 @@
            style="fill:#0077ff" />
       </g>
       <polygon
-         points="1017.417,210.284 1036.257,210.284 1026.839,200.864 "
+         points="1036.257,210.284 1026.839,200.864 1017.417,210.284 "
          id="polygon3907"
          style="fill:#0077ff;display:inline" />
       <polygon
-         points="1059.257,200.864 1040.417,200.864 1049.835,210.284 "
+         points="1040.417,200.864 1049.835,210.284 1059.257,200.864 "
          id="polygon3909"
          style="fill:#0077ff;display:inline" />
       <circle
@@ -14984,7 +16485,7 @@
        id="path6497-45-1"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:#ffffff;fill-opacity:0;stroke:#d6bc9b;stroke-width:1.43681633;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:3;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#ffffff;fill-opacity:0;stroke:#d6bc9b;stroke-width:1.43681633;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:3;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9360)"
        id="rect7410-5"
        width="181.60001"
        height="11.767315"
@@ -14998,7 +16499,7 @@
      style="display:inline">
     <circle
        d="m 900.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
-       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:1;display:inline"
+       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:1;display:inline;filter:url(#filter8996)"
        sodipodi:ry="10"
        sodipodi:rx="10"
        sodipodi:cy="623.59998"
@@ -15010,7 +16511,7 @@
        transform="matrix(-1.5,0,0,-1.5,2022.4,1264.9)" />
     <circle
        d="m 900.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
-       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:0.49803922;display:inline"
+       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:0.49803922;display:inline;filter:url(#filter9000)"
        sodipodi:ry="10"
        sodipodi:rx="10"
        sodipodi:cy="623.59998"
@@ -15022,7 +16523,7 @@
        transform="matrix(-1.5,0,0,-1.5,2071.4,1264.9)" />
     <circle
        d="m 900.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
-       style="fill:#6cb0cf;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;display:inline"
+       style="fill:#6cb0cf;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;display:inline;filter:url(#filter9004)"
        sodipodi:ry="10"
        sodipodi:rx="10"
        sodipodi:cy="623.59998"
@@ -15035,7 +16536,7 @@
     <g
        id="g8389"
        transform="matrix(-1,0,0,-1,1781.4807,1521.2002)"
-       style="stroke:#000000;stroke-opacity:1">
+       style="stroke:#000000;stroke-opacity:1;filter:url(#filter9008)">
       <path
          style="fill:#5875a6;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          inkscape:connector-curvature="0"
@@ -15043,153 +16544,111 @@
          id="path8391"
          sodipodi:nodetypes="sssss" />
     </g>
+    <path
+       id="path8397"
+       d="m 965.3807,927.1002 c 0,8.3 -6.7,15 -15,15 -8.3,0 -15,-6.7 -15,-15 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.8 15,15 z"
+       inkscape:connector-curvature="0"
+       style="fill:#f8f800;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       sodipodi:nodetypes="sssss" />
     <g
-       id="g8393"
-       transform="matrix(-1,0,0,-1,1781.4807,1521.2002)"
-       inkscape:transform-center-x="-35.890907"
-       inkscape:transform-center-y="-365.16981"
-       style="stroke:#000000;stroke-opacity:1">
-      <g
-         id="g8395"
-         style="stroke:#000000;stroke-opacity:1">
-        <path
-           id="path8397"
-           d="m 816.1,594.1 c 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.7,15 -15,15 -8.3,0 -15,-6.8 -15,-15 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffa300;stroke:#000000;stroke-opacity:1"
-           sodipodi:nodetypes="sssss" />
-      </g>
-    </g>
-    <g
-       id="g8399"
+       id="g8401"
        transform="translate(-336.68218,422.05547)">
-      <g
-         id="g8401">
-        <circle
-           id="circle8403"
-           r="11.8"
-           cy="569.40002"
-           cx="907.90002"
-           sodipodi:cx="907.90002"
-           sodipodi:cy="569.40002"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#ab3e27"
-           d="m 919.70002,569.40002 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-        <path
-           id="path8405"
-           d="m 907.8,554.4 c 8.3,0 15,6.7 15.1,14.9 0.1,8.2 -6.7,15 -14.9,15.1 -8.3,0 -15,-6.7 -15.1,-14.9 -0.1,-8.2 6.6,-15.1 14.9,-15.1 z m 0.1,23.6 c 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.8 -3.9,-8.7 -8.7,-8.7 -4.8,0 -8.7,3.9 -8.7,8.7 0,4.9 3.9,8.8 8.7,8.7 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ab3e27" />
-      </g>
+      <circle
+         d="m 919.70002,569.40002 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+         style="fill:#ab3e27"
+         sodipodi:ry="11.8"
+         sodipodi:rx="11.8"
+         sodipodi:cy="569.40002"
+         sodipodi:cx="907.90002"
+         cx="907.90002"
+         cy="569.40002"
+         r="11.8"
+         id="circle8403" />
       <path
-         id="path8407"
-         d="m 919.5,569.6 c 0,0 0.6,-0.2 0.6,-0.3 0,-6.5 -3.7,-11.9 -11.3,-11.9 l 0,12.2 10.7,0 z"
+         style="fill:#ab3e27"
          inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
-      <path
-         id="path8409"
-         d="m 895.8,569.7 c 0,0 0.6,0 0.6,0 0,6.5 4.8,11.7 12.5,11.6 l 0,-11.7 -13.1,0.1 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
+         d="m 907.8,554.4 c 8.3,0 15,6.7 15.1,14.9 0.1,8.2 -6.7,15 -14.9,15.1 -8.3,0 -15,-6.7 -15.1,-14.9 -0.1,-8.2 6.6,-15.1 14.9,-15.1 z m 0.1,23.6 c 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.8 -3.9,-8.7 -8.7,-8.7 -4.8,0 -8.7,3.9 -8.7,8.7 0,4.9 3.9,8.8 8.7,8.7 z"
+         id="path8405" />
     </g>
     <g
-       id="g8411"
+       style="filter:url(#filter9016)"
+       id="g8413"
        transform="translate(-264.29169,388.75548)">
-      <g
-         id="g8413">
-        <circle
-           id="circle8415"
-           r="11.8"
-           cy="602.70001"
-           cx="921.29999"
-           sodipodi:cx="921.29999"
-           sodipodi:cy="602.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#826c53"
-           d="m 933.09999,602.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-      </g>
-      <g
-         id="g8417">
-        <circle
-           id="circle8419"
-           r="11.8"
-           cy="602.70001"
-           cx="921.29999"
-           sodipodi:cx="921.29999"
-           sodipodi:cy="602.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#826c53"
-           d="m 933.09999,602.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-        <path
-           id="path8421"
-           d="m 921.4,617.7 c -8.3,0 -15,-6.7 -15,-15 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15 -15,15 z m -0.1,-23.6 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.7 8.7,8.7 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
-           inkscape:connector-curvature="0"
-           style="fill:#826c53" />
-      </g>
-      <path
-         id="path8423"
-         d="m 909.7,603.6 c 0,0 0.2,-0.4 0.2,-0.3 0,6.5 4.4,11.3 12.1,11.3 l 0,-11 -12.3,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
-      <path
-         id="path8425"
-         d="m 933.4,603.6 c 0,0 0.2,-0.6 0.2,-0.6 0,-6.5 -4,-12.3 -11.6,-12.3 l 0,12.9 11.4,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
-    </g>
-    <g
-       id="g8427"
-       transform="translate(-336.68218,417.75547)">
-      <g
-         id="g8429">
-        <circle
-           id="circle8431"
-           r="11.8"
-           cy="573.70001"
-           cx="951.29999"
-           sodipodi:cx="951.29999"
-           sodipodi:cy="573.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#826c53"
-           d="m 963.09999,573.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-      </g>
-      <g
-         id="g8433">
-        <circle
-           id="circle8435"
-           r="11.8"
-           cy="573.70001"
-           cx="951.29999"
-           sodipodi:cx="951.29999"
-           sodipodi:cy="573.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#729445"
-           d="m 963.09999,573.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-        <path
-           id="path8437"
-           d="m 951.4,588.7 c -8.3,0 -15,-6.7 -15,-15 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15 -15,15 z m -0.1,-23.6 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.7 8.7,8.7 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
-           inkscape:connector-curvature="0"
-           style="fill:#729445" />
-      </g>
-      <path
-         id="path8439"
-         d="m 939.7,574.6 c 0,0 0.2,-0.4 0.2,-0.3 0,6.5 4.4,11.3 12.1,11.3 l 0,-11 -12.3,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
-      <path
-         id="path8441"
-         d="m 963.4,574.6 c 0,0 0.2,-0.6 0.2,-0.6 0,-6.5 -4,-12.3 -11.6,-12.3 l 0,12.9 11.4,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
+      <circle
+         d="m 933.09999,602.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+         style="fill:#826c53"
+         sodipodi:ry="11.8"
+         sodipodi:rx="11.8"
+         sodipodi:cy="602.70001"
+         sodipodi:cx="921.29999"
+         cx="921.29999"
+         cy="602.70001"
+         r="11.8"
+         id="circle8415" />
     </g>
     <circle
+       id="circle8419"
+       r="11.8"
+       cy="602.70001"
+       cx="921.29999"
+       sodipodi:cx="921.29999"
+       sodipodi:cy="602.70001"
+       sodipodi:rx="11.8"
+       sodipodi:ry="11.8"
+       style="fill:#826c53;filter:url(#filter9016)"
+       d="m 933.09999,602.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+       transform="translate(-264.29169,388.75548)" />
+    <path
+       id="path8421"
+       d="m 657.10831,1006.4555 c -8.3,0 -15,-6.70002 -15,-15.00002 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15.00002 -15,15.00002 z m -0.1,-23.60002 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.70002 8.7,8.70002 4.8,0 8.7,-3.90002 8.7,-8.70002 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
+       inkscape:connector-curvature="0"
+       style="fill:#826c53;filter:url(#filter9016)" />
+    <path
+       style="fill:#ffe8c7;filter:url(#filter9016)"
+       inkscape:connector-curvature="0"
+       d="m 645.40831,992.35548 c 0,0 0.2,-0.4 0.2,-0.3 0,6.5 4.4,11.30002 12.1,11.30002 l 0,-11.00002 -12.3,0 z"
+       id="path8423" />
+    <path
+       style="fill:#ffe8c7;filter:url(#filter9016)"
+       inkscape:connector-curvature="0"
+       d="m 669.10831,992.35548 c 0,0 0.2,-0.6 0.2,-0.6 0,-6.5 -4,-12.3 -11.6,-12.3 l 0,12.9 11.4,0 z"
+       id="path8425" />
+    <g
+       style="filter:url(#filter9020)"
+       id="g8429"
+       transform="translate(-336.68218,417.75547)">
+      <circle
+         d="m 963.09999,573.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+         style="fill:#826c53"
+         sodipodi:ry="11.8"
+         sodipodi:rx="11.8"
+         sodipodi:cy="573.70001"
+         sodipodi:cx="951.29999"
+         cx="951.29999"
+         cy="573.70001"
+         r="11.8"
+         id="circle8431" />
+    </g>
+    <circle
+       id="circle8435"
+       r="11.8"
+       cy="573.70001"
+       cx="951.29999"
+       sodipodi:cx="951.29999"
+       sodipodi:cy="573.70001"
+       sodipodi:rx="11.8"
+       sodipodi:ry="11.8"
+       style="fill:#729445"
+       d="m 963.09999,573.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+       transform="translate(-336.68218,417.75547)" />
+    <path
+       id="path8437"
+       d="m 614.71782,1006.4555 c -8.3,0 -15,-6.70003 -15,-15.00003 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15.00003 -15,15.00003 z m -0.1,-23.60003 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.70003 8.7,8.70003 4.8,0 8.7,-3.90003 8.7,-8.70003 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
+       inkscape:connector-curvature="0"
+       style="fill:#729445" />
+    <circle
        d="m 900.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
-       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       style="fill:#6cb0cf;fill-opacity:1;stroke:#000000;stroke-opacity:1;filter:url(#filter9024)"
        sodipodi:ry="10"
        sodipodi:rx="10"
        sodipodi:cy="623.59998"
@@ -15199,27 +16658,24 @@
        r="10"
        id="circle8445"
        transform="matrix(-1,0,0,-1,1799.4806,1505.5923)" />
-    <g
-       id="g8447"
-       transform="matrix(-1,0,0,-1,1779.6667,1505.5923)"
-       style="stroke:#000000;stroke-opacity:1">
-      <circle
-         id="circle8449"
-         r="10"
-         cy="623.59998"
-         cx="831.59998"
-         sodipodi:cx="831.59998"
-         sodipodi:cy="623.59998"
-         sodipodi:rx="10"
-         sodipodi:ry="10"
-         style="fill:#ffa300;stroke:#000000;stroke-opacity:1"
-         d="m 841.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z" />
-    </g>
+    <circle
+       d="m 841.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
+       style="fill:#ffff7e;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       sodipodi:ry="10"
+       sodipodi:rx="10"
+       sodipodi:cy="623.59998"
+       sodipodi:cx="831.59998"
+       cx="831.59998"
+       cy="623.59998"
+       r="10"
+       id="circle8449"
+       transform="matrix(-1,0,0,-1,1779.6667,1505.5923)" />
     <g
        id="g8451"
        transform="matrix(-1,0,0,-1,1781.4807,1521.2002)"
        inkscape:transform-center-x="-75.890907"
-       inkscape:transform-center-y="-365.16981">
+       inkscape:transform-center-y="-365.16981"
+       style="filter:url(#filter9032)">
       <g
          id="g8453">
         <path
@@ -15231,7 +16687,8 @@
     </g>
     <g
        id="g8457"
-       transform="matrix(-1,0,0,-1,1780.4806,1504.5923)">
+       transform="matrix(-1,0,0,-1,1780.4806,1504.5923)"
+       style="filter:url(#filter9036)">
       <circle
          id="circle8459"
          r="10"
@@ -15245,52 +16702,52 @@
          d="m 801.59998,623.59998 c 0,5.52284 -4.47716,10 -10,10 -5.52285,0 -10,-4.47716 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z" />
     </g>
     <g
-       id="g8461"
+       style="filter:url(#filter9040)"
+       id="g8463"
        transform="translate(-261.07433,359.75548)">
-      <g
-         id="g8463">
-        <circle
-           id="circle8465"
-           r="11.8"
-           cy="631.70001"
-           cx="963.29999"
-           sodipodi:cx="963.29999"
-           sodipodi:cy="631.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#826c53"
-           d="m 975.09999,631.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-      </g>
-      <g
-         id="g8467">
-        <circle
-           id="circle8469"
-           r="11.8"
-           cy="631.70001"
-           cx="963.29999"
-           sodipodi:cx="963.29999"
-           sodipodi:cy="631.70001"
-           sodipodi:rx="11.8"
-           sodipodi:ry="11.8"
-           style="fill:#ffffff"
-           d="m 975.09999,631.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z" />
-        <path
-           id="path8471"
-           d="m 963.4,646.7 c -8.3,0 -15,-6.7 -15,-15 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15 -15,15 z m -0.1,-23.6 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.7 8.7,8.7 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-      </g>
-      <path
-         id="path8473"
-         d="m 951.7,632.6 c 0,0 0.2,-0.4 0.2,-0.3 0,6.5 4.4,11.3 12.1,11.3 l 0,-11 -12.3,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
-      <path
-         id="path8475"
-         d="m 975.4,632.6 c 0,0 0.2,-0.6 0.2,-0.6 0,-6.5 -4,-12.3 -11.6,-12.3 l 0,12.9 11.4,0 z"
-         inkscape:connector-curvature="0"
-         style="fill:#ffe8c7" />
+      <circle
+         d="m 975.09999,631.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+         style="fill:#826c53"
+         sodipodi:ry="11.8"
+         sodipodi:rx="11.8"
+         sodipodi:cy="631.70001"
+         sodipodi:cx="963.29999"
+         cx="963.29999"
+         cy="631.70001"
+         r="11.8"
+         id="circle8465" />
     </g>
+    <g
+       style="filter:url(#filter9040)"
+       id="g8467"
+       transform="translate(-261.07433,359.75548)">
+      <circle
+         d="m 975.09999,631.70001 c 0,6.51696 -5.28304,11.8 -11.8,11.8 -6.51696,0 -11.8,-5.28304 -11.8,-11.8 0,-6.51696 5.28304,-11.8 11.8,-11.8 6.51696,0 11.8,5.28304 11.8,11.8 z"
+         style="fill:#ffffff"
+         sodipodi:ry="11.8"
+         sodipodi:rx="11.8"
+         sodipodi:cy="631.70001"
+         sodipodi:cx="963.29999"
+         cx="963.29999"
+         cy="631.70001"
+         r="11.8"
+         id="circle8469" />
+      <path
+         style="fill:#ffffff"
+         inkscape:connector-curvature="0"
+         d="m 963.4,646.7 c -8.3,0 -15,-6.7 -15,-15 0,-8.3 6.7,-15 15,-15 8.3,0 15,6.7 15,15 0,8.3 -6.8,15 -15,15 z m -0.1,-23.6 c -4.8,0 -8.7,3.9 -8.7,8.7 0,4.8 3.9,8.7 8.7,8.7 4.8,0 8.7,-3.9 8.7,-8.7 0,-4.9 -3.9,-8.7 -8.7,-8.7 z"
+         id="path8471" />
+    </g>
+    <path
+       style="fill:#ffe8c7;filter:url(#filter9040)"
+       inkscape:connector-curvature="0"
+       d="m 690.62567,992.35548 c 0,0 0.2,-0.4 0.2,-0.3 0,6.5 4.4,11.30002 12.1,11.30002 l 0,-11.00002 -12.3,0 z"
+       id="path8473" />
+    <path
+       style="fill:#ffe8c7;filter:url(#filter9040)"
+       inkscape:connector-curvature="0"
+       d="m 714.32567,992.35548 c 0,0 0.2,-0.6 0.2,-0.6 0,-6.5 -4,-12.3 -11.6,-12.3 l 0,12.9 11.4,0 z"
+       id="path8475" />
     <circle
        id="circle8381"
        r="50"
@@ -15312,7 +16769,7 @@
        sodipodi:cy="482.29999"
        sodipodi:rx="50"
        sodipodi:ry="50"
-       style="fill:#cfd48e"
+       style="fill:#cfd48e;filter:url(#filter9044)"
        d="m 1033.8,482.29999 c 0,27.61424 -22.3858,50 -50.00001,50 -27.61424,0 -50,-22.38576 -50,-50 0,-27.61424 22.38576,-50 50,-50 27.61421,0 50.00001,22.38576 50.00001,50 z"
        transform="translate(-266.43515,435.97582)" />
     <circle
@@ -15324,12 +16781,13 @@
        sodipodi:cy="487.29999"
        sodipodi:rx="50"
        sodipodi:ry="50"
-       style="fill:#e3c7a5"
+       style="fill:#e3c7a5;filter:url(#filter9048)"
        d="m 1143.8,487.29999 c 0,27.61424 -22.3857,50 -50,50 -27.6142,0 -50,-22.38576 -50,-50 0,-27.61424 22.3858,-50 50,-50 27.6143,0 50,22.38576 50,50 z"
        transform="translate(-266.43515,430.97582)" />
     <g
        id="g6417"
-       transform="translate(0,-0.4016325)">
+       transform="translate(0,-0.4016325)"
+       style="filter:url(#filter9052)">
       <path
          id="polygon9409"
          d="m 233,35 -95,0 0,469 -69,0 0,131 69,0 78.9,0 16.1,0 z"
@@ -15353,346 +16811,9 @@
       </g>
     </g>
     <g
-       id="g9417"
-       style="display:inline"
-       transform="translate(585.04761,529.99686)">
-      <g
-         id="g8863">
-        <g
-           id="g9419">
-          <g
-             id="g9421">
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 198.4,63.8 c 4.9,4.9 12.3,4.7 17,0 4.7,-4.7 4.9,-12.1 0,-17 l -2.4,2.4 c 3.5,3.5 3.3,8.8 0,12.1 -3.3,3.3 -8.7,3.5 -12.1,0 l -2.5,2.5 z"
-               id="path9423" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 214.9,47.3 c 4.4,4.4 4.4,11.6 0,16 -4.4,4.4 -11.6,4.4 -16,0 -4.4,-4.4 -4.4,-11.6 0,-16 4.4,-4.4 11.6,-4.4 16,0 m 0.5,-0.5 c -4.7,-4.7 -12.3,-4.7 -17,0 -4.7,4.7 -4.7,12.3 0,17 4.7,4.7 12.3,4.7 17,0 4.7,-4.7 4.7,-12.3 0,-17 l 0,0 z"
-               id="path9425" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 214,48.2 c 3.9,3.9 3.9,10.3 0,14.2 -3.9,3.9 -10.3,3.9 -14.2,0 -3.9,-3.9 -3.9,-10.3 0,-14.2 3.9,-3.9 10.3,-3.9 14.2,0 m 0.4,-0.4 c -4.2,-4.2 -10.9,-4.2 -15.1,0 -4.2,4.2 -4.2,10.9 0,15.1 4.2,4.2 10.9,4.2 15.1,0 4.2,-4.2 4.2,-10.9 0,-15.1 l 0,0 z"
-               id="path9427" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 200.3,61.8 0.5,-0.5 c -3.4,-3.4 -3.3,-8.8 0,-12.1 3.3,-3.3 8.8,-3.4 12.1,0 l 0.5,-0.5 c -3.4,-3.4 -9.5,-3.6 -13.1,0 -3.6,3.6 -3.4,9.8 0,13.1 z"
-               id="path9429" />
-            <line
-               style="fill:#b13b2c"
-               x1="198.39999"
-               y1="63.299999"
-               x2="200.3"
-               y2="61.299999"
-               id="line9431" />
-            <line
-               style="fill:#b13b2c"
-               x1="213"
-               y1="48.599998"
-               x2="215"
-               y2="46.700001"
-               id="line9433" />
-          </g>
-        </g>
-        <g
-           id="g9435">
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 157.9,55.8 0,0 c 0,1.4 -0.5,2.6 -1.5,3.5 -1,1 -2.1,1.5 -3.5,1.5 -1.1,0 -2.1,-0.3 -2.9,-1 v 5.8 h -2 v -9.9 h 2.1 v 0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 z m -1.7,-3.7 c 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 148 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.3,0 2.4,0.4 3.3,1.2 z"
-             id="path9437" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 161.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 3,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.8,-0.8 1.9,-1.2 3.2,-1.2 z"
-             id="path9439" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="M 176.8,50.9 V 53 c -0.2,0 -0.4,0 -0.5,0 -0.7,0 -1.3,0.2 -1.8,0.7 -0.5,0.4 -0.9,1 -1,1.7 -0.1,0.3 -0.1,0.5 -0.1,0.7 v 4.7 h -2 V 56 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.2 0.7,-2.3 1.6,-3.1 0.9,-0.8 2,-1.3 3.3,-1.3 0.2,0.1 0.4,0.1 0.5,0.1 z"
-             id="path9441" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 180.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 2.9,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 z"
-             id="path9443" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 192,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2.1,-0.8 0.6,-0.6 0.9,-1.3 0.9,-2.1 v 0 h 2 v 0.1 c 0,1.4 -0.5,2.5 -1.5,3.5 -1,1 -2.1,1.4 -3.5,1.4 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 5.9,-9.8 h 2 v 9.1 h -2.2 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 190 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.1,0 2.1,0.3 2.9,1 V 46 z"
-             id="path9445" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 206.6,60.8 c -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 0,-1.4 0.5,-2.5 1.5,-3.5 1,-1 2.1,-1.5 3.5,-1.5 1.4,0 2.5,0.5 3.5,1.5 1,1 1.5,2.1 1.5,3.5 0,1.4 -0.5,2.5 -1.5,3.5 -0.9,1 -2.1,1.5 -3.5,1.5 z m 2.1,-2.9 c 0.6,-0.6 0.9,-1.3 0.9,-2.1 0,-0.8 -0.3,-1.5 -0.9,-2.1 -0.6,-0.6 -1.3,-0.8 -2.1,-0.8 -0.8,0 -1.5,0.3 -2.1,0.8 -0.6,0.6 -0.8,1.3 -0.8,2.1 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.2 2.1,-0.8 z"
-             id="path9447" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 214.8,55.1 c -1,-0.8 -1.6,-1.9 -1.7,-3.2 0,-0.2 0,-0.4 0,-0.7 h 2 c 0,0.2 0,0.4 0.1,0.7 0.1,0.7 0.5,1.2 1,1.7 0.5,0.4 1.2,0.7 1.9,0.7 0.7,0 1.3,-0.2 1.8,-0.7 0.5,-0.4 0.9,-1 1,-1.7 0,-0.2 0.1,-0.4 0.1,-0.7 h 2 c 0,0.3 0,0.6 -0.1,0.9 -0.2,1.2 -0.8,2.2 -1.7,3 h -6.4 z m 6.2,0.7 c 1,0.8 1.7,1.9 1.9,3.2 0,0.3 0.1,0.7 0.1,1.3 v 0.4 h -2 v -0.4 c 0,-0.5 0,-0.9 -0.1,-1.1 -0.1,-0.7 -0.5,-1.2 -1,-1.7 -0.5,-0.4 -1.2,-0.7 -1.8,-0.7 -0.7,0 -1.3,0.2 -1.9,0.7 -0.5,0.4 -0.9,1 -1,1.7 0,0.3 -0.1,0.5 -0.1,0.7 v 0.8 h -2 v -0.8 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.4 0.8,-2.5 1.9,-3.3 h 6 z"
-             id="path9449" />
-        </g>
-      </g>
-    </g>
-    <g
-       id="g9417-3"
-       style="display:inline"
-       transform="translate(585.04761,569.99686)">
-      <g
-         id="g9419-6">
-        <g
-           id="g9421-3">
-          <path
-             id="path9423-4"
-             d="m 198.4,63.8 c 4.9,4.9 12.3,4.7 17,0 4.7,-4.7 4.9,-12.1 0,-17 l -2.4,2.4 c 3.5,3.5 3.3,8.8 0,12.1 -3.3,3.3 -8.7,3.5 -12.1,0 l -2.5,2.5 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9425-7"
-             d="m 214.9,47.3 c 4.4,4.4 4.4,11.6 0,16 -4.4,4.4 -11.6,4.4 -16,0 -4.4,-4.4 -4.4,-11.6 0,-16 4.4,-4.4 11.6,-4.4 16,0 m 0.5,-0.5 c -4.7,-4.7 -12.3,-4.7 -17,0 -4.7,4.7 -4.7,12.3 0,17 4.7,4.7 12.3,4.7 17,0 4.7,-4.7 4.7,-12.3 0,-17 l 0,0 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9427-4"
-             d="m 214,48.2 c 3.9,3.9 3.9,10.3 0,14.2 -3.9,3.9 -10.3,3.9 -14.2,0 -3.9,-3.9 -3.9,-10.3 0,-14.2 3.9,-3.9 10.3,-3.9 14.2,0 m 0.4,-0.4 c -4.2,-4.2 -10.9,-4.2 -15.1,0 -4.2,4.2 -4.2,10.9 0,15.1 4.2,4.2 10.9,4.2 15.1,0 4.2,-4.2 4.2,-10.9 0,-15.1 l 0,0 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9429-0"
-             d="m 200.3,61.8 0.5,-0.5 c -3.4,-3.4 -3.3,-8.8 0,-12.1 3.3,-3.3 8.8,-3.4 12.1,0 l 0.5,-0.5 c -3.4,-3.4 -9.5,-3.6 -13.1,0 -3.6,3.6 -3.4,9.8 0,13.1 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <line
-             id="line9431-7"
-             y2="61.299999"
-             x2="200.3"
-             y1="63.299999"
-             x1="198.39999"
-             style="fill:#b13b2c" />
-          <line
-             id="line9433-5"
-             y2="46.700001"
-             x2="215"
-             y1="48.599998"
-             x1="213"
-             style="fill:#b13b2c" />
-        </g>
-      </g>
-      <g
-         id="g9435-0">
-        <path
-           id="path9437-2"
-           d="m 157.9,55.8 0,0 c 0,1.4 -0.5,2.6 -1.5,3.5 -1,1 -2.1,1.5 -3.5,1.5 -1.1,0 -2.1,-0.3 -2.9,-1 v 5.8 h -2 v -9.9 h 2.1 v 0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 z m -1.7,-3.7 c 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 148 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.3,0 2.4,0.4 3.3,1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9439-5"
-           d="m 161.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 3,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.8,-0.8 1.9,-1.2 3.2,-1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9441-4"
-           d="M 176.8,50.9 V 53 c -0.2,0 -0.4,0 -0.5,0 -0.7,0 -1.3,0.2 -1.8,0.7 -0.5,0.4 -0.9,1 -1,1.7 -0.1,0.3 -0.1,0.5 -0.1,0.7 v 4.7 h -2 V 56 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.2 0.7,-2.3 1.6,-3.1 0.9,-0.8 2,-1.3 3.3,-1.3 0.2,0.1 0.4,0.1 0.5,0.1 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9443-2"
-           d="m 180.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 2.9,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9445-1"
-           d="m 192,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2.1,-0.8 0.6,-0.6 0.9,-1.3 0.9,-2.1 v 0 h 2 v 0.1 c 0,1.4 -0.5,2.5 -1.5,3.5 -1,1 -2.1,1.4 -3.5,1.4 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 5.9,-9.8 h 2 v 9.1 h -2.2 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 190 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.1,0 2.1,0.3 2.9,1 V 46 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9447-5"
-           d="m 206.6,60.8 c -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 0,-1.4 0.5,-2.5 1.5,-3.5 1,-1 2.1,-1.5 3.5,-1.5 1.4,0 2.5,0.5 3.5,1.5 1,1 1.5,2.1 1.5,3.5 0,1.4 -0.5,2.5 -1.5,3.5 -0.9,1 -2.1,1.5 -3.5,1.5 z m 2.1,-2.9 c 0.6,-0.6 0.9,-1.3 0.9,-2.1 0,-0.8 -0.3,-1.5 -0.9,-2.1 -0.6,-0.6 -1.3,-0.8 -2.1,-0.8 -0.8,0 -1.5,0.3 -2.1,0.8 -0.6,0.6 -0.8,1.3 -0.8,2.1 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.2 2.1,-0.8 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9449-1"
-           d="m 214.8,55.1 c -1,-0.8 -1.6,-1.9 -1.7,-3.2 0,-0.2 0,-0.4 0,-0.7 h 2 c 0,0.2 0,0.4 0.1,0.7 0.1,0.7 0.5,1.2 1,1.7 0.5,0.4 1.2,0.7 1.9,0.7 0.7,0 1.3,-0.2 1.8,-0.7 0.5,-0.4 0.9,-1 1,-1.7 0,-0.2 0.1,-0.4 0.1,-0.7 h 2 c 0,0.3 0,0.6 -0.1,0.9 -0.2,1.2 -0.8,2.2 -1.7,3 h -6.4 z m 6.2,0.7 c 1,0.8 1.7,1.9 1.9,3.2 0,0.3 0.1,0.7 0.1,1.3 v 0.4 h -2 v -0.4 c 0,-0.5 0,-0.9 -0.1,-1.1 -0.1,-0.7 -0.5,-1.2 -1,-1.7 -0.5,-0.4 -1.2,-0.7 -1.8,-0.7 -0.7,0 -1.3,0.2 -1.9,0.7 -0.5,0.4 -0.9,1 -1,1.7 0,0.3 -0.1,0.5 -0.1,0.7 v 0.8 h -2 v -0.8 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.4 0.8,-2.5 1.9,-3.3 h 6 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-      </g>
-    </g>
-    <g
-       id="g9417-9"
-       style="display:inline"
-       transform="matrix(3.3333333,0,0,3.3333333,155.36006,520.09929)">
-      <g
-         id="g8863-2">
-        <g
-           id="g9419-4">
-          <g
-             id="g9421-8">
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 198.4,63.8 c 4.9,4.9 12.3,4.7 17,0 4.7,-4.7 4.9,-12.1 0,-17 l -2.4,2.4 c 3.5,3.5 3.3,8.8 0,12.1 -3.3,3.3 -8.7,3.5 -12.1,0 l -2.5,2.5 z"
-               id="path9423-3" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 214.9,47.3 c 4.4,4.4 4.4,11.6 0,16 -4.4,4.4 -11.6,4.4 -16,0 -4.4,-4.4 -4.4,-11.6 0,-16 4.4,-4.4 11.6,-4.4 16,0 m 0.5,-0.5 c -4.7,-4.7 -12.3,-4.7 -17,0 -4.7,4.7 -4.7,12.3 0,17 4.7,4.7 12.3,4.7 17,0 4.7,-4.7 4.7,-12.3 0,-17 l 0,0 z"
-               id="path9425-9" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 214,48.2 c 3.9,3.9 3.9,10.3 0,14.2 -3.9,3.9 -10.3,3.9 -14.2,0 -3.9,-3.9 -3.9,-10.3 0,-14.2 3.9,-3.9 10.3,-3.9 14.2,0 m 0.4,-0.4 c -4.2,-4.2 -10.9,-4.2 -15.1,0 -4.2,4.2 -4.2,10.9 0,15.1 4.2,4.2 10.9,4.2 15.1,0 4.2,-4.2 4.2,-10.9 0,-15.1 l 0,0 z"
-               id="path9427-6" />
-            <path
-               style="fill:#b13b2c"
-               inkscape:connector-curvature="0"
-               d="m 200.3,61.8 0.5,-0.5 c -3.4,-3.4 -3.3,-8.8 0,-12.1 3.3,-3.3 8.8,-3.4 12.1,0 l 0.5,-0.5 c -3.4,-3.4 -9.5,-3.6 -13.1,0 -3.6,3.6 -3.4,9.8 0,13.1 z"
-               id="path9429-4" />
-            <line
-               style="fill:#b13b2c"
-               x1="198.39999"
-               y1="63.299999"
-               x2="200.3"
-               y2="61.299999"
-               id="line9431-77" />
-            <line
-               style="fill:#b13b2c"
-               x1="213"
-               y1="48.599998"
-               x2="215"
-               y2="46.700001"
-               id="line9433-3" />
-          </g>
-        </g>
-        <g
-           id="g9435-1">
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 157.9,55.8 0,0 c 0,1.4 -0.5,2.6 -1.5,3.5 -1,1 -2.1,1.5 -3.5,1.5 -1.1,0 -2.1,-0.3 -2.9,-1 v 5.8 h -2 v -9.9 h 2.1 v 0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 z m -1.7,-3.7 c 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 148 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.3,0 2.4,0.4 3.3,1.2 z"
-             id="path9437-7" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 161.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 3,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.8,-0.8 1.9,-1.2 3.2,-1.2 z"
-             id="path9439-4" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="M 176.8,50.9 V 53 c -0.2,0 -0.4,0 -0.5,0 -0.7,0 -1.3,0.2 -1.8,0.7 -0.5,0.4 -0.9,1 -1,1.7 -0.1,0.3 -0.1,0.5 -0.1,0.7 v 4.7 h -2 V 56 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.2 0.7,-2.3 1.6,-3.1 0.9,-0.8 2,-1.3 3.3,-1.3 0.2,0.1 0.4,0.1 0.5,0.1 z"
-             id="path9441-9" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 180.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 2.9,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 z"
-             id="path9443-6" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 192,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2.1,-0.8 0.6,-0.6 0.9,-1.3 0.9,-2.1 v 0 h 2 v 0.1 c 0,1.4 -0.5,2.5 -1.5,3.5 -1,1 -2.1,1.4 -3.5,1.4 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 5.9,-9.8 h 2 v 9.1 h -2.2 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 190 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.1,0 2.1,0.3 2.9,1 V 46 z"
-             id="path9445-9" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 206.6,60.8 c -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 0,-1.4 0.5,-2.5 1.5,-3.5 1,-1 2.1,-1.5 3.5,-1.5 1.4,0 2.5,0.5 3.5,1.5 1,1 1.5,2.1 1.5,3.5 0,1.4 -0.5,2.5 -1.5,3.5 -0.9,1 -2.1,1.5 -3.5,1.5 z m 2.1,-2.9 c 0.6,-0.6 0.9,-1.3 0.9,-2.1 0,-0.8 -0.3,-1.5 -0.9,-2.1 -0.6,-0.6 -1.3,-0.8 -2.1,-0.8 -0.8,0 -1.5,0.3 -2.1,0.8 -0.6,0.6 -0.8,1.3 -0.8,2.1 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.2 2.1,-0.8 z"
-             id="path9447-8" />
-          <path
-             style="fill:#000000"
-             inkscape:connector-curvature="0"
-             d="m 214.8,55.1 c -1,-0.8 -1.6,-1.9 -1.7,-3.2 0,-0.2 0,-0.4 0,-0.7 h 2 c 0,0.2 0,0.4 0.1,0.7 0.1,0.7 0.5,1.2 1,1.7 0.5,0.4 1.2,0.7 1.9,0.7 0.7,0 1.3,-0.2 1.8,-0.7 0.5,-0.4 0.9,-1 1,-1.7 0,-0.2 0.1,-0.4 0.1,-0.7 h 2 c 0,0.3 0,0.6 -0.1,0.9 -0.2,1.2 -0.8,2.2 -1.7,3 h -6.4 z m 6.2,0.7 c 1,0.8 1.7,1.9 1.9,3.2 0,0.3 0.1,0.7 0.1,1.3 v 0.4 h -2 v -0.4 c 0,-0.5 0,-0.9 -0.1,-1.1 -0.1,-0.7 -0.5,-1.2 -1,-1.7 -0.5,-0.4 -1.2,-0.7 -1.8,-0.7 -0.7,0 -1.3,0.2 -1.9,0.7 -0.5,0.4 -0.9,1 -1,1.7 0,0.3 -0.1,0.5 -0.1,0.7 v 0.8 h -2 v -0.8 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.4 0.8,-2.5 1.9,-3.3 h 6 z"
-             id="path9449-0" />
-        </g>
-      </g>
-    </g>
-    <g
-       id="g9417-3-3"
-       style="display:inline"
-       transform="matrix(3.3333333,0,0,3.3333333,155.66536,609.77671)">
-      <g
-         id="g9419-6-6">
-        <g
-           id="g9421-3-6">
-          <path
-             id="path9423-4-5"
-             d="m 198.4,63.8 c 4.9,4.9 12.3,4.7 17,0 4.7,-4.7 4.9,-12.1 0,-17 l -2.4,2.4 c 3.5,3.5 3.3,8.8 0,12.1 -3.3,3.3 -8.7,3.5 -12.1,0 l -2.5,2.5 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9425-7-4"
-             d="m 214.9,47.3 c 4.4,4.4 4.4,11.6 0,16 -4.4,4.4 -11.6,4.4 -16,0 -4.4,-4.4 -4.4,-11.6 0,-16 4.4,-4.4 11.6,-4.4 16,0 m 0.5,-0.5 c -4.7,-4.7 -12.3,-4.7 -17,0 -4.7,4.7 -4.7,12.3 0,17 4.7,4.7 12.3,4.7 17,0 4.7,-4.7 4.7,-12.3 0,-17 l 0,0 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9427-4-2"
-             d="m 214,48.2 c 3.9,3.9 3.9,10.3 0,14.2 -3.9,3.9 -10.3,3.9 -14.2,0 -3.9,-3.9 -3.9,-10.3 0,-14.2 3.9,-3.9 10.3,-3.9 14.2,0 m 0.4,-0.4 c -4.2,-4.2 -10.9,-4.2 -15.1,0 -4.2,4.2 -4.2,10.9 0,15.1 4.2,4.2 10.9,4.2 15.1,0 4.2,-4.2 4.2,-10.9 0,-15.1 l 0,0 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <path
-             id="path9429-0-3"
-             d="m 200.3,61.8 0.5,-0.5 c -3.4,-3.4 -3.3,-8.8 0,-12.1 3.3,-3.3 8.8,-3.4 12.1,0 l 0.5,-0.5 c -3.4,-3.4 -9.5,-3.6 -13.1,0 -3.6,3.6 -3.4,9.8 0,13.1 z"
-             inkscape:connector-curvature="0"
-             style="fill:#b13b2c" />
-          <line
-             id="line9431-7-1"
-             y2="61.299999"
-             x2="200.3"
-             y1="63.299999"
-             x1="198.39999"
-             style="fill:#b13b2c" />
-          <line
-             id="line9433-5-2"
-             y2="46.700001"
-             x2="215"
-             y1="48.599998"
-             x1="213"
-             style="fill:#b13b2c" />
-        </g>
-      </g>
-      <g
-         id="g9435-0-1">
-        <path
-           id="path9437-2-2"
-           d="m 157.9,55.8 0,0 c 0,1.4 -0.5,2.6 -1.5,3.5 -1,1 -2.1,1.5 -3.5,1.5 -1.1,0 -2.1,-0.3 -2.9,-1 v 5.8 h -2 v -9.9 h 2.1 v 0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 z m -1.7,-3.7 c 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 148 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.3,0 2.4,0.4 3.3,1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9439-5-5"
-           d="m 161.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 3,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.8,-0.8 1.9,-1.2 3.2,-1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9441-4-6"
-           d="M 176.8,50.9 V 53 c -0.2,0 -0.4,0 -0.5,0 -0.7,0 -1.3,0.2 -1.8,0.7 -0.5,0.4 -0.9,1 -1,1.7 -0.1,0.3 -0.1,0.5 -0.1,0.7 v 4.7 h -2 V 56 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.2 0.7,-2.3 1.6,-3.1 0.9,-0.8 2,-1.3 3.3,-1.3 0.2,0.1 0.4,0.1 0.5,0.1 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9443-2-4"
-           d="m 180.4,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2,-0.8 0.6,-0.6 0.8,-1.3 0.8,-2.1 v 0 h 2.1 v 4.9 h -2 v -0.9 c -0.9,0.6 -1.8,1 -2.9,1 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 2.9,-4.9 c 1.2,0 2.3,0.4 3.2,1.2 0.9,0.8 1.5,1.8 1.7,3 h -2.1 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 h -2.1 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9445-1-8"
-           d="m 192,55.8 0,0 c 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.3 2.1,-0.8 0.6,-0.6 0.9,-1.3 0.9,-2.1 v 0 h 2 v 0.1 c 0,1.4 -0.5,2.5 -1.5,3.5 -1,1 -2.1,1.4 -3.5,1.4 -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 v 0 h 2.1 z m 5.9,-9.8 h 2 v 9.1 h -2.2 c -0.2,-0.6 -0.5,-1.1 -1,-1.5 -0.5,-0.4 -1.1,-0.6 -1.8,-0.6 -0.7,0 -1.2,0.2 -1.8,0.6 -0.5,0.4 -0.9,0.9 -1,1.5 H 190 c 0.2,-1.2 0.8,-2.2 1.7,-3 0.9,-0.8 2,-1.2 3.2,-1.2 1.1,0 2.1,0.3 2.9,1 V 46 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9447-5-0"
-           d="m 206.6,60.8 c -1.4,0 -2.5,-0.5 -3.5,-1.5 -1,-1 -1.5,-2.1 -1.5,-3.5 0,-1.4 0.5,-2.5 1.5,-3.5 1,-1 2.1,-1.5 3.5,-1.5 1.4,0 2.5,0.5 3.5,1.5 1,1 1.5,2.1 1.5,3.5 0,1.4 -0.5,2.5 -1.5,3.5 -0.9,1 -2.1,1.5 -3.5,1.5 z m 2.1,-2.9 c 0.6,-0.6 0.9,-1.3 0.9,-2.1 0,-0.8 -0.3,-1.5 -0.9,-2.1 -0.6,-0.6 -1.3,-0.8 -2.1,-0.8 -0.8,0 -1.5,0.3 -2.1,0.8 -0.6,0.6 -0.8,1.3 -0.8,2.1 0,0.8 0.3,1.5 0.8,2.1 0.6,0.6 1.3,0.8 2.1,0.8 0.8,0 1.5,-0.2 2.1,-0.8 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-        <path
-           id="path9449-1-1"
-           d="m 214.8,55.1 c -1,-0.8 -1.6,-1.9 -1.7,-3.2 0,-0.2 0,-0.4 0,-0.7 h 2 c 0,0.2 0,0.4 0.1,0.7 0.1,0.7 0.5,1.2 1,1.7 0.5,0.4 1.2,0.7 1.9,0.7 0.7,0 1.3,-0.2 1.8,-0.7 0.5,-0.4 0.9,-1 1,-1.7 0,-0.2 0.1,-0.4 0.1,-0.7 h 2 c 0,0.3 0,0.6 -0.1,0.9 -0.2,1.2 -0.8,2.2 -1.7,3 h -6.4 z m 6.2,0.7 c 1,0.8 1.7,1.9 1.9,3.2 0,0.3 0.1,0.7 0.1,1.3 v 0.4 h -2 v -0.4 c 0,-0.5 0,-0.9 -0.1,-1.1 -0.1,-0.7 -0.5,-1.2 -1,-1.7 -0.5,-0.4 -1.2,-0.7 -1.8,-0.7 -0.7,0 -1.3,0.2 -1.9,0.7 -0.5,0.4 -0.9,1 -1,1.7 0,0.3 -0.1,0.5 -0.1,0.7 v 0.8 h -2 v -0.8 c 0,-0.3 0,-0.6 0,-0.8 0.2,-1.4 0.8,-2.5 1.9,-3.3 h 6 z"
-           inkscape:connector-curvature="0"
-           style="fill:#ffffff" />
-      </g>
-    </g>
-    <g
        id="g9451"
-       transform="translate(113.29628,619.18879)">
+       transform="translate(113.29628,619.18879)"
+       style="filter:url(#filter9072)">
       <linearGradient
          id="SVGID_1_-85"
          gradientUnits="userSpaceOnUse"
@@ -15773,7 +16894,8 @@
     </g>
     <g
        id="g9479"
-       transform="translate(-260.71249,765.7976)">
+       transform="translate(-260.71249,765.7976)"
+       style="filter:url(#filter9076)">
       <linearGradient
          id="SVGID_3_-06"
          gradientUnits="userSpaceOnUse"
@@ -15841,7 +16963,8 @@
     </g>
     <g
        id="g9503"
-       transform="translate(-52.928406,436.25761)">
+       transform="translate(-52.928406,436.25761)"
+       style="filter:url(#filter9080)">
       <circle
          sodipodi:ry="92.5"
          sodipodi:rx="92.5"
@@ -15909,7 +17032,8 @@
     </g>
     <g
        id="g9687"
-       transform="translate(583.82805,-430.56549)">
+       transform="translate(583.82805,-430.56549)"
+       style="filter:url(#filter9084)">
       <path
          style="fill:#ffffff"
          inkscape:connector-curvature="0"
@@ -15922,7 +17046,8 @@
     </g>
     <g
        id="g9711"
-       transform="translate(572.36275,-429.73612)">
+       transform="translate(572.36275,-429.73612)"
+       style="filter:url(#filter9088)">
       <path
          style="fill:#ffffff"
          inkscape:connector-curvature="0"
@@ -15936,7 +17061,8 @@
     </g>
     <g
        id="g11494"
-       transform="translate(-588.32545,-512.75833)">
+       transform="translate(-588.32545,-512.75833)"
+       style="filter:url(#filter9092)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9717"
@@ -15967,7 +17093,8 @@
     </g>
     <g
        id="g11521"
-       transform="translate(-587.05795,-477.70486)">
+       transform="translate(-587.05795,-477.70486)"
+       style="filter:url(#filter9096)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9723"
@@ -15995,7 +17122,8 @@
     </g>
     <g
        id="g11507"
-       transform="translate(-586.50985,-495.29507)">
+       transform="translate(-586.50985,-495.29507)"
+       style="filter:url(#filter9100)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9729"
@@ -16017,7 +17145,8 @@
     </g>
     <g
        id="g11489"
-       transform="translate(-605.17255,-513.80393)">
+       transform="translate(-605.17255,-513.80393)"
+       style="filter:url(#filter9104)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9733"
@@ -16050,7 +17179,8 @@
     </g>
     <g
        id="g11516"
-       transform="translate(-603.90515,-476.86288)">
+       transform="translate(-603.90515,-476.86288)"
+       style="filter:url(#filter9108)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9739"
@@ -16080,7 +17210,8 @@
     </g>
     <g
        id="g11503"
-       transform="translate(-604.38715,-495.4747)">
+       transform="translate(-604.38715,-495.4747)"
+       style="filter:url(#filter9112)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9745"
@@ -16103,7 +17234,8 @@
     </g>
     <g
        id="g11484"
-       transform="translate(-691.96575,-511.45224)">
+       transform="translate(-691.96575,-511.45224)"
+       style="filter:url(#filter9116)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9749"
@@ -16134,7 +17266,8 @@
     </g>
     <g
        id="g11511"
-       transform="translate(-690.77625,-478.82593)">
+       transform="translate(-690.77625,-478.82593)"
+       style="filter:url(#filter9120)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9755"
@@ -16162,7 +17295,8 @@
     </g>
     <g
        id="g11499"
-       transform="translate(-691.55115,-494.84786)">
+       transform="translate(-691.55115,-494.84786)"
+       style="filter:url(#filter9124)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9761"
@@ -16184,7 +17318,8 @@
     </g>
     <g
        id="g9783"
-       transform="translate(599.20705,-429.35917)">
+       transform="translate(599.20705,-429.35917)"
+       style="filter:url(#filter9128)">
       <path
          style="fill:#b8a186"
          inkscape:connector-curvature="0"
@@ -16196,21 +17331,21 @@
          id="path9787" />
     </g>
     <rect
-       style="fill:#b8a186"
+       style="fill:#b8a186;filter:url(#filter9132)"
        x="825.36963"
        y="250.5143"
        width="60"
        height="30"
        id="rect9789" />
     <rect
-       style="fill:#ffffff"
+       style="fill:#ffffff;filter:url(#filter9136)"
        x="825.89868"
        y="286.67728"
        width="60"
        height="30"
        id="rect9791" />
     <rect
-       style="fill:#ffffff"
+       style="fill:#ffffff;filter:url(#filter9140)"
        x="824.6759"
        y="324.70993"
        width="60"
@@ -16218,7 +17353,8 @@
        id="rect9793" />
     <g
        id="g11379"
-       transform="translate(-766.41825,-244.26112)">
+       transform="translate(-766.41825,-244.26112)"
+       style="filter:url(#filter9144)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9795"
@@ -16259,7 +17395,8 @@
     </g>
     <g
        id="g11370"
-       transform="translate(-769.35985,-243.89308)">
+       transform="translate(-769.35985,-243.89308)"
+       style="filter:url(#filter9148)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9811"
@@ -16303,7 +17440,8 @@
     </g>
     <g
        id="g11360"
-       transform="translate(-847.39995,-243.38215)">
+       transform="translate(-847.39995,-243.38215)"
+       style="filter:url(#filter9152)">
       <g
          id="g11351">
         <circle
@@ -16347,7 +17485,8 @@
     </g>
     <g
        id="g11464"
-       transform="translate(-766.44285,-293.14069)">
+       transform="translate(-766.44285,-293.14069)"
+       style="filter:url(#filter9156)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9801"
@@ -16367,7 +17506,8 @@
     </g>
     <g
        id="g11436"
-       transform="translate(-765.97445,-277.32447)">
+       transform="translate(-765.97445,-277.32447)"
+       style="filter:url(#filter9160)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9799"
@@ -16435,7 +17575,8 @@
     </g>
     <g
        id="g11400"
-       transform="translate(-766.13985,-262.37039)">
+       transform="translate(-766.13985,-262.37039)"
+       style="filter:url(#filter9164)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9797"
@@ -16503,7 +17644,8 @@
     </g>
     <g
        id="g11468"
-       transform="translate(-773.20365,-294.41922)">
+       transform="translate(-773.20365,-294.41922)"
+       style="filter:url(#filter9168)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9851"
@@ -16524,7 +17666,8 @@
     </g>
     <g
        id="g11448"
-       transform="translate(-773.56265,-277.78382)">
+       transform="translate(-773.56265,-277.78382)"
+       style="filter:url(#filter9172)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9849"
@@ -16600,7 +17743,8 @@
     </g>
     <g
        id="g11412"
-       transform="translate(-772.06605,-263.64893)">
+       transform="translate(-772.06605,-263.64893)"
+       style="filter:url(#filter9176)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9847"
@@ -16676,7 +17820,8 @@
     </g>
     <g
        id="g11460"
-       transform="translate(-851.52345,-292.22132)">
+       transform="translate(-851.52345,-292.22132)"
+       style="filter:url(#filter9180)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9877"
@@ -16696,7 +17841,8 @@
     </g>
     <g
        id="g11424"
-       transform="translate(-850.22875,-276.84998)">
+       transform="translate(-850.22875,-276.84998)"
+       style="filter:url(#filter9184)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9875"
@@ -16764,7 +17910,8 @@
     </g>
     <g
        id="g11388"
-       transform="translate(-849.72115,-262.45313)">
+       transform="translate(-849.72115,-262.45313)"
+       style="filter:url(#filter9188)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9873"
@@ -16832,7 +17979,8 @@
     </g>
     <g
        id="g11480"
-       transform="translate(-766.75585,-308.36968)">
+       transform="translate(-766.75585,-308.36968)"
+       style="filter:url(#filter9192)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9803"
@@ -16853,7 +18001,8 @@
     </g>
     <g
        id="g11476"
-       transform="translate(-773.28385,-310.82903)">
+       transform="translate(-773.28385,-310.82903)"
+       style="filter:url(#filter9196)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9900"
@@ -16875,7 +18024,8 @@
     </g>
     <g
        id="g11472"
-       transform="translate(-852.65575,-309.24293)">
+       transform="translate(-852.65575,-309.24293)"
+       style="filter:url(#filter9200)">
       <circle
          transform="translate(1127.0635,21.527304)"
          id="circle9903"
@@ -16896,7 +18046,8 @@
     </g>
     <g
        id="g8255"
-       transform="translate(-203.60438,-414.26745)">
+       transform="translate(-203.60438,-414.26745)"
+       style="filter:url(#filter9204)">
       <rect
          id="rect8257"
          height="60"
@@ -16905,16 +18056,17 @@
          x="857" />
       <polygon
          id="polygon8259"
-         points="843,498 843,424 917,424 917,427 846,427 846,498 "
+         points="846,427 846,498 843,498 843,424 917,424 917,427 "
          style="opacity:0.33000004;fill:#262626" />
       <polygon
          id="polygon8261"
-         points="850,498 850,431 917,431 917,434 853,434 853,498 "
+         points="853,434 853,498 850,498 850,431 917,431 917,434 "
          style="opacity:0.66000001;fill:#262626" />
     </g>
     <g
        id="g8263"
-       transform="translate(-204.19776,-414.26745)">
+       transform="translate(-204.19776,-414.26745)"
+       style="filter:url(#filter9208)">
       <rect
          id="rect8265"
          height="60"
@@ -16923,16 +18075,17 @@
          x="999" />
       <polygon
          id="polygon8267"
-         points="1070,498 1073,498 1073,424 999,424 999,427 1070,427 "
+         points="999,427 1070,427 1070,498 1073,498 1073,424 999,424 "
          style="opacity:0.33000004;fill:#262626" />
       <polygon
          id="polygon8269"
-         points="1063,498 1066,498 1066,431 999,431 999,434 1063,434 "
+         points="999,434 1063,434 1063,498 1066,498 1066,431 999,431 "
          style="opacity:0.66000001;fill:#262626" />
     </g>
     <g
        id="g8271"
-       transform="translate(-203.20875,-414.26745)">
+       transform="translate(-203.20875,-414.26745)"
+       style="filter:url(#filter9212)">
       <rect
          id="rect8273"
          height="60"
@@ -16950,7 +18103,8 @@
     </g>
     <g
        id="g8279"
-       transform="translate(-203.60438,-413.26748)">
+       transform="translate(-203.60438,-413.26748)"
+       style="filter:url(#filter9216)">
       <rect
          id="rect8281"
          height="74"
@@ -16968,7 +18122,8 @@
     </g>
     <g
        id="g8287"
-       transform="translate(-203.95599,-413.26748)">
+       transform="translate(-203.95599,-413.26748)"
+       style="filter:url(#filter9220)">
       <rect
          id="rect8289"
          height="74"
@@ -16986,7 +18141,8 @@
     </g>
     <g
        id="g8295"
-       transform="translate(-204.19776,-412.26748)">
+       transform="translate(-204.19776,-412.26748)"
+       style="filter:url(#filter9224)">
       <rect
          id="rect8297"
          height="60"
@@ -16995,16 +18151,17 @@
          x="999" />
       <polygon
          id="polygon8299"
-         points="1070,578 1073,578 1073,652 999,652 999,649 1070,649 "
+         points="999,649 1070,649 1070,578 1073,578 1073,652 999,652 "
          style="opacity:0.33000004;fill:#262626" />
       <polygon
          id="polygon8301"
-         points="1063,578 1066,578 1066,645 999,645 999,642 1063,642 "
+         points="999,642 1063,642 1063,578 1066,578 1066,645 999,645 "
          style="opacity:0.66000001;fill:#262626" />
     </g>
     <g
        id="g8303"
-       transform="translate(-203.51649,-412.26748)">
+       transform="translate(-203.51649,-412.26748)"
+       style="filter:url(#filter9228)">
       <rect
          id="rect8305"
          height="60"
@@ -17022,7 +18179,8 @@
     </g>
     <g
        id="g8311"
-       transform="translate(-203.60438,-412.26748)">
+       transform="translate(-203.60438,-412.26748)"
+       style="filter:url(#filter9232)">
       <rect
          id="rect8313"
          height="60"
@@ -17031,11 +18189,11 @@
          x="857" />
       <polygon
          id="polygon8315"
-         points="843,578 846,578 846,649 917,649 917,652 843,652 "
+         points="917,652 843,652 843,578 846,578 846,649 917,649 "
          style="opacity:0.33000004;fill:#262626" />
       <polygon
          id="polygon8317"
-         points="850,578 853,578 853,642 917,642 917,645 850,645 "
+         points="917,645 850,645 850,578 853,578 853,642 917,642 "
          style="opacity:0.66000001;fill:#262626" />
     </g>
     <rect
@@ -17043,10 +18201,12 @@
        height="74"
        width="74"
        y="87.732506"
-       x="717.48352" />
+       x="717.48352"
+       style="filter:url(#filter9236)" />
     <g
        id="g8644"
-       transform="translate(-543.63988,-415.73366)">
+       transform="translate(-543.63988,-415.73366)"
+       style="filter:url(#filter9240)">
       <g
          transform="matrix(0.7,0,0,0.7,407.57588,77.746125)"
          id="g11484-9"
@@ -17092,7 +18252,8 @@
     </g>
     <g
        id="g8636"
-       transform="translate(-531.83078,-437.0537)">
+       transform="translate(-531.83078,-437.0537)"
+       style="filter:url(#filter9244)">
       <g
          transform="matrix(0.7,0,0,0.7,411.69976,98.128148)"
          id="g11484-9-9"
@@ -17138,7 +18299,7 @@
     </g>
     <g
        transform="translate(-515.49368,-437.07977)"
-       style="display:inline"
+       style="display:inline;filter:url(#filter9248)"
        id="g8636-0">
       <g
          transform="matrix(0.7,0,0,0.7,411.69976,98.128148)"
@@ -17184,7 +18345,7 @@
       </g>
     </g>
     <rect
-       style="fill:#b8a186;fill-opacity:1;stroke:none"
+       style="fill:#b8a186;fill-opacity:1;stroke:none;filter:url(#filter9252)"
        id="rect8688"
        width="5"
        height="5"
@@ -17192,7 +18353,8 @@
        y="366.7789" />
     <g
        id="g8353"
-       transform="matrix(0.9,0,0,0.9,-492.86765,2.841176)">
+       transform="matrix(0.9,0,0,0.9,-492.86765,2.841176)"
+       style="filter:url(#filter9256)">
       <path
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.21000004;stroke-miterlimit:4;stroke-dasharray:none;display:inline"
          inkscape:connector-curvature="0"
@@ -17213,7 +18375,7 @@
     </g>
     <g
        transform="translate(-206.73805,-1.1213265)"
-       style="display:inline"
+       style="display:inline;filter:url(#filter9260)"
        id="g8624-2">
       <path
          inkscape:connector-curvature="0"
@@ -17228,7 +18390,8 @@
     </g>
     <g
        id="g9474"
-       transform="translate(-1.0000025,0)">
+       transform="translate(-1.0000025,0)"
+       style="filter:url(#filter9264)">
       <path
          inkscape:connector-curvature="0"
          id="path8508-5-3-3-1-2"
@@ -17242,7 +18405,7 @@
     </g>
     <g
        transform="translate(-1.2765473,-208.87255)"
-       style="display:inline"
+       style="display:inline;filter:url(#filter9268)"
        id="g8715-7">
       <path
          transform="matrix(0.09250092,0,0,0.09250092,388.1356,367.251)"
@@ -17342,7 +18505,7 @@
          sodipodi:type="star" />
     </g>
     <g
-       style="stroke:#000000;stroke-opacity:1;display:inline"
+       style="stroke:#000000;stroke-opacity:1;display:inline;filter:url(#filter9272)"
        id="g8389-9-8-1-9"
        transform="matrix(-0.9999899,0,0,-0.9999899,1558.591,1019.0942)">
       <path
@@ -17357,9 +18520,9 @@
        id="path8391-4-8-1-3"
        d="m 750.49966,425.0002 c 0,8.29992 -6.69994,14.99985 -14.99985,14.99985 -8.29992,0 -14.99985,-6.69993 -14.99985,-14.99985 0,-8.29992 6.69993,-14.99985 14.99985,-14.99985 8.29991,0 14.99985,6.79993 14.99985,14.99985 z"
        inkscape:connector-curvature="0"
-       style="fill:#5875a6;fill-opacity:1;stroke:#000000;stroke-width:0.99998993;stroke-opacity:0.49803922" />
+       style="fill:#5875a6;fill-opacity:1;stroke:#000000;stroke-width:0.99998993;stroke-opacity:0.49803922;filter:url(#filter9276)" />
     <g
-       style="fill:#5875a6;fill-opacity:1;stroke:#ffffff;stroke-width:1.50001514;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       style="fill:#5875a6;fill-opacity:1;stroke:#ffffff;stroke-width:1.50001514;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;filter:url(#filter9280)"
        id="g8389-9-8-1-93"
        transform="matrix(-0.9999899,0,0,-0.9999899,1655.591,1019.0942)">
       <path
@@ -17371,7 +18534,8 @@
     </g>
     <g
        id="g9344"
-       transform="matrix(0.95000346,0,0,0.8941324,34.294214,32.168116)">
+       transform="matrix(0.95000346,0,0,0.8941324,34.294214,32.168116)"
+       style="filter:url(#filter9284)">
       <path
          transform="matrix(0.13320132,0,0,0.13320132,681.69,252.47326)"
          d="M 190.74074,174.5844 112.25512,195.05879 88.888886,272.73255 68.414495,194.24692 -9.2592677,170.88069 69.226359,150.4063 92.59259,72.732538 113.06698,151.21816 z"
@@ -17476,7 +18640,7 @@
        inkscape:connector-curvature="0" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9288)"
        id="path3096-5-6-6-1"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17492,7 +18656,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,730.90207,257.91295)" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9292)"
        id="path3096-1-1-1-0-8"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17508,7 +18672,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,718.81006,251.42479)" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9296)"
        id="path3096-1-7-7-8-6-2"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17524,7 +18688,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,721.18326,267.37928)" />
     <path
        sodipodi:type="star"
-       style="fill:#4295ba;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#4295ba;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9300)"
        id="path3096-1-1-1-8-1-66"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17540,7 +18704,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,722.16183,257.78775)" />
     <path
        sodipodi:type="star"
-       style="fill:#42c3d9;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#42c3d9;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9304)"
        id="path3096-5-6-3-6-03"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17556,7 +18720,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,734.25385,264.27591)" />
     <path
        sodipodi:type="star"
-       style="fill:#4a89b3;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#4a89b3;fill-opacity:1;stroke:#2f445a;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:0.49803922;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9308)"
        id="path3096-1-7-7-8-7-8-8"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17572,7 +18736,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,724.53504,273.74224)" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9312)"
        id="path3096-5-6-6-1-1"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17588,7 +18752,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,778.90207,257.91295)" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9316)"
        id="path3096-1-1-1-0-8-2"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17604,7 +18768,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,766.81006,251.42479)" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9320)"
        id="path3096-1-7-7-8-6-2-5"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17620,7 +18784,7 @@
        transform="matrix(0.12654171,0,0,0.11909962,769.18326,267.37928)" />
     <path
        sodipodi:type="star"
-       style="fill:#4295ba;fill-opacity:1;stroke:#5875a6;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#4295ba;fill-opacity:1;stroke:#5875a6;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9324)"
        id="path3096-1-1-1-8-1-66-0"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17636,7 +18800,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,770.16183,257.78775)" />
     <path
        sodipodi:type="star"
-       style="fill:#42c3d9;fill-opacity:1;stroke:#6cb0cf;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#42c3d9;fill-opacity:1;stroke:#6cb0cf;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9328)"
        id="path3096-5-6-3-6-03-9"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17652,7 +18816,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,782.25385,264.27591)" />
     <path
        sodipodi:type="star"
-       style="fill:#4a89b3;fill-opacity:1;stroke:#5875a6;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       style="fill:#4a89b3;fill-opacity:1;stroke:#5875a6;stroke-width:10.39999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;filter:url(#filter9332)"
        id="path3096-1-7-7-8-7-8-8-4"
        sodipodi:sides="4"
        sodipodi:cx="90.740738"
@@ -17668,7 +18832,7 @@
        transform="matrix(0.08787619,0,0,0.08270807,772.53504,273.74224)" />
     <g
        transform="translate(-0.8087225,-1.0662775)"
-       style="display:inline"
+       style="display:inline;filter:url(#filter9336)"
        id="g8624">
       <path
          id="path8508-5-3"
@@ -17682,7 +18846,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <g
-       style="stroke:#000000;stroke-width:1.77838612;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       style="stroke:#000000;stroke-width:1.77838612;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;filter:url(#filter9340)"
        id="g8389-9-8-1"
        transform="matrix(-1.2587172,0,0,-1.2587172,1689.9896,1338.9453)">
       <path
@@ -17707,7 +18871,7 @@
        inkscape:label="#rect4181"
        transform="matrix(0,1,-1,0,0,0)" />
     <rect
-       style="fill:url(#linearGradient7317);fill-opacity:1;stroke:none;display:inline"
+       style="fill:url(#linearGradient7317);fill-opacity:1;stroke:none;display:inline;filter:url(#filter9348)"
        id="EdgeWideSatisfiedUnselected-4"
        width="32"
        height="32"
@@ -17743,7 +18907,7 @@
        inkscape:label="#rect4181"
        transform="matrix(0,1,-1,0,0,0)" />
     <rect
-       style="fill:url(#linearGradient7417);fill-opacity:1;stroke:none;display:inline"
+       style="fill:url(#linearGradient7417);fill-opacity:1;stroke:none;display:inline;filter:url(#filter9356)"
        id="EdgeNarrowSatisfiedUnselected-7"
        width="32"
        height="32"

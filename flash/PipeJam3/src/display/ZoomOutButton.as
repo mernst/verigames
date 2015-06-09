@@ -10,7 +10,7 @@ package display
 		public function ZoomOutButton()
 		{
 			m_toolTipText = "Zoom Out";
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonZoomOut))]),

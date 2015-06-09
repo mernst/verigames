@@ -142,7 +142,7 @@ package scenes.game.display
 			
 			if(!mAtlas)
 			{
-				mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+				mAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 				DarkBlueCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableWide);
 				LightBlueCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableNarrow);
 				LightBlueSelectedCircle = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_VariableNarrowSelected);

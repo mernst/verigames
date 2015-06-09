@@ -1,6 +1,5 @@
 package display 
 {
-	import assets.AssetInterface;
 	import starling.display.Image;
 	import starling.textures.TextureAtlas;
 	import starling.display.Sprite;
@@ -32,8 +31,7 @@ package display
 		static public var gameObjectBatch:GameObjectBatch;
 		
 		public function NineSliceBatch(_width:Number, _height:Number, _cX:Number, _cY:Number, 
-		                               _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
-									   _atlasXMLTexturePrefix:String)
+                                       _atlas:TextureAtlas, _atlasXMLTexturePrefix:String)
 		{
 			super();
 			mWidth = _width;
@@ -41,7 +39,7 @@ package display
 			mCx = Math.min(_cX, mWidth / 2.0); // can't be > half the width
 			mCy = Math.min(_cY, mHeight / 2.0); // can't be > half the height
 			
-			mAtlas = AssetInterface.getTextureAtlas(_atlasFile, _atlasImgName, _atlasXMLName);
+			mAtlas = _atlas;
 			
 			mTopLeft = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.TOP_LEFT));
 			mTop = new Image(mAtlas.getTexture(_atlasXMLTexturePrefix + Constants.TOP));

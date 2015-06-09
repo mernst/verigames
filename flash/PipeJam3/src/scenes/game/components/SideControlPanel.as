@@ -88,7 +88,7 @@ package scenes.game.components
 			WIDTH = _width;
 			HEIGHT = _height;
 			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			
 			var scoreCircleBackTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleBack);
 			var scoreCircleMiddleTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleMiddle);
@@ -207,7 +207,7 @@ package scenes.game.components
 		
 		public function addedToStage(event:starling.events.Event):void
 		{
-			addChild(m_menuButton);
+			if (!PipeJam3.ASSET_SUFFIX) addChild(m_menuButton);
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 		//	addChild(m_fullScreenButton); not quite ready. Next Tutorials don't draw, occasional 'too big' crashes
@@ -420,6 +420,25 @@ package scenes.game.components
 			//if only one shows, hide them all
 			if(count == 1)
 				m_solver1Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+		}
+		
+		public function emphasizeBrushes(emphasizeBrushes:int):void
+		{
+			m_narrowBrush.deemphasize();
+			m_widenBrush.deemphasize();
+			m_solver1Brush.deemphasize();
+			if (emphasizeBrushes & TutorialLevelManager.NARROW_BRUSH)
+			{
+				m_narrowBrush.emphasize();
+			}
+			if (emphasizeBrushes & TutorialLevelManager.WIDEN_BRUSH)
+			{
+				m_widenBrush.emphasize();
+			}
+			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			{
+				m_solver1Brush.emphasize();
+			}
 		}
 		
 //		private function onTouchHighScore(evt:TouchEvent):void

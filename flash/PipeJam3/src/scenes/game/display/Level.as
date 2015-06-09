@@ -1973,6 +1973,12 @@ package scenes.game.display
 			
 		}
 		
+		public function emphasizeBrushes():int
+		{
+			if (tutorialManager) return tutorialManager.emphasizeBrushes();
+			return 0x0;
+		}
+		
 		private static function popNode(d:Dictionary):Node
 		{
 			for (var id:String in d)

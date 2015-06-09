@@ -111,6 +111,8 @@ package
 			m_sfxButton.x = localPoint.x;
 			m_sfxButton.y = localPoint.y;
 			
+			if (PipeJam3.ASSET_SUFFIX) m_sfxButton.visible = false;
+			
 			_parent.addChild(m_sfxButton);
 		}
 		
@@ -250,7 +252,7 @@ package
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{
-			m_sfxButton.visible = event.data;
+			m_sfxButton.visible = PipeJam3.ASSET_SUFFIX ? false : event.data;
 			if(m_sfxButton.visible)
 			{
 				AudioManager.getInstance().reset();

@@ -4,7 +4,6 @@ package dialogs
 	import assets.AssetsFont;
 	
 	import display.BasicButton;
-	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	
 	import flash.geom.Rectangle;

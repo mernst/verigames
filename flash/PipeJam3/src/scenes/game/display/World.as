@@ -77,8 +77,6 @@ package scenes.game.display
 		protected var m_backgroundLayer:Sprite;
 		protected var m_foregroundLayer:Sprite;
 		protected var m_splashLayer:Sprite;
-				
-		private var m_sfxButton:SoundButton;
 		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
@@ -137,7 +135,7 @@ package scenes.game.display
 				var levelObj:Object = allLevels[level_index];
 				var levelId:String = levelObj["id"];
 				var levelDisplayName:String = levelId;
-				if (levelObj.hasOwnProperty("display_name")) levelDisplayName = levelObj["display_name"];
+				if (levelObj.hasOwnProperty("display_name") && !PipeJam3.ASSET_SUFFIX) levelDisplayName = levelObj["display_name"];
 				var levelLayoutObj:Object = findLevelFile(levelId, m_layoutObj);
 				var levelAssignmentsObj:Object = findLevelFile(levelId, m_assignmentsObj);
 				// if we didn't find the level, assume this is a global constraints file
@@ -1089,6 +1087,8 @@ package scenes.game.display
 			active_level.initialize();
 			showVisibleBrushes();
 			showCurrentBrush();
+			var brushesToEmphasize:int = active_level.emphasizeBrushes();
+			sideControlPanel.emphasizeBrushes(brushesToEmphasize);
 		}
 		
 		private function onLevelLoaded(evt:MenuEvent):void
@@ -1271,25 +1271,37 @@ package scenes.game.display
 		
 		public function setFirstBrush(visibleBrushes:int):void
 		{
-			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			var brushInt2Str:Dictionary = new Dictionary();
+			brushInt2Str[TutorialLevelManager.SOLVER_BRUSH] = GridViewPanel.FIRST_SOLVER_BRUSH;
+			brushInt2Str[TutorialLevelManager.WIDEN_BRUSH] = GridViewPanel.WIDEN_BRUSH;
+			brushInt2Str[TutorialLevelManager.NARROW_BRUSH] = GridViewPanel.NARROW_BRUSH;
+			
+			// This determines the default for which brush is activated first (if visible)
+			var brushOrder:Array = [
+									TutorialLevelManager.SOLVER_BRUSH,
+									TutorialLevelManager.WIDEN_BRUSH,
+									TutorialLevelManager.NARROW_BRUSH
+			];
+			// If a tutorial specifically wants one brush to be selected to start, put
+			// this at the beginning of the list of brushes to check for visibility
+			if (active_level.tutorialManager != null)
 			{
-				edgeSetGraphViewPanel.changeBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
-				sideControlPanel.changeSelectedBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
-				return;
+				var firstBrush:Number = active_level.tutorialManager.getStartingBrush();
+				if (!isNaN(firstBrush))
+				{
+					brushOrder.unshift(firstBrush);
+				}
 			}
 			
-			if(visibleBrushes & TutorialLevelManager.WIDEN_BRUSH)
+			// Activate the first brush that's visible in the brushOrder array
+			for (var i:int = 0; i < brushOrder.length; i++)
 			{
-				edgeSetGraphViewPanel.changeBrush(GridViewPanel.WIDEN_BRUSH);
-				sideControlPanel.changeSelectedBrush(GridViewPanel.WIDEN_BRUSH);
-				return;
-			}
-			
-			if(visibleBrushes & TutorialLevelManager.NARROW_BRUSH)
-			{
-				edgeSetGraphViewPanel.changeBrush(GridViewPanel.NARROW_BRUSH);
-				sideControlPanel.changeSelectedBrush(GridViewPanel.NARROW_BRUSH);
-				return;
+				if(visibleBrushes & brushOrder[i])
+				{
+					edgeSetGraphViewPanel.changeBrush(brushInt2Str[brushOrder[i]]);
+					sideControlPanel.changeSelectedBrush(brushInt2Str[brushOrder[i]]);
+					return;
+				}
 			}
 		}
 	}
