@@ -50,7 +50,7 @@ package constraints
 		public var currentScore:int = 0;	
 		public var prevScore:int = 0;
 		public var oldScore:int = 0;
-		static public var m_maxPossibleScore:int = 0;
+		public var maxPossibleScore:int = 0;
 		public var qid:int = -1;
 		
 		static protected var updateCount:int = 0;
@@ -103,7 +103,7 @@ package constraints
 						clauseID = constraint.lhs.id;
 					else
 						clauseID = constraint.rhs.id;
-					if (constraint.isClauseSatisfied(varIdChanged, newPropValue)) {
+					if (constraint.isClauseSatisfied(varIdChanged, newPropValue)) { 
 						newConstraintPoints += constraint.scoring.getScoringValue(ConstraintScoringConfig.CONSTRAINT_VALUE_KEY);
 						newSatisfiedConstraints[clauseID] = constraint;
 					} else {
@@ -262,7 +262,7 @@ package constraints
 			if (newConstraint is ConstraintEdge) {
 				nConstraints++;
 				constraintsDict[newConstraint.id] = newConstraint;
-				m_maxPossibleScore++;
+				maxPossibleScore++;
 				// Attach any groups
 				if (groupsArr && totalGroups) {
 					var fillLeft:Boolean = (newConstraint.lhs.groups == null);
@@ -316,7 +316,7 @@ package constraints
 			var ver:String = levelObj[VERSION];
 			graph1.version = levelObj[VERSION];
 			var defaultValue:String = levelObj[DEFAULT_VAR];
-			m_maxPossibleScore = 0;
+			graph1.maxPossibleScore = 0;
 			graph1.qid = parseInt(levelObj[QID]);
 			switch (graph1.version) {
 				case "1": // Version 1
