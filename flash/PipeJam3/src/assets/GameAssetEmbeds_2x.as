@@ -104,6 +104,9 @@ package assets
 		[Embed(source="../../lib/assets/splash/ConstraintRules.png")]
 		public static const ConstraintsSplashClass:Class;
 		
+		[Embed(source="../../lib/assets/splash/ConstraintRulesTurk.png")]
+		public static const ConstraintsSplashClassTurk:Class;
+		
 		[Embed(source = "../../lib/assets/BorderVignette.png")]
 		public static const BorderVignetteClass:Class;
 		

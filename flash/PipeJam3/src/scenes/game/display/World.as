@@ -762,7 +762,7 @@ package scenes.game.display
 			currentPercent = sideControlPanel.updateScore(active_level, false);
 			if(currentPercent >= 100)
 			{
-				if(!PipeJamGameScene.inTutorial)
+				if(!PipeJamGameScene.inTutorial && PlayerValidation.playerActivity != null)
 				{
 					GameFileHandler.reportScore();
 					var levelPlayedArray:Array = PlayerValidation.playerActivity['completed_boards'];

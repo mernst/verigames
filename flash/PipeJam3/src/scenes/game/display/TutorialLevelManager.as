@@ -571,7 +571,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "002":
-					var splashText:Texture = AssetInterface.getTexture("Game", "ConstraintsSplashClass");
+					var splashText:Texture = AssetInterface.getTexture("Game", "ConstraintsSplashClass" + PipeJam3.ASSET_SUFFIX);
 					var splash:Image = new Image(splashText);
 					return splash;
 			}

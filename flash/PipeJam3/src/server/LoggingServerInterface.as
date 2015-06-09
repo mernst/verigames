@@ -14,6 +14,7 @@ package server
 	public class LoggingServerInterface
 	{
 		public static const SETUP_KEY_FRIENDS_AND_FAMILY_BETA:String = "SETUP_KEY_FRIENDS_AND_FAMILY_BETA";
+		public static const SETUP_KEY_TURK:String = "SETUP_KEY_TURK";
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
 		public static const CACHE_PREV_UID:String = "prev_uid"; // used to track play sessions before a player was logged in
 		
@@ -44,6 +45,11 @@ package server
 			switch (_setupKey) {
 				case SETUP_KEY_FRIENDS_AND_FAMILY_BETA:
 					cid = VerigameServerConstants.VERIGAME_CATEGORY_PARADOX_FRIENDS_FAMILY_BETA_MAY_15_2015;
+					saveCacheToServer = true;
+					provideIp = false;
+					break;
+				case SETUP_KEY_TURK:
+					cid = VerigameServerConstants.VERIGAME_CATEGORY_PARADOX_MTURK_JUNE_2015;
 					saveCacheToServer = true;
 					provideIp = false;
 					break;

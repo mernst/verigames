@@ -15,6 +15,7 @@ package system
 		public static const VERIGAME_CATEGORY_SEEDLING_BETA:int                           = 19;
 		public static const VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013:int   = 20;
 		public static const VERIGAME_CATEGORY_PARADOX_FRIENDS_FAMILY_BETA_MAY_15_2015:int = 21;
+		public static const VERIGAME_CATEGORY_PARADOX_MTURK_JUNE_2015:int                 = 22;
 		
 		public static const VERIGAME_QUEST_ID_UNDEFINED_WORLD:int = 66;
 		
