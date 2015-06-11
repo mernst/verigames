@@ -1417,11 +1417,11 @@ package scenes.game.display
 				node.animating = true;
 				m_solvingNodesToAnimate[node.id] = node;
 			}
-
+			
 			// find all the possibly relevant clauses
 			var selectedNodesDict:Dictionary = new Dictionary;
 			var connectedClausesDict:Dictionary = new Dictionary;
-			var gameEdgeId:String
+			var gameEdgeId:String;
 			for each(node in selectedNodes)
 			{
 				if (node.isClause) {

@@ -1,6 +1,7 @@
 package  
 {
 	import com.spikything.utils.MouseWheelTrap;
+	import server.MTurkAPI;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -81,7 +82,7 @@ package
 		public function PipeJam3()
 		{
 			pipeJam3 = this;
-			
+			if (ASSET_SUFFIX == "Turk") MTurkAPI.getInstance(); // initialize
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 

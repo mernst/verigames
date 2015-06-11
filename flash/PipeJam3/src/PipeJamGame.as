@@ -7,6 +7,7 @@ package
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
+	import server.MTurkAPI;
 	
 	import assets.AssetsAudio;
 	
@@ -158,6 +159,14 @@ package
 					{
 						PlayerValidation.accessToken = "denied";
 					}
+					else if (vars.taskId)
+					{
+						MTurkAPI.getInstance().taskId = vars.taskId;
+					}
+					else if (vars.workerToken)
+					{
+						MTurkAPI.getInstance().workerToken = vars.workerToken;
+					}
 				}
 			}
 			
@@ -171,6 +180,12 @@ package
 				else
 					onGetRandomLevel();
 					
+			}
+			else if (PipeJam3.ASSET_SUFFIX && MTurkAPI.getInstance().taskId)
+			{
+				PipeJamGameScene.inTutorial = true;
+				PipeJamGameScene.inDemo = false;
+				showScene("PipeJamGame");
 			}
 			else
 			{
