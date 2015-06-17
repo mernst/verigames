@@ -74,6 +74,9 @@ package scenes.game.components
 		/** Text showing best score */
 		private var m_bestTextfield:TextFieldWrapper;
 		
+		/** Text showing the target percentage score */
+		private var m_targetPercentTextfield:TextFieldWrapper;
+		
 		/** display control variables */
 		private var m_panZoomAllowed:Boolean;
 		
@@ -88,7 +91,7 @@ package scenes.game.components
 			WIDTH = _width;
 			HEIGHT = _height;
 			
-			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
 			
 			var scoreCircleBackTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleBack);
 			var scoreCircleMiddleTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ScoreCircleMiddle);
@@ -141,6 +144,13 @@ package scenes.game.components
 			m_scoreTextfield.y = 44;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			addChild(m_scoreTextfield);
+			
+			m_targetPercentTextfield = TextFactory.getInstance().createTextField("Target:\n0.00%", AssetsFont.FONT_UBUNTU, 30, 25, 25, 0xB1ACAA);
+			m_targetPercentTextfield.touchable = false;
+			m_targetPercentTextfield.x = 60;
+			m_targetPercentTextfield.y = 90;
+			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, 2, 1);
+			addChild(m_targetPercentTextfield);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(starling.events.Event.TRIGGERED, onZoomInButtonTriggered);
@@ -207,7 +217,7 @@ package scenes.game.components
 		
 		public function addedToStage(event:starling.events.Event):void
 		{
-			if (!PipeJam3.ASSET_SUFFIX) addChild(m_menuButton);
+			addChild(m_menuButton);
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 		//	addChild(m_fullScreenButton); not quite ready. Next Tutorials don't draw, occasional 'too big' crashes
@@ -380,29 +390,34 @@ package scenes.game.components
 			return score;
 		}
 		
+		/**
+		 * Updates the target percentage on the screen
+		 */
+		public function targetPercent(level:Level):Number
+		{
+			var maxConflicts:int = level.maxScore;
+			var targetScore:int = level.getTargetScore();
+			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
+			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;
+			
+			var currentTarget:String = targetPercentage.toFixed(2) + '%';
+			
+			TextFactory.getInstance().updateText(m_targetPercentTextfield, "Target:\n" + currentTarget);
+			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, 2, 1);
+			if (score >= targetPercentage) {
+				TextFactory.getInstance().updateColor(m_targetPercentTextfield, 0x00FF00);
+			} else {
+				TextFactory.getInstance().updateColor(m_targetPercentTextfield, 0xB1ACAA);
+			}
+			
+			return targetPercentage;
+		}
+		 
+		
 		private function changeCurrentBrush(evt:starling.events.Event):void
 		{
 			m_brushButtonGroup.makeActive(evt.target as NineSliceToggleButton);
 			dispatchEvent(new SelectionEvent(SelectionEvent.BRUSH_CHANGED, evt.target, null));
-		}
-		
-		public function changeSelectedBrush(brush:String):void
-		{
-			switch(brush)
-			{
-				case GridViewPanel.SOLVER1_BRUSH:
-					m_brushButtonGroup.makeActive(m_solver1Brush);
-					break;
-				case GridViewPanel.SOLVER2_BRUSH:
-					m_brushButtonGroup.makeActive(m_solver2Brush);
-					break;
-				case GridViewPanel.WIDEN_BRUSH:
-					m_brushButtonGroup.makeActive(m_widenBrush);
-					break;
-				case GridViewPanel.NARROW_BRUSH:
-					m_brushButtonGroup.makeActive(m_narrowBrush);
-					break;
-			}
 		}
 		
 		public function showVisibleBrushes(visibleBrushes:int):void
@@ -420,25 +435,6 @@ package scenes.game.components
 			//if only one shows, hide them all
 			if(count == 1)
 				m_solver1Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
-		}
-		
-		public function emphasizeBrushes(emphasizeBrushes:int):void
-		{
-			m_narrowBrush.deemphasize();
-			m_widenBrush.deemphasize();
-			m_solver1Brush.deemphasize();
-			if (emphasizeBrushes & TutorialLevelManager.NARROW_BRUSH)
-			{
-				m_narrowBrush.emphasize();
-			}
-			if (emphasizeBrushes & TutorialLevelManager.WIDEN_BRUSH)
-			{
-				m_widenBrush.emphasize();
-			}
-			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
-			{
-				m_solver1Brush.emphasize();
-			}
 		}
 		
 //		private function onTouchHighScore(evt:TouchEvent):void
