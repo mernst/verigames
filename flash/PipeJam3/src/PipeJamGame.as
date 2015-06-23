@@ -159,13 +159,11 @@ package
 					{
 						PlayerValidation.accessToken = "denied";
 					}
-					else if (vars.taskId)
+					else if (PipeJam3.ASSET_SUFFIX == "Turk" && vars.token)
 					{
-						MTurkAPI.getInstance().taskId = vars.taskId;
-					}
-					else if (vars.workerToken)
-					{
-						MTurkAPI.getInstance().workerToken = vars.workerToken;
+						MTurkAPI.getInstance().workerToken = vars.token;
+						if (ExternalInterface.available)
+							ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token);
 					}
 				}
 			}
@@ -181,8 +179,9 @@ package
 					onGetRandomLevel();
 					
 			}
-			else if (PipeJam3.ASSET_SUFFIX && MTurkAPI.getInstance().taskId)
+			else if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
+				// TODO: Turk - use MTurkAPI.getInstance().workerToken from above to determine taskId, for now assume it is 101 = tutorials
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
 				showScene("PipeJamGame");

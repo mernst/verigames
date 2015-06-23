@@ -9,11 +9,15 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import hints.HintController;
+	import server.MTurkAPI;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -735,13 +739,31 @@ package scenes.game.display
 						active_level.targetScoreReached = true;
 						//if(active_level.m_inSolver)
 						//	solverDoneCallback("");
-						var continueDelay:Number = 0;
-						var showFanfare:Boolean = true;
-						if (active_level && active_level.tutorialManager) {
-							continueDelay = active_level.tutorialManager.continueButtonDelay();
-							showFanfare = active_level.tutorialManager.showFanfare();
+						if (PipeJam3.ASSET_SUFFIX == "Turk" && active_level && active_level.m_levelQID == "2006")
+						{
+							MTurkAPI.getInstance().onTaskComplete(function(confCode:String):void {
+								var nativeText:TextField = new TextField();
+								nativeText.backgroundColor = 0xFFFFFF;
+								nativeText.background = true;
+								nativeText.selectable = true;
+								nativeText.width = Constants.GameWidth;
+								nativeText.height = Constants.GameHeight;
+								nativeText.text = "Thanks for playing!\n\nTask complete.\nYour confirmation code is:\n\n" + confCode;
+								nativeText.wordWrap = true;
+								nativeText.setTextFormat(new TextFormat(null, 32, 0x0, null, null, null, null, null, TextFormatAlign.CENTER));
+								Starling.current.nativeOverlay.addChild(nativeText);
+							});
 						}
-						Starling.juggler.delayCall(edgeSetGraphViewPanel.displayContinueButton, continueDelay, true, showFanfare);
+						else
+						{
+							var continueDelay:Number = 0;
+							var showFanfare:Boolean = true;
+							if (active_level && active_level.tutorialManager) {
+								continueDelay = active_level.tutorialManager.continueButtonDelay();
+								showFanfare = active_level.tutorialManager.showFanfare();
+							}
+							Starling.juggler.delayCall(edgeSetGraphViewPanel.displayContinueButton, continueDelay, true, showFanfare);
+						}
 					}
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();

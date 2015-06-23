@@ -82,7 +82,6 @@ package
 		public function PipeJam3()
 		{
 			pipeJam3 = this;
-			if (ASSET_SUFFIX == "Turk") MTurkAPI.getInstance(); // initialize
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 
@@ -160,7 +159,12 @@ package
 			}
 			else
 			{
-				if(PRODUCTION_BUILD)
+				if (ASSET_SUFFIX == "Turk")
+				{
+					NetworkConnection.productionInterop = "http://ec2-184-73-33-59.compute-1.amazonaws.com/cgi-bin/interop.php";
+					NetworkConnection.baseURL = "http://ec2-184-73-33-59.compute-1.amazonaws.com/";
+				}
+				else if(PRODUCTION_BUILD)
 				{
 					NetworkConnection.productionInterop = "http://paradox.verigames.com/cgi-bin/interop.php";
 					NetworkConnection.baseURL = "http://paradox.verigames.com";
@@ -171,8 +175,16 @@ package
 					NetworkConnection.baseURL = "http://paradox.verigames.org";
 				}
 			}
-			//get level info
-			GameFileHandler.retrieveLevelMetadata();
+			
+			if (ASSET_SUFFIX == "Turk")
+			{
+				MTurkAPI.getInstance(); // initialize
+			}
+			else
+			{
+				//get level info
+				GameFileHandler.retrieveLevelMetadata();
+			}
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
 			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);

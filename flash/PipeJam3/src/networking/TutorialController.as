@@ -61,7 +61,7 @@ package networking
 			if(completedTutorialDictionary == null)
 				completedTutorialDictionary = new Dictionary;
 			
-			var tutorialsCompleted:String = HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
+			var tutorialsCompleted:String = (PipeJam3.ASSET_SUFFIX == "Turk") ? null : HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
 			if(tutorialsCompleted != null)
 			{
 				var tutorialListArray:Array = tutorialsCompleted.split(",");
@@ -90,7 +90,7 @@ package networking
 		}
 		public function post():void
 		{
-			var tutorialsCompleted:String = HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
+			var tutorialsCompleted:String = (PipeJam3.ASSET_SUFFIX == "Turk") ? "" : HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
 			tutorialsCompleted += "," + levelCompletedQID;
  			HTTPCookies.setCookie(TUTORIALS_COMPLETED_STRING, tutorialsCompleted);
 		}
