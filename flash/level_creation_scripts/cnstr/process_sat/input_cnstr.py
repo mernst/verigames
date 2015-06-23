@@ -48,6 +48,17 @@ def run(infile, outfile):
                         process_constraint_block(clauses, constraint['then'], lits + [(test_var, False)])
                     if constraint.has_key('else'):
                         process_constraint_block(clauses, constraint['else'], lits + [(test_var, True)])
+                        
+                elif cns == 'clause':
+                    cns, pos, neg = _util.get_vals(constraint, ['constraint', 'pos', 'neg'])
+                    temp = []
+                    for cl in pos:
+                        temp.append((cl, True))
+                    for cl in neg:
+                        temp.append((cl, False))
+                        
+                    clauses.append(lits + temp)
+                        
 
                 else:
                     print 'UNRECOGNIZED CONSTRAINT KEY', cns

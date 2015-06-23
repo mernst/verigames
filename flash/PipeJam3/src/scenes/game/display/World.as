@@ -93,6 +93,7 @@ package scenes.game.display
 		
 		protected var m_currentLevelNumber:int;
 		public var currentPercent:Number;
+		public var targetPercent:Number;
 		
 		protected var undoStack:Vector.<UndoEvent>;
 		protected var redoStack:Vector.<UndoEvent>;
@@ -782,6 +783,8 @@ package scenes.game.display
 				}
 			}
 			currentPercent = sideControlPanel.updateScore(active_level, false);
+			targetPercent = sideControlPanel.targetPercent(active_level);
+						
 			if(currentPercent >= 100)
 			{
 				if(!PipeJamGameScene.inTutorial && PlayerValidation.playerActivity != null)
