@@ -162,10 +162,16 @@ package
 					else if (PipeJam3.ASSET_SUFFIX == "Turk" && vars.token)
 					{
 						MTurkAPI.getInstance().workerToken = vars.token;
-						if (ExternalInterface.available)
-							ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token);
+						MTurkAPI.getInstance().onTaskBegin();
+						ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token);
 					}
 				}
+			}
+			else if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				// Use test token
+				MTurkAPI.getInstance().workerToken = "4G9OGQuO9X";
+				MTurkAPI.getInstance().onTaskBegin();
 			}
 			
 			// use file if set in url, else create and show menu screen

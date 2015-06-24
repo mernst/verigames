@@ -749,7 +749,13 @@ package scenes.game.display
 								nativeText.selectable = true;
 								nativeText.width = Constants.GameWidth;
 								nativeText.height = Constants.GameHeight;
-								nativeText.text = "Thanks for playing!\n\nTask complete.\nYour confirmation code is:\n\n" + confCode;
+								if (confCode == "0") {
+									active_level.targetScoreReached = false;
+									nativeText.text = "This task was expected to take at least 2 minutes.\n\nThis page will update automatically in 30 seconds to retry the confirmation code."
+									Starling.juggler.delayCall(onWidgetChange, 30, evt); // if time isn't up, wait a bit
+								} else {
+									nativeText.text = "Thanks for playing!\n\nTask complete.\nYour confirmation code is:\n\n" + confCode;
+								}
 								nativeText.wordWrap = true;
 								nativeText.setTextFormat(new TextFormat(null, 32, 0x0, null, null, null, null, null, TextFormatAlign.CENTER));
 								Starling.current.nativeOverlay.addChild(nativeText);

@@ -12,6 +12,7 @@ package server
 		
 		public var workerToken:String;
 		public var taskId:String = "101";
+		private var m_encryptedMessage:String;
 		
 		public static function getInstance():MTurkAPI
 		{
@@ -28,10 +29,28 @@ package server
 			// TODO: get time?
 		}
 		
+		public function onTaskBegin():void
+		{
+			var info:Object = new Object();
+			var url:String = NetworkConnection.productionInterop + "?function=mTurkTaskBegin&data_id=%7B\\\"workerToken\\\"%3A\\\"" + workerToken + "\\\"%7D&rand=" + (Math.round(Math.random()*1000));;
+			var method:String = URLRequestMethod.GET;
+			function thisCallback(result:int, e:Event):void
+			{
+				if (e == null)
+				{
+					if (ExternalInterface.available) ExternalInterface.call("console.log", "interop.php onTaskBegin bad response");
+				}
+				m_encryptedMessage = e.target.data as String;
+				if (ExternalInterface.available) ExternalInterface.call("console.log", "interop.php onTaskBegin msg:" + m_encryptedMessage + " result:" + result);
+			}
+			if (ExternalInterface.available) ExternalInterface.call("console.log", "calling " + url);
+			NetworkConnection.sendMessage(thisCallback, null, url, method, "");
+		}
+		
 		public function onTaskComplete(callback:Function):void
 		{
-			var url:String = NetworkConnection.productionInterop + "?function=mTurkTaskComplete&data_id='test'";
-			var method:String = URLRequestMethod.POST;
+			var url:String = NetworkConnection.productionInterop + "?function=mTurkTaskComplete&data_id=" + m_encryptedMessage + "&rand=" + (Math.round(Math.random()*1000));
+			var method:String = URLRequestMethod.GET;
 			function thisCallback(result:int, e:Event):void
 			{
 				if (e == null)
@@ -44,8 +63,7 @@ package server
 				callback(code);
 			}
 			if (ExternalInterface.available) ExternalInterface.call("console.log", "calling " + url);
-			var data:String = JSON.stringify( { "test":1 } );
-			NetworkConnection.sendMessage(thisCallback, data, url, method);
+			NetworkConnection.sendMessage(thisCallback, null, url, method, "");
 		}
 		
 	}
