@@ -36,7 +36,7 @@ public class MongoTestBed {
 
         //staging game level server
        //    Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
-     Mongo mongo = new Mongo( "api.paradox.verigames.com", 27017 );
+     Mongo mongo = new Mongo( "api.paradox.verigames.org", 27017 );
        String dbName = "game3api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
@@ -45,16 +45,22 @@ public class MongoTestBed {
         listCollectionNames(db);
        HashMap<String, String> map = new HashMap<String, String>();
   //     map.put("levelID", "551ec321b0044206887210a8");//551ec321b0044206887210a8,551ec31fb0044206887210a0
-       map.put("playerID", "555b7cd234359e8c18e3e644");//
+  //     map.put("version", "12");//
       
+       listEntries(db, "BaseLevels", map, true);
+       listEntries(db, "ActiveLevels", map, true);
+       listEntries(db, "GameSolvedLevels", map, true);
+       listEntries(db, "PlayerActivity", map, true);
+       listEntries(db, "fs.chunks", map, true);
+       listEntries(db, "fs.files", map, true);
     //   listEntriesToFile(db, "GameSolvedLevels", "GameSolvedLevels.txt");
-       listEntries(db, "ActiveLevels");
+   //    listEntriesToFile(db, "ActiveLevels", "activeLevels.txt");
    //    listFiles(fs);
     //   
-    //   writeFileLocally(fs, "555f64fff882c00238313b40", "assignments.json" );
+  //     writeFileLocally(fs, "55678fb8f882c00765fab77f", "103Assignments.json" );
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
-        
+ //      countPlayerSubmissions(db);
 	    mongo.close();
 	}
 	
@@ -74,10 +80,7 @@ public class MongoTestBed {
     	DBCursor cursor = null;
     	try 
     	{
-    	//	writer = new PrintWriter("Entries.txt", "UTF-8");
-
-        	   
-        	  
+         	  
 		BasicDBObject field = new BasicDBObject();
 		if(searchKeys != null)
 		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
@@ -87,12 +90,13 @@ public class MongoTestBed {
 		}
 		
 		DBCollection collection = db.getCollection(collectionName);
-//		 try { 
+
 			 cursor = collection.find(field);
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
+
                System.out.println(obj);
-     //          writer.println(obj);
+
                if(remove)
             	   collection.remove(obj);
            }
@@ -103,10 +107,6 @@ public class MongoTestBed {
         	if(cursor != null)
         		cursor.close();
         }
-    	
-    //	 writer.close();
-			
-		
 	}
 	
 	static void listEntriesToFile(DB db, String collectionName, String filename)
@@ -122,8 +122,6 @@ public class MongoTestBed {
     	{
     		writer = new PrintWriter(filename, "UTF-8");
 
-        	   
-        	  
 			BasicDBObject field = new BasicDBObject();
 			if(searchKeys != null)
 			for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
@@ -150,6 +148,33 @@ public class MongoTestBed {
         }
     	
     	 writer.close();
+	}
+	
+	static void countPlayerSubmissions(DB db)
+	{
+    	DBCursor cursor = null;
+    	try 
+    	{
+    		DBCollection collection = db.getCollection("PlayerActivity");
+
+    		cursor = collection.find();
+    		while(cursor.hasNext()) {
+    			DBObject obj = cursor.next();
+
+    			String playerID = (String)obj.get("playerID");
+    			BasicDBList e = (BasicDBList)obj.get("completed_boards");
+    			int submittedBoardCount = Integer.parseInt((String)obj.get("submitted_boards"));
+    			int commulativeScore = Integer.parseInt((String)obj.get("cummulative_score"));
+    			if(e != null && e.size() > 20)
+    				System.out.println(playerID +  ' ' + e.size() + ' ' + submittedBoardCount + ' ' + commulativeScore);
+    		}
+    	}catch (Exception e)
+    	{
+    		System.out.println(e);
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
 	}
 	
 	static void groupSubmittedLevelsByPlayerID(DB db)

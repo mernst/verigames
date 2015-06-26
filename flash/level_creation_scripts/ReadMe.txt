@@ -13,8 +13,8 @@ Create a level from a wcnf, cnf, or json file:
 
 Add a level to the database:
 
-	Think about which files to delete. Game info is retrieved from the ActiveLevels table, and the PlayerActivity table. The latter is used to track progress, so I wouldn't remove it,
-	but the former is used to choose the next level out of, and so should be removed for all levels not wanted any more. You can also remove the GameSolvedLevels table info, but 
+	Think about which files to delete. Game info is retrieved from the ActiveLevels table and the PlayerActivity table. The latter is used to track progress, so I wouldn't remove it,
+	but the former is used to choose the next level out of, and so should be cleaned of all levels not wanted any more. You can also remove the GameSolvedLevels table info, but 
 	I'd save that as it might be wanted to track submissions for prior levels.
 	
 	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py

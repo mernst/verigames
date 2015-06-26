@@ -8,8 +8,12 @@ build:
 	gcc maxsatz.c -o maxsatz
 '''
 import os, json, sys
+import time
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
+print (time.strftime("%H:%M:%S"))
+
+solverType = sys.argv[2]
 all_assignments = {}
 files = os.listdir(sys.argv[1])
 n_autosolve_levels = 0
@@ -43,7 +47,7 @@ for fname in files:
 			print fprefix
 		# Get mapping of sat var ids (1->n) to original constraint vars (var:12452, etc) from comment in wcnf
 		keys = []
-		with open(sys.argv[1] + '\%s.%s' % (fprefix, ext), 'r') as sat_in:
+		with open(sys.argv[1] + '/%s.%s' % (fprefix, ext), 'r') as sat_in:
 			if current % 100 == 0:
 				print sys.argv[1] + '\%s.%s' % (fprefix, ext)
 			current = current + 1
@@ -63,10 +67,10 @@ for fname in files:
 					nodes_constraints = input_line[7:].split(' ')
 					n_total_nodes += int(nodes_constraints[0])
 					n_total_constraints += int(nodes_constraints[1])
-		#use one of these
-		with os.popen('%s/maxsatz.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
-		#with os.popen('%s/borchers.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
+			path = '%s/maxsatz/maxsatz %s/%s.%s'
+		with os.popen(path % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
 			lines = sat_cmd.readlines()
+			print '%s/maxsatz/maxsatz %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)
 			max_score = None
 			penalty = None
 			assignments = {}
@@ -103,3 +107,5 @@ with open('AllAssignments.json', 'w') as asg_out:
 print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
 print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
 print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+
+print (time.strftime("%H:%M:%S"))
