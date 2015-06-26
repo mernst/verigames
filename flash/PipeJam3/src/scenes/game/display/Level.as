@@ -1010,7 +1010,12 @@ package scenes.game.display
 		
 		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array, previouslyCheckedNodes:Dictionary):void
 		{
-			node.select();
+			if (!node.isSelected) {
+				//trace("select direct " + node.id);
+				node.select();
+				selectedNodes.push(node);
+				m_nodesToDraw[node.id] = node;
+			}
 			
 			for each(var gameEdgeId:String in node.connectedEdgeIds)
 			{
@@ -1319,6 +1324,89 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
+		
+		protected var solverRunningTime:Number;
+		public function solverTimerCallback(evt:TimerEvent):void
+		{
+			solveSelection(solverUpdate, solverDone);
+		}
+		
+		public function solverLoopTimerCallback(evt:TimerEvent):void
+		{
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				node.unused = true;
+			}
+			solveSelection(solverUpdate, solverDone);
+		}
+
+		//used when ctrl-shift clicking a node, selects x whole group or nearest neighbors if no group
+		protected var currentSelectionProcessCount:int;
+		public var NUM_NODES_TO_SELECT:int = 100;
+
+		protected function onGroupSelection(evt:SelectionEvent):void
+		{
+			if (evt.component is Node) {
+				var node:Node = evt.component as Node;
+				currentSelectionProcessCount = 1;
+				var nextToVisitArray:Array = new Array;
+				var previouslyCheckedNodes:Dictionary = new Dictionary;
+				selectSurroundingNodes(node, nextToVisitArray, previouslyCheckedNodes);
+				for each(var nextNode:Node in nextToVisitArray)
+				{
+					selectSurroundingNodes(nextNode, nextToVisitArray, previouslyCheckedNodes);
+					if(currentSelectionProcessCount > NUM_NODES_TO_SELECT)
+						break;
+					currentSelectionProcessCount++;
+				}
+			}
+		}
+
+		public var loopcount:int = 0;
+		public var looptimer:Timer;
+		public var runContinualSolver:Boolean = false;
+		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
+		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
+		{
+			if(firstRun)
+			{
+				solverRunningTime = new Date().getTime();
+			}
+			//if caps lock is down, start repeated solving using 'random' selection
+			if(runContinualSolver)
+			{
+				//loop through all nodes, finding ones with conflicts
+				for each(var node:Node in nodeLayoutObjs)
+				{
+					if(node is ClauseNode)
+					{
+						var clauseNode:ClauseNode = node as ClauseNode;
+						if(clauseNode.hasError() && node.unused)
+						{
+							node.unused = false;
+						//trace(node.id);
+							onGroupSelection(new SelectionEvent("foo", node));
+							solveSelection1(updateCallback, doneCallback, GridViewPanel.SOLVER1_BRUSH);
+							unselectAll();
+							return;
+						}
+					}
+
+				}
+				
+				// if we make it this far start over
+				//trace("new loop", loopcount);
+				looptimer = new Timer(1000, 1);
+				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+				looptimer.start();
+			}
+			else
+			{
+				solveSelection1(updateCallback, doneCallback, GridViewPanel.SOLVER1_BRUSH);
+			}
+		}
+		
+
 	
 		public var updateCallback:Function;
 		public var doneCallback:Function;
@@ -1332,7 +1420,7 @@ package scenes.game.display
 		private var m_solverType:int;
 		private var selectedConstraintValue:int;
 		public var startingSelectedNodeCount:int;
-		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
+		public function solveSelection1(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
@@ -1380,7 +1468,7 @@ package scenes.game.display
 			}
 			
 			if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC) {
-				createConstriantsBasedOnVariables();
+				createConstraintsBasedOnVariables();
 			} else {
 				createConstraintsForClauses();
 
@@ -1414,7 +1502,7 @@ package scenes.game.display
 			}
 		}
 
-		private function createConstriantsBasedOnVariables():void
+		private function createConstraintsBasedOnVariables():void
 		{
 			var node:Node, edge:Edge, toNode:Node, fromNode:Node;
 			
@@ -1832,7 +1920,7 @@ package scenes.game.display
 			}
 		}
 		
-		public var count:int = 0;
+		public var solverRunCount:int = 0;
 		public var timer:Timer;
 		
 		public function solverDone(errMsg:String):void
@@ -1853,6 +1941,16 @@ package scenes.game.display
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true, scoreWentDown));
 			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			
+			if(runContinualSolver && solverRunCount < 3000)
+			{
+				solverRunCount++;
+				//trace("count", count);
+				timer = new Timer(1000, 1);
+				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
+				timer.start();
+			}
+
 		}
 		
 		//draw nodes in a different color to indicate solver is done

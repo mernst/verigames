@@ -766,9 +766,12 @@ package scenes.game.display
 			{
 				if(!PipeJamGameScene.inTutorial)
 				{
-					GameFileHandler.reportScore();
-					var levelPlayedArray:Array = PlayerValidation.playerActivity['completed_boards'];
-					edgeSetGraphViewPanel.showProgressDialog(levelPlayedArray.length);
+					if(PipeJam3.RELEASE_BUILD)
+					{
+						GameFileHandler.reportScore();
+						var levelPlayedArray:Array = PlayerValidation.playerActivity['completed_boards'];
+						edgeSetGraphViewPanel.showProgressDialog(levelPlayedArray.length);
+					}
 				}
 			}
 			if(!PipeJamGameScene.inTutorial && evt)
