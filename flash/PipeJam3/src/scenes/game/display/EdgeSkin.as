@@ -40,7 +40,7 @@ package scenes.game.display
 			
 			if (mAtlas == null)
 			{
-				mAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetPNG");
+				mAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 				EdgeNarrowSatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowSatisfiedSelected);
 				EdgeNarrowSatisfiedUnselected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowSatisfiedUnselected);
 				EdgeNarrowUnsatisfiedSelected = mAtlas.getTexture(AssetInterface.ParadoxSubTexture_EdgeNarrowUnsatisfiedSelected);

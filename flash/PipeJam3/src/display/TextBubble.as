@@ -47,7 +47,7 @@ package display
 								   _pointTo:String = Constants.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:uint = Constants.BROWN, _outlineWeight:Number = 0,
+								   _showBox:Boolean = true, _arrowColor:Number = NaN, _outlineWeight:Number = 0,
 								   _outlineColor:uint = 0x0)
 		{
 			m_fontSize = _fontSize;
@@ -83,7 +83,7 @@ package display
 			
 			// background box
 			if (_showBox) {
-				var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
+				var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, AssetInterface.PipeJamSpriteSheetAtlas, AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
 				m_textContainer.addChild(box);
 			} else {
 				//squeeze text closer to arrow if no box
@@ -99,10 +99,10 @@ package display
 			
 			// arrow
 			if (m_pointAt) {
-				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+				var atlas:TextureAtlas = AssetInterface.PipeJamSpriteSheetAtlas;
 				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
-				m_tutorialArrow.color = _arrowColor;
+				m_tutorialArrow.color = isNaN(_arrowColor) ? (PipeJam3.ASSET_SUFFIX ? Constants.NARROW_GRAY : Constants.BROWN) : _arrowColor;
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;
 				XSprite.setPivotCenter(m_tutorialArrow);
 				addChild(m_tutorialArrow);

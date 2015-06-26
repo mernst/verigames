@@ -41,7 +41,7 @@ package dialogs
 			backgroundProgressColor.x = 1.5;
 			backgroundProgressColor.y = 1;
 			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			var progressMarkerTexture:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ProgressMarkerPrefix);
 			var progressMarkerImage:Image = new Image(progressMarkerTexture);
 			progressContainer.addChild( progressMarkerImage );

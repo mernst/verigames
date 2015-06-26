@@ -11,6 +11,8 @@ Create a level from a wcnf, cnf, or json file:
 	From a level file (constraint of the type "c1 <= v1")
 		run ... (not finished...)
 
+	From DIMACS cnf, run makeConstraintFromDIMACS.py to create a json file. Then, run cnstr/process_constraint_json.py on the result to create the level files.
+
 Add a level to the database:
 
 	Think about which files to delete. Game info is retrieved from the ActiveLevels table and the PlayerActivity table. The latter is used to track progress, so I wouldn't remove it,

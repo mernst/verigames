@@ -31,6 +31,10 @@ package assets
         // Texture cache
         
         public static var sContentScaleFactor:int = 1;
+		private static var sParadoxSpriteSheetAtlas:TextureAtlas;
+		private static var sPipeJamSpriteSheetAtlas:TextureAtlas;
+		private static var sDialogWindowAtlas:TextureAtlas;
+		private static var sPipeJamLevelSelectAtlas:TextureAtlas;
 		private static var sTextureAtlases:Dictionary = new Dictionary();
         private static var sTextures:Dictionary = new Dictionary();
         private static var sSounds:Dictionary = new Dictionary();
@@ -69,8 +73,6 @@ package assets
 		public static const ParadoxSubTexture_BrushCircleClick:String = "BrushCircleClick";
 		public static const ParadoxSubTexture_BrushDiamond:String = "BrushDiamond";
 		public static const ParadoxSubTexture_BrushDiamondClick:String = "BrushDiamondClick";
-		public static const ParadoxSubTexture_BrushHexagon:String = "BrushHexagon";
-		public static const ParadoxSubTexture_BrushHexagonClick:String = "BrushHexagonClick";
 		public static const ParadoxSubTexture_BrushSquare:String = "BrushSquare";
 		public static const ParadoxSubTexture_BrushSquareClick:String = "BrushSquareClick";
 		public static const ParadoxSubTexture_ButtonBrushCircle:String = "ButtonBrushCircle";
@@ -286,6 +288,34 @@ package assets
 			return dict[file + texClassName];
 		}
         
+		public static function get PipeJamSpriteSheetAtlas():TextureAtlas
+		{
+			if (sPipeJamSpriteSheetAtlas == null)
+				sPipeJamSpriteSheetAtlas = getTextureAtlas("Game", "PipeJamSpriteSheetPNG" + PipeJam3.ASSET_SUFFIX, "PipeJamSpriteSheetXML" + PipeJam3.ASSET_SUFFIX);
+			return sPipeJamSpriteSheetAtlas;
+		}
+		
+		public static function get ParadoxSpriteSheetAtlas():TextureAtlas
+		{
+			if (sParadoxSpriteSheetAtlas == null)
+				sParadoxSpriteSheetAtlas = getTextureAtlas("Game", "ParadoxSpriteSheetPNG" + PipeJam3.ASSET_SUFFIX, "ParadoxSpriteSheetXML" + PipeJam3.ASSET_SUFFIX);
+			return sParadoxSpriteSheetAtlas;
+		}
+		
+		public static function get DialogWindowAtlas():TextureAtlas
+		{
+			if (sDialogWindowAtlas == null)
+				sDialogWindowAtlas = getTextureAtlas("Game", "DialogWindowPNG", "DialogWindowXML");
+			return sDialogWindowAtlas;
+		}
+		
+		public static function get PipeJamLevelSelectAtlas():TextureAtlas
+		{
+			if (sPipeJamLevelSelectAtlas == null)
+				sPipeJamLevelSelectAtlas = getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
+			return sPipeJamLevelSelectAtlas;
+		}	
+		
         public static function loadBitmapFont(filename:String, fontName:String, xmlFile:String):void
         {
             var texture:Texture = getTexture(filename, fontName);

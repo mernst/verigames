@@ -7,6 +7,7 @@ package
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
+	import server.MTurkAPI;
 	
 	import assets.AssetsAudio;
 	
@@ -111,6 +112,8 @@ package
 			m_sfxButton.x = localPoint.x;
 			m_sfxButton.y = localPoint.y;
 			
+			if (PipeJam3.ASSET_SUFFIX) m_sfxButton.visible = false;
+			
 			_parent.addChild(m_sfxButton);
 		}
 		
@@ -166,7 +169,19 @@ package
 					{
 						PlayerValidation.accessToken = "denied";
 					}
+					else if (PipeJam3.ASSET_SUFFIX == "Turk" && vars.token)
+					{
+						MTurkAPI.getInstance().workerToken = vars.token;
+						MTurkAPI.getInstance().onTaskBegin();
+						ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token);
+					}
 				}
+			}
+			else if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				// Use test token
+				MTurkAPI.getInstance().workerToken = "4G9OGQuO9X";
+				MTurkAPI.getInstance().onTaskBegin();
 			}
 			
 			// use file if set in url, else create and show menu screen
@@ -181,6 +196,13 @@ package
 				else
 					onGetRandomLevel();
 					
+			}
+			else if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				// TODO: Turk - use MTurkAPI.getInstance().workerToken from above to determine taskId, for now assume it is 101 = tutorials
+				PipeJamGameScene.inTutorial = true;
+				PipeJamGameScene.inDemo = false;
+				showScene("PipeJamGame");
 			}
 			else
 			{
@@ -268,7 +290,7 @@ package
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{
-			m_sfxButton.visible = event.data;
+			m_sfxButton.visible = PipeJam3.ASSET_SUFFIX ? false : event.data;
 			if(m_sfxButton.visible)
 			{
 				AudioManager.getInstance().reset();

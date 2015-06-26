@@ -1,6 +1,7 @@
 package  
 {
 	import com.spikything.utils.MouseWheelTrap;
+	import server.MTurkAPI;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -43,11 +44,12 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static var RELEASE_BUILD:Boolean = false;
-		public static var TUTORIAL_DEMO:Boolean = false;
+		public static const RELEASE_BUILD:Boolean = true;
+		public static const TUTORIAL_DEMO:Boolean = false;
+		public static const ASSET_SUFFIX:String = ""; // specify "Turk" to change atlases to turk
 		
 		//if release build is true, true if using production machine db/info, false if using staging
-		public static var PRODUCTION_BUILD:Boolean = true;
+		public static const PRODUCTION_BUILD:Boolean = true;
 		
 		/** turn on logging of game play. */
 		public static var LOGGING_ON:Boolean = true;
@@ -69,7 +71,7 @@ package
 		public static var SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 
 		public static var logging:LoggingServerInterface;
-		public static const loggingKey:String = LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;
+		public static const loggingKey:String = (ASSET_SUFFIX == "Turk") ? LoggingServerInterface.SETUP_KEY_TURK : LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var isFullScreen:Boolean = false;
 
@@ -80,7 +82,6 @@ package
 		public function PipeJam3()
 		{
 			pipeJam3 = this;
-			
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 
@@ -158,7 +159,12 @@ package
 			}
 			else
 			{
-				if(PRODUCTION_BUILD)
+				if (ASSET_SUFFIX == "Turk")
+				{
+					NetworkConnection.productionInterop = "http://ec2-184-73-33-59.compute-1.amazonaws.com/cgi-bin/interop.php";
+					NetworkConnection.baseURL = "http://ec2-184-73-33-59.compute-1.amazonaws.com/";
+				}
+				else if(PRODUCTION_BUILD)
 				{
 					NetworkConnection.productionInterop = "http://paradox.verigames.com/cgi-bin/interop.php";
 					NetworkConnection.baseURL = "http://paradox.verigames.com";
@@ -169,8 +175,16 @@ package
 					NetworkConnection.baseURL = "http://paradox.verigames.org";
 				}
 			}
-			//get level info
-			GameFileHandler.retrieveLevelMetadata();
+			
+			if (ASSET_SUFFIX == "Turk")
+			{
+				MTurkAPI.getInstance(); // initialize
+			}
+			else
+			{
+				//get level info
+				GameFileHandler.retrieveLevelMetadata();
+			}
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
 			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);

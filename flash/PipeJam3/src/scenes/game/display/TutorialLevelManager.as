@@ -115,7 +115,7 @@ package scenes.game.display
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
 						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
@@ -181,7 +181,7 @@ package scenes.game.display
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
 						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
@@ -458,6 +458,32 @@ package scenes.game.display
 					return SOLVER_BRUSH + WIDEN_BRUSH + NARROW_BRUSH;
 			}
 		}
+		
+		public function getStartingBrush():Number
+		{
+			switch (m_tutorialTag) {
+				case "002":
+				case "01":
+				case "004":
+				case "02":
+					return WIDEN_BRUSH
+			}
+			return NaN;
+		}
+		
+		public function emphasizeBrushes():int
+		{
+			switch(m_tutorialTag) {
+				case "002":
+				case "01":
+					return NARROW_BRUSH;
+				case "004":
+				case "02":
+					return SOLVER_BRUSH;
+			}
+			return 0x0;
+		}
+		
 		private function pointToNode(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name).skin; };
@@ -545,7 +571,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "002":
-					var splashText:Texture = AssetInterface.getTexture("Game", "ConstraintsSplashClass");
+					var splashText:Texture = AssetInterface.getTexture("Game", "ConstraintsSplashClass" + PipeJam3.ASSET_SUFFIX);
 					var splash:Image = new Image(splashText);
 					return splash;
 			}

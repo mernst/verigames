@@ -1516,11 +1516,11 @@ package scenes.game.display
 				node.animating = true;
 				m_solvingNodesToAnimate[node.id] = node;
 			}
-
+			
 			// find all the possibly relevant clauses
 			var selectedNodesDict:Dictionary = new Dictionary;
 			var connectedClausesDict:Dictionary = new Dictionary;
-			var gameEdgeId:String
+			var gameEdgeId:String;
 			for each(node in selectedNodes)
 			{
 				if (node.isClause) {
@@ -2080,6 +2080,12 @@ package scenes.game.display
 				solverSelected = new Vector.<Node>;
 			}
 			
+		}
+		
+		public function emphasizeBrushes():int
+		{
+			if (tutorialManager) return tutorialManager.emphasizeBrushes();
+			return 0x0;
 		}
 		
 		private static function popNode(d:Dictionary):Node

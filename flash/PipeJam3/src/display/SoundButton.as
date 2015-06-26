@@ -10,7 +10,7 @@ package display
 	{
 		public function SoundButton()
 		{
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			var soundUp:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSound);
 			var soundOver:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSoundOver);
 			var soundDown:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonSoundClick);

@@ -1,5 +1,6 @@
 package dialogs
 {
+	import assets.AssetInterface;
 	import display.NineSliceBatch;
 	
 	import scenes.BaseComponent;
@@ -26,7 +27,7 @@ package dialogs
 			
 			//multiplying by two and then scaling seems to give the best result
 			//but it does mean we can't add the buttons to the background.
-			background = new NineSliceBatch(_width*2, _height*2, 64, 64, "Game", "DialogWindowPNG", "DialogWindowXML", "DialogWindow");
+			background = new NineSliceBatch(_width*2, _height*2, 64, 64, AssetInterface.DialogWindowAtlas, "DialogWindow");
 			background.scaleX = background.scaleY = .5;
 			
 			addChild(background);

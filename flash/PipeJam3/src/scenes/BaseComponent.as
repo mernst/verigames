@@ -161,7 +161,7 @@ package scenes
 		{
 			var paintBrushButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("", 25, 25, toolTipText);
 
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			var buttonTexture:Texture = atlas.getTexture("Button"+style);
 			var image:Image = new Image(buttonTexture);
 			image.width = image.height = 25;
@@ -187,7 +187,7 @@ package scenes
 
 		protected function createPaintBrush(style:String):Sprite
 		{
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			var brushTexture:Texture = atlas.getTexture(style);			
 			var brushImage:Image = new Image(brushTexture);
 			brushImage.width = brushImage.height = 2 * GridViewPanel.PAINT_RADIUS;

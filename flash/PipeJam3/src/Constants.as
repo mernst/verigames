@@ -2,7 +2,7 @@ package
 {
     public class Constants
     {
-        public static const GameWidth:int  = 480;
+		public static const GameWidth:int  = 480;
         public static const GameHeight:int = 320;
 		
         public static const CenterX:int = GameWidth / 2;
@@ -31,15 +31,11 @@ package
 		
 		public static const GOLD:uint = 0xFFEC00;
 		public static const BROWN:uint = 0x624202;
-		public static const RED:uint = 0xFF0000;
 		
 		public static const NARROW_BLUE:uint = 0x6cb0cf;
+		public static const NARROW_GRAY:uint = 0xa4a4a4;
 		public static const WIDE_BLUE:uint = 0x5876a6;
-		
-		public static const SATISFIED_EDGE:uint = 0xb8a186;
-		public static const UNSATISFIED_EDGE:uint = 0xff834d;
-		public static const SATISFIED_EDGE_HIGHLIGHT:uint = 0xbabd82;
-		public static const UNSATISFIED_EDGE_HIGHLIGHT:uint = 0xf0c05b;
+		public static const WIDE_GRAY:uint = 0x727272;
 		
 		//Nine slice
 		public static const TOP_LEFT:String = "TopLeft";

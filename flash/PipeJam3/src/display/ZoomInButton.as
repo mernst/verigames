@@ -10,7 +10,7 @@ package display
 		public function ZoomInButton()
 		{
 			m_toolTipText = "Zoom In";
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "ParadoxSpriteSheetPNG", "ParadoxSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
 			
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonZoomIn))]),

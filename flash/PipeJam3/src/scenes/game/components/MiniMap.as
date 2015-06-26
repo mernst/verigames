@@ -96,10 +96,6 @@ package scenes.game.components
 		public function MiniMap()
 		{
 			super();
-//			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
-//			var background:Texture = atlas.getTexture("MapMaximized");
-//			backgroundImage = new Image(background);
-//			addChild(backgroundImage);
 			
 			width = WIDTH;
 			height = HEIGHT;
