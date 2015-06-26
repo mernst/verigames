@@ -11,8 +11,8 @@ from bson import json_util
 import json
 
 #description file looks like:
-#<files version='0' property="ostrusted" >
-#<file name='L10823_V16' widgets="1" links="1" conflicts="1"/>
+#<files version='0' property="ostrusted"  type="game or turk, or...">
+#<file name="p_000100_00049945" constraints="100"  score="0"/>
 #</files>
 
 
@@ -23,14 +23,15 @@ def addLevelToDB(infile, description_file):
 	fileElem = descriptionxml.getElementsByTagName('files')
 	version = fileElem[0].getAttribute("version")
 	property = fileElem[0].getAttribute("property")
+	type = fileElem[0].getAttribute("type")
 
-	client = Connection('api.paradox.verigames.com', 27017)
+	client = Connection('api.paradox.verigames.org', 27017)
 	db = client.game3api
 	description = None
 	print "finding files"
 	files = descriptionxml.getElementsByTagName('file')
 	for file in files:
-		levelObj = {"version": version, "property": property, "current_score": "0", "serve": "1", "revision":"1", "leader": "New"}
+		levelObj = {"version": version, "property": property, "type": type, "current_score": "0", "serve": "1", "revision":"1", "leader": "New"}
 		filename = file.getAttribute("name")
 		levelObj["name"] = filename
 		if filename == infileroot:
