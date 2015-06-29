@@ -1215,7 +1215,7 @@ package scenes.game.display
 				//trace("New best score: " + m_bestScore);
 				m_levelBestScoreAssignmentsObj = createAssignmentsObj();
 				//don't update on loading
-				if(levelGraph.oldScore != 0  && PlayerValidation.accessGranted())
+				if(levelGraph.oldScore != 0  && (PlayerValidation.accessGranted() || (PipeJam3.ASSET_SUFFIX == "Turk")))
 					dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
 			}
 			//if (levelGraph.prevScore != levelGraph.currentScore)

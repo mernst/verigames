@@ -252,7 +252,7 @@ package
 		
 		public function updateHighScoreList(event:starling.events.Event = null):void
 		{
-			if(!PipeJamGameScene.inTutorial)
+			if(!PipeJamGameScene.inTutorial && !(PipeJam3.ASSET_SUFFIX == "Turk"))
 				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 		}
 		
