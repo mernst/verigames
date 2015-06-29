@@ -102,7 +102,7 @@ package display
 				var atlas:TextureAtlas = AssetInterface.PipeJamSpriteSheetAtlas;
 				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
-				m_tutorialArrow.color = isNaN(_arrowColor) ? (PipeJam3.ASSET_SUFFIX ? Constants.NARROW_GRAY : Constants.BROWN) : _arrowColor;
+				m_tutorialArrow.color = isNaN(_arrowColor) ? ((PipeJam3.ASSET_SUFFIX == "Turk") ? Constants.NARROW_GRAY : Constants.BROWN) : _arrowColor;
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;
 				XSprite.setPivotCenter(m_tutorialArrow);
 				addChild(m_tutorialArrow);

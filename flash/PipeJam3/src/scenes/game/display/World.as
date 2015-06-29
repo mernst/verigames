@@ -140,7 +140,7 @@ package scenes.game.display
 				var levelObj:Object = allLevels[level_index];
 				var levelId:String = levelObj["id"];
 				var levelDisplayName:String = levelId;
-				if (levelObj.hasOwnProperty("display_name") && !PipeJam3.ASSET_SUFFIX) levelDisplayName = levelObj["display_name"];
+				if (levelObj.hasOwnProperty("display_name") && !(PipeJam3.ASSET_SUFFIX == "Turk")) levelDisplayName = levelObj["display_name"];
 				var levelLayoutObj:Object = findLevelFile(levelId, m_layoutObj);
 				var levelAssignmentsObj:Object = findLevelFile(levelId, m_assignmentsObj);
 				// if we didn't find the level, assume this is a global constraints file

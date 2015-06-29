@@ -95,7 +95,7 @@ package networking
 				GameFileHandler.m_name = name;
 				GameFileHandler.m_loadCallback = callback;
 				//set a timer, and try again
-				var timer:Timer = new Timer(250, 0);
+				var timer:Timer = new Timer(250, 1);
 				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
 				timer.start();
 			}

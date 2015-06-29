@@ -217,7 +217,7 @@ package scenes.game.components
 		
 		public function addedToStage(event:starling.events.Event):void
 		{
-			if (!PipeJam3.ASSET_SUFFIX) addChild(m_menuButton);
+			if (!(PipeJam3.ASSET_SUFFIX == "Turk")) addChild(m_menuButton);
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 		//	addChild(m_fullScreenButton); not quite ready. Next Tutorials don't draw, occasional 'too big' crashes

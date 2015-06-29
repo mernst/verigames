@@ -1386,7 +1386,7 @@ package scenes.game.components
 		private var m_stopFanfareDelayedCall:DelayedCall;
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
 		{
-			if (PipeJam3.ASSET_SUFFIX) showFanfare = false;
+			if (PipeJam3.ASSET_SUFFIX == "Turk") showFanfare = false;
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
@@ -1421,7 +1421,7 @@ package scenes.game.components
 				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = PipeJamGameScene.inTutorial ? 2.0 : 0.0;
 				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
 				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, PipeJam3.ASSET_SUFFIX ? Constants.NARROW_GRAY : Constants.BROWN);
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, (PipeJam3.ASSET_SUFFIX == "Turk") ? Constants.NARROW_GRAY : Constants.BROWN);
 				if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				m_fanfareTextContainer.alpha = 1;
