@@ -180,11 +180,7 @@ package
 			{
 				MTurkAPI.getInstance(); // initialize
 			}
-			else
-			{
-				//get level info
-				GameFileHandler.retrieveLevelMetadata();
-			}
+			GameFileHandler.retrieveLevelMetadata();
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
 			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);
