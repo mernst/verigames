@@ -24,7 +24,9 @@ package events
 		public static const MAKE_SELECTION_NARROW:String = "MAKE_SELECTION_NARROW";
 		
 		public static const MOUSE_OVER_CONTROL_PANEL:String = "MOUSE_OVER_CONTROL_PANEL";
-
+		
+		public static const TURK_FINISH:String = "TURK_FINISH";
+		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{
 			super(_type, true, _eventData);

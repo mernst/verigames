@@ -111,6 +111,7 @@ package scenes.game.display
 		// TODO: Circular dependency - remove this reference, children should send events to parents not depend on World
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
+		private var m_confirmationCodeGiven:String = "";
 		
 		protected var m_backgroundImage:Image;
 		protected var m_backgroundImageSolving:Image;
@@ -400,6 +401,8 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.MOUSE_OVER_CONTROL_PANEL, overControlPanelHandler);
 			
+			addEventListener(MenuEvent.TURK_FINISH, onTurkFinishButtonPressed);
+			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
 			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
@@ -416,6 +419,18 @@ package scenes.game.display
 			addEventListener(SelectionEvent.NUM_SELECTED_NODES_CHANGED, onNumSelectedNodesChanged);
 			
 			//trace("Done initializing event listeners.");
+		}
+		
+		private function onTurkFinishButtonPressed(event:starling.events.Event):void
+		{
+			if (!m_confirmationCodeGiven)
+			{
+				MTurkAPI.getInstance().onTaskComplete(displayConfirmationCodeScreen);
+			}
+			else
+			{
+				displayConfirmationCodeScreen(m_confirmationCodeGiven);
+			}
 		}
 		
 		private function overControlPanelHandler(event:starling.events.Event):void
@@ -720,6 +735,26 @@ package scenes.game.display
 			miniMap.onViewspaceChanged(event);
 		}
 		
+		private function displayConfirmationCodeScreen(confCode:String):void {
+			var nativeText:TextField = new TextField();
+			nativeText.backgroundColor = 0xFFFFFF;
+			nativeText.background = true;
+			nativeText.selectable = true;
+			nativeText.width = Constants.GameWidth;
+			nativeText.height = Constants.GameHeight;
+			if (confCode == "0") {
+				active_level.targetScoreReached = false;
+				nativeText.text = "This task was expected to take at least 2 minutes.\n\nThis page will update automatically in 30 seconds to retry the confirmation code."
+				Starling.juggler.delayCall(onWidgetChange, 30, new WidgetChangeEvent(WidgetChangeEvent.LEVEL_WIDGET_CHANGED, null, null, false, active_level, null)); // if time isn't up, wait a bit
+			} else {
+				m_confirmationCodeGiven = confCode;
+				nativeText.text = "Thanks for playing!\n\nTask complete.\nYour confirmation code is:\n\n" + confCode;
+			}
+			nativeText.wordWrap = true;
+			nativeText.setTextFormat(new TextFormat(null, 32, 0x0, null, null, null, null, null, TextFormatAlign.CENTER));
+			Starling.current.nativeOverlay.addChild(nativeText);
+		}
+		
 		public function onWidgetChange(evt:WidgetChangeEvent = null):void
 		{
 			var level_changed:Level = evt ? (evt.level ? evt.level : active_level) : active_level;
@@ -740,26 +775,16 @@ package scenes.game.display
 						active_level.targetScoreReached = true;
 						//if(active_level.m_inSolver)
 						//	solverDoneCallback("");
-						if (PipeJam3.ASSET_SUFFIX == "Turk" && active_level && active_level.m_levelQID == "2006")
+						if (PipeJam3.ASSET_SUFFIX == "Turk" && active_level && (!PipeJamGameScene.inTutorial || (active_level.m_levelQID == "2006")))
 						{
-							MTurkAPI.getInstance().onTaskComplete(function(confCode:String):void {
-								var nativeText:TextField = new TextField();
-								nativeText.backgroundColor = 0xFFFFFF;
-								nativeText.background = true;
-								nativeText.selectable = true;
-								nativeText.width = Constants.GameWidth;
-								nativeText.height = Constants.GameHeight;
-								if (confCode == "0") {
-									active_level.targetScoreReached = false;
-									nativeText.text = "This task was expected to take at least 2 minutes.\n\nThis page will update automatically in 30 seconds to retry the confirmation code."
-									Starling.juggler.delayCall(onWidgetChange, 30, evt); // if time isn't up, wait a bit
-								} else {
-									nativeText.text = "Thanks for playing!\n\nTask complete.\nYour confirmation code is:\n\n" + confCode;
-								}
-								nativeText.wordWrap = true;
-								nativeText.setTextFormat(new TextFormat(null, 32, 0x0, null, null, null, null, null, TextFormatAlign.CENTER));
-								Starling.current.nativeOverlay.addChild(nativeText);
-							});
+							if (!m_confirmationCodeGiven)
+							{
+								MTurkAPI.getInstance().onTaskComplete(displayConfirmationCodeScreen);
+							}
+							else
+							{
+								displayConfirmationCodeScreen(m_confirmationCodeGiven);
+							}
 						}
 						else
 						{
@@ -1200,6 +1225,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			removeEventListener(MenuEvent.LOAD_HIGH_SCORE, loadHighScore);
 			removeEventListener(MenuEvent.SOLVE_SELECTION, onSolveSelection);
+			removeEventListener(MenuEvent.TURK_FINISH, onTurkFinishButtonPressed);
 			
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
