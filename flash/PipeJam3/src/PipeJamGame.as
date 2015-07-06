@@ -176,7 +176,7 @@ package
 			{
 				// Use test token
 				MTurkAPI.getInstance().workerToken = "4G9OGQuO9X";
-				m_fileName = "p_000305_00054356";
+				m_fileName = "p_001011_00054778";
 				MTurkAPI.getInstance().onTaskBegin();
 			}
 			

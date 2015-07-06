@@ -196,18 +196,29 @@ package scenes.game.display
 				NARROW_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY);
 			
 			m_targetScore = int.MAX_VALUE;
-			if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
-				m_targetScore = int(m_levelAssignmentsObj["target_score"]);
-				//now check to see if we have a higher target if not in tutorial
-				if(!PipeJamGameScene.inTutorial)
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				m_targetScore = 0;
+				for (var key:String in nodeLayoutObjs)
 				{
-					if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
-						m_targetScore = PipeJamGame.levelInfo.target_score;
+					if (nodeLayoutObjs[key] is ClauseNode) m_targetScore++;
 				}
 			}
 			else
 			{
-				m_targetScore = PipeJamGame.levelInfo.target_score;
+				if ((m_levelAssignmentsObj["target_score"] != undefined) && !isNaN(int(m_levelAssignmentsObj["target_score"]))) {
+					m_targetScore = int(m_levelAssignmentsObj["target_score"]);
+					//now check to see if we have a higher target if not in tutorial
+					if(!PipeJamGameScene.inTutorial)
+					{
+						if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
+							m_targetScore = PipeJamGame.levelInfo.target_score;
+					}
+				}
+				else
+				{
+					m_targetScore = PipeJamGame.levelInfo.target_score;
+				}
 			}
 			targetScoreReached = false;
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
@@ -646,7 +657,7 @@ package scenes.game.display
 			skin.disableSkin();
 		}
 		
-		protected function createGridChildFromLayoutObj(gridChildId:String, gridChildLayout:Object, isGroup:Boolean):GridChild
+		private function createGridChildFromLayoutObj(gridChildId:String, gridChildLayout:Object, isGroup:Boolean):GridChild
 		{
 			var layoutX:Number = Number(gridChildLayout["x"]) * Constants.GAME_SCALE * levelLayoutScale;
 			var layoutY:Number = Number(gridChildLayout["y"]) * Constants.GAME_SCALE * levelLayoutScale;
@@ -798,8 +809,14 @@ package scenes.game.display
 				
 				m_numNodes++;
 			}
-			//trace("edge count = " + n);
-			
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				m_targetScore = 0;
+				for (var key:String in nodeLayoutObjs)
+				{
+					if (nodeLayoutObjs[key] is ClauseNode) m_targetScore++;
+				}
+			}
 		}
 		
 		public function initialize():void
