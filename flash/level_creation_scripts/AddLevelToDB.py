@@ -75,7 +75,7 @@ def addDirectoryToDB(url, indir, description_file):
 	
 def addFilesToDB():
 	if (len(sys.argv) < 5) or (len(sys.argv) > 5):
-		print ('\n\nUsage: %s addFilesToDB url input_file_or_directory description_file\n\n  url : either api.paradox.verigames.com or api.paradox.verigames.org \n  input_file: name of base json file, omitting ".zip" extension\n  description_file : xml file with file entry(ies) describing file(s)') % (sys.argv[0])
+		print ('\n\nUsage: %s addFilesToDB url input_file_or_directory description_file\n\n  url : either api.paradox.verigames.com or api.paradox.verigames.org \n  input_file_or_directory: name of base json file, omitting ".zip" extension or directory of game files\n  description_file : xml file with file entry(ies) describing file(s)') % (sys.argv[0])
 		quit()
 	url = sys.argv[2]
 	infile = sys.argv[3]
