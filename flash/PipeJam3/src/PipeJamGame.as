@@ -112,7 +112,7 @@ package
 			m_sfxButton.x = localPoint.x;
 			m_sfxButton.y = localPoint.y;
 			
-			if (PipeJam3.ASSET_SUFFIX) m_sfxButton.visible = false;
+			if (PipeJam3.ASSET_SUFFIX == "Turk") m_sfxButton.visible = false;
 			
 			_parent.addChild(m_sfxButton);
 		}
@@ -132,7 +132,18 @@ package
 				{
 					var params:String = url.substring(paramsStart+1);
 					var vars:URLVariables = new URLVariables(params);
-					if(vars.localfile)
+					if (PipeJam3.ASSET_SUFFIX == "Turk" && vars.token)
+					{
+						MTurkAPI.getInstance().workerToken = vars.token;
+						if (vars.name)
+						{
+							MTurkAPI.getInstance().taskId = String(vars.name);
+							m_fileName = String(vars.name);
+						}
+						MTurkAPI.getInstance().onTaskBegin();
+						ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token + " task:" + MTurkAPI.getInstance().taskId);
+					}
+					else if(vars.localfile)
 					{
 						m_fileName = vars.localfile;
 						//create this here so we know this is a local file
@@ -169,18 +180,13 @@ package
 					{
 						PlayerValidation.accessToken = "denied";
 					}
-					else if (PipeJam3.ASSET_SUFFIX == "Turk" && vars.token)
-					{
-						MTurkAPI.getInstance().workerToken = vars.token;
-						MTurkAPI.getInstance().onTaskBegin();
-						ExternalInterface.call("console.log", "[Flash game]: workerToken found from queryString: " + vars.token);
-					}
 				}
 			}
 			else if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				// Use test token
 				MTurkAPI.getInstance().workerToken = "4G9OGQuO9X";
+				m_fileName = "p_001011_00054778";
 				MTurkAPI.getInstance().onTaskBegin();
 			}
 			
@@ -199,8 +205,8 @@ package
 			}
 			else if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
-				// TODO: Turk - use MTurkAPI.getInstance().workerToken from above to determine taskId, for now assume it is 101 = tutorials
-				PipeJamGameScene.inTutorial = true;
+				if (MTurkAPI.getInstance().taskId == "101")
+					PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
 				showScene("PipeJamGame");
 			}
@@ -264,7 +270,7 @@ package
 		
 		public function updateHighScoreList(event:starling.events.Event = null):void
 		{
-			if(!PipeJamGameScene.inTutorial)
+			if(!PipeJamGameScene.inTutorial && !(PipeJam3.ASSET_SUFFIX == "Turk"))
 				GameFileHandler.getHighScoresForLevel(handleHighScoreList, PipeJamGame.levelInfo.levelID);
 		}
 		
@@ -290,7 +296,7 @@ package
 		
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{
-			m_sfxButton.visible = PipeJam3.ASSET_SUFFIX ? false : event.data;
+			m_sfxButton.visible = (PipeJam3.ASSET_SUFFIX == "Turk") ? false : event.data;
 			if(m_sfxButton.visible)
 			{
 				AudioManager.getInstance().reset();

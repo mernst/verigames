@@ -14,7 +14,7 @@ package scenes.game.display
 		{
 			text = _text;
 			if (text != null)
-				text = PipeJam3.ASSET_SUFFIX ? _text.split("!").join(".") : _text;
+				text = (PipeJam3.ASSET_SUFFIX == "Turk") ? _text.split("!").join(".") : _text;
 			size = _size;
 			pointAtFn = _pointAtFn;
 			pointFrom = _pointFrom;

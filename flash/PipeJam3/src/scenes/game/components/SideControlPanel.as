@@ -4,6 +4,7 @@ package scenes.game.components
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Point;
+	import scenes.game.PipeJamGameScene;
 	import starling.display.DisplayObject;
 	import utils.XMath;
 	
@@ -52,6 +53,7 @@ package scenes.game.components
 		
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
+		private var m_turkFinishButton:NineSliceButton;
 		
 		protected var scoreCircleMiddleImage:Image;
 		protected var scoreCircleFrontImage:Image;
@@ -129,6 +131,15 @@ package scenes.game.components
 			m_menuButton.y = 23;
 			m_menuButton.scaleX = .8;
 			//m_menuButton.scaleY = .8;
+			
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				m_turkFinishButton = ButtonFactory.getInstance().createButton("Finish", 44, 14, 8, 8, "Finish this task and receive confirmation code");
+				m_turkFinishButton.addEventListener(starling.events.Event.TRIGGERED, onTurkFinishButtonTriggered);
+				m_turkFinishButton.x = 59;
+				m_turkFinishButton.y = 23;
+				m_turkFinishButton.scaleX = .8;
+			}
 			
 			var logo:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_ParadoxLogoWhiteSmall);
 			var logoImage:Image = new Image(logo);
@@ -215,9 +226,21 @@ package scenes.game.components
 			//
 		}
 		
+		private function showTurkFinishButton():void
+		{
+			addChild(m_turkFinishButton);
+		}
+		
 		public function addedToStage(event:starling.events.Event):void
 		{
-			if (!PipeJam3.ASSET_SUFFIX) addChild(m_menuButton);
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
+			{
+				if (!PipeJamGameScene.inTutorial) Starling.juggler.delayCall(showTurkFinishButton, 5*60); // show after 5 minutes
+			}
+			else
+			{
+				addChild(m_menuButton);
+			}
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
 		//	addChild(m_fullScreenButton); not quite ready. Next Tutorials don't draw, occasional 'too big' crashes
@@ -305,6 +328,11 @@ package scenes.game.components
 			} else {
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 			}
+		}
+		
+		private function onTurkFinishButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.TURK_FINISH));
 		}
 		
 		private function onZoomInButtonTriggered():void

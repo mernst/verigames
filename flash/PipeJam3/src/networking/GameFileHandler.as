@@ -8,6 +8,7 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import server.MTurkAPI;
 	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
@@ -635,9 +636,19 @@ package networking
 					solutionInfo.target_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.max_score =  String(World.m_world.active_level.maxScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
+					solutionInfo.max_score =  String(World.m_world.active_level.maxScore);
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
-					solutionInfo.playerID =  PlayerValidation.playerID;
-					solutionInfo.username = PlayerValidation.userNames[PlayerValidation.playerID]; 
+					if (PipeJam3.ASSET_SUFFIX == "Turk")
+					{
+						solutionInfo.turkToken = MTurkAPI.getInstance().workerToken;
+						solutionInfo.playerID = "turk";
+						solutionInfo.username = "turk";
+					}
+					else
+					{
+						solutionInfo.playerID = PlayerValidation.playerID;
+						solutionInfo.username = PlayerValidation.userNames[PlayerValidation.playerID]; 
+					}
 					delete solutionInfo["id"]; //need to remove this or else successive saves won't work
 					delete solutionInfo["_id"]; //need to remove this or else successive saves won't work
 					PipeJamGame.levelInfo.revision = solutionInfo.revision;
