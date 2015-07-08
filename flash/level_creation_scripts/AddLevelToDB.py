@@ -11,12 +11,12 @@ from bson import json_util
 import json
 
 #description file looks like:
-#<files version='0' property="ostrusted"  type="game or turk, or...">
+#<files version='0' property="ostrusted" type="game or turk or ...." >
 #<file name="p_000100_00049945" constraints="100"  score="0"/>
 #</files>
 
 
-def addLevelToDB(infile, description_file):
+def addLevelToDB(url, infile, description_file):
 	index = infile.rfind('/')
 	infileroot = infile[index+1:]
 	descriptionxml = parse(description_file)
@@ -25,7 +25,7 @@ def addLevelToDB(infile, description_file):
 	property = fileElem[0].getAttribute("property")
 	type = fileElem[0].getAttribute("type")
 
-	client = Connection('api.paradox.verigames.org', 27017)
+	client = Connection(url, 27017)
 	db = client.game3api
 	description = None
 	print "finding files"
@@ -61,7 +61,7 @@ def addFile(db, fileName):
 	id = fs.put(contents)
 	return id
 
-def addDirectoryToDB(indir, description_file):
+def addDirectoryToDB(url, indir, description_file):
 	#open description file, loop through entries, if you can find the entry file upload it
 	descriptionxml = parse(description_file)
 	files = descriptionxml.getElementsByTagName('file')
@@ -69,33 +69,82 @@ def addDirectoryToDB(indir, description_file):
 		name = file.getAttribute("name")
 		print 'adding ' + name
 		if os.path.exists(indir + os.path.sep + name + '.zip'):
-			addLevelToDB(indir + os.path.sep + name, description_file)
+			addLevelToDB(url, indir + os.path.sep + name, description_file)
 		else:
 			print indir + os.path.sep + name + '.zip' + ' not found'
 	
+def addFilesToDB():
+	if (len(sys.argv) < 5) or (len(sys.argv) > 5):
+		print ('\n\nUsage: %s addFilesToDB url input_file_or_directory description_file\n\n  url : either api.paradox.verigames.com or api.paradox.verigames.org \n  input_file: name of base json file, omitting ".zip" extension\n  description_file : xml file with file entry(ies) describing file(s)') % (sys.argv[0])
+		quit()
+	url = sys.argv[2]
+	infile = sys.argv[3]
+	description_file = sys.argv[4]
+	
+	if os.path.isdir(infile):
+		addDirectoryToDB(url, infile, description_file)
+	else:
+		addLevelToDB(url, infile, description_file)
+		
+#this doesn't work for me, maybe you will have better luck, I have to use Java to delete things
+def removeCurrentFiles():
+	if (len(sys.argv) < 3) or (len(sys.argv) > 3):
+		print ('\n\nUsage: %s removeCurrentFiles url\n\n  url : either api.paradox.verigames.com or api.paradox.verigames.org') % (sys.argv[0])
+		quit()
+	url = sys.argv[2]
+
+	try:
+		client = Connection(url, 27017)
+		db = client.game2api
+		level_collection = db.ActiveLevels
+		level_collection.delete_many()
+	except:
+		print sys.exc_info()
+		
+def createDescriptionFile():
+	if (len(sys.argv) < 7) or (len(sys.argv) > 7):
+		print ('\n\nUsage: python AddLevelToDB.py createDescriptionFile input_path, output_file version property type(currently "game" or "turk")')
+		quit()
+	inputpath = sys.argv[2]
+	outputfile = sys.argv[3]
+	version = sys.argv[4]
+	property = sys.argv[5]
+	type = sys.argv[6]
+
+	pathlen = len(inputpath)
+
+	descriptionFile = open(outputfile,'w')
+	descriptionFile.write('<files version="'+version+'" property="'+property+'" type="'+type+'" >\n')
+		
+	cmd = os.popen('ls %s/*Assignments.json' % inputpath) #find Assignments files in an attempt to find unique named files for each level
+	for fullfilename in cmd:
+		print fullfilename
+		startfilenameindex = fullfilename.rfind('/')
+		endfilenameindex = fullfilename.rfind('A')
+		filename = fullfilename[startfilenameindex+1:endfilenameindex]
+		print filename
+		numWidgetsStartIndex = filename.find('_')+1
+		numWidgetsEndIndex = filename.find('_', numWidgetsStartIndex)
+		numWidgets = str(int(filename[numWidgetsStartIndex:numWidgetsEndIndex])) #get rid of leading zeros
+		print numWidgets
+		score = 0
+		#conflicts get updated during game play, links are ignored currently as widgets mostly predict size of level
+		descriptionFile.write('<file name="'+filename+'" constraints="'+numWidgets+'"  score="'+str(score)+'"/>\n')
+
+	descriptionFile.write('</files>\n')
+	
 ### Command line interface ###
 if __name__ == "__main__":
-	if (len(sys.argv) < 3) or (len(sys.argv) > 3):
-		print ('\n\nUsage: %s input_file description_file\n\n  input_file: name of base json file, omitting ".zip" extension\n  description_file : zip file with file entry describing file') % (sys.argv[0], sys.argv[0])
-		quit()
 
-	infile = sys.argv[1]
-	description_file = sys.argv[2]
+	functionToCall = sys.argv[1]
 	
-	# there seems to be ownership issues when files added through python can't be deleted from java. so do it here, but really make sure you want to remove everything....
-	'''
-	client = Connection('api.flowjam.verigames.com', 27017)
-	db = client.game2api
-	level_collection = db.Levels
-	level_collection.remove()
-	base_collection = db.BaseLevels
-	base_collection.remove()
-	scored_collection = db.ScoredLevels
-	scored_collection.remove()
-	solved_collection = db.GameSolvedLevels
-	solved_collection.remove()
-	'''
-	if os.path.isdir(infile):
-		addDirectoryToDB(infile, description_file)
+	if functionToCall == "removeCurrentFiles":
+		removeCurrentFiles()
+	elif functionToCall == "addFilesToDB":
+		addFilesToDB()
+	elif functionToCall == "createDescriptionFile":
+		createDescriptionFile()
 	else:
-		addLevelToDB(infile, description_file)
+		print 'function not found'
+		
+		

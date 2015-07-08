@@ -9,13 +9,8 @@ build:
 '''
 import os, json, sys
 import time
-SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
-print (time.strftime("%H:%M:%S"))
-
-solverType = sys.argv[2]
 all_assignments = {}
-files = os.listdir(sys.argv[1])
 n_autosolve_levels = 0
 n_total_levels = 0
 n_autosolve_nodes = 0
@@ -23,7 +18,9 @@ n_total_nodes = 0
 n_autosolve_constraints = 0
 n_total_constraints = 0
 current = 0
-for fname in files:
+
+def handleFile(fname):
+	global n_total_levels, n_autosolve_levels, current, n_autosolve_nodes, n_autosolve_constraints, n_total_constraints, n_total_nodes
 	is_sat = False
 	is_weighted = False
 	if fname[-5:] == '.json' or fname[-5:] == '.wcnf':
@@ -102,10 +99,19 @@ for fname in files:
 				cnf_out.write(line)
 				if "Optimal" in line and not "= 0" in line:
 					print "Unoptimal", fprefix
-with open('AllAssignments.json', 'w') as asg_out:
-	asg_out.write(json.dumps(all_assignments))
-print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
-print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
-print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+					
 
-print (time.strftime("%H:%M:%S"))
+if __name__ == "__main__":					
+	SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
+	files = os.listdir(sys.argv[1])
+	for fname in files:
+		print (time.strftime("%H:%M:%S"))
+		handleFile(fname)
+		print (time.strftime("%H:%M:%S"))
+		
+	with open('AllAssignments.json', 'w') as asg_out:
+		asg_out.write(json.dumps(all_assignments))
+	print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
+	print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
+	print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+

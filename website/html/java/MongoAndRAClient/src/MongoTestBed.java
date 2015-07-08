@@ -33,28 +33,39 @@ public class MongoTestBed {
 
 	public static void main(String[] args) throws Exception {
 
+		String url = "api.paradox.verigames.org";
+		if(args.length > 0)
+			url = args[0];
+		
 
+		
         //staging game level server
        //    Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
-     Mongo mongo = new Mongo( "api.paradox.verigames.org", 27017 );
+     Mongo mongo = new Mongo( url, 27017 );
        String dbName = "game3api";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
 
-        listCollectionNames(db);
+    //    listCollectionNames(db);
        HashMap<String, String> map = new HashMap<String, String>();
   //     map.put("levelID", "551ec321b0044206887210a8");//551ec321b0044206887210a8,551ec31fb0044206887210a0
   //     map.put("version", "12");//
       
-       listEntries(db, "BaseLevels", map, true);
-       listEntries(db, "ActiveLevels", map, true);
-       listEntries(db, "GameSolvedLevels", map, true);
-       listEntries(db, "PlayerActivity", map, true);
-       listEntries(db, "fs.chunks", map, true);
-       listEntries(db, "fs.files", map, true);
+      // listEntries(db, "BaseLevels");
+       if(args.length == 1)
+       {
+    	   System.out.println("Listing files from " + url);
+    	   listEntries(db, "ActiveLevels");
+       }
+       else if(args.length > 1 && args[1].indexOf("true") != -1)
+       {
+    	   System.out.println("Removing files from " + url);
+    	   listEntries(db, "ActiveLevels", map, true);
+       }
+    //     listEntries(db, "ActiveLevels");
     //   listEntriesToFile(db, "GameSolvedLevels", "GameSolvedLevels.txt");
-   //    listEntriesToFile(db, "ActiveLevels", "activeLevels.txt");
+     //  listEntriesToFile(db, "ActiveLevels", "activeLevelsV13_1.txt");
    //    listFiles(fs);
     //   
   //     writeFileLocally(fs, "55678fb8f882c00765fab77f", "103Assignments.json" );
