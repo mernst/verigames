@@ -1126,6 +1126,8 @@ package scenes.game.display
 			}
 			else
 			{
+				if (PipeJam3.ASSET_SUFFIX == "Turk")
+					return 500;
 				if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC)
 				{
 					switch(PlayerValidation.currentActivityLevel)
