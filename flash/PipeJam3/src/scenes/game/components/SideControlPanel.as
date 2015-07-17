@@ -88,6 +88,8 @@ package scenes.game.components
 		public static const WIDE_BRUSH_CONTROL:int = 2;
 		public static const NARROW_BRUSH_CONTROL:int = 3;
 		
+		private static const SHOW_DECIMAL_CIRCLE:Boolean = false;
+		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
 			WIDTH = _width;
@@ -101,24 +103,36 @@ package scenes.game.components
 			
 			var scoreCircleBackImage:Image = new Image(scoreCircleBackTexture);
 			scoreCircleBackImage.scaleX = scoreCircleBackImage.scaleY = 0.5;
-			scoreCircleBackImage.x = 6.25;
+			scoreCircleBackImage.x = 7.25;
 			scoreCircleBackImage.y = 18.75;
 			addChild(scoreCircleBackImage);
 			
 			scoreCircleMiddleImage = new Image(scoreCircleMiddleTexture);
-			scoreCircleMiddleImage.x = 6.25;
+			scoreCircleMiddleImage.x = 7.25;
 			scoreCircleMiddleImage.y = 18.75;
 			scoreCircleMiddleImage.scaleX = scoreCircleMiddleImage.scaleY = 0.5;
 			addChild(scoreCircleMiddleImage);
 			
-			scoreCircleFrontImage = new Image(scoreCircleFrontTexture);
-			scoreCircleFrontImage.x = 19;
+			if (SHOW_DECIMAL_CIRCLE) {
+				scoreCircleFrontImage = new Image(scoreCircleFrontTexture);
+			} else {
+				scoreCircleFrontImage = new Image(scoreCircleBackTexture);
+			}
+			scoreCircleFrontImage.x = 20;
 			scoreCircleFrontImage.y = 32.5;
-			scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.5;
+			if (SHOW_DECIMAL_CIRCLE) {
+				scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.5;
+			} else {
+				scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.351351;
+			}
 			addChild(scoreCircleFrontImage);
 			
 			scoreImageCenter = new Point(scoreCircleFrontImage.x + scoreCircleFrontImage.width/2, 
-												scoreCircleFrontImage.y + scoreCircleFrontImage.height/2)
+												scoreCircleFrontImage.y + scoreCircleFrontImage.height / 2);
+
+			if (!SHOW_DECIMAL_CIRCLE) {
+				rotateToDegree(scoreCircleFrontImage, scoreImageCenter, -180.0);
+			}
 			
 			var background:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_Sidebar);
 			var backgroundImage:Image = new Image(background);
@@ -413,7 +427,9 @@ package scenes.game.components
 			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
 			var decimalRotation:Number = -(100-decimalPart)*1.8;
 			rotateToDegree(scoreCircleMiddleImage, scoreImageCenter, integerRotation);
-			rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
+			if (SHOW_DECIMAL_CIRCLE) {
+				rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
+			}
 			
 			return score;
 		}
