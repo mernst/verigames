@@ -268,6 +268,10 @@ package
 			m_replayText.text = text;
 			m_replayText.setTextFormat(REPLAY_TEXT_FORMAT);
 		}
+		
+		public static function getScaledScore(currentScore:int, maxScore:int):Number
+		{
+			return (Number(currentScore) / maxScore) * 100.0;
+		}
 	}
-	
 }

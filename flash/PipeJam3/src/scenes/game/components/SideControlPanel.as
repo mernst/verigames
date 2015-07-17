@@ -149,7 +149,7 @@ package scenes.game.components
 			logoImage.scaleY = logoImage.scaleX;
 			addChild(logoImage);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0.00%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = 44;
 			m_scoreTextfield.y = 44;
@@ -400,7 +400,7 @@ package scenes.game.components
 		{
 			var maxConflicts:int = level.maxScore;
 			var currentConflicts:int = MiniMap.numConflicts;
-			var score:Number = ((maxConflicts-currentConflicts)/maxConflicts)*100;
+			var score:Number = PipeJam3.getScaledScore(maxConflicts - currentConflicts, maxConflicts);
 			var integerPart:int = Math.floor(score);
 			var decimalPart:int = (score - integerPart) * 100;
 			
@@ -408,7 +408,7 @@ package scenes.game.components
 			trace("conflict count", maxConflicts, currentConflicts, currentScore);
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore);
-			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, TextFactory.HRIGHT, TextFactory.VCENTER);
 			
 			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
 			var decimalRotation:Number = -(100-decimalPart)*1.8;
@@ -424,14 +424,16 @@ package scenes.game.components
 		public function targetPercent(level:Level):Number
 		{
 			var maxConflicts:int = level.maxScore;
+			var currentConflicts:int = MiniMap.numConflicts;
+			var score:Number = PipeJam3.getScaledScore(maxConflicts - currentConflicts, maxConflicts);
+			
 			var targetScore:int = level.getTargetScore();
-			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
-			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;
+			var targetPercentage:Number = PipeJam3.getScaledScore(targetScore, maxConflicts);
 			
 			var currentTarget:String = targetPercentage.toFixed(2) + '%';
 			
 			TextFactory.getInstance().updateText(m_targetPercentTextfield, "Target:\n" + currentTarget);
-			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, 2, 1);
+			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, TextFactory.HRIGHT, TextFactory.VCENTER);
 			if (score >= targetPercentage) {
 				TextFactory.getInstance().updateColor(m_targetPercentTextfield, 0x00FF00);
 			} else {
