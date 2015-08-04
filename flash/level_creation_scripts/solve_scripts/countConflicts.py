@@ -324,8 +324,9 @@ def solveConflictsBySectionByVar(input_file, maxCount):
 
 	currentIndex = 0
 	test = 0
+	loopCount = 0
 	startTime = time.strftime("%H:%M:%S")
-	while currentMaxCount != 30:
+	while loopCount != 250:
 		try:
 			resultClauseArray = []
 			resultClauseDict = {}
@@ -354,7 +355,7 @@ def solveConflictsBySectionByVar(input_file, maxCount):
 			if oldCount == newCount:
 				currentIndex += 1
 
-
+			loopCount += 1
 		except:
 			if len(currentConflicts) > 0 and newCount <= currentIndex:
 				currentIndex = 0

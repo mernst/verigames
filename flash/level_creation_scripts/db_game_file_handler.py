@@ -53,6 +53,7 @@ def addLevelToDB(url, infile, description_file):
 		base_collection.save(levelObj)
 		level_collection.save(levelObj)
 		print 'saved file'
+		
 def addFile(db, fileName):
 	print fileName
 	fileobj = open(fileName, 'rb')
@@ -103,7 +104,7 @@ def removeCurrentFiles():
 		
 def createDescriptionFile():
 	if (len(sys.argv) < 7) or (len(sys.argv) > 7):
-		print ('\n\nUsage: python AddLevelToDB.py createDescriptionFile input_path, output_file version property type(currently "game" or "turk")')
+		print ('\n\nUsage: python db_game_file_handler.py createDescriptionFile input_path, output_file version property type(currently "game" or "turk")')
 		quit()
 	inputpath = sys.argv[2]
 	outputfile = sys.argv[3]
@@ -144,6 +145,8 @@ if __name__ == "__main__":
 		addFilesToDB()
 	elif functionToCall == "createDescriptionFile":
 		createDescriptionFile()
+	elif functionToCall == "downloadBestScoringFiles":
+		downloadBestScoringFiles()
 	else:
 		print 'function not found'
 		

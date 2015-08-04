@@ -44,7 +44,7 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static const RELEASE_BUILD:Boolean = true;
+		public static const RELEASE_BUILD:Boolean = false;
 		public static const TUTORIAL_DEMO:Boolean = false;
 		public static const ASSET_SUFFIX:String = ""; // specify "Turk" to change atlases to turk
 		

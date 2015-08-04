@@ -144,5 +144,6 @@ if __name__ == "__main__":
 			dir_entry_path = os.path.join(input_path, dir_entry)
 			if os.path.isfile(dir_entry_path):
 				handleFile(dir_entry_path)
-				print_wcnf(os.path.join(output_path, dir_entry[:-5] + ".wcnf"))
+				if len(var_map) > 0:
+					print_wcnf(os.path.join(output_path, dir_entry[:-5] + ".wcnf"))
 

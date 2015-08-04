@@ -1359,7 +1359,7 @@ package scenes.game.display
 
 		//used when ctrl-shift clicking a node, selects x whole group or nearest neighbors if no group
 		protected var currentSelectionProcessCount:int;
-		public var NUM_NODES_TO_SELECT:int = 100;
+		public var NUM_NODES_TO_SELECT:int = 20;
 
 		protected function onGroupSelection(evt:SelectionEvent):void
 		{
@@ -1381,7 +1381,7 @@ package scenes.game.display
 
 		public var loopcount:int = 0;
 		public var looptimer:Timer;
-		public var runContinualSolver:Boolean = false;
+		public var runContinualSolver:Boolean = true;
 		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
@@ -1959,7 +1959,7 @@ package scenes.game.display
 			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
 			
-			if(runContinualSolver && solverRunCount < 3000)
+			if(runContinualSolver && solverRunCount < 250)
 			{
 				solverRunCount++;
 				//trace("count", count);

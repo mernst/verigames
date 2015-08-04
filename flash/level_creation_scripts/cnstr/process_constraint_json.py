@@ -34,14 +34,14 @@ if __name__ == "__main__":
     groups_fn = '%s.groups' % file_pref
     group.run(graphs_fn, groups_fn, group_min, node_max)
     
-    # wcnf_dirn = '%s_wcnf_files' % file_pref
-    # suf_i = 0
-    # while os.path.exists(wcnf_dirn):
-    #     suf_i += 1
-    #     wcnf_dirn = '%s_wcnf_files_%s' % (file_pref, suf_i)
-    # os.makedirs(wcnf_dirn)
-    # print 'Writing wcnf files to: %s' % wcnf_dirn
-    # output_dimacs.run(graphs_fn, wcnf_dirn)
+    wcnf_dirn = '%s_wcnf_files' % file_pref
+    suf_i = 0
+    while os.path.exists(wcnf_dirn):
+         suf_i += 1
+         wcnf_dirn = '%s_wcnf_files_%s' % (file_pref, suf_i)
+    os.makedirs(wcnf_dirn)
+    print 'Writing wcnf files to: %s' % wcnf_dirn
+    output_dimacs.run(graphs_fn, wcnf_dirn)
 
     game_files_dirn = '%s_game_files' % file_pref
     suf_i = 0

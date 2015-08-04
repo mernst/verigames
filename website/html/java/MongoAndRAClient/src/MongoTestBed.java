@@ -3,17 +3,26 @@ import com.mongodb.gridfs.*;
 
 import java.io.BufferedReader;
 import java.io.Console;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardCopyOption.*;
+
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.bson.types.ObjectId;
 
@@ -34,8 +43,16 @@ public class MongoTestBed {
 	public static void main(String[] args) throws Exception {
 
 		String url = "api.paradox.verigames.org";
+		String property = "property";
+		String value = "interning";
 		if(args.length > 0)
 			url = args[0];
+		
+		if(args.length > 2)
+		{
+			property = args[1];
+			value = args[2];
+		}
 		
 
 		
@@ -49,26 +66,19 @@ public class MongoTestBed {
 
     //    listCollectionNames(db);
        HashMap<String, String> map = new HashMap<String, String>();
-  //     map.put("levelID", "551ec321b0044206887210a8");//551ec321b0044206887210a8,551ec31fb0044206887210a0
-  //     map.put("version", "12");//
+   //    map.put("version", "maxsat");//551ec321b0044206887210a8,551ec31fb0044206887210a0
+       map.put(property, value);
       
-      // listEntries(db, "BaseLevels");
-       if(args.length == 1)
-       {
-    	   System.out.println("Listing files from " + url);
-    	   listEntries(db, "ActiveLevels");
-       }
-       else if(args.length > 1 && args[1].indexOf("true") != -1)
-       {
-    	   System.out.println("Removing files from " + url);
-    	   listEntries(db, "ActiveLevels", map, true);
-       }
+   //     listEntries(db, "GameSolvedLevels", map);
+
+    	//  listEntries(db, "ActiveLevels");
+
     //     listEntries(db, "ActiveLevels");
     //   listEntriesToFile(db, "GameSolvedLevels", "GameSolvedLevels.txt");
      //  listEntriesToFile(db, "ActiveLevels", "activeLevelsV13_1.txt");
    //    listFiles(fs);
     //   
-  //     writeFileLocally(fs, "55678fb8f882c00765fab77f", "103Assignments.json" );
+       writeFilesLocally(db, "GameSolvedLevels", fs, map);
      //    listLog(db);
  //         saveAndCleanLog(db, "old");
  //      countPlayerSubmissions(db);
@@ -94,11 +104,11 @@ public class MongoTestBed {
          	  
 		BasicDBObject field = new BasicDBObject();
 		if(searchKeys != null)
-		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
-		    String key = entry.getKey();
-		    String value = entry.getValue();
-		    field.put(key, value);
-		}
+			for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+			    String key = entry.getKey();
+			    String value = entry.getValue();
+			    field.put(key, value);
+			}
 		
 		DBCollection collection = db.getCollection(collectionName);
 
@@ -135,11 +145,11 @@ public class MongoTestBed {
 
 			BasicDBObject field = new BasicDBObject();
 			if(searchKeys != null)
-			for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
-			    String key = entry.getKey();
-			    String value = entry.getValue();
-			    field.put(key, value);
-			}
+				for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+				    String key = entry.getKey();
+				    String value = entry.getValue();
+				    field.put(key, value);
+				}
 			
 			DBCollection collection = db.getCollection(collectionName);
 
@@ -519,6 +529,144 @@ public class MongoTestBed {
 		   }
         }
     }
+    
+    static void writeFilesLocally(DB db, String collectionName, GridFS fs, HashMap<String, String> searchKeys) throws Exception
+    {
+    	DBCursor cursor = null;
+    	
+        BasicDBObject field = new BasicDBObject();
+    	if(searchKeys != null)
+			for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+			    String key = entry.getKey();
+			    String value = entry.getValue();
+			    field.put(key, value);
+			}
+    	
+        try {
+        	DBCollection collection = db.getCollection(collectionName);
+        	HashMap<String, Integer> scoreMap = new HashMap<String, Integer>();
+        	HashMap<String, String> assignmentMap = new HashMap<String, String>();
+        	
+        	cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+
+				DBObject obj = cursor.next();
+				
+				String name = (String)obj.get("name");
+				Integer score = new Integer((String)obj.get("current_score"));
+				String assignmentsID = (String)obj.get("assignmentsID");
+				
+				if(scoreMap.get(name) == null)
+				{
+					scoreMap.put(name, score);
+					assignmentMap.put(name, assignmentsID);
+				}
+				else
+				{
+					Integer currentScore = scoreMap.get(name);
+					if(score > currentScore)
+					{
+						scoreMap.put(name, score);
+						assignmentMap.put(name, assignmentsID);
+					}
+				}
+			 }
+				
+
+			for(Map.Entry<String, String> assignmentsIDEntry : assignmentMap.entrySet())
+			{
+				String value = assignmentsIDEntry.getValue();
+				String levelName = assignmentsIDEntry.getKey();
+				String zipname = "output/" + levelName + "Assignments.zip";
+				String dirname = "output/" + levelName + "Assignments";
+				String filename = "output/" + levelName + "Assignments.json";
+				BasicDBObject filefield = new BasicDBObject();
+				filefield.put("_id", new ObjectId(value));
+				List<GridFSDBFile> filecursor = fs.find(filefield);
+				for(int i=0; i<filecursor.size();i++) {
+					GridFSDBFile fileobj = filecursor.get(i);	   
+	
+					FileOutputStream outputImage = new FileOutputStream(zipname);
+					fileobj.writeTo( outputImage );
+					outputImage.close();
+				}
+				File file = new File(zipname);
+				while (!file.exists()) {
+				    try { 
+				        Thread.sleep(100);
+				    } catch (InterruptedException ie) { /* safe to ignore */ }
+				}
+				unZipIt(zipname, dirname);
+				
+				//now copy actual file out of directory
+				Path source = Paths.get(dirname+"/assignments");
+				Path dest = Paths.get(filename);
+				Files.move(source, dest, REPLACE_EXISTING);
+				
+				try {
+					Path zip = Paths.get(zipname);
+					Path dir = Paths.get(dirname);
+				    Files.delete(zip);
+				    Files.delete(dir);
+				} catch (Exception x) {
+				    System.err.println(x);
+				}
+			}
+        } finally {
+           	if(cursor != null)
+           		cursor.close();
+           	}
+    }
+    
+    static public void unZipIt(String zipFile, String outputFolder){
+
+        byte[] buffer = new byte[1024];
+       	
+        try{
+       		
+       	//create output directory is not exists
+       	File folder = new File(outputFolder);
+       	if(!folder.exists()){
+       		folder.mkdir();
+       	}
+       		
+       	//get the zip file content
+       	ZipInputStream zis = 
+       		new ZipInputStream(new FileInputStream(zipFile));
+       	//get the zipped file list entry
+       	ZipEntry ze = zis.getNextEntry();
+       		
+       	while(ze!=null){
+       			
+       	   String fileName = ze.getName();
+              File newFile = new File(outputFolder + File.separator + fileName);
+                   
+              System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+                   
+               //create all non exists folders
+               //else you will hit FileNotFoundException for compressed folder
+               new File(newFile.getParent()).mkdirs();
+                 
+               FileOutputStream fos = new FileOutputStream(newFile);             
+
+               int len;
+               while ((len = zis.read(buffer)) > 0) {
+          		fos.write(buffer, 0, len);
+               }
+           		
+               fos.close();   
+               ze = zis.getNextEntry();
+       	}
+       	
+           zis.closeEntry();
+       	zis.close();
+       		
+       	System.out.println("Done");
+       		
+       }catch(IOException ex){
+          ex.printStackTrace(); 
+       }
+      } 
     
     static void writeFileLocally(GridFS fs, String objectID, String filename ) throws Exception
     {
