@@ -88,8 +88,6 @@ package scenes.game.components
 		public static const WIDE_BRUSH_CONTROL:int = 2;
 		public static const NARROW_BRUSH_CONTROL:int = 3;
 		
-		private static const SHOW_DECIMAL_CIRCLE:Boolean = false;
-		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
 			WIDTH = _width;
@@ -103,36 +101,24 @@ package scenes.game.components
 			
 			var scoreCircleBackImage:Image = new Image(scoreCircleBackTexture);
 			scoreCircleBackImage.scaleX = scoreCircleBackImage.scaleY = 0.5;
-			scoreCircleBackImage.x = 7.25;
+			scoreCircleBackImage.x = 6.25;
 			scoreCircleBackImage.y = 18.75;
 			addChild(scoreCircleBackImage);
 			
 			scoreCircleMiddleImage = new Image(scoreCircleMiddleTexture);
-			scoreCircleMiddleImage.x = 7.25;
+			scoreCircleMiddleImage.x = 6.25;
 			scoreCircleMiddleImage.y = 18.75;
 			scoreCircleMiddleImage.scaleX = scoreCircleMiddleImage.scaleY = 0.5;
 			addChild(scoreCircleMiddleImage);
 			
-			if (SHOW_DECIMAL_CIRCLE) {
-				scoreCircleFrontImage = new Image(scoreCircleFrontTexture);
-			} else {
-				scoreCircleFrontImage = new Image(scoreCircleBackTexture);
-			}
-			scoreCircleFrontImage.x = 20;
+			scoreCircleFrontImage = new Image(scoreCircleFrontTexture);
+			scoreCircleFrontImage.x = 19;
 			scoreCircleFrontImage.y = 32.5;
-			if (SHOW_DECIMAL_CIRCLE) {
-				scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.5;
-			} else {
-				scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.351351;
-			}
+			scoreCircleFrontImage.scaleX = scoreCircleFrontImage.scaleY = 0.5;
 			addChild(scoreCircleFrontImage);
 			
 			scoreImageCenter = new Point(scoreCircleFrontImage.x + scoreCircleFrontImage.width/2, 
-												scoreCircleFrontImage.y + scoreCircleFrontImage.height / 2);
-
-			if (!SHOW_DECIMAL_CIRCLE) {
-				rotateToDegree(scoreCircleFrontImage, scoreImageCenter, -180.0);
-			}
+												scoreCircleFrontImage.y + scoreCircleFrontImage.height/2)
 			
 			var background:Texture = atlas.getTexture(AssetInterface.ParadoxSubTexture_Sidebar);
 			var backgroundImage:Image = new Image(background);
@@ -163,7 +149,7 @@ package scenes.game.components
 			logoImage.scaleY = logoImage.scaleX;
 			addChild(logoImage);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0.00%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
 			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = 44;
 			m_scoreTextfield.y = 44;
@@ -414,7 +400,7 @@ package scenes.game.components
 		{
 			var maxConflicts:int = level.maxScore;
 			var currentConflicts:int = MiniMap.numConflicts;
-			var score:Number = PipeJam3.getScaledScore(maxConflicts - currentConflicts, maxConflicts);
+			var score:Number = ((maxConflicts-currentConflicts)/maxConflicts)*100;
 			var integerPart:int = Math.floor(score);
 			var decimalPart:int = (score - integerPart) * 100;
 			
@@ -422,14 +408,12 @@ package scenes.game.components
 			trace("conflict count", maxConflicts, currentConflicts, currentScore);
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore);
-			TextFactory.getInstance().updateAlign(m_scoreTextfield, TextFactory.HRIGHT, TextFactory.VCENTER);
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			
 			var integerRotation:Number = -(100-integerPart)*1.8; //180/100
 			var decimalRotation:Number = -(100-decimalPart)*1.8;
 			rotateToDegree(scoreCircleMiddleImage, scoreImageCenter, integerRotation);
-			if (SHOW_DECIMAL_CIRCLE) {
-				rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
-			}
+			rotateToDegree(scoreCircleFrontImage, scoreImageCenter, decimalRotation);
 			
 			return score;
 		}
@@ -440,16 +424,14 @@ package scenes.game.components
 		public function targetPercent(level:Level):Number
 		{
 			var maxConflicts:int = level.maxScore;
-			var currentConflicts:int = MiniMap.numConflicts;
-			var score:Number = PipeJam3.getScaledScore(maxConflicts - currentConflicts, maxConflicts);
-			
 			var targetScore:int = level.getTargetScore();
-			var targetPercentage:Number = PipeJam3.getScaledScore(targetScore, maxConflicts);
+			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
+			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;
 			
 			var currentTarget:String = targetPercentage.toFixed(2) + '%';
 			
 			TextFactory.getInstance().updateText(m_targetPercentTextfield, "Target:\n" + currentTarget);
-			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, TextFactory.HRIGHT, TextFactory.VCENTER);
+			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, 2, 1);
 			if (score >= targetPercentage) {
 				TextFactory.getInstance().updateColor(m_targetPercentTextfield, 0x00FF00);
 			} else {

@@ -1,8 +1,6 @@
 package  
 {
-	import com.adobe.crypto.MD5;
 	import com.spikything.utils.MouseWheelTrap;
-	
 	import server.MTurkAPI;
 	
 	import flash.display.Sprite;
@@ -80,8 +78,6 @@ package
 		static public var pipeJam3:PipeJam3;
 		
 		private static var m_replayText:TextField = new TextField();
-		
-		private static var m_scoreScalingType:int = -1;
 		
 		public function PipeJam3()
 		{
@@ -272,22 +268,6 @@ package
 			m_replayText.text = text;
 			m_replayText.setTextFormat(REPLAY_TEXT_FORMAT);
 		}
-		
-		public static function getScaledScore(currentScore:int, maxScore:int):Number
-		{
-			if (m_scoreScalingType < 0) {
-				if (logging && logging.uid) {
-					m_scoreScalingType = int(MD5.hash(logging.uid).charCodeAt(0)) % 2;
-				} else {
-					m_scoreScalingType = 0;
-				}
-			}
-			
-			if (m_scoreScalingType == 0) {
-				return (Number(currentScore) / maxScore) * 100.0;
-			} else {
-				return Math.pow(Number(currentScore) / maxScore, 2.0) * 100.0;
-			}
-		}
 	}
+	
 }

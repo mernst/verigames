@@ -198,7 +198,7 @@ package scenes.game.display
 				NARROW_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY);
 			
 			m_targetScore = int.MAX_VALUE;
-			if (!m_tutorialTag && PipeJam3.ASSET_SUFFIX == "Turk")
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				m_targetScore = 0;
 				for (var key:String in nodeLayoutObjs)
@@ -820,7 +820,7 @@ package scenes.game.display
 				
 				m_numNodes++;
 			}
-			if (!m_tutorialTag && PipeJam3.ASSET_SUFFIX == "Turk")
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				m_targetScore = 0;
 				for (var key:String in nodeLayoutObjs)
