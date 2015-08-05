@@ -248,6 +248,64 @@ def submitLevel2(messageData, fileContents):
     except:
         return sys.exc_info()
 
+from zipfile import ZipFile
+from StringIO import StringIO
+
+def getAssignmentsJsonById(assignmentsID):
+    try:
+        client = Connection('api.paradox.verigames.org', 27017)
+        db = client.game3api
+        fs = gridfs.GridFS(db)
+        f = fs.get(ObjectId(assignmentsID))
+        zipfile = ZipFile(StringIO(f.read()))
+        fcontents = zipfile.open('assignments').read()
+        return json.loads(fcontents)
+    except:
+        return None
+
+def getTopSolutions(_version='15', _property='ostrusted'):
+    client = Connection('api.paradox.verigames.org', 27017)
+    db = client.game3api
+    collection = db.GameSolvedLevels
+    cur = collection.find({'property':_property, 'version':_version})
+    subs = {}
+    for sub in cur:
+        this_obj = {}
+        for f in ['submitted_date','assignmentsID','layoutID','username','conflicts','last_update','current_score','target_score','maxScore','name']:
+            this_obj[f] = sub.get(f)
+        nm = this_obj.get('name')
+        if subs.get(nm) is None:
+            subs[nm] = []
+        subs[nm].append(this_obj)
+    # sort from top scores to bottom
+    asg_obj = {}
+    for level_name in subs:
+        asg_obj[level_name] = {'top_10_submissions': []}
+        subs[level_name] = sorted(subs[level_name], key=lambda ss:int(ss.get('current_score', 0)), reverse=True)
+        # gather assignments for top 10 scores for each level
+        var_keys = []
+        for sub in subs[level_name][:10]:
+            assignmentsObj = getAssignmentsJsonById(sub.get('assignmentsID'))
+            if assignmentsObj is None:
+                continue
+            these_assignments = assignmentsObj.get('assignments', {})
+            if len(var_keys) == 0:
+                for var_key in these_assignments:
+                    var_keys.append(var_key)
+            var_values = ''
+            for var_key in var_keys:
+                var_value_obj = these_assignments.get(var_key, {}).get('type_value')
+                if var_value_obj == 'type:0':
+                    var_values += '0'
+                elif var_value_obj == 'type:1':
+                    var_values += '1'
+                else:
+                    var_values += 'X'
+            sub['assignments'] = var_values
+            asg_obj[level_name]['top_10_submissions'].append(sub)
+        asg_obj[level_name]['vars'] = var_keys
+    return json.dumps(asg_obj)
+
 def submitLevel2File(messageData, fileName):
     try:
         with open('tempfiles/'+fileName, 'r') as content_file:
@@ -272,7 +330,7 @@ def _getSubmissionsByTurkToken(turkToken):
         collection = db.GameSolvedLevels
         found_submissions = []
         for level in collection.find({'turkToken':turkToken}):
-            last_update_time = int(level.get('last_update', 0))
+            last_update_time = int(level.get('submitted_date', 0))
             now_time = int(time.mktime(datetime.datetime.now().utctimetuple()))
             sec_ago = now_time - last_update_time
             found_submissions.append({
@@ -359,22 +417,49 @@ def mTurkTaskComplete(msg):
     try:
         req = urllib2.Request(TURK_SET_CONF_CODE_URL, data_enc, headers)
         resp = urllib2.urlopen(req)
-        collection.update({"taskToken":worker_token}, {"$set": {"code":new_code}}, True)
         resp_str = resp.read()
         # If any improvements in the last 5 minutes, also award a bonus
         latest_improvements = _getLatestImprovementsByTurkToken(worker_token)
         found_improvement = False
+        improv_5min_keys = {}
+        bonus_val = 0.0
         for imp in latest_improvements:
-            if imp.get('last_update_sec_ago', 999999999) <= 5 * 60:
+            if imp.get('last_update_sec_ago') is not None:
                 found_improvement = True
-                break
+                five_min_key = '%s' % (imp.get('last_update_sec_ago')/300)*300 # round to 5 minute periods
+                if improv_5min_keys.get(five_min_key) is None:
+                    bonus_val += 0.25
+                    improv_5min_keys[five_min_key] = True
+        bonus_val = min(bonus_val, 1.25) # limit bonus to $1.25
         if found_improvement:
-            # Asynchronously send bonus
-            Thread(target=_mTurkSendBonus, args=[worker_token, token])
+            # Record a bonus to be paid once the user submits this assignment
+            bonus_str = '%s' % bonus_val
+            collection.update({"taskToken":worker_token}, {"$set": {"code":new_code, "bonus":bonus_str}}, True)
+        else:
+            # Save code to avoid rewarding players multiple times
+            collection.update({"taskToken":worker_token}, {"$set": {"code":new_code}}, True)
         return new_code
     except Exception as e:
         return 'mTurkTaskComplete Error: %s' % e
 
+def _mTurkAwardUnrewardedBonuses():
+    client = Connection('api.paradox.verigames.org', 27017)
+    db = client.game3api
+    collection = db.MturkTokensAwarded
+    unrewarded_entries = collection.find({"bonusAwarded":None, "bonus":{"$ne":None}})
+    output = '['
+    for entry in unrewarded_entries:
+        resp = None
+        if entry.get('taskToken') is not None and entry.get('bonus') is not None:
+            success, resp = _mTurkSendBonus(turkToken=entry.get('taskToken'),amt=entry.get('bonus'))
+            if success:
+                collection.update({"taskToken":entry.get('taskToken')}, {"$set": {"bonusAwarded":entry.get('bonus')}}, True)
+                resp = 'Updated "bonusAwarded":"%s"' % entry.get('bonus')
+        output += '{taskToken: %s code: %s bonus: %s, response: "%s"},' % (entry.get('taskToken'), entry.get('code'), entry.get('bonus'), resp)
+    output += ']'
+    return output
+
+#deprecated
 def _mTurkApproveAssignment(turkToken, token=None):
     if token is None:
         token = get_turk_access_token()
@@ -401,8 +486,7 @@ def _mTurkApproveAssignment(turkToken, token=None):
     except Exception as e:
         return e
 
-
-def _mTurkSendBonus(turkToken, token=None):
+def _mTurkSendBonus(turkToken, token=None, amt='0.50'):
     if token is None:
         token = get_turk_access_token()
     task_info = _getTaskInfoByWorkerToken(turkToken, token)
@@ -412,7 +496,7 @@ def _mTurkSendBonus(turkToken, token=None):
         return 'Error: assignment_id: %s worker_id:%s' % (assignment_id, worker_id)
     data = {
         'WorkerId': worker_id,
-        'BonusAmount': {'Amount': '0.50', 'CurrencyCode': 'USD'},
+        'BonusAmount': {'Amount': amt, 'CurrencyCode': 'USD'},
         'Reason': 'Conflicts solved.'
     }
     headers = {
@@ -425,9 +509,9 @@ def _mTurkSendBonus(turkToken, token=None):
         req = urllib2.Request('%s/assignment/%s/bonus' % (TURK_API, assignment_id), data_enc, headers)
         resp = urllib2.urlopen(req)
         resp_str = resp.read()
-        return resp_str
+        return (True, resp_str)
     except Exception as e:
-        return e
+        return (False, e.read())
 
 def get_turk_access_token():
     data = {
@@ -506,7 +590,11 @@ elif sys.argv[1] == "mTurkTaskComplete":
     print(mTurkTaskComplete(sys.argv[2]))
 elif sys.argv[1] == "_getLatestImprovementsByTurkToken":
     print(_getLatestImprovementsByTurkToken(sys.argv[2]))
+elif sys.argv[1] == "_mTurkAwardUnrewardedBonuses":
+    print(_mTurkAwardUnrewardedBonuses())
 ## end mTurk
+elif sys.argv[1] == "getTopSolutions":
+    print(getTopSolutions(sys.argv[2], sys.argv[3]))
 elif sys.argv[1] == "test":
     print(test())
 
