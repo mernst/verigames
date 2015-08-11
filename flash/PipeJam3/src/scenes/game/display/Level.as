@@ -352,7 +352,7 @@ package scenes.game.display
 			
 			if (nGroups > 0)
 			{
-				for (i = 0; i < nGroups; i++)
+				for (i = 2; i < nGroups; i++)
 				{
 					groupGrid = m_groupGrids[i];
 					newGroupDepth = i;
