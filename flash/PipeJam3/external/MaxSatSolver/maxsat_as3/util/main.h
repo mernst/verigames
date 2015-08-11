@@ -1,5 +1,5 @@
-#define BUILD_LIB
-//#define borchers
+//#define BUILD_LIB
+#define borchers
 //#define MAXSATZ2009
 extern const int ALG_DPLL;
 extern const int ALG_RAND;
@@ -14,8 +14,8 @@ extern const int ALG_RAND;
 #define ACTIVE 1
 
 //for borchars
-#define MAX_CLAUSES 50000
-#define MAX_VARS    20000
+#define MAX_CLAUSES 150000
+#define MAX_VARS    150000
 
 typedef struct entry *entry_ptr;
 

@@ -15,11 +15,7 @@
 #ifndef BUILD_LIB
 #include "../borchers.h"
 #endif
-/*
- * Some important limits on the size of the problem.
- */
-#define MAX_CLAUSES 50000
-#define MAX_VARS    20000
+
 
 /*
  * A constant used with the random number generator.

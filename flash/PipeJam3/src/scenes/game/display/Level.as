@@ -156,6 +156,8 @@ package scenes.game.display
 		static public var debugSolver:Boolean = false;
 		public var extendSolver:Boolean = true;
 		
+		public static var numNodesOnScreen:int = 0;
+		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -196,7 +198,7 @@ package scenes.game.display
 				NARROW_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY);
 			
 			m_targetScore = int.MAX_VALUE;
-			if (!m_tutorialTag && PipeJam3.ASSET_SUFFIX == "Turk")
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				m_targetScore = 0;
 				for (var key:String in nodeLayoutObjs)
@@ -342,7 +344,7 @@ package scenes.game.display
 		}
 		
 		//called on when GridViewPanel content is moving
-		public function updateLevelDisplay(viewRect:Rectangle = null):int
+		public function updateLevelDisplay(viewRect:Rectangle = null, content:DisplayObject = null):int
 		{
 			var nGroups:int = (levelGraph.groupsArr ? levelGraph.groupsArr.length : 0);
 			var newGroupDepth:int = 0;
@@ -365,13 +367,17 @@ package scenes.game.display
 			}
 			
 			var candidatesToRemove:Dictionary = new Dictionary();
-			for (var nodeOnScreenId:String in m_nodeOnScreenDict) candidatesToRemove[nodeOnScreenId] = true;
+			for (var nodeOnScreenId:String in m_nodeOnScreenDict) { candidatesToRemove[nodeOnScreenId] = true; numNodesOnScreen--; }
 			
 			groupGrid = m_groupGrids[newGroupDepth];
-			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, groupGrid.gridDimensions);
-			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, groupGrid.gridDimensions);
-			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, groupGrid.gridDimensions);
-			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, groupGrid.gridDimensions);
+			var scaledDimensions:Point= groupGrid.gridDimensions.clone();
+		//	if(content)
+		//		scaledDimensions.normalize(content.scaleX);
+			
+			var minX:int = (viewRect == null) ? 0 : GroupGrid.getGridX(viewRect.left, scaledDimensions);
+			var maxX:int = GroupGrid.getGridXRight((viewRect == null) ? m_boundingBox.right : viewRect.right, scaledDimensions);
+			var minY:int = (viewRect == null) ? 0 : GroupGrid.getGridY(viewRect.top, scaledDimensions) -1;
+			var maxY:int = GroupGrid.getGridYBottom((viewRect == null) ? m_boundingBox.bottom : viewRect.bottom, scaledDimensions);
 			var count:int = 0;
 
 			for (i = minX; i <= maxX; i++)
@@ -386,7 +392,7 @@ package scenes.game.display
 					for (var nodeId:String in gridNodeDict)
 					{
 						var node:Node = nodeLayoutObjs[nodeId] as Node;
-						count++
+						count++;
 						if (node != null)
 						{
 							//if (!m_nodeOnScreenDict.hasOwnProperty(nodeId)) 
@@ -420,7 +426,6 @@ package scenes.game.display
 		}
 		
 		private var m_initLayers:Boolean = false;
-		
 		public function draw():void
 		{
 			if (!m_initLayers)
@@ -477,7 +482,7 @@ package scenes.game.display
 					nodeToRemove.backgroundSkin = null;
 					touchedConflictLayer = true;
 				}
-				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) delete m_nodeOnScreenDict[nodeToRemove.id];
+				if (m_nodeOnScreenDict.hasOwnProperty(nodeToRemove.id)) {delete m_nodeOnScreenDict[nodeToRemove.id]; numNodesOnScreen--; }
 				nodesProcessed++;
 				if (nodesProcessed > ITEMS_PER_FRAME && !m_tutorialTag) break;
 			}
@@ -531,6 +536,7 @@ package scenes.game.display
 				if (nodeToDraw.skin != null)
 				{
 					m_nodeOnScreenDict[nodeToDraw.id] = true;
+					numNodesOnScreen++;
 					if (parent)
 					{
 						nodeToDraw.skin.scale(0.5 / parent.scaleX);
@@ -779,6 +785,11 @@ package scenes.game.display
 				if (gridChild == null) continue;
 				m_numNodes++;
 			}
+			//quick fix to make large level actually playable
+			if(m_numNodes > 50000)
+				PipeJam3.SELECTION_STYLE = PipeJam3.SELECTION_STYLE_CLASSIC;
+			else
+				PipeJam3.SELECTION_STYLE = PipeJam3.SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 			
 			//trace("node count = " + n);
 			
@@ -809,7 +820,7 @@ package scenes.game.display
 				
 				m_numNodes++;
 			}
-			if (!m_tutorialTag && PipeJam3.ASSET_SUFFIX == "Turk")
+			if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				m_targetScore = 0;
 				for (var key:String in nodeLayoutObjs)
@@ -1016,7 +1027,12 @@ package scenes.game.display
 		
 		public function selectSurroundingNodes(node:Node, nextToVisitArray:Array, previouslyCheckedNodes:Dictionary):void
 		{
-			node.select();
+			if (!node.isSelected) {
+				//trace("select direct " + node.id);
+				node.select();
+				selectedNodes.push(node);
+				m_nodesToDraw[node.id] = node;
+			}
 			
 			for each(var gameEdgeId:String in node.connectedEdgeIds)
 			{
@@ -1327,6 +1343,89 @@ package scenes.game.display
 			var node:Node = nodeLayoutObjs[nodeId];
 			return node;
 		}
+		
+		protected var solverRunningTime:Number;
+		public function solverTimerCallback(evt:TimerEvent):void
+		{
+			solveSelection(solverUpdate, solverDone);
+		}
+		
+		public function solverLoopTimerCallback(evt:TimerEvent):void
+		{
+			for each(var node:Node in nodeLayoutObjs)
+			{
+				node.unused = true;
+			}
+			solveSelection(solverUpdate, solverDone);
+		}
+
+		//used when ctrl-shift clicking a node, selects x whole group or nearest neighbors if no group
+		protected var currentSelectionProcessCount:int;
+		public var NUM_NODES_TO_SELECT:int = 20;
+
+		protected function onGroupSelection(evt:SelectionEvent):void
+		{
+			if (evt.component is Node) {
+				var node:Node = evt.component as Node;
+				currentSelectionProcessCount = 1;
+				var nextToVisitArray:Array = new Array;
+				var previouslyCheckedNodes:Dictionary = new Dictionary;
+				selectSurroundingNodes(node, nextToVisitArray, previouslyCheckedNodes);
+				for each(var nextNode:Node in nextToVisitArray)
+				{
+					selectSurroundingNodes(nextNode, nextToVisitArray, previouslyCheckedNodes);
+					if(currentSelectionProcessCount > NUM_NODES_TO_SELECT)
+						break;
+					currentSelectionProcessCount++;
+				}
+			}
+		}
+
+		public var loopcount:int = 0;
+		public var looptimer:Timer;
+		public var runContinualSolver:Boolean = true;
+		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
+		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
+		{
+			if(firstRun)
+			{
+				solverRunningTime = new Date().getTime();
+			}
+			//if caps lock is down, start repeated solving using 'random' selection
+			if(runContinualSolver)
+			{
+				//loop through all nodes, finding ones with conflicts
+				for each(var node:Node in nodeLayoutObjs)
+				{
+					if(node is ClauseNode)
+					{
+						var clauseNode:ClauseNode = node as ClauseNode;
+						if(clauseNode.hasError() && node.unused)
+						{
+							node.unused = false;
+						//trace(node.id);
+							onGroupSelection(new SelectionEvent("foo", node));
+							solveSelection1(updateCallback, doneCallback, GridViewPanel.SOLVER1_BRUSH);
+							unselectAll();
+							return;
+						}
+					}
+
+				}
+				
+				// if we make it this far start over
+				//trace("new loop", loopcount);
+				looptimer = new Timer(1000, 1);
+				looptimer.addEventListener(TimerEvent.TIMER, solverLoopTimerCallback);
+				looptimer.start();
+			}
+			else
+			{
+				solveSelection1(updateCallback, doneCallback, GridViewPanel.SOLVER1_BRUSH);
+			}
+		}
+		
+
 	
 		public var updateCallback:Function;
 		public var doneCallback:Function;
@@ -1340,7 +1439,7 @@ package scenes.game.display
 		private var m_solverType:int;
 		private var selectedConstraintValue:int;
 		public var startingSelectedNodeCount:int;
-		public function solveSelection(_updateCallback:Function, _doneCallback:Function, brushType:String):void
+		public function solveSelection1(_updateCallback:Function, _doneCallback:Function, brushType:String):void
 		{
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
@@ -1388,7 +1487,7 @@ package scenes.game.display
 			}
 			
 			if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC) {
-				createConstriantsBasedOnVariables();
+				createConstraintsBasedOnVariables();
 			} else {
 				createConstraintsForClauses();
 
@@ -1422,7 +1521,7 @@ package scenes.game.display
 			}
 		}
 
-		private function createConstriantsBasedOnVariables():void
+		private function createConstraintsBasedOnVariables():void
 		{
 			var node:Node, edge:Edge, toNode:Node, fromNode:Node;
 			
@@ -1840,7 +1939,7 @@ package scenes.game.display
 			}
 		}
 		
-		public var count:int = 0;
+		public var solverRunCount:int = 0;
 		public var timer:Timer;
 		
 		public function solverDone(errMsg:String):void
@@ -1861,6 +1960,16 @@ package scenes.game.display
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true, scoreWentDown));
 			m_inSolver = false;
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STOPPED, true));
+			
+			if(runContinualSolver && solverRunCount < 250)
+			{
+				solverRunCount++;
+				//trace("count", count);
+				timer = new Timer(1000, 1);
+				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
+				timer.start();
+			}
+
 		}
 		
 		//draw nodes in a different color to indicate solver is done

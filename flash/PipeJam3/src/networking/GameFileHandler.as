@@ -82,6 +82,31 @@ package networking
 			fileHandler.sendMessage(GET_LEVEL, fileHandler.defaultJSONCallback, null, id);
 		}
 		
+		static public function loadLevelInfoFromID(id:String, callback:Function):void
+		{
+			//look up name in metadata list
+			if(levelInfoVector)
+			{
+				PipeJamGame.levelInfo = findLevelObject(id);
+				PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+				
+			}
+			else
+			{
+				GameFileHandler.m_name = id;
+				GameFileHandler.m_loadCallback = callback;
+				//set a timer, and try again
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
+				timer.start();
+			}
+		}
+		
+		public static function getLevelCallback(e:TimerEvent = null):void
+		{
+			GameFileHandler.loadLevelInfoFromID(GameFileHandler.m_name, GameFileHandler.m_loadCallback);
+		}		
+		
 		static public function loadLevelInfoFromName(name:String, callback:Function):void
 		{
 			//look up name in metadata list
@@ -97,12 +122,13 @@ package networking
 				GameFileHandler.m_loadCallback = callback;
 				//set a timer, and try again
 				var timer:Timer = new Timer(250, 1);
-				timer.addEventListener(TimerEvent.TIMER, getLevelCallback);
+				timer.addEventListener(TimerEvent.TIMER, getLevelFromNameCallback);
 				timer.start();
 			}
 		}
-		
-		public static function getLevelCallback(e:TimerEvent = null):void
+
+				
+		public static function getLevelFromNameCallback(e:TimerEvent = null):void
 		{
 			GameFileHandler.loadLevelInfoFromName(GameFileHandler.m_name, GameFileHandler.m_loadCallback);
 		}
@@ -133,7 +159,7 @@ package networking
 		{
 			for each(var level:Object in levelInfoVector)
 			{
-				if(level.id == id)
+				if(level.levelID == id)
 				{
 					return level;
 				}
@@ -232,6 +258,12 @@ package networking
 				
 				//mark this one played, too
 				levelPlayedDict[levelInfo.levelID] = 1;
+				return levelInfoVector[currentIndex];
+			}
+			else if(PipeJam3.RELEASE_BUILD == false)
+			{
+				//this is for local debugguing, non-release build
+				currentIndex = XMath.randomInt(0, levelInfoVector.length-1);
 				return levelInfoVector[currentIndex];
 			}
 			else
@@ -602,6 +634,7 @@ package networking
 					var solutionInfo:Object = PipeJamGame.levelInfo;
 					solutionInfo.current_score =  String(World.m_world.active_level.currentScore);
 					solutionInfo.target_score =  String(World.m_world.active_level.currentScore);
+					solutionInfo.max_score =  String(World.m_world.active_level.maxScore);
 					solutionInfo.prev_score =  String(World.m_world.active_level.oldScore);
 					solutionInfo.max_score =  String(World.m_world.active_level.maxScore);
 					solutionInfo.revision =  String(int(PipeJamGame.levelInfo.revision) + 1);
@@ -628,7 +661,10 @@ package networking
 					delete solutionInfo["highScores"];
 					data_id = JSON.stringify(solutionInfo);
 					solutionInfo.highScores = savedHighScoreArray;
-					url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
+					if(data.length > 75000) //just a guess as to what doesn't pass well between php and python on the server. 130K doesn't work
+						url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&file="+String(Math.round(Math.random()*10000))+"&data_id='"+data_id+"'";
+					else
+						url = NetworkConnection.productionInterop + "?function=submitLevelPOST2&data_id='"+data_id+"'";
 					break;
 				case REPORT_LEADERBOARD_SCORE:
 					if(PlayerValidation.playerID == "")

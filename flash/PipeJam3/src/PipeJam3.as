@@ -44,7 +44,7 @@ package
 		private var mStarling:Starling;
 		
 		/** At most one of these two should be true. They can both be false. */
-		public static const RELEASE_BUILD:Boolean = true;
+		public static const RELEASE_BUILD:Boolean = false;
 		public static const TUTORIAL_DEMO:Boolean = false;
 		public static const ASSET_SUFFIX:String = ""; // specify "Turk" to change atlases to turk
 		
@@ -68,7 +68,7 @@ package
 		public static const SELECTION_STYLE_CLASSIC:uint                = 0;
 		public static const SELECTION_STYLE_VAR_BY_VAR:uint             = 1;
 		public static const SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR:uint   = 2;
-		public static const SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
+		public static var SELECTION_STYLE:uint = SELECTION_STYLE_VAR_BY_VAR_AND_CNSTR;
 
 		public static var logging:LoggingServerInterface;
 		public static const loggingKey:String = (ASSET_SUFFIX == "Turk") ? LoggingServerInterface.SETUP_KEY_TURK : LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA;
