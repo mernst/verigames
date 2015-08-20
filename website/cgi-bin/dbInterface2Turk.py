@@ -442,7 +442,7 @@ def mTurkTaskComplete(msg):
     except Exception as e:
         return 'mTurkTaskComplete Error: %s' % e
 
-def _mTurkAwardUnrewardedBonuses():
+def _mTurkAwardUnrewardedBonuses(remove_if_unsuccessful=False):
     client = Connection('api.paradox.verigames.org', 27017)
     db = client.game3api
     collection = db.MturkTokensAwarded
@@ -452,7 +452,7 @@ def _mTurkAwardUnrewardedBonuses():
         resp = None
         if entry.get('taskToken') is not None and entry.get('bonus') is not None:
             success, resp = _mTurkSendBonus(turkToken=entry.get('taskToken'),amt=entry.get('bonus'))
-            if success:
+            if success or remove_if_unsuccessful:
                 collection.update({"taskToken":entry.get('taskToken')}, {"$set": {"bonusAwarded":entry.get('bonus')}}, True)
                 resp = 'Updated "bonusAwarded":"%s"' % entry.get('bonus')
         output += '{taskToken: %s code: %s bonus: %s, response: "%s"},' % (entry.get('taskToken'), entry.get('code'), entry.get('bonus'), resp)
@@ -591,7 +591,10 @@ elif sys.argv[1] == "mTurkTaskComplete":
 elif sys.argv[1] == "_getLatestImprovementsByTurkToken":
     print(_getLatestImprovementsByTurkToken(sys.argv[2]))
 elif sys.argv[1] == "_mTurkAwardUnrewardedBonuses":
-    print(_mTurkAwardUnrewardedBonuses())
+    if len(sys.argv) >= 3:
+        print(_mTurkAwardUnrewardedBonuses(True))
+    else:
+        print(_mTurkAwardUnrewardedBonuses())
 ## end mTurk
 elif sys.argv[1] == "getTopSolutions":
     print(getTopSolutions(sys.argv[2], sys.argv[3], 'org'))
