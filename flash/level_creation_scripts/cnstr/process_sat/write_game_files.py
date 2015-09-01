@@ -47,8 +47,9 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
   },
   "groups":%s,
   "variables":{},
+  "cut_edges":%s,
   "constraints":[
-    ''' % (G.graph['id'], use_qid, version, json.dumps(G.graph.get('groups', []))))
+    ''' % (G.graph['id'], current_qid, version, json.dumps(G.graph.get('cut_edges',[]), json.dumps(G.graph.get('groups', []))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')

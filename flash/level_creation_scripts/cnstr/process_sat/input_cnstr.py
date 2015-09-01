@@ -27,11 +27,11 @@ def run(infile, outfile):
                         sub, cns, sup = _util.get_vals(constraint, ['sub', 'constraint', 'sup'])
                         clauses.append(lits + [(sub, False), (sup, True)])
                 elif cns == 'greaterthan':
-					sub, cns, sup = _util.get_vals(constraint, ['sub', 'constraint', 'sup'])
-					clauses.append(lits + [(sub, True), (sup, True)])
+                    sub, cns, sup = _util.get_vals(constraint, ['sub', 'constraint', 'sup'])
+                    clauses.append(lits + [(sub, True), (sup, True)])
                 elif cns == 'lessthan':
-					sub, cns, sup = _util.get_vals(constraint, ['sub', 'constraint', 'sup'])
-					clauses.append(lits + [(sub, False), (sup, False)])
+                    sub, cns, sup = _util.get_vals(constraint, ['sub', 'constraint', 'sup'])
+                    clauses.append(lits + [(sub, False), (sup, False)])
                 elif cns == 'equality':
                     lhs, cns, rhs = _util.get_vals(constraint, ['lhs', 'constraint', 'rhs'])
                     clauses.append(lits + [(rhs, False), (lhs, True)])
