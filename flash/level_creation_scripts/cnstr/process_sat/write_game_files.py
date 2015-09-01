@@ -22,7 +22,18 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
 
-        outfilename = game_files_directory + ('/%s.json' % G.graph['id'])
+        solved_if_wide = G.graph.get('solved_if_wide', False)
+        solved_if_narrow = G.graph.get('solved_if_narrow', False)
+
+        if solved_if_narrow:
+          outfilename = game_files_directory + ('/SOLVED_NARROW_%s.json' % G.graph['id'])
+          use_qid = -1
+        elif solved_if_wide:
+          outfilename = game_files_directory + ('/SOLVED_WIDE_%s.json' % G.graph['id'])
+          use_qid = -1
+        else:
+          outfilename = game_files_directory + ('/%s.json' % G.graph['id'])
+          use_qid = current_qid
         out = open(outfilename, 'w')
         out.write('''
 {
@@ -37,7 +48,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
   "groups":%s,
   "variables":{},
   "constraints":[
-    ''' % (G.graph['id'], current_qid, version, json.dumps(G.graph.get('groups', []))))
+    ''' % (G.graph['id'], use_qid, version, json.dumps(G.graph.get('groups', []))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')
@@ -46,6 +57,9 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
             comma = ',\n    '
         out.write(']\n}')
         out.close()
+
+        if solved_if_narrow or solved_if_wide:
+          continue
 
         asg_outfilename = game_files_directory + ('/%sAssignments.json' % G.graph['id'])
         out = open(asg_outfilename, 'w')

@@ -108,6 +108,37 @@ digraph G {
         
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
+
+        # Check for all wide/narrow solutions, skip layout if so
+        pos_constr = {}
+        neg_constr = {}
+        for ee in G.edges():
+            if ee[0].startswith('var'):
+                # True if narrow
+                neg_constr[ee[1]] = True
+            elif ee[1].startswith('var'):
+                # True if wide
+                pos_constr[ee[0]] = True
+        wide_is_solution = True
+        narrow_is_solution = True
+        # If constraints appear in pos but not neg, then can only be wide (all narrow would fail)
+        for cc in pos_constr:
+            if neg_constr.get(cc) is None:
+                narrow_is_solution = False
+        # If constraints appear in neg but not pos, then can only be narrow (all wide would fail)
+        for cc in neg_constr:
+            if pos_constr.get(cc) is None:
+                wide_is_solution = False
+
+        if wide_is_solution:
+            G.graph['solved_if_wide'] = True
+            print '%s is solvable by setting all vars to WIDE, skipping layout...' % G.graph['id']
+            continue
+        if narrow_is_solution:
+            G.graph['solved_if_narrow'] = True
+            print '%s is solvable by setting all vars to NARROW, skipping layout...' % G.graph['id']
+            continue
+
         # Individual files per graph
         if out_is_folder:
             outfilename = outfile + ('/%s.dot' % G.graph['id'])
