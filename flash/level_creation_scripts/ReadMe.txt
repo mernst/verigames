@@ -15,49 +15,68 @@ Create a level from a wcnf, cnf, or json file:
 
 Add a level to the database:
 
-	Think about which files to delete. Game info is retrieved from the ActiveLevels table, and the PlayerActivity table. The latter is used to track progress, so I wouldn't remove it,
-	but the former is used to choose the next level out of, and so should be removed for all levels not wanted any more. You can also remove the GameSolvedLevels table info, but 
-	I'd save that as it might be wanted to track submissions for prior levels.
-	
-	Create a description file for the levels, you can do this by hand, or use createDescriptionFile.py
-	
-	With the description file, run addLevelToDB.py
+	There's a python script at  level_creation_scripts/AddLevelToDB.py that has pymongo, gridfs and bson as dependencies. You can install them yourself, use the versions on the staging server, or find my packages here:
 
-zipall.py
+	PipeJam\website\cgi-bin\thirdparty\
 
-Zips a directory of files into individual zip files. Unix only. Usually I upload the json files to a server (upload the zipped collection is far faster, then unzip them) and then run this, as I don't have a Windows equivalent.
+	The python script should do most things, but for me it doesn't successfully remove files from the db, so I have a java jar to do that. (In a newer version of pymongo, collection.remove has been depreciated, and there's a delete_many call. It might work better.)
+
+	The steps are:
+
+	1) Create and zip game files.
+		
+		To create them, see above.
+		To zip them, see below section: "Zip game files, individually".
+
+	2) Remove old files
+		python db_game_file_handler.py removeCurrentFiles api.paradox.verigames.org
+
+		you can of course change the .org to .com for production. As I mentioned, this doesn't work for me, probably a permissions issue.
+
+		There is a jar file at level_creation_scripts/RemoveActiveLevels.jar.txt. Remove the .txt extension, and then run it thusly:
+
+		java -jar RemoveActiveLevels.jar api.paradox.verigames.org true
+
+		If you want just to list files, leave off the last parameter. Again, you can use .com.
+
+		If you get desperate, my long-in-the-tooth Swiss-army knife Java files are at PipeJam\website\html\java\MongoAndRAClient. 
+		The code is ever in flux, but mostly you want to look at the main method in MongoTestBed.java. You should be able to figure it out.
+
+	3) Prepare a description file
+
+		python db_game_file_handler.py createDescriptionFile input_dir, outputfile version property type
+
+		input dir : the game file dir
+		outputfile : the name of the xml output file
+		version : 14, 15, 16 etc...
+		property : ostrusted, interned, etc
+		type: 'game' or 'turk'
+
+		These are identical for both production and turk, except for the first line which contains the type, so I often just change it by hand.
+
+	4) Upload files
+
+		python db_game_file_handler.py addFilesToDB api.paradox.verigames.org zipped_game_files_dir description_file_path
+
+Download and combine played assignment files:
+
+	
+Zip game files, individually:
+	
+	zipall.py
+
+		Zips a directory of files into individual zip files. Unix only. Usually I upload the json files to a server 
+		(upload the zipped collection is far faster, then unzip them) and then run the script, zip the output together, 
+		and then copy them back down, as I don't have a Windows equivalent.
+
+		python zipall.py input_directory
+
+		The output directory is the same as the input_directory.
 	
 Autosolve levels:
 
-	Use autosolve_wcnfs.py
+	Check the readme in the solve_scripts directory.
 	
-	If you have json files, use json_to_wcnf.py to convert them.
-	
-makeConstraints.py
-
-Makes a global constraint file from a wcnf or cnf file.	
-
-
-Obsolete files in this directory
-
-classic2grid.py
-layoutgrid.ph
-classic2gridall.py
-layoutgridall.py
-
-These files will create and layout a level. classic2grid calls layoutgrid. Run classic2grid/layoutgrid on single levels, classic2gridall/layoutgridall on a directory. These last two are unix only.
-
-obfuscateNames.py
-
-Removes all names from a world, replacing them with consecutive integers. Creates a mapping xml file defining the relationships.
-
-PipeJamRenamer.py
-
-Uses the Pipe Jam classic renaming scheme on a directory of levels.
-
-separateLevelsInWorld.py
-
-Separates a world into disjoint worlds. Copies the varID-sets into each file.
 
 
 

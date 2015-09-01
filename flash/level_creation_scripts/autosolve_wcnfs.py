@@ -8,10 +8,9 @@ build:
 	gcc maxsatz.c -o maxsatz
 '''
 import os, json, sys
-SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
+import time
 
 all_assignments = {}
-files = os.listdir(sys.argv[1])
 n_autosolve_levels = 0
 n_total_levels = 0
 n_autosolve_nodes = 0
@@ -19,7 +18,9 @@ n_total_nodes = 0
 n_autosolve_constraints = 0
 n_total_constraints = 0
 current = 0
-for fname in files:
+
+def handleFile(fname):
+	global n_total_levels, n_autosolve_levels, current, n_autosolve_nodes, n_autosolve_constraints, n_total_constraints, n_total_nodes
 	is_sat = False
 	is_weighted = False
 	if fname[-5:] == '.json' or fname[-5:] == '.wcnf':
@@ -43,7 +44,7 @@ for fname in files:
 			print fprefix
 		# Get mapping of sat var ids (1->n) to original constraint vars (var:12452, etc) from comment in wcnf
 		keys = []
-		with open(sys.argv[1] + '\%s.%s' % (fprefix, ext), 'r') as sat_in:
+		with open(sys.argv[1] + '/%s.%s' % (fprefix, ext), 'r') as sat_in:
 			if current % 100 == 0:
 				print sys.argv[1] + '\%s.%s' % (fprefix, ext)
 			current = current + 1
@@ -63,8 +64,10 @@ for fname in files:
 					nodes_constraints = input_line[7:].split(' ')
 					n_total_nodes += int(nodes_constraints[0])
 					n_total_constraints += int(nodes_constraints[1])
-		with os.popen('%s/maxsatz.exe %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
+			path = '%s/maxsatz/maxsatz %s/%s.%s'
+		with os.popen(path % (SCRIPT_PATH, sys.argv[1], fprefix, ext)) as sat_cmd:
 			lines = sat_cmd.readlines()
+			print '%s/maxsatz/maxsatz %s/%s.%s' % (SCRIPT_PATH, sys.argv[1], fprefix, ext)
 			max_score = None
 			penalty = None
 			assignments = {}
@@ -96,8 +99,19 @@ for fname in files:
 				cnf_out.write(line)
 				if "Optimal" in line and not "= 0" in line:
 					print "Unoptimal", fprefix
-with open('AllAssignments.json', 'w') as asg_out:
-	asg_out.write(json.dumps(all_assignments))
-print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
-print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
-print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+					
+
+if __name__ == "__main__":					
+	SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
+	files = os.listdir(sys.argv[1])
+	for fname in files:
+		print (time.strftime("%H:%M:%S"))
+		handleFile(fname)
+		print (time.strftime("%H:%M:%S"))
+		
+	with open('AllAssignments.json', 'w') as asg_out:
+		asg_out.write(json.dumps(all_assignments))
+	print 'Levels: %s autosolved / %s total = %s' % (n_autosolve_levels, n_total_levels, (n_autosolve_levels / n_total_levels))
+	print 'Nodes: %s autosolved / %s total = %s' % (n_autosolve_nodes, n_total_nodes, (n_autosolve_nodes / n_total_nodes))
+	print 'constraints: %s autosolved / %s total = %s' % (n_autosolve_constraints, n_total_constraints, (n_autosolve_constraints / n_total_constraints))
+
