@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project version="2">
-  <!-- Output SWF options -->
+  <!-- Output SWF options   -->
   <output>
     <movie outputType="Application" />
     <movie input="" />
