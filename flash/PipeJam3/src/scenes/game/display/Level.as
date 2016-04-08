@@ -1383,7 +1383,7 @@ package scenes.game.display
 
 		public var loopcount:int = 0;
 		public var looptimer:Timer;
-		public var runContinualSolver:Boolean = true;
+		public var runContinualSolver:Boolean = false;
 		//this is a test robot. It will find a conflict, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
