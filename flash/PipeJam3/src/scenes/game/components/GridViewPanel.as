@@ -275,7 +275,9 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			displaySkipButton();
+			if (TutorialController.tutorialsDone) {
+				displaySkipButton();
+			}
 			
 			resetKeysDown();
 
