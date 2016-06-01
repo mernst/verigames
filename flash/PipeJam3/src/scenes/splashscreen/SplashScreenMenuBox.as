@@ -48,6 +48,7 @@ package scenes.splashscreen
 		protected var currentDisplayString:String = "Begin"
 		public var inputInfo:flash.text.TextField;
 		private var m_infoTextfield:TextFieldWrapper;
+		private var m_scoreTextfield:TextFieldWrapper;
 
 
 		public function SplashScreenMenuBox(_parent:SplashScreenScene)
@@ -84,10 +85,12 @@ package scenes.splashscreen
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
 			
-			m_infoTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
+			
+			
+			m_infoTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_DEFAULT, 250, 2.0 * 20, 15, 0x000000);
 			m_infoTextfield.touchable = false;
-			m_infoTextfield.x = play_button.x;
-			m_infoTextfield.y = play_button.y + 20;
+			m_infoTextfield.x = m_parent.width/2 - 125;
+			m_infoTextfield.y = play_button.y - 50;
 			TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 			m_mainMenu.addChild(m_infoTextfield);
 			
@@ -157,14 +160,14 @@ package scenes.splashscreen
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "The first 8 levels teaches you how to play");
+						TextFactory.getInstance().updateText(m_infoTextfield, "The first 8 levels teach you how to play. You must play all the levels for credit");
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 					}
 					else{
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
+						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You have an option to skip a level");
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 					}	
 				}

@@ -38,7 +38,7 @@ package scenes.splashscreen
 			var logo:Image = new Image(logoTexture);
 			logo.scaleX = logo.scaleY = .6;
 			logo.x = (background.width - logo.width)/2 + 10; //looks better slightly off-center
-			logo.y = 150;
+			logo.y = 50;
 			//logo.scaleX = stage.stageWidth/background.width;
 			//logo.scaleY = stage.stageHeight/background.height;
 			//logo.blendMode = BlendMode.NONE;
