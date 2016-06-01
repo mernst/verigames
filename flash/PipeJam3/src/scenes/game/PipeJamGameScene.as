@@ -61,7 +61,9 @@ package scenes.game
 			super.addedToStage(event);
 			m_layoutLoaded = m_worldLoaded = m_assignmentsLoaded = false;
 			startLoadTime = new Date().getTime();
+			trace("BEFORE LOADING THE GAME FILES");
 			GameFileHandler.loadGameFiles(onWorldLoaded, onLayoutLoaded, onConstraintsLoaded);
+			trace("AFTER LOADING THE GAME FILES");
 		}
 		
 		protected  override function removedFromStage(event:starling.events.Event):void
@@ -181,12 +183,19 @@ package scenes.game
 		
 		public function checkTasksComplete():void
 		{
+			trace("INSIDE checkTasksComplete()");
 			if(m_layoutLoaded && m_worldLoaded && m_assignmentsLoaded)
 			{
 				if(m_worldObj is String)
-					parseCNF();
+					{
+						trace("PARSING CNF");
+						parseCNF();
+					}
 				else
-					parseJson();
+					{
+						trace("PARSING JSON");
+						parseJson();
+					}
 			}
 		}
 		
@@ -204,7 +213,7 @@ package scenes.game
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
 			}
 			addChild(active_world);
-			trace("Load Time", new Date().getTime() - startLoadTime);
+			trace("Load Time::::::", new Date().getTime() - startLoadTime);
 		}
 	}
 }

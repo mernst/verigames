@@ -88,6 +88,7 @@ package scenes.game.components
 		private var m_currentMode:int;
 		private var endingMoveMode:Boolean;
 		private var continueButton:NineSliceButton;
+		private var skipButton:NineSliceButton;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
 		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
@@ -273,6 +274,8 @@ package scenes.game.components
 
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
+			
+			displaySkipButton();
 			
 			resetKeysDown();
 
@@ -1233,10 +1236,12 @@ package scenes.game.components
 		{
 			// would be good to check this is already the case and clean up if not
 			setMode(MODE_HOVER);
-
+			
 			m_continueButtonForced = false;
 			removeFanfare();
 			hideContinueButton();
+			trace("REACHES HERE &&&&&&&&&&&&&&&&&&&&&&&&&&");
+
 			if (m_gridContainer) m_gridContainer.removeFromParent();
 			if (m_zoomPanTimer) m_zoomPanTimer.stop();
 			if (m_currentLevel != level)
@@ -1389,6 +1394,16 @@ package scenes.game.components
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
+		
+		public function displaySkipButton():void {
+			
+			skipButton = ButtonFactory.getInstance().createDefaultButton("Skip Level", 128, 32);
+			skipButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
+			skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
+			skipButton.y = HEIGHT - skipButton.height - 2;
+			m_buttonLayer.addChild(skipButton);
+		}
+
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
 		{
 			if (PipeJam3.ASSET_SUFFIX == "Turk") showFanfare = false;
@@ -1396,12 +1411,15 @@ package scenes.game.components
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-				continueButton.x = WIDTH - continueButton.width - 50 - Constants.RightPanelWidth;
+				continueButton.x = WIDTH - continueButton.width - Constants.RightPanelWidth + 10;
 				continueButton.y = HEIGHT - continueButton.height - 2;
 			}
 			
-			if(PipeJamGameScene.inTutorial)
-				m_buttonLayer.addChild(continueButton);
+			//if(PipeJamGameScene.inTutorial)
+			m_buttonLayer.addChild(continueButton);
+			
+			
+			trace("This level complete ########################################");
 			
 			// Fanfare
 			removeFanfare();
@@ -1491,6 +1509,14 @@ package scenes.game.components
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
 			buttonHit = true;
+			trace("Next level button is triggered");
+			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+		}
+		
+		private function onSkipLevelButtonTriggered(evt:starling.events.Event):void
+		{
+			
+			trace("Next level button is triggered");
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		

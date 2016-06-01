@@ -3,6 +3,7 @@ package networking
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
 	import starling.display.Sprite;
+	import server.LoggingServerInterface;
 	
 	public class TutorialController extends Sprite
 	{			
@@ -25,6 +26,8 @@ package networking
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
 		
 		public static var TUTORIALS_COMPLETED_STRING:String = "tutorials_completed";
+		
+		public static var tutorialsDone:Boolean = false;
 
 		//used as a ordered array of order values containing all tutorial orders
 		protected var tutorialOrderedList:Vector.<Number>;
@@ -119,6 +122,9 @@ package networking
 			currentLevelQID = parseInt(PipeJamGame.levelInfo.tutorialLevelID);
 			
 			var currentLevel:Object = qidToTutorialDictionary[currentLevelQID];
+			trace("THIS IS THE CURRENT LEVEL---------------------------------------", LoggingServerInterface.obj2str(currentLevel));
+			
+			
 			if (!currentLevel) return 0;
 			var currentPosition:int = currentLevel["position"];
 			var nextPosition:int = currentPosition + 1;
@@ -187,7 +193,6 @@ package networking
 			{
 				var level:Object = orderToTutorialDictionary[position];
 				var qid:String = level["qid"];
-				
 				if(isTutorialLevelCompleted(qid) == false)
 					return false;				
 			}
@@ -230,6 +235,8 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 			}
+			
+
 
 			NetworkConnection.sendMessage(callback, null, url, method, "");
 		}

@@ -122,8 +122,11 @@ package
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
+			trace("ExternalInterface.available = false");
 			if (ExternalInterface.available)
 			{
+				trace("ExternalInterface.available = true");
+				
 				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
 				
 				var url:String = ExternalInterface.call("window.location.href.toString");
@@ -193,14 +196,25 @@ package
 			// use file if set in url, else create and show menu screen
 			if(m_fileName || m_levelID || PlayerValidation.AuthorizationAttempted)
 			{ 
+				trace("Any of the abover 3 is true");
 				if(PipeJamGame.levelInfo) //local file
-					showScene("PipeJamGame");
+					{	trace("First if");
+						showScene("PipeJamGame");}
 				else if(m_levelID)
-					loadLevelFromID(m_levelID);
+					{
+						trace("Second if");
+						loadLevelFromID(m_levelID);
+					}
 				else if(m_fileName)
-					loadLevelFromName(m_fileName);
+					{
+						trace("Third if");
+						loadLevelFromName(m_fileName);
+					}
 				else
-					onGetRandomLevel();
+					{
+						trace("Else");
+						onGetRandomLevel();
+					}
 					
 			}
 			else if (PipeJam3.ASSET_SUFFIX == "Turk")

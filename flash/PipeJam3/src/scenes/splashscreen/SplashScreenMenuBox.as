@@ -7,6 +7,9 @@ package scenes.splashscreen
 	import flash.net.navigateToURL;
 	import flash.text.TextField;
 	import flash.utils.Timer;
+	
+		import assets.AssetInterface;
+	import assets.AssetsFont;
 		
 	import display.NineSliceButton;
 	
@@ -20,6 +23,7 @@ package scenes.splashscreen
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
@@ -41,8 +45,10 @@ package scenes.splashscreen
 
 		protected var m_parent:SplashScreenScene;
 				
-		
+		protected var currentDisplayString:String = "Begin"
 		public var inputInfo:flash.text.TextField;
+		private var m_infoTextfield:TextFieldWrapper;
+
 
 		public function SplashScreenMenuBox(_parent:SplashScreenScene)
 		{
@@ -50,7 +56,8 @@ package scenes.splashscreen
 			
 			m_parent = _parent;
 			buildMainMenu();
-			
+			trace("TutorialsDone", TutorialController.tutorialsDone);
+
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
 		}
@@ -73,10 +80,21 @@ package scenes.splashscreen
 			var BUTTON_CENTER_X:Number = m_parent.width/2; // center point to put Play and Log In buttons
 			var TOP_BUTTON_Y:int = 205;
 			
-			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
+			play_button = ButtonFactory.getInstance().createDefaultButton(stringToDisplay(), 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = TOP_BUTTON_Y + 15; //if only two buttons center them
 			
+			m_infoTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
+			m_infoTextfield.touchable = false;
+			m_infoTextfield.x = play_button.x;
+			m_infoTextfield.y = play_button.y + 20;
+			TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+			m_mainMenu.addChild(m_infoTextfield);
+			
+			trace("isTutorialDone?", isTutorialDone());
+			
+			// Not happening//
+			/*
 			if(!isTutorialDone())
 			{
 				continue_tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 88, 32);
@@ -85,6 +103,9 @@ package scenes.splashscreen
 				continue_tutorial_button.y = play_button.y + play_button.height + 5;
 			}
 			
+			
+			trace("RELEASE_BUILD=", PipeJam3.RELEASE_BUILD);
+			trace("PipeJam3.TUTORIAL_DEMO=",PipeJam3.TUTORIAL_DEMO);
 			if(PipeJam3.RELEASE_BUILD)
 			{			
 				m_mainMenu.addChild(play_button);
@@ -102,9 +123,11 @@ package scenes.splashscreen
 				if (!DEMO_ONLY) m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 			}
-			
+			// Not happening//
+			*/
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
 			{
+				/*
 				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 56, 22);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 				tutorial_button.x = Constants.GameWidth - tutorial_button.width - 4;
@@ -123,22 +146,73 @@ package scenes.splashscreen
 					demo_button.y = tutorial_button.y + 30;
 				}
 				m_mainMenu.addChild(demo_button);
+				*/
+				
+				if (World.gamePlayDone){
+					TextFactory.getInstance().updateText(m_infoTextfield, "Game Over! Thank you!");
+					TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+				}
+				else{
+					if (currentDisplayString == "Begin"){
+						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
+						m_mainMenu.addChild(play_button);
+						
+						TextFactory.getInstance().updateText(m_infoTextfield, "The first 8 levels teaches you how to play");
+						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+					}
+					else{
+						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
+						m_mainMenu.addChild(play_button);
+						
+						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
+						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+					}	
+				}
+				
+				
 			}
 		}
 		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
+			trace("Function triggered on play button press");
 			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
 			{
-				if(PipeJam3.PRODUCTION_BUILD)
-					navigateToURL(new URLRequest("http://oauth.verigames.com/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.com/game/Paradox.html&client_id=" + PlayerValidation.production_client_id), "");
+				trace("Inside first if");
+				if (PipeJam3.PRODUCTION_BUILD)
+					
+					{
+						trace("Inside second if");
+						navigateToURL(new URLRequest("http://oauth.verigames.com/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.com/game/Paradox.html&client_id=" + PlayerValidation.production_client_id), "");
+					}
 				else
-					navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/Paradox.html&client_id=" + PlayerValidation.staging_client_id), "");
+					{
+						trace("Inside first else");
+						navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/Paradox.html&client_id=" + PlayerValidation.staging_client_id), "");
+					}
 			}
 			else
-				getNextRandomLevel(null);
+				{
+					trace("Inside second else");
+					//getNextRandomLevel(null);
+					
+					PipeJamGameScene.inTutorial = false;
+					PipeJamGameScene.inDemo = false;
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+
+				}
 		}
 		
+		protected function stringToDisplay():String
+		{
+			if (TutorialController.tutorialsDone) {
+				currentDisplayString = "Continue";
+				return "Continue";
+			}
+			else return "Begin"
+			
+			
+		}
 		protected function onContinueTutorialTriggered(e:starling.events.Event):void
 		{
 			loadTutorial();
@@ -164,15 +238,18 @@ package scenes.splashscreen
 		protected function getNextRandomLevel(evt:TimerEvent):void
 		{
 			//check to see if we have the level list yet, if not, stall
+			trace("Inside random level function");
 			if(GameFileHandler.levelInfoVector == null)
 			{
+				trace("GameFileHandler.levelInfoVector is null");
 				var timer:Timer = new Timer(200, 1);
 				timer.addEventListener(TimerEvent.TIMER, getNextRandomLevel);
 				timer.start();
 				return;
 			}
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			//dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
 		}
 		
 		protected function isTutorialDone():Boolean

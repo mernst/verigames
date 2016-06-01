@@ -301,13 +301,19 @@ package networking
 			//do this so I can debug the object...
 			var levelInformation:Object = PipeJamGame.levelInfo;
 			
-			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Constants.START_BUSY_ANIMATION,true));
+			trace("Before start of busy animation");
+			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Constants.START_BUSY_ANIMATION, true));
+			trace("After start of busy animation");
 			
 			var m_id:int = 100000;
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.hasOwnProperty("id") && PipeJamGame.levelInfo.id.length < 5)
-				m_id = parseInt(PipeJamGame.levelInfo.id);
+				{
+					trace("GameFileHandler : First if");
+					m_id = parseInt(PipeJamGame.levelInfo.id);
+				}
 			if(m_id < 1000) // in the tutorial if a low level id
 			{
+				trace("GameFileHandler : Second if");
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
 				//				fileName = "tutorial";
@@ -315,21 +321,47 @@ package networking
 			if (PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
 			{
 				//load the zip file from it's location
+				trace("GameFileHandler : Third if");
 				loadType = USE_URL;
 				gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
 				gameFileHandler.loadFile(USE_LOCAL, PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP, gameFileHandler.zipLoaded);
 			}
 			else if(PipeJamGameScene.inTutorial)
 			{
-				
+				trace("GameFileHandler : Fourth if (else if)");
 				layoutFileLoadedCallback(TutorialController.tutorialLayoutObj);
 				assignmentsFileLoadedCallback(TutorialController.tutorialAssignmentsObj);
 				worldFileLoadedCallback(TutorialController.tutorialObj);
 			}
 			else
 			{
+				trace("GameFileHandler : Fifth if (else)");
 				var loadType:int = USE_LOCAL;
+				//-------------------------------------------------------------------------
+				/*
+				 * Create a separate class with functions that loads the main gameplay levels*/
+
+				[Embed(source = "../../lib/levels/gameplay/gameplay.json", mimeType = "application/octet-stream")]
+				const gameplayFileClass:Class;
+				const gameplayJson:String = new gameplayFileClass();
+				const gameplayObj:Object = JSON.parse(gameplayJson);
 				
+				[Embed(source = "../../lib/levels/gameplay/gameplayLayout.json", mimeType = "application/octet-stream")]
+				const gameplayLayoutFileClass:Class;
+				const gameplayLayoutJson:String = new gameplayLayoutFileClass();
+				const gameplayLayoutObj:Object = JSON.parse(gameplayLayoutJson);
+				
+				[Embed(source = "../../lib/levels/gameplay/gameplayAssignments.json", mimeType = "application/octet-stream")]
+				const gameplayAssignmentsFileClass:Class;
+				const gameplayAssignmentsJson:String = new gameplayAssignmentsFileClass();
+				const gameplayAssignmentsObj:Object = JSON.parse(gameplayAssignmentsJson);
+				
+				layoutFileLoadedCallback(gameplayLayoutObj);
+				assignmentsFileLoadedCallback(gameplayAssignmentsObj);
+				worldFileLoadedCallback(gameplayObj);
+				
+				 
+				//-------------------------------------------------------------------------
 				var fileName:String;
 				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.baseFileName)
 					fileName = PipeJamGame.levelInfo.baseFileName;
@@ -339,17 +371,23 @@ package networking
 				
 				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.assignmentsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
+					trace("GameFileHandler : Fifth if ---> first if");
 					loadType = USE_DATABASE;
 					//is this an all in one file?
 					var version:int = 0;
 					if(PipeJamGame.levelInfo.version)
-						version = PipeJamGame.levelInfo.version;
+						{
+							trace("GameFileHandler : Fifth if ---> first if ---> first if");
+							version = PipeJamGame.levelInfo.version;
+						}
 					if(version == PipeJamGame.ALL_IN_ONE)
 					{
+						trace("GameFileHandler : Fifth if ---> first if ---> second if");
 						loadFile(worldFileLoadedCallback, loadType, getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.assignmentsID+"\"");
 					}
 					else
 					{
+						trace("GameFileHandler : Fifth if ---> first if ---> third if");
 						var levelInfo:Object = PipeJamGame.levelInfo;
 						// TODO: probably rename from /xml and /constraints to /level and /assignments
 						trace(getFileURL +"&data_id=\"" +PipeJamGame.levelInfo.levelID+"\"");
@@ -360,8 +398,10 @@ package networking
 				}
 				else if(fileName && fileName.length > 0)
 				{
+					trace("GameFileHandler : Fifth if ---> second if (else if)");
 					if(fileName.indexOf("cnf") == -1)
 					{
+						trace("GameFileHandler : Fifth if ---> second if (else if) ---> first if");
 						//check for which form we are loading, try loading one, and if it works, continue...
 						loadFile(worldFileLoadedCallback, loadType, fileName+".zip");
 						loadFile(layoutFileLoadedCallback, loadType, fileName+"Layout.zip");
@@ -369,6 +409,7 @@ package networking
 					}
 					else
 					{
+						trace("GameFileHandler : Fifth if ---> second if (else if) ---> else");
 						loadFile(worldFileLoadedCallback, loadType, fileName+".zip");
 						var index:int = fileName.lastIndexOf('.');
 						var fileNameRoot:String = fileName.substring(0, index);

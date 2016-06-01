@@ -66,7 +66,7 @@ package
 		protected function prepareAssets():void
 		{
 			assets.AssetInterface.prepareSounds();
-		   assets.AssetInterface.loadBitmapFont("Game","DesyrelTexture", "DesyrelXml");	
+		    assets.AssetInterface.loadBitmapFont("Game","DesyrelTexture", "DesyrelXml");	
 		   
 		   //load images if we haven't
 		   if(loadingAnimationImages == null)
@@ -96,10 +96,16 @@ package
 			var callback:Function =
 				function():void
 				{
+					trace("mCurrentScene is false");
 					if (mCurrentScene) {
+						trace("mCurrentScene is true");
+						trace("THIS IS THE CURRENT SCENE",mCurrentScene);
 						closeCurrentScene();
 					}
+					trace("event.scene is false");
 					if (event.scene) {
+						trace("event.scene is true");
+						trace("THIS IS THE EVENT.SCENE",event.scene);
 						showScene(event.scene);
 					}
 				};
@@ -112,6 +118,7 @@ package
 		}
 		
 		private var m_fadeCallback:Function;
+		
 		public function fadeOut(callback:Function):void
 		{
 			if (m_fadeCallback != null) {
@@ -153,15 +160,20 @@ package
 			clearHTMLScores();
             
 			mCurrentScene = sceneDictionary[name];
+			
 			if(mCurrentScene == null)
 			{
+				trace("NAME",name);
+				trace("scenesToCreate[name]---",scenesToCreate[name]);
             	var sceneClass:Class = scenesToCreate[name];
             	mCurrentScene = Scene.getScene(sceneClass, this);
+				trace("CURRENT SCENE INSIDE SHOWSCENE",mCurrentScene);
 				sceneDictionary[name] = mCurrentScene;
 				mCurrentScene.setPosition(0,0,480,320);
 			}
 			
 			addChildAt(mCurrentScene, 0);
+			trace("After adding scene as child");
         }
 		
 		//use for global wait states. BaseComponent has one you can use with local parents.

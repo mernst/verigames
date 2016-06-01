@@ -7,6 +7,15 @@ package server
 	import cgs.server.logging.GameServerData;
 	import cgs.server.logging.actions.ClientAction;
 	
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
+	import flash.system.Security;
+	import flash.external.ExternalInterface;
+	
+	
 	import flash.display.Stage;
 	
 	import system.VerigameServerConstants;
@@ -23,7 +32,7 @@ package server
 		public var uid:String;
 		public var prevUid:String;
 		public var serverInitialized:Boolean = false;
-		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
+		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER;
 		public var saveCacheToServer:Boolean = false;
 		public var provideIp:Boolean = true;
 		public var stage:Stage;
@@ -136,15 +145,42 @@ package server
 			}
 			clientAction.setDetail(actionDetails);
 			trace("logQuestAction actionId:" + actionId + " details:" + obj2str(actionDetails) + " levelTimeMs:" + levelTimeMs);
+			
+			
+			//-----------------------------------------------------------------------------------------
+			
+			//----------------LOGGING 
+			/*
+			Security.allowDomain("*");
+			var url:String = "http://crudapi-kdin.rhcloud.com/api/objects/";
+
+			var request:URLRequest = new URLRequest(url);
+			request.data = obj2str(actionDetails);
+			request.method = URLRequestMethod.POST;
+			var urlLoader:URLLoader = new URLLoader();
+			urlLoader = new URLLoader();
+			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+
+			
+			try {
+				urlLoader.load(request);
+			} catch (e:Error) {
+				trace(e);
+			}
+			*/	
+			
+			//-----------------------------------------------------------------------------------------
+
+			
 			m_cgsServer.logQuestAction(clientAction);
 		}
 		
-		private static function obj2str(obj:Object):String
+		public static function obj2str(obj:Object):String
 		{
-			var str:String = "{\n"
+			var str:String = "{"
 			for (var key:String in obj)
 			{
-				str = str + key + ":" + obj[key] + "\n";
+				str = str + key + ":" + obj[key] + ",";
 			}
 			str = str + "}";
 			return str;

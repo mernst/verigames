@@ -26,7 +26,7 @@ package scenes.splashscreen
 		protected override function addedToStage(event:starling.events.Event):void
 		{
 			super.addedToStage(event);
-			
+			trace("SplashScreenScene: addedToStage");
 			background = new Image(AssetInterface.getTexture("Game", "ParadoxStartScreenImageClass"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;

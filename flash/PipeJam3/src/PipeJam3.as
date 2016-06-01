@@ -1,6 +1,7 @@
 package  
 {
 	import com.spikything.utils.MouseWheelTrap;
+	import flash.events.MouseEvent;
 	import server.MTurkAPI;
 	
 	import flash.display.Sprite;
@@ -27,6 +28,8 @@ package
 	import networking.GameFileHandler;
 	import networking.HTTPCookies;
 	import networking.NetworkConnection;
+
+
 	
 	import server.LoggingServerInterface;
 	import server.ReplayController;
@@ -34,6 +37,8 @@ package
 	import starling.core.Starling;
 	
 	import system.VerigameServerConstants;
+	
+	
 
 	[SWF(width = "960", height = "640", frameRate = "30", backgroundColor = "#ffffff")]
 	
@@ -82,7 +87,8 @@ package
 		public function PipeJam3()
 		{
 			pipeJam3 = this;
-			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+		
+			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);			
 			
 			if (REPLAY_DQID || PipeJam3.LOGGING_ON) 
 			{
@@ -94,8 +100,10 @@ package
 		}
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
+			trace("In stage function");
 			if(hasBeenAddedToStage == false)
 			{
+				trace("Inside the predicate");
 				removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 
 				initialize();
@@ -120,10 +128,13 @@ package
 			
 			//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
 			mStarling = new Starling(PipeJamGame, stage);
+			trace("Initialized Starling in initialize() function");
 			//mostly just an annoyance in desktop mode, so turn off...
 			mStarling.simulateMultitouch = false;
 			mStarling.enableErrorChecking = false;
+			trace("Before starling.start()");
 			mStarling.start();
+			trace("After starling.start()");
 			
 			if (REPLAY_DQID) {
 				m_replayText.text = "Loading replay...";
@@ -138,7 +149,10 @@ package
 			
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
+			
+			trace("Before checking for a predicate to load a level");
 			if (ExternalInterface.available) {
+				trace("Inside the predicate: So ExternalInterface.available = true")
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
 			
@@ -183,6 +197,7 @@ package
 			GameFileHandler.retrieveLevelMetadata();
 			
 			Starling.current.nativeStage.addEventListener(flash.events.Event.FULLSCREEN, changeFullScreen);
+			
 			addEventListener(NavigationEvent.LOAD_LEVEL, onLoadLevel);
 		}
 				

@@ -239,7 +239,7 @@ package scenes.game.components
 			}
 			else
 			{
-				addChild(m_menuButton);
+				//addChild(m_menuButton);
 			}
 			addChild(m_zoomInButton);
 			addChild(m_zoomOutButton);
@@ -406,6 +406,7 @@ package scenes.game.components
 			
 			var currentScore:String = score.toFixed(2) + '%';
 			trace("conflict count", maxConflicts, currentConflicts, currentScore);
+			trace("TRACE OF CONFLICT COUNT ---");
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore);
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
@@ -424,6 +425,7 @@ package scenes.game.components
 		public function targetPercent(level:Level):Number
 		{
 			var maxConflicts:int = level.maxScore;
+			level.setTargetScore(maxConflicts * 0.99);
 			var targetScore:int = level.getTargetScore();
 			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
 			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;

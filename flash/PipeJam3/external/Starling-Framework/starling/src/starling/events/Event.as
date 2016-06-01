@@ -86,7 +86,7 @@ package starling.events
         private var mData:Object;
         
         /** Creates an event object that can be passed to listeners. */
-        public function Event(type:String, bubbles:Boolean=false, data:Object=null)
+        public function Event (type:String, bubbles:Boolean=false, data:Object=null)
         {
             mType = type;
             mBubbles = bubbles;

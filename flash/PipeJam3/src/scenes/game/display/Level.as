@@ -35,6 +35,16 @@ package scenes.game.display
 	
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
+	import networking.NetworkConnection;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
+	import flash.utils.Dictionary;
+	import flash.net.URLRequestHeader;
+	import flash.external.ExternalInterface;
+
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -170,9 +180,12 @@ package scenes.game.display
 		 */
 		public function Level(_name:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
 		{
+			trace("Into Level");
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
+			
 			original_level_name = _originalLevelName;
+			
 			levelGraph = _levelGraph;
 			levelObj = _levelObj;
 			m_levelLayoutObj = _levelLayoutObj;
@@ -197,7 +210,7 @@ package scenes.game.display
 			if(levelGraph.graphScoringConfig && levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY))
 				NARROW_NODE_SIZE_CONSTRAINT_VALUE = levelGraph.graphScoringConfig.getScoringValue(ConstraintScoringConfig.TYPE_0_VALUE_KEY);
 			
-			m_targetScore = int.MAX_VALUE;
+			m_targetScore = 1073;//int.MAX_VALUE;
 			if (PipeJam3.ASSET_SUFFIX == "Turk")
 			{
 				m_targetScore = 0;
@@ -214,12 +227,18 @@ package scenes.game.display
 					if(!PipeJamGameScene.inTutorial)
 					{
 						if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.target_score && m_targetScore < PipeJamGame.levelInfo.target_score)
-							m_targetScore = PipeJamGame.levelInfo.target_score;
+							{
+								m_targetScore = PipeJamGame.levelInfo.target_score;
+								trace("Target set this way:",m_targetScore);
+							}
+							
 					}
+
 				}
 				else
 				{
-					m_targetScore = PipeJamGame.levelInfo.target_score;
+					if(PipeJamGameScene.inTutorial)
+						m_targetScore = PipeJamGame.levelInfo.target_score;
 				}
 			}
 			targetScoreReached = false;
@@ -284,6 +303,7 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
 				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				trace("MARKER IS HERE");
 				PipeJam3.logging.logQuestAction(isBest ? VerigameServerConstants.VERIGAME_ACTION_LOAD_BEST_ASSIGNMENTS : VerigameServerConstants.VERIGAME_ACTION_LOAD_ASSIGNMENTS, details, getTimeMs());
 			}
 		}
@@ -693,6 +713,8 @@ package scenes.game.display
 		
 		protected function loadLayout():void
 		{
+			
+			trace("LOADING LAYOUT ...");
 			nodeLayoutObjs = new Dictionary();
 			edgeLayoutObjs = new Dictionary();
 			
@@ -837,9 +859,11 @@ package scenes.game.display
 			
 			//this.alpha = .999;
 			
+			trace("In initialize %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			totalMoveDist = new Point();
 			loadLayout();
 			loadInitialConfiguration();
+			trace("Layout & Configuration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			addEventListener(SelectionEvent.COMPONENT_SELECTED, onComponentSelection);
@@ -856,11 +880,10 @@ package scenes.game.display
 			levelGraph.startingScore = levelGraph.currentScore;
 			dispatchEvent(new MenuEvent(MenuEvent.LEVEL_LOADED));			
 			if (tutorialManager) tutorialManager.startLevel();
-			initialized = true;
+			//initialized = true;
 			
-	//		flatten();
+			//flatten();
 			
-
 		}
 		
 		public function zipJsonFile(jsonFile:Object, name:String):ByteArray
@@ -904,11 +927,13 @@ package scenes.game.display
 		
 		protected function createAssignmentsObj():Object
 		{
+			
 			var hashSize:int = 0;
 			var nodeId:String;
 			for (nodeId in nodeLayoutObjs) hashSize++;
 			
-			PipeJamGame.levelInfo.hash = new Array();
+			//PipeJamGame.levelInfo.hash = new Array();
+			
 			
 			var assignmentsObj:Object = { "id": original_level_name, 
 									"hash": [], 
@@ -1392,6 +1417,9 @@ package scenes.game.display
 				solverRunningTime = new Date().getTime();
 			}
 			//if caps lock is down, start repeated solving using 'random' selection
+			
+
+			
 			if(runContinualSolver)
 			{
 				//loop through all nodes, finding ones with conflicts
@@ -1466,6 +1494,11 @@ package scenes.game.display
 			newSelectedClauses = new Dictionary;
 			m_inSolver = true;
 			
+			trace("LOGGING TRUE? ================================", PipeJam3.logging)
+			
+			
+			
+			
 			if (PipeJam3.logging)
 			{
 				var details:Object = new Object();
@@ -1483,6 +1516,28 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
 				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				// -------------------------------------------------
+				trace("LOGGING START ::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
+				
+				var url:String = "http://crudapi-kdin.rhcloud.com/api/objects/";
+				
+				var request:URLRequest = new URLRequest(url);
+				request.data = details;
+				request.method = URLRequestMethod.POST;
+
+				 
+				var urlLoader:URLLoader = new URLLoader();
+				urlLoader = new URLLoader();
+				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+				
+				try {
+					urlLoader.load(request);
+				} catch (e:Error) {
+					trace(e);
+				}
+				
+				trace("LOGGING END ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
+			//------------------------------------------------------
 				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_PAINT_AUTOSOLVE, details, getTimeMs());
 			}
 			

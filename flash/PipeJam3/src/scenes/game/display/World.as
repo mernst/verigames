@@ -18,6 +18,9 @@ package scenes.game.display
 	import flash.utils.Timer;
 	import hints.HintController;
 	import server.MTurkAPI;
+	import flash.net.URLRequest;
+	import flash.net.URLVariables;
+
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -47,6 +50,7 @@ package scenes.game.display
 	import networking.GameFileHandler;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
+	import networking.NetworkConnection;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -67,6 +71,8 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	
+	import server.LoggingServerInterface;
 	
 	import system.VerigameServerConstants;
 	
@@ -120,6 +126,8 @@ package scenes.game.display
 		
 		static public var altKeyDown:Boolean;
 		
+		static public var gamePlayDone:Boolean = false;
+		
 		public var updateTimer1:Timer;
 		public var updateTimer2:Timer;
 		
@@ -138,6 +146,7 @@ package scenes.game.display
 			if (!allLevels) allLevels = [m_worldObj];
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
+				trace("A new level has started");
 				var levelObj:Object = allLevels[level_index];
 				var levelId:String = levelObj["id"];
 				var levelDisplayName:String = levelId;
@@ -155,6 +164,16 @@ package scenes.game.display
 					throw new Error("World level found without constraint graph:" + levelObj["id"]);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelObj["id"]] as ConstraintGraph;
+				/*
+				trace("Adding a level with arguments");
+				trace("LevelDisplayName", levelDisplayName);
+				trace("levelGraph", levelGraph);
+				trace("levelObj", LoggingServerInterface.obj2str(levelObj));
+				trace("levelLayoutObj", LoggingServerInterface.obj2str(levelLayoutObj));
+				trace("levelAssignmentsObj",LoggingServerInterface.obj2str(levelAssignmentsObj));
+				trace("levelName", levelNameFound);
+				*/
+				
 				var my_level:Level = new Level(levelDisplayName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
 				
@@ -280,6 +299,7 @@ package scenes.game.display
 				if(PipeJam3.TUTORIAL_DEMO)
 					obj = PipeJamGame.levelInfo;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
+
 				var nextLevelQID:int;
 				if(!obj)
 				{
@@ -316,6 +336,7 @@ package scenes.game.display
 		private function initLevel():void {
 			//trace("Initializing Level...");
 			var time1:Number = new Date().getTime();
+			m_currentLevelNumber = 0;
 			selectLevel(firstLevel);
 			//trace("Done initializing Level.", new Date().getTime()-time1);
 		}
@@ -677,12 +698,13 @@ package scenes.game.display
 		
 		protected function switchToLevelSelect():void
 		{
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
 		protected function onShowGameMenuEvent(evt:NavigationEvent = null):void
 		{
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
+			dispatchEvent(new NavigationEvent (NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
 		public function updateAssignments(currentLevelOnly:Boolean = false):Object
@@ -765,7 +787,6 @@ package scenes.game.display
 				miniMap.isDirty = true;
 				miniMap.imageIsDirty = true;
 			}
-			
 			var oldScore:int = active_level.prevScore;
 			var newScore:int = active_level.currentScore;
 			if (evt) {
@@ -799,6 +820,7 @@ package scenes.game.display
 					}
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
+					
 				}
 				if (oldScore != newScore && evt.pt != null) {
 					var thisPt:Point = globalToLocal(evt.pt);
@@ -837,7 +859,6 @@ package scenes.game.display
 				}
 				
 				Achievements.checkAchievements(Achievements.CHECK_SCORE, newScore - active_level.startingScore);
-
 			}
 		}
 		
@@ -852,9 +873,9 @@ package scenes.game.display
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.RaLevelID);
 			if(PipeJamGameScene.inTutorial)
 			{
+				var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.RaLevelID);
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				if (active_level) {
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
@@ -868,6 +889,7 @@ package scenes.game.display
 				{
 					//and if so, set to false, unless at the end of the tutorials
 					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
+
 					if(currentLevelId != 0)
 						tutorialsDone = false;
 					
@@ -880,7 +902,11 @@ package scenes.game.display
 						if(PipeJam3.TUTORIAL_DEMO)
 							switchToLevelSelect();
 						else
-							onShowGameMenuEvent();
+							{	
+								trace("TUTORIALS OVER ++++++");
+								TutorialController.tutorialsDone = true;
+								onShowGameMenuEvent();
+							}
 					return;
 				}
 				else if (tutorialController.isLastTutorialLevel())
@@ -888,7 +914,11 @@ package scenes.game.display
 					if(PipeJam3.TUTORIAL_DEMO)
 						switchToLevelSelect();
 					else
-						onShowGameMenuEvent();
+						{
+							trace("TUTORIALS OVER ++++++");
+							TutorialController.tutorialsDone = true;
+							onShowGameMenuEvent();
+						}
 					return;
 				}
 				else
@@ -906,12 +936,22 @@ package scenes.game.display
 						m_currentLevelNumber++;
 					}
 					m_currentLevelNumber = m_currentLevelNumber % levels.length;
+					
+					trace("COMES IN FOR LEVEL CHANGE++++++++++++++++++++++++++++");
 				}
 			}
 			else {
+				
+				
 				m_currentLevelNumber = (m_currentLevelNumber + 1) % levels.length;
+				if (m_currentLevelNumber == 0) {
+					gamePlayDone = true;	
+					onShowGameMenuEvent();	
+				}
+				
 				updateAssignments(); // save world progress
 			}
+
 			var callback:Function =
 				function():void
 				{
@@ -1082,8 +1122,14 @@ package scenes.game.display
 		
 		protected function selectLevel(newLevel:Level):void
 		{
+			trace("Selectin a new level");
 			if (!newLevel) {
 				return;
+			}
+			
+			if(newLevel != firstLevel){
+				trace("CURRENT SCORE *************************************************************", newLevel.currentScore);
+				trace("TARGET SCORE *************************************************************", newLevel.getTargetScore());
 			}
 			if (PipeJam3.logging) {
 				var details:Object, qid:int;
@@ -1148,6 +1194,11 @@ package scenes.game.display
 			showCurrentBrush();
 			var brushesToEmphasize:int = active_level.emphasizeBrushes();
 			sideControlPanel.emphasizeBrushes(brushesToEmphasize);
+			
+			active_level.setTargetScore(active_level.currentScore + 2);
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_OUT));
+
+			trace("THESE ARE THE SCORES ^^^^^^^^^^^^^^^^^^^^^^^^^^^^CURRENT_SCORE", active_level.currentScore, " TARGET_SCORE ", active_level.m_targetScore);
 		}
 		
 		private function onLevelLoaded(evt:MenuEvent):void
