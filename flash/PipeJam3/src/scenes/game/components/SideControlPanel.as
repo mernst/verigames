@@ -82,12 +82,6 @@ package scenes.game.components
 		/** display control variables */
 		private var m_panZoomAllowed:Boolean;
 		
-		private var addSolverArray:Array = [1,0,1,1];
-		public static const OPTIMIZER1_BRUSH_CONTROL:int = 0;
-		public static const OPTIMIZER2_BRUSH_CONTROL:int = 1;
-		public static const WIDE_BRUSH_CONTROL:int = 2;
-		public static const NARROW_BRUSH_CONTROL:int = 3;
-		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
 			WIDTH = _width;
@@ -193,37 +187,49 @@ package scenes.game.components
 			m_brushButtonGroup.y = 130;
 			m_brushButtonGroup.x = 65;
 			
-			m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
-		//	m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
 			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
 			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
 
-			m_widenBrush.y = 00;
-			m_narrowBrush.y = 30;
-			m_solver1Brush.y = 60;
+			m_widenBrush.y = 0;
+			m_narrowBrush.y  = 30;
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.y = 60;
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.y = 90;
+
+			m_widenBrush.visible = false;
+			m_brushButtonGroup.addChild(m_widenBrush);
+
+			m_narrowBrush.visible = false;
+			m_brushButtonGroup.addChild(m_narrowBrush);
 			
-			m_solver1Brush.visible = false;
-			if(addSolverArray[OPTIMIZER1_BRUSH_CONTROL] == 1)
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
 			{
+				m_solver1Brush.visible = false;
 				m_brushButtonGroup.addChild(m_solver1Brush);
+			}
+			
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			{
+				m_solver2Brush.visible = false;
+				m_brushButtonGroup.addChild(m_solver2Brush);
+			}
+
+			//
+			
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			{
 				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
 				m_brushButtonGroup.makeActive(m_solver1Brush);
 			}
-			else
-				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
-			
-			m_widenBrush.visible = false;
-			if(addSolverArray[WIDE_BRUSH_CONTROL] == 1)
+			else if (PipeJam3.ENABLE_SOLVER2_BRUSH)
 			{
-				m_brushButtonGroup.addChild(m_widenBrush);
+				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
+				m_brushButtonGroup.makeActive(m_solver2Brush);
 			}
-
-			m_narrowBrush.visible = false;
-			if(addSolverArray[NARROW_BRUSH_CONTROL] == 1)
-				m_brushButtonGroup.addChild(m_narrowBrush);
 			
-			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			//
+			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 		}
 		
 		private function showTurkFinishButton():void
@@ -453,17 +459,17 @@ package scenes.game.components
 		{
 			switch(brush)
 			{
-				case GridViewPanel.SOLVER1_BRUSH:
-					m_brushButtonGroup.makeActive(m_solver1Brush);
-					break;
-				case GridViewPanel.SOLVER2_BRUSH:
-					m_brushButtonGroup.makeActive(m_solver2Brush);
-					break;
 				case GridViewPanel.WIDEN_BRUSH:
 					m_brushButtonGroup.makeActive(m_widenBrush);
 					break;
 				case GridViewPanel.NARROW_BRUSH:
 					m_brushButtonGroup.makeActive(m_narrowBrush);
+					break;
+				case GridViewPanel.SOLVER1_BRUSH:
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_brushButtonGroup.makeActive(m_solver1Brush);
+					break;
+				case GridViewPanel.SOLVER2_BRUSH:
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_brushButtonGroup.makeActive(m_solver2Brush);
 					break;
 			}
 		}
@@ -471,36 +477,52 @@ package scenes.game.components
 		public function showVisibleBrushes(visibleBrushes:int):void
 		{
 			var count:int = 0;
-			m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
-			if(m_solver1Brush.visible) count++;
-		//	m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
-		//	if(m_solver2Brush.visible) count++;
-			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
-			if(m_narrowBrush.visible) count++;
+
 			m_widenBrush.visible = visibleBrushes & TutorialLevelManager.NARROW_BRUSH ? true : false;
 			if(m_widenBrush.visible) count++;
+			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
+			if(m_narrowBrush.visible) count++;
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			{
+				m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+				if (m_solver1Brush.visible) count++;
+			}
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) {
+				m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+				if (m_solver2Brush.visible) count++;
+			}
 			
 			//if only one shows, hide them all
-			if(count == 1)
-				m_solver1Brush.visible = m_narrowBrush.visible = m_widenBrush.visible = false;
+			if (count == 1)
+			{
+				m_widenBrush.visible = false;
+				m_narrowBrush.visible = false;
+				if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.visible = false;
+				if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.visible = false;
+			}
 		}
 		
 		public function emphasizeBrushes(emphasizeBrushes:int):void
 		{
-			m_narrowBrush.deemphasize();
 			m_widenBrush.deemphasize();
-			m_solver1Brush.deemphasize();
-			if (emphasizeBrushes & TutorialLevelManager.NARROW_BRUSH)
-			{
-				m_narrowBrush.emphasize();
-			}
+			m_narrowBrush.deemphasize();
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.deemphasize();
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.deemphasize();
 			if (emphasizeBrushes & TutorialLevelManager.WIDEN_BRUSH)
 			{
 				m_widenBrush.emphasize();
 			}
+			if (emphasizeBrushes & TutorialLevelManager.NARROW_BRUSH)
+			{
+				m_narrowBrush.emphasize();
+			}
 			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
 			{
-				m_solver1Brush.emphasize();
+				if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.emphasize();
+			}
+			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			{
+				if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.emphasize();
 			}
 		}
 		

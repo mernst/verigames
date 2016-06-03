@@ -137,15 +137,15 @@ package scenes.game.components
 		protected static const MODE_MOVING_RIGHT:int   = 3;
 		
 		//brush details
-		protected var m_solver1Brush:Sprite;
-		protected var m_solver2Brush:Sprite;
 		protected var m_widenBrush:Sprite;
 		protected var m_narrowBrush:Sprite;
+		protected var m_solver1Brush:Sprite;
+		protected var m_solver2Brush:Sprite;
 	
-		public static const SOLVER1_BRUSH:String = "BrushCircle";
-		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 		public static const WIDEN_BRUSH:String = "BrushHexagon";
 		public static const NARROW_BRUSH:String = "BrushSquare";
+		public static const SOLVER1_BRUSH:String = "BrushCircle";
+		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 
 		public static var FIRST_SOLVER_BRUSH:String;
 		
@@ -198,12 +198,14 @@ package scenes.game.components
 			addChildAt(contentBarrier,0);
 			
 			// Create paintbrushes for menu, and for mouse cursor
-			m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
-			m_solver2Brush = createPaintBrush(SOLVER1_BRUSH);
 			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
 			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrush(SOLVER1_BRUSH); //TODO: reusing solver1 brush for now
 			
-			m_paintBrush = m_solver1Brush;
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_paintBrush = m_solver1Brush;
+			else if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_paintBrush = m_solver2Brush;
+			else m_paintBrush = m_widenBrush;
 			
 			var atlas:TextureAtlas = AssetInterface.PipeJamSpriteSheetAtlas;
 			var scoreBoxTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
@@ -1621,22 +1623,27 @@ package scenes.game.components
 		{
 			var brush:Sprite;
 			
-			if(brushName == GridViewPanel.SOLVER1_BRUSH)
+			if(brushName == GridViewPanel.WIDEN_BRUSH)
 			{
-				brush = m_solver1Brush;
-			}
-			
-			if(brushName == GridViewPanel.SOLVER2_BRUSH)
-			{
-				brush = m_solver2Brush;
+				brush = m_widenBrush;
 			}
 			else if(brushName == GridViewPanel.NARROW_BRUSH)
 			{
 				brush = m_narrowBrush;
 			}
-			else if(brushName == GridViewPanel.WIDEN_BRUSH)
+			else if(brushName == GridViewPanel.SOLVER1_BRUSH)
 			{
-				brush = m_widenBrush;
+				if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+				{
+					brush = m_solver1Brush;
+				}
+			}
+			else if(brushName == GridViewPanel.SOLVER2_BRUSH)
+			{
+				if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+				{
+					brush = m_solver2Brush;
+				}
 			}
 			
 			if(brush == m_paintBrush || brush == null)

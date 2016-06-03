@@ -65,6 +65,10 @@ package
 		/** show frames per second, and memory usage. */
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
+		/** which solver brushes to be enabled */
+		public static var ENABLE_SOLVER1_BRUSH:Boolean = true;
+		public static var ENABLE_SOLVER2_BRUSH:Boolean = true;
+		
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
