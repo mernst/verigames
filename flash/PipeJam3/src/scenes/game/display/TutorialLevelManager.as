@@ -29,9 +29,10 @@ package scenes.game.display
 		private var m_currentTutorialText:TutorialManagerTextInfo;
 		private var m_currentToolTipsText:Vector.<TutorialManagerTextInfo>;
 		
-		public static const SOLVER_BRUSH:int = 0x000001;
-		public static const WIDEN_BRUSH:int = 0x000002;
-		public static const NARROW_BRUSH:int = 0x000004;
+		public static const WIDEN_BRUSH:int    = 0x000001;
+		public static const NARROW_BRUSH:int   = 0x000002;
+		public static const SOLVER1_BRUSH:int  = 0x000004;
+		public static const SOLVER2_BRUSH:int  = 0x000008;
 		
 		public function TutorialLevelManager(_tutorialTag:String)
 		{
@@ -435,7 +436,7 @@ package scenes.game.display
 					return WIDEN_BRUSH;
 				case "002":
 				case "01":
-					return WIDEN_BRUSH + NARROW_BRUSH;
+					return WIDEN_BRUSH | NARROW_BRUSH;
 				case "004":
 				case "02":
 				case "03":
@@ -455,7 +456,10 @@ package scenes.game.display
 				case "13":
 				case "14":
 				default:
-					return SOLVER_BRUSH + WIDEN_BRUSH + NARROW_BRUSH;
+					var brushes:int = WIDEN_BRUSH | NARROW_BRUSH;
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					return brushes;
 			}
 		}
 		
@@ -479,7 +483,7 @@ package scenes.game.display
 					return NARROW_BRUSH;
 				case "004":
 				case "02":
-					return SOLVER_BRUSH;
+					return SOLVER1_BRUSH;
 			}
 			return 0x0;
 		}

@@ -147,8 +147,6 @@ package scenes.game.components
 		public static const SOLVER1_BRUSH:String = "BrushCircle";
 		public static const SOLVER2_BRUSH:String = "BrushDiamond";
 
-		public static var FIRST_SOLVER_BRUSH:String;
-		
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
 		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
@@ -1600,10 +1598,22 @@ package scenes.game.components
 		
 		public function setFirstBrush(visibleBrushes:int):void
 		{
-			if(visibleBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
 			{
-				changeBrush(GridViewPanel.FIRST_SOLVER_BRUSH);
-				return;
+				if(visibleBrushes & TutorialLevelManager.SOLVER1_BRUSH)
+				{
+					changeBrush(GridViewPanel.SOLVER1_BRUSH);
+					return;
+				}
+			}
+			
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			{
+				if(visibleBrushes & TutorialLevelManager.SOLVER2_BRUSH)
+				{
+					changeBrush(GridViewPanel.SOLVER2_BRUSH);
+					return;
+				}
 			}
 			
 			if(visibleBrushes & TutorialLevelManager.WIDEN_BRUSH)
@@ -1633,17 +1643,11 @@ package scenes.game.components
 			}
 			else if(brushName == GridViewPanel.SOLVER1_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER1_BRUSH)
-				{
-					brush = m_solver1Brush;
-				}
+				if (PipeJam3.ENABLE_SOLVER1_BRUSH) brush = m_solver1Brush;
 			}
 			else if(brushName == GridViewPanel.SOLVER2_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER2_BRUSH)
-				{
-					brush = m_solver2Brush;
-				}
+				if (PipeJam3.ENABLE_SOLVER2_BRUSH) brush = m_solver2Brush;
 			}
 			
 			if(brush == m_paintBrush || brush == null)

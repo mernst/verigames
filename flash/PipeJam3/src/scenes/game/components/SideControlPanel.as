@@ -195,7 +195,8 @@ package scenes.game.components
 			m_widenBrush.y = 0;
 			m_narrowBrush.y  = 30;
 			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.y = 60;
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.y = 90;
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 60;
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 90;
 
 			m_widenBrush.visible = false;
 			m_brushButtonGroup.addChild(m_widenBrush);
@@ -219,12 +220,10 @@ package scenes.game.components
 			
 			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
 			{
-				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER1_BRUSH;
 				m_brushButtonGroup.makeActive(m_solver1Brush);
 			}
 			else if (PipeJam3.ENABLE_SOLVER2_BRUSH)
 			{
-				GridViewPanel.FIRST_SOLVER_BRUSH = GridViewPanel.SOLVER2_BRUSH;
 				m_brushButtonGroup.makeActive(m_solver2Brush);
 			}
 			
@@ -484,11 +483,12 @@ package scenes.game.components
 			if(m_narrowBrush.visible) count++;
 			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
 			{
-				m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+				m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER1_BRUSH ? true : false;
 				if (m_solver1Brush.visible) count++;
 			}
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) {
-				m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER_BRUSH ? true : false;
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			{
+				m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER2_BRUSH ? true : false;
 				if (m_solver2Brush.visible) count++;
 			}
 			
@@ -516,11 +516,11 @@ package scenes.game.components
 			{
 				m_narrowBrush.emphasize();
 			}
-			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			if (emphasizeBrushes & TutorialLevelManager.SOLVER1_BRUSH)
 			{
 				if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.emphasize();
 			}
-			if (emphasizeBrushes & TutorialLevelManager.SOLVER_BRUSH)
+			if (emphasizeBrushes & TutorialLevelManager.SOLVER2_BRUSH)
 			{
 				if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.emphasize();
 			}
