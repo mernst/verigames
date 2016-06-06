@@ -502,7 +502,7 @@ package scenes.game.display
 							//PipeJam3.logging.logQuestAction(, details, active_level.getTimeMs());
 						}
 						
-						active_level.solveSelection(solverUpdateCallback, solverDoneCallback, event.data as String);
+						active_level.solveSelection1(solverUpdateCallback, solverDoneCallback, event.data as String);
 					}
 					else
 						active_level.unselectAll();

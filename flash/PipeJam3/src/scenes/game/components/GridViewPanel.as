@@ -201,7 +201,7 @@ package scenes.game.components
 			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
 			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
 			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrush(SOLVER1_BRUSH); //TODO: reusing solver1 brush for now
+			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrush(SOLVER2_BRUSH);
 			
 			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_paintBrush = m_solver1Brush;
 			else if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_paintBrush = m_solver2Brush;

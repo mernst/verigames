@@ -1478,8 +1478,9 @@ package scenes.game.display
 			startingSelectedNodeCount = selectedNodes.length;
 			selectedConstraintValue = 0;
 			m_solverType = 1;
-			if(brushType != GridViewPanel.SOLVER1_BRUSH)
+			if (brushType != GridViewPanel.SOLVER1_BRUSH) {
 				m_solverType = 2;
+			}
 			
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var storedConstraints:Dictionary = new Dictionary;
@@ -1913,7 +1914,7 @@ package scenes.game.display
 		
 		public function solverStartCallback(evt:TimerEvent):void
 		{
-			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(m_solverType, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
