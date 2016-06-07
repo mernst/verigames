@@ -43,6 +43,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 				case "03":
 				case "04":
 				case "1":
@@ -247,6 +248,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 				case "03":
 				case "04":
 				case "1":
@@ -263,6 +265,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 				case "03":
 				case "04":
 				case "1":
@@ -296,6 +299,7 @@ package scenes.game.display
 					return 1.3;
 				case "004":
 					return 0.95;
+				case "005":
 				case "03":
 				case "04":
 				case "1":
@@ -321,6 +325,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 				case "03":
 				case "04":
 				case "1":
@@ -349,6 +354,7 @@ package scenes.game.display
 					case "01":
 					case "004":
 					case "02":
+					case "005":
 						return 5;
 					case "03":
 					case "04":
@@ -376,6 +382,7 @@ package scenes.game.display
 					case "01":
 					case "004":
 					case "02":
+					case "005":
 						return 10;
 					case "03":
 					case "04":
@@ -412,6 +419,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 					return false;
 				case "03":
 				case "04":
@@ -431,14 +439,27 @@ package scenes.game.display
 		
 		public function getVisibleBrushes():int
 		{
+			var brushes:int = 0;
+
 			switch (m_tutorialTag) {
 				case "001":
-					return WIDEN_BRUSH;
+					brushes = WIDEN_BRUSH;
+					break;
 				case "002":
 				case "01":
-					return WIDEN_BRUSH | NARROW_BRUSH;
+					brushes = WIDEN_BRUSH | NARROW_BRUSH;
+					break;
 				case "004":
 				case "02":
+					brushes = WIDEN_BRUSH | NARROW_BRUSH;
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					break;
+				case "005":
+					brushes = WIDEN_BRUSH | NARROW_BRUSH;
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					else if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					break;
 				case "03":
 				case "04":
 				case "1":
@@ -456,11 +477,12 @@ package scenes.game.display
 				case "13":
 				case "14":
 				default:
-					var brushes:int = WIDEN_BRUSH | NARROW_BRUSH;
+					brushes = WIDEN_BRUSH | NARROW_BRUSH;
 					if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
 					if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
-					return brushes;
+					break;
 			}
+			return brushes;
 		}
 		
 		public function getStartingBrush():Number
@@ -470,6 +492,7 @@ package scenes.game.display
 				case "01":
 				case "004":
 				case "02":
+				case "005":
 					return WIDEN_BRUSH
 			}
 			return NaN;
@@ -483,7 +506,9 @@ package scenes.game.display
 					return NARROW_BRUSH;
 				case "004":
 				case "02":
-					return SOLVER1_BRUSH;
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH) return SOLVER1_BRUSH;
+				case "005":
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH) return SOLVER2_BRUSH;
 			}
 			return 0x0;
 		}
@@ -603,6 +628,7 @@ package scenes.game.display
 		public function getTextInfo():TutorialManagerTextInfo
 		{
 			if (m_currentTutorialText != null) return m_currentTutorialText;
+			var text:String = null;
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
@@ -628,14 +654,30 @@ package scenes.game.display
 						null,
 						null, null);
 				case "004":
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "New paintbrush unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New paintbrush unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.";
+					else                                    text = "Keep eliminating the red conflicts!";
 					return new TutorialManagerTextInfo(
-						"New brush unlocked! The optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.",
+						text,
 						null,
 						null,
 						null, null);
 				case "02":
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!";
+					else                                    text = "Keep eliminating the red conflicts!";
 					return new TutorialManagerTextInfo(
-						"The optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!",
+						text,
+						null,
+						null,
+						null, null);
+				case "005":
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New paintbrush unlocked! The diamond optimizer will also\nautomatically try to reduce the overall number of conflicts.\nIt may find different solutions from the star optimizer.";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red conflicts!";
+					else if (PipeJam3.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red conflicts!";
+					else                                                                      text = "Keep eliminating the red conflicts!";
+					return new TutorialManagerTextInfo(
+						text,
 						null,
 						null,
 						null, null);
