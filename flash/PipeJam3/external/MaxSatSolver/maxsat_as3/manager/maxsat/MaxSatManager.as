@@ -31,6 +31,7 @@ package maxsat
 		public function start(algorithm:int, clauses:Array, initvars:Array, updateCallback:Function, doneCallback:Function):void
 		{
 			stop();
+			
 			m_algorithm = algorithm;
 			m_clauses = clauses;
 			m_initvars = initvars;
@@ -52,6 +53,7 @@ package maxsat
 		
 		public function stop():void
 		{
+			m_algorithm = 0;
 			m_clauses = null;
 			m_initvars = null;
 			m_updateCallback = null;
