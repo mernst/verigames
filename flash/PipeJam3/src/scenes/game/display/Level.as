@@ -1930,6 +1930,11 @@ package scenes.game.display
 			m_lastVarValues = vars;
 			var percentDone:Number = ((selectedConstraintValue - unsat_weight) / selectedConstraintValue) * 100;
 			
+			updateNodes();
+			levelGraph.updateScore();
+			onScoreChange(true);
+			System.gc();
+
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_UPDATED, true, percentDone));
 		}
 		
@@ -2003,13 +2008,17 @@ package scenes.game.display
 		{
 			//trace("solver done " + errMsg);
 			unselectAll();
-			updateNodes();
-			
 			MaxSatSolver.stop_solver();
+
+			/*
+			updateNodes();
 			levelGraph.updateScore();
 			onScoreChange(true);
-			drawNodesAfterSolving();
 			System.gc();
+			*/
+
+			drawNodesAfterSolving();
+			
 			var scoreWentDown:Boolean = true;
 			if(levelGraph.oldScore <= levelGraph.currentScore)
 				scoreWentDown = false;
@@ -2026,7 +2035,6 @@ package scenes.game.display
 				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
 				timer.start();
 			}
-
 		}
 		
 		//draw nodes in a different color to indicate solver is done
