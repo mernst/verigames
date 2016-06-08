@@ -655,7 +655,7 @@ package scenes.game.display
 						null, null);
 				case "004":
 					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "New paintbrush unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New paintbrush unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New paintbrush unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
 					else                                    text = "Keep eliminating the red conflicts!";
 					return new TutorialManagerTextInfo(
 						text,
@@ -672,7 +672,7 @@ package scenes.game.display
 						null,
 						null, null);
 				case "005":
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New paintbrush unlocked! The diamond optimizer will also\nautomatically try to reduce the overall number of conflicts.\nIt may find different solutions from the star optimizer.";
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New paintbrush unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
 					else if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red conflicts!";
 					else if (PipeJam3.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red conflicts!";
 					else                                                                      text = "Keep eliminating the red conflicts!";
