@@ -766,7 +766,8 @@ package scenes.game.display
 							brushesToActivate += TutorialLevelManager.NARROW_BRUSH;
 							break;
 						case 'auto':
-							brushesToActivate += TutorialLevelManager.SOLVER_BRUSH;
+							if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER1_BRUSH;
+							if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER2_BRUSH;
 							break;
 					}
 				}
@@ -1481,8 +1482,9 @@ package scenes.game.display
 			startingSelectedNodeCount = selectedNodes.length;
 			selectedConstraintValue = 0;
 			m_solverType = 1;
-			if(brushType != GridViewPanel.SOLVER1_BRUSH)
+			if (brushType != GridViewPanel.SOLVER1_BRUSH) {
 				m_solverType = 2;
+			}
 			
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var storedConstraints:Dictionary = new Dictionary;
@@ -1917,7 +1919,7 @@ package scenes.game.display
 		
 		public function solverStartCallback(evt:TimerEvent):void
 		{
-			MaxSatSolver.run_solver(1, constraintArray, initvarsArray, updateCallback, doneCallback);
+			MaxSatSolver.run_solver(m_solverType, constraintArray, initvarsArray, updateCallback, doneCallback);
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_STARTED, true));
 		}
 		
@@ -1932,6 +1934,11 @@ package scenes.game.display
 			m_lastVarValues = vars;
 			var percentDone:Number = ((selectedConstraintValue - unsat_weight) / selectedConstraintValue) * 100;
 			
+			updateNodes();
+			levelGraph.updateScore();
+			onScoreChange(true);
+			System.gc();
+
 			dispatchEvent(new starling.events.Event(MaxSatSolver.SOLVER_UPDATED, true, percentDone));
 		}
 		
@@ -2005,13 +2012,17 @@ package scenes.game.display
 		{
 			//trace("solver done " + errMsg);
 			unselectAll();
-			updateNodes();
-			
 			MaxSatSolver.stop_solver();
+
+			/*
+			updateNodes();
 			levelGraph.updateScore();
 			onScoreChange(true);
-			drawNodesAfterSolving();
 			System.gc();
+			*/
+
+			drawNodesAfterSolving();
+			
 			var scoreWentDown:Boolean = true;
 			if(levelGraph.oldScore <= levelGraph.currentScore)
 				scoreWentDown = false;
@@ -2028,7 +2039,6 @@ package scenes.game.display
 				timer.addEventListener(TimerEvent.TIMER, solverTimerCallback);
 				timer.start();
 			}
-
 		}
 		
 		//draw nodes in a different color to indicate solver is done

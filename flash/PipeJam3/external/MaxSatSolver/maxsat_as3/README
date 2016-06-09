@@ -1,0 +1,3 @@
+To build, you will need Adobe Crossbridge installed, and the
+environment variable FLASCC set to to Crossbridge's sdk folder.  Set
+FLEX_HOME to the location of our Flex.  Then run build.sh.
