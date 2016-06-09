@@ -21,6 +21,7 @@ package scenes.game.display
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
 
+	import mx.utils.UIDUtil;
 	
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
@@ -131,6 +132,13 @@ package scenes.game.display
 		public var updateTimer1:Timer;
 		public var updateTimer2:Timer;
 		
+		static public var playerID:String;
+		static public var gameTimer:Timer;
+		static public var realLevelsCompleted:int;
+		static public var levelTimer:Timer;
+		static public var actionTaken:String;	//Solved selection or Level Complete or Level Skipped
+		
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;
@@ -182,11 +190,17 @@ package scenes.game.display
 				}
 			}
 			//trace("Done creating World...");
+			
+			initPlayerVars();
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
-		
+		public function initPlayerVars():void {
+			
+			playerID = UIDUtil.createUID();
+			trace("THIS IS THE UNIQUE ID:::::::::::::::::::::::::", playerID);
+		}
 		
 		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
 		protected function onAddedToStage(event:starling.events.Event):void

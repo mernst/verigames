@@ -152,8 +152,12 @@ package scenes.splashscreen
 				*/
 				
 				if (World.gamePlayDone){
-					TextFactory.getInstance().updateText(m_infoTextfield, "Game Over! Thank you!");
+					
+					play_button.addEventListener(starling.events.Event.TRIGGERED, onSurveyButtonTriggered);
+					m_mainMenu.addChild(play_button);
+					TextFactory.getInstance().updateText(m_infoTextfield, "Game Over! Thank you!. Now complete a feedback for completion code.");
 					TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+					
 				}
 				else{
 					if (currentDisplayString == "Begin"){
@@ -202,6 +206,7 @@ package scenes.splashscreen
 					PipeJamGameScene.inTutorial = false;
 					PipeJamGameScene.inDemo = false;
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+					
 
 				}
 		}
@@ -211,6 +216,10 @@ package scenes.splashscreen
 			if (TutorialController.tutorialsDone) {
 				currentDisplayString = "Continue";
 				return "Continue";
+			}
+			if (World.gamePlayDone){
+				currentDisplayString = "Continue to survey"
+				return "Continue to survey"
 			}
 			else return "Begin"
 			
@@ -253,6 +262,11 @@ package scenes.splashscreen
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			//dispatchEvent(new NavigationEvent(NavigationEvent.GET_RANDOM_LEVEL));
+		}
+		
+		protected function onSurveyButtonTriggered(e:starling.events.Event):void {
+			navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
+			parent.removeChild(play_button);
 		}
 		
 		protected function isTutorialDone():Boolean

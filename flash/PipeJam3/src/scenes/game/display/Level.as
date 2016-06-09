@@ -52,6 +52,9 @@ package scenes.game.display
 	import scenes.game.components.MiniMap;
 	import scenes.game.components.TutorialText;
 	import scenes.game.display.Node;
+	import scenes.game.display.World;
+	
+	import server.LoggingServerInterface;
 	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -1516,13 +1519,14 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
 				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				details["PlayerID"] = World.playerID;
 				// -------------------------------------------------
 				trace("LOGGING START ::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 				
 				var url:String = "http://crudapi-kdin.rhcloud.com/api/objects/";
 				
 				var request:URLRequest = new URLRequest(url);
-				request.data = details;
+				request.data = LoggingServerInterface.obj2str(details);
 				request.method = URLRequestMethod.POST;
 
 				 
