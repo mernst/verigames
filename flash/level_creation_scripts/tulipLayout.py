@@ -73,6 +73,7 @@ for node in tlp_graph.getNodes():
     nh = gv.findnode(gv_graph, name)
     gv.setv(nh, 'pos', pos)
 
+
 # print new dot graph
 sys.stderr.write('writing\n')
 gv.write(gv_graph, 'out.dot')
