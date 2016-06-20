@@ -74,6 +74,9 @@ package scenes.game.components
 	import utils.PropDictionary;
 	import utils.XMath;
 	
+	import server.NULogging;
+	import scenes.game.display.World;
+	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
 	{
@@ -1512,6 +1515,23 @@ package scenes.game.components
 		{
 			buttonHit = true;
 			trace("Next level button is triggered");
+			
+			
+			
+			World.levelTimer.stop();
+			var details:Object = new Object();
+			details["playerID"] = World.playerID;
+			details["levelName"] = World.targetReachedLevelName;
+			details["actionTaken"] = "LevelComplete";
+			details["movesPerLevel"] = World.movesPerLevel;
+			details["percentBrushCircle"] = String((World.movesBrushCircle/World.movesPerLevel)*100);
+			details["percentBrushDiamond"] = String((World.movesBrushDiamond/World.movesPerLevel)*100);
+			details["percentBrushHexagon"] = String((World.movesBrushHexagon/World.movesPerLevel)*100);
+			details["percentBrushSquare"] = String((World.movesBrushSquare/World.movesPerLevel)*100);
+			details["levelTime"] = World.levelTimer.currentCount;
+			NULogging.log(details);
+			
+			World.levelTimer.reset();
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
@@ -1519,6 +1539,20 @@ package scenes.game.components
 		{
 			
 			trace("Next level button is triggered");
+			//------------------------------------------------------------------
+			
+			World.levelTimer.stop();
+			var dataLog:Object = new Object();
+			dataLog["PlayerID"] = World.playerID;
+			dataLog["actionTaken"] = "LevelSkipped";
+			dataLog["movesPerLevel"] = World.movesPerLevel;
+			dataLog["levelTime"] = World.levelTimer.currentCount;
+			World.realLevelsSkipped += 1;
+			NULogging.log(dataLog);
+			
+			World.levelTimer.reset();
+			
+			//------------------------------------------------------------------
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
@@ -1634,6 +1668,8 @@ package scenes.game.components
 		public function changeBrush(brushName:String):void
 		{
 			var brush:Sprite;
+			World.currentBrush = brushName;
+
 			
 			if(brushName == GridViewPanel.WIDEN_BRUSH)
 			{

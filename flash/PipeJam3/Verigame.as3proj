@@ -12,7 +12,7 @@
     <movie minorVersion="4" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Flex 4.6.0, AIR 21.0;4.6.0, 21.0;" />
+    <movie preferredSDK="Flex 4.6.0, AIR 20.0;4.6.0, 20.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>

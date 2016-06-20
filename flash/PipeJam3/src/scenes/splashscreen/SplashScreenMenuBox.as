@@ -29,6 +29,9 @@ package scenes.splashscreen
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
+	import server.NULogging;
+	import scenes.game.display.World;
+	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
 		protected var m_mainMenu:Sprite;
@@ -87,10 +90,10 @@ package scenes.splashscreen
 			
 			
 			
-			m_infoTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_DEFAULT, 250, 2.0 * 20, 15, 0x000000);
+			m_infoTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_DEFAULT, 300, 2.0 * 20, 15, 0x000000);
 			m_infoTextfield.touchable = false;
 			m_infoTextfield.x = m_parent.width/2 - 125;
-			m_infoTextfield.y = play_button.y - 50;
+			m_infoTextfield.y = play_button.y - 85;
 			TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 			m_mainMenu.addChild(m_infoTextfield);
 			
@@ -151,11 +154,28 @@ package scenes.splashscreen
 				m_mainMenu.addChild(demo_button);
 				*/
 				
-				if (World.gamePlayDone){
+				if (World.gamePlayDone) {
+				
+						
+					//------------------------------------------------------------------
+					World.gameTimer.stop();
+					World.realLevelsTimer.stop();
+					var dataLog:Object = new Object();
+					dataLog["playerID"] = World.playerID;
+					dataLog["levelsCompleted"] = World.realLevelsCompleted;
+					dataLog["levelsSkipped"] = World.realLevelsSkipped;
+					dataLog["levelsAttempted"] = World.realLevelsAttempted;
+					dataLog["totalMoves"] = World.totalMoves;
+					dataLog["gameTime"] = World.gameTimer.currentCount;
+					dataLog["realLevelsTime"] = World.realLevelsTimer.currentCount;
+					dataLog["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
+					
+					NULogging.log(dataLog);
+					//------------------------------------------------------------------
 					
 					play_button.addEventListener(starling.events.Event.TRIGGERED, onSurveyButtonTriggered);
 					m_mainMenu.addChild(play_button);
-					TextFactory.getInstance().updateText(m_infoTextfield, "Game Over! Thank you!. Now complete a feedback for completion code.");
+					TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
 					TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 					
 				}
@@ -164,14 +184,14 @@ package scenes.splashscreen
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "The first 8 levels teach you how to play. You must play all the levels for credit");
+						TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 					}
 					else{
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You have an option to skip a level");
+						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels.");
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 					}	
 				}
@@ -205,6 +225,8 @@ package scenes.splashscreen
 					
 					PipeJamGameScene.inTutorial = false;
 					PipeJamGameScene.inDemo = false;
+					World.realLevelsTimer.start();
+					
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 					
 

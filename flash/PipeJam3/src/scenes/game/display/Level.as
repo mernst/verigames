@@ -54,7 +54,8 @@ package scenes.game.display
 	import scenes.game.display.Node;
 	import scenes.game.display.World;
 	
-	import server.LoggingServerInterface;
+	import server.NULogging;
+	import networking.TutorialController;
 	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -562,7 +563,7 @@ package scenes.game.display
 					numNodesOnScreen++;
 					if (parent)
 					{
-						nodeToDraw.skin.scale(0.5 / parent.scaleX);
+						nodeToDraw.skin.scale(0.5);// / parent.scaleX);
 					}
 					if (nodeToDraw.skin.parent != desiredLayer)
 					{
@@ -1189,6 +1190,17 @@ package scenes.game.display
 			}
 		}
 		
+		public function getRounded():int {
+			var nonRounded:int = 0.2 * MiniMap.maxNumConflicts;
+			
+			if (10-(nonRounded%10) <= 5-(nonRounded%5)) {
+				return nonRounded + (nonRounded % 10);
+			}
+			else {
+				return nonRounded + (nonRounded % 5);
+			}
+		}
+		
 		public function getTargetScore():int
 		{
 			return m_targetScore;
@@ -1522,9 +1534,37 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
 				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
 				details["PlayerID"] = World.playerID;
+				details["actionTaken"] = "Solved Selection";
+				
+				if(TutorialController.tutorialsDone && !World.levelAttempted){
+					World.realLevelsAttempted += 1;	
+					World.levelAttempted = true;
+				}
+				if(TutorialController.tutorialsDone && World.targetReached){
+					World.levelsContinuedAfterTargetScore += 1;
+					World.targetReached = false;
+				}
+				
+				World.totalMoves += 1;
+				World.movesPerLevel += 1;
+				
+				if (World.currentBrush == "BrushSquare") {
+					World.movesBrushSquare += 1;
+				}
+				if (World.currentBrush == "BrushHexagon") {
+					World.movesBrushHexagon += 1;
+				}
+				if (World.currentBrush == "BrushCircle") {
+					World.movesBrushCircle += 1;
+				}
+				if (World.currentBrush == "BrushDiamond") {
+					World.movesBrushDiamond += 1;
+				}
+				
 				// -------------------------------------------------
 				trace("LOGGING START ::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 				
+				/*
 				var url:String = "http://crudapi-kdin.rhcloud.com/api/objects/";
 				
 				var request:URLRequest = new URLRequest(url);
@@ -1541,6 +1581,9 @@ package scenes.game.display
 				} catch (e:Error) {
 					trace(e);
 				}
+				*/
+				
+				NULogging.log(details);
 				
 				trace("LOGGING END ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 			//------------------------------------------------------

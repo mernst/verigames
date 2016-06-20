@@ -73,7 +73,8 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	import server.LoggingServerInterface;
+	import server.NULogging;
+	import scenes.game.display.World;
 	
 	import system.VerigameServerConstants;
 	
@@ -132,10 +133,28 @@ package scenes.game.display
 		public var updateTimer1:Timer;
 		public var updateTimer2:Timer;
 		
-		static public var playerID:String;
+		static public var playerID:String; 
+		
 		static public var gameTimer:Timer;
-		static public var realLevelsCompleted:int;
 		static public var levelTimer:Timer;
+		static public var realLevelsTimer:Timer;
+		
+		static public var realLevelsAttempted:int;
+		static public var realLevelsCompleted:int;
+		static public var realLevelsSkipped:int;
+		static public var levelsContinuedAfterTargetScore:int;
+		static public var levelAttempted:Boolean;
+		static public var targetReached:Boolean;
+		static public var targetReachedLevelName:String;
+		
+		static public var currentBrush:String;
+		static public var movesBrushHexagon:Number;
+		static public var movesBrushSquare:Number;
+		static public var movesBrushCircle:Number;
+		static public var movesBrushDiamond:Number;
+		
+		static public var totalMoves:int;
+		static public var movesPerLevel:int;
 		static public var actionTaken:String;	//Solved selection or Level Complete or Level Skipped
 		
 		
@@ -200,6 +219,19 @@ package scenes.game.display
 			
 			playerID = UIDUtil.createUID();
 			trace("THIS IS THE UNIQUE ID:::::::::::::::::::::::::", playerID);
+			realLevelsCompleted = 0;
+			realLevelsSkipped = 0;
+			realLevelsAttempted = 0;
+			levelsContinuedAfterTargetScore = 0;
+			
+			totalMoves = 0;
+			
+			gameTimer = new Timer(1000, 0);
+			gameTimer.start();
+			levelTimer = new Timer(1000, 0);
+			realLevelsTimer = new Timer(1000, 0);
+			
+			
 		}
 		
 		private var m_initQueue:Vector.<Function> = new Vector.<Function>();
@@ -823,12 +855,29 @@ package scenes.game.display
 						}
 						else
 						{
+							//--------------------------------------------------------------
+							targetReached = true;
+							var dataLog:Object = new Object();
+							dataLog["PlayerID"] = playerID;
+							dataLog["levelName"] = active_level.level_name;
+							dataLog["actionTaken"] = "Target Reached";
+							dataLog["targetReachTime"] = levelTimer.currentCount;
+							NULogging.log(dataLog);
+							targetReachedLevelName = active_level.level_name;
+							
+							if (TutorialController.tutorialsDone){
+								realLevelsCompleted += 1;
+							}
+							
+							//--------------------------------------------------------------
+							
 							var continueDelay:Number = 0;
 							var showFanfare:Boolean = true;
 							if (active_level && active_level.tutorialManager) {
 								continueDelay = active_level.tutorialManager.continueButtonDelay();
 								showFanfare = active_level.tutorialManager.showFanfare();
 							}
+							
 							Starling.juggler.delayCall(edgeSetGraphViewPanel.displayContinueButton, continueDelay, true, showFanfare);
 						}
 					}
@@ -1217,6 +1266,27 @@ package scenes.game.display
 		
 		private function onLevelLoaded(evt:MenuEvent):void
 		{
+			//-----------------------------------------------------------------
+			
+			levelAttempted = false;
+			targetReached = false;
+			movesPerLevel = 0;
+			movesBrushCircle = 0;
+			movesBrushDiamond = 0;
+			movesBrushHexagon = 0;
+			movesBrushSquare = 0;
+			
+			levelTimer.start();
+			var dataLoad:Object = new Object();
+			dataLoad["actionTaken"] = "New Level";
+			dataLoad["playerID"] = playerID;
+			dataLoad["levelName"] = active_level.level_name;
+			
+			NULogging.log(dataLoad);
+			//-----------------------------------------------------------------
+			
+			
+			
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 			//called later by initScoring
 			//onWidgetChange();
