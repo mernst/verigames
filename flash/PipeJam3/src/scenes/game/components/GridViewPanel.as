@@ -400,24 +400,24 @@ package scenes.game.components
 				if (m_keyPanUp && !m_keyPanDown) {
 					viewRect = getViewInContentSpace(contentToUse);
 					newX = viewRect.x + viewRect.width / 2;
-					newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
+					newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
 					moveContent(newX, newY);
 				}
 				if (m_keyPanDown && !m_keyPanUp) {
 					viewRect = getViewInContentSpace(contentToUse);
 					newX = viewRect.x + viewRect.width / 2;
-					newY = viewRect.y + viewRect.height / 2 - MOVE_PX / contentToUse.scaleY;
+					newY = viewRect.y + viewRect.height / 2 + MOVE_PX / contentToUse.scaleY;
 					moveContent(newX, newY);
 				}
 				if (m_keyPanLeft && !m_keyPanRight) {
 					viewRect = getViewInContentSpace(contentToUse);
-					newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
+					newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
 					newY = viewRect.y + viewRect.height / 2;
 					moveContent(newX, newY);
 				}
 				if (m_keyPanRight && !m_keyPanLeft) {
 					viewRect = getViewInContentSpace(contentToUse);
-					newX = viewRect.x + viewRect.width / 2 - MOVE_PX / contentToUse.scaleX;
+					newX = viewRect.x + viewRect.width / 2 + MOVE_PX / contentToUse.scaleX;
 					newY = viewRect.y + viewRect.height / 2;
 					moveContent(newX, newY);
 				}
