@@ -180,9 +180,11 @@ package server
 			var str:String = "{"
 			for (var key:String in obj)
 			{
-				str = str + key + ":" + obj[key] + ",";
+				if (typeof (Object[key]) == "Number") { trace("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); }
+				str = str + '"' +key+ '"' + ":" + '"' +String(obj[key])+'"'+ ",";
 			}
-			str = str + "}";
+			str = str.substr(0, str.length - 1) + "}";
+			
 			return str;
 		}
 		

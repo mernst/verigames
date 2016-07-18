@@ -102,6 +102,7 @@ package scenes.game.display
 		protected var m_currentLevelNumber:int;
 		public var currentPercent:Number;
 		public var targetPercent:Number;
+		public static var currentLevelName:String;
 		
 		protected var undoStack:Vector.<UndoEvent>;
 		protected var redoStack:Vector.<UndoEvent>;
@@ -156,7 +157,8 @@ package scenes.game.display
 		static public var totalMoves:int;
 		static public var movesPerLevel:int;
 		static public var actionTaken:String;	//Solved selection or Level Complete or Level Skipped
-		
+		static public var remainingTotalLevels:int;
+		static public var levelNumberArray:Array = new Array(); 
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
@@ -209,13 +211,21 @@ package scenes.game.display
 				}
 			}
 			//trace("Done creating World...");
+			if (!PipeJamGameScene.inTutorial){
+				remainingTotalLevels = levels.length - 1;	
+			}
 			
-			initPlayerVars();
+			levelNumberArray = new Array();
+			for (var i:int = 1; i < levels.length; i++ ){
+				levelNumberArray.push(i);
+			}
+			trace("RANDOM:INIT", levelNumberArray);
+			//initPlayerVars();
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
-		public function initPlayerVars():void {
+		public static function initPlayerVars():void {
 			
 			playerID = UIDUtil.createUID();
 			trace("THIS IS THE UNIQUE ID:::::::::::::::::::::::::", playerID);
@@ -230,7 +240,10 @@ package scenes.game.display
 			gameTimer.start();
 			levelTimer = new Timer(1000, 0);
 			realLevelsTimer = new Timer(1000, 0);
-			
+			var initLog:Object = new Object();
+			initLog["playerID"] = playerID;
+			initLog["actionTaken"] = "Session start";
+			NULogging.log(initLog);
 			
 		}
 		
@@ -874,7 +887,7 @@ package scenes.game.display
 							var continueDelay:Number = 0;
 							var showFanfare:Boolean = true;
 							if (active_level && active_level.tutorialManager) {
-								continueDelay = active_level.tutorialManager.continueButtonDelay();
+								continueDelay = 0;//active_level.tutorialManager.continueButtonDelay();
 								showFanfare = active_level.tutorialManager.showFanfare();
 							}
 							
@@ -899,7 +912,10 @@ package scenes.game.display
 				}
 			}
 			currentPercent = sideControlPanel.updateScore(active_level, false);
-			targetPercent = sideControlPanel.targetPercent(active_level);
+			if(newScore < active_level.getTargetScore()){
+				targetPercent = sideControlPanel.targetPercent(active_level);
+			}
+			
 						
 			if(currentPercent >= 100)
 			{
@@ -1005,12 +1021,22 @@ package scenes.game.display
 			}
 			else {
 				
-				
-				m_currentLevelNumber = (m_currentLevelNumber + 1) % levels.length;
-				if (m_currentLevelNumber == 0) {
+				if (remainingTotalLevels == 0) {
 					gamePlayDone = true;	
 					onShowGameMenuEvent();	
 				}
+				
+				var pick:int = randomLevelNumber(levelNumberArray.length);
+				m_currentLevelNumber = levelNumberArray[pick];
+				
+				
+				trace("RANDOM:LEVELNUMBERARRAY", levelNumberArray);
+				levelNumberArray = levelNumberArray.filter(function (element:*, index:int, arr:Array):Boolean { return (pick != index) } );
+				remainingTotalLevels -= 1;
+				
+				trace("RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
+				trace("RANDOM:PICK", pick);
+				trace("RANDOM:REMAININGLEVELS",remainingTotalLevels);
 				
 				updateAssignments(); // save world progress
 			}
@@ -1021,6 +1047,12 @@ package scenes.game.display
 					selectLevel(levels[m_currentLevelNumber]);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
+		}
+		
+		public function randomLevelNumber(range:int):int {
+			var pick:int;
+			pick = (int(Math.random() * 100)) % range;
+			return pick;
 		}
 		
 		public function onErrorAdded(event:ErrorEvent):void
@@ -1186,6 +1218,7 @@ package scenes.game.display
 		protected function selectLevel(newLevel:Level):void
 		{
 			trace("Selectin a new level");
+			currentLevelName = newLevel.level_name;
 			if (!newLevel) {
 				return;
 			}

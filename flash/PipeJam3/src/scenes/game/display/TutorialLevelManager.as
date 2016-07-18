@@ -620,7 +620,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case "001":
-					return false;
+					return true;
 			}
 			return true;
 		}

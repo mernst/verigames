@@ -152,6 +152,7 @@ package scenes.game.display
 		private var m_createdConflictsToAnimate:Vector.<ClauseNode> = new Vector.<ClauseNode>();
 		private var m_nodeOnScreenDict:Dictionary = new Dictionary();
 		private var m_groupGrids:Vector.<GroupGrid>
+		private var m_totalVariables:int = 0;
 		private static const ITEMS_PER_FRAME:uint = 300; // limit on nodes/edges to remove/add per frame
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
@@ -184,7 +185,6 @@ package scenes.game.display
 		 */
 		public function Level(_name:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
 		{
-			trace("Into Level");
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			
@@ -811,6 +811,10 @@ package scenes.game.display
 				gridChild = createGridChildFromLayoutObj(varId, nodeLayout, false);
 				if (gridChild == null) continue;
 				m_numNodes++;
+				
+				if (varId.substr(0,3) == "var") {
+					m_totalVariables ++;
+				}
 			}
 			//quick fix to make large level actually playable
 			if(m_numNodes > 50000)
@@ -1175,12 +1179,14 @@ package scenes.game.display
 				if (PipeJam3.ASSET_SUFFIX == "Turk")
 					return 500;
 				if (PipeJam3.SELECTION_STYLE != PipeJam3.SELECTION_STYLE_CLASSIC)
-				{
+				{					
+					
+					
 					switch(PlayerValidation.currentActivityLevel)
 					{
 						case 2: return 250;
 						case 3: return 500;
-						default: return 100;
+						default: return (getRounded()>100?100:getRounded())
 					}
 				}
 				else
@@ -1191,13 +1197,13 @@ package scenes.game.display
 		}
 		
 		public function getRounded():int {
-			var nonRounded:int = 0.2 * MiniMap.maxNumConflicts;
-			
-			if (10-(nonRounded%10) <= 5-(nonRounded%5)) {
-				return nonRounded + (nonRounded % 10);
+			var nonRounded:int = 0.2 * m_totalVariables;
+			var quo:int = nonRounded / 5;
+			if (nonRounded%5 >= 3) {
+				return 5*(quo + 1);
 			}
 			else {
-				return nonRounded + (nonRounded % 5);
+				return 5*quo;
 			}
 		}
 		
@@ -1528,7 +1534,7 @@ package scenes.game.display
 					if (idArr.length == 2) simpleId = idArr[1] as String;
 					selectedVarIds += (selectedVarIds.length == 0) ? simpleId : ("," + simpleId);
 				}
-				details[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = selectedVarIds;
+				details[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = "[" + selectedVarIds + "]";
 				details[VerigameServerConstants.ACTION_PARAMETER_TYPE] = m_solverType;
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
@@ -1547,7 +1553,7 @@ package scenes.game.display
 				
 				World.totalMoves += 1;
 				World.movesPerLevel += 1;
-				
+				trace("LOG_",World.currentBrush);
 				if (World.currentBrush == "BrushSquare") {
 					World.movesBrushSquare += 1;
 				}

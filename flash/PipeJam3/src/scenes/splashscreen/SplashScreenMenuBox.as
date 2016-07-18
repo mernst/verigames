@@ -92,10 +92,11 @@ package scenes.splashscreen
 			
 			m_infoTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_DEFAULT, 300, 2.0 * 20, 15, 0x000000);
 			m_infoTextfield.touchable = false;
-			m_infoTextfield.x = m_parent.width/2 - 125;
+			m_infoTextfield.x = m_parent.width/2 - m_infoTextfield.width/2;
 			m_infoTextfield.y = play_button.y - 85;
 			TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
 			m_mainMenu.addChild(m_infoTextfield);
+			
 			
 			trace("isTutorialDone?", isTutorialDone());
 			
@@ -174,9 +175,10 @@ package scenes.splashscreen
 					//------------------------------------------------------------------
 					
 					play_button.addEventListener(starling.events.Event.TRIGGERED, onSurveyButtonTriggered);
-					m_mainMenu.addChild(play_button);
-					TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
-					TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+					//m_mainMenu.addChild(play_button);
+					//TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
+					TextFactory.getInstance().updateText(m_infoTextfield, "Thank you for playing!");
+					TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					
 				}
 				else{
@@ -184,15 +186,17 @@ package scenes.splashscreen
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
-						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+						//TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
+						TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play. ");
+						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}
 					else{
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels.");
-						TextFactory.getInstance().updateAlign(m_infoTextfield, 2, 1);
+						//TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels.");
+						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
+						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}	
 				}
 				

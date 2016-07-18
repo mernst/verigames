@@ -430,7 +430,15 @@ package scenes.game.components
 		public function targetPercent(level:Level):Number
 		{
 			var maxConflicts:int = level.maxScore;
-			level.setTargetScore(maxConflicts * 0.99);
+			trace("LEVEL NAME::::::::::::::::::::::::::::::", level.level_name);
+			if (level.level_name == "Reach out") {
+				level.setTargetScore(maxConflicts);
+			}
+			else{
+				level.setTargetScore(maxConflicts * 0.99);	
+			}
+			
+			if(level.currentScore >= level.getTargetScore()) {level.setTargetScore(level.currentScore + 1)}
 			var targetScore:int = level.getTargetScore();
 			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
 			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;

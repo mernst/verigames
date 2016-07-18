@@ -16,6 +16,10 @@ package scenes.game.components
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
+	import flash.net.navigateToURL;
+	import flash.net.URLRequest;
+
+
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
@@ -92,6 +96,7 @@ package scenes.game.components
 		private var endingMoveMode:Boolean;
 		private var continueButton:NineSliceButton;
 		private var skipButton:NineSliceButton;
+		private var passButton:NineSliceButton;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
 		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
@@ -278,9 +283,12 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			if (TutorialController.tutorialsDone) {
+			//if (TutorialController.tutorialsDone) {
 				displaySkipButton();
-			}
+				//displayPassButton();
+			//}
+			
+			
 			
 			resetKeysDown();
 
@@ -1265,6 +1273,7 @@ package scenes.game.components
 				m_currentLevel = level;
 				
 				var max:int = m_currentLevel.getMaxSelectableWidgets();
+				trace("MAX SELECTABLE WIDGETS ####################################################", max);
 				TextFactory.getInstance().updateText(m_selectionLimitText, String(max));
 				TextFactory.getInstance().updateAlign(m_selectionLimitText, 1, 1);
 				
@@ -1408,6 +1417,14 @@ package scenes.game.components
 			skipButton.y = HEIGHT - skipButton.height - 2;
 			m_buttonLayer.addChild(skipButton);
 		}
+		
+		public function displayPassButton():void {
+			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to end", 128, 32);
+			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
+			passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
+			passButton.y = HEIGHT - passButton.height - 2;
+			m_buttonLayer.addChild(passButton);
+		}
 
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
 		{
@@ -1545,6 +1562,7 @@ package scenes.game.components
 			var dataLog:Object = new Object();
 			dataLog["PlayerID"] = World.playerID;
 			dataLog["actionTaken"] = "LevelSkipped";
+			dataLog["levelName"] = World.currentLevelName;
 			dataLog["movesPerLevel"] = World.movesPerLevel;
 			dataLog["levelTime"] = World.levelTimer.currentCount;
 			World.realLevelsSkipped += 1;
@@ -1554,6 +1572,12 @@ package scenes.game.components
 			
 			//------------------------------------------------------------------
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+		}
+		
+		private function onPassButtonTriggered(evt:starling.events.Event):void {
+			World.gamePlayDone = true;
+			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
 		}
 		
 		//calculates the relative point of the level's content and centers it

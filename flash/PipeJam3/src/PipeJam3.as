@@ -12,7 +12,7 @@ package
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	
+	import scenes.game.display.World;
 	import assets.AssetsFont;
 	
 	import cgs.server.logging.data.QuestData;
@@ -66,8 +66,8 @@ package
 		public static var SHOW_PERFORMANCE_STATS:Boolean = false;
 		
 		/** which solver brushes to be enabled */
-		public static var ENABLE_SOLVER1_BRUSH:Boolean = true;
-		public static var ENABLE_SOLVER2_BRUSH:Boolean = true;
+		public static var ENABLE_SOLVER1_BRUSH:Boolean = false;
+		public static var ENABLE_SOLVER2_BRUSH:Boolean = false;
 		
 		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
 		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
@@ -116,6 +116,7 @@ package
 		
 		public function initialize(result:int = 0, e:flash.events.Event = null):void
 		{			
+			World.initPlayerVars();
 			MouseWheelTrap.setup(stage);
 			
 			//set up the main controller
