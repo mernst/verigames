@@ -92,10 +92,13 @@ package display
 		protected var mEnabled:Boolean = true;
 		protected var mIsDown:Boolean = false;
 		protected var mIsHovering:Boolean = false;
+		
 		// Adaptive from starling.display.Button
 		protected override function onTouch(event:TouchEvent):void
         {
 			super.onTouch(event);
+			
+			event.stopPropagation();
 			
             Mouse.cursor = (useHandCursor && mEnabled && event.interactsWith(this)) ? 
                 MouseCursor.BUTTON : MouseCursor.AUTO;
