@@ -250,7 +250,7 @@ package scenes.game.components
 			m_nameText.x = 8;
 			m_nameText.y = HEIGHT - 30;
 			TextFactory.getInstance().updateAlign(m_nameText, 1, 1);
-			addChild(m_nameText);
+			//addChild(m_nameText);
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -283,10 +283,10 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			//if (TutorialController.tutorialsDone) {
+			if (TutorialController.tutorialsDone) {
 				displaySkipButton();
-				//displayPassButton();
-			//}
+				displayPassButton();
+			}
 			
 			
 			
@@ -969,7 +969,7 @@ package scenes.game.components
 			gridImage.x = cornerPt.x;
 			gridImage.y = cornerPt.y;
 			gridImage.alpha = .8;
-			m_nameText.visible = true;
+			m_nameText.visible = false;
 			m_paintBrushLayer.visible = true;
 			m_tutorialTextLayer.visible = true;
 		}
@@ -1051,8 +1051,11 @@ package scenes.game.components
 				
 				if(newZoomLevel > 0 && zoomDialogPosted == false)
 				{
-					HintController.getInstance().popHint("Zoom in for more detail.", m_currentLevel, 6);
-					zoomDialogPosted = true;
+					if (PipeJamGameScene.inTutorial) {
+						HintController.getInstance().popHint("Zoom in for more detail.", m_currentLevel, 6);
+						zoomDialogPosted = true;	
+					}
+					
 				}
 			}
 			// zzz
@@ -1810,8 +1813,11 @@ package scenes.game.components
 			
 			if(!scoreUndoHintGiven && m_currentLevel.m_inSolver && (event.data as Boolean))
 			{
-				HintController.getInstance().popHint("Your score went down.\n You can undo to revert.", m_currentLevel);
-				scoreUndoHintGiven = true;
+				if (PipeJamGameScene.inTutorial) {
+						HintController.getInstance().popHint("Your score went down.\n You can undo to revert.", m_currentLevel);
+					scoreUndoHintGiven = true;
+				}
+				
 			}
 		}
 		

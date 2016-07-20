@@ -8,6 +8,7 @@ package hints
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import system.VerigameServerConstants;
+	import scenes.game.PipeJamGameScene;
 	
 	public class HintController extends Sprite 
 	{
@@ -84,7 +85,10 @@ package hints
 			}
 			if (!atLeastOneConflictFound)
 			{
-				popHint("Paint at least one\nconflict before optimizing", level);
+				if (PipeJamGameScene.inTutorial) {
+					popHint("Paint at least one\nconflict before optimizing", level);
+				}
+				
 				return false;
 			}
 			else if (performSmallSelectionCheck)
@@ -102,7 +106,10 @@ package hints
 				if (smallGroupAttempts + 1 == 3)
 				{
 					// After three consecutive small attempts, assume the user is not click+dragging properly and prompt them to do so
-					popHint("Try holding the left mouse button and\ndragging to select many variables at once.", level);
+					if (PipeJamGameScene.inTutorial) {
+						popHint("Try holding the left mouse button and\ndragging to select many variables at once.", level);
+					}
+					
 					m_playerStatus.setSmallGroupAttempts(level, 0);
 					return false;
 				}

@@ -431,7 +431,7 @@ package scenes.game.components
 		{
 			var maxConflicts:int = level.maxScore;
 			trace("LEVEL NAME::::::::::::::::::::::::::::::", level.level_name);
-			if (level.level_name == "Reach out") {
+			if (level.level_name == "Reach out" || level.level_name == "Welcome" || level.level_name == "Know your limits" ) {
 				level.setTargetScore(maxConflicts);
 			}
 			else{
