@@ -41,7 +41,7 @@ package
 	
 
 	[SWF(width = "960", height = "640", frameRate = "30", backgroundColor = "#ffffff")]
-	
+	[Frame(factoryClass='Preloader')]
 	public class PipeJam3 extends flash.display.Sprite 
 	{
 		static public var GAME_ID:int = 1;

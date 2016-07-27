@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'19-Jul-16'</value>
+      <value>'7/27/2016'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -32,28 +32,28 @@
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Hi-ReS-Stats-master\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Feathers 1.0.1\source</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Starling-Extension-Graphics-master-606972f814\extension\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Starling-Extension-Particle-System-master-bdfe72d182\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Starling-Framework\starling\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\pixelmask-master-2e968c9fd2\src</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\FZip</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\MouseWheelTrap</path-element>
-      <path-element>E:\FlasdDevelop\Library\AS3\classes</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Hi-ReS-Stats-master\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Feathers 1.0.1\source</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Starling-Extension-Graphics-master-606972f814\extension\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Starling-Extension-Particle-System-master-bdfe72d182\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Starling-Framework\starling\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\pixelmask-master-2e968c9fd2\src</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\FZip</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\MouseWheelTrap</path-element>
+      <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <library-path append="true">
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\lib\assets\</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\cgs-common\CGSCommon.swc</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\Feathers 1.0.1\swc\feathers.swc</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\MaxSatSolver\maxsat_as3\example\lib\maxsat_manager.swc</path-element>
-      <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\external\MaxSatSolver\maxsat_as3\example\lib\maxsat_util.swc</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\lib\assets\</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\cgs-common\CGSCommon.swc</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\Feathers 1.0.1\swc\feathers.swc</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\MaxSatSolver\maxsat_as3\example\lib\maxsat_manager.swc</path-element>
+      <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\external\MaxSatSolver\maxsat_as3\example\lib\maxsat_util.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
-    <path-element>I:\Autolevelling_Branch\verigames\flash\PipeJam3\src\PipeJam3.as</path-element>
+    <path-element>F:\auto-levelling\auto-leveling branch\flash\PipeJam3\src\PipeJam3.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>
