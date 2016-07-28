@@ -34,6 +34,20 @@ package scenes.game.display
 		public static const SOLVER1_BRUSH:int  = 0x000004;
 		public static const SOLVER2_BRUSH:int  = 0x000008;
 		
+		public static function excludeLevel(id:String):Boolean
+		{
+			if (!PipeJam3.ENABLE_SOLVER_LEVELS)
+			{
+				switch (id) {
+					case "004":
+					case "02":
+					case "005":
+						return true;
+				}
+			}
+			return false;
+		}
+		
 		public function TutorialLevelManager(_tutorialTag:String)
 		{
 			m_tutorialTag = _tutorialTag;

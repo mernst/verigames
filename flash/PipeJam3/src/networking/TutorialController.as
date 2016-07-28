@@ -2,25 +2,25 @@ package networking
 {
 	import flash.net.URLRequestMethod;
 	import flash.utils.Dictionary;
+	import scenes.game.display.TutorialLevelManager;
 	import starling.display.Sprite;
 	import server.LoggingServerInterface;
 	
 	public class TutorialController extends Sprite
 	{			
 		[Embed(source = "../../lib/levels/tutorial/tutorial.json", mimeType = "application/octet-stream")]
-		static public const tutorialFileClass:Class;
-		static public const tutorialJson:String = new tutorialFileClass();
-		static public const tutorialObj:Object = JSON.parse(tutorialJson);
+		private static const tutorialFileClass:Class;
+		private static var tutorialObj_instance:Object;
 		
 		[Embed(source = "../../lib/levels/tutorial/tutorialLayout.json", mimeType = "application/octet-stream")]
-		static public const tutorialLayoutFileClass:Class;
-		static public const tutorialLayoutJson:String = new tutorialLayoutFileClass();
-		static public const tutorialLayoutObj:Object = JSON.parse(tutorialLayoutJson);
+		private static const tutorialLayoutFileClass:Class;
+		private static const tutorialLayoutJson:String = new tutorialLayoutFileClass();
+		public static const tutorialLayoutObj:Object = JSON.parse(tutorialLayoutJson);
 		
 		[Embed(source = "../../lib/levels/tutorial/tutorialAssignments.json", mimeType = "application/octet-stream")]
-		static public const tutorialAssignmentsFileClass:Class;
-		static public const tutorialAssignmentsJson:String = new tutorialAssignmentsFileClass();
-		static public const tutorialAssignmentsObj:Object = JSON.parse(tutorialAssignmentsJson);
+		private static const tutorialAssignmentsFileClass:Class;
+		private static const tutorialAssignmentsJson:String = new tutorialAssignmentsFileClass();
+		public static const tutorialAssignmentsObj:Object = JSON.parse(tutorialAssignmentsJson);
 		
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
@@ -51,6 +51,35 @@ package networking
 			setTutorialObj(tutorialObj);
 		}
 		
+		
+		// these getters allow us to modify the embedded JSON before it is used
+		public static function get tutorialObj():Object
+		{
+			if (tutorialObj_instance == null) {
+				var worldJson:String = new tutorialFileClass();
+				var worldObj:Object = JSON.parse(worldJson);
+				
+				var levels:Array = worldObj["levels"];
+				if (levels)
+				{
+					var newLevels:Array = [];
+					for (var i:int = 0; i < levels.length; i++)
+					{
+						var levelObj:Object = levels[i];
+						if (!TutorialLevelManager.excludeLevel(levelObj["id"]))
+						{
+							newLevels.push(levelObj);
+						}
+					}
+					worldObj["levels"] = newLevels;
+				}
+				
+				tutorialObj_instance = worldObj;
+			}
+			return tutorialObj_instance;
+		}
+		
+
 		static public function getTutorialController():TutorialController
 		{
 			if(tutorialController == null)
