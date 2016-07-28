@@ -95,11 +95,11 @@ package scenes.game.display
 					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -109,18 +109,18 @@ package scenes.game.display
 					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -150,9 +150,9 @@ package scenes.game.display
 					}
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "constraint\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "constraint\nwith\nparadox" : "paradox\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "constraint\nwith\nconflict" : "conflict\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "constraint\nwith\nparadox" : "paradox\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
@@ -161,11 +161,11 @@ package scenes.game.display
 					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -175,18 +175,18 @@ package scenes.game.display
 					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this conflict two others\nwould be created, so leaving this\nconflict is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
-						tip = new TutorialManagerTextInfo("Conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -200,7 +200,7 @@ package scenes.game.display
 						if (key == "c_80002" || key == "c_150843" || key == "c_13896") longConflictFound = true;
 					}
 					if (num == 1 && longConflictFound) {
-						tip = new TutorialManagerTextInfo("Try painting from here   ", null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
+						tip = new TutorialManagerTextInfo("Try selecting from here   ", null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
 						tips.push(tip);
 						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86622"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
 						tips.push(tip);
@@ -218,7 +218,7 @@ package scenes.game.display
 						if (key == "c_61618" || key == "c_102237" || key == "c_27250") longConflictFound = true;
 					}
 					if (num == 1 && longConflictFound) {
-						tip = new TutorialManagerTextInfo("Try painting\nfrom here", null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo("Try selecting\nfrom here", null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2596"), Constants.TOP_LEFT, Constants.TOP_LEFT);
 						tips.push(tip);
@@ -573,23 +573,23 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo("constraint\nwith\nconflict", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("constraint\nwith\nparadox", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("constraint\nwith\nconflict", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("constraint\nwith\nparadox", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "01":
-					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "02":
-					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("conflict", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 					tips.push(tip);
 					break;
 			}
@@ -632,50 +632,50 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
-						"Variables can change states. Click and drag to paint variables.\nRelease the mouse to apply the state being painted.",
+						"Variables can change states. Click and drag to select variables.\nRelease the mouse to apply the state being selected.",
 						null,
 						null,
 						null, null);
 				case "002":
 					return new TutorialManagerTextInfo(
-						"New paintbrush\n" +
+						"New selector\n" +
 						"unlocked! Change\n" +
-						"paintbrushes by\n" + 
+						"selector by\n" + 
 						"clicking on one\n" +
-						"of the paintbrush\n" + 
+						"of the selectors\n" + 
 						"    previews -->",
 						null,
 						null,
 						Constants.RIGHT, null);
 				case "01":
 					return new TutorialManagerTextInfo(
-						"Eliminate as many red conflicts as you can!",
+						"Eliminate as many red paradoxes as you can!",
 						null,
 						null,
 						null, null);
 				case "004":
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "New paintbrush unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New paintbrush unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of conflicts.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
-					else                                    text = "Keep eliminating the red conflicts!";
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "New selector unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New selector unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
+					else                                    text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,
 						null,
 						null,
 						null, null);
 				case "02":
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of conflicts. Eliminate as many red conflicts as you can!";
-					else                                    text = "Keep eliminating the red conflicts!";
+					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
+					else                                    text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,
 						null,
 						null,
 						null, null);
 				case "005":
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New paintbrush unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red conflicts!";
-					else if (PipeJam3.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red conflicts!";
-					else                                                                      text = "Keep eliminating the red conflicts!";
+					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New selector unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
+					else if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red paradoxes!";
+					else if (PipeJam3.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red paradoxes!";
+					else                                                                      text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,
 						null,
@@ -683,13 +683,13 @@ package scenes.game.display
 						null, null);
 				case "03":
 					return new TutorialManagerTextInfo(
-						"There is a limit to how many things you select. The numbers on the\npaintbrush indicate how many you've selected and the selection limit.",
+						"There is a limit to how many things you select. The numbers on the\nselector indicate how many you've selected and the selection limit.",
 						null,
 						null,
 						null, null);
 				case "04":
 					return new TutorialManagerTextInfo(
-						"Different selection areas will create different solutions.\nSometimes many items need to change to eliminate a conflict.",
+						"Different selection areas will create different solutions.\nSometimes many items need to change to eliminate a paradox.",
 						null,
 						null,
 						null, null);
@@ -710,7 +710,7 @@ package scenes.game.display
 				case "13":
 				case "14":
 					return new TutorialManagerTextInfo(
-						"Keep eliminating the red conflicts!",
+						"Keep eliminating the red paradoxes!",
 						null,
 						null,
 						null, null);

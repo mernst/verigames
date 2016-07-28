@@ -410,8 +410,8 @@ package scenes.game.components
 			var decimalPart:int = (score - integerPart) * 100;
 			
 			var currentScore:String = score.toFixed(2) + '%';
-			trace("conflict count", maxConflicts, currentConflicts, currentScore);
-			trace("TRACE OF CONFLICT COUNT ---");
+			trace("paradox count", maxConflicts, currentConflicts, currentScore);
+			trace("TRACE OF PARADOX COUNT ---");
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore);
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);

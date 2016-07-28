@@ -86,7 +86,7 @@ package hints
 			if (!atLeastOneConflictFound)
 			{
 				if (PipeJamGameScene.inTutorial) {
-					popHint("Paint at least one\nconflict before optimizing", level);
+					popHint("Select at least one\nparadox before optimizing", level);
 				}
 				
 				return false;
