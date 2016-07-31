@@ -57,4 +57,4 @@ if __name__ == "__main__":
 
     print 'Writing game files to: %s' % game_files_dirn
     qids_start = int(raw_input('Enter qid to start with: '))
-    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_min, node_max)
+    write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_min, node_max, True)

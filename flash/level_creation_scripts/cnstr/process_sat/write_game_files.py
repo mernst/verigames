@@ -2,7 +2,7 @@ import networkx as nx
 import cPickle, json, sys, os
 import _util
 
-def run(graphs_infile, game_files_directory, version, qids_start, node_min, node_max):
+def run(graphs_infile, game_files_directory, version, qids_start, node_min, node_max, random_assignments):
     
     with open(graphs_infile, 'rb') as infile:
         Gs = cPickle.load(infile)
@@ -68,9 +68,23 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 {
   "id": "%s",
   "qid": %s,
-  "assignments":{
+  "assignments":{''' % (G.graph['id'], current_qid))
+        if random_assignments:
+            first = True
+            for node_id in G.nodes():
+                if not node_id.startswith('var'):
+                    continue
+                type_no = '1' if node_id[-1] in ['0', '2', '4', '6', '8'] else '0'
+                if first:
+                    out.write('\n')
+                    first = False
+                else:
+                    out.write(',\n')
+                out.write('    "%s": {"type_value": "type:%s"}' % (node_id, type_no))
+        out.write('''
   }
-}''' % (G.graph['id'], current_qid))
+}
+''')
         out.close()
 
         layout_outfilename = game_files_directory + ('/%sLayout.json' % G.graph['id'])
