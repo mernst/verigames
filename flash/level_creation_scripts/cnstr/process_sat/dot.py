@@ -62,7 +62,7 @@ def layout_with_fruchterman_reingold(Gs):
         add_layout_to_graph(G, node_layout)
         
 
-def run(infile, outfile, node_min=0, node_max=20000, SHOW_LABELS=False):
+def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
     _util.print_step('loading')
 
     out_is_folder = os.path.isdir(outfile)
@@ -74,7 +74,7 @@ def run(infile, outfile, node_min=0, node_max=20000, SHOW_LABELS=False):
     total_conf = 0
     total_del = 0
 
-    if SHOW_LABELS:
+    if show_labels:
         label_txt = 'fontcolor="#888888"'
     else:
         label_txt = 'label=""'
@@ -110,34 +110,36 @@ digraph G {
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
 
         # Check for all wide/narrow solutions, skip layout if so
-        pos_constr = {}
-        neg_constr = {}
-        for ee in G.edges():
-            if ee[0].startswith('var'):
-                # True if narrow
-                neg_constr[ee[1]] = True
-            elif ee[1].startswith('var'):
-                # True if wide
-                pos_constr[ee[0]] = True
-        wide_is_solution = True
-        narrow_is_solution = True
-        # If constraints appear in pos but not neg, then can only be wide (all narrow would fail)
-        for cc in pos_constr:
-            if neg_constr.get(cc) is None:
-                narrow_is_solution = False
-        # If constraints appear in neg but not pos, then can only be narrow (all wide would fail)
-        for cc in neg_constr:
-            if pos_constr.get(cc) is None:
-                wide_is_solution = False
+        if skip_if_trivial:
+            pos_constr = {}
+            neg_constr = {}
+            for ee in G.edges():
+                if ee[0].startswith('var'):
+                    # True if narrow
+                    neg_constr[ee[1]] = True
+                elif ee[1].startswith('var'):
+                    # True if wide
+                    pos_constr[ee[0]] = True
 
-        if wide_is_solution:
-            G.graph['solved_if_wide'] = True
-            print '%s is solvable by setting all vars to WIDE, skipping layout...' % G.graph['id']
-            continue
-        if narrow_is_solution:
-            G.graph['solved_if_narrow'] = True
-            print '%s is solvable by setting all vars to NARROW, skipping layout...' % G.graph['id']
-            continue
+            wide_is_solution = True
+            narrow_is_solution = True
+            # If constraints appear in pos but not neg, then can only be wide (all narrow would fail)
+            for cc in pos_constr:
+                if neg_constr.get(cc) is None:
+                    narrow_is_solution = False
+            # If constraints appear in neg but not pos, then can only be narrow (all wide would fail)
+            for cc in neg_constr:
+                if pos_constr.get(cc) is None:
+                    wide_is_solution = False
+
+            if wide_is_solution:
+                G.graph['solved_if_wide'] = True
+                print '%s is solvable by setting all vars to WIDE, skipping layout...' % G.graph['id']
+                continue
+            if narrow_is_solution:
+                G.graph['solved_if_narrow'] = True
+                print '%s is solvable by setting all vars to NARROW, skipping layout...' % G.graph['id']
+                continue
 
         # Individual files per graph
         if out_is_folder:
@@ -270,4 +272,4 @@ if __name__ == "__main__":
     show_labels = sys.argv[3]
     node_min = sys.argv[4]
     node_max = sys.argv[5]
-    run(infile, outfile, show_labels, node_min, node_max)
+    run(infile, outfile, True, show_labels, node_min, node_max)

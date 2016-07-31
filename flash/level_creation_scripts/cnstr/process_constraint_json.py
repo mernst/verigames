@@ -31,8 +31,9 @@ if __name__ == "__main__":
         suf_i += 1
         dot_dirn = '%s_dot_files_%s' % (file_pref, suf_i)
     os.makedirs(dot_dirn)
+
     print 'Writing dot files to: %s' % dot_dirn
-    dot.run(graphs_fn, dot_dirn, node_min, node_max)
+    dot.run(graphs_fn, dot_dirn, False, node_min, node_max, False)
     
     if GROUP:
         groups_fn = '%s.groups' % file_pref
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         suf_i += 1
         game_files_dirn = '%s_game_files%s' % (file_pref, suf_i)
     os.makedirs(game_files_dirn)
+
     print 'Writing game files to: %s' % game_files_dirn
     qids_start = int(raw_input('Enter qid to start with: '))
     write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_min, node_max)
-
