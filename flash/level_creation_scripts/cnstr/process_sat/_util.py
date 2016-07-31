@@ -17,9 +17,9 @@ def print_step(step):
         print step, '...'
     sys.stdout.flush()
 
-def get_vals(js, lst):
+def get_vals(js, lst, ignore=None):
     for key, val in js.iteritems():
-        if key not in lst:
+        if key not in lst and key not in ignore:
             raise RuntimeError('JSON has unrecognized key ' + key)
 
     ret = []
