@@ -25,7 +25,7 @@ package server
 	public class NULogging 
 	{
 		public static var url:String = "http://viridian.ccs.neu.edu/api/objects/";//"http://crudapi-kdin.rhcloud.com/api/objects/";
-		public static var loggingOn:Boolean = false;
+		public static var loggingOn:Boolean = true;
 		public static var request:URLRequest = new URLRequest(url);
 		static public var postAlerts:Boolean = false;
 		static public var EVENT_COMPLETE:int = 1;
@@ -62,9 +62,6 @@ package server
 					trace(e);
 				}	
 			}
-			
-			
-			
 		}
 		
 		private static function configureListeners(dispatcher:flash.events.IEventDispatcher):void

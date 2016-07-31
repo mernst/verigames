@@ -20,6 +20,8 @@ package scenes.game.display
 	import server.MTurkAPI;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
+	
+	import flash.external.ExternalInterface;
 
 	import mx.utils.UIDUtil;
 	
@@ -227,7 +229,11 @@ package scenes.game.display
 		
 		public static function initPlayerVars():void {
 			
+			
+			
 			playerID = UIDUtil.createUID();
+			trace("PLAYERid$$", playerID);
+			
 			trace("THIS IS THE UNIQUE ID:::::::::::::::::::::::::", playerID);
 			realLevelsCompleted = 0;
 			realLevelsSkipped = 0;

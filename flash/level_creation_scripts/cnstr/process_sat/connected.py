@@ -1,5 +1,5 @@
 import networkx as nx
-import pymetis
+
 import cPickle, json, os, sys
 import _util
 
@@ -32,6 +32,7 @@ def split_graph(G, existing_Gs):
         print 'Graph with %s vars... DONE' % var_count
         return
     else:
+        import pymetis
         num_partitions = var_count / 5000
         print 'Graph with %s vars... splitting into %s paritions...' % (var_count, num_partitions)
         (metis_g, vert_dict) = nx_to_metis(G)
