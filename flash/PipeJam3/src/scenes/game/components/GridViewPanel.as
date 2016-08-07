@@ -171,6 +171,9 @@ package scenes.game.components
 		
 		public var m_updateDisplay:Boolean = true;
 		
+		public static var skipLevelOn:Boolean;
+		public static var skipToEndOn:Boolean;
+		
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
@@ -258,6 +261,9 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
+			skipLevelOn = true;
+			skipToEndOn = true;
+			
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				
 			//create a clip rect for the window
@@ -283,10 +289,16 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			if (TutorialController.tutorialsDone) {
+			if (TutorialController.tutorialsDone && skipLevelOn) {
 				displaySkipButton();
+			}
+			
+			
+			if (TutorialController.tutorialsDone && skipToEndOn) {
 				displayPassButton();
 			}
+			
+			
 			
 			
 			

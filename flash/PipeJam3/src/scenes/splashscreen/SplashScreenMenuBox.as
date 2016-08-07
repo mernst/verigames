@@ -52,6 +52,9 @@ package scenes.splashscreen
 		public var inputInfo:flash.text.TextField;
 		private var m_infoTextfield:TextFieldWrapper;
 		private var m_scoreTextfield:TextFieldWrapper;
+		
+		public static var MTurkVersion:Boolean = true;
+		public static var userStudyVersion:Boolean = false;
 
 
 		public function SplashScreenMenuBox(_parent:SplashScreenScene)
@@ -176,10 +179,19 @@ package scenes.splashscreen
 					//------------------------------------------------------------------
 					
 					play_button.addEventListener(starling.events.Event.TRIGGERED, onSurveyButtonTriggered);
-					m_mainMenu.addChild(play_button);
+					
 					m_infoTextfield.width = 300;
-					TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
-					//TextFactory.getInstance().updateText(m_infoTextfield, "Thank you for playing!");
+					
+					
+					if (MTurkVersion) {
+						TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
+						m_mainMenu.addChild(play_button);
+					}
+					
+					if (userStudyVersion) {
+						TextFactory.getInstance().updateText(m_infoTextfield, "Thank you for playing!");
+					}
+					
 					TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					
 				}
@@ -187,9 +199,14 @@ package scenes.splashscreen
 					if (currentDisplayString == "Begin"){
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 						m_mainMenu.addChild(play_button);
+					
+						if (MTurkVersion) {
+							TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
+						}
+						if (userStudyVersion) {
+							TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play. ");
+						}
 						
-						TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
-						//TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play. ");
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}
 					else{
@@ -199,8 +216,13 @@ package scenes.splashscreen
 						m_infoTextfield.width = 450;
 						m_infoTextfield.x = m_parent.width/2 - m_infoTextfield.width/2;
 
-						TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels, or skip to the end if you wish.");
-						//TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
+						if (MTurkVersion) {
+							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels, or skip to the end if you wish.");
+						}
+						if (userStudyVersion) {
+							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
+						}
+						
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}	
 				}
@@ -296,7 +318,7 @@ package scenes.splashscreen
 		}
 		
 		protected function onSurveyButtonTriggered(e:starling.events.Event):void {
-			navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
+			navigateToURL(new URLRequest("http://viridian.ccs.neu.edu/api/survey/" + World.playerID));
 			parent.removeChild(play_button);
 		}
 		
