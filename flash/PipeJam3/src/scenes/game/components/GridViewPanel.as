@@ -290,7 +290,7 @@ package scenes.game.components
 			checkPaintBrushVisibility();
 			
 			if (TutorialController.tutorialsDone && skipLevelOn) {
-				displaySkipButton();
+				displaySkipButton();	
 			}
 			
 			
