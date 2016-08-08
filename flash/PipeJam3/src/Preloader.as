@@ -44,7 +44,7 @@ package
 		private function handleProgress(progressPercent:Number) : void 
 		{
 			// Do logging or anything else here..
-			trace("Loading.. " + progressPercent + "%");
+			trace("Loading... " + progressPercent + "%");
 		}
 		
 		/**

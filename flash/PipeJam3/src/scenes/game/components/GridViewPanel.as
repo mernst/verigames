@@ -170,10 +170,7 @@ package scenes.game.components
 		private static const ZOOM_PAN_TIME_SEC:Number = 0.6;
 		
 		public var m_updateDisplay:Boolean = true;
-		
-		public static var skipLevelOn:Boolean;
-		public static var skipToEndOn:Boolean;
-		
+				
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
@@ -261,9 +258,6 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
-			skipLevelOn = true;
-			skipToEndOn = true;
-			
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				
 			//create a clip rect for the window
@@ -289,12 +283,11 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			if (TutorialController.tutorialsDone && skipLevelOn) {
-				displaySkipButton();	
-			}
+			if ((!TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_GAMEPLAY)) {
+				displaySkipButton();
+			}			
 			
-			
-			if (TutorialController.tutorialsDone && skipToEndOn) {
+			if (TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_TO_END_GAMEPLAY) {
 				displayPassButton();
 			}
 			
@@ -1424,8 +1417,8 @@ package scenes.game.components
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
 		
-		public function displaySkipButton():void {
-			
+		public function displaySkipButton():void
+		{	
 			skipButton = ButtonFactory.getInstance().createDefaultButton("Skip Level", 128, 32);
 			skipButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
 			skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
@@ -1433,7 +1426,8 @@ package scenes.game.components
 			m_buttonLayer.addChild(skipButton);
 		}
 		
-		public function displayPassButton():void {
+		public function displayPassButton():void
+		{
 			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to end", 128, 32);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
 			passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
