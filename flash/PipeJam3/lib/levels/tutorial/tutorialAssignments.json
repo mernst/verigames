@@ -64,7 +64,6 @@
           "type_value": "type:0"
         }
       },
-      "id": "005",
       "qid": 2105,
       "target_score": 20
     },
@@ -74,6 +73,26 @@
       "qid": 2003,
       "target_score": 52
     },
+    "var:6": {"type_value": "type:0"},
+    "var:7": {"type_value": "type:0"},
+    "var:10": {"type_value": "type:0"},
+    "var:11": {"type_value": "type:0"}
+  }
+}
+,
+
+  "qid": 2105,
+}
+,
+
+{
+  "id": "p_000031_00011222",
+  "target_score": 52,
+  "qid": 2003,
+  "assignments":{
+  }
+}
+,
     {
       "assignments": {},
       "id": "p_000029_00012696",
