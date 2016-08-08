@@ -3,6 +3,7 @@ import json
 # dump JSON in a nice format
 def json_dump(obj, fp):
 	json.dump(obj, fp, indent=2, separators=(',',': '), sort_keys=True)
+	fp.write('\n')
 
 
 
