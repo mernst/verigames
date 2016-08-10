@@ -24,7 +24,7 @@ package server
 	 */
 	public class NULogging 
 	{
-		public static var url:String = "https://viridian.ccs.neu.edu/api/objects/";//"http://crudapi-kdin.rhcloud.com/api/objects/";
+		public static var url:String = "http://viridian.ccs.neu.edu/api/objects/";//"http://crudapi-kdin.rhcloud.com/api/objects/";
 		public static var loggingOn:Boolean = true;
 		public static var request:URLRequest = new URLRequest(url);
 		static public var postAlerts:Boolean = false;
