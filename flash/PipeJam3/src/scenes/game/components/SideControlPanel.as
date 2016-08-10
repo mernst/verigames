@@ -189,14 +189,14 @@ package scenes.game.components
 			
 			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
 			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
 
 			m_widenBrush.y = 0;
 			m_narrowBrush.y  = 30;
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.y = 60;
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 60;
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 90;
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush.y = 60;
+			if (GameConfig.ENABLE_SOLVER2_BRUSH && !GameConfig.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 60;
+			if (GameConfig.ENABLE_SOLVER2_BRUSH && GameConfig.ENABLE_SOLVER1_BRUSH) m_solver2Brush.y = 90;
 
 			m_widenBrush.visible = false;
 			m_brushButtonGroup.addChild(m_widenBrush);
@@ -204,13 +204,13 @@ package scenes.game.components
 			m_narrowBrush.visible = false;
 			m_brushButtonGroup.addChild(m_narrowBrush);
 			
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			if (GameConfig.ENABLE_SOLVER1_BRUSH)
 			{
 				m_solver1Brush.visible = false;
 				m_brushButtonGroup.addChild(m_solver1Brush);
 			}
 			
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			if (GameConfig.ENABLE_SOLVER2_BRUSH)
 			{
 				m_solver2Brush.visible = false;
 				m_brushButtonGroup.addChild(m_solver2Brush);
@@ -218,11 +218,11 @@ package scenes.game.components
 
 			//
 			
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			if (GameConfig.ENABLE_SOLVER1_BRUSH)
 			{
 				m_brushButtonGroup.makeActive(m_solver1Brush);
 			}
-			else if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			else if (GameConfig.ENABLE_SOLVER2_BRUSH)
 			{
 				m_brushButtonGroup.makeActive(m_solver2Brush);
 			}
@@ -473,10 +473,10 @@ package scenes.game.components
 					m_brushButtonGroup.makeActive(m_narrowBrush);
 					break;
 				case GridViewPanel.SOLVER1_BRUSH:
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_brushButtonGroup.makeActive(m_solver1Brush);
+					if (GameConfig.ENABLE_SOLVER1_BRUSH) m_brushButtonGroup.makeActive(m_solver1Brush);
 					break;
 				case GridViewPanel.SOLVER2_BRUSH:
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_brushButtonGroup.makeActive(m_solver2Brush);
+					if (GameConfig.ENABLE_SOLVER2_BRUSH) m_brushButtonGroup.makeActive(m_solver2Brush);
 					break;
 			}
 		}
@@ -489,12 +489,12 @@ package scenes.game.components
 			if(m_widenBrush.visible) count++;
 			m_narrowBrush.visible = visibleBrushes & TutorialLevelManager.WIDEN_BRUSH ? true : false;
 			if(m_narrowBrush.visible) count++;
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			if (GameConfig.ENABLE_SOLVER1_BRUSH)
 			{
 				m_solver1Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER1_BRUSH ? true : false;
 				if (m_solver1Brush.visible) count++;
 			}
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			if (GameConfig.ENABLE_SOLVER2_BRUSH)
 			{
 				m_solver2Brush.visible = visibleBrushes & TutorialLevelManager.SOLVER2_BRUSH ? true : false;
 				if (m_solver2Brush.visible) count++;
@@ -505,8 +505,8 @@ package scenes.game.components
 			{
 				m_widenBrush.visible = false;
 				m_narrowBrush.visible = false;
-				if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.visible = false;
-				if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.visible = false;
+				if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush.visible = false;
+				if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush.visible = false;
 			}
 		}
 		
@@ -514,8 +514,8 @@ package scenes.game.components
 		{
 			m_widenBrush.deemphasize();
 			m_narrowBrush.deemphasize();
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.deemphasize();
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.deemphasize();
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush.deemphasize();
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush.deemphasize();
 			if (emphasizeBrushes & TutorialLevelManager.WIDEN_BRUSH)
 			{
 				m_widenBrush.emphasize();
@@ -526,11 +526,11 @@ package scenes.game.components
 			}
 			if (emphasizeBrushes & TutorialLevelManager.SOLVER1_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush.emphasize();
+				if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush.emphasize();
 			}
 			if (emphasizeBrushes & TutorialLevelManager.SOLVER2_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush.emphasize();
+				if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush.emphasize();
 			}
 		}
 		

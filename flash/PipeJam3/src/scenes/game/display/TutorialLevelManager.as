@@ -36,7 +36,7 @@ package scenes.game.display
 		
 		public static function excludeLevel(id:String):Boolean
 		{
-			if (!PipeJam3.ENABLE_SOLVER_LEVELS)
+			if (!GameConfig.ENABLE_SOLVER_LEVELS)
 			{
 				switch (id) {
 					case "004":
@@ -466,13 +466,13 @@ package scenes.game.display
 				case "004":
 				case "02":
 					brushes = WIDEN_BRUSH | NARROW_BRUSH;
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					if (GameConfig.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
 					break;
 				case "005":
 					brushes = WIDEN_BRUSH | NARROW_BRUSH;
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
-					else if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					if (GameConfig.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					else if (GameConfig.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
 					break;
 				case "03":
 				case "04":
@@ -492,8 +492,8 @@ package scenes.game.display
 				case "14":
 				default:
 					brushes = WIDEN_BRUSH | NARROW_BRUSH;
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
+					if (GameConfig.ENABLE_SOLVER1_BRUSH) brushes = brushes | SOLVER1_BRUSH;
+					if (GameConfig.ENABLE_SOLVER2_BRUSH) brushes = brushes | SOLVER2_BRUSH;
 					break;
 			}
 			return brushes;
@@ -520,9 +520,9 @@ package scenes.game.display
 					return NARROW_BRUSH;
 				case "004":
 				case "02":
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH) return SOLVER1_BRUSH;
+					if (GameConfig.ENABLE_SOLVER1_BRUSH) return SOLVER1_BRUSH;
 				case "005":
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH) return SOLVER2_BRUSH;
+					if (GameConfig.ENABLE_SOLVER2_BRUSH) return SOLVER2_BRUSH;
 			}
 			return 0x0;
 		}
@@ -668,8 +668,8 @@ package scenes.game.display
 						null,
 						null, null);
 				case "004":
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "New selector unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "New selector unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
+					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = "New selector unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.";
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = "New selector unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
 					else                                    text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,
@@ -677,8 +677,8 @@ package scenes.game.display
 						null,
 						null, null);
 				case "02":
-					if (PipeJam3.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
+					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
 					else                                    text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,
@@ -686,9 +686,9 @@ package scenes.game.display
 						null,
 						null, null);
 				case "005":
-					if (PipeJam3.ENABLE_SOLVER2_BRUSH && PipeJam3.ENABLE_SOLVER1_BRUSH)       text = "New selector unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
-					else if (PipeJam3.ENABLE_SOLVER2_BRUSH && !PipeJam3.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red paradoxes!";
-					else if (PipeJam3.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red paradoxes!";
+					if (GameConfig.ENABLE_SOLVER2_BRUSH && GameConfig.ENABLE_SOLVER1_BRUSH)       text = "New selector unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH && !GameConfig.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red paradoxes!";
+					else if (GameConfig.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red paradoxes!";
 					else                                                                      text = "Keep eliminating the red paradoxes!";
 					return new TutorialManagerTextInfo(
 						text,

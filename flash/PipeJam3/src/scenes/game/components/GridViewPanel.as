@@ -206,11 +206,11 @@ package scenes.game.components
 			// Create paintbrushes for menu, and for mouse cursor
 			m_widenBrush = createPaintBrush(WIDEN_BRUSH);
 			m_narrowBrush = createPaintBrush(NARROW_BRUSH);
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrush(SOLVER2_BRUSH);
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrush(SOLVER1_BRUSH);
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrush(SOLVER2_BRUSH);
 			
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) m_paintBrush = m_solver1Brush;
-			else if (PipeJam3.ENABLE_SOLVER2_BRUSH) m_paintBrush = m_solver2Brush;
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_paintBrush = m_solver1Brush;
+			else if (GameConfig.ENABLE_SOLVER2_BRUSH) m_paintBrush = m_solver2Brush;
 			else m_paintBrush = m_widenBrush;
 			
 			var atlas:TextureAtlas = AssetInterface.PipeJamSpriteSheetAtlas;
@@ -283,11 +283,11 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			if ((!TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_GAMEPLAY)) {
+			if ((!TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_GAMEPLAY)) {
 				displaySkipButton();
 			}			
 			
-			if (TutorialController.tutorialsDone && PipeJam3.ENABLE_SKIP_TO_END_GAMEPLAY) {
+			if (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TO_END_GAMEPLAY) {
 				displayPassButton();
 			}
 			
@@ -1667,7 +1667,7 @@ package scenes.game.components
 		
 		public function setFirstBrush(visibleBrushes:int):void
 		{
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH)
+			if (GameConfig.ENABLE_SOLVER1_BRUSH)
 			{
 				if(visibleBrushes & TutorialLevelManager.SOLVER1_BRUSH)
 				{
@@ -1676,7 +1676,7 @@ package scenes.game.components
 				}
 			}
 			
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH)
+			if (GameConfig.ENABLE_SOLVER2_BRUSH)
 			{
 				if(visibleBrushes & TutorialLevelManager.SOLVER2_BRUSH)
 				{
@@ -1714,11 +1714,11 @@ package scenes.game.components
 			}
 			else if(brushName == GridViewPanel.SOLVER1_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER1_BRUSH) brush = m_solver1Brush;
+				if (GameConfig.ENABLE_SOLVER1_BRUSH) brush = m_solver1Brush;
 			}
 			else if(brushName == GridViewPanel.SOLVER2_BRUSH)
 			{
-				if (PipeJam3.ENABLE_SOLVER2_BRUSH) brush = m_solver2Brush;
+				if (GameConfig.ENABLE_SOLVER2_BRUSH) brush = m_solver2Brush;
 			}
 			
 			if(brush == m_paintBrush || brush == null)

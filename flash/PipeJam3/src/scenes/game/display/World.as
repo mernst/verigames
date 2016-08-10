@@ -1508,16 +1508,16 @@ package scenes.game.display
 			var brushInt2Str:Dictionary = new Dictionary();
 			brushInt2Str[TutorialLevelManager.WIDEN_BRUSH] = GridViewPanel.WIDEN_BRUSH;
 			brushInt2Str[TutorialLevelManager.NARROW_BRUSH] = GridViewPanel.NARROW_BRUSH;
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushInt2Str[TutorialLevelManager.SOLVER1_BRUSH] = GridViewPanel.SOLVER1_BRUSH;
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushInt2Str[TutorialLevelManager.SOLVER2_BRUSH] = GridViewPanel.SOLVER2_BRUSH;
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) brushInt2Str[TutorialLevelManager.SOLVER1_BRUSH] = GridViewPanel.SOLVER1_BRUSH;
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) brushInt2Str[TutorialLevelManager.SOLVER2_BRUSH] = GridViewPanel.SOLVER2_BRUSH;
 			
 			// This determines the default for which brush is activated first (if visible)
 			var brushOrder:Array = [
 									TutorialLevelManager.WIDEN_BRUSH,
 									TutorialLevelManager.NARROW_BRUSH
 			];
-			if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushOrder.unshift(TutorialLevelManager.SOLVER2_BRUSH);
-			if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushOrder.unshift(TutorialLevelManager.SOLVER1_BRUSH);
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) brushOrder.unshift(TutorialLevelManager.SOLVER2_BRUSH);
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) brushOrder.unshift(TutorialLevelManager.SOLVER1_BRUSH);
 			
 			// If a tutorial specifically wants one brush to be selected to start, put
 			// this at the beginning of the list of brushes to check for visibility

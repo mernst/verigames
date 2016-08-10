@@ -767,8 +767,8 @@ package scenes.game.display
 							brushesToActivate += TutorialLevelManager.NARROW_BRUSH;
 							break;
 						case 'auto':
-							if (PipeJam3.ENABLE_SOLVER1_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER1_BRUSH;
-							if (PipeJam3.ENABLE_SOLVER2_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER2_BRUSH;
+							if (GameConfig.ENABLE_SOLVER1_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER1_BRUSH;
+							if (GameConfig.ENABLE_SOLVER2_BRUSH) brushesToActivate += TutorialLevelManager.SOLVER2_BRUSH;
 							break;
 					}
 				}
