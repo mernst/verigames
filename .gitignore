@@ -14,7 +14,6 @@ java/test/.*/diff_.*txt
 java/dist/
 java/optimizer/build/
 
-syntax: glob
 *.aux
 *.blg
 *.log
@@ -211,7 +210,7 @@ flash/PipeJam3/SampleWorlds/rand-500-3.json
 flash/PipeJam3/SampleWorlds/rand-500-3Assignments.json
 flash/PipeJam3/SampleWorlds/rand-500-3Layout.json
 flash/PipeJam3/lib/audio/axtoncrolley-nodens-field-song.mp3
-flash/PipeJam3/obj/VerigameConfig.old
+flash/PipeJam3/obj/
 flash/level_creation_scripts/L21414_V17680.json
 flash/level_creation_scripts/L21414_V17680_OPT.json
 flash/level_creation_scripts/L21414_V17680_OPTAssignments.json
