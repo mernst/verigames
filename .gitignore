@@ -14,7 +14,6 @@ java/test/.*/diff_.*txt
 java/dist/
 java/optimizer/build/
 
-syntax: glob
 *.aux
 *.blg
 *.log
