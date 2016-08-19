@@ -91,8 +91,9 @@ package
 		{
 			trace("In onLoaded..");
 			nextFrame(); //go to next frame and start PipeJam3
-			var App:Class = getDefinitionByName("PipeJam3") as Class; //class of your app
-			addChild(new App() as DisplayObject);
+			addChild(new PipeJam3());
+			//var App:Class = getDefinitionByName("PipeJam3") as Class; //class of your app
+			//addChild(new App() as DisplayObject);
 		}
 		
 	}

@@ -42,6 +42,7 @@ package hints
 		{
 			var performSmallSelectionCheck:Boolean = (level.tutorialManager != null) ? level.tutorialManager.getPerformSmallAutosolveGroupCheck() : true;
 			var atLeastOneConflictFound:Boolean = false;
+			trace("Total " + level.selectedNodes.length + " nodes selected.");
 			for each(var selectedNode:Node in level.selectedNodes)
 			{
 				if (selectedNode is ClauseNode)
@@ -93,7 +94,7 @@ package hints
 			}
 			else if (performSmallSelectionCheck)
 			{
-				var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
+				//var smallGroupAttempts:int = m_playerStatus.getSmallGroupAttempts(level);
 				if (level.selectedNodes.length <= SMALL_NODE_CHECK_VAL)
 				{
 					incrementSmallGroupAttempts(level);
@@ -103,14 +104,14 @@ package hints
 					resetSmallGroupAttempts(level);
 				}
 				
-				if (smallGroupAttempts + 1 == 3)
+				if (m_playerStatus.getSmallGroupAttempts(level) == 3)
 				{
 					// After three consecutive small attempts, assume the user is not click+dragging properly and prompt them to do so
 					if (PipeJamGameScene.inTutorial) {
 						popHint("Try holding the left mouse button and\ndragging to select many variables at once.", level);
 					}
 					
-					m_playerStatus.setSmallGroupAttempts(level, 0);
+					resetSmallGroupAttempts(level);
 					return false;
 				}
 			}
