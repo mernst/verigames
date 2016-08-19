@@ -438,12 +438,18 @@ package scenes.game.components
 				level.setTargetScore(maxConflicts * 0.99);	
 			}
 			
-			if(level.currentScore >= level.getTargetScore()) {level.setTargetScore(level.currentScore + 1)}
+			if(level.currentScore >= level.getTargetScore()) {trace("Current score " + level.currentScore + " is >= " + level.getTargetScore()); /* level.setTargetScore(level.currentScore + 1)*/ }
 			var targetScore:int = level.getTargetScore();
 			var targetPercentage:Number = (targetScore / maxConflicts) * 100;
 			var score:Number = ((maxConflicts - MiniMap.numConflicts) / maxConflicts) * 100;
 			
 			var currentTarget:String = targetPercentage.toFixed(2) + '%';
+			
+			if ((m_targetPercentTextfield as TextFieldHack).text != "Target:\n" + currentTarget)
+			{
+				trace("Target percentage changed from '" + (m_targetPercentTextfield as TextFieldHack).text
+					+ "' to 'Target:\n" + currentTarget + "'");
+			}
 			
 			TextFactory.getInstance().updateText(m_targetPercentTextfield, "Target:\n" + currentTarget);
 			TextFactory.getInstance().updateAlign(m_targetPercentTextfield, 2, 1);
