@@ -1417,21 +1417,28 @@ package scenes.game.components
 		private var m_fanfareTextContainer:Sprite = new Sprite();
 		private var m_stopFanfareDelayedCall:DelayedCall;
 		
+		private var m_buttonBufferValue:int = 8;
+		private var m_buttonWidth:int = 85;
+		private var m_buttonHeight:int = 22;
+		
 		public function displaySkipButton():void
 		{	
-			skipButton = ButtonFactory.getInstance().createDefaultButton("Skip Level", 128, 32);
+			skipButton = ButtonFactory.getInstance().createDefaultButton("Skip Level", m_buttonWidth, m_buttonHeight);
 			skipButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
-			skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
-			skipButton.y = HEIGHT - skipButton.height - 2;
+			//skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
+			skipButton.x = m_buttonBufferValue ;
+			skipButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
 			m_buttonLayer.addChild(skipButton);
 		}
 		
 		public function displayPassButton():void
 		{
-			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to end", 128, 32);
+			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to end", m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
-			passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
-			passButton.y = HEIGHT - passButton.height - 2;
+			//passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
+			passButton.x = m_buttonBufferValue;
+			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
+			//passButton.y = HEIGHT - passButton.height - 2;
 			m_buttonLayer.addChild(passButton);
 		}
 
@@ -1440,10 +1447,12 @@ package scenes.game.components
 			if (PipeJam3.ASSET_SUFFIX == "Turk") showFanfare = false;
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
-				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
+				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", m_buttonWidth, m_buttonHeight);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-				continueButton.x = WIDTH - continueButton.width - Constants.RightPanelWidth + 10;
-				continueButton.y = HEIGHT - continueButton.height - 2;
+				//continueButton.x = WIDTH - continueButton.width - Constants.RightPanelWidth + 10;
+				//continueButton.y = HEIGHT - continueButton.height - 2;
+				continueButton.x = m_buttonBufferValue;
+				continueButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
 			}
 			
 			//if(PipeJamGameScene.inTutorial)

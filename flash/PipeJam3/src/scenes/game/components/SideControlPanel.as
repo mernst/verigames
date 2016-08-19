@@ -79,6 +79,9 @@ package scenes.game.components
 		/** Text showing the target percentage score */
 		private var m_targetPercentTextfield:TextFieldWrapper;
 		
+		/** Text showing the nameof the level */
+		private var m_levelNameTextField:TextFieldWrapper;
+		
 		/** display control variables */
 		private var m_panZoomAllowed:Boolean;
 		
@@ -142,6 +145,13 @@ package scenes.game.components
 			logoImage.width = m_menuButton.width;
 			logoImage.scaleY = logoImage.scaleX;
 			addChild(logoImage);
+			
+			m_levelNameTextField = TextFactory.getInstance().createTextField("Level Name Comes Here", AssetsFont.FONT_UBUNTU, 30, 25, 6, 0xB1ACAA, true);
+			m_levelNameTextField.touchable = false;
+			m_levelNameTextField.x = 54;
+			m_levelNameTextField.y = 18;
+			TextFactory.getInstance().updateAlign(m_levelNameTextField, 0, 1);
+			addChild(m_levelNameTextField);
 			
 			m_scoreTextfield = TextFactory.getInstance().createTextField("0%", AssetsFont.FONT_UBUNTU, 50, 2.0 * 20, 30, 0xFFFFFF);
 			m_scoreTextfield.touchable = false;
@@ -431,6 +441,10 @@ package scenes.game.components
 		{
 			var maxConflicts:int = level.maxScore;
 			trace("LEVEL NAME::::::::::::::::::::::::::::::", level.level_name);
+			
+			TextFactory.getInstance().updateText(m_levelNameTextField, level.level_name);
+			TextFactory.getInstance().updateAlign(m_levelNameTextField, 0, 1);
+			
 			if (level.level_name == "Reach out" || level.level_name == "Welcome" || level.level_name == "Know your limits" ) {
 				level.setTargetScore(maxConflicts);
 			}
