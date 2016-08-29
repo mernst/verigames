@@ -80,6 +80,8 @@ package scenes.game.components
 	
 	import server.NULogging;
 	import scenes.game.display.World;
+	import mx.controls.Alert;
+
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -293,8 +295,6 @@ package scenes.game.components
 			
 			
 			
-			
-			
 			resetKeysDown();
 
 			addEventListener(MaxSatSolver.SOLVER_STARTED, onSolverStarted);
@@ -306,6 +306,8 @@ package scenes.game.components
 			Starling.current.nativeStage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightClickUpEventHandler);
 			Starling.current.nativeStage.addEventListener(flash.events.Event.MOUSE_LEAVE, mouseLeaveHandler);
 		}
+		
+		//public var m_skipCount:int = 0;
 		
 		private function resetKeysDown():void
 		{
@@ -1433,13 +1435,14 @@ package scenes.game.components
 		
 		public function displayPassButton():void
 		{
-			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to end", m_buttonWidth, m_buttonHeight);
+			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to survey", m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
 			//passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
 			passButton.x = m_buttonBufferValue;
 			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
 			//passButton.y = HEIGHT - passButton.height - 2;
 			m_buttonLayer.addChild(passButton);
+			passButton.visible = false;
 		}
 
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
@@ -1545,12 +1548,13 @@ package scenes.game.components
 			}
 		}
 		
+		private var m_skipCount:int = 0;
 		private var buttonHit:Boolean = false;
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
+			m_skipCount = 0;
 			buttonHit = true;
-			trace("Next level button is triggered");
-			
+			trace("Next level button is triggered");		
 			
 			
 			World.levelTimer.stop();
@@ -1570,9 +1574,25 @@ package scenes.game.components
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
+		private function CheckPassButton():void
+		{
+			if (passButton == null || passButton.visible)
+				return;
+			
+			trace("--------------------------------> Skip count " + m_skipCount);
+			if (m_skipCount >= 2)
+			{
+				passButton.visible = true;
+			}
+			else	
+				passButton.visible = false;
+		}
+		
 		private function onSkipLevelButtonTriggered(evt:starling.events.Event):void
 		{
-			
+			m_skipCount++;
+			trace("--------------------------------> Calling CheckPassButton() <-----------------------");
+			CheckPassButton();
 			trace("Next level button is triggered");
 			//------------------------------------------------------------------
 			
@@ -1592,10 +1612,29 @@ package scenes.game.components
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
+		private function alertEventHandler(evt:starling.events.Event):void {
+			World.gamePlayDone = true;
+			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
+		}
+		
 		private function onPassButtonTriggered(evt:starling.events.Event):void {
 			World.gamePlayDone = true;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
 			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
+			
+			/*
+			var sp:flash.display.Sprite = new flash.display.Sprite();
+			sp.width = this.width;
+			sp.height = this.height;
+			sp.x = this.width / 2;
+			sp.y = this.y / 2;
+			addChild(sp);
+			
+			Alert.show("Are you sure you want to skip to Survey?", "Skip to Survey",
+				mx.controls.Alert.YES | mx.controls.Alert.NO, sp, alertEventHandler);		
+			*/
+			
 		}
 		
 		//calculates the relative point of the level's content and centers it
