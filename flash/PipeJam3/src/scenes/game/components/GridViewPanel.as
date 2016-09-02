@@ -80,7 +80,7 @@ package scenes.game.components
 	
 	import server.NULogging;
 	import scenes.game.display.World;
-	import mx.controls.Alert;
+	import dialogs.SimpleAlertDialog;
 
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -1612,30 +1612,21 @@ package scenes.game.components
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
-		private function alertEventHandler(evt:starling.events.Event):void {
+		private function alertEventHandler():void {
 			World.gamePlayDone = true;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
 			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
+		}
+		//Alert.show("Testing..");
+		
+		
+		
+		private function onPassButtonTriggered(evt:starling.events.Event):void {			
+			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to Skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
+			this.addChild(dialog);			
 		}
 		
-		private function onPassButtonTriggered(evt:starling.events.Event):void {
-			World.gamePlayDone = true;
-			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
-			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
-			
-			/*
-			var sp:flash.display.Sprite = new flash.display.Sprite();
-			sp.width = this.width;
-			sp.height = this.height;
-			sp.x = this.width / 2;
-			sp.y = this.y / 2;
-			addChild(sp);
-			
-			Alert.show("Are you sure you want to skip to Survey?", "Skip to Survey",
-				mx.controls.Alert.YES | mx.controls.Alert.NO, sp, alertEventHandler);		
-			*/
-			
-		}
+		//onPassButtonTriggered(null);
 		
 		//calculates the relative point of the level's content and centers it
 		public function moveToPoint(percentPoint:Point):void

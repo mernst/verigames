@@ -18,10 +18,11 @@ package dialogs
 	public class SimpleAlertDialog extends BaseDialog
 	{
 		protected var ok_button:NineSliceButton;
+		protected var cancel_button:NineSliceButton;
 		private var m_socialText:String;
 		private var m_callback:Function;
 		
-		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "", callback:Function = null, numLinesInText:int = 1)
+		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "", callback:Function = null, numLinesInText:int = 1, cancelButton:Boolean = false)
 		{
 			super(_width, _height);
 			
@@ -34,11 +35,24 @@ package dialogs
 			label.x = (width - label.width)/2;
 			label.y = background.y + 15;
 			
-			ok_button = ButtonFactory.getInstance().createButton("OK", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			if (cancelButton)
+				ok_button = ButtonFactory.getInstance().createButton("Yes", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			else
+				ok_button = ButtonFactory.getInstance().createButton("OK", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+				
 			ok_button.addEventListener(starling.events.Event.TRIGGERED, onOKButtonTriggered);
 			addChild(ok_button);
-			ok_button.x = background.x + (_width - ok_button.width)/2;
+			ok_button.x = background.x + (_width - ok_button.width)/2 - 40;
 			ok_button.y = background.y + _height - 16 - 16;
+			
+			if (cancelButton)
+			{
+				cancel_button = ButtonFactory.getInstance().createButton("No", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+				cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
+				addChild(cancel_button);
+				cancel_button.x = background.x + (_width - cancel_button.width)/2 + 40;
+				cancel_button.y = background.y + _height - 16 - 16;
+			}
 			
 			if (m_socialText && m_socialText.length > 0) {
 				var fbLogoTexture:Texture = AssetInterface.getTexture("Game", "FacebookLogoWhiteClass");
@@ -73,6 +87,13 @@ package dialogs
 		{
 			// TODO: Call Top coder API
 			trace("Tweet: " + m_socialText);
+		}
+		
+		
+		private function onCancelButtonTriggered(evt:Event):void
+		{
+			visible = false;
+			parent.removeChild(this);
 		}
 		
 		private function onOKButtonTriggered(evt:Event):void
