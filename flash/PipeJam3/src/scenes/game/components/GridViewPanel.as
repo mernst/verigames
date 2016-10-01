@@ -172,6 +172,27 @@ package scenes.game.components
 		private static const ZOOM_PAN_TIME_SEC:Number = 0.6;
 		
 		public var m_updateDisplay:Boolean = true;
+		
+		// The Timer to show for real levels.
+		private var m_mainGameTimer:Timer;
+		
+		// Maximum wait time for the game timer.
+		private static const MAX_WAIT_TIME_IN_MINUTES:Number = 5;
+		
+		// The minutes to display on the timer.
+		private var m_minutesRemaining:Number = 0;
+		
+		// The seconds to display on the timer.
+		private var m_secondsRemaining:Number = 0;
+		
+		// The maximum wait time in seconds (Set to MAX_WAIT_TIME_IN_MINUTES minutes)
+		private static const MAX_WAIT_TIME_FOR_GAME_TIMER:Number = MAX_WAIT_TIME_IN_MINUTES * 60;
+		
+		// Should we show the skip to end button yet?
+		private var m_showSkipToEnd:Boolean = false;
+		
+		// The text field wrapper to show on the screen for the timer.
+		private var m_gameTimerText:TextFieldWrapper;
 				
 		public function GridViewPanel(world:World)
 		{
@@ -290,8 +311,12 @@ package scenes.game.components
 			}			
 			
 			if (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TO_END_GAMEPLAY) {
+				startGameTimer();
 				displayPassButton();
 			}
+			
+			
+				
 			
 			
 			
@@ -1433,16 +1458,74 @@ package scenes.game.components
 			m_buttonLayer.addChild(skipButton);
 		}
 		
+		
+		public function startGameTimer():void
+		{
+			// Set the timer to tick at every second for max wait time (defaulted to MAX_WAIT_TIME_IN_MINUTES minutes)
+			m_mainGameTimer = new Timer(1000, MAX_WAIT_TIME_FOR_GAME_TIMER);
+			m_mainGameTimer.addEventListener(TimerEvent.TIMER, onGameTimerTick);
+			m_mainGameTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onGameTimerComplete);
+			
+			m_gameTimerText = TextFactory.getInstance().createTextField("0" + MAX_WAIT_TIME_IN_MINUTES.toString() + ":00",
+				AssetsFont.FONT_UBUNTU, 30, 25, 10, 0x660000, true);
+			m_gameTimerText.touchable = false;
+			
+			m_gameTimerText.x = m_buttonBufferValue;
+			//m_gameTimerText.x = m_buttonWidth / 2;
+			m_gameTimerText.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue + m_buttonBufferValue)) ;
+			
+			TextFactory.getInstance().updateAlign(m_gameTimerText, 0, 1);
+			m_buttonLayer.addChild(m_gameTimerText);
+			
+			m_minutesRemaining = MAX_WAIT_TIME_IN_MINUTES;
+			m_secondsRemaining = 0;
+			
+			m_mainGameTimer.start();
+		}
+		
+		private function onGameTimerTick(e: TimerEvent):void
+		{
+			//trace("Ticking..:" + m_minutesRemaining.toString() + ":" + m_secondsRemaining.toString());
+			
+			if (m_secondsRemaining == 0 && m_minutesRemaining == 0)
+				return;
+			
+			if (m_secondsRemaining == 0)
+			{
+				m_secondsRemaining = 60;
+				m_minutesRemaining -= 1;
+			}
+			
+			m_secondsRemaining--;
+			
+			var timerText:String = "0" + m_minutesRemaining.toString() + ":";
+			if (m_secondsRemaining < 10)
+				timerText += "0";
+			timerText += m_secondsRemaining.toString();
+			
+			
+			TextFactory.getInstance().updateText(m_gameTimerText, timerText);
+			TextFactory.getInstance().updateAlign(m_gameTimerText, 0, 1);
+		}
+		
+		private function onGameTimerComplete(e: TimerEvent):void
+		{
+			trace("Tick complete.");
+			m_showSkipToEnd = true;
+			passButton.visible = true;
+			passButton.enabled = m_showSkipToEnd;
+			m_gameTimerText.visible = !m_showSkipToEnd;
+		}
+		
 		public function displayPassButton():void
 		{
 			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to survey", m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
-			//passButton.x = WIDTH - Constants.RightPanelWidth - passButton.width - 150 ;
 			passButton.x = m_buttonBufferValue;
 			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
-			//passButton.y = HEIGHT - passButton.height - 2;
 			m_buttonLayer.addChild(passButton);
-			passButton.visible = false;
+			passButton.visible = true;
+			passButton.enabled = m_showSkipToEnd;
 		}
 
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
@@ -1452,8 +1535,6 @@ package scenes.game.components
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", m_buttonWidth, m_buttonHeight);
 				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-				//continueButton.x = WIDTH - continueButton.width - Constants.RightPanelWidth + 10;
-				//continueButton.y = HEIGHT - continueButton.height - 2;
 				continueButton.x = m_buttonBufferValue;
 				continueButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
 			}
@@ -1592,7 +1673,7 @@ package scenes.game.components
 		{
 			m_skipCount++;
 			trace("--------------------------------> Calling CheckPassButton() <-----------------------");
-			CheckPassButton();
+			//CheckPassButton();
 			trace("Next level button is triggered");
 			//------------------------------------------------------------------
 			

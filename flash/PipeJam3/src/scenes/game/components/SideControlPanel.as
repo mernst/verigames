@@ -4,6 +4,7 @@ package scenes.game.components
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Point;
+	import flash.utils.Timer;
 	import scenes.game.PipeJamGameScene;
 	import starling.display.DisplayObject;
 	import utils.XMath;
@@ -84,6 +85,8 @@ package scenes.game.components
 		
 		/** display control variables */
 		private var m_panZoomAllowed:Boolean;
+		
+		
 		
 		public function SideControlPanel( _width:Number, _height:Number)
 		{
