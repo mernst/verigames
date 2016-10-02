@@ -162,6 +162,12 @@ package scenes.game.display
 		static public var remainingTotalLevels:int;
 		static public var levelNumberArray:Array = new Array(); 
 		
+		static public var maxTimeInLevel:Number = -1;
+		static public var maxTimeLevelName:String = "";
+		
+		static public var minTimeInLevel:Number = Number.MAX_VALUE;
+		static public var minTimeLevelName:String = "";
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;

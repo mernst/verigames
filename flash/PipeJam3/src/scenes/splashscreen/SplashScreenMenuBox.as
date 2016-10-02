@@ -173,7 +173,15 @@ package scenes.splashscreen
 					dataLog["totalMoves"] = World.totalMoves;
 					dataLog["gameTime"] = World.gameTimer.currentCount;
 					dataLog["realLevelsTime"] = World.realLevelsTimer.currentCount;
+					dataLog["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
 					dataLog["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
+					dataLog["remainingTotalLevels"] = World.remainingTotalLevels;
+					dataLog["LevelsIgnored"] = World.levelNumberArray.length;
+					dataLog["MaxTimeSpentOnLevel"] = World.maxTimeInLevel;
+					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
+					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
+					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
+					dataLog["IsSummaryData"] = true;
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------

@@ -1519,7 +1519,7 @@ package scenes.game.components
 		
 		public function displayPassButton():void
 		{
-			passButton = ButtonFactory.getInstance().createDefaultButton("Skip to survey", m_buttonWidth, m_buttonHeight);
+			passButton = ButtonFactory.getInstance().createDefaultButton("Go to survey", m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
 			passButton.x = m_buttonBufferValue;
 			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
@@ -1629,6 +1629,25 @@ package scenes.game.components
 			}
 		}
 		
+		private function collectMinMaxStats() : void
+		{
+			// If the tutorial is done, store these stats.
+			if (TutorialController.tutorialsDone)
+			{
+				if (World.maxTimeInLevel < World.levelTimer.currentCount)
+				{
+					World.maxTimeInLevel = World.levelTimer.currentCount;
+					World.maxTimeLevelName = World.targetReachedLevelName;
+				}
+				
+				if (World.minTimeInLevel > World.levelTimer.currentCount)
+				{
+					World.minTimeInLevel = World.levelTimer.currentCount;
+					World.minTimeLevelName = World.targetReachedLevelName;
+				}
+			}
+		}
+		
 		private var m_skipCount:int = 0;
 		private var buttonHit:Boolean = false;
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
@@ -1636,6 +1655,8 @@ package scenes.game.components
 			m_skipCount = 0;
 			buttonHit = true;
 			trace("Next level button is triggered");		
+			
+			collectMinMaxStats();
 			
 			
 			World.levelTimer.stop();
@@ -1676,6 +1697,8 @@ package scenes.game.components
 			//CheckPassButton();
 			trace("Next level button is triggered");
 			//------------------------------------------------------------------
+			
+			collectMinMaxStats();
 			
 			World.levelTimer.stop();
 			var dataLog:Object = new Object();
