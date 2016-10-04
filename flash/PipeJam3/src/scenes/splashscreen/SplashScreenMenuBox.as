@@ -181,6 +181,10 @@ package scenes.splashscreen
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
 					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
 					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
+					dataLog["HexagonCount"] = World.totalHexagonBrushCount;
+					dataLog["DiamondCount"] = World.totalDiamondBrushCount;
+					dataLog["CircleCount"] = World.totalCircleBrushCount;
+					dataLog["SquareCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
 					
 					NULogging.log(dataLog);

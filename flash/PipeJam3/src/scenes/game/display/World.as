@@ -156,6 +156,11 @@ package scenes.game.display
 		static public var movesBrushCircle:Number;
 		static public var movesBrushDiamond:Number;
 		
+		static public var totalHexagonBrushCount:Number = 0;
+		static public var totalSquareBrushCount:Number = 0;
+		static public var totalCircleBrushCount:Number = 0;
+		static public var totalDiamondBrushCount:Number = 0;
+		
 		static public var totalMoves:int;
 		static public var movesPerLevel:int;
 		static public var actionTaken:String;	//Solved selection or Level Complete or Level Skipped

@@ -1645,6 +1645,12 @@ package scenes.game.components
 					World.minTimeInLevel = World.levelTimer.currentCount;
 					World.minTimeLevelName = World.targetReachedLevelName;
 				}
+				
+				World.totalHexagonBrushCount += World.movesBrushHexagon;
+				World.totalSquareBrushCount += World.movesBrushSquare;
+				World.totalCircleBrushCount += World.movesBrushCircle;
+				World.totalDiamondBrushCount += World.movesBrushDiamond;
+				
 			}
 		}
 		
