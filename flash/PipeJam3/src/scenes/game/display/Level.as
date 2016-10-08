@@ -1567,6 +1567,8 @@ package scenes.game.display
 					World.movesBrushDiamond += 1;
 				}
 				
+				trace("---->" + World.currentBrush + "<------");
+				
 				// -------------------------------------------------
 				trace("LOGGING START ::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 				

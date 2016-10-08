@@ -172,6 +172,7 @@ package scenes.game.display
 		
 		static public var minTimeInLevel:Number = Number.MAX_VALUE;
 		static public var minTimeLevelName:String = "";
+		static public var workerId:String = "";
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
@@ -238,12 +239,34 @@ package scenes.game.display
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
+		public static function setWorkerId(newWorkerId:String):void {
+			World.workerId = newWorkerId;
+			
+			var initLog:Object = new Object();
+			initLog["playerID"] = playerID;
+			initLog["workerId"] = workerId;
+			initLog["actionTaken"] = "Set WorkerId";
+			NULogging.log(initLog);
+			
+		}
+		
+		// Ask the HTML to callt he setWorkerId function because now, we know that flash was properly loaded and can
+		//  accept the callback.
+		if(ExternalInterface.available)
+			ExternalInterface.addCallback("setWorkerId", World.setWorkerId);
+		else
+			trace("=============> No External Interface available <=============");
+		
 		public static function initPlayerVars():void {
-			
-			
 			
 			playerID = UIDUtil.createUID();
 			trace("PLAYERid$$", playerID);
+			
+			// Call the setWorkerId of the Javascript in the HTML page that has this swf object.
+			//  The setWorkerId() of hte Javascript will internally call the 'setWorkerId()'
+			//   of this class (defined above) which will set the workerId as a World variable
+			if(ExternalInterface.available)
+				ExternalInterface.call("setWorkerId", playerID);
 			
 			trace("THIS IS THE UNIQUE ID:::::::::::::::::::::::::", playerID);
 			realLevelsCompleted = 0;
@@ -257,6 +280,7 @@ package scenes.game.display
 			gameTimer.start();
 			levelTimer = new Timer(1000, 0);
 			realLevelsTimer = new Timer(1000, 0);
+			
 			var initLog:Object = new Object();
 			initLog["playerID"] = playerID;
 			initLog["actionTaken"] = "Session start";

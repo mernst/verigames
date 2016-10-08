@@ -167,6 +167,7 @@ package scenes.splashscreen
 					World.realLevelsTimer.stop();
 					var dataLog:Object = new Object();
 					dataLog["playerID"] = World.playerID;
+					dataLog["workerId"] = World.workerId;
 					dataLog["levelsCompleted"] = World.realLevelsCompleted;
 					dataLog["levelsSkipped"] = World.realLevelsSkipped;
 					dataLog["levelsAttempted"] = World.realLevelsAttempted;
