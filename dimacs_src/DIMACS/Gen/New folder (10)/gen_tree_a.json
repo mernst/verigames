@@ -1,0 +1,505 @@
+{
+	"constraints": [
+		{
+			"constraint": "clause",
+			"pos": ["var:2"],
+			"neg": ["var:1"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:1", "var:3"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:1", "var:4"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:5"],
+			"neg": ["var:1"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:1"],
+			"neg": ["var:6"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:1"],
+			"neg": ["var:7"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:3", "var:1"],
+			"neg": ["var:2"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:2", "var:8"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:2"],
+			"neg": ["var:9"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:8", "var:2"],
+			"neg": ["var:9"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:8"],
+			"neg": ["var:10"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:10", "var:11"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:11", "var:12"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:12"],
+			"neg": ["var:13"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:14"],
+			"neg": ["var:9"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:14", "var:15"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:15", "var:16"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:16", "var:17"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:3", "var:18"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:3", "var:19"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:3", "var:20"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:19"],
+			"neg": ["var:18", "var:3"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:21"],
+			"neg": ["var:18"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:22"],
+			"neg": ["var:21"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:23"],
+			"neg": ["var:22"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:24"],
+			"neg": ["var:23"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:19", "var:25"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:25", "var:26"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:26", "var:27"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:28"],
+			"neg": ["var:27"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:20", "var:29"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:29"],
+			"neg": ["var:30"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:30", "var:31"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:4"],
+			"neg": ["var:32"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:4"],
+			"neg": ["var:33"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:33", "var:4"],
+			"neg": ["var:32"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:32", "var:34"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:32"],
+			"neg": ["var:35"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:34"],
+			"neg": ["var:35", "var:32"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:36"],
+			"neg": ["var:34"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:36", "var:37"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:35"],
+			"neg": ["var:38"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:38", "var:39"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:33", "var:40"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:40", "var:41"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:41"],
+			"neg": ["var:42"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:42"],
+			"neg": ["var:43"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:44"],
+			"neg": ["var:5"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:5"],
+			"neg": ["var:45"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:46"],
+			"neg": ["var:5"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:44", "var:45", "var:5"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:44", "var:47"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:48"],
+			"neg": ["var:47"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:45"],
+			"neg": ["var:49"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:45"],
+			"neg": ["var:50"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:50"],
+			"neg": ["var:49", "var:45"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:49"],
+			"neg": ["var:51"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:52"],
+			"neg": ["var:51"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:53"],
+			"neg": ["var:52"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:50", "var:54"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:54"],
+			"neg": ["var:55"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:46", "var:56"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:57"],
+			"neg": ["var:46"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:56", "var:46"],
+			"neg": ["var:57"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:56", "var:58"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:59"],
+			"neg": ["var:58"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:57", "var:60"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:60"],
+			"neg": ["var:61"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:6"],
+			"neg": ["var:62"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:63"],
+			"neg": ["var:6"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:62"],
+			"neg": ["var:63", "var:6"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:62"],
+			"neg": ["var:64"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:62"],
+			"neg": ["var:65"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:64", "var:65", "var:62"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:64", "var:66"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:66", "var:67"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:68"],
+			"neg": ["var:65"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:68", "var:69"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:63", "var:70"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:71"],
+			"neg": ["var:70"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:71", "var:72"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:72", "var:73"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:74"],
+			"neg": ["var:7"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:75"],
+			"neg": ["var:7"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:75"],
+			"neg": ["var:74", "var:7"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:76"],
+			"neg": ["var:74"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:74", "var:77"],
+			"neg": []
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:76", "var:77", "var:74"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:78"],
+			"neg": ["var:76"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:79"],
+			"neg": ["var:78"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:79"],
+			"neg": ["var:80"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:77", "var:81"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:81", "var:82"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:75", "var:83"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:83"],
+			"neg": ["var:84"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:73"],
+			"neg": ["var:24"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:80", "var:61"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:61", "var:37"]
+		},
+		{
+			"constraint": "clause",
+			"pos": [],
+			"neg": ["var:55", "var:39"]
+		},
+		{
+			"constraint": "clause",
+			"pos": ["var:67"],
+			"neg": ["var:80", "var:43"]
+		}
+	],
+	"version": "2"
+}

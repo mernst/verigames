@@ -1,0 +1,2336 @@
+c FILE:  par8-2.cnf
+c
+c SOURCE: James Crawford (jc@research.att.com)
+c
+c DESCRIPTION: Instance arises from the problem of learning the parity
+c              function.  
+c
+c     parxx-y denotes a parity problem on xx bits.  y is simply the
+c     intance number.
+c
+c     parxx-y-c denotes an instance identical to parxx-y except that
+c     the instances have been simplified (to create an equivalent
+c     problem). 
+c
+c NOTE: Satisfiable (checked for 8 and 16 size instances. All
+c       instances are satisfiable by construction)
+c
+c NOTE: Number of clauses corrected August 3, 1993
+c
+c Converted from tableau format Tue Aug  3 09:55:28 EDT 1993
+p cnf 350 1157
+
+ 1
+ c zero
+ 2 -1
+ c zero
+ -2 1
+ c zero
+ 146 -2 3
+ c zero
+ -146 2 3
+ c zero
+ 146 2 -3
+ c zero
+ -146 -2 -3
+ c zero
+ 4 -3
+ c zero
+ -4 3
+ c zero
+ 148 -4 5
+ c zero
+ -148 4 5
+ c zero
+ 148 4 -5
+ c zero
+ -148 -4 -5
+ c zero
+ 149 -5 6
+ c zero
+ -149 5 6
+ c zero
+ 149 5 -6
+ c zero
+ -149 -5 -6
+ c zero
+ 150 -6 7
+ c zero
+ -150 6 7
+ c zero
+ 150 6 -7
+ c zero
+ -150 -6 -7
+ c zero
+ 8 -7
+ c zero
+ -8 7
+ c zero
+ 9 -8
+ c zero
+ -9 8
+ c zero
+ 10
+ c zero
+ 11 -10
+ c zero
+ -11 10
+ c zero
+ 12 -11
+ c zero
+ -12 11
+ c zero
+ 13 -12
+ c zero
+ -13 12
+ c zero
+ 14 -13
+ c zero
+ -14 13
+ c zero
+ 149 -14 15
+ c zero
+ -149 14 15
+ c zero
+ 149 14 -15
+ c zero
+ -149 -14 -15
+ c zero
+ 16 -15
+ c zero
+ -16 15
+ c zero
+ 17 -16
+ c zero
+ -17 16
+ c zero
+ 152 -17 18
+ c zero
+ -152 17 18
+ c zero
+ 152 17 -18
+ c zero
+ -152 -17 -18
+ c zero
+ -19
+ c zero
+ 20 -19
+ c zero
+ -20 19
+ c zero
+ 146 -20 21
+ c zero
+ -146 20 21
+ c zero
+ 146 20 -21
+ c zero
+ -146 -20 -21
+ c zero
+ 147 -21 22
+ c zero
+ -147 21 22
+ c zero
+ 147 21 -22
+ c zero
+ -147 -21 -22
+ c zero
+ 23 -22
+ c zero
+ -23 22
+ c zero
+ 24 -23
+ c zero
+ -24 23
+ c zero
+ 25 -24
+ c zero
+ -25 24
+ c zero
+ 26 -25
+ c zero
+ -26 25
+ c zero
+ 27 -26
+ c zero
+ -27 26
+ c zero
+ 28
+ c zero
+ 29 -28
+ c zero
+ -29 28
+ c zero
+ 146 -29 30
+ c zero
+ -146 29 30
+ c zero
+ 146 29 -30
+ c zero
+ -146 -29 -30
+ c zero
+ 147 -30 31
+ c zero
+ -147 30 31
+ c zero
+ 147 30 -31
+ c zero
+ -147 -30 -31
+ c zero
+ 32 -31
+ c zero
+ -32 31
+ c zero
+ 33 -32
+ c zero
+ -33 32
+ c zero
+ 34 -33
+ c zero
+ -34 33
+ c zero
+ 151 -34 35
+ c zero
+ -151 34 35
+ c zero
+ 151 34 -35
+ c zero
+ -151 -34 -35
+ c zero
+ 152 -35 36
+ c zero
+ -152 35 36
+ c zero
+ 152 35 -36
+ c zero
+ -152 -35 -36
+ c zero
+ 37
+ c zero
+ 145 -37 38
+ c zero
+ -145 37 38
+ c zero
+ 145 37 -38
+ c zero
+ -145 -37 -38
+ c zero
+ 146 -38 39
+ c zero
+ -146 38 39
+ c zero
+ 146 38 -39
+ c zero
+ -146 -38 -39
+ c zero
+ 147 -39 40
+ c zero
+ -147 39 40
+ c zero
+ 147 39 -40
+ c zero
+ -147 -39 -40
+ c zero
+ 41 -40
+ c zero
+ -41 40
+ c zero
+ 149 -41 42
+ c zero
+ -149 41 42
+ c zero
+ 149 41 -42
+ c zero
+ -149 -41 -42
+ c zero
+ 43 -42
+ c zero
+ -43 42
+ c zero
+ 151 -43 44
+ c zero
+ -151 43 44
+ c zero
+ 151 43 -44
+ c zero
+ -151 -43 -44
+ c zero
+ 152 -44 45
+ c zero
+ -152 44 45
+ c zero
+ 152 44 -45
+ c zero
+ -152 -44 -45
+ c zero
+ -46
+ c zero
+ 47 -46
+ c zero
+ -47 46
+ c zero
+ 48 -47
+ c zero
+ -48 47
+ c zero
+ 147 -48 49
+ c zero
+ -147 48 49
+ c zero
+ 147 48 -49
+ c zero
+ -147 -48 -49
+ c zero
+ 50 -49
+ c zero
+ -50 49
+ c zero
+ 51 -50
+ c zero
+ -51 50
+ c zero
+ 150 -51 52
+ c zero
+ -150 51 52
+ c zero
+ 150 51 -52
+ c zero
+ -150 -51 -52
+ c zero
+ 151 -52 53
+ c zero
+ -151 52 53
+ c zero
+ 151 52 -53
+ c zero
+ -151 -52 -53
+ c zero
+ 54 -53
+ c zero
+ -54 53
+ c zero
+ 55
+ c zero
+ 145 -55 56
+ c zero
+ -145 55 56
+ c zero
+ 145 55 -56
+ c zero
+ -145 -55 -56
+ c zero
+ 146 -56 57
+ c zero
+ -146 56 57
+ c zero
+ 146 56 -57
+ c zero
+ -146 -56 -57
+ c zero
+ 147 -57 58
+ c zero
+ -147 57 58
+ c zero
+ 147 57 -58
+ c zero
+ -147 -57 -58
+ c zero
+ 59 -58
+ c zero
+ -59 58
+ c zero
+ 60 -59
+ c zero
+ -60 59
+ c zero
+ 150 -60 61
+ c zero
+ -150 60 61
+ c zero
+ 150 60 -61
+ c zero
+ -150 -60 -61
+ c zero
+ 151 -61 62
+ c zero
+ -151 61 62
+ c zero
+ 151 61 -62
+ c zero
+ -151 -61 -62
+ c zero
+ 63 -62
+ c zero
+ -63 62
+ c zero
+ -64
+ c zero
+ 145 -64 65
+ c zero
+ -145 64 65
+ c zero
+ 145 64 -65
+ c zero
+ -145 -64 -65
+ c zero
+ 146 -65 66
+ c zero
+ -146 65 66
+ c zero
+ 146 65 -66
+ c zero
+ -146 -65 -66
+ c zero
+ 67 -66
+ c zero
+ -67 66
+ c zero
+ 68 -67
+ c zero
+ -68 67
+ c zero
+ 69 -68
+ c zero
+ -69 68
+ c zero
+ 150 -69 70
+ c zero
+ -150 69 70
+ c zero
+ 150 69 -70
+ c zero
+ -150 -69 -70
+ c zero
+ 71 -70
+ c zero
+ -71 70
+ c zero
+ 152 -71 72
+ c zero
+ -152 71 72
+ c zero
+ 152 71 -72
+ c zero
+ -152 -71 -72
+ c zero
+ -73
+ c zero
+ 74 -73
+ c zero
+ -74 73
+ c zero
+ 146 -74 75
+ c zero
+ -146 74 75
+ c zero
+ 146 74 -75
+ c zero
+ -146 -74 -75
+ c zero
+ 76 -75
+ c zero
+ -76 75
+ c zero
+ 77 -76
+ c zero
+ -77 76
+ c zero
+ 149 -77 78
+ c zero
+ -149 77 78
+ c zero
+ 149 77 -78
+ c zero
+ -149 -77 -78
+ c zero
+ 150 -78 79
+ c zero
+ -150 78 79
+ c zero
+ 150 78 -79
+ c zero
+ -150 -78 -79
+ c zero
+ 80 -79
+ c zero
+ -80 79
+ c zero
+ 81 -80
+ c zero
+ -81 80
+ c zero
+ 82
+ c zero
+ 83 -82
+ c zero
+ -83 82
+ c zero
+ 146 -83 84
+ c zero
+ -146 83 84
+ c zero
+ 146 83 -84
+ c zero
+ -146 -83 -84
+ c zero
+ 85 -84
+ c zero
+ -85 84
+ c zero
+ 86 -85
+ c zero
+ -86 85
+ c zero
+ 149 -86 87
+ c zero
+ -149 86 87
+ c zero
+ 149 86 -87
+ c zero
+ -149 -86 -87
+ c zero
+ 150 -87 88
+ c zero
+ -150 87 88
+ c zero
+ 150 87 -88
+ c zero
+ -150 -87 -88
+ c zero
+ 151 -88 89
+ c zero
+ -151 88 89
+ c zero
+ 151 88 -89
+ c zero
+ -151 -88 -89
+ c zero
+ 90 -89
+ c zero
+ -90 89
+ c zero
+ 91
+ c zero
+ 92 -91
+ c zero
+ -92 91
+ c zero
+ 146 -92 93
+ c zero
+ -146 92 93
+ c zero
+ 146 92 -93
+ c zero
+ -146 -92 -93
+ c zero
+ 147 -93 94
+ c zero
+ -147 93 94
+ c zero
+ 147 93 -94
+ c zero
+ -147 -93 -94
+ c zero
+ 95 -94
+ c zero
+ -95 94
+ c zero
+ 96 -95
+ c zero
+ -96 95
+ c zero
+ 150 -96 97
+ c zero
+ -150 96 97
+ c zero
+ 150 96 -97
+ c zero
+ -150 -96 -97
+ c zero
+ 98 -97
+ c zero
+ -98 97
+ c zero
+ 99 -98
+ c zero
+ -99 98
+ c zero
+ 100
+ c zero
+ 145 -100 101
+ c zero
+ -145 100 101
+ c zero
+ 145 100 -101
+ c zero
+ -145 -100 -101
+ c zero
+ 102 -101
+ c zero
+ -102 101
+ c zero
+ 147 -102 103
+ c zero
+ -147 102 103
+ c zero
+ 147 102 -103
+ c zero
+ -147 -102 -103
+ c zero
+ 104 -103
+ c zero
+ -104 103
+ c zero
+ 105 -104
+ c zero
+ -105 104
+ c zero
+ 106 -105
+ c zero
+ -106 105
+ c zero
+ 107 -106
+ c zero
+ -107 106
+ c zero
+ 108 -107
+ c zero
+ -108 107
+ c zero
+ 109
+ c zero
+ 110 -109
+ c zero
+ -110 109
+ c zero
+ 111 -110
+ c zero
+ -111 110
+ c zero
+ 147 -111 112
+ c zero
+ -147 111 112
+ c zero
+ 147 111 -112
+ c zero
+ -147 -111 -112
+ c zero
+ 148 -112 113
+ c zero
+ -148 112 113
+ c zero
+ 148 112 -113
+ c zero
+ -148 -112 -113
+ c zero
+ 149 -113 114
+ c zero
+ -149 113 114
+ c zero
+ 149 113 -114
+ c zero
+ -149 -113 -114
+ c zero
+ 150 -114 115
+ c zero
+ -150 114 115
+ c zero
+ 150 114 -115
+ c zero
+ -150 -114 -115
+ c zero
+ 116 -115
+ c zero
+ -116 115
+ c zero
+ 117 -116
+ c zero
+ -117 116
+ c zero
+ 118
+ c zero
+ 145 -118 119
+ c zero
+ -145 118 119
+ c zero
+ 145 118 -119
+ c zero
+ -145 -118 -119
+ c zero
+ 146 -119 120
+ c zero
+ -146 119 120
+ c zero
+ 146 119 -120
+ c zero
+ -146 -119 -120
+ c zero
+ 121 -120
+ c zero
+ -121 120
+ c zero
+ 122 -121
+ c zero
+ -122 121
+ c zero
+ 149 -122 123
+ c zero
+ -149 122 123
+ c zero
+ 149 122 -123
+ c zero
+ -149 -122 -123
+ c zero
+ 124 -123
+ c zero
+ -124 123
+ c zero
+ 151 -124 125
+ c zero
+ -151 124 125
+ c zero
+ 151 124 -125
+ c zero
+ -151 -124 -125
+ c zero
+ 152 -125 126
+ c zero
+ -152 125 126
+ c zero
+ 152 125 -126
+ c zero
+ -152 -125 -126
+ c zero
+ -127
+ c zero
+ 128 -127
+ c zero
+ -128 127
+ c zero
+ 129 -128
+ c zero
+ -129 128
+ c zero
+ 130 -129
+ c zero
+ -130 129
+ c zero
+ 148 -130 131
+ c zero
+ -148 130 131
+ c zero
+ 148 130 -131
+ c zero
+ -148 -130 -131
+ c zero
+ 132 -131
+ c zero
+ -132 131
+ c zero
+ 133 -132
+ c zero
+ -133 132
+ c zero
+ 151 -133 134
+ c zero
+ -151 133 134
+ c zero
+ 151 133 -134
+ c zero
+ -151 -133 -134
+ c zero
+ 152 -134 135
+ c zero
+ -152 134 135
+ c zero
+ 152 134 -135
+ c zero
+ -152 -134 -135
+ c zero
+ 136
+ c zero
+ 145 -136 137
+ c zero
+ -145 136 137
+ c zero
+ 145 136 -137
+ c zero
+ -145 -136 -137
+ c zero
+ 146 -137 138
+ c zero
+ -146 137 138
+ c zero
+ 146 137 -138
+ c zero
+ -146 -137 -138
+ c zero
+ 147 -138 139
+ c zero
+ -147 138 139
+ c zero
+ 147 138 -139
+ c zero
+ -147 -138 -139
+ c zero
+ 140 -139
+ c zero
+ -140 139
+ c zero
+ 149 -140 141
+ c zero
+ -149 140 141
+ c zero
+ 149 140 -141
+ c zero
+ -149 -140 -141
+ c zero
+ 150 -141 142
+ c zero
+ -150 141 142
+ c zero
+ 150 141 -142
+ c zero
+ -150 -141 -142
+ c zero
+ 151 -142 143
+ c zero
+ -151 142 143
+ c zero
+ 151 142 -143
+ c zero
+ -151 -142 -143
+ c zero
+ 152 -143 144
+ c zero
+ -152 143 144
+ c zero
+ 152 143 -144
+ c zero
+ -152 -143 -144
+ c zero
+ -153
+ c zero
+ -154
+ c zero
+ -155
+ c zero
+ -156
+ c zero
+ -157
+ c zero
+ -158
+ c zero
+ 9 -255
+ c zero
+ -9 255
+ c zero
+ 255 -153 159
+ c zero
+ -255 153 159
+ c zero
+ 255 153 -159
+ c zero
+ -255 -153 -159
+ c zero
+ 256 -154 160
+ c zero
+ -256 154 160
+ c zero
+ 256 154 -160
+ c zero
+ -256 -154 -160
+ c zero
+ 255 -256
+ c zero
+ 153 -256
+ c zero
+ -255 -153 256
+ c zero
+ -153 159 256
+ c zero
+ 257 -155 161
+ c zero
+ -257 155 161
+ c zero
+ 257 155 -161
+ c zero
+ -257 -155 -161
+ c zero
+ 256 -257
+ c zero
+ 154 -257
+ c zero
+ -256 -154 257
+ c zero
+ -154 160 257
+ c zero
+ 258 -156 162
+ c zero
+ -258 156 162
+ c zero
+ 258 156 -162
+ c zero
+ -258 -156 -162
+ c zero
+ 257 -258
+ c zero
+ 155 -258
+ c zero
+ -257 -155 258
+ c zero
+ -155 161 258
+ c zero
+ 259 -157 163
+ c zero
+ -259 157 163
+ c zero
+ 259 157 -163
+ c zero
+ -259 -157 -163
+ c zero
+ 258 -259
+ c zero
+ 156 -259
+ c zero
+ -258 -156 259
+ c zero
+ -156 162 259
+ c zero
+ 260 -158 164
+ c zero
+ -260 158 164
+ c zero
+ 260 158 -164
+ c zero
+ -260 -158 -164
+ c zero
+ 259 -260
+ c zero
+ 157 -260
+ c zero
+ -259 -157 260
+ c zero
+ -157 163 260
+ c zero
+ 18 -261
+ c zero
+ -18 261
+ c zero
+ 261 -159 165
+ c zero
+ -261 159 165
+ c zero
+ 261 159 -165
+ c zero
+ -261 -159 -165
+ c zero
+ 262 -160 166
+ c zero
+ -262 160 166
+ c zero
+ 262 160 -166
+ c zero
+ -262 -160 -166
+ c zero
+ 261 -262
+ c zero
+ 159 -262
+ c zero
+ -261 -159 262
+ c zero
+ -159 165 262
+ c zero
+ 263 -161 167
+ c zero
+ -263 161 167
+ c zero
+ 263 161 -167
+ c zero
+ -263 -161 -167
+ c zero
+ 262 -263
+ c zero
+ 160 -263
+ c zero
+ -262 -160 263
+ c zero
+ -160 166 263
+ c zero
+ 264 -162 168
+ c zero
+ -264 162 168
+ c zero
+ 264 162 -168
+ c zero
+ -264 -162 -168
+ c zero
+ 263 -264
+ c zero
+ 161 -264
+ c zero
+ -263 -161 264
+ c zero
+ -161 167 264
+ c zero
+ 265 -163 169
+ c zero
+ -265 163 169
+ c zero
+ 265 163 -169
+ c zero
+ -265 -163 -169
+ c zero
+ 264 -265
+ c zero
+ 162 -265
+ c zero
+ -264 -162 265
+ c zero
+ -162 168 265
+ c zero
+ 266 -164 170
+ c zero
+ -266 164 170
+ c zero
+ 266 164 -170
+ c zero
+ -266 -164 -170
+ c zero
+ 265 -266
+ c zero
+ 163 -266
+ c zero
+ -265 -163 266
+ c zero
+ -163 169 266
+ c zero
+ 27 -267
+ c zero
+ -27 267
+ c zero
+ 267 -165 171
+ c zero
+ -267 165 171
+ c zero
+ 267 165 -171
+ c zero
+ -267 -165 -171
+ c zero
+ 268 -166 172
+ c zero
+ -268 166 172
+ c zero
+ 268 166 -172
+ c zero
+ -268 -166 -172
+ c zero
+ 267 -268
+ c zero
+ 165 -268
+ c zero
+ -267 -165 268
+ c zero
+ -165 171 268
+ c zero
+ 269 -167 173
+ c zero
+ -269 167 173
+ c zero
+ 269 167 -173
+ c zero
+ -269 -167 -173
+ c zero
+ 268 -269
+ c zero
+ 166 -269
+ c zero
+ -268 -166 269
+ c zero
+ -166 172 269
+ c zero
+ 270 -168 174
+ c zero
+ -270 168 174
+ c zero
+ 270 168 -174
+ c zero
+ -270 -168 -174
+ c zero
+ 269 -270
+ c zero
+ 167 -270
+ c zero
+ -269 -167 270
+ c zero
+ -167 173 270
+ c zero
+ 271 -169 175
+ c zero
+ -271 169 175
+ c zero
+ 271 169 -175
+ c zero
+ -271 -169 -175
+ c zero
+ 270 -271
+ c zero
+ 168 -271
+ c zero
+ -270 -168 271
+ c zero
+ -168 174 271
+ c zero
+ 272 -170 176
+ c zero
+ -272 170 176
+ c zero
+ 272 170 -176
+ c zero
+ -272 -170 -176
+ c zero
+ 271 -272
+ c zero
+ 169 -272
+ c zero
+ -271 -169 272
+ c zero
+ -169 175 272
+ c zero
+ 36 -273
+ c zero
+ -36 273
+ c zero
+ 273 -171 177
+ c zero
+ -273 171 177
+ c zero
+ 273 171 -177
+ c zero
+ -273 -171 -177
+ c zero
+ 274 -172 178
+ c zero
+ -274 172 178
+ c zero
+ 274 172 -178
+ c zero
+ -274 -172 -178
+ c zero
+ 273 -274
+ c zero
+ 171 -274
+ c zero
+ -273 -171 274
+ c zero
+ -171 177 274
+ c zero
+ 275 -173 179
+ c zero
+ -275 173 179
+ c zero
+ 275 173 -179
+ c zero
+ -275 -173 -179
+ c zero
+ 274 -275
+ c zero
+ 172 -275
+ c zero
+ -274 -172 275
+ c zero
+ -172 178 275
+ c zero
+ 276 -174 180
+ c zero
+ -276 174 180
+ c zero
+ 276 174 -180
+ c zero
+ -276 -174 -180
+ c zero
+ 275 -276
+ c zero
+ 173 -276
+ c zero
+ -275 -173 276
+ c zero
+ -173 179 276
+ c zero
+ 277 -175 181
+ c zero
+ -277 175 181
+ c zero
+ 277 175 -181
+ c zero
+ -277 -175 -181
+ c zero
+ 276 -277
+ c zero
+ 174 -277
+ c zero
+ -276 -174 277
+ c zero
+ -174 180 277
+ c zero
+ 278 -176 182
+ c zero
+ -278 176 182
+ c zero
+ 278 176 -182
+ c zero
+ -278 -176 -182
+ c zero
+ 277 -278
+ c zero
+ 175 -278
+ c zero
+ -277 -175 278
+ c zero
+ -175 181 278
+ c zero
+ 45 -279
+ c zero
+ -45 279
+ c zero
+ 279 -177 183
+ c zero
+ -279 177 183
+ c zero
+ 279 177 -183
+ c zero
+ -279 -177 -183
+ c zero
+ 280 -178 184
+ c zero
+ -280 178 184
+ c zero
+ 280 178 -184
+ c zero
+ -280 -178 -184
+ c zero
+ 279 -280
+ c zero
+ 177 -280
+ c zero
+ -279 -177 280
+ c zero
+ -177 183 280
+ c zero
+ 281 -179 185
+ c zero
+ -281 179 185
+ c zero
+ 281 179 -185
+ c zero
+ -281 -179 -185
+ c zero
+ 280 -281
+ c zero
+ 178 -281
+ c zero
+ -280 -178 281
+ c zero
+ -178 184 281
+ c zero
+ 282 -180 186
+ c zero
+ -282 180 186
+ c zero
+ 282 180 -186
+ c zero
+ -282 -180 -186
+ c zero
+ 281 -282
+ c zero
+ 179 -282
+ c zero
+ -281 -179 282
+ c zero
+ -179 185 282
+ c zero
+ 283 -181 187
+ c zero
+ -283 181 187
+ c zero
+ 283 181 -187
+ c zero
+ -283 -181 -187
+ c zero
+ 282 -283
+ c zero
+ 180 -283
+ c zero
+ -282 -180 283
+ c zero
+ -180 186 283
+ c zero
+ 284 -182 188
+ c zero
+ -284 182 188
+ c zero
+ 284 182 -188
+ c zero
+ -284 -182 -188
+ c zero
+ 283 -284
+ c zero
+ 181 -284
+ c zero
+ -283 -181 284
+ c zero
+ -181 187 284
+ c zero
+ 54 -285
+ c zero
+ -54 285
+ c zero
+ 285 -183 189
+ c zero
+ -285 183 189
+ c zero
+ 285 183 -189
+ c zero
+ -285 -183 -189
+ c zero
+ 286 -184 190
+ c zero
+ -286 184 190
+ c zero
+ 286 184 -190
+ c zero
+ -286 -184 -190
+ c zero
+ 285 -286
+ c zero
+ 183 -286
+ c zero
+ -285 -183 286
+ c zero
+ -183 189 286
+ c zero
+ 287 -185 191
+ c zero
+ -287 185 191
+ c zero
+ 287 185 -191
+ c zero
+ -287 -185 -191
+ c zero
+ 286 -287
+ c zero
+ 184 -287
+ c zero
+ -286 -184 287
+ c zero
+ -184 190 287
+ c zero
+ 288 -186 192
+ c zero
+ -288 186 192
+ c zero
+ 288 186 -192
+ c zero
+ -288 -186 -192
+ c zero
+ 287 -288
+ c zero
+ 185 -288
+ c zero
+ -287 -185 288
+ c zero
+ -185 191 288
+ c zero
+ 289 -187 193
+ c zero
+ -289 187 193
+ c zero
+ 289 187 -193
+ c zero
+ -289 -187 -193
+ c zero
+ 288 -289
+ c zero
+ 186 -289
+ c zero
+ -288 -186 289
+ c zero
+ -186 192 289
+ c zero
+ 290 -188 194
+ c zero
+ -290 188 194
+ c zero
+ 290 188 -194
+ c zero
+ -290 -188 -194
+ c zero
+ 289 -290
+ c zero
+ 187 -290
+ c zero
+ -289 -187 290
+ c zero
+ -187 193 290
+ c zero
+ 63 -291
+ c zero
+ -63 291
+ c zero
+ 291 -189 195
+ c zero
+ -291 189 195
+ c zero
+ 291 189 -195
+ c zero
+ -291 -189 -195
+ c zero
+ 292 -190 196
+ c zero
+ -292 190 196
+ c zero
+ 292 190 -196
+ c zero
+ -292 -190 -196
+ c zero
+ 291 -292
+ c zero
+ 189 -292
+ c zero
+ -291 -189 292
+ c zero
+ -189 195 292
+ c zero
+ 293 -191 197
+ c zero
+ -293 191 197
+ c zero
+ 293 191 -197
+ c zero
+ -293 -191 -197
+ c zero
+ 292 -293
+ c zero
+ 190 -293
+ c zero
+ -292 -190 293
+ c zero
+ -190 196 293
+ c zero
+ 294 -192 198
+ c zero
+ -294 192 198
+ c zero
+ 294 192 -198
+ c zero
+ -294 -192 -198
+ c zero
+ 293 -294
+ c zero
+ 191 -294
+ c zero
+ -293 -191 294
+ c zero
+ -191 197 294
+ c zero
+ 295 -193 199
+ c zero
+ -295 193 199
+ c zero
+ 295 193 -199
+ c zero
+ -295 -193 -199
+ c zero
+ 294 -295
+ c zero
+ 192 -295
+ c zero
+ -294 -192 295
+ c zero
+ -192 198 295
+ c zero
+ 296 -194 200
+ c zero
+ -296 194 200
+ c zero
+ 296 194 -200
+ c zero
+ -296 -194 -200
+ c zero
+ 295 -296
+ c zero
+ 193 -296
+ c zero
+ -295 -193 296
+ c zero
+ -193 199 296
+ c zero
+ 72 -297
+ c zero
+ -72 297
+ c zero
+ 297 -195 201
+ c zero
+ -297 195 201
+ c zero
+ 297 195 -201
+ c zero
+ -297 -195 -201
+ c zero
+ 298 -196 202
+ c zero
+ -298 196 202
+ c zero
+ 298 196 -202
+ c zero
+ -298 -196 -202
+ c zero
+ 297 -298
+ c zero
+ 195 -298
+ c zero
+ -297 -195 298
+ c zero
+ -195 201 298
+ c zero
+ 299 -197 203
+ c zero
+ -299 197 203
+ c zero
+ 299 197 -203
+ c zero
+ -299 -197 -203
+ c zero
+ 298 -299
+ c zero
+ 196 -299
+ c zero
+ -298 -196 299
+ c zero
+ -196 202 299
+ c zero
+ 300 -198 204
+ c zero
+ -300 198 204
+ c zero
+ 300 198 -204
+ c zero
+ -300 -198 -204
+ c zero
+ 299 -300
+ c zero
+ 197 -300
+ c zero
+ -299 -197 300
+ c zero
+ -197 203 300
+ c zero
+ 301 -199 205
+ c zero
+ -301 199 205
+ c zero
+ 301 199 -205
+ c zero
+ -301 -199 -205
+ c zero
+ 300 -301
+ c zero
+ 198 -301
+ c zero
+ -300 -198 301
+ c zero
+ -198 204 301
+ c zero
+ 302 -200 206
+ c zero
+ -302 200 206
+ c zero
+ 302 200 -206
+ c zero
+ -302 -200 -206
+ c zero
+ 301 -302
+ c zero
+ 199 -302
+ c zero
+ -301 -199 302
+ c zero
+ -199 205 302
+ c zero
+ 81 -303
+ c zero
+ -81 303
+ c zero
+ 303 -201 207
+ c zero
+ -303 201 207
+ c zero
+ 303 201 -207
+ c zero
+ -303 -201 -207
+ c zero
+ 304 -202 208
+ c zero
+ -304 202 208
+ c zero
+ 304 202 -208
+ c zero
+ -304 -202 -208
+ c zero
+ 303 -304
+ c zero
+ 201 -304
+ c zero
+ -303 -201 304
+ c zero
+ -201 207 304
+ c zero
+ 305 -203 209
+ c zero
+ -305 203 209
+ c zero
+ 305 203 -209
+ c zero
+ -305 -203 -209
+ c zero
+ 304 -305
+ c zero
+ 202 -305
+ c zero
+ -304 -202 305
+ c zero
+ -202 208 305
+ c zero
+ 306 -204 210
+ c zero
+ -306 204 210
+ c zero
+ 306 204 -210
+ c zero
+ -306 -204 -210
+ c zero
+ 305 -306
+ c zero
+ 203 -306
+ c zero
+ -305 -203 306
+ c zero
+ -203 209 306
+ c zero
+ 307 -205 211
+ c zero
+ -307 205 211
+ c zero
+ 307 205 -211
+ c zero
+ -307 -205 -211
+ c zero
+ 306 -307
+ c zero
+ 204 -307
+ c zero
+ -306 -204 307
+ c zero
+ -204 210 307
+ c zero
+ 308 -206 212
+ c zero
+ -308 206 212
+ c zero
+ 308 206 -212
+ c zero
+ -308 -206 -212
+ c zero
+ 307 -308
+ c zero
+ 205 -308
+ c zero
+ -307 -205 308
+ c zero
+ -205 211 308
+ c zero
+ 90 -309
+ c zero
+ -90 309
+ c zero
+ 309 -207 213
+ c zero
+ -309 207 213
+ c zero
+ 309 207 -213
+ c zero
+ -309 -207 -213
+ c zero
+ 310 -208 214
+ c zero
+ -310 208 214
+ c zero
+ 310 208 -214
+ c zero
+ -310 -208 -214
+ c zero
+ 309 -310
+ c zero
+ 207 -310
+ c zero
+ -309 -207 310
+ c zero
+ -207 213 310
+ c zero
+ 311 -209 215
+ c zero
+ -311 209 215
+ c zero
+ 311 209 -215
+ c zero
+ -311 -209 -215
+ c zero
+ 310 -311
+ c zero
+ 208 -311
+ c zero
+ -310 -208 311
+ c zero
+ -208 214 311
+ c zero
+ 312 -210 216
+ c zero
+ -312 210 216
+ c zero
+ 312 210 -216
+ c zero
+ -312 -210 -216
+ c zero
+ 311 -312
+ c zero
+ 209 -312
+ c zero
+ -311 -209 312
+ c zero
+ -209 215 312
+ c zero
+ 313 -211 217
+ c zero
+ -313 211 217
+ c zero
+ 313 211 -217
+ c zero
+ -313 -211 -217
+ c zero
+ 312 -313
+ c zero
+ 210 -313
+ c zero
+ -312 -210 313
+ c zero
+ -210 216 313
+ c zero
+ 314 -212 218
+ c zero
+ -314 212 218
+ c zero
+ 314 212 -218
+ c zero
+ -314 -212 -218
+ c zero
+ 313 -314
+ c zero
+ 211 -314
+ c zero
+ -313 -211 314
+ c zero
+ -211 217 314
+ c zero
+ 99 -315
+ c zero
+ -99 315
+ c zero
+ 315 -213 219
+ c zero
+ -315 213 219
+ c zero
+ 315 213 -219
+ c zero
+ -315 -213 -219
+ c zero
+ 316 -214 220
+ c zero
+ -316 214 220
+ c zero
+ 316 214 -220
+ c zero
+ -316 -214 -220
+ c zero
+ 315 -316
+ c zero
+ 213 -316
+ c zero
+ -315 -213 316
+ c zero
+ -213 219 316
+ c zero
+ 317 -215 221
+ c zero
+ -317 215 221
+ c zero
+ 317 215 -221
+ c zero
+ -317 -215 -221
+ c zero
+ 316 -317
+ c zero
+ 214 -317
+ c zero
+ -316 -214 317
+ c zero
+ -214 220 317
+ c zero
+ 318 -216 222
+ c zero
+ -318 216 222
+ c zero
+ 318 216 -222
+ c zero
+ -318 -216 -222
+ c zero
+ 317 -318
+ c zero
+ 215 -318
+ c zero
+ -317 -215 318
+ c zero
+ -215 221 318
+ c zero
+ 319 -217 223
+ c zero
+ -319 217 223
+ c zero
+ 319 217 -223
+ c zero
+ -319 -217 -223
+ c zero
+ 318 -319
+ c zero
+ 216 -319
+ c zero
+ -318 -216 319
+ c zero
+ -216 222 319
+ c zero
+ 320 -218 224
+ c zero
+ -320 218 224
+ c zero
+ 320 218 -224
+ c zero
+ -320 -218 -224
+ c zero
+ 319 -320
+ c zero
+ 217 -320
+ c zero
+ -319 -217 320
+ c zero
+ -217 223 320
+ c zero
+ 108 -321
+ c zero
+ -108 321
+ c zero
+ 321 -219 225
+ c zero
+ -321 219 225
+ c zero
+ 321 219 -225
+ c zero
+ -321 -219 -225
+ c zero
+ 322 -220 226
+ c zero
+ -322 220 226
+ c zero
+ 322 220 -226
+ c zero
+ -322 -220 -226
+ c zero
+ 321 -322
+ c zero
+ 219 -322
+ c zero
+ -321 -219 322
+ c zero
+ -219 225 322
+ c zero
+ 323 -221 227
+ c zero
+ -323 221 227
+ c zero
+ 323 221 -227
+ c zero
+ -323 -221 -227
+ c zero
+ 322 -323
+ c zero
+ 220 -323
+ c zero
+ -322 -220 323
+ c zero
+ -220 226 323
+ c zero
+ 324 -222 228
+ c zero
+ -324 222 228
+ c zero
+ 324 222 -228
+ c zero
+ -324 -222 -228
+ c zero
+ 323 -324
+ c zero
+ 221 -324
+ c zero
+ -323 -221 324
+ c zero
+ -221 227 324
+ c zero
+ 325 -223 229
+ c zero
+ -325 223 229
+ c zero
+ 325 223 -229
+ c zero
+ -325 -223 -229
+ c zero
+ 324 -325
+ c zero
+ 222 -325
+ c zero
+ -324 -222 325
+ c zero
+ -222 228 325
+ c zero
+ 326 -224 230
+ c zero
+ -326 224 230
+ c zero
+ 326 224 -230
+ c zero
+ -326 -224 -230
+ c zero
+ 325 -326
+ c zero
+ 223 -326
+ c zero
+ -325 -223 326
+ c zero
+ -223 229 326
+ c zero
+ 117 -327
+ c zero
+ -117 327
+ c zero
+ 327 -225 231
+ c zero
+ -327 225 231
+ c zero
+ 327 225 -231
+ c zero
+ -327 -225 -231
+ c zero
+ 328 -226 232
+ c zero
+ -328 226 232
+ c zero
+ 328 226 -232
+ c zero
+ -328 -226 -232
+ c zero
+ 327 -328
+ c zero
+ 225 -328
+ c zero
+ -327 -225 328
+ c zero
+ -225 231 328
+ c zero
+ 329 -227 233
+ c zero
+ -329 227 233
+ c zero
+ 329 227 -233
+ c zero
+ -329 -227 -233
+ c zero
+ 328 -329
+ c zero
+ 226 -329
+ c zero
+ -328 -226 329
+ c zero
+ -226 232 329
+ c zero
+ 330 -228 234
+ c zero
+ -330 228 234
+ c zero
+ 330 228 -234
+ c zero
+ -330 -228 -234
+ c zero
+ 329 -330
+ c zero
+ 227 -330
+ c zero
+ -329 -227 330
+ c zero
+ -227 233 330
+ c zero
+ 331 -229 235
+ c zero
+ -331 229 235
+ c zero
+ 331 229 -235
+ c zero
+ -331 -229 -235
+ c zero
+ 330 -331
+ c zero
+ 228 -331
+ c zero
+ -330 -228 331
+ c zero
+ -228 234 331
+ c zero
+ 332 -230 236
+ c zero
+ -332 230 236
+ c zero
+ 332 230 -236
+ c zero
+ -332 -230 -236
+ c zero
+ 331 -332
+ c zero
+ 229 -332
+ c zero
+ -331 -229 332
+ c zero
+ -229 235 332
+ c zero
+ 126 -333
+ c zero
+ -126 333
+ c zero
+ 333 -231 237
+ c zero
+ -333 231 237
+ c zero
+ 333 231 -237
+ c zero
+ -333 -231 -237
+ c zero
+ 334 -232 238
+ c zero
+ -334 232 238
+ c zero
+ 334 232 -238
+ c zero
+ -334 -232 -238
+ c zero
+ 333 -334
+ c zero
+ 231 -334
+ c zero
+ -333 -231 334
+ c zero
+ -231 237 334
+ c zero
+ 335 -233 239
+ c zero
+ -335 233 239
+ c zero
+ 335 233 -239
+ c zero
+ -335 -233 -239
+ c zero
+ 334 -335
+ c zero
+ 232 -335
+ c zero
+ -334 -232 335
+ c zero
+ -232 238 335
+ c zero
+ 336 -234 240
+ c zero
+ -336 234 240
+ c zero
+ 336 234 -240
+ c zero
+ -336 -234 -240
+ c zero
+ 335 -336
+ c zero
+ 233 -336
+ c zero
+ -335 -233 336
+ c zero
+ -233 239 336
+ c zero
+ 337 -235 241
+ c zero
+ -337 235 241
+ c zero
+ 337 235 -241
+ c zero
+ -337 -235 -241
+ c zero
+ 336 -337
+ c zero
+ 234 -337
+ c zero
+ -336 -234 337
+ c zero
+ -234 240 337
+ c zero
+ 338 -236 242
+ c zero
+ -338 236 242
+ c zero
+ 338 236 -242
+ c zero
+ -338 -236 -242
+ c zero
+ 337 -338
+ c zero
+ 235 -338
+ c zero
+ -337 -235 338
+ c zero
+ -235 241 338
+ c zero
+ 135 -339
+ c zero
+ -135 339
+ c zero
+ 339 -237 243
+ c zero
+ -339 237 243
+ c zero
+ 339 237 -243
+ c zero
+ -339 -237 -243
+ c zero
+ 340 -238 244
+ c zero
+ -340 238 244
+ c zero
+ 340 238 -244
+ c zero
+ -340 -238 -244
+ c zero
+ 339 -340
+ c zero
+ 237 -340
+ c zero
+ -339 -237 340
+ c zero
+ -237 243 340
+ c zero
+ 341 -239 245
+ c zero
+ -341 239 245
+ c zero
+ 341 239 -245
+ c zero
+ -341 -239 -245
+ c zero
+ 340 -341
+ c zero
+ 238 -341
+ c zero
+ -340 -238 341
+ c zero
+ -238 244 341
+ c zero
+ 342 -240 246
+ c zero
+ -342 240 246
+ c zero
+ 342 240 -246
+ c zero
+ -342 -240 -246
+ c zero
+ 341 -342
+ c zero
+ 239 -342
+ c zero
+ -341 -239 342
+ c zero
+ -239 245 342
+ c zero
+ 343 -241 247
+ c zero
+ -343 241 247
+ c zero
+ 343 241 -247
+ c zero
+ -343 -241 -247
+ c zero
+ 342 -343
+ c zero
+ 240 -343
+ c zero
+ -342 -240 343
+ c zero
+ -240 246 343
+ c zero
+ 344 -242 248
+ c zero
+ -344 242 248
+ c zero
+ 344 242 -248
+ c zero
+ -344 -242 -248
+ c zero
+ 343 -344
+ c zero
+ 241 -344
+ c zero
+ -343 -241 344
+ c zero
+ -241 247 344
+ c zero
+ 144 -345
+ c zero
+ -144 345
+ c zero
+ 345 -243 249
+ c zero
+ -345 243 249
+ c zero
+ 345 243 -249
+ c zero
+ -345 -243 -249
+ c zero
+ 346 -244 250
+ c zero
+ -346 244 250
+ c zero
+ 346 244 -250
+ c zero
+ -346 -244 -250
+ c zero
+ 345 -346
+ c zero
+ 243 -346
+ c zero
+ -345 -243 346
+ c zero
+ -243 249 346
+ c zero
+ 347 -245 251
+ c zero
+ -347 245 251
+ c zero
+ 347 245 -251
+ c zero
+ -347 -245 -251
+ c zero
+ 346 -347
+ c zero
+ 244 -347
+ c zero
+ -346 -244 347
+ c zero
+ -244 250 347
+ c zero
+ 348 -246 252
+ c zero
+ -348 246 252
+ c zero
+ 348 246 -252
+ c zero
+ -348 -246 -252
+ c zero
+ 347 -348
+ c zero
+ 245 -348
+ c zero
+ -347 -245 348
+ c zero
+ -245 251 348
+ c zero
+ 349 -247 253
+ c zero
+ -349 247 253
+ c zero
+ 349 247 -253
+ c zero
+ -349 -247 -253
+ c zero
+ 348 -349
+ c zero
+ 246 -349
+ c zero
+ -348 -246 349
+ c zero
+ -246 252 349
+ c zero
+ 350 -248 254
+ c zero
+ -350 248 254
+ c zero
+ 350 248 -254
+ c zero
+ -350 -248 -254
+ c zero
+ 349 -350
+ c zero
+ 247 -350
+ c zero
+ -349 -247 350
+ c zero
+ -247 253 350
+ c zero
+ -254
+ c zero
+ -253
+ c zero
+ -252
+ c zero
+ -251
+ c zero
+ -250
+ c zero
+ -260
+ c zero
+ -266
+ c zero
+ -272
+ c zero
+ -278
+ c zero
+ -284
+ c zero
+ -290
+ c zero
+ -296
+ c zero
+ -302
+ c zero
+ -308
+ c zero
+ -314
+ c zero
+ -320
+ c zero
+ -326
+ c zero
+ -332
+ c zero
+ -338
+ c zero
+ -344
+ c zero
+ -350
+ c zero
