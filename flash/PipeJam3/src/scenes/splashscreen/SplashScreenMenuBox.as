@@ -167,7 +167,8 @@ package scenes.splashscreen
 					World.realLevelsTimer.stop();
 					var dataLog:Object = new Object();
 					dataLog["playerID"] = World.playerID;
-					dataLog["workerId"] = World.workerId;
+					//dataLog["workerId"] = World.workerId;
+					dataLog["HitId"] = World.hitId;
 					dataLog["levelsCompleted"] = World.realLevelsCompleted;
 					dataLog["levelsSkipped"] = World.realLevelsSkipped;
 					dataLog["levelsAttempted"] = World.realLevelsAttempted;
@@ -182,10 +183,10 @@ package scenes.splashscreen
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
 					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
 					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
-					dataLog["HexagonCount"] = World.totalHexagonBrushCount;
-					dataLog["DiamondCount"] = World.totalDiamondBrushCount;
-					dataLog["CircleCount"] = World.totalCircleBrushCount;
-					dataLog["SquareCount"] = World.totalSquareBrushCount;
+					dataLog["WidenBrushCount"] = World.totalHexagonBrushCount;
+					dataLog["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
+					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
+					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
 					
 					NULogging.log(dataLog);

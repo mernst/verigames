@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import com.adobe.crypto.MD5Stream;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.StageDisplayState;
@@ -17,6 +18,7 @@ package scenes.game.display
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import hints.HintController;
+	import mx.utils.Base64Decoder;
 	import server.MTurkAPI;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
@@ -173,6 +175,7 @@ package scenes.game.display
 		static public var minTimeInLevel:Number = Number.MAX_VALUE;
 		static public var minTimeLevelName:String = "";
 		static public var workerId:String = "";
+		static public var hitId:String = "";
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
@@ -239,15 +242,36 @@ package scenes.game.display
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
-		public static function setWorkerId(newWorkerId:String):void {
+		public static function setWorkerId(newWorkerId:String, hitId:String):void {
+			
 			World.workerId = newWorkerId;
+			World.hitId = hitId;
+			var oldPlayerID:String = playerID;
+			
+			try {
+				var raw:ByteArray = new ByteArray();
+				raw.writeUTF(newWorkerId);
+				
+				var md5:MD5Stream = new MD5Stream();
+				md5.update(raw);
+				playerID = md5.complete();
+			} catch (err:Error) {
+				var errLog:Object = new Object();
+				errLog["playerID"] = playerID;
+				errLog["RandomPlayerId"] = oldPlayerID;
+				errLog["workerId"] = workerId;
+				errLog["actionTaken"] = "Error setting WorkerId";
+				errLog["ErrorMessage"] = err.message;
+				NULogging.log(errLog);
+			}
 			
 			var initLog:Object = new Object();
 			initLog["playerID"] = playerID;
+			initLog["RandomPlayerId"] = oldPlayerID;
 			initLog["workerId"] = workerId;
+			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
 			NULogging.log(initLog);
-			
 		}
 		
 		// Ask the HTML to callt he setWorkerId function because now, we know that flash was properly loaded and can
@@ -258,6 +282,8 @@ package scenes.game.display
 			trace("=============> No External Interface available <=============");
 		
 		public static function initPlayerVars():void {
+			
+			
 			
 			playerID = UIDUtil.createUID();
 			trace("PLAYERid$$", playerID);

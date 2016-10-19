@@ -177,7 +177,7 @@ package scenes.game.components
 		private var m_mainGameTimer:Timer;
 		
 		// Maximum wait time for the game timer.
-		private static const MAX_WAIT_TIME_IN_MINUTES:Number = 5;
+		private static const MAX_WAIT_TIME_IN_MINUTES:Number = 1;
 		
 		// The minutes to display on the timer.
 		private var m_minutesRemaining:Number = 0;
