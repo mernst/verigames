@@ -1,4 +1,4 @@
-import json
+import json, os
 
 # dump JSON in a nice format
 def json_dump(obj, fp):
@@ -6,6 +6,18 @@ def json_dump(obj, fp):
 	fp.write('\n')
 
 
+
+# list file prefixes for all levels in the same folder as from_file
+def list_file_prefixes(from_file):
+	all_files = os.listdir(os.path.dirname(os.path.realpath(from_file)))
+
+	files = []
+	for file in all_files:
+		name, ext = os.path.splitext(file)
+
+		if ext == '.json' and not name.endswith('Assignments') and not name.endswith('Layout'):
+			files.append(name)
+	return files
 
 # combine levels into one array
 def combine_levels(outfilename, infilenames):
