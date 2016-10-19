@@ -1,6 +1,7 @@
 import sys, os
 from process_sat import input_cnstr, connected, dot, output_dimacs, group, write_game_files
 
+NO_INPUT = True
 GROUP = False
 
 ### Command line interface ###
@@ -11,10 +12,10 @@ if __name__ == "__main__":
         quit()
     file_pref = sys.argv[1]
     
-    node_min = int(raw_input('Enter minimum number of vars required to process level (or -1 to process all levels): '))
-    node_max = int(raw_input('Enter maximum number of vars required to process level (or -1 to process all levels): '))
+    node_min = -1 if NO_INPUT else int(raw_input('Enter minimum number of vars required to process level (or -1 to process all levels): '))
+    node_max = -1 if NO_INPUT else int(raw_input('Enter maximum number of vars required to process level (or -1 to process all levels): '))
     if GROUP:
-        group_min = int(raw_input('Enter minimum number of vars required to perform grouping on a level (or -1 to process all levels): '))
+        group_min = -1 if NO_INPUT else int(raw_input('Enter minimum number of vars required to perform grouping on a level (or -1 to process all levels): '))
     if node_max == -1:
         node_max = sys.maxsize
     
@@ -56,5 +57,6 @@ if __name__ == "__main__":
     os.makedirs(game_files_dirn)
 
     print 'Writing game files to: %s' % game_files_dirn
-    qids_start = int(raw_input('Enter qid to start with: '))
+    qids_start = -1 if NO_INPUT else int(raw_input('Enter qid to start with: '))
+
     write_game_files.run(graphs_fn, game_files_dirn, version, qids_start, node_min, node_max, True)

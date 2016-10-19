@@ -13,7 +13,6 @@ def run(infile, outfile):
         raise RuntimeError('JSON has unrecognized version ' + version)
     version = int(version)
 
-
     def process_constraint_block(clauses, constraints, lits):
         for constraint in constraints:
             if constraint.has_key('constraint'):
