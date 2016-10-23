@@ -59,7 +59,10 @@ def update_qid(prefix):
 	os.remove(prefix + 'Layout.json')
 	os.remove(prefix + 'Assignments.json')
 
-	out_filename = os.path.dirname(prefix) + '/' + ''.join([c for c in new_id.replace(' ', '_') if c.isalnum() or c == '_'])
+	dirname = os.path.dirname(prefix)
+	if dirname != '':
+		dirname = dirname + '/'
+	out_filename = dirname + ''.join([c for c in new_id.replace(' ', '_') if c.isalnum() or c == '_'])
 
 	_util.json_dump(level_obj, open(out_filename + '.json', 'w'))
 	_util.json_dump(layout_obj, open(out_filename + 'Layout.json', 'w'))
