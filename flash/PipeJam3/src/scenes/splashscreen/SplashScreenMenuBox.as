@@ -183,10 +183,10 @@ package scenes.splashscreen
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
 					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
 					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
-					dataLog["WidenBrushCount"] = World.totalHexagonBrushCount;
-					dataLog["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
-					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
-					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
+					dataLog["WidenBrushCount"] = World.movesBrushHexagon;
+					dataLog["Solver2_DiamondBrushCount"] = World.movesBrushDiamond;
+					dataLog["Solver1_CircleBrushCount"] = World.movesBrushCircle;
+					dataLog["NarrowBrushCount"] = World.movesBrushSquare;
 					dataLog["IsSummaryData"] = true;
 					
 					NULogging.log(dataLog);
@@ -231,7 +231,7 @@ package scenes.splashscreen
 						m_infoTextfield.x = m_parent.width/2 - m_infoTextfield.width/2;
 
 						if (MTurkVersion) {
-							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels. You now have the option to skip levels, or skip to the end if you wish.");
+							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.");
 						}
 						if (userStudyVersion) {
 							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
