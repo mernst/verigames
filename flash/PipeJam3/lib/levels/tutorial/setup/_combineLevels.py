@@ -1,4 +1,6 @@
-execfile('../../util.py')
+import sys
+sys.path.append('../../../../../level_creation_scripts/')
+import _util
 
 FILES = [
 	'001',
@@ -23,4 +25,4 @@ FILES = [
 #	'14',
 ]
 
-combine_levels_all('../tutorial', FILES)
+_util.combine_levels_all('../tutorial', FILES)

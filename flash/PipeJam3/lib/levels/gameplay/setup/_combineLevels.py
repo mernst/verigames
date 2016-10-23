@@ -1,3 +1,5 @@
-execfile('../../util.py')
+import sys
+sys.path.append('../../../../../level_creation_scripts/')
+import _util
 
-combine_levels_all('../gameplay', list_file_prefixes(__file__))
+_util.combine_levels_all('../gameplay', _util.list_file_prefixes(__file__))

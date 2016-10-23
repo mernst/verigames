@@ -27,18 +27,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 
         # use a hash of the graph as the qid if none was supplied
         if qids_start == -1:
-            stored_id = None
-            if G.graph.has_key('id'):
-                stored_id = G.graph['id']
-            del G.graph['id']
-
-            hash = hashlib.md5(cPickle.dumps(G))
-            current_qid = hash.hexdigest()
-
-            if stored_id and not stored_id.startswith('p_'):
-                G.graph['id'] = stored_id
-            else:
-                G.graph['id'] = 'h_' + hash.hexdigest()[0:14]
+            current_qid = 0
 
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
