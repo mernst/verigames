@@ -50,10 +50,10 @@ def update_qid(prefix):
 	hash = hashlib.md5(str_rep)
 
 	new_qid = hash.hexdigest()
-	new_id = 'h_' + hash.hexdigest()[0:14]
+	new_name = 'h_' + hash.hexdigest()[0:14]
 
-	level_obj['id'] = new_id
-	level_obj['qid'] = layout_obj['qid'] = assignments_obj['qid'] = new_qid
+	level_obj['display_name'] = new_name
+	level_obj['id'] = level_obj['qid'] = layout_obj['qid'] = assignments_obj['qid'] = new_qid
 
 	os.remove(prefix + '.json')
 	os.remove(prefix + 'Layout.json')
@@ -62,7 +62,7 @@ def update_qid(prefix):
 	dirname = os.path.dirname(prefix)
 	if dirname != '':
 		dirname = dirname + '/'
-	out_filename = dirname + ''.join([c for c in new_id.replace(' ', '_') if c.isalnum() or c == '_'])
+	out_filename = dirname + ''.join([c for c in new_name.replace(' ', '_') if c.isalnum() or c == '_'])
 
 	_util.json_dump(level_obj, open(out_filename + '.json', 'w'))
 	_util.json_dump(layout_obj, open(out_filename + 'Layout.json', 'w'))

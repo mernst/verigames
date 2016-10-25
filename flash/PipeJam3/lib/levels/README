@@ -1,0 +1,15 @@
+Each of these folders contains the three files describing a set of
+levels. Some of these folders contain subfolders used for assembling
+those files.
+
+
+- setup/
+
+  Contains the levels stored in individual files.  Use
+  _combineLevels.py to combine them all into one set.
+
+
+- incoming/
+
+  Contains input files that are used to generate the levels.  Use
+  _convertLevels.py to convert them into levels in the setup/ folder.
