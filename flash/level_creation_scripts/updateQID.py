@@ -1,27 +1,32 @@
 import hashlib, json, os, sys
 import _util
 
+KEY_USE       = 0 # must be present, used in checksum
+KEY_SKIP      = 1 # must be present, not used in checksum
+KEY_OPTIONAL  = 2 # does not need to be present
+
 LEVEL_KEYS = {
-	'qid': False,
-	'id': False,
-	'file': True,
-	'version': True,
-	'scoring': True,
-	'default': True,
-	'groups': True,
-	'variables': True,
-	'cut_edges': True,
-	'constraints': True,
+	'qid': KEY_SKIP,
+	'id': KEY_SKIP,
+	'display_name': KEY_OPTIONAL,
+	'file': KEY_USE,
+	'version': KEY_USE,
+	'scoring': KEY_USE,
+	'default': KEY_USE,
+	'groups': KEY_USE,
+	'variables': KEY_USE,
+	'cut_edges': KEY_USE,
+	'constraints': KEY_USE,
 }
 
 LAYOUT_KEYS = {
-	'qid': False,
-	'layout': True,
+	'qid': KEY_SKIP,
+	'layout': KEY_USE,
 }
 
 ASSIGNMENTS_KEYS = {
-	'qid': False,
-	'assignments': True,
+	'qid': KEY_SKIP,
+	'assignments': KEY_USE,
 }
 
 
@@ -33,10 +38,13 @@ def process_obj(file_obj, keys):
 
 	new_obj = {}
 	for key, use in keys.iteritems():
+		if use == KEY_OPTIONAL:
+			continue
+
 		if not file_obj.has_key(key):
 			raise RuntimeError('Missing key %s.' % key)
 		
-		if use:
+		if use == KEY_USE:
 			new_obj[key] = file_obj[key]
 
 	return json.dumps(new_obj, sort_keys=True)
