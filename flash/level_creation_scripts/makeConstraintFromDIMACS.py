@@ -39,7 +39,10 @@ for line in content:
 
     if values[0] == 'c':
         # remember comments
-        comments.append(line[1:].strip())
+        comment = line[1:].rstrip()
+        if len(comment) > 0 and comment[0] == ' ':
+            comment = comment[1:]
+        comments.append(comment)
 
     elif values[0] == 'p':
         # check if the line starts with a p

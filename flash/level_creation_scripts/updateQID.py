@@ -9,6 +9,7 @@ LEVEL_KEYS = {
 	'qid': KEY_SKIP,
 	'id': KEY_SKIP,
 	'display_name': KEY_OPTIONAL,
+	'comments': KEY_OPTIONAL,
 	'file': KEY_USE,
 	'version': KEY_USE,
 	'scoring': KEY_USE,

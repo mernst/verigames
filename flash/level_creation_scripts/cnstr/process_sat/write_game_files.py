@@ -45,10 +45,11 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 
         out = open(outfilename, 'w')
         out.write('''{
-  "qid": "%s",
   "version": "%s",
+  "qid": "%s",
   "id": "%s",
   "file": "%s",
+  "comments":%s,
   "default": "type:1",
   "scoring": {
     "variables": {"type:0": 0, "type:1": 0},
@@ -58,7 +59,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
   "variables":{},
   "cut_edges":%s,
   "constraints":[
-    ''' % (str(current_qid), version, G.graph['id'], file_name, json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
+    ''' % (version, str(current_qid), G.graph['id'], file_name, json.dumps(G.graph.get('comments', [])), json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')

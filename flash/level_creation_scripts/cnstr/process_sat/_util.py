@@ -23,11 +23,18 @@ def get_vals(js, lst, ignore=None):
             raise RuntimeError('JSON has unrecognized key ' + key)
 
     ret = []
-    for ls in lst:
-        if not js.has_key(ls):
-            raise RuntimeError('JSON missing key ' + ls)
+    for key in lst:
+        if not js.has_key(key):
+            raise RuntimeError('JSON missing key ' + key)
             
-        ret.append(js[ls])
+        ret.append(js[key])
+
+    if ignore:
+        for key in ignore:
+            if not js.has_key(key):
+                ret.append(None)
+            else:
+                ret.append(js[key])
 
     if len(ret) == 1:
         return ret[0]
