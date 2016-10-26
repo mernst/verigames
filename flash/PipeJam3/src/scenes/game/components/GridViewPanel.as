@@ -193,6 +193,8 @@ package scenes.game.components
 		
 		// The text field wrapper to show on the screen for the timer.
 		private var m_gameTimerText:TextFieldWrapper;
+		
+		private static var attemptedLevel:Boolean = false;
 				
 		public function GridViewPanel(world:World)
 		{
@@ -1651,6 +1653,9 @@ package scenes.game.components
 				World.totalCircleBrushCount += World.movesBrushCircle;
 				World.totalDiamondBrushCount += World.movesBrushDiamond;
 				
+				attemptedLevel = World.movesBrushHexagon + World.movesBrushSquare
+								+ World.movesBrushCircle + World.movesBrushDiamond > 0;
+				
 			}
 		}
 		
@@ -1663,6 +1668,8 @@ package scenes.game.components
 			trace("Next level button is triggered");		
 			
 			collectMinMaxStats();
+			if (TutorialController.tutorialsDone)
+				World.totallevelsCompleted++;
 			
 			
 			World.levelTimer.stop();
@@ -1705,6 +1712,13 @@ package scenes.game.components
 			//------------------------------------------------------------------
 			
 			collectMinMaxStats();
+			if (TutorialController.tutorialsDone)
+			{
+				if(attemptedLevel)
+					World.totalLevelsAttempted++;
+				else
+					World.totallevelsAbandoned++;
+			}
 			
 			World.levelTimer.stop();
 			var dataLog:Object = new Object();
@@ -1725,6 +1739,14 @@ package scenes.game.components
 		private function alertEventHandler():void {
 			World.gamePlayDone = true;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
+			
+			if (TutorialController.tutorialsDone)
+			{
+				if(attemptedLevel)
+					World.totalLevelsAttempted++;
+				else
+					World.totallevelsAbandoned++;
+			}
 			//navigateToURL(new URLRequest("https://crudapi-kdin.rhcloud.com/api/survey/" + World.playerID));
 		}
 		//Alert.show("Testing..");

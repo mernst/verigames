@@ -162,6 +162,12 @@ package scenes.game.display
 		static public var totalSquareBrushCount:Number = 0;
 		static public var totalCircleBrushCount:Number = 0;
 		static public var totalDiamondBrushCount:Number = 0;
+		static public var totalBrushUsageCount:Number = 0;
+		static public var totalLevelCount:Number = 0;
+		static public var totallevelsSeen:Number = 0;
+		static public var totallevelsCompleted:Number = 0;
+		static public var totallevelsAbandoned:Number = 0;
+		static public var totalLevelsAttempted:Number = 0;
 		
 		static public var totalMoves:int;
 		static public var movesPerLevel:int;
@@ -190,6 +196,7 @@ package scenes.game.display
 			
 			var allLevels:Array = m_worldObj["levels"];
 			if (!allLevels) allLevels = [m_worldObj];
+			World.totalLevelCount = allLevels.length;
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
 				trace("A new level has started");

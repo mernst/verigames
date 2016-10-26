@@ -161,7 +161,15 @@ package scenes.splashscreen
 				
 				if (World.gamePlayDone) {
 				
+					
+					// Calclulate total Brush count used.
+					World.totalBrushUsageCount = World.totalHexagonBrushCount + World.totalDiamondBrushCount 
+						+ World.totalCircleBrushCount + World.totalSquareBrushCount;
 						
+					// Calculate total Levels Seen
+					World.totallevelsSeen = World.totallevelsCompleted + World.totallevelsAbandoned + World.totalLevelsAttempted;
+					
+										
 					//------------------------------------------------------------------
 					World.gameTimer.stop();
 					World.realLevelsTimer.stop();
@@ -169,10 +177,14 @@ package scenes.splashscreen
 					dataLog["playerID"] = World.playerID;
 					//dataLog["workerId"] = World.workerId;
 					dataLog["HitId"] = World.hitId;
-					dataLog["levelsCompleted"] = World.realLevelsCompleted;
-					dataLog["levelsSkipped"] = World.realLevelsSkipped;
-					dataLog["levelsAttempted"] = World.realLevelsAttempted;
-					dataLog["totalMoves"] = World.totalMoves;
+					dataLog["totalLevelsInGame"] = World.totalLevelCount;
+					dataLog["levelsCompleted"] = World.totallevelsCompleted;
+					dataLog["levelsAbandoned"] = World.totallevelsAbandoned;
+					dataLog["levelsAttempted"] = World.totalLevelsAttempted;
+					dataLog["levelsSkipped"] = World.totalLevelCount - World.totallevelsSeen;
+					dataLog["levelsDoneSomething"] = World.totallevelsSeen - World.totallevelsAbandoned;
+					dataLog["levelsSeen"] = World.totallevelsSeen;
+					dataLog["totalMoves"] = World.totalBrushUsageCount;
 					dataLog["gameTime"] = World.gameTimer.currentCount;
 					dataLog["realLevelsTime"] = World.realLevelsTimer.currentCount;
 					dataLog["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
@@ -183,10 +195,10 @@ package scenes.splashscreen
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
 					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
 					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
-					dataLog["WidenBrushCount"] = World.movesBrushHexagon;
-					dataLog["Solver2_DiamondBrushCount"] = World.movesBrushDiamond;
-					dataLog["Solver1_CircleBrushCount"] = World.movesBrushCircle;
-					dataLog["NarrowBrushCount"] = World.movesBrushSquare;
+					dataLog["WidenBrushCount"] = World.totalHexagonBrushCount;
+					dataLog["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
+					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
+					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
 					
 					NULogging.log(dataLog);

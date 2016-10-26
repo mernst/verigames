@@ -33,7 +33,7 @@ def scale_layout(filename, scale_factor):
 	with open(filename, 'w') as fout:
 		json_dump(layout_obj, fout)
 
-#scaleInfo = [("p_000050_00000000Layout.json", 5), ("p_000250_00000000Layout.json", 5), ("p_0001200_00000000Layout.json", 3), ("p_000140_00000000Layout.json", 6), ("p_000200_00000000Layout.json", 6), ("p_000084_00000000Layout.json", 6), ("p_000140_00000000Layout.json", 6)]
+#scaleInfo = [("p_000050_00000000Layout.json", 5), ("p_000250_00000000Layout.json", 5), ("p_0001200_00000000Layout.json", 3), ("p_000140_00000000Layout.json", 6), ("p_000200_00000000Layout.json", 6), ("p_000084_00000000Layout.json", 6)]
 scaleInfo = []
 
 for info in scaleInfo:
