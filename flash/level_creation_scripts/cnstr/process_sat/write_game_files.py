@@ -45,9 +45,9 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 
         out = open(outfilename, 'w')
         out.write('''{
+  "id": "%s",
   "version": "%s",
   "qid": "%s",
-  "id": "%s",
   "file": "%s",
   "comments":%s,
   "default": "type:1",
@@ -59,7 +59,7 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
   "variables":{},
   "cut_edges":%s,
   "constraints":[
-    ''' % (version, str(current_qid), G.graph['id'], file_name, json.dumps(G.graph.get('comments', [])), json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
+    ''' % (G.graph['id'], version, str(current_qid), file_name, json.dumps(G.graph.get('comments', [])), json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')
@@ -75,8 +75,8 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
         asg_outfilename = game_files_directory + ('/%sAssignments.json' % G.graph['id'])
         out = open(asg_outfilename, 'w')
         out.write('''{
-  "qid": "%s",
-  "assignments":{''' % (str(current_qid)))
+  "id": "%s",
+  "assignments":{''' % (G.graph['id']))
         first = True
         for node_id in G.nodes():
             if G.node[node_id].has_key('value'):
@@ -92,11 +92,11 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
         layout_outfilename = game_files_directory + ('/%sLayout.json' % G.graph['id'])
         out = open(layout_outfilename, 'w')
         out.write('''{
-  "qid": "%s",
+  "id": "%s",
   "layout": {
     "bounds": [%s,%s,%s,%s],
     "vars": {
-      ''' % (str(current_qid), G.graph.get('min_x',0), G.graph.get('min_y',0), G.graph.get('max_x',0), G.graph.get('max_y',0)))
+      ''' % (G.graph['id'], G.graph.get('min_x',0), G.graph.get('min_y',0), G.graph.get('max_x',0), G.graph.get('max_y',0)))
         comma = ''
         for node_id in G.nodes():
             node = G.node[node_id]

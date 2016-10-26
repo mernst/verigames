@@ -6,12 +6,12 @@ KEY_SKIP      = 1 # must be present, not used in checksum
 KEY_OPTIONAL  = 2 # does not need to be present
 
 LEVEL_KEYS = {
-	'qid': KEY_SKIP,
 	'id': KEY_SKIP,
+	'version': KEY_USE,
+	'qid': KEY_SKIP,
 	'display_name': KEY_OPTIONAL,
 	'comments': KEY_OPTIONAL,
 	'file': KEY_USE,
-	'version': KEY_USE,
 	'scoring': KEY_USE,
 	'default': KEY_USE,
 	'groups': KEY_USE,
@@ -21,12 +21,12 @@ LEVEL_KEYS = {
 }
 
 LAYOUT_KEYS = {
-	'qid': KEY_SKIP,
+	'id': KEY_SKIP,
 	'layout': KEY_USE,
 }
 
 ASSIGNMENTS_KEYS = {
-	'qid': KEY_SKIP,
+	'id': KEY_SKIP,
 	'assignments': KEY_USE,
 }
 
@@ -62,7 +62,7 @@ def update_qid(prefix):
 	new_name = 'h_' + hash.hexdigest()[0:14]
 
 	level_obj['display_name'] = new_name
-	level_obj['id'] = level_obj['qid'] = layout_obj['qid'] = assignments_obj['qid'] = new_qid
+	level_obj['id'] = level_obj['qid'] = layout_obj['id'] = assignments_obj['id'] = new_qid
 
 	os.remove(prefix + '.json')
 	os.remove(prefix + 'Layout.json')
