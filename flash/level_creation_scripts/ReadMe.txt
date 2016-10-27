@@ -3,6 +3,8 @@ Standard tasks:
 
 Create a level from a wcnf, cnf, or json file:
 
+	From DIMACS cnf, run makeConstraintFromDIMACS.py to create a json file. Then, run cnstr/process_constraint_json.py on the result to create the level files.
+
 	From wcnf or cnf, run makeConstraintFile.py to create a json file.
 	
 	From a json file created by Mike's team
@@ -11,7 +13,7 @@ Create a level from a wcnf, cnf, or json file:
 	From a level file (constraint of the type "c1 <= v1")
 		run ... (not finished...)
 
-	From DIMACS cnf, run makeConstraintFromDIMACS.py to create a json file. Then, run cnstr/process_constraint_json.py on the result to create the level files.
+
 
 Add a level to the database:
 
@@ -58,7 +60,10 @@ Add a level to the database:
 
 		python db_game_file_handler.py addFilesToDB api.paradox.verigames.org zipped_game_files_dir description_file_path
 
+
+
 Download and combine played assignment files:
+
 
 	
 Zip game files, individually:
@@ -73,10 +78,8 @@ Zip game files, individually:
 
 		The output directory is the same as the input_directory.
 	
+
+
 Autosolve levels:
 
 	Check the readme in the solve_scripts directory.
-	
-
-
-

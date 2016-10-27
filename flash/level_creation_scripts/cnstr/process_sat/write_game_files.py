@@ -1,12 +1,11 @@
 import networkx as nx
-import cPickle, json, sys, os
+import cPickle, hashlib, json, sys, os
 import _util
 
 def run(graphs_infile, game_files_directory, version, qids_start, node_min, node_max, random_assignments):
-    
     with open(graphs_infile, 'rb') as infile:
         Gs = cPickle.load(infile)
-    constraints_name = os.path.basename(graphs_infile).split('.')[0]
+    file_name = os.path.splitext(os.path.basename(graphs_infile))[0]
 
     if not os.path.isdir(game_files_directory):
         raise RuntimeError('game_files_directory is not a directory/does not exist: %s' % game_files_directory)
@@ -19,27 +18,38 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
         if n_vars < node_min or n_vars > node_max:
             continue
 
+        if random_assignments:
+            for node_id in G.nodes():
+                if not node_id.startswith('var'):
+                    continue
+                type_no = '1' if node_id[-1] in ['0', '2', '4', '6', '8'] else '0'
+                G.node[node_id]['value'] = 'type:' + type_no
+
+        # use a hash of the graph as the qid if none was supplied
+        if qids_start == -1:
+            current_qid = 0
+
         if not G.graph.has_key('id'):
             G.graph['id'] = 'p_%06d_%08d' % (n_vars, Gi)
 
         solved_if_wide = G.graph.get('solved_if_wide', False)
         solved_if_narrow = G.graph.get('solved_if_narrow', False)
 
+        id_for_filename = G.graph['id'].replace(' ', '_')
         if solved_if_narrow:
-          outfilename = game_files_directory + ('/SOLVED_NARROW_%s.json' % G.graph['id'])
-          use_qid = -1
+          outfilename = game_files_directory + ('/SOLVED_NARROW_%s.json' % id_for_filename)
         elif solved_if_wide:
-          outfilename = game_files_directory + ('/SOLVED_WIDE_%s.json' % G.graph['id'])
-          use_qid = -1
+          outfilename = game_files_directory + ('/SOLVED_WIDE_%s.json' % id_for_filename)
         else:
-          outfilename = game_files_directory + ('/%s.json' % G.graph['id'])
-          use_qid = current_qid
+          outfilename = game_files_directory + ('/%s.json' % id_for_filename)
+
         out = open(outfilename, 'w')
-        out.write('''
-{
+        out.write('''{
   "id": "%s",
-  "qid": %s,
   "version": "%s",
+  "qid": "%s",
+  "file": "%s",
+  "comments":%s,
   "default": "type:1",
   "scoring": {
     "variables": {"type:0": 0, "type:1": 0},
@@ -49,14 +59,14 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
   "variables":{},
   "cut_edges":%s,
   "constraints":[
-    ''' % (G.graph['id'], current_qid, version, json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
+    ''' % (G.graph['id'], version, str(current_qid), file_name, json.dumps(G.graph.get('comments', [])), json.dumps(G.graph.get('groups', [])), json.dumps(G.graph.get('cut_edges',[]))))
         comma = ''
         for edge_parts in G.edges():
             from_n = edge_parts[0].replace('clause', 'c')
             to_n = edge_parts[1].replace('clause', 'c')
             out.write('%s"%s <= %s"' % (comma, from_n, to_n))
             comma = ',\n    '
-        out.write(']\n}')
+        out.write(']\n}\n')
         out.close()
 
         if solved_if_narrow or solved_if_wide:
@@ -64,42 +74,29 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
 
         asg_outfilename = game_files_directory + ('/%sAssignments.json' % G.graph['id'])
         out = open(asg_outfilename, 'w')
-        out.write('''
-{
+        out.write('''{
   "id": "%s",
-  "qid": %s,
-  "assignments":{''' % (G.graph['id'], current_qid))
-        if random_assignments:
-            first = True
-            for node_id in G.nodes():
-                if not node_id.startswith('var'):
-                    continue
-                type_no = '1' if node_id[-1] in ['0', '2', '4', '6', '8'] else '0'
+  "assignments":{''' % (G.graph['id']))
+        first = True
+        for node_id in G.nodes():
+            if G.node[node_id].has_key('value'):
                 if first:
                     out.write('\n')
                     first = False
                 else:
                     out.write(',\n')
-                out.write('    "%s": {"type_value": "type:%s"}' % (node_id, type_no))
-        out.write('''
-  }
-}
-''')
+                out.write('    "%s": {"type_value": "%s"}' % (node_id, G.node[node_id]['value']))
+        out.write('\n  }\n}\n')
         out.close()
 
         layout_outfilename = game_files_directory + ('/%sLayout.json' % G.graph['id'])
         out = open(layout_outfilename, 'w')
-        out.write('''
-{
+        out.write('''{
   "id": "%s",
   "layout": {
     "bounds": [%s,%s,%s,%s],
     "vars": {
-      ''' % (G.graph.get('id',''), 
-        G.graph.get('min_x',0), 
-        G.graph.get('min_y',0), 
-        G.graph.get('max_x',0), 
-        G.graph.get('max_y',0)))
+      ''' % (G.graph['id'], G.graph.get('min_x',0), G.graph.get('min_y',0), G.graph.get('max_x',0), G.graph.get('max_y',0)))
         comma = ''
         for node_id in G.nodes():
             node = G.node[node_id]
@@ -109,9 +106,11 @@ def run(graphs_infile, game_files_directory, version, qids_start, node_min, node
             node_id_ = node_id.replace(':', '_').replace('clause_', 'c_')
             out.write('%s"%s":{"x":%s,"y":%s}' % (comma, node_id_, node.get('x'), node.get('y')))
             comma = ',\n      '
-        out.write('\n     }\n  }\n}')
+        out.write('\n     }\n  }\n}\n')
         out.close()
-        current_qid += 1
+        
+        if qids_start != -1:
+            current_qid += 1
 
 
 

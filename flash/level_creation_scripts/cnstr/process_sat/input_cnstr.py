@@ -7,12 +7,11 @@ def run(infile, outfile):
     _util.print_step('parsing')
 
     world = json.load(open(infile))
-    version, constraints = _util.get_vals(world, ['version', 'constraints'], ['comments'])
+    version, constraints, comments = _util.get_vals(world, ['version', 'constraints'], ['comments'])
 
     if version not in ['1', '2']:
         raise RuntimeError('JSON has unrecognized version ' + version)
     version = int(version)
-
 
     def process_constraint_block(clauses, constraints, lits):
         for constraint in constraints:
@@ -74,6 +73,10 @@ def run(infile, outfile):
     _util.print_step('constructing graph')
 
     G = nx.DiGraph()
+
+    if comments:
+        G.graph['comments'] = comments
+
     edges = {}
     for cc, clause in enumerate(clauses):
         cnode = 'clause:' + str(cc + 1)
