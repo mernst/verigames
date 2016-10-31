@@ -190,13 +190,24 @@ package scenes.game.display
 			m_layoutObj = _layout;
 			m_assignmentsObj = _assignments;
 			
-			m_world = this;
+			m_world = this;			
+			
+			LoadAllLevels()
+		}
+		
+		
+		private function LoadAllLevels(): void {
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
 			var allLevels:Array = m_worldObj["levels"];
-			if (!allLevels) allLevels = [m_worldObj];
+			if (!allLevels) 
+				allLevels = [m_worldObj];
+				
 			World.totalLevelCount = allLevels.length;
+			
+			trace("--------------------------------------------------------------->>>>>>" + World.totalLevelCount + "");
+			
 			// create World
 			for (var level_index:int = 0; level_index < allLevels.length; level_index++) {
 				trace("A new level has started");
@@ -217,15 +228,7 @@ package scenes.game.display
 					throw new Error("World level found without constraint graph:" + levelObj["id"]);
 				}
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelObj["id"]] as ConstraintGraph;
-				/*
-				trace("Adding a level with arguments");
-				trace("LevelDisplayName", levelDisplayName);
-				trace("levelGraph", levelGraph);
-				trace("levelObj", LoggingServerInterface.obj2str(levelObj));
-				trace("levelLayoutObj", LoggingServerInterface.obj2str(levelLayoutObj));
-				trace("levelAssignmentsObj",LoggingServerInterface.obj2str(levelAssignmentsObj));
-				trace("levelName", levelNameFound);
-				*/
+
 				
 				var my_level:Level = new Level(levelDisplayName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
@@ -1095,24 +1098,51 @@ package scenes.game.display
 			}
 			else {
 				
-				if (remainingTotalLevels == 0) {
-					gamePlayDone = true;	
-					onShowGameMenuEvent();	
+				if (remainingTotalLevels <= 0) {
+					//gamePlayDone = true;	
+					//onShowGameMenuEvent();
+					
+					LoadAllLevels();
+					
+					/*
+					levelNumberArray = new Array();
+					for (var i:int = 1; i < levels.length; i++) {
+						levelNumberArray.push(i);					
+					}
+					
+					remainingTotalLevels = levels.length - 1;
+					
+					trace("Post Adjustment: RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
+					trace("Post Adjustment: RANDOM:REMAININGLEVELS", remainingTotalLevels);
+					trace("Post Adjustment: Levels", levels.length);
+					
+					m_currentLevelNumber = 0;
+					*/
+				}
+				else{
+					var pick:int = randomLevelNumber(levelNumberArray.length);
+					m_currentLevelNumber = levelNumberArray[pick];
+					trace("m_currentLevelNumber = ", m_currentLevelNumber);
+					
+					trace("RANDOM:LEVELNUMBERARRAY", levelNumberArray);
+					levelNumberArray = levelNumberArray.filter(function (element:*, index:int, arr:Array):Boolean { return (pick != index) } );
+					remainingTotalLevels -= 1;
+					
+					trace("RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
+					trace("RANDOM:PICK", pick);
+					trace("RANDOM:REMAININGLEVELS", remainingTotalLevels);
+					trace("Levels", levels.length);
 				}
 				
-				var pick:int = randomLevelNumber(levelNumberArray.length);
-				m_currentLevelNumber = levelNumberArray[pick];
 				
 				
-				trace("RANDOM:LEVELNUMBERARRAY", levelNumberArray);
-				levelNumberArray = levelNumberArray.filter(function (element:*, index:int, arr:Array):Boolean { return (pick != index) } );
-				remainingTotalLevels -= 1;
 				
-				trace("RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
-				trace("RANDOM:PICK", pick);
-				trace("RANDOM:REMAININGLEVELS",remainingTotalLevels);
 				
 				updateAssignments(); // save world progress
+				
+				trace("--===============================-->" + remainingTotalLevels + "<--==============================--");
+				
+				
 			}
 
 			var callback:Function =
@@ -1291,11 +1321,13 @@ package scenes.game.display
 		
 		protected function selectLevel(newLevel:Level):void
 		{
-			trace("Selectin a new level");
-			currentLevelName = newLevel.level_name;
+			
 			if (!newLevel) {
 				return;
 			}
+			
+			trace("Selectin a new level");
+			currentLevelName = newLevel.level_name;
 			
 			if(newLevel != firstLevel){
 				trace("CURRENT SCORE *************************************************************", newLevel.currentScore);
@@ -1314,7 +1346,7 @@ package scenes.game.display
 					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
 					//}
 					PipeJam3.logging.logQuestEnd(qid, details);
-					active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
+					//active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
@@ -1330,9 +1362,9 @@ package scenes.game.display
 				PipeJam3.logging.logQuestStart(qid, details);
 			}
 			if (active_level) {
-				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
-				active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
-				active_level.dispose();
+				//active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+				//active_level.levelGraph.removeEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+				//active_level.dispose();
 			}
 			if (m_splashLayer) {
 				m_splashLayer.removeChildren(0, -1, true);
