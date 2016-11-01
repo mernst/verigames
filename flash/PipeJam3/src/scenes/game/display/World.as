@@ -1103,7 +1103,6 @@ package scenes.game.display
 					//onShowGameMenuEvent();
 					
 					LoadAllLevels();
-
 				}
 				else{
 					var pick:int = randomLevelNumber(levelNumberArray.length);
