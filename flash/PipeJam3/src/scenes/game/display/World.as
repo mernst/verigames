@@ -1103,21 +1103,7 @@ package scenes.game.display
 					//onShowGameMenuEvent();
 					
 					LoadAllLevels();
-					
-					/*
-					levelNumberArray = new Array();
-					for (var i:int = 1; i < levels.length; i++) {
-						levelNumberArray.push(i);					
-					}
-					
-					remainingTotalLevels = levels.length - 1;
-					
-					trace("Post Adjustment: RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
-					trace("Post Adjustment: RANDOM:REMAININGLEVELS", remainingTotalLevels);
-					trace("Post Adjustment: Levels", levels.length);
-					
-					m_currentLevelNumber = 0;
-					*/
+
 				}
 				else{
 					var pick:int = randomLevelNumber(levelNumberArray.length);
