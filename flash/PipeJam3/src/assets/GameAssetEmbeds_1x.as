@@ -115,6 +115,12 @@ package assets
 		
 		[Embed(source = "../../lib/assets/checkmark.png")]
 		public static const CheckmarkClass:Class;
+		
+		[Embed(source="../../lib/assets/splash/GameHelp.png")]
+		public static const GameHelpSplashClass:Class;
+		
+		[Embed(source="../../lib/assets/splash/GameHelpTurk.png")]
+		public static const GameHelpSplashClassTurk:Class;
 
 		// Bitmap Fonts
 		

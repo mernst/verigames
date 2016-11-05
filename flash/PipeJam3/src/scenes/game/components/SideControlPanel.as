@@ -14,6 +14,7 @@ package scenes.game.components
 	
 	import display.BasicButton;
 	import display.FullScreenButton;
+	import display.HelpScreenButton;
 	import display.NineSliceButton;
 	import display.NineSliceToggleButton;
 	import display.RadioButton;
@@ -64,6 +65,8 @@ package scenes.game.components
 		private var m_zoomInButton:BasicButton;
 		private var m_zoomOutButton:BasicButton;
 		private var m_fullScreenButton:BasicButton;
+		
+		private var m_helpScreenButton:HelpScreenButton;
 		
 		protected var m_solver1Brush:NineSliceToggleButton;
 		protected var m_solver2Brush:NineSliceToggleButton;
@@ -194,6 +197,16 @@ package scenes.game.components
 			XSprite.setPivotCenter(m_fullScreenButton);
 			m_fullScreenButton.x = m_zoomOutButton.x;
 			m_fullScreenButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 5;
+			
+			
+			m_helpScreenButton = new HelpScreenButton(World.m_world);
+			m_helpScreenButton.scaleX = m_helpScreenButton.scaleY = m_zoomInButton.scaleX;
+			XSprite.setPivotCenter(m_helpScreenButton);
+			m_helpScreenButton.x = m_zoomInButton.x;
+			m_helpScreenButton.y = m_zoomOutButton.y + m_zoomInButton.height;
+			//addChild(m_helpScreenButton);
+			
+			
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);

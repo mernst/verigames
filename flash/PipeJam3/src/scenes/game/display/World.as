@@ -1388,6 +1388,39 @@ package scenes.game.display
 			trace("THESE ARE THE SCORES ^^^^^^^^^^^^^^^^^^^^^^^^^^^^CURRENT_SCORE", active_level.currentScore, " TARGET_SCORE ", active_level.m_targetScore);
 		}
 		
+		// Refactored to be reused..
+		public function showSplashScreen(splash:starling.display.Image): void
+		{
+			if (splash)
+			{
+				if (!m_splashLayer) {
+					m_splashLayer = new Sprite();
+					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
+				} else {
+					m_splashLayer.removeChildren(0, -1, true);
+				}
+				
+				var backQ:Quad = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
+				backQ.alpha = 0.9;
+				m_splashLayer.addChild(backQ);
+				splash.x = 0.5 * (Constants.GameWidth - splash.width);
+				splash.y = 0.5 * (Constants.GameHeight - splash.height);
+				m_splashLayer.addChild(splash);
+				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click anywhere to continue...", Constants.GameWidth, 12, 8, Constants.GOLD);
+				splashText.y = Constants.GameHeight - 12;
+				m_splashLayer.addChild(splashText);
+				addChild(m_splashLayer);
+			}
+		}
+		
+		public function onHelpButtonClicked():void
+		{
+			//var splashText:Texture = AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX);
+			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
+			
+			showSplashScreen(splash);
+		}
+		
 		private function onLevelLoaded(evt:MenuEvent):void
 		{
 			//-----------------------------------------------------------------
@@ -1415,25 +1448,11 @@ package scenes.game.display
 			//called later by initScoring
 			//onWidgetChange();
 			var levelSplash:Image;
-			if (active_level.tutorialManager) levelSplash = active_level.tutorialManager.getSplashScreen();
-			if (levelSplash) {
-				if (!m_splashLayer) {
-					m_splashLayer = new Sprite();
-					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
-				} else {
-					m_splashLayer.removeChildren(0, -1, true);
-				}
-				var backQ:Quad = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
-				backQ.alpha = 0.9;
-				m_splashLayer.addChild(backQ);
-				levelSplash.x = 0.5 * (Constants.GameWidth - levelSplash.width);
-				levelSplash.y = 0.5 * (Constants.GameHeight - levelSplash.height);
-				m_splashLayer.addChild(levelSplash);
-				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click anywhere to continue...", Constants.GameWidth, 12, 8, Constants.GOLD);
-				splashText.y = Constants.GameHeight - 12;
-				m_splashLayer.addChild(splashText);
-				addChild(m_splashLayer);
-			}
+			if (active_level.tutorialManager)
+				levelSplash = active_level.tutorialManager.getSplashScreen();
+			
+			showSplashScreen(levelSplash);
+			
 			
 			//trace("edgeSetGraphViewPanel.loadLevel()");
 			edgeSetGraphViewPanel.setupLevel(active_level);
