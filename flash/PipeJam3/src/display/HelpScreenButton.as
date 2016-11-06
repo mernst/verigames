@@ -25,11 +25,11 @@ package display
 			// Need to know which world we're painting on..
 			m_world = _world;
 			
-			var atlas:TextureAtlas = AssetInterface.ParadoxSpriteSheetAtlas;
+			var atlas:TextureAtlas = AssetInterface.QuestionSpriteAtlas;
 			super(
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonMaximize))]),
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonMaximizeOver))]),
-				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.ParadoxSubTexture_ButtonMaximizeClick))])
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.QuestionSprite_QuestionButton))]),
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.QuestionSprite_QuestionButton))]),
+				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.QuestionSprite_QuestionButton))])
 			);	
 			
 			// Default splash screen

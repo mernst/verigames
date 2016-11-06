@@ -250,6 +250,14 @@ package scenes.game.display
 			//initPlayerVars();
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
+			
+			/*
+			if (!PipeJamGameScene.inTutorial && !switchFromTutorial)
+			{
+					m_world.onHelpButtonClicked();
+					switchFromTutorial = true;
+			}
+			*/
 		}
 		
 		public static function setWorkerId(newWorkerId:String, hitId:String):void {
@@ -474,6 +482,13 @@ package scenes.game.display
 			var time1:Number = new Date().getTime();
 			m_currentLevelNumber = 0;
 			selectLevel(firstLevel);
+			
+			if (!PipeJamGameScene.inTutorial && !switchFromTutorial)
+			{
+				m_world.onHelpButtonClicked();
+				switchFromTutorial = true;
+			}
+					
 			//trace("Done initializing Level.", new Date().getTime()-time1);
 		}
 		
@@ -1027,6 +1042,8 @@ package scenes.game.display
 			}
 		}
 		
+		private var switchFromTutorial:Boolean = false;
+		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
 			if(PipeJamGameScene.inTutorial)
@@ -1098,6 +1115,13 @@ package scenes.game.display
 			}
 			else {
 				
+				/*
+				if (!switchFromTutorial)
+				{
+					m_world.onHelpButtonClicked();
+					switchFromTutorial = true;
+				}*/
+				
 				if (remainingTotalLevels <= 0) {
 					//gamePlayDone = true;	
 					//onShowGameMenuEvent();
@@ -1136,6 +1160,8 @@ package scenes.game.display
 					selectLevel(levels[m_currentLevelNumber]);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
+			
+			
 		}
 		
 		public function randomLevelNumber(range:int):int {

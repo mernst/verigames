@@ -35,11 +35,13 @@ package assets
 		private static var sPipeJamSpriteSheetAtlas:TextureAtlas;
 		private static var sDialogWindowAtlas:TextureAtlas;
 		private static var sPipeJamLevelSelectAtlas:TextureAtlas;
+		private static var sQuestionSpriteAtlas:TextureAtlas;
 		private static var sTextureAtlases:Dictionary = new Dictionary();
         private static var sTextures:Dictionary = new Dictionary();
         private static var sSounds:Dictionary = new Dictionary();
         private static var sTextureAtlas:TextureAtlas;
         private static var sBitmapFontsLoaded:Boolean;
+		
 		
 		//need to declare a variable of each type, else they get stripped by the compiler and dynamic generation doesn't work
 		private var gameAssetEmbeds_1x:GameAssetEmbeds_1x;
@@ -160,6 +162,7 @@ package assets
 		public static const ParadoxSubTexture_VariableWideSelected:String = "VariableWideSelected";
 		public static const ParadoxSubTexture_VariableWideWorking:String = "VariableWideWorking";
 		public static const ParadoxSubTexture_ProgressMarkerPrefix:String = "ProgressMarker";
+		public static const QuestionSprite_QuestionButton:String = "QuestionButton";
 		
         public static function getTexture(file:String, name:String):Texture
         {
@@ -307,6 +310,13 @@ package assets
 			if (sDialogWindowAtlas == null)
 				sDialogWindowAtlas = getTextureAtlas("Game", "DialogWindowPNG", "DialogWindowXML");
 			return sDialogWindowAtlas;
+		}
+		
+		public static function get QuestionSpriteAtlas():TextureAtlas
+		{
+			if (sQuestionSpriteAtlas == null)
+				sQuestionSpriteAtlas = getTextureAtlas("Game", "QuestionSpritePNG", "QuestionSpriteXML");
+			return sQuestionSpriteAtlas;
 		}
 		
 		public static function get PipeJamLevelSelectAtlas():TextureAtlas

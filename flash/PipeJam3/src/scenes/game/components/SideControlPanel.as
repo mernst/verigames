@@ -203,10 +203,8 @@ package scenes.game.components
 			m_helpScreenButton.scaleX = m_helpScreenButton.scaleY = m_zoomInButton.scaleX;
 			XSprite.setPivotCenter(m_helpScreenButton);
 			m_helpScreenButton.x = m_zoomInButton.x;
-			m_helpScreenButton.y = m_zoomOutButton.y + m_zoomInButton.height;
-			//addChild(m_helpScreenButton);
-			
-			
+			m_helpScreenButton.y = m_zoomOutButton.y + m_zoomInButton.height + 5;
+			addChild(m_helpScreenButton);
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);
@@ -284,9 +282,9 @@ package scenes.game.components
 		{
 			m_sfxButton.scaleX = m_sfxButton.scaleY = m_zoomInButton.scaleX;
 			m_sfxButton.x = m_zoomInButton.x - 3.5;
-			m_sfxButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 3.5;
+			m_sfxButton.y = 2 * (m_zoomOutButton.y + m_zoomOutButton.height) + 1;
 			var test:Point = localToGlobal(new Point(m_sfxButton.x, m_sfxButton.y));
-			addChild(m_sfxButton);
+			//addChild(m_sfxButton);
 		}
 		
 		//min scale == max zoom

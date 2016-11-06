@@ -8,7 +8,7 @@ package scenes.splashscreen
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
-		import assets.AssetInterface;
+	import assets.AssetInterface;
 	import assets.AssetsFont;
 		
 	import display.NineSliceButton;

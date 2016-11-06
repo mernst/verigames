@@ -77,6 +77,12 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/DialogWindow.xml", mimeType = "application/octet-stream")]
 		public static const DialogWindowXML:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/QuestionSprite.png")]
+		public static const QuestionSpritePNG:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/QuestionSprite.xml", mimeType = "application/octet-stream")]
+		public static const QuestionSpriteXML:Class;
+		
 		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.png")]
 		public static const PipeJamLevelSelectSpriteSheetPNG:Class;
 		

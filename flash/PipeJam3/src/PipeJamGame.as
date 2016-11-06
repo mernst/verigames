@@ -55,7 +55,7 @@ package
 		public static var ALL_IN_ONE:int = 2;
 		
 		private static var m_sfxButton:SoundButton;
-		public static var soundButtonGlobalCoords:Point = new Point(400.5, 294);
+		public static var soundButtonGlobalCoords:Point = new Point(400.5, 305);
 		private var m_gameObjectBatch:GameObjectBatch;
 		
 		/** this is the main holder of information about the level. */
