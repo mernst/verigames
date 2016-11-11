@@ -15,6 +15,8 @@ package server
 	import flash.net.URLRequestHeader;
 	import com.adobe.serialization.json.JSON;
 	import Date;
+	
+	import scenes.game.display.World;
 
 	import networking.HTTPCookies;
 	
@@ -43,6 +45,7 @@ package server
 			if (loggingOn){
 				var date:Date = new Date();
 				logData["timestamp"] = date;
+				logData["HitId"] = World.hitId;
 				trace("LOG__________________________________________________________________", LoggingServerInterface.obj2str(logData));
 				
 				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");

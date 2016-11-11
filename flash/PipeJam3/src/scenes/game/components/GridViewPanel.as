@@ -1683,6 +1683,7 @@ package scenes.game.components
 			details["percentBrushHexagon"] = String((World.movesBrushHexagon/World.movesPerLevel)*100);
 			details["percentBrushSquare"] = String((World.movesBrushSquare/World.movesPerLevel)*100);
 			details["levelTime"] = World.levelTimer.currentCount;
+			//details["HitId"] = World.hitId;
 			NULogging.log(details);
 			
 			World.levelTimer.reset();
@@ -1727,6 +1728,7 @@ package scenes.game.components
 			dataLog["levelName"] = World.currentLevelName;
 			dataLog["movesPerLevel"] = World.movesPerLevel;
 			dataLog["levelTime"] = World.levelTimer.currentCount;
+			//dataLog["HitId"] = World.hitId;
 			World.realLevelsSkipped += 1;
 			NULogging.log(dataLog);
 			

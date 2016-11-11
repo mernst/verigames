@@ -280,6 +280,7 @@ package scenes.game.display
 				errLog["workerId"] = workerId;
 				errLog["actionTaken"] = "Error setting WorkerId";
 				errLog["ErrorMessage"] = err.message;
+				//errLog["HitId"] = World.hitId;
 				NULogging.log(errLog);
 			}
 			
@@ -328,6 +329,7 @@ package scenes.game.display
 			var initLog:Object = new Object();
 			initLog["playerID"] = playerID;
 			initLog["actionTaken"] = "Session start";
+			//initLog["HitId"] = World.hitId;
 			NULogging.log(initLog);
 			
 		}
@@ -967,6 +969,7 @@ package scenes.game.display
 							dataLog["levelName"] = active_level.level_name;
 							dataLog["actionTaken"] = "Target Reached";
 							dataLog["targetReachTime"] = levelTimer.currentCount;
+							//dataLog["HitId"] = World.hitId;
 							NULogging.log(dataLog);
 							targetReachedLevelName = active_level.level_name;
 							

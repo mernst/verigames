@@ -1591,7 +1591,9 @@ package scenes.game.display
 				}
 				*/
 				
+				//details["HitId"] = World.hitId;
 				NULogging.log(details);
+				
 				
 				trace("LOGGING END ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 			//------------------------------------------------------
