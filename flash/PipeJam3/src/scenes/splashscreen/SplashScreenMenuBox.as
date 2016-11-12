@@ -344,7 +344,7 @@ package scenes.splashscreen
 		}
 		
 		protected function onSurveyButtonTriggered(e:starling.events.Event):void {
-			navigateToURL(new URLRequest("http://viridian.ccs.neu.edu/api/survey/" + World.playerID));
+			navigateToURL(new URLRequest("http://viridian.ccs.neu.edu/api/survey/:" + World.playerID + "/:" + World.hitId));
 			parent.removeChild(play_button);
 		}
 		
