@@ -127,6 +127,12 @@ package assets
 		
 		[Embed(source="../../lib/assets/splash/GameHelpTurk.png")]
 		public static const GameHelpSplashClassTurk:Class;
+		
+		[Embed(source="../../lib/assets/splash/GameHelpPointer.png")]
+		public static const GameHelpPointerClass:Class;
+		
+		[Embed(source="../../lib/assets/splash/GameHelpPointerTurk.png")]
+		public static const GameHelpPointerClassTurk:Class;
 
 		// Bitmap Fonts
 		

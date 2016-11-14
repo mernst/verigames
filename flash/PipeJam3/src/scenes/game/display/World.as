@@ -487,7 +487,7 @@ package scenes.game.display
 			
 			if (!PipeJamGameScene.inTutorial && !switchFromTutorial)
 			{
-				m_world.onHelpButtonClicked();
+				onHelpButtonClicked();
 				switchFromTutorial = true;
 			}
 					
@@ -1422,6 +1422,9 @@ package scenes.game.display
 		{
 			if (splash)
 			{
+				
+				trace('************************************************************************ showHelpButtonIndicator = ' + World.showHelpButtonIndicator);
+				
 				if (!m_splashLayer) {
 					m_splashLayer = new Sprite();
 					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
@@ -1442,12 +1445,58 @@ package scenes.game.display
 			}
 		}
 		
+		public function showSHelpButton(): void
+		{
+			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpPointerClass" + PipeJam3.ASSET_SUFFIX));
+			
+			if (splash)
+			{
+				if (!m_splashLayer) {
+					m_splashLayer = new Sprite();
+					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
+				} else {
+					m_splashLayer.removeChildren(0, -1, true);
+				}
+				
+				splash.x = Constants.GameWidth - 175;
+				splash.y = Constants.GameHeight - 55;
+				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click this button to see the help screen again!", Constants.GameWidth, 14, 14, Constants.BROWN);
+				splashText.y = Constants.GameHeight - 72;
+				m_splashLayer.addChild(splash);
+				m_splashLayer.addChild(splashText);
+				addChild(m_splashLayer);
+				
+				World.showHelpButtonIndicator = 2;
+				
+			}
+		}
+		
 		public function onHelpButtonClicked():void
 		{
-			//var splashText:Texture = AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX);
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
-			
+			World.showHelpButtonIndicator = 1;
+			trace('************************************************************************ 4> showHelpButtonIndicator = ' + World.showHelpButtonIndicator);
 			showSplashScreen(splash);
+		}
+		
+		public static var showHelpButtonIndicator:int = 0;
+		private function onTouchSplashScreen(evt:TouchEvent):void
+		{
+			if (evt.getTouches(this, TouchPhase.BEGAN).length && m_splashLayer)
+			{
+				// Touch screen pressed, remove it
+				m_splashLayer.removeChildren(0, -1, true);
+				m_splashLayer.removeFromParent();
+				
+				
+				if (World.showHelpButtonIndicator == 1)
+				{
+					trace('************************************************************************ Showing HelpButton!');
+					World.showHelpButtonIndicator = 2;
+					showSHelpButton();
+				}
+			}		
+			
 		}
 		
 		private function onLevelLoaded(evt:MenuEvent):void
@@ -1505,15 +1554,7 @@ package scenes.game.display
 			//trace("World.onLevelLoaded complete");
 		}
 		
-		private function onTouchSplashScreen(evt:TouchEvent):void
-		{
-			if (evt.getTouches(this, TouchPhase.BEGAN).length && m_splashLayer)
-			{
-				// Touch screen pressed, remove it
-				m_splashLayer.removeChildren(0, -1, true);
-				m_splashLayer.removeFromParent();
-			}
-		}
+		
 		
 		private function onRemovedFromStage():void
 		{

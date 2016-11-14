@@ -40,6 +40,8 @@ package display
 		
 		public function showHelpScreen():void 
 		{
+			if(World.showHelpButtonIndicator == 0)
+				World.showHelpButtonIndicator = 1;
 			m_world.showSplashScreen(m_splash);
 		}
 	}
