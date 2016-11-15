@@ -7,6 +7,7 @@ package scenes.game.components
 	import flash.utils.Timer;
 	import scenes.game.PipeJamGameScene;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import utils.XMath;
 	
 	import assets.AssetInterface;
@@ -258,6 +259,12 @@ package scenes.game.components
 		private function showTurkFinishButton():void
 		{
 			addChild(m_turkFinishButton);
+		}
+		
+		
+		public function GetHelpButton():DisplayObject
+		{
+			return m_helpScreenButton;
 		}
 		
 		public function addedToStage(event:starling.events.Event):void

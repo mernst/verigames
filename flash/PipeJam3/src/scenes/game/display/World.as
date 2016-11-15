@@ -1454,6 +1454,25 @@ package scenes.game.display
 		
 		public function showSHelpButton(): void
 		{
+			
+			// TutorialManagerTextInfo
+			//var pointerHint = new TutorialManagerTextInfo("Click this button to see the help screen again!", null, null, null, null);
+			var buble:TextBubble = new TextBubble("Click this button to see the help screen again!", 10, 0xEEEEEE,
+			sideControlPanel.GetHelpButton(), m_world.active_level, Constants.TOP_LEFT,
+			Constants.TOP_LEFT, null, false, 15, 2, 0.5, 3, true, NaN, 1, 0xEEEEEE);
+			
+			if (!m_splashLayer) {
+					m_splashLayer = new Sprite();
+					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
+				} else {
+					m_splashLayer.removeChildren(0, -1, true);
+				}
+			buble.addEventListener(MouseEvent.CLICK, onTouchSplashScreen);
+			m_splashLayer.addChild(buble);
+			addChild(m_splashLayer);
+			
+			/*
+			// Add the splash - Pointer on the screen
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpPointerClass" + PipeJam3.ASSET_SUFFIX));
 			
 			if (splash)
@@ -1464,11 +1483,7 @@ package scenes.game.display
 				} else {
 					m_splashLayer.removeChildren(0, -1, true);
 				}
-				
-				HelpButtonIndicatorTimer = new Timer(1000, HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS);
-				HelpButtonIndicatorTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onHelpTextWaittimeComplete);
-				
-				
+
 				splash.x = Constants.GameWidth - 175;
 				splash.y = Constants.GameHeight - 55;
 				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click this button to see the help screen again!", Constants.GameWidth, 14, 14, Constants.BROWN);
@@ -1476,11 +1491,16 @@ package scenes.game.display
 				m_splashLayer.addChild(splash);
 				m_splashLayer.addChild(splashText);
 				addChild(m_splashLayer);
-				
-				World.showHelpButtonIndicator = 2;
-				HelpButtonIndicatorTimer.start();
-				
 			}
+			*/
+			
+			// Add the timer and start it, reset the value of showHelpButtonIndicator so that we don't show this pointer again.
+			HelpButtonIndicatorTimer = new Timer(1000, HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS);
+			HelpButtonIndicatorTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onHelpTextWaittimeComplete);
+			
+			World.showHelpButtonIndicator = 2;
+			// Start the timer.
+			HelpButtonIndicatorTimer.start();
 		}
 		
 		public function onHelpButtonClicked():void
@@ -1501,7 +1521,7 @@ package scenes.game.display
 			
 		}
 		
-		private function clearSplashDisplay()
+		private function clearSplashDisplay():void
 		{
 			// Touch screen pressed, remove it
 				m_splashLayer.removeChildren(0, -1, true);
