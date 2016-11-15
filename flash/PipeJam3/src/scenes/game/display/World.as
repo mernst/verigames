@@ -186,6 +186,7 @@ package scenes.game.display
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
 		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 20;
 		
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;
