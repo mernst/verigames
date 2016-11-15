@@ -183,6 +183,9 @@ package scenes.game.display
 		static public var workerId:String = "";
 		static public var hitId:String = "";
 		
+		// Wait time for the Help screen's tooltip to last. This value is in seconds.
+		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 20;
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;
@@ -1422,9 +1425,6 @@ package scenes.game.display
 		{
 			if (splash)
 			{
-				
-				trace('************************************************************************ showHelpButtonIndicator = ' + World.showHelpButtonIndicator);
-				
 				if (!m_splashLayer) {
 					m_splashLayer = new Sprite();
 					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
@@ -1445,6 +1445,12 @@ package scenes.game.display
 			}
 		}
 		
+		private function onHelpTextWaittimeComplete(e: TimerEvent):void
+		{
+			trace("Wait time for HelpText complete");
+			clearSplashDisplay();
+		}
+		
 		public function showSHelpButton(): void
 		{
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpPointerClass" + PipeJam3.ASSET_SUFFIX));
@@ -1458,6 +1464,10 @@ package scenes.game.display
 					m_splashLayer.removeChildren(0, -1, true);
 				}
 				
+				HelpButtonIndicatorTimer = new Timer(1000, HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS);
+				HelpButtonIndicatorTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onHelpTextWaittimeComplete);
+				
+				
 				splash.x = Constants.GameWidth - 175;
 				splash.y = Constants.GameHeight - 55;
 				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click this button to see the help screen again!", Constants.GameWidth, 14, 14, Constants.BROWN);
@@ -1467,6 +1477,7 @@ package scenes.game.display
 				addChild(m_splashLayer);
 				
 				World.showHelpButtonIndicator = 2;
+				HelpButtonIndicatorTimer.start();
 				
 			}
 		}
@@ -1475,28 +1486,32 @@ package scenes.game.display
 		{
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
 			World.showHelpButtonIndicator = 1;
-			trace('************************************************************************ 4> showHelpButtonIndicator = ' + World.showHelpButtonIndicator);
 			showSplashScreen(splash);
 		}
 		
 		public static var showHelpButtonIndicator:int = 0;
+		public static var HelpButtonIndicatorTimer:Timer;
 		private function onTouchSplashScreen(evt:TouchEvent):void
 		{
 			if (evt.getTouches(this, TouchPhase.BEGAN).length && m_splashLayer)
 			{
-				// Touch screen pressed, remove it
+				clearSplashDisplay();
+			}		
+			
+		}
+		
+		private function clearSplashDisplay()
+		{
+			// Touch screen pressed, remove it
 				m_splashLayer.removeChildren(0, -1, true);
 				m_splashLayer.removeFromParent();
 				
 				
 				if (World.showHelpButtonIndicator == 1)
 				{
-					trace('************************************************************************ Showing HelpButton!');
 					World.showHelpButtonIndicator = 2;
 					showSHelpButton();
 				}
-			}		
-			
 		}
 		
 		private function onLevelLoaded(evt:MenuEvent):void
