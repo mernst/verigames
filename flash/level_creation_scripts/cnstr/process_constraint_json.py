@@ -1,8 +1,9 @@
 import sys, os
-from process_sat import input_cnstr, connected, dot, output_dimacs, group, write_game_files
+from process_sat import input_cnstr, connected, layout_dot, layout_tulip, output_dimacs, group, write_game_files
 
 NO_INPUT = True
 GROUP = False
+LAYOUT_DOT = True
 
 ### Command line interface ###
 if __name__ == "__main__":
@@ -26,15 +27,19 @@ if __name__ == "__main__":
     graphs_fn = '%s.graphs' % file_pref
     connected.run(graph_fn, graphs_fn, node_min, node_max)
     
-    dot_dirn = '%s_dot_files' % file_pref
-    suf_i = 0
-    while os.path.exists(dot_dirn):
-        suf_i += 1
-        dot_dirn = '%s_dot_files_%s' % (file_pref, suf_i)
-    os.makedirs(dot_dirn)
+    if LAYOUT_DOT:
+        dot_dirn = '%s_dot_files' % file_pref
+        suf_i = 0
+        while os.path.exists(dot_dirn):
+            suf_i += 1
+            dot_dirn = '%s_dot_files_%s' % (file_pref, suf_i)
+        os.makedirs(dot_dirn)
 
-    print 'Writing dot files to: %s' % dot_dirn
-    dot.run(graphs_fn, dot_dirn, False, node_min, node_max, False)
+        print 'Writing dot files to: %s' % dot_dirn
+        layout_dot.run(graphs_fn, dot_dirn, False, node_min, node_max, False)
+
+    else:
+        layout_tulip.run(graphs_fn, None, False, node_min, node_max, False)
     
     if GROUP:
         groups_fn = '%s.groups' % file_pref
