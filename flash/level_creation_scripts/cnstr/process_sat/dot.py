@@ -80,8 +80,8 @@ def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
         label_txt = 'label=""'
     header = '''
 digraph G {
-  graph [ overlap="scalexy" penwidth="0.2" splines=none outputorder=edgesfirst size=100 sep="+0.4" esep="+0.0"]
-  node [ shape="circle" width="0.2" height="0.2" %s ]
+  graph [ overlap="scalexy" penwidth="0.2" splines=none outputorder=edgesfirst size=100 sep="+8.0" esep="+0.0"]
+  node [ shape="circle" width="2.0" height="2.0" %s ]
     ''' % label_txt
 
     footer = '''
