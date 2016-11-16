@@ -1,0 +1,53 @@
+{
+  "assignments": {
+    "var:1": {
+      "type_value": "type:0"
+    },
+    "var:10": {
+      "type_value": "type:1"
+    },
+    "var:11": {
+      "type_value": "type:0"
+    },
+    "var:12": {
+      "type_value": "type:1"
+    },
+    "var:13": {
+      "type_value": "type:0"
+    },
+    "var:14": {
+      "type_value": "type:1"
+    },
+    "var:15": {
+      "type_value": "type:0"
+    },
+    "var:16": {
+      "type_value": "type:1"
+    },
+    "var:2": {
+      "type_value": "type:1"
+    },
+    "var:3": {
+      "type_value": "type:0"
+    },
+    "var:4": {
+      "type_value": "type:1"
+    },
+    "var:5": {
+      "type_value": "type:0"
+    },
+    "var:6": {
+      "type_value": "type:1"
+    },
+    "var:7": {
+      "type_value": "type:0"
+    },
+    "var:8": {
+      "type_value": "type:1"
+    },
+    "var:9": {
+      "type_value": "type:0"
+    }
+  },
+  "id": "b21cf55c89af8f1b443dc2d7006bf4e4"
+}

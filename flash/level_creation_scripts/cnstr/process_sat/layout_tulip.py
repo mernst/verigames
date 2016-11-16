@@ -2,6 +2,7 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util, layout_util
 
+NODE_SIZE = 2.0
 
 def layout_with_tulip(Gs):
     from tulip import tlp
@@ -23,11 +24,35 @@ def layout_with_tulip(Gs):
         # do layout
         view_size = tlp_graph.getSizeProperty('viewSize')
         for n in tlp_graph.getNodes():
-            view_size[n] = tlp.Size(3, 3, 1)
+            view_size[n] = tlp.Size(NODE_SIZE, NODE_SIZE, 1)
 
         view_layout = tlp_graph.getLayoutProperty('viewLayout')
-        tlp_graph.applyLayoutAlgorithm('Fast Multipole Embedder (OGDF)', view_layout)
-        tlp_graph.applyLayoutAlgorithm('Fast Overlap Removal', view_layout)
+
+        params = tlp.getDefaultPluginParameters('FM^3 (OGDF)', tlp_graph)
+        params['New initial placement'] = False
+
+        for len_scale in [1, 2, 4, 6, 8, 10, 12, 14, 16]:
+            params['Unit edge length'] = NODE_SIZE * len_scale
+            tlp_graph.applyLayoutAlgorithm('FM^3 (OGDF)', view_layout, params)
+
+            pre_positions = {}
+            for node in tlp_graph.getNodes():
+                pre_positions[node] = (view_layout[node][0], view_layout[node][1])
+
+            tlp_graph.applyLayoutAlgorithm('Fast Overlap Removal', view_layout)
+
+            change_accum = 0.0
+            change_count = 0
+            for node in tlp_graph.getNodes():
+                pre = pre_positions[node]
+                post = (view_layout[node][0], view_layout[node][1])
+                change_accum += (pre[0] - post[0]) ** 2 + (pre[1] - post[1]) ** 2
+                change_count += 1
+            change_ave = (change_accum / change_count) ** 0.5
+
+            print '****************************** -- ', change_ave
+            if change_ave <= 0.5 * NODE_SIZE:
+                break;
 
         # update original graph
         node_layout = {}

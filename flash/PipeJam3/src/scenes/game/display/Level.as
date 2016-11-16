@@ -778,10 +778,11 @@ package scenes.game.display
 			var bbHeight:Number = maxY - minY + Constants.SKIN_DIAMETER;
 			
 			// Limit content to 2048x2048
-			levelLayoutScale = Math.min(
-				Math.min(bbWidth, 2048.0) / bbWidth,
-				Math.min(bbHeight, 2048.0) / bbHeight
-			);
+			levelLayoutScale = 1.0;
+			//levelLayoutScale = Math.min(
+			//	Math.min(bbWidth, 2048.0) / bbWidth,
+			//	Math.min(bbHeight, 2048.0) / bbHeight
+			//);
 			
 			m_boundingBox = new Rectangle(	levelLayoutScale * (minX - Constants.SKIN_DIAMETER * .5), 
 											levelLayoutScale * (minY - Constants.SKIN_DIAMETER * .5),
