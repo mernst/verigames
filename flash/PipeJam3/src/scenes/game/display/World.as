@@ -184,7 +184,7 @@ package scenes.game.display
 		static public var hitId:String = "";
 		
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
-		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 20;
+		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 5;
 		
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -1457,9 +1457,9 @@ package scenes.game.display
 			
 			// TutorialManagerTextInfo
 			//var pointerHint = new TutorialManagerTextInfo("Click this button to see the help screen again!", null, null, null, null);
-			var buble:TextBubble = new TextBubble("Click this button to see the help screen again!", 10, 0xEEEEEE,
+			var buble:TextBubble = new TextBubble("Click this button to see the help screen again!", 12, Constants.GOLD,
 			sideControlPanel.GetHelpButton(), m_world.active_level, Constants.TOP_LEFT,
-			Constants.TOP_LEFT, null, false, 15, 2, 0.5, 3, true, NaN, 1, 0xEEEEEE);
+			Constants.TOP_LEFT, null, false, 20, 2, 0.5, 3, true, NaN, 1, Constants.GOLD);
 			
 			if (!m_splashLayer) {
 					m_splashLayer = new Sprite();

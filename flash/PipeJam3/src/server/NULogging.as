@@ -32,6 +32,7 @@ package server
 		static public var postAlerts:Boolean = false;
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
+		static private var seqNumber:Number = 0;
 		
 		
 
@@ -46,6 +47,7 @@ package server
 				var date:Date = new Date();
 				logData["timestamp"] = date;
 				logData["HitId"] = World.hitId;
+				logData["SeqNumber"] = seqNumber;
 				trace("LOG__________________________________________________________________", LoggingServerInterface.obj2str(logData));
 				
 				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");
@@ -61,9 +63,13 @@ package server
 				
 				try {
 					urlLoader.load(request);
+					
 				} catch (e:Error) {
+					trace("Error loging sequence number: " + seqNumber + ", for log data: " + logData);
 					trace(e);
-				}	
+				}
+				
+				seqNumber++;
 			}
 		}
 		
