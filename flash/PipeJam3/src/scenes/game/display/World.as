@@ -1506,6 +1506,13 @@ package scenes.game.display
 		public function onHelpButtonClicked():void
 		{
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
+			var dataLoad:Object = new Object();
+			dataLoad["actionTaken"] = "Help Button Clicked";
+			dataLoad["playerID"] = playerID;
+			dataLoad["levelName"] = active_level.level_name;
+			
+			NULogging.log(dataLoad);
+			
 			World.showHelpButtonIndicator = 1;
 			showSplashScreen(splash);
 		}
