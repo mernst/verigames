@@ -65,7 +65,7 @@ package server
 					urlLoader.load(request);
 					
 				} catch (e:Error) {
-					trace("Error loging sequence number: " + seqNumber + ", for log data: " + logData);
+					trace("Error logging sequence number: " + seqNumber + ", for log data: " + logData);
 					trace(e);
 				}
 				
