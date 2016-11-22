@@ -200,7 +200,7 @@ package scenes.splashscreen
 					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
 					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
-					dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Difficulty";
+					dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------

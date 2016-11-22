@@ -319,7 +319,7 @@ package scenes.game.display
 			initLog["workerId"] = workerId;
 			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
-			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Difficulty";
+			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
 			NULogging.log(initLog);
 		}
 		
