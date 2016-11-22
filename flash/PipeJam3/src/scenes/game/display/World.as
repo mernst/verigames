@@ -188,7 +188,7 @@ package scenes.game.display
 		// This value can be seen/changed at any point of the game and will affect the game-play.
 		// 1 -> Random Order
 		// 2 -> Increasing order of difficulty
-		static public var LevelDisplayMode:Number = 1;
+		static public var LevelDisplayMode:Number = 2;
 		
 		static private var CurrentIncreasingDifficultyLevel:int = 0;
 		
