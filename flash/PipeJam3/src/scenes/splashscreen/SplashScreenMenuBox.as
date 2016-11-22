@@ -200,6 +200,7 @@ package scenes.splashscreen
 					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
 					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
+					dataLog["LevelDisplayMode"] = World.LevelDisplayMode; // 1 -> Random order; 2-> Inreasing order of difficulty
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------
