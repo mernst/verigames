@@ -210,7 +210,9 @@ package scenes.game.display
 		
 		
 		private function LoadAllLevels(): void {
-			m_currentLevelNumber = 0;
+			if(LevelDisplayMode == 2)
+				m_currentLevelNumber = 0;
+				
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -317,6 +319,7 @@ package scenes.game.display
 			initLog["workerId"] = workerId;
 			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
+			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Difficulty";
 			NULogging.log(initLog);
 		}
 		
