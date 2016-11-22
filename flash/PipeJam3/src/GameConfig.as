@@ -1,4 +1,4 @@
-package 
+package
 {
 	public class GameConfig {
 		private static const CONFIG_STUDY:uint = 0;
@@ -14,5 +14,8 @@ package
 		public static const ENABLE_SKIP_TUTORIAL:Boolean          = (CONFIG != CONFIG_MTURK);
 		public static const ENABLE_SKIP_GAMEPLAY:Boolean          = true;
 		public static const ENABLE_SKIP_TO_END_GAMEPLAY:Boolean   = (CONFIG == CONFIG_MTURK);
+
+		/** level scaling */
+		public static const ENABLE_SCALE_LEVEL_LAYOUT:Boolean     = false;
 	}
 }
