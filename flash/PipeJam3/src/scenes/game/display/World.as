@@ -316,7 +316,7 @@ package scenes.game.display
 			NULogging.log(initLog);
 		}
 		
-		// Ask the HTML to callt he setWorkerId function because now, we know that flash was properly loaded and can
+		// Ask the HTML to call the setWorkerId function because now, we know that flash was properly loaded and can
 		//  accept the callback.
 		if(ExternalInterface.available)
 			ExternalInterface.addCallback("setWorkerId", World.setWorkerId);

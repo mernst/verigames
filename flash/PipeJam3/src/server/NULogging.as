@@ -46,6 +46,8 @@ package server
 			if (loggingOn){
 				var date:Date = new Date();
 				logData["timestamp"] = date;
+				var unixTimestamp:String = date.valueOf().toString();
+				logData["UnixTimestamp"] = unixTimestamp;
 				logData["HitId"] = World.hitId;
 				logData["SeqNumber"] = seqNumber;
 				trace("LOG__________________________________________________________________", LoggingServerInterface.obj2str(logData));
@@ -65,7 +67,7 @@ package server
 					urlLoader.load(request);
 					
 				} catch (e:Error) {
-					trace("Error loging sequence number: " + seqNumber + ", for log data: " + logData);
+					trace("Error logging sequence number: " + seqNumber + ", for log data: " + logData);
 					trace(e);
 				}
 				

@@ -1724,7 +1724,10 @@ package scenes.game.components
 			World.levelTimer.stop();
 			var dataLog:Object = new Object();
 			dataLog["PlayerID"] = World.playerID;
-			dataLog["actionTaken"] = "LevelSkipped";
+			if (attemptedLevel)
+				dataLog["actionTaken"] = "LevelAbandoned";
+			else
+				dataLog["actionTaken"] = "LevelSkipped";
 			dataLog["levelName"] = World.currentLevelName;
 			dataLog["movesPerLevel"] = World.movesPerLevel;
 			dataLog["levelTime"] = World.levelTimer.currentCount;
