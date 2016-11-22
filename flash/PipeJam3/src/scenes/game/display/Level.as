@@ -252,6 +252,32 @@ package scenes.game.display
 			m_recentlySolved = false;
 		}
 		
+		
+		public static function SortLevels(a:Object, b:Object):int
+		{
+			
+			
+			var nodeCountA:int = Level(a).levelGraph.nVars;
+			var nodeCountB:int = Level(b).levelGraph.nVars;
+			
+			/*
+			nodeCountA = 0;
+			for (var key :* in Level(a).m_nodeOnScreenDict)			
+				nodeCountA++;
+				
+			nodeCountB = 0;
+			for (var key :* in Level(b).m_nodeOnScreenDict)			
+				nodeCountB++;
+				*/
+			
+			//trace('Comparing a:' + nodeCountA + '; b:' + nodeCountB);
+			
+			// If nodeCountA < nodeCountB, then return -1, else
+			// If nodeCountB < nodeCountA, then return 1,
+			// If they are the same, return 0
+			return nodeCountA < nodeCountB ? -1 : (nodeCountB < nodeCountA ? 1 : 0);
+		}
+		
 		public function loadBestScoringConfiguration():void
 		{
 			loadAssignments(m_levelBestScoreAssignmentsObj, true, true);

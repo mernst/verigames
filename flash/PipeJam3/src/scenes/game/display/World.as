@@ -183,8 +183,17 @@ package scenes.game.display
 		static public var workerId:String = "";
 		static public var hitId:String = "";
 		
+		// When displaying the challenge levels, levels can be given in random order of difficulty level
+		//  or we can give them levels with increasing order of difficulty level.
+		// This value can be seen/changed at any point of the game and will affect the game-play.
+		// 1 -> Random Order
+		// 2 -> Increasing order of difficulty
+		static public var LevelDisplayMode:Number = 2;
+		
+		static private var CurrentIncreasingDifficultyLevel:int = 0;
+		
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
-		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 20;
+		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 5;
 		
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -194,13 +203,16 @@ package scenes.game.display
 			m_layoutObj = _layout;
 			m_assignmentsObj = _assignments;
 			
-			m_world = this;			
+			m_world = this;
 			
 			LoadAllLevels()
 		}
 		
 		
 		private function LoadAllLevels(): void {
+			if(LevelDisplayMode == 2)
+				m_currentLevelNumber = 0;
+				
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -244,6 +256,15 @@ package scenes.game.display
 			//trace("Done creating World...");
 			if (!PipeJamGameScene.inTutorial){
 				remainingTotalLevels = levels.length - 1;	
+				
+				trace('Sorting all Levels based on LevelGraph.nVars');
+				//allLevels.sort(Level.SortLevels);
+				levels.sort(Level.SortLevels);
+				
+				for (var i:int = 0; i < levels.length; ++i)				
+					trace('nVars:' + levels[i].levelGraph.nVars);				
+				
+				firstLevel = levels[0];
 			}
 			
 			levelNumberArray = new Array();
@@ -277,6 +298,10 @@ package scenes.game.display
 				var md5:MD5Stream = new MD5Stream();
 				md5.update(raw);
 				playerID = md5.complete();
+
+				// Set weather the levels are shown in random or increasing order based on the LSB of the playerID.
+				World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
+				
 			} catch (err:Error) {
 				var errLog:Object = new Object();
 				errLog["playerID"] = playerID;
@@ -294,10 +319,11 @@ package scenes.game.display
 			initLog["workerId"] = workerId;
 			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
+			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Difficulty";
 			NULogging.log(initLog);
 		}
 		
-		// Ask the HTML to callt he setWorkerId function because now, we know that flash was properly loaded and can
+		// Ask the HTML to call the setWorkerId function because now, we know that flash was properly loaded and can
 		//  accept the callback.
 		if(ExternalInterface.available)
 			ExternalInterface.addCallback("setWorkerId", World.setWorkerId);
@@ -946,6 +972,9 @@ package scenes.game.display
 			}
 			var oldScore:int = active_level.prevScore;
 			var newScore:int = active_level.currentScore;
+			
+			trace("==========================>> Old Score:" + oldScore + ", newScore:" + newScore + ", activeLevel.TargetScore:" + active_level.getTargetScore() + "<<===================");
+			
 			if (evt) {
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
 				if (newScore >= active_level.getTargetScore()) {
@@ -1136,29 +1165,37 @@ package scenes.game.display
 					LoadAllLevels();
 				}
 				else{
-					var pick:int = randomLevelNumber(levelNumberArray.length);
-					m_currentLevelNumber = levelNumberArray[pick];
-					trace("m_currentLevelNumber = ", m_currentLevelNumber);
 					
-					trace("RANDOM:LEVELNUMBERARRAY", levelNumberArray);
-					levelNumberArray = levelNumberArray.filter(function (element:*, index:int, arr:Array):Boolean { return (pick != index) } );
+					var pick:int = 0;
+					// Randomly select the next level
+					if (LevelDisplayMode == 1)
+					{
+						pick = randomLevelNumber(levelNumberArray.length);
+						m_currentLevelNumber = levelNumberArray[pick];
+						trace("m_currentLevelNumber = ", m_currentLevelNumber);
+						
+						trace("RANDOM:LEVELNUMBERARRAY", levelNumberArray);
+						levelNumberArray = levelNumberArray.filter(function (element:*, index:int, arr:Array):Boolean { return (pick != index) } );
+						
+						trace("RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
+						trace("RANDOM:PICK", pick);
+						trace("RANDOM:REMAININGLEVELS", remainingTotalLevels);
+						trace("Levels", levels.length);
+					}
+					// Pick the next one
+					else if (LevelDisplayMode == 2)
+					{
+						trace('Increasing difficulty, picking ' + (m_currentLevelNumber + 1) + ' level.');
+						m_currentLevelNumber++;
+					}
+					
 					remainingTotalLevels -= 1;
-					
-					trace("RANDOM:LEVELNUMBERARRAY-FILTERED", levelNumberArray);
-					trace("RANDOM:PICK", pick);
-					trace("RANDOM:REMAININGLEVELS", remainingTotalLevels);
-					trace("Levels", levels.length);
+					trace("Min Count for nVars:" + levels[m_currentLevelNumber].levelGraph.nVars);
 				}
-				
-				
-				
-				
 				
 				updateAssignments(); // save world progress
 				
 				trace("--===============================-->" + remainingTotalLevels + "<--==============================--");
-				
-				
 			}
 
 			var callback:Function =
@@ -1457,9 +1494,9 @@ package scenes.game.display
 			
 			// TutorialManagerTextInfo
 			//var pointerHint = new TutorialManagerTextInfo("Click this button to see the help screen again!", null, null, null, null);
-			var buble:TextBubble = new TextBubble("Click this button to see the help screen again!", 10, 0xEEEEEE,
+			var buble:TextBubble = new TextBubble("Click this button to see the help screen again!", 12, Constants.GOLD,
 			sideControlPanel.GetHelpButton(), m_world.active_level, Constants.TOP_LEFT,
-			Constants.TOP_LEFT, null, false, 15, 2, 0.5, 3, true, NaN, 1, 0xEEEEEE);
+			Constants.TOP_LEFT, null, false, 20, 2, 0.5, 3, true, NaN, 1, Constants.GOLD);
 			
 			if (!m_splashLayer) {
 					m_splashLayer = new Sprite();
@@ -1506,6 +1543,13 @@ package scenes.game.display
 		public function onHelpButtonClicked():void
 		{
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
+			var dataLoad:Object = new Object();
+			dataLoad["actionTaken"] = "Help Button Clicked";
+			dataLoad["playerID"] = playerID;
+			dataLoad["levelName"] = active_level.level_name;
+			
+			NULogging.log(dataLoad);
+			
 			World.showHelpButtonIndicator = 1;
 			showSplashScreen(splash);
 		}

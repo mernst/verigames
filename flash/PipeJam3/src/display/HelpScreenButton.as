@@ -6,7 +6,7 @@ package display
 	import starling.textures.TextureAtlas;
 	import starling.display.DisplayObject;
 	import starling.events.Event;
-	
+	import server.NULogging;
 	
 	/**
 	 * ...
@@ -42,6 +42,14 @@ package display
 		{
 			if(World.showHelpButtonIndicator == 0)
 				World.showHelpButtonIndicator = 1;
+				
+			var dataLoad:Object = new Object();
+			dataLoad["actionTaken"] = "Help Button Clicked";
+			dataLoad["playerID"] = World.playerID;
+			dataLoad["levelName"] = World.m_world.active_level.level_name;
+			
+			NULogging.log(dataLoad);
+				
 			m_world.showSplashScreen(m_splash);
 		}
 	}
