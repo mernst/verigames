@@ -203,7 +203,7 @@ package scenes.game.display
 			m_layoutObj = _layout;
 			m_assignmentsObj = _assignments;
 			
-			m_world = this;			
+			m_world = this;
 			
 			LoadAllLevels()
 		}
@@ -296,6 +296,10 @@ package scenes.game.display
 				var md5:MD5Stream = new MD5Stream();
 				md5.update(raw);
 				playerID = md5.complete();
+
+				// Set weather the levels are shown in random or increasing order based on the LSB of the playerID.
+				World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
+				
 			} catch (err:Error) {
 				var errLog:Object = new Object();
 				errLog["playerID"] = playerID;
