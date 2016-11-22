@@ -3,7 +3,7 @@ from process_sat import input_cnstr, connected, layout_dot, layout_tulip, output
 
 NO_INPUT = True
 GROUP = False
-LAYOUT_DOT = True
+LAYOUT_DOT = False
 
 ### Command line interface ###
 if __name__ == "__main__":

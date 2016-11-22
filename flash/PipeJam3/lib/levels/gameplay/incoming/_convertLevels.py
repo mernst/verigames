@@ -1,8 +1,6 @@
 import os, shutil, sys
 
-NEED_SCALE = {
-    'uf20-01.cnf': 5.0,
-}
+NEED_SCALE = {}
 
 SCRIPTS_DIR = '../../../../../level_creation_scripts/'
 

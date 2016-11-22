@@ -1,0 +1,1382 @@
+{
+  "assignments": {
+    "var:1": {
+      "type_value": "type:0"
+    },
+    "var:10": {
+      "type_value": "type:1"
+    },
+    "var:100": {
+      "type_value": "type:1"
+    },
+    "var:101": {
+      "type_value": "type:0"
+    },
+    "var:102": {
+      "type_value": "type:1"
+    },
+    "var:103": {
+      "type_value": "type:0"
+    },
+    "var:104": {
+      "type_value": "type:1"
+    },
+    "var:105": {
+      "type_value": "type:0"
+    },
+    "var:106": {
+      "type_value": "type:1"
+    },
+    "var:107": {
+      "type_value": "type:0"
+    },
+    "var:108": {
+      "type_value": "type:1"
+    },
+    "var:109": {
+      "type_value": "type:0"
+    },
+    "var:11": {
+      "type_value": "type:0"
+    },
+    "var:110": {
+      "type_value": "type:1"
+    },
+    "var:111": {
+      "type_value": "type:0"
+    },
+    "var:112": {
+      "type_value": "type:1"
+    },
+    "var:113": {
+      "type_value": "type:0"
+    },
+    "var:114": {
+      "type_value": "type:1"
+    },
+    "var:115": {
+      "type_value": "type:0"
+    },
+    "var:116": {
+      "type_value": "type:1"
+    },
+    "var:117": {
+      "type_value": "type:0"
+    },
+    "var:118": {
+      "type_value": "type:1"
+    },
+    "var:119": {
+      "type_value": "type:0"
+    },
+    "var:12": {
+      "type_value": "type:1"
+    },
+    "var:120": {
+      "type_value": "type:1"
+    },
+    "var:121": {
+      "type_value": "type:0"
+    },
+    "var:122": {
+      "type_value": "type:1"
+    },
+    "var:123": {
+      "type_value": "type:0"
+    },
+    "var:124": {
+      "type_value": "type:1"
+    },
+    "var:125": {
+      "type_value": "type:0"
+    },
+    "var:126": {
+      "type_value": "type:1"
+    },
+    "var:127": {
+      "type_value": "type:0"
+    },
+    "var:128": {
+      "type_value": "type:1"
+    },
+    "var:129": {
+      "type_value": "type:0"
+    },
+    "var:13": {
+      "type_value": "type:0"
+    },
+    "var:130": {
+      "type_value": "type:1"
+    },
+    "var:131": {
+      "type_value": "type:0"
+    },
+    "var:132": {
+      "type_value": "type:1"
+    },
+    "var:133": {
+      "type_value": "type:0"
+    },
+    "var:134": {
+      "type_value": "type:1"
+    },
+    "var:135": {
+      "type_value": "type:0"
+    },
+    "var:136": {
+      "type_value": "type:1"
+    },
+    "var:137": {
+      "type_value": "type:0"
+    },
+    "var:138": {
+      "type_value": "type:1"
+    },
+    "var:139": {
+      "type_value": "type:0"
+    },
+    "var:14": {
+      "type_value": "type:1"
+    },
+    "var:140": {
+      "type_value": "type:1"
+    },
+    "var:141": {
+      "type_value": "type:0"
+    },
+    "var:142": {
+      "type_value": "type:1"
+    },
+    "var:143": {
+      "type_value": "type:0"
+    },
+    "var:144": {
+      "type_value": "type:1"
+    },
+    "var:145": {
+      "type_value": "type:0"
+    },
+    "var:146": {
+      "type_value": "type:1"
+    },
+    "var:147": {
+      "type_value": "type:0"
+    },
+    "var:148": {
+      "type_value": "type:1"
+    },
+    "var:149": {
+      "type_value": "type:0"
+    },
+    "var:15": {
+      "type_value": "type:0"
+    },
+    "var:150": {
+      "type_value": "type:1"
+    },
+    "var:151": {
+      "type_value": "type:0"
+    },
+    "var:152": {
+      "type_value": "type:1"
+    },
+    "var:153": {
+      "type_value": "type:0"
+    },
+    "var:154": {
+      "type_value": "type:1"
+    },
+    "var:155": {
+      "type_value": "type:0"
+    },
+    "var:156": {
+      "type_value": "type:1"
+    },
+    "var:157": {
+      "type_value": "type:0"
+    },
+    "var:158": {
+      "type_value": "type:1"
+    },
+    "var:159": {
+      "type_value": "type:0"
+    },
+    "var:16": {
+      "type_value": "type:1"
+    },
+    "var:160": {
+      "type_value": "type:1"
+    },
+    "var:161": {
+      "type_value": "type:0"
+    },
+    "var:162": {
+      "type_value": "type:1"
+    },
+    "var:163": {
+      "type_value": "type:0"
+    },
+    "var:164": {
+      "type_value": "type:1"
+    },
+    "var:165": {
+      "type_value": "type:0"
+    },
+    "var:166": {
+      "type_value": "type:1"
+    },
+    "var:167": {
+      "type_value": "type:0"
+    },
+    "var:168": {
+      "type_value": "type:1"
+    },
+    "var:169": {
+      "type_value": "type:0"
+    },
+    "var:17": {
+      "type_value": "type:0"
+    },
+    "var:170": {
+      "type_value": "type:1"
+    },
+    "var:171": {
+      "type_value": "type:0"
+    },
+    "var:172": {
+      "type_value": "type:1"
+    },
+    "var:173": {
+      "type_value": "type:0"
+    },
+    "var:174": {
+      "type_value": "type:1"
+    },
+    "var:175": {
+      "type_value": "type:0"
+    },
+    "var:176": {
+      "type_value": "type:1"
+    },
+    "var:177": {
+      "type_value": "type:0"
+    },
+    "var:178": {
+      "type_value": "type:1"
+    },
+    "var:179": {
+      "type_value": "type:0"
+    },
+    "var:18": {
+      "type_value": "type:1"
+    },
+    "var:180": {
+      "type_value": "type:1"
+    },
+    "var:181": {
+      "type_value": "type:0"
+    },
+    "var:182": {
+      "type_value": "type:1"
+    },
+    "var:183": {
+      "type_value": "type:0"
+    },
+    "var:184": {
+      "type_value": "type:1"
+    },
+    "var:185": {
+      "type_value": "type:0"
+    },
+    "var:186": {
+      "type_value": "type:1"
+    },
+    "var:187": {
+      "type_value": "type:0"
+    },
+    "var:188": {
+      "type_value": "type:1"
+    },
+    "var:189": {
+      "type_value": "type:0"
+    },
+    "var:19": {
+      "type_value": "type:0"
+    },
+    "var:190": {
+      "type_value": "type:1"
+    },
+    "var:191": {
+      "type_value": "type:0"
+    },
+    "var:192": {
+      "type_value": "type:1"
+    },
+    "var:193": {
+      "type_value": "type:0"
+    },
+    "var:194": {
+      "type_value": "type:1"
+    },
+    "var:195": {
+      "type_value": "type:0"
+    },
+    "var:196": {
+      "type_value": "type:1"
+    },
+    "var:197": {
+      "type_value": "type:0"
+    },
+    "var:198": {
+      "type_value": "type:1"
+    },
+    "var:199": {
+      "type_value": "type:0"
+    },
+    "var:2": {
+      "type_value": "type:1"
+    },
+    "var:20": {
+      "type_value": "type:1"
+    },
+    "var:200": {
+      "type_value": "type:1"
+    },
+    "var:201": {
+      "type_value": "type:0"
+    },
+    "var:202": {
+      "type_value": "type:1"
+    },
+    "var:203": {
+      "type_value": "type:0"
+    },
+    "var:204": {
+      "type_value": "type:1"
+    },
+    "var:205": {
+      "type_value": "type:0"
+    },
+    "var:206": {
+      "type_value": "type:1"
+    },
+    "var:207": {
+      "type_value": "type:0"
+    },
+    "var:208": {
+      "type_value": "type:1"
+    },
+    "var:209": {
+      "type_value": "type:0"
+    },
+    "var:21": {
+      "type_value": "type:0"
+    },
+    "var:210": {
+      "type_value": "type:1"
+    },
+    "var:211": {
+      "type_value": "type:0"
+    },
+    "var:212": {
+      "type_value": "type:1"
+    },
+    "var:213": {
+      "type_value": "type:0"
+    },
+    "var:214": {
+      "type_value": "type:1"
+    },
+    "var:215": {
+      "type_value": "type:0"
+    },
+    "var:216": {
+      "type_value": "type:1"
+    },
+    "var:217": {
+      "type_value": "type:0"
+    },
+    "var:218": {
+      "type_value": "type:1"
+    },
+    "var:219": {
+      "type_value": "type:0"
+    },
+    "var:22": {
+      "type_value": "type:1"
+    },
+    "var:220": {
+      "type_value": "type:1"
+    },
+    "var:221": {
+      "type_value": "type:0"
+    },
+    "var:222": {
+      "type_value": "type:1"
+    },
+    "var:223": {
+      "type_value": "type:0"
+    },
+    "var:224": {
+      "type_value": "type:1"
+    },
+    "var:225": {
+      "type_value": "type:0"
+    },
+    "var:226": {
+      "type_value": "type:1"
+    },
+    "var:227": {
+      "type_value": "type:0"
+    },
+    "var:228": {
+      "type_value": "type:1"
+    },
+    "var:229": {
+      "type_value": "type:0"
+    },
+    "var:23": {
+      "type_value": "type:0"
+    },
+    "var:230": {
+      "type_value": "type:1"
+    },
+    "var:231": {
+      "type_value": "type:0"
+    },
+    "var:232": {
+      "type_value": "type:1"
+    },
+    "var:233": {
+      "type_value": "type:0"
+    },
+    "var:234": {
+      "type_value": "type:1"
+    },
+    "var:235": {
+      "type_value": "type:0"
+    },
+    "var:236": {
+      "type_value": "type:1"
+    },
+    "var:237": {
+      "type_value": "type:0"
+    },
+    "var:238": {
+      "type_value": "type:1"
+    },
+    "var:239": {
+      "type_value": "type:0"
+    },
+    "var:24": {
+      "type_value": "type:1"
+    },
+    "var:240": {
+      "type_value": "type:1"
+    },
+    "var:241": {
+      "type_value": "type:0"
+    },
+    "var:242": {
+      "type_value": "type:1"
+    },
+    "var:243": {
+      "type_value": "type:0"
+    },
+    "var:244": {
+      "type_value": "type:1"
+    },
+    "var:245": {
+      "type_value": "type:0"
+    },
+    "var:246": {
+      "type_value": "type:1"
+    },
+    "var:247": {
+      "type_value": "type:0"
+    },
+    "var:248": {
+      "type_value": "type:1"
+    },
+    "var:249": {
+      "type_value": "type:0"
+    },
+    "var:25": {
+      "type_value": "type:0"
+    },
+    "var:250": {
+      "type_value": "type:1"
+    },
+    "var:251": {
+      "type_value": "type:0"
+    },
+    "var:252": {
+      "type_value": "type:1"
+    },
+    "var:253": {
+      "type_value": "type:0"
+    },
+    "var:254": {
+      "type_value": "type:1"
+    },
+    "var:255": {
+      "type_value": "type:0"
+    },
+    "var:256": {
+      "type_value": "type:1"
+    },
+    "var:257": {
+      "type_value": "type:0"
+    },
+    "var:258": {
+      "type_value": "type:1"
+    },
+    "var:259": {
+      "type_value": "type:0"
+    },
+    "var:26": {
+      "type_value": "type:1"
+    },
+    "var:260": {
+      "type_value": "type:1"
+    },
+    "var:261": {
+      "type_value": "type:0"
+    },
+    "var:262": {
+      "type_value": "type:1"
+    },
+    "var:263": {
+      "type_value": "type:0"
+    },
+    "var:264": {
+      "type_value": "type:1"
+    },
+    "var:265": {
+      "type_value": "type:0"
+    },
+    "var:266": {
+      "type_value": "type:1"
+    },
+    "var:267": {
+      "type_value": "type:0"
+    },
+    "var:268": {
+      "type_value": "type:1"
+    },
+    "var:269": {
+      "type_value": "type:0"
+    },
+    "var:27": {
+      "type_value": "type:0"
+    },
+    "var:270": {
+      "type_value": "type:1"
+    },
+    "var:271": {
+      "type_value": "type:0"
+    },
+    "var:272": {
+      "type_value": "type:1"
+    },
+    "var:273": {
+      "type_value": "type:0"
+    },
+    "var:274": {
+      "type_value": "type:1"
+    },
+    "var:275": {
+      "type_value": "type:0"
+    },
+    "var:276": {
+      "type_value": "type:1"
+    },
+    "var:277": {
+      "type_value": "type:0"
+    },
+    "var:278": {
+      "type_value": "type:1"
+    },
+    "var:279": {
+      "type_value": "type:0"
+    },
+    "var:28": {
+      "type_value": "type:1"
+    },
+    "var:280": {
+      "type_value": "type:1"
+    },
+    "var:281": {
+      "type_value": "type:0"
+    },
+    "var:282": {
+      "type_value": "type:1"
+    },
+    "var:283": {
+      "type_value": "type:0"
+    },
+    "var:284": {
+      "type_value": "type:1"
+    },
+    "var:285": {
+      "type_value": "type:0"
+    },
+    "var:286": {
+      "type_value": "type:1"
+    },
+    "var:287": {
+      "type_value": "type:0"
+    },
+    "var:288": {
+      "type_value": "type:1"
+    },
+    "var:289": {
+      "type_value": "type:0"
+    },
+    "var:29": {
+      "type_value": "type:0"
+    },
+    "var:290": {
+      "type_value": "type:1"
+    },
+    "var:291": {
+      "type_value": "type:0"
+    },
+    "var:292": {
+      "type_value": "type:1"
+    },
+    "var:293": {
+      "type_value": "type:0"
+    },
+    "var:294": {
+      "type_value": "type:1"
+    },
+    "var:295": {
+      "type_value": "type:0"
+    },
+    "var:296": {
+      "type_value": "type:1"
+    },
+    "var:297": {
+      "type_value": "type:0"
+    },
+    "var:298": {
+      "type_value": "type:1"
+    },
+    "var:299": {
+      "type_value": "type:0"
+    },
+    "var:3": {
+      "type_value": "type:0"
+    },
+    "var:30": {
+      "type_value": "type:1"
+    },
+    "var:300": {
+      "type_value": "type:1"
+    },
+    "var:301": {
+      "type_value": "type:0"
+    },
+    "var:302": {
+      "type_value": "type:1"
+    },
+    "var:303": {
+      "type_value": "type:0"
+    },
+    "var:304": {
+      "type_value": "type:1"
+    },
+    "var:305": {
+      "type_value": "type:0"
+    },
+    "var:306": {
+      "type_value": "type:1"
+    },
+    "var:307": {
+      "type_value": "type:0"
+    },
+    "var:308": {
+      "type_value": "type:1"
+    },
+    "var:309": {
+      "type_value": "type:0"
+    },
+    "var:31": {
+      "type_value": "type:0"
+    },
+    "var:310": {
+      "type_value": "type:1"
+    },
+    "var:311": {
+      "type_value": "type:0"
+    },
+    "var:312": {
+      "type_value": "type:1"
+    },
+    "var:313": {
+      "type_value": "type:0"
+    },
+    "var:314": {
+      "type_value": "type:1"
+    },
+    "var:315": {
+      "type_value": "type:0"
+    },
+    "var:316": {
+      "type_value": "type:1"
+    },
+    "var:317": {
+      "type_value": "type:0"
+    },
+    "var:318": {
+      "type_value": "type:1"
+    },
+    "var:319": {
+      "type_value": "type:0"
+    },
+    "var:32": {
+      "type_value": "type:1"
+    },
+    "var:320": {
+      "type_value": "type:1"
+    },
+    "var:321": {
+      "type_value": "type:0"
+    },
+    "var:322": {
+      "type_value": "type:1"
+    },
+    "var:323": {
+      "type_value": "type:0"
+    },
+    "var:324": {
+      "type_value": "type:1"
+    },
+    "var:325": {
+      "type_value": "type:0"
+    },
+    "var:326": {
+      "type_value": "type:1"
+    },
+    "var:327": {
+      "type_value": "type:0"
+    },
+    "var:328": {
+      "type_value": "type:1"
+    },
+    "var:329": {
+      "type_value": "type:0"
+    },
+    "var:33": {
+      "type_value": "type:0"
+    },
+    "var:330": {
+      "type_value": "type:1"
+    },
+    "var:331": {
+      "type_value": "type:0"
+    },
+    "var:332": {
+      "type_value": "type:1"
+    },
+    "var:333": {
+      "type_value": "type:0"
+    },
+    "var:334": {
+      "type_value": "type:1"
+    },
+    "var:335": {
+      "type_value": "type:0"
+    },
+    "var:336": {
+      "type_value": "type:1"
+    },
+    "var:337": {
+      "type_value": "type:0"
+    },
+    "var:338": {
+      "type_value": "type:1"
+    },
+    "var:339": {
+      "type_value": "type:0"
+    },
+    "var:34": {
+      "type_value": "type:1"
+    },
+    "var:340": {
+      "type_value": "type:1"
+    },
+    "var:341": {
+      "type_value": "type:0"
+    },
+    "var:342": {
+      "type_value": "type:1"
+    },
+    "var:343": {
+      "type_value": "type:0"
+    },
+    "var:344": {
+      "type_value": "type:1"
+    },
+    "var:345": {
+      "type_value": "type:0"
+    },
+    "var:346": {
+      "type_value": "type:1"
+    },
+    "var:347": {
+      "type_value": "type:0"
+    },
+    "var:348": {
+      "type_value": "type:1"
+    },
+    "var:349": {
+      "type_value": "type:0"
+    },
+    "var:35": {
+      "type_value": "type:0"
+    },
+    "var:350": {
+      "type_value": "type:1"
+    },
+    "var:351": {
+      "type_value": "type:0"
+    },
+    "var:352": {
+      "type_value": "type:1"
+    },
+    "var:353": {
+      "type_value": "type:0"
+    },
+    "var:354": {
+      "type_value": "type:1"
+    },
+    "var:355": {
+      "type_value": "type:0"
+    },
+    "var:356": {
+      "type_value": "type:1"
+    },
+    "var:357": {
+      "type_value": "type:0"
+    },
+    "var:358": {
+      "type_value": "type:1"
+    },
+    "var:359": {
+      "type_value": "type:0"
+    },
+    "var:36": {
+      "type_value": "type:1"
+    },
+    "var:360": {
+      "type_value": "type:1"
+    },
+    "var:361": {
+      "type_value": "type:0"
+    },
+    "var:362": {
+      "type_value": "type:1"
+    },
+    "var:363": {
+      "type_value": "type:0"
+    },
+    "var:364": {
+      "type_value": "type:1"
+    },
+    "var:365": {
+      "type_value": "type:0"
+    },
+    "var:366": {
+      "type_value": "type:1"
+    },
+    "var:367": {
+      "type_value": "type:0"
+    },
+    "var:368": {
+      "type_value": "type:1"
+    },
+    "var:369": {
+      "type_value": "type:0"
+    },
+    "var:37": {
+      "type_value": "type:0"
+    },
+    "var:370": {
+      "type_value": "type:1"
+    },
+    "var:371": {
+      "type_value": "type:0"
+    },
+    "var:372": {
+      "type_value": "type:1"
+    },
+    "var:373": {
+      "type_value": "type:0"
+    },
+    "var:374": {
+      "type_value": "type:1"
+    },
+    "var:375": {
+      "type_value": "type:0"
+    },
+    "var:376": {
+      "type_value": "type:1"
+    },
+    "var:377": {
+      "type_value": "type:0"
+    },
+    "var:378": {
+      "type_value": "type:1"
+    },
+    "var:379": {
+      "type_value": "type:0"
+    },
+    "var:38": {
+      "type_value": "type:1"
+    },
+    "var:380": {
+      "type_value": "type:1"
+    },
+    "var:381": {
+      "type_value": "type:0"
+    },
+    "var:382": {
+      "type_value": "type:1"
+    },
+    "var:383": {
+      "type_value": "type:0"
+    },
+    "var:384": {
+      "type_value": "type:1"
+    },
+    "var:385": {
+      "type_value": "type:0"
+    },
+    "var:386": {
+      "type_value": "type:1"
+    },
+    "var:387": {
+      "type_value": "type:0"
+    },
+    "var:388": {
+      "type_value": "type:1"
+    },
+    "var:389": {
+      "type_value": "type:0"
+    },
+    "var:39": {
+      "type_value": "type:0"
+    },
+    "var:390": {
+      "type_value": "type:1"
+    },
+    "var:391": {
+      "type_value": "type:0"
+    },
+    "var:392": {
+      "type_value": "type:1"
+    },
+    "var:393": {
+      "type_value": "type:0"
+    },
+    "var:394": {
+      "type_value": "type:1"
+    },
+    "var:395": {
+      "type_value": "type:0"
+    },
+    "var:396": {
+      "type_value": "type:1"
+    },
+    "var:397": {
+      "type_value": "type:0"
+    },
+    "var:398": {
+      "type_value": "type:1"
+    },
+    "var:399": {
+      "type_value": "type:0"
+    },
+    "var:4": {
+      "type_value": "type:1"
+    },
+    "var:40": {
+      "type_value": "type:1"
+    },
+    "var:400": {
+      "type_value": "type:1"
+    },
+    "var:401": {
+      "type_value": "type:0"
+    },
+    "var:402": {
+      "type_value": "type:1"
+    },
+    "var:403": {
+      "type_value": "type:0"
+    },
+    "var:404": {
+      "type_value": "type:1"
+    },
+    "var:405": {
+      "type_value": "type:0"
+    },
+    "var:406": {
+      "type_value": "type:1"
+    },
+    "var:407": {
+      "type_value": "type:0"
+    },
+    "var:408": {
+      "type_value": "type:1"
+    },
+    "var:409": {
+      "type_value": "type:0"
+    },
+    "var:41": {
+      "type_value": "type:0"
+    },
+    "var:410": {
+      "type_value": "type:1"
+    },
+    "var:411": {
+      "type_value": "type:0"
+    },
+    "var:412": {
+      "type_value": "type:1"
+    },
+    "var:413": {
+      "type_value": "type:0"
+    },
+    "var:414": {
+      "type_value": "type:1"
+    },
+    "var:415": {
+      "type_value": "type:0"
+    },
+    "var:416": {
+      "type_value": "type:1"
+    },
+    "var:417": {
+      "type_value": "type:0"
+    },
+    "var:418": {
+      "type_value": "type:1"
+    },
+    "var:419": {
+      "type_value": "type:0"
+    },
+    "var:42": {
+      "type_value": "type:1"
+    },
+    "var:420": {
+      "type_value": "type:1"
+    },
+    "var:421": {
+      "type_value": "type:0"
+    },
+    "var:422": {
+      "type_value": "type:1"
+    },
+    "var:423": {
+      "type_value": "type:0"
+    },
+    "var:424": {
+      "type_value": "type:1"
+    },
+    "var:425": {
+      "type_value": "type:0"
+    },
+    "var:426": {
+      "type_value": "type:1"
+    },
+    "var:427": {
+      "type_value": "type:0"
+    },
+    "var:428": {
+      "type_value": "type:1"
+    },
+    "var:429": {
+      "type_value": "type:0"
+    },
+    "var:43": {
+      "type_value": "type:0"
+    },
+    "var:430": {
+      "type_value": "type:1"
+    },
+    "var:431": {
+      "type_value": "type:0"
+    },
+    "var:432": {
+      "type_value": "type:1"
+    },
+    "var:433": {
+      "type_value": "type:0"
+    },
+    "var:434": {
+      "type_value": "type:1"
+    },
+    "var:435": {
+      "type_value": "type:0"
+    },
+    "var:436": {
+      "type_value": "type:1"
+    },
+    "var:437": {
+      "type_value": "type:0"
+    },
+    "var:438": {
+      "type_value": "type:1"
+    },
+    "var:439": {
+      "type_value": "type:0"
+    },
+    "var:44": {
+      "type_value": "type:1"
+    },
+    "var:440": {
+      "type_value": "type:1"
+    },
+    "var:441": {
+      "type_value": "type:0"
+    },
+    "var:442": {
+      "type_value": "type:1"
+    },
+    "var:443": {
+      "type_value": "type:0"
+    },
+    "var:444": {
+      "type_value": "type:1"
+    },
+    "var:445": {
+      "type_value": "type:0"
+    },
+    "var:446": {
+      "type_value": "type:1"
+    },
+    "var:447": {
+      "type_value": "type:0"
+    },
+    "var:448": {
+      "type_value": "type:1"
+    },
+    "var:449": {
+      "type_value": "type:0"
+    },
+    "var:45": {
+      "type_value": "type:0"
+    },
+    "var:450": {
+      "type_value": "type:1"
+    },
+    "var:451": {
+      "type_value": "type:0"
+    },
+    "var:452": {
+      "type_value": "type:1"
+    },
+    "var:453": {
+      "type_value": "type:0"
+    },
+    "var:454": {
+      "type_value": "type:1"
+    },
+    "var:455": {
+      "type_value": "type:0"
+    },
+    "var:456": {
+      "type_value": "type:1"
+    },
+    "var:457": {
+      "type_value": "type:0"
+    },
+    "var:458": {
+      "type_value": "type:1"
+    },
+    "var:459": {
+      "type_value": "type:0"
+    },
+    "var:46": {
+      "type_value": "type:1"
+    },
+    "var:47": {
+      "type_value": "type:0"
+    },
+    "var:48": {
+      "type_value": "type:1"
+    },
+    "var:49": {
+      "type_value": "type:0"
+    },
+    "var:5": {
+      "type_value": "type:0"
+    },
+    "var:50": {
+      "type_value": "type:1"
+    },
+    "var:51": {
+      "type_value": "type:0"
+    },
+    "var:52": {
+      "type_value": "type:1"
+    },
+    "var:53": {
+      "type_value": "type:0"
+    },
+    "var:54": {
+      "type_value": "type:1"
+    },
+    "var:55": {
+      "type_value": "type:0"
+    },
+    "var:56": {
+      "type_value": "type:1"
+    },
+    "var:57": {
+      "type_value": "type:0"
+    },
+    "var:58": {
+      "type_value": "type:1"
+    },
+    "var:59": {
+      "type_value": "type:0"
+    },
+    "var:6": {
+      "type_value": "type:1"
+    },
+    "var:60": {
+      "type_value": "type:1"
+    },
+    "var:61": {
+      "type_value": "type:0"
+    },
+    "var:62": {
+      "type_value": "type:1"
+    },
+    "var:63": {
+      "type_value": "type:0"
+    },
+    "var:64": {
+      "type_value": "type:1"
+    },
+    "var:65": {
+      "type_value": "type:0"
+    },
+    "var:66": {
+      "type_value": "type:1"
+    },
+    "var:67": {
+      "type_value": "type:0"
+    },
+    "var:68": {
+      "type_value": "type:1"
+    },
+    "var:69": {
+      "type_value": "type:0"
+    },
+    "var:7": {
+      "type_value": "type:0"
+    },
+    "var:70": {
+      "type_value": "type:1"
+    },
+    "var:71": {
+      "type_value": "type:0"
+    },
+    "var:72": {
+      "type_value": "type:1"
+    },
+    "var:73": {
+      "type_value": "type:0"
+    },
+    "var:74": {
+      "type_value": "type:1"
+    },
+    "var:75": {
+      "type_value": "type:0"
+    },
+    "var:76": {
+      "type_value": "type:1"
+    },
+    "var:77": {
+      "type_value": "type:0"
+    },
+    "var:78": {
+      "type_value": "type:1"
+    },
+    "var:79": {
+      "type_value": "type:0"
+    },
+    "var:8": {
+      "type_value": "type:1"
+    },
+    "var:80": {
+      "type_value": "type:1"
+    },
+    "var:81": {
+      "type_value": "type:0"
+    },
+    "var:82": {
+      "type_value": "type:1"
+    },
+    "var:83": {
+      "type_value": "type:0"
+    },
+    "var:84": {
+      "type_value": "type:1"
+    },
+    "var:85": {
+      "type_value": "type:0"
+    },
+    "var:86": {
+      "type_value": "type:1"
+    },
+    "var:87": {
+      "type_value": "type:0"
+    },
+    "var:88": {
+      "type_value": "type:1"
+    },
+    "var:89": {
+      "type_value": "type:0"
+    },
+    "var:9": {
+      "type_value": "type:0"
+    },
+    "var:90": {
+      "type_value": "type:1"
+    },
+    "var:91": {
+      "type_value": "type:0"
+    },
+    "var:92": {
+      "type_value": "type:1"
+    },
+    "var:93": {
+      "type_value": "type:0"
+    },
+    "var:94": {
+      "type_value": "type:1"
+    },
+    "var:95": {
+      "type_value": "type:0"
+    },
+    "var:96": {
+      "type_value": "type:1"
+    },
+    "var:97": {
+      "type_value": "type:0"
+    },
+    "var:98": {
+      "type_value": "type:1"
+    },
+    "var:99": {
+      "type_value": "type:0"
+    }
+  },
+  "id": "c0594971d1f050042002d7a88c6dbd05"
+}
