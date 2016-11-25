@@ -2,7 +2,7 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util, layout_util
 
-NODE_SIZE = 2.0
+NODE_SIZE = 5.0
 
 def layout_with_tulip(Gs):
     from tulip import tlp
