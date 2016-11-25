@@ -189,7 +189,7 @@ package scenes.game.display
 					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
@@ -593,17 +593,17 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case "01":
-					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "02":
-					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 					tips.push(tip);
 					break;
 			}

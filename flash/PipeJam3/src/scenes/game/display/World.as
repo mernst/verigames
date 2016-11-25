@@ -261,8 +261,8 @@ package scenes.game.display
 				//allLevels.sort(Level.SortLevels);
 				levels.sort(Level.SortLevels);
 				
-				for (var i:int = 0; i < levels.length; ++i)				
-					trace('nVars:' + levels[i].levelGraph.nVars);				
+				for (var j:int = 0; j < levels.length; ++j)				
+					trace('nVars:' + levels[j].levelGraph.nVars);				
 				
 				firstLevel = levels[0];
 			}

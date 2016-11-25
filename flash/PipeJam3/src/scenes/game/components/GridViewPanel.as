@@ -1234,7 +1234,7 @@ package scenes.game.components
 					zoomOutDiscrete();
 					break;
 				case Keyboard.SPACE:
-					center();
+					//center();
 					break;
 				case Keyboard.DELETE:
 					if (m_currentLevel) m_currentLevel.onDeletePressed();

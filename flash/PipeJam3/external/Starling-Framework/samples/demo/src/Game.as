@@ -84,9 +84,10 @@ package
         
         private function onKey(event:KeyboardEvent):void
         {
-            if (event.keyCode == Keyboard.SPACE)
-                Starling.current.showStats = !Starling.current.showStats;
-            else if (event.keyCode == Keyboard.X)
+            //if (event.keyCode == Keyboard.SPACE)
+            //    Starling.current.showStats = !Starling.current.showStats;
+            //else
+			if (event.keyCode == Keyboard.X)
                 Starling.context.dispose();
         }
         
