@@ -188,7 +188,7 @@ package scenes.game.display
 		// This value can be seen/changed at any point of the game and will affect the game-play.
 		// 1 -> Random Order
 		// 2 -> Increasing order of difficulty
-		static public var LevelDisplayMode:Number = 2;
+		static public var LevelDisplayMode:Number = 1;
 		
 		static private var CurrentIncreasingDifficultyLevel:int = 0;
 		
@@ -253,6 +253,7 @@ package scenes.game.display
 					firstLevel = my_level; //grab first one..
 				}
 			}
+			var firstLevelNumber:int = 0;
 			//trace("Done creating World...");
 			if (!PipeJamGameScene.inTutorial){
 				remainingTotalLevels = levels.length - 1;	
@@ -264,13 +265,19 @@ package scenes.game.display
 				for (var j:int = 0; j < levels.length; ++j)				
 					trace('nVars:' + levels[j].levelGraph.nVars);				
 				
-				firstLevel = levels[0];
+				if (World.LevelDisplayMode == 1)				
+					firstLevelNumber = randomLevelNumber(levels.length);
+				
+				firstLevel = levels[firstLevelNumber];
 			}
 			
 			levelNumberArray = new Array();
-			for (var i:int = 1; i < levels.length; i++ ){
-				levelNumberArray.push(i);
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if(i != firstLevelNumber)
+					levelNumberArray.push(i);
 			}
+			
 			trace("RANDOM:INIT", levelNumberArray);
 			//initPlayerVars();
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
