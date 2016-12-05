@@ -262,8 +262,8 @@ package scenes.game.display
 				//allLevels.sort(Level.SortLevels);
 				levels.sort(Level.SortLevels);
 				
-				for (var j:int = 0; j < levels.length; ++j)				
-					trace('nVars:' + levels[j].levelGraph.nVars);				
+				for (var j:int = 0; j < levels.length; ++j)
+					trace('nVars:' + levels[j].levelGraph.nVars);
 				
 				if (World.LevelDisplayMode == 1)				
 					firstLevelNumber = randomLevelNumber(levels.length);
@@ -283,13 +283,6 @@ package scenes.game.display
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 			
-			/*
-			if (!PipeJamGameScene.inTutorial && !switchFromTutorial)
-			{
-					m_world.onHelpButtonClicked();
-					switchFromTutorial = true;
-			}
-			*/
 		}
 		
 		public static function setWorkerId(newWorkerId:String, hitId:String):void {
@@ -1158,12 +1151,7 @@ package scenes.game.display
 			}
 			else {
 				
-				/*
-				if (!switchFromTutorial)
-				{
-					m_world.onHelpButtonClicked();
-					switchFromTutorial = true;
-				}*/
+
 				
 				if (remainingTotalLevels <= 0) {
 					//gamePlayDone = true;	
@@ -1550,12 +1538,17 @@ package scenes.game.display
 		public function onHelpButtonClicked():void
 		{
 			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpSplashClass" + PipeJam3.ASSET_SUFFIX));
+			
+			/*
+			// We don't want to log this event when we are sowing the screen outselves.
+			 
 			var dataLoad:Object = new Object();
 			dataLoad["actionTaken"] = "Help Button Clicked";
 			dataLoad["playerID"] = playerID;
 			dataLoad["levelName"] = active_level.level_name;
 			
 			NULogging.log(dataLoad);
+			*/
 			
 			World.showHelpButtonIndicator = 1;
 			showSplashScreen(splash);
