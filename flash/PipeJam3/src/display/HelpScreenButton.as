@@ -49,6 +49,12 @@ package display
 			dataLoad["levelName"] = World.m_world.active_level.level_name;
 			
 			NULogging.log(dataLoad);
+			
+			var o:Object = new Object();
+			o["actionTaken"] = "Help Button Clicked";
+			o["playerID"] = World.playerID;
+			o["levelName"] = World.m_world.active_level.level_name;
+			NULogging.action(o);
 				
 			m_world.showSplashScreen(m_splash);
 		}

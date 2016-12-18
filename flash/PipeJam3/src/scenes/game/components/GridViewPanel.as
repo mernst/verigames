@@ -668,6 +668,10 @@ package scenes.game.components
 		{
 			m_startingTouchPoint = new Point(content.x, content.y);
 			setMode(MODE_MOVING);
+			
+			var o:Object = new Object();
+			o["action_taken"] = "Begining Move Mode";
+			NULogging.action(o);
 		}
 		
 		private function endMoveMode():void
@@ -682,6 +686,12 @@ package scenes.game.components
 				eventToDispatch.addToSimilar = true;
 				dispatchEvent(eventToDispatch);
 				endingMoveMode = true;
+				
+				var o:Object = new Object();
+				o["action_taken"] = "Ending Move Mode";
+				o["startPoint"] = startPoint;
+				o["endPoint"] = endPoint;
+				NULogging.action(o);
 			}
 		}
 
@@ -814,6 +824,11 @@ package scenes.game.components
 		private var lastScaleChanged:Boolean = false;
 		private function handleMouseWheel(delta:Number, localMouse:Point = null):void
 		{
+			var o:Object = new Object();
+			o["action_taken"] = "Zoom in/out";
+			o["Zoom Value"] = delta;
+			NULogging.action(o);
+			
 			if (!getPanZoomAllowed())
 			{
 				return;
@@ -1168,6 +1183,11 @@ package scenes.game.components
 	
 		private function onKeyDown(event:KeyboardEvent):void
 		{
+			var o:Object = new Object();
+			o["action_taken"] = "Key Down Input";
+			o["Key Input"] = event.keyCode;
+			NULogging.action(o);
+			
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
@@ -1250,6 +1270,11 @@ package scenes.game.components
 		
 		private function onKeyUp(event:KeyboardEvent):void
 		{
+			var o:Object = new Object();
+			o["action_taken"] = "Key Up Input";
+			o["Key Input"] = event.keyCode;
+			NULogging.action(o);
+			
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
@@ -1688,6 +1713,21 @@ package scenes.game.components
 			
 			World.levelTimer.reset();
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			
+			
+			var o:Object = new Object();
+			o["levelName"] = World.targetReachedLevelName;
+			o["actionTaken"] = "LevelComplete";
+			o["movesPerLevel"] = World.movesPerLevel;
+			o["percentBrushCircle"] = String((World.movesBrushCircle/World.movesPerLevel)*100);
+			o["percentBrushDiamond"] = String((World.movesBrushDiamond/World.movesPerLevel)*100);
+			o["percentBrushHexagon"] = String((World.movesBrushHexagon/World.movesPerLevel)*100);
+			o["percentBrushSquare"] = String((World.movesBrushSquare / World.movesPerLevel) * 100);
+
+			// When the user clicked the Next Level button, signal an action
+			NULogging.action(o);
+			// When a new level button is pressed, signal a run End event
+			NULogging.runEnd(o);
 		}
 		
 		private function CheckPassButton():void
@@ -1739,9 +1779,31 @@ package scenes.game.components
 			
 			//------------------------------------------------------------------
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			
+			
+			var o:Object = new Object();
+			o["levelName"] = World.targetReachedLevelName;
+			if (attemptedLevel)
+				o["actionTaken"] = "LevelAbandoned";
+			else
+				o["actionTaken"] = "LevelSkipped";
+			o["movesPerLevel"] = World.movesPerLevel;
+			
+			// When the user clicked the Next Level button, signal an action
+			NULogging.action(o);
+			
+			// When a skip level button is pressed, signal a run End event
+			NULogging.runEnd(o);
 		}
 		
 		private function alertEventHandler():void {
+			var o:Object = new Object();
+			o["details"] = "Definitely wanted to skip to survey.";			
+			NULogging.action(o);
+			
+			// When skipping to survey, mark it as the end of this run.
+			NULogging.runEnd(o);
+			
 			World.gamePlayDone = true;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
 			
@@ -1758,7 +1820,11 @@ package scenes.game.components
 		
 		
 		
-		private function onPassButtonTriggered(evt:starling.events.Event):void {			
+		private function onPassButtonTriggered(evt:starling.events.Event):void {
+			var o:Object = new Object();
+			o["details"] = "Skip to Survey button clicked.";			
+			NULogging.action(o);
+			
 			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to Skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
 			this.addChild(dialog);			
 		}
@@ -1781,6 +1847,12 @@ package scenes.game.components
 		 */
 		public function panTo(panX:Number, panY:Number, contentToMove:DisplayObject):void
 		{
+			var o:Object = new Object();
+			o["action_taken"] = "moved_to_location";
+			o["New_X"] = panX;
+			o["New_Y"] = panY;
+			NULogging.action(o);
+			
 			contentToMove.x = clipRect.width / 2 - panX * contentToMove.scaleX;
 			contentToMove.y = clipRect.height / 2 - panY * contentToMove.scaleY;
 			if (contentToMove == content)
@@ -1879,6 +1951,10 @@ package scenes.game.components
 			var brush:Sprite;
 			World.currentBrush = brushName;
 
+			var o:Object = new Object();
+			o["action_taken"] = "change brush";
+			o["changeBrush"] = brushName;
+			NULogging.action(o);
 			
 			if(brushName == GridViewPanel.WIDEN_BRUSH)
 			{

@@ -1624,6 +1624,16 @@ package scenes.game.display
 				//details["HitId"] = World.hitId;
 				NULogging.log(details);
 				
+				var o:Object = new Object();
+				o[VerigameServerConstants.ACTION_PARAMETER_VAR_IDS] = "[" + selectedVarIds + "]";
+				o[VerigameServerConstants.ACTION_PARAMETER_TYPE] = m_solverType;
+				o[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
+				o[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+				o[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
+				o["PlayerID"] = World.playerID;
+				o["actionTaken"] = "Solved Selection";
+				NULogging.action(o);
+				
 				
 				trace("LOGGING END ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");
 			//------------------------------------------------------

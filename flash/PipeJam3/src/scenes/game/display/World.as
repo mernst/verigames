@@ -301,7 +301,6 @@ package scenes.game.display
 
 				// Set weather the levels are shown in random or increasing order based on the LSB of the playerID.
 				World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
-				
 			} catch (err:Error) {
 				var errLog:Object = new Object();
 				errLog["playerID"] = playerID;
@@ -321,6 +320,9 @@ package scenes.game.display
 			initLog["actionTaken"] = "Set WorkerId";
 			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
 			NULogging.log(initLog);
+			
+			// Begin a new session here..
+			NULogging.sessionBegin();
 		}
 		
 		// Ask the HTML to call the setWorkerId function because now, we know that flash was properly loaded and can
@@ -1004,6 +1006,14 @@ package scenes.game.display
 							dataLog["targetReachTime"] = levelTimer.currentCount;
 							//dataLog["HitId"] = World.hitId;
 							NULogging.log(dataLog);
+							
+							var o:Object = new Object();
+							o["PlayerID"] = playerID;
+							o["levelName"] = active_level.level_name;
+							o["actionTaken"] = "Target Reached";
+							o["targetReachTime"] = levelTimer.currentCount;
+							NULogging.action(o);
+							
 							targetReachedLevelName = active_level.level_name;
 							
 							if (TutorialController.tutorialsDone){
@@ -1197,6 +1207,8 @@ package scenes.game.display
 				function():void
 				{
 					selectLevel(levels[m_currentLevelNumber]);
+					// When we load a new level, we begin a run.
+					NULogging.runBegin();
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 			
@@ -1600,6 +1612,11 @@ package scenes.game.display
 			NULogging.log(dataLoad);
 			//-----------------------------------------------------------------
 			
+			var o:Object = new Object();
+			o["actionTaken"] = "New Level";
+			o["playerID"] = playerID;
+			o["levelName"] = active_level.level_name;
+			NULogging.action(o);
 			
 			
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);

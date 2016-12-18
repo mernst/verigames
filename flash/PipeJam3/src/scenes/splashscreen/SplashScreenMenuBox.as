@@ -191,9 +191,9 @@ package scenes.splashscreen
 					dataLog["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
 					dataLog["remainingTotalLevels"] = World.remainingTotalLevels;
 					dataLog["LevelsIgnored"] = World.levelNumberArray.length;
-					dataLog["MaxTimeSpentOnLevel"] = World.maxTimeInLevel;
+					dataLog["MaxTimeSpentOnLevel"] = (World.maxTimeInLevel == -1 ? "" : World.maxTimeInLevel);
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
-					dataLog["MinTimeSpentOnLevel"] = World.minTimeInLevel;
+					dataLog["MinTimeSpentOnLevel"] = (World.minTimeInLevel == Number.MAX_VALUE ? "" : World.minTimeInLevel);
 					dataLog["MinTimeLevelName"] = World.minTimeLevelName;
 					dataLog["WidenBrushCount"] = World.totalHexagonBrushCount;
 					dataLog["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
@@ -204,6 +204,9 @@ package scenes.splashscreen
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------
+					
+					// End Session here.
+					NULogging.sessionEnd();
 					
 					play_button.addEventListener(starling.events.Event.TRIGGERED, onSurveyButtonTriggered);
 					
@@ -237,6 +240,12 @@ package scenes.splashscreen
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}
 					else{
+						// End the tutorial session
+						NULogging.sessionEnd();
+						
+						// Start of challenge levels
+						NULogging.sessionBegin();
+						
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						
