@@ -141,16 +141,18 @@ package server
 			data["player_id"] = NULogging.player_id;
 			data["version"] = NULogging.version;
 			
+			/*
 			var dataAsString:String = LoggingServerInterface.obj2str(data);
 			// Need to change this to a regex. This is NOT effecient.
 			while (dataAsString.indexOf("\"") != -1)
 			{
 				dataAsString = dataAsString.replace("\"", "'");
 			}
+			*/
 			
 			var dataToLog:Object = new Object();
 			dataToLog["type"] = type;
-			dataToLog["data"] = dataAsString;
+			dataToLog.data = data;
 			
 			
 			// Finally log the data
@@ -161,7 +163,8 @@ package server
 				var jsonHeader:URLRequestHeader = new URLRequestHeader("Content-type", "application/json");
 				//request.requestHeaders.push(jsonHeader);
 				
-				request.data = LoggingServerInterface.obj2str(dataToLog);
+				
+				request.data = com.adobe.serialization.json.JSON.encode(dataToLog);
 				request.method = URLRequestMethod.POST;	
 				var urlLoader:URLLoader = new URLLoader();
 				//urlLoader = new URLLoader();
