@@ -670,7 +670,7 @@ package scenes.game.components
 			setMode(MODE_MOVING);
 			
 			var o:Object = new Object();
-			o["action_taken"] = "Begining Move Mode";
+			o["action_taken"] = "Beginning Move Mode";
 			NULogging.action(o);
 		}
 		
