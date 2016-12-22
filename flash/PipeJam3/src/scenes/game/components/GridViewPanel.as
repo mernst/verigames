@@ -177,7 +177,7 @@ package scenes.game.components
 		private var m_mainGameTimer:Timer;
 		
 		// Maximum wait time for the game timer.
-		private static const MAX_WAIT_TIME_IN_MINUTES:Number = 10;
+		private static const MAX_WAIT_TIME_IN_MINUTES:Number = GameConfig.ENABLE_TIME_CONSTRAINT ? 10 : 0;
 		
 		// The minutes to display on the timer.
 		private var m_minutesRemaining:Number = 0;
@@ -283,6 +283,7 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
+			trace("=========ON ADDED TO STAGE CALLED===========");
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 				
 			//create a clip rect for the window
@@ -1502,7 +1503,9 @@ package scenes.game.components
 			m_gameTimerText.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue + m_buttonBufferValue)) ;
 			
 			TextFactory.getInstance().updateAlign(m_gameTimerText, 0, 1);
-			m_buttonLayer.addChild(m_gameTimerText);
+			
+			if (MAX_WAIT_TIME_IN_MINUTES != 0)
+				m_buttonLayer.addChild(m_gameTimerText);
 			
 			m_minutesRemaining = MAX_WAIT_TIME_IN_MINUTES;
 			m_secondsRemaining = 0;
@@ -1688,13 +1691,15 @@ package scenes.game.components
 		private var buttonHit:Boolean = false;
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
-			m_skipCount = 0;
+			//m_skipCount = 0;
 			buttonHit = true;
 			trace("Next level button is triggered");		
 			
 			collectMinMaxStats();
 			if (TutorialController.tutorialsDone)
+			{
 				World.totallevelsCompleted++;
+			}
 			
 			
 			World.levelTimer.stop();
@@ -1732,23 +1737,29 @@ package scenes.game.components
 		
 		private function CheckPassButton():void
 		{
-			if (passButton == null || passButton.visible)
-				return;
 			
-			trace("--------------------------------> Skip count " + m_skipCount);
-			if (m_skipCount >= 2)
+			trace("--------------------------------> Skip count: " + m_skipCount);
+			trace("--------------------------------> Remaining total levels: " + World.remainingTotalLevels);
+			if (World.remainingTotalLevels == 0 || m_skipCount >= 3)
 			{
 				passButton.visible = true;
+				m_showSkipToEnd = true;
+				displayPassButton();
 			}
-			else	
-				passButton.visible = false;
+			
+			//if (passButton == null || passButton.visible)
+			//	return;
+			//else	
+			//	passButton.visible = false;
+			
 		}
 		
 		private function onSkipLevelButtonTriggered(evt:starling.events.Event):void
 		{
 			m_skipCount++;
 			trace("--------------------------------> Calling CheckPassButton() <-----------------------");
-			//CheckPassButton();
+			if (!GameConfig.ENABLE_TIME_CONSTRAINT)
+				CheckPassButton();
 			trace("Next level button is triggered");
 			//------------------------------------------------------------------
 			

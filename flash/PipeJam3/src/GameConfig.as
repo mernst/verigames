@@ -17,5 +17,8 @@ package
 
 		/** level scaling */
 		public static const ENABLE_SCALE_LEVEL_LAYOUT:Boolean     = false;
+		
+		/** run HIT with or without requiring player to play for a specified amount of time */
+		public static const ENABLE_TIME_CONSTRAINT:Boolean = false;
 	}
 }
