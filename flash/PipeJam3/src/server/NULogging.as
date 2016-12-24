@@ -61,7 +61,7 @@ package server
 
 		public function NULogging()
 		{
-
+			// Nothing so far..
 		}
 		
 		public static function sessionBegin(o:Object):void {
