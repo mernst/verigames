@@ -196,6 +196,7 @@ package scenes.game.display
 		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 5;
 		
 		
+		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
 		{
 			m_worldGraphDict = _worldGraphDict;
@@ -322,7 +323,14 @@ package scenes.game.display
 			NULogging.log(initLog);
 			
 			// Begin a new session here..
-			NULogging.sessionBegin();
+			var o:Object = new Object();
+			o["playerID"] = playerID;
+			o["RandomPlayerId"] = oldPlayerID;
+			o["workerId"] = workerId;
+			o["hitId"] = hitId;
+			o["actionTaken"] = "Set WorkerId";
+			o["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
+			NULogging.sessionBegin(o);
 		}
 		
 		// Ask the HTML to call the setWorkerId function because now, we know that flash was properly loaded and can
@@ -1012,7 +1020,7 @@ package scenes.game.display
 							o["levelName"] = active_level.level_name;
 							o["actionTaken"] = "Target Reached";
 							o["targetReachTime"] = levelTimer.currentCount;
-							NULogging.action(o);
+							NULogging.action(o, NULogging.ACTION_TYPE_TARGET_SCORE_REACHED);
 							
 							targetReachedLevelName = active_level.level_name;
 							
@@ -1207,8 +1215,8 @@ package scenes.game.display
 				function():void
 				{
 					selectLevel(levels[m_currentLevelNumber]);
-					// When we load a new level, we begin a run.
-					NULogging.runBegin();
+					// When we load a new level, we begin a run.				
+					
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", null, callback));
 			
@@ -1384,12 +1392,19 @@ package scenes.game.display
 		protected function selectLevel(newLevel:Level):void
 		{
 			
+			
 			if (!newLevel) {
 				return;
 			}
 			
 			trace("Selectin a new level");
 			currentLevelName = newLevel.level_name;
+			
+			var o:Object = new Object();
+			o["levelName"] = levels[m_currentLevelNumber].level_name;
+			o["level_number"] = m_currentLevelNumber;
+			o["node_count"] = levels[m_currentLevelNumber].levelGraph.nVars;
+			NULogging.runBegin(o);
 			
 			if(newLevel != firstLevel){
 				trace("CURRENT SCORE *************************************************************", newLevel.currentScore);
@@ -1616,7 +1631,7 @@ package scenes.game.display
 			o["actionTaken"] = "New Level";
 			o["playerID"] = playerID;
 			o["levelName"] = active_level.level_name;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_NEW_LEVEL_LOADED);
 			
 			
 			active_level.removeEventListener(MenuEvent.LEVEL_LOADED, onLevelLoaded);

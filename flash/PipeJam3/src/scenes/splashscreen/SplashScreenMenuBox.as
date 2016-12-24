@@ -240,12 +240,6 @@ package scenes.splashscreen
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}
 					else{
-						// End the tutorial session
-						NULogging.sessionEnd();
-						
-						// Start of challenge levels
-						NULogging.sessionBegin();
-						
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 						m_mainMenu.addChild(play_button);
 						

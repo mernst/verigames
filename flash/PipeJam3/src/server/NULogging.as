@@ -46,13 +46,25 @@ package server
 		static public var run_seqno:uint;
 		static public var action_count:uint;
 		static public var action_seqno:uint;
+		
+		static public const ACTION_TYPE_NEXT_LEVEL_CLICKED:uint = 1;
+		static public const ACTION_TYPE_SKIP_LEVEL_CLICKED:uint = 2;
+		static public const ACTION_TYPE_SKIP_TO_SURVEY_CLICKED:uint = 3;
+		static public const ACTION_TYPE_TARGET_SCORE_REACHED:uint = 4;
+		static public const ACTION_TYPE_PARADOX_SOLVED:uint = 5;
+		static public const ACTION_TYPE_BRUSH_SELECTION_CHANGED:uint = 6;
+		static public const ACTION_TYPE_WINDOW_RESIZED:uint = 7;
+		static public const ACTION_TYPE_NEW_LEVEL_LOADED:uint = 8;
+		static public const ACTION_TYPE_MOUSE_CLICKED:uint = 9;
+		static public const ACTION_TYPE_KEY_INPUT:uint = 10;
+		static public const ACTION_TYPE_HELP_BUTTON_CLICKED:uint = 11;
 
 		public function NULogging()
 		{
 
 		}
 		
-		public static function sessionBegin():void {
+		public static function sessionBegin(o:Object):void {
 			// At the begining of a new session, always renew the session Id.
 			NULogging.session_id = UIDUtil.createUID();
 			
@@ -65,10 +77,17 @@ package server
 			NULogging.trial_id = World.hitId;
 			
 			// Finally, log the new object.
-			var o:Object = new Object();
-			o["session_id"] = NULogging.session_id;			
+			var data:Object = new Object();
+			data["session_id"] = NULogging.session_id;
+			data["game_id"] = "Paradox";
+			data["build_id"] = World.hitId;
+			data["condition"] = uint(1);
+			data["browser"] = "Unknown";
+			data["os"] = "Unknown";
+			data["hardware"] = "Unknown";
+			data["details"] = o;
 			
-			logData("session_begin", o);
+			logData("session_begin", data);
 		}
 		
 		public static function sessionEnd():void {
@@ -77,13 +96,13 @@ package server
 			// Add the ession id that's about to end and the count of runs in this session.
 			o["session_id"] = NULogging.session_id;
 			o["run_count"] = NULogging.run_count;
+			o["details"] = "";
 			
 			// Finally log it.
 			logData("session_end", o);
 		}
 		
-		public static function runBegin():void {
-			var o:Object = new Object();
+		public static function runBegin(o:Object):void {
 			
 			// imcrease the value of run count for every run begin.
 			NULogging.run_count++;
@@ -98,57 +117,59 @@ package server
 			NULogging.action_seqno = 0;
 			NULogging.action_count = 0;
 			
-			o["session_id"] = NULogging.session_id;
-			o["run_id"] = NULogging.run_id;
-			o["run_seqno"] = NULogging.run_seqno;
+			var data:Object = new Object();
+			
+			data["session_id"] = NULogging.session_id;
+			data["run_id"] = NULogging.run_id;
+			data["run_seqno"] = NULogging.run_seqno;
+			data["definition"] = "New Level Started";
+			data["details"] = o;
 			
 			
-			logData("run_begin", o);
+			logData("run_begin", data);
 		}
 		
 		public static function runEnd(o:Object):void {			
 			// assuming o has some kind of score information in it..
+			var data:Object = new Object();
 			
-			o["session_id"] = NULogging.session_id;
-			o["run_id"] = NULogging.run_id;
-			o["action_count"] = NULogging.action_count;			
+			data["details"] = o;
+			data["session_id"] = NULogging.session_id;
+			data["run_id"] = NULogging.run_id;
+			data["action_count"] = NULogging.action_count;
+			data["score"] = Number(0.0);
 			
-			logData("run_end", o);
+			logData("run_end", data);
 		}
 		
-		public static function action(o:Object): void {
+		public static function action(o:Object, type:uint): void {
 			
 			// Increase action_count to note how many actions took place.
 			NULogging.action_count++;
 			
 			// increment action_seqno to note which sequence number this action currently is in.
 			NULogging.action_seqno++;
+			var data:Object = new Object();
+			data["details"] = o;
 			
-			o["run_id"] = NULogging.run_id;
-			o["action_seqno"] = NULogging.action_seqno;			
+			data["run_id"] = NULogging.run_id;
+			data["action_seqno"] = NULogging.action_seqno;		
+			data["type"] = type;
+			data["frame"] = uint(0);
 			
-			logData("action", o);
+			logData("action", data);
 		}
 		
 		private static function logData(type:String, data:Object):void {
 			// Add the timestamp
 			var date:Date = new Date();
 			data["client_time"] = date;
-			data["UnixTimestamp"] = date.valueOf().toString();
+			//data["UnixTimestamp"] = date.valueOf().toString();
 			
 			// Add all constants
 			data["trial_id"] = NULogging.trial_id;
 			data["player_id"] = NULogging.player_id;
 			data["version"] = NULogging.version;
-			
-			/*
-			var dataAsString:String = LoggingServerInterface.obj2str(data);
-			// Need to change this to a regex. This is NOT effecient.
-			while (dataAsString.indexOf("\"") != -1)
-			{
-				dataAsString = dataAsString.replace("\"", "'");
-			}
-			*/
 			
 			var dataToLog:Object = new Object();
 			dataToLog["type"] = type;
@@ -167,7 +188,6 @@ package server
 				request.data = com.adobe.serialization.json.JSON.encode(dataToLog);
 				request.method = URLRequestMethod.POST;	
 				var urlLoader:URLLoader = new URLLoader();
-				//urlLoader = new URLLoader();
 				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 				configureListeners(urlLoader);
 

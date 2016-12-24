@@ -1632,7 +1632,7 @@ package scenes.game.display
 				o[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
 				o["PlayerID"] = World.playerID;
 				o["actionTaken"] = "Solved Selection";
-				NULogging.action(o);
+				NULogging.action(o, NULogging.ACTION_TYPE_PARADOX_SOLVED);
 				
 				
 				trace("LOGGING END ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;");

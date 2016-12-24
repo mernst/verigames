@@ -671,7 +671,7 @@ package scenes.game.components
 			
 			var o:Object = new Object();
 			o["action_taken"] = "Begining Move Mode";
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_MOUSE_CLICKED);
 		}
 		
 		private function endMoveMode():void
@@ -691,7 +691,7 @@ package scenes.game.components
 				o["action_taken"] = "Ending Move Mode";
 				o["startPoint"] = startPoint;
 				o["endPoint"] = endPoint;
-				NULogging.action(o);
+				NULogging.action(o, NULogging.ACTION_TYPE_MOUSE_CLICKED);
 			}
 		}
 
@@ -827,7 +827,7 @@ package scenes.game.components
 			var o:Object = new Object();
 			o["action_taken"] = "Zoom in/out";
 			o["Zoom Value"] = delta;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_WINDOW_RESIZED);
 			
 			if (!getPanZoomAllowed())
 			{
@@ -1186,7 +1186,7 @@ package scenes.game.components
 			var o:Object = new Object();
 			o["action_taken"] = "Key Down Input";
 			o["Key Input"] = event.keyCode;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_KEY_INPUT);
 			
 			switch(event.keyCode)
 			{
@@ -1273,7 +1273,7 @@ package scenes.game.components
 			var o:Object = new Object();
 			o["action_taken"] = "Key Up Input";
 			o["Key Input"] = event.keyCode;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_KEY_INPUT);
 			
 			switch(event.keyCode)
 			{
@@ -1725,7 +1725,7 @@ package scenes.game.components
 			o["percentBrushSquare"] = String((World.movesBrushSquare / World.movesPerLevel) * 100);
 
 			// When the user clicked the Next Level button, signal an action
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_NEXT_LEVEL_CLICKED);
 			// When a new level button is pressed, signal a run End event
 			NULogging.runEnd(o);
 		}
@@ -1790,7 +1790,7 @@ package scenes.game.components
 			o["movesPerLevel"] = World.movesPerLevel;
 			
 			// When the user clicked the Next Level button, signal an action
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_LEVEL_CLICKED);
 			
 			// When a skip level button is pressed, signal a run End event
 			NULogging.runEnd(o);
@@ -1799,7 +1799,7 @@ package scenes.game.components
 		private function alertEventHandler():void {
 			var o:Object = new Object();
 			o["details"] = "Definitely wanted to skip to survey.";			
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_TO_SURVEY_CLICKED);
 			
 			// When skipping to survey, mark it as the end of this run.
 			NULogging.runEnd(o);
@@ -1823,7 +1823,7 @@ package scenes.game.components
 		private function onPassButtonTriggered(evt:starling.events.Event):void {
 			var o:Object = new Object();
 			o["details"] = "Skip to Survey button clicked.";			
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_TO_SURVEY_CLICKED);
 			
 			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to Skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
 			this.addChild(dialog);			
@@ -1851,7 +1851,7 @@ package scenes.game.components
 			o["action_taken"] = "moved_to_location";
 			o["New_X"] = panX;
 			o["New_Y"] = panY;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_MOUSE_CLICKED);
 			
 			contentToMove.x = clipRect.width / 2 - panX * contentToMove.scaleX;
 			contentToMove.y = clipRect.height / 2 - panY * contentToMove.scaleY;
@@ -1954,7 +1954,7 @@ package scenes.game.components
 			var o:Object = new Object();
 			o["action_taken"] = "change brush";
 			o["changeBrush"] = brushName;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_BRUSH_SELECTION_CHANGED);
 			
 			if(brushName == GridViewPanel.WIDEN_BRUSH)
 			{

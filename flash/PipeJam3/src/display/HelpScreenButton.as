@@ -54,7 +54,7 @@ package display
 			o["actionTaken"] = "Help Button Clicked";
 			o["playerID"] = World.playerID;
 			o["levelName"] = World.m_world.active_level.level_name;
-			NULogging.action(o);
+			NULogging.action(o, NULogging.ACTION_TYPE_HELP_BUTTON_CLICKED);
 				
 			m_world.showSplashScreen(m_splash);
 		}
