@@ -181,7 +181,7 @@ package scenes.splashscreen
 					dataLog["levelsCompleted"] = World.totallevelsCompleted;
 					dataLog["levelsAbandoned"] = World.totallevelsAbandoned;
 					dataLog["levelsAttempted"] = World.totalLevelsAttempted;
-					dataLog["levelsSkipped"] = World.totalLevelCount - World.totallevelsSeen;
+					//dataLog["levelsSkipped"] = World.totalLevelCount - World.totallevelsSeen;
 					dataLog["levelsDoneSomething"] = World.totallevelsSeen - World.totallevelsAbandoned;
 					dataLog["levelsSeen"] = World.totallevelsSeen;
 					dataLog["totalMoves"] = World.totalBrushUsageCount;
@@ -190,7 +190,7 @@ package scenes.splashscreen
 					dataLog["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
 					dataLog["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
 					dataLog["remainingTotalLevels"] = World.remainingTotalLevels;
-					dataLog["LevelsIgnored"] = World.levelNumberArray.length;
+					//dataLog["LevelsIgnored"] = World.levelNumberArray.length;
 					dataLog["MaxTimeSpentOnLevel"] = (World.maxTimeInLevel == -1 ? "" : World.maxTimeInLevel);
 					dataLog["MaxTimelevelName"] = World.maxTimeLevelName;
 					dataLog["MinTimeSpentOnLevel"] = (World.minTimeInLevel == Number.MAX_VALUE ? "" : World.minTimeInLevel);
