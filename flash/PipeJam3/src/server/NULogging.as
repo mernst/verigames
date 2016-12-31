@@ -164,7 +164,7 @@ package server
 			// Add the timestamp
 			var date:Date = new Date();
 			data["client_time"] = date;
-			//data["UnixTimestamp"] = date.valueOf().toString();
+			data["unix_timestamp"] = date.valueOf().toString();	 //Unix timestamp needed to generate level ratings using playback_driver
 			
 			// Add all constants
 			data["trial_id"] = NULogging.trial_id;
