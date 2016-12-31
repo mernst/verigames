@@ -1836,7 +1836,7 @@ package scenes.game.components
 			o["details"] = "Skip to Survey button clicked.";			
 			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_TO_SURVEY_CLICKED);
 			
-			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to Skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
+			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
 			this.addChild(dialog);			
 		}
 		

@@ -29,7 +29,7 @@ package dialogs
 			m_socialText = _socialText;
 			m_callback = callback;
 						
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, 120, 14*numLinesInText, 12, 0x0077FF);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, 120, 14*numLinesInText, 12, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
 			label.x = (width - label.width)/2;
