@@ -1,5 +1,8 @@
 package  
 {
+	import assets.StringTable;
+	import assets.StringTableBase;
+	import assets.StringTableMTurk;
 	import com.spikything.utils.MouseWheelTrap;
 	import flash.events.MouseEvent;
 	import server.MTurkAPI;
@@ -111,7 +114,14 @@ package
 		}
 		
 		public function initialize(result:int = 0, e:flash.events.Event = null):void
-		{			
+		{
+			// for now, initialize string table here
+			if (GameConfig.IS_MTURK) {
+				StringTable.setInstance(new StringTableMTurk);
+			} else {
+				StringTable.setInstance(new StringTableBase);
+			}
+			
 			World.initPlayerVars();
 			MouseWheelTrap.setup(stage);
 			

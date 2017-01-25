@@ -1,5 +1,6 @@
 package scenes.splashscreen
 {
+	import assets.StringTable;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.net.URLLoader;
@@ -47,16 +48,18 @@ package scenes.splashscreen
 		protected var loader:URLLoader;
 
 		protected var m_parent:SplashScreenScene;
-				
-		protected var currentDisplayString:String = "Begin"
+		
+		
+		private static const ST_BEGIN:int     = 0;
+		private static const ST_CONTINUE:int  = 1;
+		private static const ST_SURVEY:int    = 2;
+		
+		private var m_currentDisplayState:int = ST_BEGIN;
+		
 		public var inputInfo:flash.text.TextField;
 		private var m_infoTextfield:TextFieldWrapper;
 		private var m_scoreTextfield:TextFieldWrapper;
 		
-		public static var MTurkVersion:Boolean = true;
-		public static var userStudyVersion:Boolean = false;
-
-
 		public function SplashScreenMenuBox(_parent:SplashScreenScene)
 		{
 			super();
@@ -160,7 +163,6 @@ package scenes.splashscreen
 				*/
 				
 				if (World.gamePlayDone) {
-				
 					
 					// Calclulate total Brush count used.
 					World.totalBrushUsageCount = World.totalHexagonBrushCount + World.totalDiamondBrushCount 
@@ -212,31 +214,19 @@ package scenes.splashscreen
 					
 					m_infoTextfield.width = 300;
 					
-					
-					if (MTurkVersion) {
-						TextFactory.getInstance().updateText(m_infoTextfield, "Complete the following survey for your completion code.");
-						m_mainMenu.addChild(play_button);
-					}
-					
-					if (userStudyVersion) {
-						TextFactory.getInstance().updateText(m_infoTextfield, "Thank you for playing!");
-					}
-					
+					TextFactory.getInstance().updateText(m_infoTextfield, StringTable.lookup(StringTable.SPLASH_DONE));
 					TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					
+					if (GameConfig.IS_MTURK) {
+						m_mainMenu.addChild(play_button);
+					}
 				}
 				else{
-					if (currentDisplayString == "Begin"){
+					if (m_currentDisplayState == ST_BEGIN) {
 						play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 						m_mainMenu.addChild(play_button);
 					
-						if (MTurkVersion) {
-							TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play.  You must play all levels for credit.");
-						}
-						if (userStudyVersion) {
-							TextFactory.getInstance().updateText(m_infoTextfield, "The first set of levels introduces how to play. ");
-						}
-						
+						TextFactory.getInstance().updateText(m_infoTextfield, StringTable.lookup(StringTable.SPLASH_TUTORIAL));
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}
 					else{
@@ -246,13 +236,7 @@ package scenes.splashscreen
 						m_infoTextfield.width = 450;
 						m_infoTextfield.x = m_parent.width/2 - m_infoTextfield.width/2;
 
-						if (MTurkVersion) {
-							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.");
-						}
-						if (userStudyVersion) {
-							TextFactory.getInstance().updateText(m_infoTextfield, "Use the skills you have learnt to play the upcoming levels.");
-						}
-						
+						TextFactory.getInstance().updateText(m_infoTextfield, StringTable.lookup(StringTable.SPLASH_CHALLENGE));
 						TextFactory.getInstance().updateAlign(m_infoTextfield, 1, 1);
 					}	
 				}
@@ -297,17 +281,17 @@ package scenes.splashscreen
 		protected function stringToDisplay():String
 		{
 			if (TutorialController.tutorialsDone) {
-				currentDisplayString = "Continue";
-				return "Continue";
+				m_currentDisplayState = ST_CONTINUE;
+				return StringTable.lookup(StringTable.SPLASH_CONTINUE);
 			}
-			if (World.gamePlayDone){
-				currentDisplayString = "Continue to survey"
-				return "Continue to survey"
+			if (World.gamePlayDone) {
+				m_currentDisplayState = ST_SURVEY;
+				return StringTable.lookup(StringTable.SPLASH_CONTINUE);
 			}
-			else return "Begin"
-			
-			
+			m_currentDisplayState = ST_BEGIN;
+			return StringTable.lookup(StringTable.SPLASH_CONTINUE);
 		}
+
 		protected function onContinueTutorialTriggered(e:starling.events.Event):void
 		{
 			loadTutorial();

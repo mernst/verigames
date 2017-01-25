@@ -5,6 +5,8 @@ package
 		private static const CONFIG_MTURK:uint = 1;
 		private static const CONFIG:uint = CONFIG_MTURK;
 		
+		public static const IS_MTURK:Boolean = (CONFIG == CONFIG_MTURK);
+		
 		/** which solver brushes to be enabled */
 		public static const ENABLE_SOLVER1_BRUSH:Boolean          = true;
 		public static const ENABLE_SOLVER2_BRUSH:Boolean          = true;
