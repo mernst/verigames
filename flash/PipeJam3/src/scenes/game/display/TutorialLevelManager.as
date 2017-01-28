@@ -1,5 +1,6 @@
 package scenes.game.display 
 {
+	import assets.StringTable;
 	import assets.AssetInterface;
 	import constraints.ConstraintEdge;
 	import constraints.ConstraintGraph;
@@ -646,50 +647,45 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case "001":
 					return new TutorialManagerTextInfo(
-						"Variables can change states. Click and drag to select variables.\nRelease the mouse to apply the state being selected.",
+						StringTable.lookup(StringTable.INTRO_VARIABLES),
 						null,
 						null,
 						null, null);
 				case "002":
 					return new TutorialManagerTextInfo(
-						"New selector\n" +
-						"unlocked! Change\n" +
-						"selector by\n" + 
-						"clicking on one\n" +
-						"of the selectors\n" + 
-						"    previews -->",
+						StringTable.lookup(StringTable.SELECTOR_UNLOCKED),
 						null,
 						null,
 						Constants.RIGHT, null);
 				case "01":
 					return new TutorialManagerTextInfo(
-						"Eliminate as many red paradoxes as you can!",
+						StringTable.lookup(StringTable.ELIMINATE_PARADOX),
 						null,
 						null,
 						null, null);
 				case "004":
-					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = "New selector unlocked! The star optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.";
-					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = "New selector unlocked! The diamond optimizer will automatically adjust the\nselected variables to reduce the overall number of paradoxes.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
-					else                                    text = "Keep eliminating the red paradoxes!";
+					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = StringTable.lookup(StringTable.INTRO_SOLVER1_BRUSH);
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = StringTable.lookup(StringTable.INTRO_SOLVER2_BRUSH);
+					else                                    text = StringTable.lookup(StringTable.ELIMINATE_PARADOX);
 					return new TutorialManagerTextInfo(
 						text,
 						null,
 						null,
 						null, null);
 				case "02":
-					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = "The star optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
-					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = "The diamond optimizer will adjust the selected variables to reduce the\ntotal number of paradoxes. Eliminate as many red paradoxes as you can!";
-					else                                    text = "Keep eliminating the red paradoxes!";
+					if (GameConfig.ENABLE_SOLVER1_BRUSH)      text = StringTable.lookup(StringTable.FUNCTION_SOLVER1_BRUSH);
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH) text = StringTable.lookup(StringTable.FUNCTION_SOLVER2_BRUSH);
+					else                                    text = StringTable.lookup(StringTable.ELIMINATE_PARADOX);
 					return new TutorialManagerTextInfo(
 						text,
 						null,
 						null,
 						null, null);
 				case "005":
-					if (GameConfig.ENABLE_SOLVER2_BRUSH && GameConfig.ENABLE_SOLVER1_BRUSH)       text = "New selector unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
-					else if (GameConfig.ENABLE_SOLVER2_BRUSH && !GameConfig.ENABLE_SOLVER1_BRUSH) text = "Keep eliminating the red paradoxes!";
-					else if (GameConfig.ENABLE_SOLVER1_BRUSH)                                   text = "Keep eliminating the red paradoxes!";
-					else                                                                      text = "Keep eliminating the red paradoxes!";
+					if (GameConfig.ENABLE_SOLVER2_BRUSH && GameConfig.ENABLE_SOLVER1_BRUSH)       text = StringTable.lookup(StringTable.BOTH_BRUSHES_ENABLED);
+					else if (GameConfig.ENABLE_SOLVER2_BRUSH && !GameConfig.ENABLE_SOLVER1_BRUSH) text = StringTable.lookup(StringTable.ELIMINATE_PARADOX);
+					else if (GameConfig.ENABLE_SOLVER1_BRUSH)                                   text = StringTable.lookup(StringTable.ELIMINATE_PARADOX);
+					else                                                                      text = StringTable.lookup(StringTable.ELIMINATE_PARADOX);
 					return new TutorialManagerTextInfo(
 						text,
 						null,
@@ -697,19 +693,19 @@ package scenes.game.display
 						null, null);
 				case "03":
 					return new TutorialManagerTextInfo(
-						"There is a limit to how many things you select. The numbers on the\nselector indicate how many you've selected and the selection limit.",
+						StringTable.lookup(StringTable.INFORM_LIMITS),
 						null,
 						null,
 						null, null);
 				case "04":
 					return new TutorialManagerTextInfo(
-						"Different selection areas will create different solutions.\nSometimes many items need to change to eliminate a paradox.",
+						StringTable.lookup(StringTable.INTRO_SELECTION_AREAS),
 						null,
 						null,
 						null, null);
 				case "2":
 					return new TutorialManagerTextInfo(
-						"Use the arrow keys or right-click and drag to pan. Use +/- to zoom.",
+						StringTable.lookup(StringTable.INTRO_ZOOM),
 						null,
 						null,
 						null, null);
@@ -724,13 +720,13 @@ package scenes.game.display
 				case "13":
 				case "14":
 					return new TutorialManagerTextInfo(
-						"Keep eliminating the red paradoxes!",
+						StringTable.lookup(StringTable.ELIMINATE_PARADOX),
 						null,
 						null,
 						null, null);
 				case "12":
 					return new TutorialManagerTextInfo(
-						"For larger levels use on the minimap in the top right to navigate.",
+						StringTable.lookup(StringTable.MINIMAP),
 						null,
 						null,
 						Constants.TOP_LEFT, null);

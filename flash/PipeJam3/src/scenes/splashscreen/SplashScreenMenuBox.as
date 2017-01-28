@@ -246,26 +246,21 @@ package scenes.splashscreen
 		}
 		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
-		{			
-			trace("Function triggered on play button press");
+		{	
 			if(!PlayerValidation.AuthorizationAttempted && PipeJam3.RELEASE_BUILD)
 			{
-				trace("Inside first if");
 				if (PipeJam3.PRODUCTION_BUILD)
 					
 					{
-						trace("Inside second if");
 						navigateToURL(new URLRequest("http://oauth.verigames.com/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.com/game/Paradox.html&client_id=" + PlayerValidation.production_client_id), "");
 					}
 				else
 					{
-						trace("Inside first else");
 						navigateToURL(new URLRequest("http://oauth.verigames.org/oauth2/authorize?response_type=code&redirect_uri=http://paradox.verigames.org/game/Paradox.html&client_id=" + PlayerValidation.staging_client_id), "");
 					}
 			}
 			else
 				{
-					trace("Inside second else");
 					//getNextRandomLevel(null);
 					
 					PipeJamGameScene.inTutorial = false;
