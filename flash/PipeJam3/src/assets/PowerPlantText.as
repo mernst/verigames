@@ -18,6 +18,14 @@ package assets
 				case BOTH_BRUSHES_ENABLED:return  "New selector unlocked! The diamond power\nmay find different solutions from the star power.\nThe diamond power can run for a long time, click again if you need to stop it.";
 				case INFORM_LIMITS:return "There is a limit to how many power plants you select. The numbers on the\npower types indicate how many you've selected and the selection limit.";
 				case INTRO_SELECTION_AREAS:return "Different selection areas will create different solutions.\nSometimes many items need to change to power a factory.";
+				case TIP_VARIABLE:return "Power plant";
+				case TIP_CONSTRAINT:return "Factory";
+				case TIP_PARADOX:return "Paradox";
+				case TIP_PARADOX_CONSTRAINT:return "Factory\nwith\nparadox";
+				case TIP_PARADOX_REMOVAL:return "To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution";
+				case TIP_PARADOX_REMOVED: return "paradox\nremoved!";
+				case APPRECIATE: return "Great work! The target score for this level was reached by\n" + "powering all the factories. Move on to the next level to learn more!";
+				
 			}
 			return "";
 		}

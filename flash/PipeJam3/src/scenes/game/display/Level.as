@@ -333,7 +333,7 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = original_level_name; // yes, we can get this from the quest data but include it here for convenience
 				details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
 				details[VerigameServerConstants.ACTION_PARAMETER_TARGET_SCORE] = m_targetScore;
-				trace("MARKER IS HERE");
+				
 				PipeJam3.logging.logQuestAction(isBest ? VerigameServerConstants.VERIGAME_ACTION_LOAD_BEST_ASSIGNMENTS : VerigameServerConstants.VERIGAME_ACTION_LOAD_ASSIGNMENTS, details, getTimeMs());
 			}
 		}
@@ -1546,10 +1546,6 @@ package scenes.game.display
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			m_inSolver = true;
-			
-			trace("LOGGING TRUE? ================================", PipeJam3.logging)
-			
-			
 			
 			
 			if (PipeJam3.logging)

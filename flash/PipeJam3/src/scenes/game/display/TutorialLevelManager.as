@@ -110,11 +110,11 @@ package scenes.game.display
 					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -124,18 +124,18 @@ package scenes.game.display
 					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX_REMOVAL), null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -154,8 +154,7 @@ package scenes.game.display
 					for (key in levelGraph.unsatisfiedConstraintDict) num++;
 					if (num == 0) { // End of level, display summary
 						tip = new TutorialManagerTextInfo(
-							"Great work! The target score for this level was reached by\n" + 
-							"satisfying all the constraints. Move on to the next level to learn more!",
+							StringTable.lookup(StringTable.APPRECIATE),
 							null, 
 							null, 
 							Constants.BOTTOM, null);
@@ -165,9 +164,9 @@ package scenes.game.display
 					}
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? "constraint\nwith\nparadox" : "paradox\nremoved!", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_4"] ? StringTable.lookup(StringTable.TIP_PARADOX_CONSTRAINT) : StringTable.lookup(StringTable.TIP_PARADOX_REMOVED), null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? "constraint\nwith\nparadox" : "paradox\nremoved!", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(levelGraph.unsatisfiedConstraintDict["c_9"] ? StringTable.lookup(StringTable.TIP_PARADOX_CONSTRAINT) : StringTable.lookup(StringTable.TIP_PARADOX_REMOVED), null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
@@ -176,11 +175,11 @@ package scenes.game.display
 					var var_98011_1:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_1:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_1 && var_98011_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_1 && var_98019_1.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -190,18 +189,18 @@ package scenes.game.display
 					var var_98011_2:ConstraintVar = levelGraph.variableDict["var_98011"];
 					var var_98019_2:ConstraintVar = levelGraph.variableDict["var_98019"];
 					if (var_98011_2 && var_98011_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (var_98019_2 && var_98019_2.getValue().intVal == 1) {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					}
 					if (tips.length == 0) {
-						tip = new TutorialManagerTextInfo("To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution", null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX_REMOVAL), null, pointToNode("c_111708"), Constants.TOP, Constants.TOP);
 						tips.push(tip);
 					} else {
-						tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -215,11 +214,11 @@ package scenes.game.display
 						if (key == "c_80002" || key == "c_150843" || key == "c_13896") longConflictFound = true;
 					}
 					if (num == 1 && longConflictFound) {
-						tip = new TutorialManagerTextInfo("Try selecting from here   ", null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_FROM), null, pointToNode("var_86825"), Constants.LEFT, Constants.LEFT);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86622"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_TO), null, pointToNode("var_86622"), Constants.TOP_RIGHT, Constants.TOP_RIGHT);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_86623"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_TO), null, pointToNode("var_86623"), Constants.TOP_LEFT, Constants.TOP_LEFT);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -233,15 +232,15 @@ package scenes.game.display
 						if (key == "c_61618" || key == "c_102237" || key == "c_27250") longConflictFound = true;
 					}
 					if (num == 1 && longConflictFound) {
-						tip = new TutorialManagerTextInfo("Try selecting\nfrom here", null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_FROM), null, pointToNode("c_61618"), Constants.BOTTOM, Constants.BOTTOM);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2596"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_TO), null, pointToNode("var_2596"), Constants.TOP_LEFT, Constants.TOP_LEFT);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2646"), Constants.TOP_LEFT, Constants.TOP_LEFT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_TO), null, pointToNode("var_2646"), Constants.TOP_LEFT, Constants.TOP_LEFT);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here", null, pointToNode("var_2657"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_TO), null, pointToNode("var_2657"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo("To here and this\nwhole cluster", null, pointToNode("var_3561"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
+						tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_SELECT_CLUSTER), null, pointToNode("var_3561"), Constants.BOTTOM_RIGHT, Constants.BOTTOM_RIGHT);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -577,34 +576,34 @@ package scenes.game.display
 			var tip:TutorialManagerTextInfo;
 			switch (m_tutorialTag) {
 				case "001":
-					tip = new TutorialManagerTextInfo("variable", null, pointToNode("var_1"), Constants.BOTTOM_RIGHT, Constants.CENTER);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_VARIABLE), null, pointToNode("var_1"), Constants.BOTTOM_RIGHT, Constants.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("variable", null, pointToNode("var_2"), Constants.BOTTOM_LEFT, Constants.CENTER);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_VARIABLE), null, pointToNode("var_2"), Constants.BOTTOM_LEFT, Constants.CENTER);
 					tips.push(tip);
 					
-					tip = new TutorialManagerTextInfo("constraint", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_CONSTRAINT), null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("constraint", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_CONSTRAINT), null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "002":
-					tip = new TutorialManagerTextInfo("constraint\nwith\nparadox", null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX_CONSTRAINT), null, pointToNode("c_4"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("constraint\nwith\nparadox", null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX_CONSTRAINT), null, pointToNode("c_9"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "01":
-					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
 					break;
 				case "02":
-					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74452"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_74407"), Constants.TOP, Constants.TOP);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Paradox", null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
+					tip = new TutorialManagerTextInfo(StringTable.lookup(StringTable.TIP_PARADOX), null, pointToNode("c_111708"), Constants.BOTTOM, Constants.BOTTOM);
 					tips.push(tip);
 					break;
 			}

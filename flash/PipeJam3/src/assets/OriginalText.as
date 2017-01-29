@@ -17,6 +17,14 @@ package assets
 				case BOTH_BRUSHES_ENABLED:return  "New selector unlocked! The diamond optimizer\nmay find different solutions from the star optimizer.\nThe diamond optimizer can run for a long time, click again if you need to stop it.";
 				case INFORM_LIMITS:return "There is a limit to how many things you select. The numbers on the\nselector indicate how many you've selected and the selection limit.";
 				case INTRO_SELECTION_AREAS:return "Different selection areas will create different solutions.\nSometimes many items need to change to eliminate a paradox.";
+				case TIP_VARIABLE:return "variable";
+				case TIP_CONSTRAINT:return "constraint";
+				case TIP_PARADOX:return "Paradox";
+				case TIP_PARADOX_CONSTRAINT:return "constraint\nwith\nparadox";
+				case TIP_PARADOX_REMOVAL:return "To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution";
+				case TIP_PARADOX_REMOVED: return "paradox\nremoved!";
+				case APPRECIATE: return "Great work! The target score for this level was reached by\n"+"satisfying all the constraints. Move on to the next level to learn more!";
+				
 			}
 			return "";
 		}
