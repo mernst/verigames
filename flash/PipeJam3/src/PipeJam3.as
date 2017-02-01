@@ -1,5 +1,6 @@
 package  
 {
+	import assets.PowerPlantText;
 	import assets.StringTable;
 	import assets.StringTableBase;
 	import assets.StringTableMTurk;
@@ -117,7 +118,7 @@ package
 		{
 			// for now, initialize string table here
 			if (GameConfig.IS_MTURK) {
-				StringTable.setInstance(new StringTableMTurk);
+				GameConfig.IS_ORIGINAL?StringTable.setInstance(new StringTableMTurk):StringTable.setInstance(new PowerPlantText);
 			} else {
 				StringTable.setInstance(new StringTableBase);
 			}

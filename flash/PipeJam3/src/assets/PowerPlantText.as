@@ -4,9 +4,9 @@ package assets
 	 * ...
 	 * @author ...
 	 */
-	public class PowerPlantText extends Metaphors { 
+	public class PowerPlantText extends StringTableMTurk { 
 		
-		public static function lookupText(key:int):String { 
+		protected override function doLookup(key:int):String { 
 			switch (key) { 
 				case INTRO_VARIABLES: return "Power plants give out different types of power.\n Click and drag to match the power delivered.";
 				case SELECTOR_UNLOCKED: return "New power type\n"+"unlocked! Change\n" +"power type by\n"+"clicking on one\n"+"of the power\n"+"    previews -->"
@@ -27,7 +27,7 @@ package assets
 				case APPRECIATE: return "Great work! The target score for this level was reached by\n" + "powering all the factories. Move on to the next level to learn more!";
 				
 			}
-			return "";
+			return super.doLookup(key);
 		}
 	}
 
