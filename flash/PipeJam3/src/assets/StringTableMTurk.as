@@ -2,22 +2,12 @@ package assets
 {
 	public class StringTableMTurk extends StringTableBase
 	{
-		
-		
 		protected override function doLookup(key:int):String
 		{
 			switch(key) {
 				case SPLASH_TUTORIAL: return "The first set of levels introduces how to play.  You must play all levels for credit.";
 				case SPLASH_CHALLENGE: return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.";
 				case SPLASH_DONE: return "Complete the following survey for your completion code.";
-				
-				case INTRO_ZOOM:return "Use the arrow keys or right-click and drag to pan. Use +/- to zoom.";
-				case MINIMAP:"For larger levels use on the minimap in the top right to navigate.";
-				case TIP_SELECT_FROM:return "Try selecting\nfrom here";
-				case TIP_SELECT_TO:return "To here";
-				case TIP_SELECT_CLUSTER:return "To here and this\nwhole cluster";
-				
-				
 				
 				case INTRO_VARIABLES: return "Variables can change states. Click and drag to select variables.\nRelease the mouse to apply the state being selected.";
 				case SELECTOR_UNLOCKED: return "New selector\n"+"unlocked! Change\n"+"selector by\n"+"clicking on one\n"+"of the selectors\n"+ "    previews -->";
@@ -36,11 +26,8 @@ package assets
 				case TIP_PARADOX_REMOVAL:return "To remove this paradox two others\nwould be created, so leaving this\nparadox is the optimal solution";
 				case TIP_PARADOX_REMOVED: return "paradox\nremoved!";
 				case APPRECIATE: return "Great work! The target score for this level was reached by\n"+"satisfying all the constraints. Move on to the next level to learn more!";
-				
-				
 			}
 			return super.doLookup(key);
 		}
-		
 	}
 }

@@ -1,10 +1,6 @@
 package assets 
 {
-	/**
-	 * ...
-	 * @author ...
-	 */
-	public class PowerPlantText extends StringTableMTurk { 
+	public class StringTablePowerPlant extends StringTableMTurk { 
 		
 		protected override function doLookup(key:int):String { 
 			switch (key) { 

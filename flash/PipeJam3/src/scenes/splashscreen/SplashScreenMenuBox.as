@@ -281,10 +281,10 @@ package scenes.splashscreen
 			}
 			if (World.gamePlayDone) {
 				m_currentDisplayState = ST_SURVEY;
-				return StringTable.lookup(StringTable.SPLASH_CONTINUE);
+				return StringTable.lookup(StringTable.SPLASH_SURVEY);
 			}
 			m_currentDisplayState = ST_BEGIN;
-			return StringTable.lookup(StringTable.SPLASH_CONTINUE);
+			return StringTable.lookup(StringTable.SPLASH_BEGIN);
 		}
 
 		protected function onContinueTutorialTriggered(e:starling.events.Event):void
