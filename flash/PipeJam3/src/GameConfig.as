@@ -20,5 +20,8 @@ package
 		
 		/** run HIT with or without requiring player to play for a specified amount of time */
 		public static const ENABLE_TIME_CONSTRAINT:Boolean = false;
+		
+		/** run with player and level ratings displayed along with current game mode */
+		public static const ENABLE_DEBUG_DISPLAY:Boolean = false;
 	}
 }
