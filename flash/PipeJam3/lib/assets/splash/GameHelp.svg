@@ -30,7 +30,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.82"
-     inkscape:cx="333.80758"
+     inkscape:cx="348.55226"
      inkscape:cy="217.86503"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
@@ -93,80 +93,61 @@
      id="layer2"
      inkscape:label="Base">
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:20px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="50.338299"
-       y="39.195312"
-       id="text22511"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan22513"
-         x="50.338299"
-         y="39.195312">Selectors</tspan></text>
-    <text
        sodipodi:linespacing="125%"
        id="text6154"
-       y="39.195312"
+       y="99.195312"
        x="291.6286"
        style="font-style:normal;font-weight:normal;font-size:20px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="39.195312"
+         y="99.195312"
          x="291.6286"
          id="tspan6156"
          sodipodi:role="line">Explanation</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.5px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="41.112495"
-       y="295.8754"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="31.112495"
+       y="345.8754"
        id="text6158"
        sodipodi:linespacing="110%"><tspan
          sodipodi:role="line"
-         id="tspan6189"
-         x="41.112495"
-         y="295.8754">Levels in this game are related to the <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.5px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start"
-   id="tspan6201">maximum satisfiability problem</tspan> in</tspan><tspan
-         sodipodi:role="line"
-         x="41.112495"
-         y="315.1254"
-         id="tspan6203">computational theory.</tspan><tspan
+         x="31.112495"
+         y="345.8754"
+         id="tspan6203">Levels in this game are related to the <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start"
+   id="tspan6201">maximum satisfiability problem</tspan> in computational theory.</tspan><tspan
          sodipodi:role="line"
          id="tspan6191"
-         x="41.112495"
-         y="334.3754"></tspan><tspan
+         x="31.112495"
+         y="362.3754" /><tspan
          sodipodi:role="line"
-         id="tspan6193"
-         x="41.112495"
-         y="353.6254">It has many real-world applications, including route planning, circuit layout,</tspan><tspan
+         x="31.112495"
+         y="378.8754"
+         id="tspan6205">It has many real-world applications, including route planning, circuit layout, genomics, and</tspan><tspan
          sodipodi:role="line"
-         x="41.112495"
-         y="372.8754"
-         id="tspan6205">genomics, and software verification.</tspan><tspan
+         x="31.112495"
+         y="395.3754"
+         id="tspan4225">software verification.</tspan><tspan
          sodipodi:role="line"
          id="tspan6195"
-         x="41.112495"
-         y="392.1254"></tspan><tspan
-         sodipodi:role="line"
-         id="tspan6197"
-         x="41.112495"
-         y="411.3754">When you play, you are helping to find the best solutions to maximum satisfiability</tspan><tspan
-         sodipodi:role="line"
-         x="41.112495"
-         y="430.6254"
-         id="tspan6207">problems by assigning values in a logical formula!</tspan><tspan
+         x="31.112495"
+         y="411.8754" /><tspan
          sodipodi:role="line"
          id="tspan6199"
-         x="41.112495"
-         y="449.8754"></tspan></text>
+         x="31.112495"
+         y="428.3754">When you play, you are helping to find the best solutions to maximum satisfiability problems by</tspan><tspan
+         sodipodi:role="line"
+         x="31.112495"
+         y="444.8754"
+         id="tspan4223">assigning values in a logical formula!</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text6217"
-       y="176.77409"
+       y="236.77409"
        x="119.92976"
        style="font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="176.77409"
+         y="236.77409"
          x="119.92976"
          id="tspan6219"
          sodipodi:role="line">Star</tspan></text>
@@ -174,30 +155,30 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="118.53336"
-       y="226.27997"
+       y="286.27997"
        id="text6221"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan6223"
          x="118.53336"
-         y="226.27997">Diamond</tspan></text>
+         y="286.27997">Diamond</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 20,265 780,0"
+       d="m 23.658537,325 780.000003,0"
        id="path6225"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <circle
        style="display:inline;fill:#c0c0c0;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-opacity:1"
        cx="-85.645531"
-       cy="-72.513306"
+       cy="-132.51331"
        r="15"
        id="circle8445-2-4-2"
        transform="scale(-1,-1)" />
     <g
        style="display:inline;fill:#404040;fill-opacity:1;stroke:#000000;stroke-opacity:1"
        id="g8389-9-8-1-9"
-       transform="matrix(-0.9999899,0,0,-0.9999899,957.73672,715.07538)">
+       transform="matrix(-0.9999899,0,0,-0.9999899,957.73672,775.07538)">
       <path
          style="fill:#404040;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          inkscape:connector-curvature="0"
@@ -208,7 +189,7 @@
     <g
        style="display:inline"
        id="g9344"
-       transform="matrix(0.95000346,0,0,0.8941324,-567.39881,-76.009085)">
+       transform="matrix(0.95000346,0,0,0.8941324,-567.39881,-16.009085)">
       <path
          transform="matrix(0.13320132,0,0,0.13320132,681.69,252.47326)"
          d="M 190.74074,174.5844 112.25512,195.05879 88.888886,272.73255 68.414495,194.24692 -9.2592677,170.88069 69.226359,150.4063 92.59259,72.732538 113.06698,151.21816 Z"
@@ -309,7 +290,7 @@
     <g
        style="display:inline"
        id="g25239"
-       transform="translate(-601.20323,-156.14436)">
+       transform="translate(-601.20323,-96.14436)">
       <rect
          transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"
          y="734.46027"
@@ -337,26 +318,32 @@
     </g>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="119.31179"
-       y="77.50901"
+       y="137.509"
        id="text6799"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan6801"
          x="119.31179"
-         y="77.50901">Light</tspan></text>
+         y="137.509">Light</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text6803"
-       y="127.2971"
+       y="187.29709"
        x="119.28523"
-       style="display:inline;font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="127.2971"
+         y="187.29709"
          x="119.28523"
          id="tspan6805"
          sodipodi:role="line">Dark</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4231"
+       d="m 24.878049,73.243902 780.000001,0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -366,11 +353,11 @@
     <text
        sodipodi:linespacing="125%"
        id="text8054"
-       y="76.757133"
+       y="136.75714"
        x="308.78546"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="76.757133"
+         y="136.75714"
          x="308.78546"
          id="tspan8056"
          sodipodi:role="line">Make variables light.</tspan></text>
@@ -378,43 +365,73 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="308.78546"
-       y="126.3812"
+       y="186.3812"
        id="text8060"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8062"
          x="308.78546"
-         y="126.3812">Make variables dark.</tspan></text>
+         y="186.3812">Make variables dark.</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text8064"
-       y="177.50902"
+       y="237.50902"
        x="309.53735"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="177.50902"
+         y="237.50902"
          x="309.53735"
          id="tspan8066"
          sodipodi:role="line">Try all possible combinations to find good variable</tspan><tspan
-         y="196.25902"
+         y="256.25903"
          x="309.53735"
          sodipodi:role="line"
-         id="tspan8068">settings; may be slow.</tspan></text>
+         id="tspan8068">colors; may be slow.</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="310.28925"
-       y="226.3812"
+       y="286.3812"
        id="text8070"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8072"
          x="310.28925"
-         y="226.3812">Try random combinations to find good variable</tspan><tspan
+         y="286.3812">Try random combinations to find good variable</tspan><tspan
          id="tspan8074"
          sodipodi:role="line"
          x="310.28925"
-         y="245.1312">settings; fast, but may miss the best combinations.</tspan></text>
+         y="305.1312">colors; fast, but may miss the best combinations.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:20px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="50.338299"
+       y="99.195312"
+       id="text22511"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan22513"
+         x="50.338299"
+         y="99.195312">Editors</tspan></text>
+    <text
+       sodipodi:linespacing="110%"
+       id="text4233"
+       y="27.241253"
+       x="38.429573"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         id="tspan4249"
+         y="27.241253"
+         x="38.429573"
+         sodipodi:role="line">To play, click and drag to use editors to change the color of variables.</tspan><tspan
+         y="43.741253"
+         x="38.429573"
+         sodipodi:role="line"
+         id="tspan4284">Your goal is to match the colors of as many constraints as possible to remove paradoxes</tspan><tspan
+         y="60.241253"
+         x="38.429573"
+         sodipodi:role="line"
+         id="tspan5658">and beat the target score!</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -425,21 +442,21 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="308.78546"
-       y="76.757133"
+       y="136.75714"
        id="text8086"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8088"
          x="308.78546"
-         y="76.757133">Make power plants emit light energy.</tspan></text>
+         y="136.75714">Make power plants emit light energy.</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text8090"
-       y="126.3812"
+       y="186.3812"
        x="308.78546"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="126.3812"
+         y="186.3812"
          x="308.78546"
          id="tspan8092"
          sodipodi:role="line">Make power plants emit dark energy.</tspan></text>
@@ -447,31 +464,61 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="309.53735"
-       y="177.50902"
+       y="237.50902"
        id="text8094"
        sodipodi:linespacing="125%"><tspan
          id="tspan8098"
          sodipodi:role="line"
          x="309.53735"
-         y="177.50902">Try all possible combinations to find the best type of energy</tspan><tspan
+         y="237.50902">Try all possible combinations to find the best type of energy</tspan><tspan
          sodipodi:role="line"
          x="309.53735"
-         y="196.25902"
+         y="256.25903"
          id="tspan8118">for each power plant to emit; may be slow.</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text8100"
-       y="226.3812"
+       y="286.3812"
        x="310.28925"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="226.3812"
+         y="286.3812"
          x="310.28925"
          sodipodi:role="line"
          id="tspan8104">Try random combinations to find good types of energy for each</tspan><tspan
-         y="245.1312"
+         y="305.1312"
          x="310.28925"
          sodipodi:role="line"
          id="tspan8122">power plant to emit; fast, but may miss the best combinations.</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4207"
+       y="99.195312"
+       x="50.338299"
+       style="font-style:normal;font-weight:normal;font-size:20px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="99.195312"
+         x="50.338299"
+         id="tspan4209"
+         sodipodi:role="line">Engineers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:110.00000238%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="38.429573"
+       y="27.241253"
+       id="text5639"
+       sodipodi:linespacing="110%"><tspan
+         sodipodi:role="line"
+         x="38.429573"
+         y="27.241253"
+         id="tspan5641">To play, click and drag to deploy engineers and change the energy type emitted from power plants.</tspan><tspan
+         id="tspan5643"
+         sodipodi:role="line"
+         x="38.429573"
+         y="43.741253">Your goal is to match the energy types of as many factories as possible to remove blackouts</tspan><tspan
+         sodipodi:role="line"
+         x="38.429573"
+         y="60.241253"
+         id="tspan5652">and beat the target score!</tspan></text>
   </g>
 </svg>
