@@ -208,7 +208,7 @@ package server
 				var date:Date = new Date();
 				logData["timestamp"] = date;
 				var unixTimestamp:String = date.valueOf().toString();
-				logData["UnixTimestamp"] = unixTimestamp;
+				logData["unix_timestamp"] = unixTimestamp;
 				logData["HitId"] = World.hitId;
 				logData["SeqNumber"] = seqNumber;
 				trace("LOG__________________________________________________________________", LoggingServerInterface.obj2str(logData));
