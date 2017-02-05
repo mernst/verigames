@@ -1,5 +1,6 @@
 package scenes.game.components
 {
+	import assets.StringTable;
 	import flash.display.StageDisplayState;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
@@ -212,10 +213,10 @@ package scenes.game.components
 			m_brushButtonGroup.y = 130;
 			m_brushButtonGroup.x = 65;
 			
-			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, "Make Wide") as NineSliceToggleButton;
-			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, "Make Narrow") as NineSliceToggleButton;
-			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
-			if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, "Optimize") as NineSliceToggleButton;
+			m_widenBrush = createPaintBrushButton(GridViewPanel.WIDEN_BRUSH, changeCurrentBrush, StringTable.lookup(StringTable.TOOLTIP_WIDE)) as NineSliceToggleButton;
+			m_narrowBrush = createPaintBrushButton(GridViewPanel.NARROW_BRUSH, changeCurrentBrush, StringTable.lookup(StringTable.TOOLTIP_NARROW)) as NineSliceToggleButton;
+			if (GameConfig.ENABLE_SOLVER1_BRUSH) m_solver1Brush = createPaintBrushButton(GridViewPanel.SOLVER1_BRUSH, changeCurrentBrush, StringTable.lookup(StringTable.TOOLTIP_SOLVER1)) as NineSliceToggleButton;
+			if (GameConfig.ENABLE_SOLVER2_BRUSH) m_solver2Brush = createPaintBrushButton(GridViewPanel.SOLVER2_BRUSH, changeCurrentBrush, StringTable.lookup(StringTable.TOOLTIP_SOLVER2)) as NineSliceToggleButton;
 
 			m_widenBrush.y = 0;
 			m_narrowBrush.y  = 30;
