@@ -294,14 +294,14 @@ package assets
 		public static function get PipeJamSpriteSheetAtlas():TextureAtlas
 		{
 			if (sPipeJamSpriteSheetAtlas == null)
-				sPipeJamSpriteSheetAtlas = getTextureAtlas("Game", "PipeJamSpriteSheetPNG" + PipeJam3.ASSET_SUFFIX, "PipeJamSpriteSheetXML" + PipeJam3.ASSET_SUFFIX);
+				sPipeJamSpriteSheetAtlas = getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			return sPipeJamSpriteSheetAtlas;
 		}
 		
 		public static function get ParadoxSpriteSheetAtlas():TextureAtlas
 		{
 			if (sParadoxSpriteSheetAtlas == null)
-				sParadoxSpriteSheetAtlas = getTextureAtlas("Game", "ParadoxSpriteSheetPNG" + PipeJam3.ASSET_SUFFIX, "ParadoxSpriteSheetXML" + PipeJam3.ASSET_SUFFIX);
+				sParadoxSpriteSheetAtlas = getTextureAtlas("Game", "ParadoxSpriteSheetPNG" + PipeJam3.ASSET_SUFFIX, "ParadoxSpriteSheetXML");
 			return sParadoxSpriteSheetAtlas;
 		}
 		

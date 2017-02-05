@@ -65,12 +65,6 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamSpriteSheetXML:Class;
 		
-		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheetTurk.png")]
-		public static const PipeJamSpriteSheetPNGTurk:Class;
-		
-		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheetTurk.xml", mimeType = "application/octet-stream")]
-		public static const PipeJamSpriteSheetXMLTurk:Class;
-		
 		[Embed(source = "../../lib/assets/atlases/DialogWindow.png")]
 		public static const DialogWindowPNG:Class;
 		
@@ -92,15 +86,15 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheet.png")]
 		public static const ParadoxSpriteSheetPNG:Class;
 		
-		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheet.xml", mimeType = "application/octet-stream")]
-		public static const ParadoxSpriteSheetXML:Class;
+		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheetPowerPlant.png")]
+		public static const ParadoxSpriteSheetPNGPowerPlant:Class;
 		
 		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheetTurk.png")]
 		public static const ParadoxSpriteSheetPNGTurk:Class;
 		
-		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheetTurk.xml", mimeType = "application/octet-stream")]
-		public static const ParadoxSpriteSheetXMLTurk:Class;
-		
+		[Embed(source = "../../lib/assets/atlases/ParadoxSpriteSheet.xml", mimeType = "application/octet-stream")]
+		public static const ParadoxSpriteSheetXML:Class;
+				
 		[Embed(source="../../lib/assets/Backgrounds/ParadoxBackground.jpg")]
 		public static const ParadoxBackgroundClass:Class;
 		
@@ -109,6 +103,9 @@ package assets
 		
 		[Embed(source="../../lib/assets/splash/ConstraintRules.png")]
 		public static const ConstraintsSplashClass:Class;
+		
+		[Embed(source="../../lib/assets/splash/ConstraintRulesPowerPlant.png")]
+		public static const ConstraintsSplashClassPowerPlant:Class;
 		
 		[Embed(source="../../lib/assets/splash/ConstraintRulesTurk.png")]
 		public static const ConstraintsSplashClassTurk:Class;
@@ -125,15 +122,12 @@ package assets
 		[Embed(source="../../lib/assets/splash/GameHelp.png")]
 		public static const GameHelpSplashClass:Class;
 		
+		[Embed(source="../../lib/assets/splash/GameHelpPowerPlant.png")]
+		public static const GameHelpSplashClassPowerPlant:Class;
+		
 		[Embed(source="../../lib/assets/splash/GameHelpTurk.png")]
 		public static const GameHelpSplashClassTurk:Class;
 		
-		[Embed(source="../../lib/assets/splash/GameHelpPointer.png")]
-		public static const GameHelpPointerClass:Class;
-		
-		[Embed(source="../../lib/assets/splash/GameHelpPointerTurk.png")]
-		public static const GameHelpPointerClassTurk:Class;
-
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]

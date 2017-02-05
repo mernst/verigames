@@ -55,7 +55,7 @@ package
 		/** At most one of these two should be true. They can both be false. */
 		public static const RELEASE_BUILD:Boolean = false;
 		public static const TUTORIAL_DEMO:Boolean = false;
-		public static const ASSET_SUFFIX:String = ""; // specify "Turk" to change atlases to turk
+		public static var ASSET_SUFFIX:String = ""; // specify "Turk" to change atlases to turk
 		
 		//if release build is true, true if using production machine db/info, false if using staging
 		public static const PRODUCTION_BUILD:Boolean = true;
@@ -118,7 +118,13 @@ package
 		{
 			// for now, initialize string table here
 			if (GameConfig.IS_MTURK) {
-				GameConfig.IS_ORIGINAL?StringTable.setInstance(new StringTableMTurk):StringTable.setInstance(new StringTablePowerPlant);
+				if (GameConfig.GAME_METAPHOR == GameConfig.ORIGINAL_METAPHOR) {
+					StringTable.setInstance(new StringTableMTurk);
+					ASSET_SUFFIX = "";
+				} else {
+					StringTable.setInstance(new StringTablePowerPlant);
+					ASSET_SUFFIX = "PowerPlant";
+				}
 			} else {
 				StringTable.setInstance(new StringTableBase);
 			}

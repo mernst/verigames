@@ -1530,29 +1530,6 @@ package scenes.game.display
 			m_splashLayer.addChild(buble);
 			addChild(m_splashLayer);
 			
-			/*
-			// Add the splash - Pointer on the screen
-			var splash:Image = new Image(AssetInterface.getTexture("Game", "GameHelpPointerClass" + PipeJam3.ASSET_SUFFIX));
-			
-			if (splash)
-			{
-				if (!m_splashLayer) {
-					m_splashLayer = new Sprite();
-					m_splashLayer.addEventListener(TouchEvent.TOUCH, onTouchSplashScreen);
-				} else {
-					m_splashLayer.removeChildren(0, -1, true);
-				}
-
-				splash.x = Constants.GameWidth - 175;
-				splash.y = Constants.GameHeight - 55;
-				var splashText:TextFieldWrapper = TextFactory.getInstance().createDefaultTextField("Click this button to see the help screen again!", Constants.GameWidth, 14, 14, Constants.BROWN);
-				splashText.y = Constants.GameHeight - 72;
-				m_splashLayer.addChild(splash);
-				m_splashLayer.addChild(splashText);
-				addChild(m_splashLayer);
-			}
-			*/
-			
 			// Add the timer and start it, reset the value of showHelpButtonIndicator so that we don't show this pointer again.
 			HelpButtonIndicatorTimer = new Timer(1000, HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS);
 			HelpButtonIndicatorTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onHelpTextWaittimeComplete);

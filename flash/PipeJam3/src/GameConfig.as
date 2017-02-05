@@ -7,10 +7,9 @@ package
 		
 		public static const IS_MTURK:Boolean = (CONFIG == CONFIG_MTURK);
 		
+		/** Metaphor that is used in the game*/
 		public static const ORIGINAL_METAPHOR:uint = 0;
 		public static const POWERPLANT_METAPHOR:uint = 1;
-		public static const IS_ORIGINAL:Boolean = GAME_METAPHOR == ORIGINAL_METAPHOR;
-		/** Metaphor that is used in the game*/
 		public static const GAME_METAPHOR:uint = ORIGINAL_METAPHOR;		
 		
 		/** which solver brushes to be enabled */
