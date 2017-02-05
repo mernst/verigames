@@ -47,6 +47,8 @@ package scenes.game.components
 	
 	import utils.XSprite;
 	
+	import networking.TutorialController;
+	
 	public class SideControlPanel extends BaseComponent
 	{
 		protected var WIDTH:Number;
@@ -463,7 +465,10 @@ package scenes.game.components
 			var maxConflicts:int = level.maxScore;
 			trace("LEVEL NAME::::::::::::::::::::::::::::::", level.level_name);
 			
-			TextFactory.getInstance().updateText(m_levelNameTextField, level.level_name);
+			if(TutorialController.tutorialsDone)
+				TextFactory.getInstance().updateText(m_levelNameTextField, level.m_levelFileName);
+			else
+				TextFactory.getInstance().updateText(m_levelNameTextField, level.level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextField, 0, 1);
 			
 			if (level.level_name == "Reach out" || level.level_name == "Welcome" || level.level_name == "Know your limits" ) {
