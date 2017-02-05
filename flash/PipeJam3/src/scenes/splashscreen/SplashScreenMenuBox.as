@@ -200,7 +200,16 @@ package scenes.splashscreen
 					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
 					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
-					dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
+					var displayMode:String;
+					if (World.LevelDisplayMode == 1)
+						displayMode = "Random Order";
+					else if (World.LevelDisplayMode == 2)
+						displayMode = "Rating Order";
+					else
+						displayMode = "Increasing Order";
+					dataLog["LevelDisplayMode"] = displayMode;
+					//dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
+					dataLog["PlayerRating"] = World.player.getRating();
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------
