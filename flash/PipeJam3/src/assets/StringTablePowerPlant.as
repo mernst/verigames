@@ -9,7 +9,7 @@ package assets
 				
 				
 				
-				case INTRO_VARIABLES: return "Power plants can emit different types of energy: light and dark.\nClick and drag to select power plants.\nRelease the mouse to deploy engineers.";
+				case INTRO_VARIABLES: return "Power plants can emit different types of energy: light and dark.\nClick and drag to select power plants.\nRelease the mouse to deploy engineers to change them.";
 				case SELECTOR_UNLOCKED: return "New engineer type\nunlocked! Change\nengineer type by\nclicking on one\nof the engineer\n    previews -->"
 				case ELIMINATE_PARADOX: return "Eliminate as many blackouts as you can!";
 				case INTRO_SOLVER1_BRUSH:return "New engineer type unlocked! The star engineer will automatically adjust the\nselected power plants to reduce the overall number of blackouts.";
