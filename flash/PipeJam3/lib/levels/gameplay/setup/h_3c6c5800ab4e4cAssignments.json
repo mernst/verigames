@@ -174,172 +174,22 @@
     "var:150": {
       "type_value": "type:1"
     },
-    "var:151": {
-      "type_value": "type:0"
-    },
-    "var:152": {
-      "type_value": "type:1"
-    },
-    "var:153": {
-      "type_value": "type:0"
-    },
-    "var:154": {
-      "type_value": "type:1"
-    },
-    "var:155": {
-      "type_value": "type:0"
-    },
-    "var:156": {
-      "type_value": "type:1"
-    },
-    "var:157": {
-      "type_value": "type:0"
-    },
-    "var:158": {
-      "type_value": "type:1"
-    },
-    "var:159": {
-      "type_value": "type:0"
-    },
     "var:16": {
       "type_value": "type:1"
     },
-    "var:160": {
-      "type_value": "type:1"
-    },
-    "var:161": {
-      "type_value": "type:0"
-    },
-    "var:162": {
-      "type_value": "type:1"
-    },
-    "var:163": {
-      "type_value": "type:0"
-    },
-    "var:164": {
-      "type_value": "type:1"
-    },
-    "var:165": {
-      "type_value": "type:0"
-    },
-    "var:166": {
-      "type_value": "type:1"
-    },
-    "var:167": {
-      "type_value": "type:0"
-    },
-    "var:168": {
-      "type_value": "type:1"
-    },
-    "var:169": {
-      "type_value": "type:0"
-    },
     "var:17": {
-      "type_value": "type:0"
-    },
-    "var:170": {
-      "type_value": "type:1"
-    },
-    "var:171": {
-      "type_value": "type:0"
-    },
-    "var:172": {
-      "type_value": "type:1"
-    },
-    "var:173": {
-      "type_value": "type:0"
-    },
-    "var:174": {
-      "type_value": "type:1"
-    },
-    "var:175": {
-      "type_value": "type:0"
-    },
-    "var:176": {
-      "type_value": "type:1"
-    },
-    "var:177": {
-      "type_value": "type:0"
-    },
-    "var:178": {
-      "type_value": "type:1"
-    },
-    "var:179": {
       "type_value": "type:0"
     },
     "var:18": {
       "type_value": "type:1"
     },
-    "var:180": {
-      "type_value": "type:1"
-    },
-    "var:181": {
-      "type_value": "type:0"
-    },
-    "var:182": {
-      "type_value": "type:1"
-    },
-    "var:183": {
-      "type_value": "type:0"
-    },
-    "var:184": {
-      "type_value": "type:1"
-    },
-    "var:185": {
-      "type_value": "type:0"
-    },
-    "var:186": {
-      "type_value": "type:1"
-    },
-    "var:187": {
-      "type_value": "type:0"
-    },
-    "var:188": {
-      "type_value": "type:1"
-    },
-    "var:189": {
-      "type_value": "type:0"
-    },
     "var:19": {
-      "type_value": "type:0"
-    },
-    "var:190": {
-      "type_value": "type:1"
-    },
-    "var:191": {
-      "type_value": "type:0"
-    },
-    "var:192": {
-      "type_value": "type:1"
-    },
-    "var:193": {
-      "type_value": "type:0"
-    },
-    "var:194": {
-      "type_value": "type:1"
-    },
-    "var:195": {
-      "type_value": "type:0"
-    },
-    "var:196": {
-      "type_value": "type:1"
-    },
-    "var:197": {
-      "type_value": "type:0"
-    },
-    "var:198": {
-      "type_value": "type:1"
-    },
-    "var:199": {
       "type_value": "type:0"
     },
     "var:2": {
       "type_value": "type:1"
     },
     "var:20": {
-      "type_value": "type:1"
-    },
-    "var:200": {
       "type_value": "type:1"
     },
     "var:21": {
@@ -601,5 +451,5 @@
       "type_value": "type:0"
     }
   },
-  "id": "5e0289baaf28f71f822e3ba81f385244"
+  "id": "3c6c5800ab4e4c63e32e80f2bab7bc51"
 }
