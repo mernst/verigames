@@ -10,7 +10,7 @@ package
 		/** Metaphor that is used in the game*/
 		public static const ORIGINAL_METAPHOR:uint = 0;
 		public static const POWERPLANT_METAPHOR:uint = 1;
-		public static const GAME_METAPHOR:uint = POWERPLANT_METAPHOR;		
+		public static const GAME_METAPHOR:uint = POWERPLANT_METAPHOR;
 		
 		/** which solver brushes to be enabled */
 		public static const ENABLE_SOLVER1_BRUSH:Boolean          = true;
