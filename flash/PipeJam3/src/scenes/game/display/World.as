@@ -97,6 +97,15 @@ package scenes.game.display
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		
+		public var chosenLevels:Vector.<String> = new Vector.<String>();
+			
+		public static var hasBeenSeen:Dictionary = new Dictionary();
+		
+		public static var player:GlickoPlayer = new GlickoPlayer(1500);
+		trace("INIT player.rating: " + player.rating);
+		trace("INIT player.getRating: " + player.getRating());
+		trace("INIT player.getInternalRating: " + player.getInternalRating());
+		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
 		
@@ -183,18 +192,15 @@ package scenes.game.display
 		static public var workerId:String = "";
 		static public var hitId:String = "";
 		
-		// When displaying the challenge levels, levels can be given in random order of difficulty level
-		//  or we can give them levels with increasing order of difficulty level.
-		// This value can be seen/changed at any point of the game and will affect the game-play.
 		// 1 -> Random Order
-		// 2 -> Increasing order of difficulty
-		static public var LevelDisplayMode:Number = 1;
+		// 2 -> Rating Order
+		// 3 -> Strictly increasing rating order
+		static public var LevelDisplayMode:Number = 3;
 		
 		static private var CurrentIncreasingDifficultyLevel:int = 0;
 		
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
 		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 5;
-		
 		
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -211,7 +217,8 @@ package scenes.game.display
 		
 		
 		private function LoadAllLevels(): void {
-			if(LevelDisplayMode == 2)
+			trace("INSIDE LOAD ALL LEVELS...");
+			if(LevelDisplayMode == 3)
 				m_currentLevelNumber = 0;
 				
 			undoStack = new Vector.<UndoEvent>();
@@ -231,6 +238,8 @@ package scenes.game.display
 				var levelObj:Object = allLevels[level_index];
 				var levelId:String = levelObj["id"];
 				var levelDisplayName:String = levelId;
+				var levelFileName:String = levelObj["file"];
+				trace("Level file name: " + levelFileName);
 				if (levelObj.hasOwnProperty("display_name") && !(PipeJam3.ASSET_SUFFIX == "Turk")) levelDisplayName = levelObj["display_name"];
 				var levelLayoutObj:Object = findLevelFile(levelId, m_layoutObj);
 				var levelAssignmentsObj:Object = findLevelFile(levelId, m_assignmentsObj);
@@ -247,8 +256,9 @@ package scenes.game.display
 				var levelGraph:ConstraintGraph = m_worldGraphDict[levelObj["id"]] as ConstraintGraph;
 
 				
-				var my_level:Level = new Level(levelDisplayName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
+				var my_level:Level = new Level(levelDisplayName, levelFileName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
+				hasBeenSeen[levelFileName] = false;
 				
 				if (!firstLevel) {
 					firstLevel = my_level; //grab first one..
@@ -259,17 +269,40 @@ package scenes.game.display
 			if (!PipeJamGameScene.inTutorial){
 				remainingTotalLevels = levels.length - 1;	
 				
+				/* Sort levels in increasing order of nodes
+				 
 				trace('Sorting all Levels based on LevelGraph.nVars');
 				//allLevels.sort(Level.SortLevels);
 				levels.sort(Level.SortLevels);
+				*/
 				
+				if (World.LevelDisplayMode == 2)
+				{
+					trace("PLAYER's RATING: " + player.getRating());
+					firstLevelNumber = getNextLevelIndex(player.getRating());
+				}
+				else if (World.LevelDisplayMode == 3)
+				{
+					levels.sort(Level.SortLevelsByRating);
+				}
+				trace(firstLevelNumber + "\t" + levels[firstLevelNumber].m_levelFileName);
+				
+				//for (var j:int = 0; j < levels.length; ++j)
+				//	trace('nVars:' + levels[j].levelGraph.nVars);
+				
+				/*
+				trace("Sorted Rating Order: ");
 				for (var j:int = 0; j < levels.length; ++j)
-					trace('nVars:' + levels[j].levelGraph.nVars);
-				
+					trace(levels[j].m_levelFileName) 
+				*/
+					
 				if (World.LevelDisplayMode == 1)				
 					firstLevelNumber = randomLevelNumber(levels.length);
 				
 				firstLevel = levels[firstLevelNumber];
+				trace("INIT level.rating: " + firstLevel.m_player.rating);
+				trace("INIT level.getRating: " + firstLevel.m_player.getRating());
+				trace("INIT level.getInternalRating: " + firstLevel.m_player.getInternalRating());
 			}
 			
 			levelNumberArray = new Array();
@@ -284,6 +317,119 @@ package scenes.game.display
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 			
+			trace("EXITING LOAD ALL LEVELS...");
+			
+		}
+		
+		public function getNextLevelIndex(playerRating:Number):int
+		{
+			trace("Inside gnli: " + playerRating);
+			var probs:Dictionary = computeProbabilities(playerRating);
+			/*
+			trace("PROBS: ");
+			for (var key:String in probs)
+			{
+				trace(key + "\t" + probs[key]);
+			}
+			*/
+			/*
+			for (var i:int = 1000; i <= 2500; i += 100)
+			{
+				trace("Win Rate: " + i + "\t" + getAltWinRateFromRating(i));
+			}
+			*/
+			var desiredWinRate:Number = getAltWinRateFromRating(playerRating);
+			//var chosenLevels:Vector.<String> = getLevels(probs, desiredWinRate);
+			getLevels(probs, desiredWinRate);
+			trace("Chosen Levels: " + chosenLevels);
+			
+			var selectedLevel:String = chosenLevels[Math.round(Math.random() * (chosenLevels.length - 1))];
+			trace("Selected Level: " + selectedLevel);
+			hasBeenSeen[selectedLevel] = true;
+			
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if (levels[i].m_levelFileName == selectedLevel)
+					return i;
+			}
+			
+			return 0;
+		}
+		
+		public function getLevels(probs:Dictionary, winRate:Number):void //Vector.<String>
+		{
+			trace("Inside getLevels...");
+			trace("Remaining Total Levels: " + remainingTotalLevels);
+			var delta:Number = 0.05;
+			chosenLevels.length = 0;
+			while (chosenLevels.length == 0)
+			{
+				for (var level:String in probs)
+				{
+					var prob:Number = probs[level];
+					//trace(level + "\t" + prob  + "\tSeen: " + hasBeenSeen[level]);
+					if (prob >= (winRate - delta) && prob <= (winRate + delta) && !hasBeenSeen[level])
+					{
+						chosenLevels.push(level);
+					}
+				}
+				delta += 0.05;
+				trace("\nWin Rate: " + winRate + "\tDelta: " + delta);
+			}
+			//return chosenLevels;
+		}
+		
+		public function computeProbabilities(playerRating:Number):Dictionary
+		{
+			var probs:Dictionary = new Dictionary();
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				var level:Level = levels[i];
+				var levelRating:Number = level.m_levelRating;
+				var WE:Number = getWinningExpectancy(playerRating, levelRating);
+				probs[level.m_levelFileName] = WE;
+			}
+			return probs;
+		}
+		
+		public function getWinningExpectancy(p1:Number, p2:Number):Number
+		{
+			return (1.0 / (1 + Math.pow(10, ( -(p1 - p2) / 400))));
+		}
+		
+		public function getWinRateFromRating(rating:Number):Number
+		{
+			var delta:Number = rating - 1500.0;
+			var winRate:Number = 0.9;
+			if (delta == 0.0)
+				return winRate;
+			if (delta >= 0.0)
+				return Math.max(0.0, winRate - (delta / 1000.0));
+			return Math.min(1.0, winRate + (0.02 * -(delta / 100.0)));
+		}
+		
+		public function getAltWinRateFromRating(rating:Number):Number
+		{
+			 var delta:Number = rating - 1900.0;
+			 var k:Number = 0.005;
+			 var winRate:Number = 1.0 - (1 / (1.0 + Math.pow(Math.E, ( -k * delta))));
+			return winRate;
+		}
+		
+		public function updateRatings(playerRating:Number, playerRD:Number, levelRating:Number, levelRD:Number, playerScore:int):void
+		{
+			trace("INSIDE UPDATE RATINGS...");
+			var levelScore:int = 1 - playerScore;
+			var currentLevel:Level = levels[m_currentLevelNumber];
+			trace("Old Ratings: ");
+			trace("Player: " + playerRating + "\tScore: " + playerScore); 
+			trace("Level: " + currentLevel.m_levelFileName + "\tRating: " + levelRating + "\tScore: " + levelScore);
+			player.updatePlayer(levelRating, levelRD, playerScore);
+			currentLevel.m_player.updatePlayer(playerRating, playerRD, levelScore);
+			trace("New Ratings: ");
+			trace("Player: " + player.getRating() + "\tScore: " + playerScore); 
+			currentLevel.m_levelRating = currentLevel.m_player.getRating();
+			trace("Level: " + currentLevel.m_levelFileName + "\tRating: " + currentLevel.m_player.getRating() + "\tScore: " + levelScore);
 		}
 		
 		public static function setWorkerId(newWorkerId:String, hitId:String):void {
@@ -300,8 +446,11 @@ package scenes.game.display
 				md5.update(raw);
 				playerID = md5.complete();
 
-				// Set weather the levels are shown in random or increasing order based on the LSB of the playerID.
-				World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
+				// Set whether the levels are shown in random, rating or increasing order based on the LSB of the playerID.
+				var mode:int = playerID.charAt(playerID.length - 1).charCodeAt(0) % 3;
+				World.LevelDisplayMode = mode+1;
+				
+				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
 			} catch (err:Error) {
 				var errLog:Object = new Object();
 				errLog["playerID"] = playerID;
@@ -319,7 +468,14 @@ package scenes.game.display
 			initLog["workerId"] = workerId;
 			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
-			initLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
+			var displayMode:String;
+			if (World.LevelDisplayMode == 1)
+				displayMode = "Random Order";
+			else if (World.LevelDisplayMode == 2)
+				displayMode = "Rating Order";
+			else
+				displayMode = "Increasing Order";
+			initLog["LevelDisplayMode"] = displayMode;
 			NULogging.log(initLog);
 			
 			// Begin a new session here..
@@ -329,7 +485,8 @@ package scenes.game.display
 			o["workerId"] = workerId;
 			o["hitId"] = hitId;
 			o["actionTaken"] = "Set WorkerId";
-			o["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Increasing Size";
+			//o["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
+			o["LevelDisplayMode"] = displayMode;
 			NULogging.sessionBegin(o);
 		}
 		
@@ -341,8 +498,6 @@ package scenes.game.display
 			trace("=============> No External Interface available <=============");
 		
 		public static function initPlayerVars():void {
-			
-			
 			
 			playerID = UIDUtil.createUID();
 			trace("PLAYERid$$", playerID);
@@ -371,6 +526,10 @@ package scenes.game.display
 			initLog["actionTaken"] = "Session start";
 			//initLog["HitId"] = World.hitId;
 			NULogging.log(initLog);
+			
+			//Set initial rating of the player to default Glicko2 rating of 1500
+			player.setRating(1500.0);
+			trace("Initial player rating: " + player.getRating());
 			
 		}
 		
@@ -1010,6 +1169,7 @@ package scenes.game.display
 							var dataLog:Object = new Object();
 							dataLog["PlayerID"] = playerID;
 							dataLog["levelName"] = active_level.level_name;
+							dataLog["levelFile"] = active_level.m_levelFileName;
 							dataLog["actionTaken"] = "Target Reached";
 							dataLog["targetReachTime"] = levelTimer.currentCount;
 							//dataLog["HitId"] = World.hitId;
@@ -1018,6 +1178,7 @@ package scenes.game.display
 							var o:Object = new Object();
 							o["PlayerID"] = playerID;
 							o["levelName"] = active_level.level_name;
+							o["levelFile"] = active_level.m_levelFileName;
 							o["actionTaken"] = "Target Reached";
 							o["targetReachTime"] = levelTimer.currentCount;
 							NULogging.action(o, NULogging.ACTION_TYPE_TARGET_SCORE_REACHED);
@@ -1132,6 +1293,9 @@ package scenes.game.display
 							{	
 								trace("TUTORIALS OVER ++++++");
 								TutorialController.tutorialsDone = true;
+								trace("PLAYER RATING: " + player.getRating());
+								player.setRating(1500);
+								trace("PLAYER RATING AFTER SET: " + player.getRating());
 								onShowGameMenuEvent();
 							}
 					return;
@@ -1144,6 +1308,9 @@ package scenes.game.display
 						{
 							trace("TUTORIALS OVER ++++++");
 							TutorialController.tutorialsDone = true;
+							trace("PLAYER RATING: " + player.getRating());
+							player.setRating(1500);
+							trace("PLAYER RATING AFTER SET: " + player.getRating());
 							onShowGameMenuEvent();
 						}
 					return;
@@ -1198,7 +1365,12 @@ package scenes.game.display
 					// Pick the next one
 					else if (LevelDisplayMode == 2)
 					{
-						trace('Increasing difficulty, picking ' + (m_currentLevelNumber + 1) + ' level.');
+						//trace('Rating order picking ' + (m_currentLevelNumber + 1) + ' level.');
+						//m_currentLevelNumber++;
+						m_currentLevelNumber = getNextLevelIndex(player.getRating());
+					}
+					else if (LevelDisplayMode == 3)
+					{
 						m_currentLevelNumber++;
 					}
 					
@@ -1399,6 +1571,12 @@ package scenes.game.display
 			
 			trace("Selectin a new level");
 			currentLevelName = newLevel.level_name;
+			
+			if(TutorialController.tutorialsDone && GameConfig.ENABLE_DEBUG_DISPLAY)
+			{ 
+			  edgeSetGraphViewPanel.displayRatings(newLevel.m_levelFileName, newLevel.m_player.getRating());
+			  edgeSetGraphViewPanel.displayMode(World.LevelDisplayMode);
+			}
 			
 			var o:Object = new Object();
 			o["levelName"] = levels[m_currentLevelNumber].level_name;
@@ -1623,7 +1801,7 @@ package scenes.game.display
 			dataLoad["actionTaken"] = "New Level";
 			dataLoad["playerID"] = playerID;
 			dataLoad["levelName"] = active_level.level_name;
-			
+			dataLoad["levelFile"] = active_level.m_levelFileName;
 			NULogging.log(dataLoad);
 			//-----------------------------------------------------------------
 			
@@ -1631,6 +1809,7 @@ package scenes.game.display
 			o["actionTaken"] = "New Level";
 			o["playerID"] = playerID;
 			o["levelName"] = active_level.level_name;
+			o["levelFile"] = active_level.m_levelFileName;
 			NULogging.action(o, NULogging.ACTION_TYPE_NEW_LEVEL_LOADED);
 			
 			
