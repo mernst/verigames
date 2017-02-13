@@ -9,6 +9,7 @@ package scenes.game.display
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import mx.utils.OrderedObject;
 	
 	import assets.AssetInterface;
 	
@@ -104,6 +105,7 @@ package scenes.game.display
 		protected var m_levelLayoutObj:Object;
 		public var levelObj:Object;
 		public var m_levelLayoutName:String;
+		public var m_levelFileName:String;
 		public var m_levelQID:String;
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutObjWrapper:Object;
@@ -154,6 +156,7 @@ package scenes.game.display
 		private var m_groupGrids:Vector.<GroupGrid>
 		private var m_totalVariables:int = 0;
 		private static const ITEMS_PER_FRAME:uint = 300; // limit on nodes/edges to remove/add per frame
+		public var m_hasBeenSeen:Boolean = false;
 		
 		static public var CONFLICT_CONSTRAINT_VALUE:Number = 10.0;
 		static public var FIXED_CONSTRAINT_VALUE:Number = 1000.0;
@@ -173,6 +176,10 @@ package scenes.game.display
 		
 		public static var numNodesOnScreen:int = 0;
 		
+		public var m_levelRating:Number;
+		public var m_player:GlickoPlayer;
+		public static var levelRatings:Dictionary = new Dictionary();
+		
 		/**
 		 * Level contains widgets, links for entire input level constraint graph
 		 * @param	_name Name to display
@@ -183,7 +190,13 @@ package scenes.game.display
 		 * @param	_targetScore Score needed to complete level
 		 * @param	_originalLevelName Level name from PL group
 		 */
-		public function Level(_name:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
+		
+		 {
+			//Init level ratings using levels generated from previous MTurk trial
+			loadLevelRatings();
+		 }
+		 
+		public function Level(_name:String, _fileName:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
@@ -198,6 +211,11 @@ package scenes.game.display
 			m_levelBestScoreAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			m_levelOriginalAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
 			m_levelAssignmentsObj = _levelAssignmentsObj;// XObject.clone(_levelAssignmentsObj);
+			m_levelFileName = _fileName;
+			m_levelRating = levelRatings[m_levelFileName];
+			m_player = new GlickoPlayer(m_levelRating);
+			
+			trace("File Name: " + _fileName + "\tRating: " + m_levelRating);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
 			if (m_tutorialTag != null) {
@@ -250,6 +268,40 @@ package scenes.game.display
 			
 			NodeSkin.InitializeSkins();
 			m_recentlySolved = false;
+			
+		}
+		
+		public static function loadLevelRatings():void
+		{
+			
+			/* Level ratings */
+				[Embed(source = "../../../../lib/levels/gameplay/levelRatings.json", mimeType = "application/octet-stream")]
+				const levelRatingsClass:Class;
+				const levelRatingsJson:String = new levelRatingsClass();
+				const levelRatingsObj:Object = JSON.parse(levelRatingsJson);
+				trace("Level Ratings Obj: " + levelRatingsObj);
+				trace("LevelRatings String: " + levelRatingsJson);
+				for (var key:String in levelRatingsObj)
+				{
+					//trace("Name: " + key + " Value: " + levelRatingsObj[key]);
+					levelRatings[key] = levelRatingsObj[key];
+				}
+				
+				for (key in levelRatings)
+				{
+					trace(key + ": " + levelRatings[key]);
+				}
+			
+		}
+		
+		public static function SortLevelsByRating(a:Object, b:Object):int
+		{
+			var levelNameA:String = Level(a).m_levelFileName;
+			var levelNameB:String = Level(b).m_levelFileName;
+			trace("A: " + levelNameA + "\tB: " + levelNameB);
+			var levelRatingA:Number = levelRatings[levelNameA];
+			var levelRatingB:Number = levelRatings[levelNameB];
+			return levelRatingA < levelRatingB ? -1 : (levelRatingB < levelRatingA ? 1 : 0);
 		}
 		
 		
@@ -1546,8 +1598,7 @@ package scenes.game.display
 			newSelectedVars = new Vector.<Node>;
 			newSelectedClauses = new Dictionary;
 			m_inSolver = true;
-			
-			
+						
 			if (PipeJam3.logging)
 			{
 				var details:Object = new Object();
@@ -1592,6 +1643,7 @@ package scenes.game.display
 				if (World.currentBrush == "BrushDiamond") {
 					World.movesBrushDiamond += 1;
 				}
+				
 				
 				trace("---->" + World.currentBrush + "<------");
 				

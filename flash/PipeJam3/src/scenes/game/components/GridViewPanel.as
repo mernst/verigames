@@ -98,6 +98,7 @@ package scenes.game.components
 		private var endingMoveMode:Boolean;
 		private var continueButton:NineSliceButton;
 		private var skipButton:NineSliceButton;
+		private var forfeitButton:NineSliceButton;
 		private var passButton:NineSliceButton;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
@@ -108,6 +109,9 @@ package scenes.game.components
 		private var m_edgeLayoutQueue:Vector.<Object> = new Vector.<Object>();
 		
 		public var m_nameText:TextFieldWrapper;
+		public var m_playerRatingText:TextFieldWrapper;
+		public var m_levelRatingText:TextFieldWrapper;
+		public var m_modeText:TextFieldWrapper;
 		
 		private var m_tutorialTextLayer:Sprite = new Sprite();
 		private var m_hintLayer:Sprite = new Sprite();
@@ -281,6 +285,7 @@ package scenes.game.components
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
+		
 		private function onAddedToStage():void
 		{
 			trace("=========ON ADDED TO STAGE CALLED===========");
@@ -317,7 +322,6 @@ package scenes.game.components
 				startGameTimer();
 				displayPassButton();
 			}
-			
 			
 				
 			
@@ -669,7 +673,6 @@ package scenes.game.components
 		{
 			m_startingTouchPoint = new Point(content.x, content.y);
 			setMode(MODE_MOVING);
-			
 			var o:Object = new Object();
 			o["action_taken"] = "Beginning Move Mode";
 			NULogging.action(o, NULogging.ACTION_TYPE_MOUSE_CLICKED);
@@ -794,6 +797,10 @@ package scenes.game.components
 						checkPaintBrushVisibility();
 					}
 				}
+				if (TutorialController.tutorialsDone && !World.m_world.active_level.targetScoreReached)
+				{
+					displayForfeitButton();
+				}
 			}
 			
 			// see if the mouse has moved
@@ -813,6 +820,8 @@ package scenes.game.components
 				movePaintBrush(location);
 				checkPaintBrushVisibility();
 			}
+			
+			
 		}
 
 		private function onMouseWheel(evt:MouseEvent):void
@@ -1486,6 +1495,59 @@ package scenes.game.components
 			m_buttonLayer.addChild(skipButton);
 		}
 		
+		public function displayForfeitButton():void
+		{	
+			if (!forfeitButton)
+			{
+				forfeitButton = ButtonFactory.getInstance().createDefaultButton("Forfeit Level", m_buttonWidth, m_buttonHeight);
+				forfeitButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
+				//skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
+				forfeitButton.x = m_buttonBufferValue ;
+				forfeitButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
+			}
+			m_buttonLayer.addChild(forfeitButton);
+		}
+		
+		public function displayRatings(levelName:String, levelRating:Number):void
+		{
+			m_buttonLayer.removeChild(m_playerRatingText);
+			m_buttonLayer.removeChild(m_levelRatingText);
+			var pr:Number = World.player.getRating();
+			var lr:Number = int(levelRating * 100) / 100;
+			pr = int(pr * 100) / 100;
+			m_playerRatingText = TextFactory.getInstance().createTextField("Your Rating: " + pr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0x660000, true);
+			m_playerRatingText.touchable = false;
+			m_playerRatingText.x = m_buttonBufferValue;
+			m_playerRatingText.y = 5;
+			TextFactory.getInstance().updateAlign(m_playerRatingText, 0, 1);
+			m_buttonLayer.addChild(m_playerRatingText);
+			
+			m_levelRatingText = TextFactory.getInstance().createTextField("Level Rating: " + lr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0x660000, true);
+			m_levelRatingText.touchable = false;
+			m_levelRatingText.x = m_buttonBufferValue;
+			m_levelRatingText.y = 20;
+			TextFactory.getInstance().updateAlign(m_levelRatingText, 0, 1);
+			m_buttonLayer.addChild(m_levelRatingText);
+		}
+		
+		public function displayMode(mode:int):void
+		{
+			var modeText:String;
+			if (mode == 1)
+				modeText = "Random Order";
+			else if (mode == 2)
+				modeText = "Rating Order";
+			else
+				modeText = "Increasing Order";
+			m_buttonLayer.removeChild(m_modeText);
+			m_modeText = TextFactory.getInstance().createTextField("Mode: " + modeText, AssetsFont.FONT_UBUNTU, 100, 25, 10, 0x660000, true);
+			m_modeText.touchable = false;
+			m_modeText.x = m_buttonBufferValue;
+			m_modeText.y = 35;
+			TextFactory.getInstance().updateAlign(m_modeText, 0, 1);
+			m_buttonLayer.addChild(m_modeText);
+		}
+		
 		
 		public function startGameTimer():void
 		{
@@ -1691,7 +1753,12 @@ package scenes.game.components
 		private var buttonHit:Boolean = false;
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
+			trace("Inside onNextLevel...");
 			//m_skipCount = 0;
+			
+			if(TutorialController.tutorialsDone)
+				forfeitButton.removeFromParent();
+				
 			buttonHit = true;
 			trace("Next level button is triggered");		
 			
@@ -1706,6 +1773,7 @@ package scenes.game.components
 			var details:Object = new Object();
 			details["playerID"] = World.playerID;
 			details["levelName"] = World.targetReachedLevelName;
+			//details["levelFile"] = 
 			details["actionTaken"] = "LevelComplete";
 			details["movesPerLevel"] = World.movesPerLevel;
 			details["percentBrushCircle"] = String((World.movesBrushCircle/World.movesPerLevel)*100);
@@ -1716,6 +1784,16 @@ package scenes.game.components
 			//details["HitId"] = World.hitId;
 			NULogging.log(details);
 			
+			
+			if(TutorialController.tutorialsDone)
+			{
+				//Update player and level ratings with a player win and log result
+				var curPlayerRating:Number = World.player.getRating();
+				var curLevelRating:Number = m_currentLevel.m_player.getRating();
+				var res:int = 1;
+				World.m_world.updateRatings(curPlayerRating, World.player.getRD(), curLevelRating, m_currentLevel.m_player.getRD(),res);
+				logResult(curPlayerRating, World.player.getRating(), curLevelRating, m_currentLevel.m_player.getRating(), res);
+			}
 			World.levelTimer.reset();
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 			
@@ -1733,6 +1811,47 @@ package scenes.game.components
 			NULogging.action(o, NULogging.ACTION_TYPE_NEXT_LEVEL_CLICKED);
 			// When a new level button is pressed, signal a run End event
 			NULogging.runEnd(o);
+		}
+		
+		public function logResult(curPlayerRating:Number, newPlayerRating:Number, curLevelRating:Number, newLevelRating:Number, result:int):void
+		{
+			
+			var resultData:Object = new Object();
+			trace("=============================================");
+			var levelName:String = m_currentLevel.m_levelFileName;
+			resultData["isResultData"] = "true";
+			resultData["hitID"] = World.hitId;
+			resultData["LevelDisplayMode"] = World.LevelDisplayMode;
+			resultData["playerID"] = World.playerID;
+			resultData["level_name"] = levelName;
+			trace("Match: vs. " + levelName);
+			trace("Current Ratings: Player -> " + curPlayerRating + "\t" + levelName + " -> " + curLevelRating);
+			resultData["cur_player_rating"] = curPlayerRating;
+			resultData["cur_level_rating"] = curLevelRating;
+			resultData["desired_win_rate"] = World.m_world.getAltWinRateFromRating(curPlayerRating);
+			resultData["player_win_prob"] = World.m_world.getWinningExpectancy(curPlayerRating, curLevelRating);
+			trace("Desired win rate: " + World.m_world.getAltWinRateFromRating(curPlayerRating));
+			trace("Player's win probability: " + World.m_world.getWinningExpectancy(curPlayerRating, curLevelRating));
+			if (result == 1)
+			{	
+				trace("Player wins!");
+				resultData["result"] = "win";
+			}
+			else if (result == 0)
+			{
+				trace("Player loses!");
+				resultData["result"] = "loss";
+			}
+			else if (result == -1)
+			{
+				trace("Level skipped!");
+				resultData["result"] = "skip";
+			}
+			trace("New Ratings: Player -> " + newPlayerRating + "\t" + levelName + " -> " + newLevelRating);
+			resultData["new_player_rating"] = newPlayerRating;
+			resultData["new_level_rating"] = newLevelRating;
+			trace("=============================================");
+			NULogging.log(resultData);
 		}
 		
 		private function CheckPassButton():void
@@ -1756,6 +1875,11 @@ package scenes.game.components
 		
 		private function onSkipLevelButtonTriggered(evt:starling.events.Event):void
 		{
+			trace("Inside onSkipLevel");
+			
+			if(forfeitButton)
+				forfeitButton.removeFromParent();
+				
 			m_skipCount++;
 			trace("--------------------------------> Calling CheckPassButton() <-----------------------");
 			if (!GameConfig.ENABLE_TIME_CONSTRAINT)
@@ -1776,9 +1900,31 @@ package scenes.game.components
 			var dataLog:Object = new Object();
 			dataLog["PlayerID"] = World.playerID;
 			if (attemptedLevel)
+			{
 				dataLog["actionTaken"] = "LevelAbandoned";
+				
+				if(TutorialController.tutorialsDone)
+				{
+					//Update player and level ratings with a player loss and log result
+					var curPlayerRating:Number = World.player.getRating();
+					var curLevelRating:Number = m_currentLevel.m_player.getRating();
+					var res:int = 0;
+					World.m_world.updateRatings(curPlayerRating, World.player.getRD(), curLevelRating, m_currentLevel.m_player.getRD(), res);
+					logResult(curPlayerRating, World.player.getRating(), curLevelRating, m_currentLevel.m_player.getRating(), res);				
+				}
+			}
 			else
+			{
 				dataLog["actionTaken"] = "LevelSkipped";
+				if(TutorialController.tutorialsDone)
+				{
+					//Update player and level ratings with a player loss and log result
+					var curPlayerRating:Number = World.player.getRating();
+					var curLevelRating:Number = m_currentLevel.m_player.getRating();
+					var res:int = -1;
+					logResult(curPlayerRating, World.player.getRating(), curLevelRating, m_currentLevel.m_player.getRating(), res);				
+				}
+			}
 			dataLog["levelName"] = World.currentLevelName;
 			dataLog["movesPerLevel"] = World.movesPerLevel;
 			dataLog["levelTime"] = World.levelTimer.currentCount;
@@ -1787,6 +1933,8 @@ package scenes.game.components
 			NULogging.log(dataLog);
 			
 			World.levelTimer.reset();
+			
+			
 			
 			//------------------------------------------------------------------
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
