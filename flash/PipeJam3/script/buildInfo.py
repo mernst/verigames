@@ -17,9 +17,9 @@ package buildInfo
 
 def main(args):
 	if sys.platform == 'win32':
-		hgcmd = 'hg id -i';
+		hgcmd = "git log -1 --format='%h'";
 	else:
-		hgcmd = 'bash -l -c "hg id -i"';
+		hgcmd = 'bash -l -c "git log -1 --format=\'%h\'"';
 
 	buildversion = os.popen(hgcmd).read().strip() or 'unknown'
 	builddate = datetime.date.today().strftime('%Y%m%d')
