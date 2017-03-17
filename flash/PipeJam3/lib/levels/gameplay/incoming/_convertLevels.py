@@ -47,16 +47,17 @@ for file in os.listdir('.'):
         for pref in prefs:
             python_script('scaleXY.py %s %f' % (outfolder + pref, NEED_SCALE[file]))
 
-    # udpate QID
+    # update QID
     for pref in prefs:
-        python_script('updateQID.py %s' % (outfolder + pref))
-
-
+	    python_script('updateQID.py %s' % (outfolder + pref))
+	
     # move level files
     for outfile in os.listdir(outfolder):
+        if 'Layout' not in outfile and 'Assignments' not in outfile:
+            python_script('updateDisplayName.py %s' % (outfolder + outfile))
         shutil.move(outfolder + outfile, '../../setup/' + outfile)
-
-
+    
+    
     # clean up
     os.chdir('..')
     shutil.rmtree('tmp')

@@ -61,7 +61,7 @@ def update_qid(prefix):
 	new_qid = hash.hexdigest()
 	new_name = 'h_' + hash.hexdigest()[0:14]
 
-	level_obj['display_name'] = new_name
+	level_obj['display_name'] = new_name  ##will be removed when update display name switches over
 	level_obj['id'] = level_obj['qid'] = layout_obj['id'] = assignments_obj['id'] = new_qid
 
 	os.remove(prefix + '.json')
