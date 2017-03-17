@@ -16,12 +16,11 @@ package buildInfo
 '''
 
 def main(args):
-	if sys.platform == 'win32':
-		hgcmd = "git log -1 --format='%h'";
-	else:
-		hgcmd = 'bash -l -c "git log -1 --format=\'%h\'"';
+	hgcmd = 'git log -1 --format=%H';
+	if sys.platform != 'win32':
+		hgcmd = 'bash -l -c "%s"' % hgcmd;
 
-	buildversion = os.popen(hgcmd).read().strip() or 'unknown'
+	buildversion = os.popen(hgcmd).read().replace('\n\t ', '')[0:10] or 'unknown'
 	builddate = datetime.date.today().strftime('%Y%m%d')
 
 	path = os.path.dirname(os.path.realpath(__file__)) + '/../src/buildInfo'
