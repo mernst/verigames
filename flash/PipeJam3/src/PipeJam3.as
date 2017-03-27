@@ -116,6 +116,18 @@ package
 		
 		public function initialize(result:int = 0, e:flash.events.Event = null):void
 		{
+			trace("Pipejam3.initialize() called");
+			
+			World.initPlayerVars();
+			
+			// Set metaphor using playerID
+			if (GameConfig.ENABLE_METAPHORS)
+			{
+			var metaphor:uint = World.playerID.charAt(World.playerID.length - 1).charCodeAt(0) % 2;
+			trace('Metaphor: ' + metaphor);
+			GameConfig.GAME_METAPHOR = metaphor;
+			}
+			
 			// for now, initialize string table here
 			if (GameConfig.IS_MTURK) {
 				if (GameConfig.GAME_METAPHOR == GameConfig.ORIGINAL_METAPHOR) {
@@ -129,7 +141,6 @@ package
 				StringTable.setInstance(new StringTableBase);
 			}
 			
-			World.initPlayerVars();
 			MouseWheelTrap.setup(stage);
 			
 			//set up the main controller

@@ -82,6 +82,11 @@ package scenes.game.display
 	
 	import system.VerigameServerConstants;
 	
+	import assets.StringTablePowerPlant;
+	import assets.StringTable;
+	import assets.StringTableBase;
+	import assets.StringTableMTurk;
+	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
 	 */
@@ -195,12 +200,12 @@ package scenes.game.display
 		// 1 -> Random Order
 		// 2 -> Rating Order
 		// 3 -> Strictly increasing rating order
-		static public var LevelDisplayMode:Number = 3;
+		static public var LevelDisplayMode:Number = 2;
 		
 		static private var CurrentIncreasingDifficultyLevel:int = 0;
 		
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
-		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 5;
+		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 3;
 		
 		
 		public function World(_worldGraphDict:Dictionary, _worldObj:Object, _layout:Object, _assignments:Object)
@@ -211,6 +216,8 @@ package scenes.game.display
 			m_assignmentsObj = _assignments;
 			
 			m_world = this;
+			
+			trace('World() called...');
 			
 			LoadAllLevels()
 		}
@@ -387,6 +394,10 @@ package scenes.game.display
 				var level:Level = levels[i];
 				var levelRating:Number = level.m_levelRating;
 				var WE:Number = getWinningExpectancy(playerRating, levelRating);
+				var GWE:Number = E(playerRating, levelRating, level.m_player.getRD());
+				trace("============");
+				trace("WE: " + WE + "\tGWE: " + GWE);
+				trace("=============");
 				probs[level.m_levelFileName] = WE;
 			}
 			return probs;
@@ -396,6 +407,18 @@ package scenes.game.display
 		{
 			return (1.0 / (1 + Math.pow(10, ( -(p1 - p2) / 400))));
 		}
+		
+		public function E(p1rating:Number, p2rating:Number, p2RD:Number):Number
+		{
+			return 1 / (1 + Math.exp( -1 * g(p2RD) * (p1rating - p2rating)));
+		}
+		
+		/* The Glicko2 g function. */
+		public function g(RD:Number):Number
+		{
+			return 1 / Math.sqrt(1 + 3 * Math.pow(RD, 2) / Math.pow(Math.PI, 2));
+		}
+		
 		
 		public function getWinRateFromRating(rating:Number):Number
 		{
@@ -447,9 +470,12 @@ package scenes.game.display
 				playerID = md5.complete();
 
 				// Set whether the levels are shown in random, rating or increasing order based on the LSB of the playerID.
-				var mode:int = playerID.charAt(playerID.length - 1).charCodeAt(0) % 3;
-				World.LevelDisplayMode = mode+1;
-				
+				if (GameConfig.ENABLE_DIFFERENT_ORDERS)
+				{
+					var mode:int = playerID.charAt(playerID.length - 1).charCodeAt(0) % 3;
+					World.LevelDisplayMode = mode+1;
+				}
+			
 				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
 			} catch (err:Error) {
 				var errLog:Object = new Object();

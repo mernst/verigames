@@ -212,6 +212,7 @@ package scenes.splashscreen
 					dataLog["LevelDisplayMode"] = displayMode;
 					//dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
 					dataLog["PlayerRating"] = World.player.getRating();
+					dataLog["Metaphor"] = GameConfig.GAME_METAPHOR == 0 ? "Original" : "Powerplant";
 					
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------

@@ -10,7 +10,7 @@ package
 		/** Metaphor that is used in the game*/
 		public static const ORIGINAL_METAPHOR:uint = 0;
 		public static const POWERPLANT_METAPHOR:uint = 1;
-		public static const GAME_METAPHOR:uint = POWERPLANT_METAPHOR;
+		public static var GAME_METAPHOR:uint = ORIGINAL_METAPHOR;
 		
 		/** which solver brushes to be enabled */
 		public static const ENABLE_SOLVER1_BRUSH:Boolean          = true;
@@ -29,6 +29,15 @@ package
 		public static const ENABLE_TIME_CONSTRAINT:Boolean = false;
 		
 		/** run with player and level ratings displayed along with current game mode */
-		public static const ENABLE_DEBUG_DISPLAY:Boolean = false;
+		public static const ENABLE_DEBUG_DISPLAY:Boolean = true;
+		
+		/** run with players being served levels in random, rating or strictly increasing rating order based on worker ID */
+		public static const ENABLE_DIFFERENT_ORDERS:Boolean = false;
+		
+		/** run with different metaphors based on worker ID */
+		public static const ENABLE_METAPHORS:Boolean = false;
+		
+		/** disable tutorial to help with debugging */
+		public static const DISABLE_TUTORIAL:Boolean = true;
 	}
 }

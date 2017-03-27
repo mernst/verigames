@@ -27,7 +27,7 @@ package networking
 		
 		public static var TUTORIALS_COMPLETED_STRING:String = "tutorials_completed";
 		
-		public static var tutorialsDone:Boolean = false;
+		public static var tutorialsDone:Boolean = GameConfig.DISABLE_TUTORIAL ? true : false;
 
 		//used as a ordered array of order values containing all tutorial orders
 		protected var tutorialOrderedList:Vector.<Number>;
