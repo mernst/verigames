@@ -57,13 +57,13 @@ for line in content:
 
         # for each item in the list of items
         for i in range (0, len(values)):
-            if (len(values) == 2):
-                print 'Invalid format'
-                quit()
+            ##if (len(values) == 2):
+                ##print 'Invalid format'
+                ##quit()
             
             if (int(values[i]) > 0):
                 pos.append(values[i])
-            else:
+            else: 
                 (neg.append(str(abs(int(values[i])))))
                 
         result += '\t\t\t"pos": ['

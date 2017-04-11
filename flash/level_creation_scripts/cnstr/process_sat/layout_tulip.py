@@ -4,9 +4,9 @@ import _util, layout_util
 
 NODE_SIZE = 5.0
 
-def layout_with_tulip(Gs):
+def layout_with_tulip(Gs, outputFile):
     from tulip import tlp
-
+    i = 1;
     for G in Gs:
         _util.print_step('Laying out %s...' % G.graph.get('id', ''))
 
@@ -61,6 +61,16 @@ def layout_with_tulip(Gs):
             node_layout[name.replace(':', '_')] = (view_layout[node][0], view_layout[node][1])
 
         layout_util.add_layout_to_graph(G, node_layout)
+
+        # get a dictionnary filled with the default plugin parameters values
+        # graph is an instance of the tlp.Graph class
+        params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
+
+        # set any input parameter value if needed   
+        # params['Beautify JSON string'] = ...
+
+        success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + str(i) + '.json', params)
+        i = i + 1
         
 
 def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
@@ -71,7 +81,7 @@ def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
 
     _util.print_step('laying out')
 
-    layout_with_tulip(Gs)
+    layout_with_tulip(Gs, outfile)
 
     _util.print_step('saving')
     
