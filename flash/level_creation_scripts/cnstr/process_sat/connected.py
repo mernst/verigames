@@ -3,7 +3,7 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util
 
-MAX_GRAPH_NODE_COUNT = 7000
+MAX_GRAPH_NODE_COUNT = 15000
 VAR = 'var:'
 
 def nx_to_metis(G):
