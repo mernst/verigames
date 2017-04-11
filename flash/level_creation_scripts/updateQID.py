@@ -67,7 +67,7 @@ def update_qid(prefix):
 	level_obj_ordered = json.dumps(ordered(json.loads(process_obj(level_obj, LEVEL_KEYS))))
 	assignments_obj_ordered = json.dumps(ordered(json.loads(process_obj(assignments_obj, ASSIGNMENTS_KEYS))))
 
-	str_rep = process_obj(level_obj, LEVEL_KEYS) + process_obj(assignments_obj, ASSIGNMENTS_KEYS)
+	str_rep = level_obj_ordered + assignments_obj_ordered
 
 	print "str_rep ", str_rep
 
