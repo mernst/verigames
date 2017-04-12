@@ -6,6 +6,21 @@ def json_dump(obj, fp):
 	fp.write('\n')
 
 
+def sort_helper(obj):
+	if isinstance(obj, dict):
+		return sorted((k, sort_helper(v)) for k, v in obj.items())
+	if isinstance(obj, list):
+		return sorted(sort_helper(x) for x in obj)
+	else:
+		return obj
+
+## sorts a json string as an object so that everything is ordered exactly the same across platforms
+def sort_full_json(str_obj):
+	obj = json.loads(str_obj)
+	sorted_obj = sort_helper(obj)
+
+	return json.dumps(sorted_obj)
+
 
 # list file prefixes for all levels in the same folder as from_file
 def list_file_prefixes(from_file):

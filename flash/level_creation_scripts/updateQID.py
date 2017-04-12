@@ -51,25 +51,15 @@ def process_obj(file_obj, keys):
 	return json.dumps(new_obj, sort_keys=True)
 
 
-def ordered(obj):
-	if isinstance(obj, dict):
-		return sorted((k, ordered(v)) for k, v in obj.items())
-	if isinstance(obj, list):
-		return sorted(ordered(x) for x in obj)
-	else:
-		return obj
-
 def update_qid(prefix):
 	level_obj = json.load(open(prefix + '.json', 'rb'))
 	layout_obj = json.load(open(prefix + 'Layout.json', 'rb'))
 	assignments_obj = json.load(open(prefix + 'Assignments.json', 'rb'))
 
-	level_obj_ordered = json.dumps(ordered(json.loads(process_obj(level_obj, LEVEL_KEYS))))
-	assignments_obj_ordered = json.dumps(ordered(json.loads(process_obj(assignments_obj, ASSIGNMENTS_KEYS))))
+	level_obj_ordered = _util.sort_full_json(process_obj(level_obj, LEVEL_KEYS))
+	assignments_obj_ordered = _util.sort_full_json(process_obj(assignments_obj, ASSIGNMENTS_KEYS))
 
 	str_rep = level_obj_ordered + assignments_obj_ordered
-
-	print "str_rep ", str_rep
 
 	hash = hashlib.md5(str_rep)
 
