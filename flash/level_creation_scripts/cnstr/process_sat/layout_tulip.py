@@ -1,6 +1,7 @@
 import networkx as nx
 import cPickle, json, os, sys
 import _util, layout_util
+import mst_layout
 
 NODE_SIZE = 5.0
 
@@ -21,6 +22,9 @@ def layout_with_tulip(Gs, outputFile):
         for edge in G.edges():
             tlp_graph.addEdge(tlp_name_to_id[edge[0]], tlp_name_to_id[edge[1]])
 
+        tlp_graph = mst_layout.run_it(tlp_graph, 1, outputFile + str(i) + '.json')
+
+        '''
         # do layout
         view_size = tlp_graph.getSizeProperty('viewSize')
         for n in tlp_graph.getNodes():
@@ -62,6 +66,10 @@ def layout_with_tulip(Gs, outputFile):
 
         layout_util.add_layout_to_graph(G, node_layout)
 
+
+        tlp_graph = mst_layout.run_it(tlp_graph, 10, outputFile + str(i) + '.json')
+
+     
         # get a dictionnary filled with the default plugin parameters values
         # graph is an instance of the tlp.Graph class
         params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
@@ -70,6 +78,7 @@ def layout_with_tulip(Gs, outputFile):
         # params['Beautify JSON string'] = ...
 
         success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + str(i) + '.json', params)
+        '''
         i = i + 1
         
 
