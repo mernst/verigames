@@ -200,7 +200,7 @@ package scenes.game.display
 		// 1 -> Random Order
 		// 2 -> Rating Order
 		// 3 -> Strictly increasing rating order
-		static public var LevelDisplayMode:Number = 2;
+		static public var LevelDisplayMode:Number = 1;
 		
 		static private var CurrentIncreasingDifficultyLevel:int = 0;
 		

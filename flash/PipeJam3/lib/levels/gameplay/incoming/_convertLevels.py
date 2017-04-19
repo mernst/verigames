@@ -53,8 +53,8 @@ for file in os.listdir('.'):
 	
     # move level files
     for outfile in os.listdir(outfolder):
-        if 'Layout' not in outfile and 'Assignments' not in outfile:
-            python_script('updateDisplayName.py %s' % (outfolder + outfile))
+        #if 'Layout' not in outfile and 'Assignments' not in outfile:
+        #    python_script('updateDisplayName.py %s' % (outfolder + outfile))
         shutil.move(outfolder + outfile, '../../setup/' + outfile)
     
     

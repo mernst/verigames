@@ -1289,6 +1289,21 @@ package scenes.game.display
 			}
 		}
 		
+		public function getCurrentScore():int
+		{
+			return currentScore;
+		}
+		
+		public function getBestScore():int
+		{
+			return bestScore;
+		}
+		
+		public function getMaxScore():int
+		{
+			return maxScore;
+		}
+		
 		public function getTargetScore():int
 		{
 			return m_targetScore;

@@ -1611,7 +1611,11 @@ package scenes.game.components
 		
 		public function displayPassButton():void
 		{
-			passButton = ButtonFactory.getInstance().createDefaultButton("Go to survey", m_buttonWidth, m_buttonHeight);
+			if (GameConfig.NO_SURVEY)
+				var passText:String = "Exit";
+			else
+				var passText:String = "Go to survey";
+			passButton = ButtonFactory.getInstance().createDefaultButton(passText, m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
 			passButton.x = m_buttonBufferValue;
 			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
@@ -1826,6 +1830,13 @@ package scenes.game.components
 			resultData["level_name"] = levelName;
 			trace("Match: vs. " + levelName);
 			trace("Current Ratings: Player -> " + curPlayerRating + "\t" + levelName + " -> " + curLevelRating);
+			resultData["level_target_score"] = m_currentLevel.getTargetScore();
+			resultData["level_max_score"] = m_currentLevel.getMaxScore();
+			resultData["player_current_score"] = m_currentLevel.getCurrentScore();
+			resultData["player_max_score"] = m_currentLevel.getBestScore();
+			resultData["max_num_conflicts"] = MiniMap.maxNumConflicts;
+			resultData["satisfied_conflicts"] = resultData["max_num_conflicts"] - MiniMap.numConflicts;
+			resultData["target_percent"] = (resultData["level_target_score"] / resultData["level_max_score"]) * 100;
 			resultData["cur_player_rating"] = curPlayerRating;
 			resultData["cur_level_rating"] = curLevelRating;
 			resultData["desired_win_rate"] = World.m_world.getAltWinRateFromRating(curPlayerRating);
@@ -1851,6 +1862,8 @@ package scenes.game.components
 			resultData["new_player_rating"] = newPlayerRating;
 			resultData["new_level_rating"] = newLevelRating;
 			trace("=============================================");
+			trace("Target: " + resultData["level_target_score"] + "\tCurrent: " + resultData["player_current_score"] + "\tBest: " + resultData["player_max_score"] + "\tMax: " + resultData["level_max_score"]);
+			trace("NumCon: " + resultData["satisfied_conflicts"] + "\tMaxCon: " + resultData["max_num_conflicts"] + "\tTarPer: " + resultData["target_percent"]);
 			NULogging.log(resultData);
 		}
 		
@@ -1983,8 +1996,8 @@ package scenes.game.components
 			var o:Object = new Object();
 			o["details"] = "Skip to Survey button clicked.";			
 			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_TO_SURVEY_CLICKED);
-			
-			var dialog:SimpleAlertDialog = new SimpleAlertDialog("Are you sure you want to skip to the survey?", 180, 75, null, alertEventHandler, 1, true);
+			var text:String = GameConfig.NO_SURVEY ? "Are you sure you want to exit?" : "Are you sure you want to skip to the survey?";
+			var dialog:SimpleAlertDialog = new SimpleAlertDialog(text, 180, 75, null, alertEventHandler, 1, true);
 			this.addChild(dialog);			
 		}
 		
