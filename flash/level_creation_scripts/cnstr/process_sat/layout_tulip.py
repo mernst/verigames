@@ -2,6 +2,7 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util, layout_util
 import mst_layout
+import partition
 
 NODE_SIZE = 5.0
 
@@ -22,9 +23,13 @@ def layout_with_tulip(Gs, outputFile):
         for edge in G.edges():
             tlp_graph.addEdge(tlp_name_to_id[edge[0]], tlp_name_to_id[edge[1]])
 
-        tlp_graph = mst_layout.run_it(tlp_graph, 1, outputFile + str(i) + '.json')
+        ##tlp_graph = mst_layout.run_it(tlp_graph, 1, outputFile + str(i) + '.json')
+        ##tlp_graph = partition.partition_it(tlp_graph, tlp_id_to_name, outputFile  + '.json')  # + str(i) + add tulip to name if you want
+        
+        ## will need a way to take cluster info from partition.py so that you can have that incorporated into layout.
+        ## might be best to use this low level layout as guideline, and then c# code adjusts everything to make sure it makes sense
 
-        '''
+
         # do layout
         view_size = tlp_graph.getSizeProperty('viewSize')
         for n in tlp_graph.getNodes():
@@ -66,10 +71,9 @@ def layout_with_tulip(Gs, outputFile):
 
         layout_util.add_layout_to_graph(G, node_layout)
 
+        tlp_graph = partition.partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json')  # + str(i) + add tulip to name if you want
 
-        tlp_graph = mst_layout.run_it(tlp_graph, 10, outputFile + str(i) + '.json')
-
-     
+        '''
         # get a dictionnary filled with the default plugin parameters values
         # graph is an instance of the tlp.Graph class
         params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)

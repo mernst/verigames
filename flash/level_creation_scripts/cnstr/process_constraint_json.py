@@ -25,7 +25,7 @@ if __name__ == "__main__":
     version = input_cnstr.run(constr_fn, graph_fn)
 
     graphs_fn = '%s.graphs' % file_pref
-    out_pref = '%stulip' % file_pref
+    ##out_pref = '%stulip' % file_pref
     connected.run(graph_fn, graphs_fn, node_min, node_max)
     
     if LAYOUT_DOT:
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         layout_dot.run(graphs_fn, dot_dirn, False, node_min, node_max, False)
 
     else:
-        layout_tulip.run(graphs_fn, out_pref, False, node_min, node_max, False)
+        layout_tulip.run(graphs_fn, file_pref, False, node_min, node_max, False)
 '''
     
     if GROUP:
