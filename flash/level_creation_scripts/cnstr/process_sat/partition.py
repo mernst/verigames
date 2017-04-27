@@ -15,7 +15,7 @@ def json_dump(obj, fp):
     json.dump(obj, fp, indent=2, separators=(',',': '), sort_keys=True)
     fp.write('\n')
 
-
+## TODO - get rid of size and position, since it will be set in treemapSlice.py
 def CalculateMetaDataBottomUp(tlp_graph, tlp_id_to_name, NodeNameToId, NodeGroupMap):
     
     queue = Queue()
@@ -60,6 +60,7 @@ def CalculateMetaDataBottomUp(tlp_graph, tlp_id_to_name, NodeNameToId, NodeGroup
 
 
 def partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
+
     nx_graph = nx.Graph()
     
     for edge in tlp_graph.getEdges():
@@ -77,6 +78,8 @@ def partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputF
     groupsMade = 0
     NodeNameToId = {} ## the full name of all the nodes together, mapped to string "Group{idnum}" ex: "Group4"
     NodeGroupMap = {}  ## Dict["Group{idnum}": Dict[parent, level, position, size, numLeafNodes, children]]  where children is dictionary of nodeNames that map to NodeGroupMap.  
+
+    allLeaves = []
 
     i = 1 
     for communities in hierarchy: 
@@ -107,6 +110,7 @@ def partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputF
                             parentKey = NodeNameToId[parentNode]
 
                             if len(community) == 1:
+                                allLeaves.append(communityNode)
                                 NodeGroupMap[parentKey]["children"].append(communityNode)
                                 nodeLayout = (view_layout[tlp_name_to_id[communityNode]][0], view_layout[tlp_name_to_id[communityNode]][1])
                                 NodeGroupMap[communityNode] = {"level": NodeGroupMap[parentKey]["level"] + 1, "parent": parentKey, "position": nodeLayout, "numLeafNodes": 1, "size": 3} 
@@ -121,13 +125,15 @@ def partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputF
                                 NodeGroupMap[parentKey]["children"].append(childKey)
                                 NodeGroupMap[childKey] = {"level": NodeGroupMap[parentKey]["level"] + 1, "parent": parentKey, "children": []} 
 
-                            nx_use_graph.add_edge(communityNode, parentNode)
+                            ##nx_use_graph.add_edge(communityNode, parentNode)
 
             parents = list(communities)
             ##print("number of recursions: ", i)
             i += 1
 
     NodeGroupMap = CalculateMetaDataBottomUp(tlp_graph, tlp_id_to_name, NodeNameToId, NodeGroupMap)
+
+    NodeGroupMap = treemapSlice.treemap("Group0", [0,0], [5000,5000], 0, "color", NodeGroupMap)
 
     depth = 0
     '''
@@ -138,58 +144,95 @@ def partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputF
 
     json_dump(NodeGroupMap, open(outputFile + "Grouping" + str(curDepth) + ".json", "w"))
 
+## below code converts full dictionary to tulip for testing visualization
     parentNodes = [NodeGroupMap["Group0"]]
     tlp_graph = tlp.newGraph()
 
     tlp_idToNodeGroup = {}
     tlp_name_to_id = {}
-    for x in range(0,4):
+    '''
+    while len(parentNodes) > 0:
+    ##for x in range(0,1): ## x is depth from top
 
         allChildren = []
         allChildrenKeys = []
         for parentNode in parentNodes:
-            if parentNode.has_key("children"):
-                allChildren.extend([NodeGroupMap[child] for child in parentNode["children"]])
-                allChildrenKeys.extend([child for child in parentNode["children"]])
+            allChildren.extend([NodeGroupMap[child] for child in parentNode["children"]])
+            allChildrenKeys.extend([child for child in parentNode["children"]])
 
-        print ("ALLCHILDREN: ", allChildren)
+        print ("ALLCHILDREN: ", allChildrenKeys)
 
-        for child in allChildren:
+        for child in allChildrenKeys:
             id = tlp_graph.addNode()
-            tlp_idToNodeGroup[id] = child
-            childKey = allChildrenKeys[allChildren.index(child)]
-            tlp_name_to_id[childKey] = id
+            tlp_idToNodeGroup[id] = NodeGroupMap[child]
+            tlp_name_to_id[child] = id
+            print("CHILD KEY", child)
 
         for parentNode in parentNodes:
             lastNode = None
             for child in parentNode["children"]:
                 if not lastNode:
-                    lastNode = NodeGroupMap[child]["parent"] ### NOTE: this isn't working
+                    print("IN HERE")
+                    lastNode = NodeGroupMap[child]["parent"]
                 if tlp_name_to_id.has_key(lastNode):
+                    print("LastNode", lastNode, " child: ", child)
                     tlp_graph.addEdge(tlp_name_to_id[lastNode], tlp_name_to_id[child])                    
                 lastNode = child
         
         for nodeKey in allChildrenKeys:
             node = tlp_name_to_id[nodeKey] 
-            properties = tlp_graph.getNodePropertiesValues(node)
+            properties = tlp_graph.getNodePropertiesValues(node)  ## this doesn't seem right
 
             groupNode = tlp_idToNodeGroup[node]
 
             colorFactor = int(groupNode["parent"][5:]) + 1
-            properties["viewSize"] = tlp.Vec3f(groupNode["size"], groupNode["size"], 1.0)
-            properties["viewLayout"] = tlp.Vec3f(groupNode["position"][0], groupNode["position"][1], 0.0)## = tlp.Vec3f(1.0, 2.0, 0.0)  IS THIS WHAT WE use for setting position?
-
+            properties["viewSize"] = tlp.Vec3f(groupNode["width"], groupNode["height"], 1.0)
+            properties["viewLayout"] = tlp.Vec3f(groupNode["position"][0], groupNode["position"][1], 0.0)
+            properties["viewLabel"] = nodeKey
+            properties["viewShape"] = tlp.NodeShape.Square
             ## TODO maybe add labels?
 
             level = groupNode["level"]
 
-            properties["viewColor"] = tlp.Color(int(math.floor(255 / colorFactor)), 0, int(math.floor(math.pow((colorFactor - 1), 2))), min(int(math.floor(level / .02)), 255))
-            ##print("PROPERTIES: ", properties)
+            properties["viewColor"] = tlp.Color(int(math.floor(255 / colorFactor)), 0, min(int(math.floor(math.pow((colorFactor - 1), 2))), 255), min(int(math.floor(level / .01)), 255))
+            print("PROPERTIES: ", properties)
 
             tlp_graph.setNodePropertiesValues(node, properties)
 
-        parentNodes = allChildren
+        parentNodes = [child for child in allChildren if child.has_key("children")]
 
-        params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
-        success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + "levelVis" + str(x) + ".json", params)
+    params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
+    success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + "levelVisMess" + ".json", params)
+    '''
+
+    tlp_name_to_id = {}
+    for leaf in allLeaves:
+        print("LEAF", leaf)
+        id = tlp_graph.addNode()
+        tlp_name_to_id[leaf] = id
+        node = id
+        properties = tlp_graph.getNodePropertiesValues(node)
+
+        groupNode = NodeGroupMap[leaf]
+
+        colorFactor = int(groupNode["parent"][5:]) + 1
+        properties["viewSize"] = tlp.Vec3f(groupNode["width"], groupNode["height"], 1.0)
+        properties["viewLayout"] = tlp.Vec3f(groupNode["position"][0], groupNode["position"][1], 0.0)
+        properties["viewLabel"] = leaf
+        properties["viewShape"] = tlp.NodeShape.Square
+        ## TODO maybe add labels?
+
+        level = groupNode["level"]
+
+        properties["viewColor"] = tlp.Color(int(math.floor(255 / colorFactor)), 0, int(math.floor(math.pow((colorFactor - 1), 2))), min(int(math.floor(level / .02)), 255))
+        print("PROPERTIES: ", properties)
+
+        tlp_graph.setNodePropertiesValues(node, properties)
+
+    ##for edge in nx_graph.edges():  ## to draw all edges of base clauses/vars
+        ##tlp_graph.addEdge(tlp_name_to_id[edge[0]], tlp_name_to_id[edge[1]])
+
+    params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
+    success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + "levelVisLEAFS" + ".json", params)
+
 
