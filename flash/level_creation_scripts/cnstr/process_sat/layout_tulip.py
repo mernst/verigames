@@ -1,8 +1,12 @@
 import networkx as nx
 import cPickle, json, os, sys
 import _util, layout_util
-import mst_layout
-import partition
+#import mst_layout
+#import partition
+#import exportTulipJson
+#import fastCommunityPartition
+import bottomUpLayout
+import collections
 
 NODE_SIZE = 5.0
 
@@ -16,33 +20,50 @@ def layout_with_tulip(Gs, outputFile):
         tlp_graph = tlp.newGraph()
         tlp_name_to_id = {}
         tlp_id_to_name = {}
+        tlp_id_to_order = {}
+        tlp_order_to_id = {}
+        numNodes = 0
         for node in G.nodes():
             id = tlp_graph.addNode()
             tlp_name_to_id[node] = id
             tlp_id_to_name[id] = node
+
+            tlp_id_to_order[id] = i
+            tlp_order_to_id[i] = id
+            numNodes += 1
+        print("in between")
+
         for edge in G.edges():
             tlp_graph.addEdge(tlp_name_to_id[edge[0]], tlp_name_to_id[edge[1]])
 
-        ##tlp_graph = mst_layout.run_it(tlp_graph, 1, outputFile + str(i) + '.json')
-        ##tlp_graph = partition.partition_it(tlp_graph, tlp_id_to_name, outputFile  + '.json')  # + str(i) + add tulip to name if you want
-        
-        ## will need a way to take cluster info from partition.py so that you can have that incorporated into layout.
-        ## might be best to use this low level layout as guideline, and then c# code adjusts everything to make sure it makes sense
-
+        if numNodes > 50000:
+            algorithmToUse =  'Fast Multipole Embedder (OGDF)'
+        else:
+            algorithmToUse = 'FM^3 (OGDF)'      
+        ## Pick algorithm based on size. 
 
         # do layout
         view_size = tlp_graph.getSizeProperty('viewSize')
+        print("going through all nodes")
         for n in tlp_graph.getNodes():
             view_size[n] = tlp.Size(NODE_SIZE, NODE_SIZE, 1)
 
         view_layout = tlp_graph.getLayoutProperty('viewLayout')
 
-        params = tlp.getDefaultPluginParameters('FM^3 (OGDF)', tlp_graph)
+        params = tlp.getDefaultPluginParameters(algorithmToUse, tlp_graph)
+
+        ## TO TRY for 'Fast Multipole Embedder (OGDF)'
+        ##params['default node size'] = 5
+        #params['number of iterations'] = 20
+        #params['number of coefficients'] = 2
+
         params['New initial placement'] = False
 
         for len_scale in [1, 2, 4, 6, 8, 10, 12, 14, 16]:
+            print("laying out with scale: ", len_scale)
+
             params['Unit edge length'] = NODE_SIZE * len_scale
-            tlp_graph.applyLayoutAlgorithm('FM^3 (OGDF)', view_layout, params)
+            tlp_graph.applyLayoutAlgorithm(algorithmToUse, view_layout, params)
 
             pre_positions = {}
             for node in tlp_graph.getNodes():
@@ -63,6 +84,9 @@ def layout_with_tulip(Gs, outputFile):
             if change_ave <= 0.5 * NODE_SIZE:
                 break;
 
+
+        bottomUpLayout.layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json') 
+        '''
         # update original graph
         node_layout = {}
         for node in tlp_graph.getNodes():
@@ -71,9 +95,7 @@ def layout_with_tulip(Gs, outputFile):
 
         layout_util.add_layout_to_graph(G, node_layout)
 
-        tlp_graph = partition.partition_it(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json')  # + str(i) + add tulip to name if you want
-
-        '''
+        
         # get a dictionnary filled with the default plugin parameters values
         # graph is an instance of the tlp.Graph class
         params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)

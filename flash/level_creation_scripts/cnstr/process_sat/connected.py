@@ -3,7 +3,7 @@ import networkx as nx
 import cPickle, json, os, sys
 import _util
 
-MAX_GRAPH_NODE_COUNT = 15000
+MAX_GRAPH_NODE_COUNT = 1500000
 VAR = 'var:'
 
 def nx_to_metis(G):
@@ -71,24 +71,26 @@ def run(infile, outfile, node_min, node_max):
     _util.print_step('loading')
 
     Gs = cPickle.load(open(infile, 'rb'))
-
+    print ("numgraphscomingin: ", len(Gs))
     _util.print_step('computing weakly connected components')
 
     new_Gs = []
     for G in Gs:
         n_vars = len([n for n in G.nodes() if n.startswith(VAR)])
-
+        print ("NVARSss: ", n_vars, "nodemax: ", node_max)
         # Limit the number of nodes in a graph
         if n_vars < node_min or n_vars > node_max:
             continue
 
+        '''
         gen = nx.weakly_connected_component_subgraphs(G)
         for ge in gen:
             new_graphs = []
             split_graph(ge, new_graphs)
             for ng in new_graphs:
                 new_Gs.append(ng)
-    Gs = new_Gs
+        '''
+    ##Gs = new_Gs
 
     if False:
         new_Gs = []
