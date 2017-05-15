@@ -2,8 +2,7 @@ import networkx as nx
 import cPickle, json, sys
 import _util
 
-
-def run(infile, outfile):
+def run(infile, constraintMapFile, outfile):
     _util.print_step('parsing')
 
     world = json.load(open(infile))
@@ -13,7 +12,7 @@ def run(infile, outfile):
         raise RuntimeError('JSON has unrecognized version ' + version)
     version = int(version)
 
-    def process_constraint_block(clauses, constraints, lits):
+    def process_constraint_block(clauses, constraintMapFile, constraints, lits):
         for constraint in constraints:
             if constraint.has_key('constraint'):
                 cns = constraint['constraint']
@@ -68,7 +67,7 @@ def run(infile, outfile):
                 raise RuntimeError()
 
     clauses = []
-    process_constraint_block(clauses, constraints, [])
+    process_constraint_block(clauses, constraintMapFile, constraints, [])
 
     _util.print_step('constructing graph')
 
@@ -78,6 +77,8 @@ def run(infile, outfile):
         G.graph['comments'] = comments
 
     edges = {}
+    nodeConstraintMap = {"constraintMap": {}, "signMap": {}}
+    print("CLUASES: ", clauses)
     for cc, clause in enumerate(clauses):
         cnode = 'clause:' + str(cc + 1)
         clause_always_true = False
@@ -108,9 +109,32 @@ def run(infile, outfile):
                     pass # if no edges were created for the clause, no clause node exists so no need to remove
                 break
             G.add_edge(from_n, to_n)
+
+
+            print("CNSTRNODE: ", cnode, ", ", sym)
+            if (from_n[0] == "v"):
+                constraint = to_n
+                var = from_n
+            else:
+                constraint = from_n
+                var = to_n
+
+            constraints = nodeConstraintMap["constraintMap"]
+            if constraints.has_key(cnode):
+                constraints[cnode].append(sym)
+                nodeConstraintMap["signMap"][cnode].append(sense)
+            else:
+                constraints[cnode] = [sym]
+                nodeConstraintMap["signMap"][cnode] = [sense]
+
             edges[(from_n, to_n)] = True
 
     _util.print_step('saving')
+
+
+    ##FIX FILENAME
+    _util.json_dump(nodeConstraintMap, open(constraintMapFile, "w"))
+
 
     cPickle.dump([G], open(outfile, 'wb'), cPickle.HIGHEST_PROTOCOL)
 

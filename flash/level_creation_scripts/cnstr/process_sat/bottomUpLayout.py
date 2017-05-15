@@ -5,19 +5,49 @@ import itertools
 import math
 import json, os
 from Queue import *
+import _util
 #import treemapSlice
 ##import pydot
 ##import gv
 
 
-def json_dump(obj, fp):
-    json.dump(obj, fp, indent=2, separators=(',',': '), sort_keys=True)
-    fp.write('\n')
+
 
 def makeGroupName(x, y, size):
     return "Group" + str(x) + ":" + str(y) + "Size" + str(size)
 
-def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
+
+def getAllChildrenHelper(curNodeKey, ancestors, nodeGroupMap):
+    curNode = nodeGroupMap[curNodeKey]
+    if curNode.has_key("children"):
+        for child in curNode["children"]:
+            ancestors = list(ancestors)
+            ancestors.append(curNodeKey)
+            getAllChildrenHelper(child, ancestors, nodeGroupMap)
+    else:
+        nodeGroupMap[curNodeKey]["ancestors"] = ancestors
+
+def getAllChildren(topLevel, nodeGroupMap):
+    for parent in topLevel:
+        parentNode = nodeGroupMap[parent]
+        for child in parentNode["children"]:
+            getAllChildrenHelper(child, [parent], nodeGroupMap)
+
+
+## 
+
+
+def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
+
+
+    with open(constraintMapFile) as json_data:
+        nodeConstraintMap = json.load(json_data)
+
+
+## TODO: ensure each parent has at least 20 children or 10-30 - some way to reduce amount of levels
+
+## at end, need to transform nodeGroupMap to array of all nodes, by level, and try to have it in order from tree.  see json input from c#
+## need consistent naming scheme
 
     nx_graph = nx.Graph()
     
@@ -33,6 +63,7 @@ def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
     allLeaves = []
 
     currentLevel = []
+    level = 0
 
     size = 4 ## has to be int
 
@@ -55,7 +86,7 @@ def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
             newY = (nodeGroupMap[nodeGroupName]["position"][1] + nodeName["position"][1] * len(children)) / (len(children) + 1)
             nodeGroupMap[nodeGroupName]["position"] = (newX, newY)
         else:
-            nodeGroupMap[nodeGroupName] = {"children": [nodeName], "position": position, "numLeafNodes": 1, "size": 4, "gridSize": size}
+            nodeGroupMap[nodeGroupName] = {"name":nodeName, "children": [nodeName], "position": position, "numLeafNodes": 1, "size": 4, "gridSize": size}
             currentLevel.append(nodeGroupName)
 
         ##print("POISITION: ", position)
@@ -63,8 +94,14 @@ def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
         botLeft = (min(botLeft[0], position[0]), min(botLeft[1], position[1]))
         topRight = (max(topRight[0], position[0]), max(topRight[1], position[1]))
 
-        nodeGroupMap[nodeName] = {"parent": nodeGroupName, "position": position, "numLeafNodes": 1, "size": 2, "gridSize": 1} ## TODO DOUBLE CHECK SIZE AND GRIDSIZE
+        nodeGroupMap[nodeName] = {"name":nodeName, "parent": nodeGroupName, "position": position, "numLeafNodes": 1, "size": 2, "gridSize": 1} ## TODO DOUBLE CHECK SIZE AND GRIDSIZE
 
+        if nodeConstraintMap["constraintMap"].has_key(nodeName):  ## ADDS CONSTRAINTS IF IT's A CONSTRAINT NODE
+             nodeGroupMap[nodeName]["constraints"] = nodeConstraintMap["constraintMap"][nodeName]
+             nodeGroupMap[nodeName]["signs"] = nodeConstraintMap["signMap"][nodeName]
+
+
+    level += 1
 
     width = topRight[0] - botLeft[0]
     height = topRight[1] - botLeft[1]
@@ -97,7 +134,7 @@ def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
                 nodeGroupMap[parentGroupName]["position"] = (newX, newY)
 
             else:
-                nodeGroupMap[parentGroupName] = {"children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"], "gridSize": size}
+                nodeGroupMap[parentGroupName] = {"name":parentGroupName, "children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"], "gridSize": size}
                 nextLevel.append(parentGroupName)
 
             ## TODO toggle size to scale well in all cases
@@ -120,14 +157,59 @@ def layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
         currentLevel = nextLevel[:]
 
 
+        print("IN HERE WHAT Size: ", size * 2, "max: ", maxSize/4)
+        levelExport = []
+        subName = 0
+        for nodeName in currentLevel:
+            if len(levelExport) >= 250000:
+                _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
+                subName += 1
+                levelExport = []
+            else:
+                levelExport.append(nodeGroupMap[nodeName])
+
+        _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
+
+
+        level += 1
+
+
     nodeGroupMap["Group0"] = {"children": currentLevel, "position": (0,0), "numLeafNodes": 1}
 
     for nodeName in currentLevel:
         nodeGroupMap[nodeName]["parent"] = "Group0"
 
-    json_dump(nodeGroupMap, open(outputFile + "GroupingTree" + ".json", "w"))
+
+
+
+    getAllChildren([child for child in nodeGroupMap["Group0"]["children"]], nodeGroupMap)
+
+    levelExport = []
+    subName = 0
+    level = 0
+    for nodeId in tlp_graph.getNodes(): ## refactor
+        nodeName = tlp_id_to_name[nodeId] 
+        if len(levelExport) >= 250000:
+            _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
+            subName += 1
+            levelExport = []
+        else:
+            nodeGroupMap[nodeName].pop('gridSize', None)
+            nodeGroupMap[nodeName].pop('numLeafNodes', None)
+            levelExport.append(nodeGroupMap[nodeName])
+
+
+    ## get rid of parent field, gridSize, numLeafNodes, maybe size
+
+    _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
+
+
+
+
+    _util.json_dump(nodeGroupMap, open(outputFile + "GroupingTree" + ".json", "w"))
 
     ## use below for drawing each level to Tulip.  This takes a long time on large graphs and can also run out of memory
+    #draw solo version might be more memory efficient, or just slower
     '''
     parentNodes = [nodeGroupMap["Group0"]] 
 

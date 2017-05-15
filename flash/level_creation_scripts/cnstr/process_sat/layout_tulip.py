@@ -10,7 +10,7 @@ import collections
 
 NODE_SIZE = 5.0
 
-def layout_with_tulip(Gs, outputFile):
+def layout_with_tulip(Gs, constraintMapFile, outputFile):
     from tulip import tlp
     i = 1;
     for G in Gs:
@@ -85,7 +85,7 @@ def layout_with_tulip(Gs, outputFile):
                 break;
 
 
-        bottomUpLayout.layout(tlp_graph, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json') 
+        bottomUpLayout.layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json') 
         '''
         # update original graph
         node_layout = {}
@@ -108,7 +108,7 @@ def layout_with_tulip(Gs, outputFile):
         i = i + 1
         
 
-def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
+def run(infile, constraintMapFile, outfile, skip_if_trivial, node_min, node_max, show_labels):
     _util.print_step('loading')
 
     with open(infile, 'rb') as read_in:
@@ -116,7 +116,7 @@ def run(infile, outfile, skip_if_trivial, node_min, node_max, show_labels):
 
     _util.print_step('laying out')
 
-    layout_with_tulip(Gs, outfile)
+    layout_with_tulip(Gs, constraintMapFile, outfile)
 
     _util.print_step('saving')
     

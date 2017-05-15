@@ -1,7 +1,12 @@
 import sys, time
+import json, os
 
 start_time = None
 last_time = None
+
+def json_dump(obj, fp):
+    json.dump(obj, fp, indent=2, separators=(',',': '), sort_keys=True)
+    fp.write('\n')
 
 def print_step(step):
     global start_time, last_time

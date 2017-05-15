@@ -22,11 +22,13 @@ if __name__ == "__main__":
     
     constr_fn = '%s.json' % file_pref
     graph_fn = '%s.graph' % file_pref
-    version = input_cnstr.run(constr_fn, graph_fn)
+    constraint_map = '%smap.json' % file_pref
+
+    version = input_cnstr.run(constr_fn, constraint_map, graph_fn) ## sets up graph based on constraints
 
     graphs_fn = '%s.graphs' % file_pref
     ##out_pref = '%stulip' % file_pref
-    connected.run(graph_fn, graphs_fn, node_min, node_max)
+    connected.run(graph_fn, graphs_fn, node_min, node_max) ## CAN REMOVE.  just finds subcomponents to break down graph.  
     
     if LAYOUT_DOT:
         dot_dirn = '%s_dot_files' % file_pref
@@ -40,7 +42,7 @@ if __name__ == "__main__":
         layout_dot.run(graphs_fn, dot_dirn, False, node_min, node_max, False)
 
     else:
-        layout_tulip.run(graphs_fn, file_pref, False, node_min, node_max, False)
+        layout_tulip.run(graphs_fn, constraint_map, file_pref, False, node_min, node_max, False)
 '''
     
     if GROUP:
