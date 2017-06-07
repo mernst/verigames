@@ -5,49 +5,314 @@ import itertools
 import math
 import json, os
 from Queue import *
+import copy
 import _util
 #import treemapSlice
 ##import pydot
 ##import gv
 
 
-
+## TODO: Make sure you only create a parent if it contains enough children - NOTE: TRY REFACTORING FIRSTPASS
+## TODO: maybe combine loops so we don't iterate through three separate times.  - Would take some refactoring
+## Todo: figure out file size
 
 def makeGroupName(x, y, size):
     return "Group" + str(x) + ":" + str(y) + "Size" + str(size)
 
 
-def getAllChildrenHelper(curNodeKey, ancestors, nodeGroupMap):
-    curNode = nodeGroupMap[curNodeKey]
-    if curNode.has_key("children"):
-        for child in curNode["children"]:
-            ancestors = list(ancestors)
-            ancestors.append(curNodeKey)
-            getAllChildrenHelper(child, ancestors, nodeGroupMap)
-    else:
-        nodeGroupMap[curNodeKey]["ancestors"] = ancestors
+def separateInfoFiles(topNode, nodeGroupMap, outputFile):
+    ## have route file with top level (or top few levels)
 
-def getAllChildren(topLevel, nodeGroupMap):
-    for parent in topLevel:
-        parentNode = nodeGroupMap[parent]
-        for child in parentNode["children"]:
-            getAllChildrenHelper(child, [parent], nodeGroupMap)
+    ## then others are just named whatever
+
+    maxSize = 5000 ## adjust based on how long it takes to load
+
+    fileContents = []
+    fileNumber = 0
+    fileName = outputFile + "sub" 
+
+    #i = 0
+
+    for nodeKey in topNode["children"]:
+        curNode = nodeGroupMap[nodeKey]
+        fileContents.append(curNode) ## ensures all top level is in file 0
 
 
-## 
+    queue = Queue() ## TODO: figure out if need lifoqueue or not.  Make sure going through depth first to add to files
+    for nodeKey in topNode["children"]:
+        queue.put(nodeKey)
+
+
+    while not queue.empty(): ## TODO there's a bug in here somewhere relating to adding fileNames properly. NOT GOING DEPTH FIRST
+        nodeKey = queue.get()
+        curNode = nodeGroupMap[nodeKey]
+
+        ##for curNodeName in curNodes:
+        ##    curNode = nodeGroupMap[curNodeName]
+
+        if curNode.has_key("children"):
+            curNode["fileNames"] = []
+
+            for child in curNode["children"]:
+                childNode = nodeGroupMap[child]
+                if len(fileContents) >= maxSize:
+                    _util.json_dump({"contents": fileContents}, open(fileName + str(fileNumber) + ".json", "w"))
+                    fileContents = []
+                    fileNumber += 1
+
+                fileContents.append(childNode)
+                curNode["fileNames"].append(fileName + str(fileNumber))
+
+                queue.put(child)
+
+    _util.json_dump({"contents": fileContents}, open(fileName + str(fileNumber) + ".json", "w"))
+
+
+
+## combines edges that point to same group, only tracks edges starting at current depth
+def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
+
+    queue = Queue()
+    for node in tlp_graph.getNodes():
+        nodeKey = tlp_id_to_name[node]
+        print ("NODEKYES: ", nodeKey)
+        queue.put(nodeKey)
+
+    while not queue.empty():
+        nodeKey = queue.get()
+
+        node = nodeGroupMap[nodeKey]
+
+        if node.has_key("children") and not node.has_key("edges"):
+
+            node["edges"] = [] 
+
+            edgeDict = {}
+
+            for child in node["children"]:
+                childNode = nodeGroupMap[child] 
+                potentialEdges = childNode["edges"]
+
+                for edge in potentialEdges:
+
+                    parentEdge = copy.copy(edge)
+                    edgeHierarchy = copy.copy(parentEdge["pointingTo"])
+
+                    edgeHierarchy = edgeHierarchy[1:] ## removes first element (node from level below)
+
+                    print("parentEdge: ", parentEdge, " childEdge: ", edge)
+                    if len(edgeHierarchy) > 0:
+                        firstNode = edgeHierarchy[0] ## starts at level of parent node
+                        if not edgeDict.has_key(firstNode) and firstNode != nodeKey:
+                            print("inhere: ", firstNode)
+
+                            parentEdge["pointingPos"] = nodeGroupMap[firstNode]["position"]
+
+                            if node.has_key("parent") and node["parent"] == "Group0":
+                                print("toppopping")
+                                parentEdge.pop("pointingTo", None) ## this shouldn't affect the items in the edgeDict I don't think
+                            else:
+                                parentEdge["pointingTo"] = edgeHierarchy
+
+                            edgeDict[firstNode] = parentEdge["sign"]  ## node to sign
+                            node["edges"].append(parentEdge)
+                        
+                        elif edgeDict.has_key(firstNode):
+                            print("hasFIRSTNODE: ", firstNode)
+                            existingSign = edgeDict[firstNode]
+                            if existingSign != 2 and parentEdge["sign"] != existingSign:
+                                existingSign = 2
+                                print("Existingsign")
+                                for nodeEdge in node["edges"]:
+                                    if nodeEdge["pointingPos"] == nodeGroupMap[firstNode]["position"]:
+                                        print("soisdf", nodeGroupMap[firstNode])
+                                        nodeEdge["sign"] = 2
+                                        break
+                        
+                    edge["pointingTo"] = edge["pointingTo"][0] # sets level below to have only it's current level as pointer
+                    if childNode.has_key("children") and edge.has_key("pointingTo"):
+                        edge.pop("pointingTo", None)
+                    print("parentPointing: ", parentEdge["pointingPos"] , " childPointing: ", edge["pointingPos"])
+
+
+        if node.has_key("parent") and node["parent"] != "Group0":
+            queue.put(node["parent"])
+
+
+
+def makeListOfAncestors(nodeName, nodeGroupMap):
+
+    node = nodeGroupMap[nodeName]
+    parentList = [nodeName]
+    while node.has_key("parent") and node["parent"] != "Group0":
+        parentName = node["parent"]
+        parentList.append(parentName)
+        node = nodeGroupMap[parentName]
+
+    return parentList
+
+## TODO change these so edges only point to cur level
+def bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMap):
+
+    for nodeId in tlp_graph.getNodes(): 
+        nodeName = tlp_id_to_name[nodeId]
+
+        if nodeConstraintMap["constraintMap"].has_key(nodeName): ## only constraints are in here, not vars
+
+            constraints = nodeConstraintMap["constraintMap"][nodeName]
+            signs = nodeConstraintMap["signMap"][nodeName] ## should match constraints
+            nodeGroupMap[nodeName]["edges"] = []
+
+            i = 0
+            for varNodeName in constraints:
+
+                ## sets edges for constraint node, and for any var nodes it points to
+                nodeGroupMap[nodeName]["edges"].append({"fromConstraint": True, "sign": signs[i], "pointingPos": nodeGroupMap[varNodeName]["position"], "pointingTo":makeListOfAncestors(varNodeName, nodeGroupMap)})
+
+                if nodeGroupMap[varNodeName].has_key("edges"):
+                    nodeGroupMap[varNodeName]["edges"].append({"fromConstraint": False, "sign": signs[i], "pointingPos": nodeGroupMap[nodeName]["position"], "pointingTo": makeListOfAncestors(nodeName, nodeGroupMap)})
+                else:
+                    nodeGroupMap[varNodeName]["edges"] = [{"fromConstraint": False, "sign": signs[i], "pointingPos": nodeGroupMap[nodeName]["position"], "pointingTo": makeListOfAncestors(nodeName, nodeGroupMap)}]
+
+                i += 1
+
+
+def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fullHeight, lowestLevelUnderOneThousandNodes, outputFile):
+
+    levelToStartDivide = lowestLevelUnderOneThousandNodes
+
+    fileContents = []
+    ##botLeftCorner = (0,0) ##TODO REALLY FIGURE OUT FULLGRIDSIZE - IT's A MAGIC NUMBER THAT DOESN"T EVEN ALWAYS WORK
+    ##fullGridSize = topNode["gridSize"] * 4 ## VERIFY: should be 8 times size of fileGridSize because it's that ensures it encompasses full graph
+    ##fileGridSize = topNode["gridSize"] / 2 ## real first level is half size of group0
+    ##print("FILEGRIDSIZE: ", fileGridSize)
+    level = 0
+
+    curLevel = []
+    for nodeKey in topNode["children"]:
+        curNode = nodeGroupMap[nodeKey]
+        ##curNode["position"] = (curNode["position"][0] + addToNormalize[0], curNode["position"][0] + addToNormalize[0], 
+        fileContents.append(curNode)
+
+        if curNode.has_key("children"):
+            for childKey in curNode["children"]:
+                childNode = nodeGroupMap[childKey]
+                curLevel.append(childNode)
+
+        curNode.pop("children", None)
+        curNode.pop("parent", None)
+
+    routeFile = {"contents": fileContents, "routeInfo":{"totalNumBaseNodes":totalNumBaseNodes, "maxDepth": maxDepth, "fullWidth": fullWidth, "fullHeight": fullHeight, "levelToStartDivide": levelToStartDivide}} ## maybe supply factor above
+    _util.json_dump(routeFile, open(str((0,0)) + "level" + str(level) + ".json", "w"))
+    fileContents = []
+    #fileGridSize = fileGridSize / 2
+    level += 1
+
+    nextLevel = []
+    while len(curLevel) > 0:
+
+        numFilesInLevel = 1
+        posFileDict = {}
+
+        if (level > levelToStartDivide):
+            levelDiff = level - levelToStartDivide   #(fileGridSize / 4) ## 4 is starting size - refactor
+            ##if levelDiff % 2 != 0:
+            ##    levelDiff += 1
+
+            power = levelDiff * 2 + 2
+
+            numFilesInLevel = int(2 ** power)
+            print("numlevelsinfile: ", numFilesInLevel)
+            print("levetostartdidvide ", levelToStartDivide, "level ", level)
+
+            xSize = int(math.ceil(fullWidth / (numFilesInLevel ** .5)))
+            ySize = int(math.ceil(fullHeight / (numFilesInLevel ** .5)))
+
+            ## goes through full grid, setting up file quadrants
+            x = 0
+            while x < fullWidth:
+                y = 0
+                while y < fullHeight:
+                    posFileDict[x,y] = []
+                    y = y + ySize
+
+                x = x + xSize
+        else:
+            xSize = fullWidth 
+            ySize = fullHeight 
+            posFileDict[0,0] = []
+
+        print("POSFILEFILE: ", posFileDict)
+        for node in curLevel:
+            ##for childKey in parentNode["children"]:
+                ##childNode = nodeGroupMap[childKey]
+
+            pos = node["position"]
+
+            print("POSSSS: ", pos, "xsize", xSize, "ysize", ySize)
+
+            fileQuad = int(math.floor(pos[0] / (xSize + 1))) * xSize, int(math.floor(pos[1] / (ySize + 1))) * ySize
+
+            posFileDict[fileQuad].append(node)
+
+            if node.has_key("children"):
+                for childKey in node["children"]:
+                    childNode = nodeGroupMap[childKey]
+                    nextLevel.append(childNode) 
+
+            node.pop("children", None)
+            node.pop("parent", None)
+
+        print("NUMLEVELSKSDJFK: ", numFilesInLevel)
+        for filePos in posFileDict.keys():
+            ##if len(posFileDict[filePos] > 0): optimization to remove empty files
+            _util.json_dump({"contents": posFileDict[filePos]}, open(str(filePos) + "level" + str(level) + ".json", "w"))
+
+
+        curLevel = list(nextLevel)
+        nextLevel = []
+        ##fileGridSize = fileGridSize / 2
+        level += 1
+
+
+def calculateSize(nodeName, nodeGroupMap, size, useLog):
+    ## pass in name of node to find size of.
+    ## TODO move size calc to unity side - can also adjust dynamically then if needed
+    numLeafNodes = nodeGroupMap[nodeName]["numLeafNodes"] 
+
+    if useLog:
+        actualSize = math.log(numLeafNodes, 1.2)
+
+    else: 
+        quarterGridSize = size / 4
+        if numLeafNodes > quarterGridSize:
+            sizeOver = int(math.ceil(numLeafNodes - quarterGridSize))
+            print("SIZEOVER: ", sizeOver)
+            addOver = sizeOver / 4  ## test divide by 16 for very dense and large graphs
+            actualSize = quarterGridSize + addOver
+        else:
+            actualSize = numLeafNodes
+
+    nodeGroupMap[nodeName]["size"] = actualSize
 
 
 def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
-
 
     with open(constraintMapFile) as json_data:
         nodeConstraintMap = json.load(json_data)
 
 
+
+
+    ## if different layout is what's causing scale issues, examine the differences for same graph
+    ## check if size > threshold for other algorithm,
+    ## if so, scale down positions or shift them over
+
+    ## will this help with too many nodes being grouped together?  Maybe, hard to tell till we see side by side
+
+
 ## TODO: ensure each parent has at least 20 children or 10-30 - some way to reduce amount of levels
 
-## at end, need to transform nodeGroupMap to array of all nodes, by level, and try to have it in order from tree.  see json input from c#
-## need consistent naming scheme
 
     nx_graph = nx.Graph()
     
@@ -56,58 +321,67 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
 
         nx_graph.add_edge(tlp_id_to_name[tlp_graph.source(edge)], tlp_id_to_name[tlp_graph.target(edge)])
 
+
+    botLeft = view_layout.getMin()
+    topRight = view_layout.getMax()
     nodeGroupMap = {}
 
-    botLeft = (1000,1000)
-    topRight = (0,0)
     allLeaves = []
 
     currentLevel = []
     level = 0
 
-    size = 4 ## has to be int
+    size = 16 ## has to be int
+
+    totalNumBaseNodes = 0
+
+    groupNumber = 1  ## 0 is still reserved for top root node
 
     for nodeId in tlp_graph.getNodes(): 
+
+        totalNumBaseNodes += 1
 
         nodeName = tlp_id_to_name[nodeId]
         allLeaves.append(nodeName)
 
         position = (view_layout[nodeId][0], view_layout[nodeId][1])
+        normalizedPosition = (position[0] + botLeft[0] * -1, position[1] + botLeft[1] * -1)
 
-        gridSq = ((int(position[0]) / size) * size, (int(position[1]) / size) * size)
+        normalizedPosition = (round(normalizedPosition[0], 2), round(normalizedPosition[1], 2))
 
+        print("botLeft ", botLeft, "topRight ", topRight, " position ", position, " normalizedPosition ", normalizedPosition)
+
+        gridSq = ((int(normalizedPosition[0]) / size) * size, (int(normalizedPosition[1]) / size) * size)
         nodeGroupName = makeGroupName(str(gridSq[0]), str(gridSq[1]), size)
+
+        nodeGroupMap[nodeName] = {"name":nodeName, "parent": nodeGroupName, "position": normalizedPosition, "numLeafNodes": 1, "size": 1} ## TODO DOUBLE CHECK SIZE AND GRIDSIZE
+
         if nodeGroupMap.has_key(nodeGroupName):
             nodeGroupMap[nodeGroupName]["children"].append(nodeName)
             nodeGroupMap[nodeGroupName]["numLeafNodes"] += 1
 
             children = nodeGroupMap[nodeGroupName]["children"]
-            newX = (nodeGroupMap[nodeGroupName]["position"][0] + nodeName["position"][0] * len(children)) / (len(children) + 1)
-            newY = (nodeGroupMap[nodeGroupName]["position"][1] + nodeName["position"][1] * len(children)) / (len(children) + 1)
-            nodeGroupMap[nodeGroupName]["position"] = (newX, newY)
+            newX = (nodeGroupMap[nodeGroupName]["position"][0] + nodeGroupMap[nodeName]["position"][0] * len(children)) / (len(children) + 1)
+            newY = (nodeGroupMap[nodeGroupName]["position"][1] + nodeGroupMap[nodeName]["position"][1] * len(children)) / (len(children) + 1)
+            nodeGroupMap[nodeGroupName]["position"] = (round(newX, 2), round(newY, 2))
         else:
-            nodeGroupMap[nodeGroupName] = {"name":nodeName, "children": [nodeName], "position": position, "numLeafNodes": 1, "size": 4, "gridSize": size}
+            nodeGroupMap[nodeGroupName] = {"name":nodeGroupName, "children": [nodeName], "position": normalizedPosition, "numLeafNodes": 1, "size": 1}
             currentLevel.append(nodeGroupName)
 
-        ##print("POISITION: ", position)
-        
-        botLeft = (min(botLeft[0], position[0]), min(botLeft[1], position[1]))
-        topRight = (max(topRight[0], position[0]), max(topRight[1], position[1]))
 
-        nodeGroupMap[nodeName] = {"name":nodeName, "parent": nodeGroupName, "position": position, "numLeafNodes": 1, "size": 2, "gridSize": 1} ## TODO DOUBLE CHECK SIZE AND GRIDSIZE
 
-        if nodeConstraintMap["constraintMap"].has_key(nodeName):  ## ADDS CONSTRAINTS IF IT's A CONSTRAINT NODE
-             nodeGroupMap[nodeName]["constraints"] = nodeConstraintMap["constraintMap"][nodeName]
-             nodeGroupMap[nodeName]["signs"] = nodeConstraintMap["signMap"][nodeName]
+    lowestLevelUnderOneThousandNodes = -1  # change to highest over 1000
 
 
     level += 1
 
     width = topRight[0] - botLeft[0]
     height = topRight[1] - botLeft[1]
-    maxSize = int(min(width, height))
+    print("finalwidth: ", width, "finalheight: ", height)
 
-    size = size * 2
+    maxSize = int(max(width, height)) ## int(min(width, height))
+
+    size = size * 3
     while size < maxSize/4: 
    
         nextLevel = []
@@ -131,48 +405,31 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
                 children = nodeGroupMap[parentGroupName]["children"]
                 newX = (nodeGroupMap[parentGroupName]["position"][0] * origParentLeafCount + childNode["position"][0] * childLeafCount) / (childLeafCount + origParentLeafCount)
                 newY = (nodeGroupMap[parentGroupName]["position"][1] * origParentLeafCount + childNode["position"][1] * childLeafCount) / (childLeafCount + origParentLeafCount)
-                nodeGroupMap[parentGroupName]["position"] = (newX, newY)
+                nodeGroupMap[parentGroupName]["position"] = (round(newX, 2), round(newY, 2))
 
             else:
-                nodeGroupMap[parentGroupName] = {"name":parentGroupName, "children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"], "gridSize": size}
+                nodeGroupMap[parentGroupName] = {"name":parentGroupName, "children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"]}
                 nextLevel.append(parentGroupName)
 
-            ## TODO toggle size to scale well in all cases
 
-            numLeafNodes = nodeGroupMap[parentGroupName]["numLeafNodes"] 
-            quarterGridSize = size / 4
-            if numLeafNodes > quarterGridSize:
-                sizeOver = int(math.ceil(numLeafNodes - quarterGridSize))
-                print("SIZEOVER: ", sizeOver)
-                addOver = sizeOver / 4  ## test divide by 16 for very dense and large graphs
-                actualSize = quarterGridSize + addOver
-            else:
-                actualSize = numLeafNodes
+                calculateSize(parentGroupName, nodeGroupMap, size, totalNumBaseNodes > 80000) ## NOTE: HAS TO MATCH VALUE FROM LAYOUTTULIP - could pass it in
 
-            nodeGroupMap[parentGroupName]["size"] = actualSize
             childNode["parent"] = parentGroupName
 
         print("SIZE: ", size)
-        size = size * 2
+        size = size * 4
+
+        print("LENCURRENTLYEV: ", len(nextLevel))
+        if lowestLevelUnderOneThousandNodes == -1 and len(nextLevel) < 350: ## CHANGE THIS FOR effecting when to start splitting files
+            print("lowsfoijs: ", level + 2)
+            lowestLevelUnderOneThousandNodes = level + 2
+
         currentLevel = nextLevel[:]
-
-
-        print("IN HERE WHAT Size: ", size * 2, "max: ", maxSize/4)
-        levelExport = []
-        subName = 0
-        for nodeName in currentLevel:
-            if len(levelExport) >= 250000:
-                _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
-                subName += 1
-                levelExport = []
-            else:
-                levelExport.append(nodeGroupMap[nodeName])
-
-        _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
-
 
         level += 1
 
+    if len(currentLevel) > 350: ## in case even highest level has too many nodes (which you should probably fix by adding more levels)
+        lowestLevelUnderOneThousandNodes = level - 1
 
     nodeGroupMap["Group0"] = {"children": currentLevel, "position": (0,0), "numLeafNodes": 1}
 
@@ -181,9 +438,19 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
 
 
 
+    bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMap)
 
-    getAllChildren([child for child in nodeGroupMap["Group0"]["children"]], nodeGroupMap)
+    bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap)
 
+    lowestLevelUnderOneThousandNodes = max(level - lowestLevelUnderOneThousandNodes, 0) ## to get level from top
+    
+    print("actuallowestlevel: ", level - 1)
+
+    LevelFiles(nodeGroupMap["Group0"], totalNumBaseNodes, nodeGroupMap, level, int(width + 1), int(height + 1), lowestLevelUnderOneThousandNodes, outputFile)
+
+    ##separateInfoFiles(nodeGroupMap["Group0"], nodeGroupMap, outputFile)
+
+    '''
     levelExport = []
     subName = 0
     level = 0
@@ -202,7 +469,7 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
     ## get rid of parent field, gridSize, numLeafNodes, maybe size
 
     _util.json_dump(levelExport, open(outputFile + "GroupingLevel" + str(level) + "sub" + str(subName) + ".json", "w"))
-
+    '''
 
 
 

@@ -119,13 +119,17 @@ def run(infile, constraintMapFile, outfile):
                 constraint = from_n
                 var = to_n
 
+            if sense:
+                sign = 1
+            else:
+                sign = -1
             constraints = nodeConstraintMap["constraintMap"]
             if constraints.has_key(cnode):
                 constraints[cnode].append(sym)
-                nodeConstraintMap["signMap"][cnode].append(sense)
+                nodeConstraintMap["signMap"][cnode].append(sign)
             else:
                 constraints[cnode] = [sym]
-                nodeConstraintMap["signMap"][cnode] = [sense]
+                nodeConstraintMap["signMap"][cnode] = [sign]
 
             edges[(from_n, to_n)] = True
 
