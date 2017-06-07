@@ -190,6 +190,8 @@ package scenes.splashscreen
 					dataLog["gameTime"] = World.gameTimer.currentCount;
 					dataLog["realLevelsTime"] = World.realLevelsTimer.currentCount;
 					dataLog["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
+					dataLog["tutorialOverCompletion"] = World.tutorialOverCompletion;
+					dataLog["tutorialMoves"] = World.tutorialMoves;
 					dataLog["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
 					dataLog["remainingTotalLevels"] = World.remainingTotalLevels;
 					//dataLog["LevelsIgnored"] = World.levelNumberArray.length;

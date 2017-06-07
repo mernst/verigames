@@ -1804,6 +1804,7 @@ package scenes.game.components
 			
 			var o:Object = new Object();
 			o["levelName"] = World.targetReachedLevelName;
+			o["levelFile"] = m_currentLevel.m_levelFileName;
 			o["actionTaken"] = "LevelComplete";
 			o["movesPerLevel"] = World.movesPerLevel;
 			o["percentBrushCircle"] = String((World.movesBrushCircle/World.movesPerLevel)*100);
@@ -1811,10 +1812,62 @@ package scenes.game.components
 			o["percentBrushHexagon"] = String((World.movesBrushHexagon/World.movesPerLevel)*100);
 			o["percentBrushSquare"] = String((World.movesBrushSquare / World.movesPerLevel) * 100);
 
+			
+			trace("Level: " + m_currentLevel.level_name);
+			trace("Current Score: " + m_currentLevel.getCurrentScore())
+			trace("Target Score: " + m_currentLevel.getTargetScore())
+			var delta:Number = Math.max(0,m_currentLevel.getCurrentScore() - m_currentLevel.getTargetScore());	
+			var gameTimer:Number = World.gameTimer.currentCount;
+			var levelTime:Number = gameTimer - World.levelStartTime;
+			World.levelStartTime = gameTimer;
+			/*
+			trace("Delta: " + delta);
+			trace("Circle: " + World.movesBrushCircle);
+			trace("Diamond: " + World.movesBrushDiamond);
+			trace("Hex: " + World.movesBrushHexagon);
+			trace("Square: " + World.movesBrushSquare);
+			trace("Moves: " + World.movesPerLevel);
+			trace("Time: " + levelTime);
+				*/
+			if (!TutorialController.tutorialsDone || m_currentLevel.level_name == "Zoom, zoom")
+			{
+				World.tutorialOverCompletion += delta;
+				World.tutorialMoves += World.movesPerLevel;
+				logFeatures(m_currentLevel.level_name, delta, levelTime, World.movesPerLevel,World.movesBrushHexagon,World.movesBrushSquare,World.movesBrushCircle,World.movesBrushDiamond);
+			}
+			else
+				logFeatures(m_currentLevel.m_levelFileName, delta, levelTime, World.movesPerLevel,World.movesBrushHexagon,World.movesBrushSquare,World.movesBrushCircle,World.movesBrushDiamond);
+			
 			// When the user clicked the Next Level button, signal an action
 			NULogging.action(o, NULogging.ACTION_TYPE_NEXT_LEVEL_CLICKED);
 			// When a new level button is pressed, signal a run End event
 			NULogging.runEnd(o);
+		}
+		
+		public function logFeatures(name:String, delta:Number, time:Number, numMoves:Number, hex:Number, square:Number, circle:Number, diamond:Number)
+		{
+			var playerFeatures:Object = new Object();
+			playerFeatures["isFeatureData"] = "true";
+			playerFeatures["hitID"] = World.hitId;
+			playerFeatures["playerID"] = World.playerID;
+			playerFeatures["level"] = name;
+			var inTutorial:String;
+			if (TutorialController.tutorialsDone)
+				inTutorial = "false";
+			else
+				inTutorial = "true";
+			playerFeatures["tutorial"] = inTutorial;
+			playerFeatures["overcompletion"] = delta;
+			playerFeatures["time"] = time;
+			playerFeatures["moves"] = numMoves;
+			playerFeatures["brushHex"] = hex;
+			playerFeatures["brushSquare"] = square;
+			playerFeatures["brushCircle"] = circle;
+			playerFeatures["brushDiamond"] = diamond;
+			playerFeatures["start"] = m_currentLevel.getStartingScore();
+			playerFeatures["score"] = m_currentLevel.getCurrentScore();
+			playerFeatures["target"] = m_currentLevel.getTargetScore();
+			NULogging.log(playerFeatures);
 		}
 		
 		public function logResult(curPlayerRating:Number, newPlayerRating:Number, curLevelRating:Number, newLevelRating:Number, result:int):void
@@ -1872,7 +1925,7 @@ package scenes.game.components
 			
 			trace("--------------------------------> Skip count: " + m_skipCount);
 			trace("--------------------------------> Remaining total levels: " + World.remainingTotalLevels);
-			if (World.remainingTotalLevels == 0 || m_skipCount >= 3)
+			if (World.remainingTotalLevels == 0 || m_skipCount >= 5)
 			{
 				passButton.visible = true;
 				m_showSkipToEnd = true;
@@ -1908,6 +1961,11 @@ package scenes.game.components
 				else
 					World.totallevelsAbandoned++;
 			}
+			var delta:Number = m_currentLevel.getCurrentScore() - m_currentLevel.getTargetScore();	
+			var gameTimer:Number = World.gameTimer.currentCount;
+			var levelTime:Number = gameTimer - World.levelStartTime;
+			World.levelStartTime = gameTimer;
+			logFeatures(m_currentLevel.m_levelFileName, delta, levelTime, World.movesPerLevel,World.movesBrushHexagon,World.movesBrushSquare,World.movesBrushCircle,World.movesBrushDiamond);
 			
 			World.levelTimer.stop();
 			var dataLog:Object = new Object();
@@ -1939,11 +1997,15 @@ package scenes.game.components
 				}
 			}
 			dataLog["levelName"] = World.currentLevelName;
+			dataLog["levelFile"] = m_currentLevel.m_levelFileName;
 			dataLog["movesPerLevel"] = World.movesPerLevel;
 			dataLog["levelTime"] = World.levelTimer.currentCount;
 			//dataLog["HitId"] = World.hitId;
 			World.realLevelsSkipped += 1;
 			NULogging.log(dataLog);
+			
+			
+			
 			
 			World.levelTimer.reset();
 			

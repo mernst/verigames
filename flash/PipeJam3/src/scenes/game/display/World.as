@@ -120,6 +120,7 @@ package scenes.game.display
 		protected var m_currentLevelNumber:int;
 		public var currentPercent:Number;
 		public var targetPercent:Number;
+		
 		public static var currentLevelName:String;
 		
 		protected var undoStack:Vector.<UndoEvent>;
@@ -196,6 +197,9 @@ package scenes.game.display
 		static public var minTimeLevelName:String = "";
 		static public var workerId:String = "";
 		static public var hitId:String = "";
+		static public var tutorialOverCompletion:Number = 0;
+		static public var tutorialMoves:Number = 0;
+		static public var levelStartTime:Number = 0;
 		
 		// 1 -> Random Order
 		// 2 -> Rating Order
@@ -245,7 +249,11 @@ package scenes.game.display
 				var levelObj:Object = allLevels[level_index];
 				var levelId:String = levelObj["id"];
 				var levelDisplayName:String = levelId;
-				var levelFileName:String = levelObj["file"];
+				var levelFileName:String;
+				if(!TutorialController.tutorialsDone)
+					levelFileName = levelObj["display_name"];
+				else
+					levelFileName = levelObj["file"];
 				trace("Level file name: " + levelFileName);
 				if (levelObj.hasOwnProperty("display_name") && !(PipeJam3.ASSET_SUFFIX == "Turk")) levelDisplayName = levelObj["display_name"];
 				var levelLayoutObj:Object = findLevelFile(levelId, m_layoutObj);

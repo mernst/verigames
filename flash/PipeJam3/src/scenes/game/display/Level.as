@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import com.adobe.utils.IntUtil;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -81,6 +82,8 @@ package scenes.game.display
 	import utils.XMath;
 	import utils.XObject;
 	import utils.XString;
+	
+	import mx.collections.ArrayList;
 	
 	/**
 	 * Level all game components - widgets and links
@@ -195,6 +198,271 @@ package scenes.game.display
 			//Init level ratings using levels generated from previous MTurk trial
 			loadLevelRatings();
 		 }
+		
+		 public function countVal(covered:Array, value:int)
+		 {
+			 var count:int = 0;
+			 for (var key:String in covered)
+				{
+					if (covered[key] == value)
+						count++;
+				}
+				return count;
+		 }
+		 
+		 public function MST()
+		 {
+			 var nodesArray = new Array();
+			var edgesArray = new Array();
+			for (var k:Object in levelGraph.variableDict)
+			{
+				nodesArray.push(k);
+			}
+			for (var k:Object in levelGraph.clauseDict)
+			{
+				nodesArray.push(k);
+			}
+			var nodesArrayList = new ArrayList(nodesArray);
+			for (var k:Object in levelGraph.constraintsDict)
+			{
+				edgesArray.push(k);
+			}
+			var edgesArrayList = new ArrayList(edgesArray);
+			var MST = new Array();
+			var covered = new Array();
+			for (var i:int = 0; i < nodesArray.length; i++ )
+			{
+				covered[nodesArray[i]] = i;
+			}
+			//while (covered.length != nodesArrayList.length)
+			for (var j:int = 0; j < edgesArray.length; j++)
+			{
+				//var edgeIdx:int = Math.floor(Math.random() * edgesArray.length);
+				//var edge:String = edgesArray[edgeIdx];
+				//edgesArray.splice(edgeIdx, 1);
+				var edge:String = edgesArray[j];
+				var arrowIdx:int = edge.search("->");
+				var lhs:String = edge.substring(0, arrowIdx - 1);
+				var rhs:String = edge.substring(arrowIdx + 3, edge.length);
+				//if(_fileName == "quinn")
+				//	trace("Edge: " + edge);
+		//		if (covered.indexOf(lhs) == -1 || covered.indexOf(rhs) == -1)
+				if(covered[lhs] != covered[rhs])
+				{
+					
+					/*
+					if (_fileName == "quinn")
+					{
+						trace("LHS: " + lhs + "\tRHS: " + rhs + "\tCLHS: " + covered[lhs] + "\tCRHS: " + covered[rhs]);
+						trace("Adding to MST...");
+					}
+					*/
+					var lhsVal:int = covered[lhs];
+					var rhsVal:int = covered[rhs];
+					if (countVal(covered, lhsVal) > countVal(covered, rhsVal))
+					{
+						//covered[rhs] = covered[lhs];
+						for (var key:String in covered)
+						{
+							if (covered[key] == rhsVal)
+							{
+								//if (_fileName == "quinn")
+								//	trace("Change..." + key);
+								covered[key] = lhsVal;
+							}
+						}
+					}
+					else
+						{
+							//covered[lhs] = covered[rhs];
+							for (var key:String in covered)
+						{
+							if (covered[key] == lhsVal)
+							{
+								//if (_fileName == "quinn")
+								//	trace("Change..." + key);
+								covered[key] = rhsVal;
+							}
+						}
+						}
+					//if (_fileName == "quinn")
+					//	trace("CLHS: " + covered[lhs] + "\tCRHS: " + covered[rhs]);
+					MST.push(edge);
+					/*
+					if(covered.indexOf(lhs) == -1)
+						covered.push(lhs);
+					if(covered.indexOf(rhs) == -1)
+						covered.push(rhs);
+						*/
+				}
+			}
+/*
+			if(_fileName == "quinn")
+			{for (var i:int = 0; i < MST.length; i++)
+				trace(MST[i]);
+				
+			 for (var key:String in covered)
+			 {
+				trace(key + "\t" + covered[key]);
+			 }
+			}
+			*/
+			trace("Total Number of Edges: " + edgesArray.length + "\tEdges in MST: " + MST.length);
+		 }
+		 
+		 public function treewidth()
+		 {
+			 //trace("TREE WIDTH");
+			 var nodesArray = new Array();
+			var edgesArray = new Array();
+			for (var k:Object in levelGraph.variableDict)
+			{
+				nodesArray.push(k);
+			}
+			for (var k:Object in levelGraph.clauseDict)
+			{
+				nodesArray.push(k);
+			}
+			var nodesArrayList = new ArrayList(nodesArray);
+			for (var k:Object in levelGraph.constraintsDict)
+			{
+				edgesArray.push(k);
+			}
+			var edgesArrayList = new ArrayList(edgesArray);
+			
+				var lb:Number = 0;
+			while (nodesArrayList.length > 0)
+			{
+				var degrees:Array = computeDegrees(nodesArrayList.toArray(), edgesArrayList.toArray());
+				var neighbors:Array = findNeighbors(nodesArrayList.toArray(), edgesArrayList.toArray());
+			
+				/*
+				trace("Degrees: ");
+				for (var d in degrees)
+					trace(d + ": " + degrees[d])
+				trace("Neighbors: ");
+				for (var n in neighbors)
+					trace(n + ": " + neighbors[n])
+					*/
+				var minDegreeNode:String = getMinDegreeNode(degrees);
+				lb = Math.max(lb,degrees[minDegreeNode]);
+				var minDegreeNeighbor:String = findMinDegreeNeighbor(neighbors[minDegreeNode], degrees);
+				//trace("MinDegNode: " + minDegreeNode + "\tMinDegNeighb: " + minDegreeNeighbor);
+				var tempEdgeList:ArrayList = new ArrayList();
+				for (var i:int = 0; i < edgesArrayList.length; i++ )
+				{
+					var edge:String = edgesArrayList.getItemAt(i);
+					//trace(edge); //c_8 -> var_7
+					var arrowIdx:int = edge.search("->");
+					var lhs:String = edge.substring(0, arrowIdx - 1);
+					var rhs:String = edge.substring(arrowIdx + 3, edge.length);
+					if (lhs == minDegreeNode)
+						lhs = minDegreeNeighbor;
+					else if (rhs == minDegreeNode)
+						rhs = minDegreeNeighbor;
+					var newEdge:String = lhs + ' -> ' + rhs;
+					/*
+					if (lhs == rhs)
+						edgesArrayList.removeItemAt(i);
+					else
+						edgesArrayList.setItemAt(newEdge, i);
+						*/
+					if (lhs != rhs)
+						tempEdgeList.addItem(newEdge);
+				}
+				edgesArrayList = tempEdgeList;
+				/*
+				trace("After update");
+				for (var i:int = 0; i < edgesArrayList.length; i++)
+					trace(edgesArrayList.getItemAt(i));
+					*/
+				nodesArrayList.removeItem(minDegreeNode);
+				//trace("Length: " + nodesArrayList.length);
+			}
+			trace("TREE WIDTH: " + lb);
+		 }
+		
+		 public function computeDegrees(nodes:Array, edges:Array)
+		 {
+			var degrees = new Array();
+			for (var i:int = 0; i < nodes.length; i++)
+			{
+				degrees[nodes[i]] = 0;
+			}
+			
+			for (var j:int = 0; j < edges.length; j++)
+			{
+				var edge:String = edges[j];
+				var arrowIdx:int = edge.search("->");
+				var lhs:String = edge.substring(0, arrowIdx - 1);
+				var rhs:String = edge.substring(arrowIdx + 3, edge.length);
+				degrees[lhs] += 1;
+				degrees[rhs] += 1;
+			} 
+			return degrees;
+		 }
+		 
+		 public function findNeighbors(nodes:Array, edges:Array)
+		 {
+			 var neighbors = new Array();
+			for (var i:int = 0; i < nodes.length; i++)
+			{
+				neighbors[nodes[i]] = new Array();
+			}
+			
+			for (var j:int = 0; j < edges.length; j++)
+			{
+				var edge:String = edges[j];
+				var arrowIdx:int = edge.search("->");
+				var lhs:String = edge.substring(0, arrowIdx - 1);
+				var rhs:String = edge.substring(arrowIdx + 3, edge.length);
+				neighbors[lhs].push(rhs);
+				neighbors[rhs].push(lhs);
+			} 
+			return neighbors;
+		 }
+		 
+		 public function assArrayLength(arr:Array)
+		 {
+			 var count:int = 0;
+			 for (var k in arr)
+				count++;
+			 return count;
+		 }
+		 
+		 public function findMinDegreeNeighbor(neighbors:Array, degrees:Array)
+		 {
+			// trace("inside minNeighbor: ");
+			 var min:Number = Number.MAX_VALUE;
+			 var minNeighbor:String;
+			 for (var n in neighbors)
+			 {
+				var node:String = neighbors[n];
+				if (degrees[node] < min)
+				{
+					min = degrees[node];
+					minNeighbor = node;
+				}
+			 }
+			 return minNeighbor;
+		 }
+		 
+		 public function getMinDegreeNode(degrees:Array)
+		 {
+			// trace("Inside getMin");
+			 var min:Number = Number.MAX_VALUE;
+			 var minNode:String;
+			 for (var d in degrees)
+			 {
+				if (degrees[d] < min)
+				{
+					min = degrees[d];
+					minNode = d;
+				}
+			 }
+			 return minNode;
+		 }
+		 
 		 
 		public function Level(_name:String, _fileName:String, _levelGraph:ConstraintGraph, _levelObj:Object, _levelLayoutObj:Object, _levelAssignmentsObj:Object, _originalLevelName:String)
 		{
@@ -204,6 +472,11 @@ package scenes.game.display
 			original_level_name = _originalLevelName;
 			
 			levelGraph = _levelGraph;
+			trace("LEVEL GRAPH***********");
+			
+			//MST();
+			//treewidth();
+			
 			levelObj = _levelObj;
 			m_levelLayoutObj = _levelLayoutObj;
 			m_levelLayoutName = _levelLayoutObj["id"];
@@ -215,7 +488,7 @@ package scenes.game.display
 			m_levelRating = levelRatings[m_levelFileName];
 			m_player = new GlickoPlayer(m_levelRating);
 			
-			trace("File Name: " + _fileName + "\tRating: " + m_levelRating);
+			trace("File Name: " + _fileName + "\tNumVars: " + levelGraph.nVars + "\tNumClauses: " + levelGraph.nClauses + "\tNumConstraints: " + levelGraph.nConstraints + "\tRating: " + m_levelRating);
 			
 			m_tutorialTag = m_levelLayoutObj["tutorial"];
 			if (m_tutorialTag != null) {
@@ -1309,6 +1582,11 @@ package scenes.game.display
 			return m_targetScore;
 		}
 		
+		public function getStartingScore():int
+		{
+			return startingScore;
+		}
+		
 
 		public function setTargetScore(score:int):void
 		{
@@ -1418,7 +1696,23 @@ package scenes.game.display
 		
 		public function onUseSelectionPressed(choice:String):void
 		{
+			trace("Inside onUseSelectionPressed...");
 			//save selection for undo
+			World.totalMoves += 1;
+				World.movesPerLevel += 1;
+				trace("Current Brush: ",World.currentBrush);
+				if (World.currentBrush == "BrushSquare") {
+					World.movesBrushSquare += 1;
+				}
+				if (World.currentBrush == "BrushHexagon") {
+					World.movesBrushHexagon += 1;
+				}
+				if (World.currentBrush == "BrushCircle") {
+					World.movesBrushCircle += 1;
+				}
+				if (World.currentBrush == "BrushDiamond") {
+					World.movesBrushDiamond += 1;
+				}
 			nodeIDToConstraintsTwoWayMap = new Dictionary;
 			var count:int = 1;
 			var newAssignmentValue:int;
@@ -1531,6 +1825,7 @@ package scenes.game.display
 		//this is a test robot. It will find a paradox, select neighboring nodes, solve that area, and repeat
 		public function solveSelection(updateCallback:Function, doneCallback:Function, firstRun:Boolean = false):void
 		{
+			trace("solveSelection called...");
 			if(firstRun)
 			{
 				solverRunningTime = new Date().getTime();
@@ -1591,7 +1886,8 @@ package scenes.game.display
 			//figure out which edges have both start and end components selected (all included edges have both ends selected?)
 			//assign connected components to component to edge constraint number dict
 			//create three constraints for conflicts and weights
-			//run the solver, passing in the callback function		
+			//run the solver, passing in the callback function	
+			trace("solveSelection1() called...")
 			updateCallback = _updateCallback;
 			doneCallback = _doneCallback;
 			startingSelectedNodeCount = selectedNodes.length;
@@ -1645,7 +1941,7 @@ package scenes.game.display
 				
 				World.totalMoves += 1;
 				World.movesPerLevel += 1;
-				trace("LOG_",World.currentBrush);
+				trace("Current Brush: ",World.currentBrush);
 				if (World.currentBrush == "BrushSquare") {
 					World.movesBrushSquare += 1;
 				}
@@ -1720,10 +2016,13 @@ package scenes.game.display
 				for(var ii:int = 1;ii<counter;ii++)
 				{
 					var gameNode:VariableNode = nodeIDToConstraintsTwoWayMap[ii];
+					
 					if(gameNode.isNarrow)
 						initvarsArray.push(0);
 					else
 						initvarsArray.push(1);
+						
+					//initvarsArray.push(1);
 				}
 
 				//build in a delay to allow UI to change
@@ -2084,6 +2383,7 @@ package scenes.game.display
 		public function solverUpdate(vars:Array, unsat_weight:int):void
 		{
 			trace("update", unsat_weight);
+			trace("solverUpdate called...");
 			if(	m_inSolver == false || unsat_weight > m_unsat_weight) //got marked done early
 				return;
 			m_unsat_weight = unsat_weight;
@@ -2100,6 +2400,7 @@ package scenes.game.display
 		
 		protected function updateNodes(undo:Boolean = false):void
 		{
+			trace("updateNodes called...");
 			if(!m_lastVarValues)
 				return;
 			

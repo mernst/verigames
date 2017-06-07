@@ -476,10 +476,7 @@ package scenes.game.components
 				level.setTargetScore(maxConflicts);
 			}
 			else{
-				if(!TutorialController.tutorialsDone)
-					level.setTargetScore(maxConflicts * 0.99);	
-				else
-					level.setTargetScore(maxConflicts);	
+				level.setTargetScore(maxConflicts * 0.99);
 			}
 			
 			if(level.currentScore >= level.getTargetScore()) {trace("Current score " + level.currentScore + " is >= " + level.getTargetScore()); /* level.setTargetScore(level.currentScore + 1)*/ }
