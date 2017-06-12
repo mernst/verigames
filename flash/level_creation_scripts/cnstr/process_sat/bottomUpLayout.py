@@ -75,6 +75,7 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
     queue = Queue()
     for node in tlp_graph.getNodes():
         nodeKey = tlp_id_to_name[node]
+
         print ("NODEKYES: ", nodeKey)
         queue.put(nodeKey)
 
@@ -89,14 +90,27 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
 
             edgeDict = {}
 
+            parentSatPercent = 0.0
+
+            totalNumConstraintNodes = 0
+            parentNumSat = 0
+
             for child in node["children"]:
                 childNode = nodeGroupMap[child] 
                 potentialEdges = childNode["edges"]
 
+                if childNode.has_key("psat"):
+                    totalNumConstraintNodes += childNode["numConstraintNodes"]
+                    parentNumSat += childNode["numSat"]
+                    ##parentSatPercent += childNode["psat"] * (childNode["numConstraintNodes"] / float(totalNumConstraintNodes))
+
+                childNode.pop("numConstraintNodes", None)
+                childNode.pop("numSat", None)
+
                 for edge in potentialEdges:
 
                     parentEdge = copy.copy(edge)
-                    edgeHierarchy = copy.copy(parentEdge["pointingTo"])
+                    edgeHierarchy = copy.copy(parentEdge["to"])
 
                     edgeHierarchy = edgeHierarchy[1:] ## removes first element (node from level below)
 
@@ -106,34 +120,58 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
                         if not edgeDict.has_key(firstNode) and firstNode != nodeKey:
                             print("inhere: ", firstNode)
 
-                            parentEdge["pointingPos"] = nodeGroupMap[firstNode]["position"]
+                            parentEdge["oPos"] = nodeGroupMap[firstNode]["position"]
 
                             if node.has_key("parent") and node["parent"] == "Group0":
                                 print("toppopping")
-                                parentEdge.pop("pointingTo", None) ## this shouldn't affect the items in the edgeDict I don't think
+                                parentEdge["to"] = nodeGroupMap[firstNode]["name"]  ## name field is what unity wants, not key.  Much shorter
                             else:
-                                parentEdge["pointingTo"] = edgeHierarchy
+                                parentEdge["to"] = edgeHierarchy
 
-                            edgeDict[firstNode] = parentEdge["sign"]  ## node to sign
+                            edgeDict[firstNode] = (parentEdge["sign"], parentEdge["oVal"])   ## node to sign
                             node["edges"].append(parentEdge)
                         
                         elif edgeDict.has_key(firstNode):
                             print("hasFIRSTNODE: ", firstNode)
-                            existingSign = edgeDict[firstNode]
+                            existingSign = edgeDict[firstNode][0]
+                            existingOValue = edgeDict[firstNode][1]
+
+                            newSign = existingSign
+                            newOValue = existingOValue
+
                             if existingSign != 2 and parentEdge["sign"] != existingSign:
                                 existingSign = 2
+                                newSign = 2
                                 print("Existingsign")
-                                for nodeEdge in node["edges"]:
-                                    if nodeEdge["pointingPos"] == nodeGroupMap[firstNode]["position"]:
-                                        print("soisdf", nodeGroupMap[firstNode])
-                                        nodeEdge["sign"] = 2
-                                        break
-                        
-                    edge["pointingTo"] = edge["pointingTo"][0] # sets level below to have only it's current level as pointer
-                    if childNode.has_key("children") and edge.has_key("pointingTo"):
-                        edge.pop("pointingTo", None)
-                    print("parentPointing: ", parentEdge["pointingPos"] , " childPointing: ", edge["pointingPos"])
+                            if existingOValue != 2 and existingOValue != 5 and parentEdge["oVal"] != existingOValue:
+                                if existingOValue < 2:
+                                    newOValue = 2
+                                else: 
+                                    newOValue = 5
 
+                            for nodeEdge in node["edges"]:
+                                if nodeEdge["oPos"] == nodeGroupMap[firstNode]["position"]:
+                                    print("soisdf", nodeGroupMap[firstNode])
+                                    nodeEdge["sign"] = newSign
+                                    nodeEdge["oVal"] = newOValue
+                                    break
+                        
+                    edge["to"] = nodeGroupMap[edge["to"][0]]["name"] # sets level below to have only it's current level as pointer
+                    ##if childNode.has_key("children") and edge.has_key("pointingTo"):
+                        ##edge.pop("pointingTo", None)
+                    print("parentPointing: ", parentEdge["oPos"] , " childPointing: ", edge["oPos"])
+
+
+            if node["parent"] != "Group0":
+                node["numConstraintNodes"] = totalNumConstraintNodes
+                node["numSat"] = parentNumSat
+            if totalNumConstraintNodes > 0:
+                if totalNumConstraintNodes > parentNumSat:
+                    node["psat"] = int(parentNumSat / float(totalNumConstraintNodes) * 100) ##will be floored, which we want, so don't lie and say its fully sat
+                else:
+                    node["psat"] = 100 ##int(round(parentNumSat / float(totalNumConstraintNodes) * 100))
+            else: 
+                node["psat"] = 100 ## TODO decide if we want to have the value at all.  Helpful when processing on unity side
 
         if node.has_key("parent") and node["parent"] != "Group0":
             queue.put(node["parent"])
@@ -163,18 +201,47 @@ def bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMa
             signs = nodeConstraintMap["signMap"][nodeName] ## should match constraints
             nodeGroupMap[nodeName]["edges"] = []
 
+            nodeGroupMap[nodeName]["numConstraintNodes"] = 1
+
             i = 0
+
+            ## assign value to each var
+
+            varValues = []
+            constraintSatisfied = 3
+            for x in range(0, len(signs)):
+                varVal = 0
+                varValues.append(varVal)  ## could make random or assign from input somehow
+
+                if (signs[x] == -1 and varVal == 0) or (signs[x] == 1 and varVal == 1): ## have same sign
+                    constraintSatisfied = 4
+
+            ## check if satisfied
+
             for varNodeName in constraints:
 
                 ## sets edges for constraint node, and for any var nodes it points to
-                nodeGroupMap[nodeName]["edges"].append({"fromConstraint": True, "sign": signs[i], "pointingPos": nodeGroupMap[varNodeName]["position"], "pointingTo":makeListOfAncestors(varNodeName, nodeGroupMap)})
+
+                if (signs[i] == -1 and varValues[i] == 0) or (signs[i] == 1 and varValues[i] == 1):
+                    constraintSatisfiedbyCurVar = 1
+                else:
+                    constraintSatisfiedbyCurVar = 0
+
+                nodeGroupMap[nodeName]["edges"].append({"oVal": constraintSatisfiedbyCurVar, "sign": signs[i], "oPos": nodeGroupMap[varNodeName]["position"], "to":makeListOfAncestors(varNodeName, nodeGroupMap)})
 
                 if nodeGroupMap[varNodeName].has_key("edges"):
-                    nodeGroupMap[varNodeName]["edges"].append({"fromConstraint": False, "sign": signs[i], "pointingPos": nodeGroupMap[nodeName]["position"], "pointingTo": makeListOfAncestors(nodeName, nodeGroupMap)})
+                    nodeGroupMap[varNodeName]["edges"].append({"oVal": constraintSatisfied, "sign": signs[i], "oPos": nodeGroupMap[nodeName]["position"], "to": makeListOfAncestors(nodeName, nodeGroupMap)})
                 else:
-                    nodeGroupMap[varNodeName]["edges"] = [{"fromConstraint": False, "sign": signs[i], "pointingPos": nodeGroupMap[nodeName]["position"], "pointingTo": makeListOfAncestors(nodeName, nodeGroupMap)}]
+                    nodeGroupMap[varNodeName]["edges"] = [{"oVal": constraintSatisfied, "sign": signs[i], "oPos": nodeGroupMap[nodeName]["position"], "to": makeListOfAncestors(nodeName, nodeGroupMap)}]
 
                 i += 1
+
+            if constraintSatisfied == 4:
+                nodeGroupMap[nodeName]["psat"] = 100
+                nodeGroupMap[nodeName]["numSat"] = 1
+            else:
+                nodeGroupMap[nodeName]["psat"] = 0
+                nodeGroupMap[nodeName]["numSat"] = 0
 
 
 def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fullHeight, lowestLevelUnderOneThousandNodes, outputFile):
@@ -188,13 +255,19 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
     ##print("FILEGRIDSIZE: ", fileGridSize)
     level = 0
 
+    groupNumber = 1  ## 0 is still reserved for top root node
+
+
     curLevel = []
     for nodeKey in topNode["children"]:
         curNode = nodeGroupMap[nodeKey]
         ##curNode["position"] = (curNode["position"][0] + addToNormalize[0], curNode["position"][0] + addToNormalize[0], 
         fileContents.append(curNode)
-
+        #if curNode.has_key("psat"):
+            ##curNode["psat"] = round(curNode["psat"], 2)
         if curNode.has_key("children"):
+            ##curNode["name"] = "G" + str(groupNumber)
+            ##groupNumber += 1
             for childKey in curNode["children"]:
                 childNode = nodeGroupMap[childKey]
                 curLevel.append(childNode)
@@ -246,6 +319,8 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
         for node in curLevel:
             ##for childKey in parentNode["children"]:
                 ##childNode = nodeGroupMap[childKey]
+            #if node.has_key("psat"):
+            #    node["psat"] = round(node["psat"], 2)
 
             pos = node["position"]
 
@@ -256,6 +331,8 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
             posFileDict[fileQuad].append(node)
 
             if node.has_key("children"):
+                #curNode["name"] = "G" + str(groupNumber)
+                #groupNumber += 1
                 for childKey in node["children"]:
                     childNode = nodeGroupMap[childKey]
                     nextLevel.append(childNode) 
@@ -365,7 +442,8 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
             newY = (nodeGroupMap[nodeGroupName]["position"][1] + nodeGroupMap[nodeName]["position"][1] * len(children)) / (len(children) + 1)
             nodeGroupMap[nodeGroupName]["position"] = (round(newX, 2), round(newY, 2))
         else:
-            nodeGroupMap[nodeGroupName] = {"name":nodeGroupName, "children": [nodeName], "position": normalizedPosition, "numLeafNodes": 1, "size": 1}
+            nodeGroupMap[nodeGroupName] = {"name":"G" + str(groupNumber), "children": [nodeName], "position": normalizedPosition, "numLeafNodes": 1, "size": 1}
+            groupNumber += 1
             currentLevel.append(nodeGroupName)
 
 
@@ -382,6 +460,7 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
     maxSize = int(max(width, height)) ## int(min(width, height))
 
     size = size * 3
+
     while size < maxSize/4: 
    
         nextLevel = []
@@ -408,7 +487,8 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
                 nodeGroupMap[parentGroupName]["position"] = (round(newX, 2), round(newY, 2))
 
             else:
-                nodeGroupMap[parentGroupName] = {"name":parentGroupName, "children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"]}
+                nodeGroupMap[parentGroupName] = {"name": "G" + str(groupNumber), "children": [nodeName], "position": position, "numLeafNodes": childNode["numLeafNodes"]}
+                groupNumber += 1
                 nextLevel.append(parentGroupName)
 
 
