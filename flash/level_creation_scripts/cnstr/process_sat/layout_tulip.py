@@ -36,9 +36,12 @@ def layout_with_tulip(Gs, constraintMapFile, outputFile):
         for edge in G.edges():
             tlp_graph.addEdge(tlp_name_to_id[edge[0]], tlp_name_to_id[edge[1]])
 
-        if numNodes > 50000:
+        layoutAlgThreshold = 70000  ## was 50000
+        if numNodes > layoutAlgThreshold: 
+            node_size = NODE_SIZE * 5.0
             algorithmToUse =  'Fast Multipole Embedder (OGDF)'
         else:
+            node_size = NODE_SIZE 
             algorithmToUse = 'FM^3 (OGDF)'      
         ## Pick algorithm based on size. 
 
@@ -46,7 +49,7 @@ def layout_with_tulip(Gs, constraintMapFile, outputFile):
         view_size = tlp_graph.getSizeProperty('viewSize')
         print("going through all nodes")
         for n in tlp_graph.getNodes():
-            view_size[n] = tlp.Size(NODE_SIZE, NODE_SIZE, 1)
+            view_size[n] = tlp.Size(node_size, node_size, 1)
 
         view_layout = tlp_graph.getLayoutProperty('viewLayout')
 
@@ -62,7 +65,7 @@ def layout_with_tulip(Gs, constraintMapFile, outputFile):
         for len_scale in [1, 2, 4, 6, 8, 10, 12, 14, 16]:
             print("laying out with scale: ", len_scale)
 
-            params['Unit edge length'] = NODE_SIZE * len_scale
+            params['Unit edge length'] = node_size * len_scale
             tlp_graph.applyLayoutAlgorithm(algorithmToUse, view_layout, params)
 
             pre_positions = {}
@@ -81,11 +84,11 @@ def layout_with_tulip(Gs, constraintMapFile, outputFile):
             change_ave = (change_accum / change_count) ** 0.5
 
             print '****************************** -- ', change_ave
-            if change_ave <= 0.5 * NODE_SIZE:
+            if change_ave <= 0.5 * node_size:
                 break;
 
 
-        bottomUpLayout.layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile  + '.json') 
+        bottomUpLayout.layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, numNodes, layoutAlgThreshold, outputFile  + '.json') 
         '''
         # update original graph
         node_layout = {}

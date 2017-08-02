@@ -90,7 +90,7 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
 
             edgeDict = {}
 
-            parentSatPercent = 0.0
+            ##parentSatPercent = 0.0
 
             totalNumConstraintNodes = 0
             parentNumSat = 0
@@ -99,13 +99,13 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
                 childNode = nodeGroupMap[child] 
                 potentialEdges = childNode["edges"]
 
-                if childNode.has_key("psat"):
-                    totalNumConstraintNodes += childNode["numConstraintNodes"]
-                    parentNumSat += childNode["numSat"]
+                if childNode.has_key("sat"):
+                    parentNumSat += childNode["sat"][0]
+                    totalNumConstraintNodes += childNode["sat"][1]
                     ##parentSatPercent += childNode["psat"] * (childNode["numConstraintNodes"] / float(totalNumConstraintNodes))
 
-                childNode.pop("numConstraintNodes", None)
-                childNode.pop("numSat", None)
+                #childNode.pop("numConstraintNodes", None)
+                #childNode.pop("numSat", None)
 
                 for edge in potentialEdges:
 
@@ -162,9 +162,10 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
                     print("parentPointing: ", parentEdge["oPos"] , " childPointing: ", edge["oPos"])
 
 
-            if node["parent"] != "Group0":
-                node["numConstraintNodes"] = totalNumConstraintNodes
-                node["numSat"] = parentNumSat
+            #if node["parent"] != "Group0":
+            #    node["numConstraintNodes"] = totalNumConstraintNodes
+            #    node["numSat"] = parentNumSat
+            '''
             if totalNumConstraintNodes > 0:
                 if totalNumConstraintNodes > parentNumSat:
                     node["psat"] = int(parentNumSat / float(totalNumConstraintNodes) * 100) ##will be floored, which we want, so don't lie and say its fully sat
@@ -172,7 +173,8 @@ def bottomUpThirdPassForGroup(tlp_graph, tlp_id_to_name, nodeGroupMap):
                     node["psat"] = 100 ##int(round(parentNumSat / float(totalNumConstraintNodes) * 100))
             else: 
                 node["psat"] = 100 ## TODO decide if we want to have the value at all.  Helpful when processing on unity side
-
+            '''
+            node["sat"] = [parentNumSat, totalNumConstraintNodes]
         if node.has_key("parent") and node["parent"] != "Group0":
             queue.put(node["parent"])
 
@@ -201,7 +203,7 @@ def bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMa
             signs = nodeConstraintMap["signMap"][nodeName] ## should match constraints
             nodeGroupMap[nodeName]["edges"] = []
 
-            nodeGroupMap[nodeName]["numConstraintNodes"] = 1
+            ##nodeGroupMap[nodeName]["numConstraintNodes"] = 1
 
             i = 0
 
@@ -210,7 +212,7 @@ def bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMa
             varValues = []
             constraintSatisfied = 3
             for x in range(0, len(signs)):
-                varVal = 0
+                varVal = 0  ## TODO change this to change starting variable value
                 varValues.append(varVal)  ## could make random or assign from input somehow
 
                 if (signs[x] == -1 and varVal == 0) or (signs[x] == 1 and varVal == 1): ## have same sign
@@ -237,14 +239,14 @@ def bottomUpSecondPass(tlp_graph, tlp_id_to_name, nodeGroupMap, nodeConstraintMa
                 i += 1
 
             if constraintSatisfied == 4:
-                nodeGroupMap[nodeName]["psat"] = 100
+                nodeGroupMap[nodeName]["sat"] = [1, 1]
                 nodeGroupMap[nodeName]["numSat"] = 1
             else:
-                nodeGroupMap[nodeName]["psat"] = 0
+                nodeGroupMap[nodeName]["sat"] = [0, 1]
                 nodeGroupMap[nodeName]["numSat"] = 0
 
 
-def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fullHeight, lowestLevelUnderOneThousandNodes, outputFile):
+def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fullHeight, lowestLevelUnderOneThousandNodes, lowestSize, sizeIncreaseFactor, outputFile):
 
     levelToStartDivide = lowestLevelUnderOneThousandNodes
 
@@ -275,7 +277,7 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
         curNode.pop("children", None)
         curNode.pop("parent", None)
 
-    routeFile = {"contents": fileContents, "routeInfo":{"totalNumBaseNodes":totalNumBaseNodes, "maxDepth": maxDepth, "fullWidth": fullWidth, "fullHeight": fullHeight, "levelToStartDivide": levelToStartDivide}} ## maybe supply factor above
+    routeFile = {"contents": fileContents, "routeInfo":{"lowestSize": lowestSize, "sizeIncreaseFactor":sizeIncreaseFactor, "totalNumBaseNodes":totalNumBaseNodes, "maxDepth": maxDepth, "fullWidth": fullWidth, "fullHeight": fullHeight, "levelToStartDivide": levelToStartDivide}} ## maybe supply factor above
     _util.json_dump(routeFile, open(str((0,0)) + "level" + str(level) + ".json", "w"))
     fileContents = []
     #fileGridSize = fileGridSize / 2
@@ -292,7 +294,7 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
             ##if levelDiff % 2 != 0:
             ##    levelDiff += 1
 
-            power = levelDiff * 2 + 2
+            power = min(levelDiff * 2 + 2, 12)
 
             numFilesInLevel = int(2 ** power)
             print("numlevelsinfile: ", numFilesInLevel)
@@ -342,8 +344,8 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
 
         print("NUMLEVELSKSDJFK: ", numFilesInLevel)
         for filePos in posFileDict.keys():
-            ##if len(posFileDict[filePos] > 0): optimization to remove empty files
-            _util.json_dump({"contents": posFileDict[filePos]}, open(str(filePos) + "level" + str(level) + ".json", "w"))
+            if len(posFileDict[filePos]) > 0: ##optimization to remove empty files
+                _util.json_dump({"contents": posFileDict[filePos]}, open(str(filePos) + "level" + str(level) + ".json", "w"))
 
 
         curLevel = list(nextLevel)
@@ -373,7 +375,7 @@ def calculateSize(nodeName, nodeGroupMap, size, useLog):
     nodeGroupMap[nodeName]["size"] = actualSize
 
 
-def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, outputFile):
+def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_to_id, totalNumBaseNodes, layoutAlgThreshold, outputFile):
 
     with open(constraintMapFile) as json_data:
         nodeConstraintMap = json.load(json_data)
@@ -408,15 +410,19 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
     currentLevel = []
     level = 0
 
-    size = 16 ## has to be int
+    if totalNumBaseNodes > layoutAlgThreshold:
+        size = 64
+    else:
+        size = 16 ## has to be int
+    lowestSize = size
 
-    totalNumBaseNodes = 0
+    ##totalNumBaseNodes = 0
 
     groupNumber = 1  ## 0 is still reserved for top root node
 
     for nodeId in tlp_graph.getNodes(): 
 
-        totalNumBaseNodes += 1
+        ##totalNumBaseNodes += 1
 
         nodeName = tlp_id_to_name[nodeId]
         allLeaves.append(nodeName)
@@ -459,7 +465,12 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
 
     maxSize = int(max(width, height)) ## int(min(width, height))
 
-    size = size * 3
+    if totalNumBaseNodes > layoutAlgThreshold:
+        sizeIncreaseFactor = 6
+    else:
+        sizeIncreaseFactor = 3
+
+    size = size * sizeIncreaseFactor
 
     while size < maxSize/4: 
    
@@ -492,12 +503,12 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
                 nextLevel.append(parentGroupName)
 
 
-                calculateSize(parentGroupName, nodeGroupMap, size, totalNumBaseNodes > 80000) ## NOTE: HAS TO MATCH VALUE FROM LAYOUTTULIP - could pass it in
+                calculateSize(parentGroupName, nodeGroupMap, size, totalNumBaseNodes > layoutAlgThreshold) ## NOTE: HAS TO MATCH VALUE FROM LAYOUTTULIP - could pass it in
 
             childNode["parent"] = parentGroupName
 
         print("SIZE: ", size)
-        size = size * 4
+        size = size * sizeIncreaseFactor
 
         print("LENCURRENTLYEV: ", len(nextLevel))
         if lowestLevelUnderOneThousandNodes == -1 and len(nextLevel) < 350: ## CHANGE THIS FOR effecting when to start splitting files
@@ -526,7 +537,7 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
     
     print("actuallowestlevel: ", level - 1)
 
-    LevelFiles(nodeGroupMap["Group0"], totalNumBaseNodes, nodeGroupMap, level, int(width + 1), int(height + 1), lowestLevelUnderOneThousandNodes, outputFile)
+    LevelFiles(nodeGroupMap["Group0"], totalNumBaseNodes, nodeGroupMap, level, int(width + 1), int(height + 1), lowestLevelUnderOneThousandNodes, lowestSize, sizeIncreaseFactor, outputFile)
 
     ##separateInfoFiles(nodeGroupMap["Group0"], nodeGroupMap, outputFile)
 
