@@ -277,7 +277,10 @@ def LevelFiles(topNode, totalNumBaseNodes, nodeGroupMap, maxDepth, fullWidth, fu
         curNode.pop("children", None)
         curNode.pop("parent", None)
 
-    routeFile = {"contents": fileContents, "routeInfo":{"lowestSize": lowestSize, "sizeIncreaseFactor":sizeIncreaseFactor, "totalNumBaseNodes":totalNumBaseNodes, "maxDepth": maxDepth, "fullWidth": fullWidth, "fullHeight": fullHeight, "levelToStartDivide": levelToStartDivide}} ## maybe supply factor above
+    # call to generate level name for a given hash
+    generatedName = generateLevelName("resources/adjectives_file.txt", "resources/nouns_file.txt", "5d41402abc4b2a76b9719d911017c592")
+    
+    routeFile = {"contents": fileContents, "routeInfo":{"lowestSize": lowestSize, "sizeIncreaseFactor":sizeIncreaseFactor, "totalNumBaseNodes":totalNumBaseNodes, "maxDepth": maxDepth, "fullWidth": fullWidth, "fullHeight": fullHeight, "levelToStartDivide": levelToStartDivide, "generatedName": generatedName}} ## maybe supply factor above
     _util.json_dump(routeFile, open(str((0,0)) + "level" + str(level) + ".json", "w"))
     fileContents = []
     #fileGridSize = fileGridSize / 2
@@ -669,4 +672,38 @@ def layout(tlp_graph, constraintMapFile, view_layout, tlp_id_to_name, tlp_name_t
     params = tlp.getDefaultPluginParameters('JSON Export', tlp_graph)
     success = tlp.exportGraph('JSON Export', tlp_graph, outputFile + "levelVisLEAFS" + ".json", params)
 
+
+def generateLevelName(adjFile, nounFile, hashStr):
+    # Read all adjectives
+    adjFileHandle = open(adjFile)
+    adjList = adjFileHandle.readlines()
+    adjFileHandle.close()
+    
+    # Read all nouns
+    nounFileHandle = open(nounFile)
+    nounList = nounFileHandle.readlines()
+    nounFileHandle.close()
+    
+    # Compute sum of all chars in hash str. Use ord values
+    sumVal = 0
+    for ch in hashStr:
+        sumVal = sumVal + ord(ch)
+    print (sumVal)
+    
+    # Get adjective from adj list using mod
+    adjIndex = sumVal % len(adjList)
+    levelAdj = adjList[adjIndex]
+    print (levelAdj)
+
+    # Get noun from noun list using mod
+    nounIndex = sumVal % len(nounList)
+    levelNoun = nounList[nounIndex]
+    print (levelNoun)
+    
+    adjStr = levelAdj.capitalize()
+    nounStr = levelNoun.capitalize()
+    adjStr = adjStr.rstrip() 
+    nounStr = nounStr.rstrip()
+    levelName = adjStr + nounStr
+    return levelName
 
