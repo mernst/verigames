@@ -13,18 +13,19 @@ def python_script(cmd):
     if ret != 0:
         raise RuntimeError('Error from Python call: ' + cmd)
 
+
+# make temp space
+shutil.rmtree('tmp', True)
+os.mkdir('tmp')
+
+
 for file in os.listdir('.'):
-    
     if not file.endswith('.cnf'):
         continue
 
     pref = file[:-4]
 
-    # make temp space
-    shutil.rmtree('tmp', True)
-    os.mkdir('tmp')
     os.chdir('tmp')
-
     
     # put DIMACS in normalized format
     python_script('normalizeDIMACS.py < ../%s.cnf > %s.cnf' % (pref, pref))
@@ -35,12 +36,15 @@ for file in os.listdir('.'):
     # do level layout, etc
     python_script('cnstr/process_constraint_json.py %s' % (pref))
 
+    os.chdir('..')
 
+
+'''
+   
     # post-process level files
     outfolder = '%s_game_files/' % (pref)
 
     prefs = _util.list_file_prefixes(outfolder + 'file')
-    
     if len(prefs) > 1:
         raise RuntimeError('Level %s was split.' % (pref))
 
@@ -55,11 +59,12 @@ for file in os.listdir('.'):
 	
     # move level files
     for outfile in os.listdir(outfolder):
-        #if 'Layout' not in outfile and 'Assignments' not in outfile:
-        #    python_script('updateDisplayName.py %s' % (outfolder + outfile))
+        if 'Layout' not in outfile and 'Assignments' not in outfile:
+            python_script('updateDisplayName.py %s' % (outfolder + outfile))
         shutil.move(outfolder + outfile, '../../setup/' + outfile)
     
     
     # clean up
     os.chdir('..')
     shutil.rmtree('tmp')
+'''

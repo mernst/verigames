@@ -25,7 +25,7 @@ def sort_full_json(str_obj):
 # list file prefixes for all levels in the same folder as from_file
 def list_file_prefixes(from_file):
 	all_files = os.listdir(os.path.dirname(os.path.realpath(from_file)))
-
+        #print "all_files", all_files
 	files = []
 	for file in all_files:
 		name, ext = os.path.splitext(file)

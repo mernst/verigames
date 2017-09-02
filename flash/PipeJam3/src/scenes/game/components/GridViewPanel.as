@@ -1885,8 +1885,10 @@ package scenes.game.components
 			trace("Current Ratings: Player -> " + curPlayerRating + "\t" + levelName + " -> " + curLevelRating);
 			resultData["level_target_score"] = m_currentLevel.getTargetScore();
 			resultData["level_max_score"] = m_currentLevel.getMaxScore();
+			resultData["level_start_score"] = m_currentLevel.getStartingScore();
 			resultData["player_current_score"] = m_currentLevel.getCurrentScore();
 			resultData["player_max_score"] = m_currentLevel.getBestScore();
+			resultData["delta"] = m_currentLevel.getCurrentScore() - m_currentLevel.getStartingScore();
 			resultData["max_num_conflicts"] = MiniMap.maxNumConflicts;
 			resultData["satisfied_conflicts"] = resultData["max_num_conflicts"] - MiniMap.numConflicts;
 			resultData["target_percent"] = (resultData["level_target_score"] / resultData["level_max_score"]) * 100;
