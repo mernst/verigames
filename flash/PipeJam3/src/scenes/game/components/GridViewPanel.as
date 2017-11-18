@@ -1,5 +1,7 @@
 package scenes.game.components
 {
+	import dialogs.LevelChoiceDialog;
+	import display.NineSliceBatch;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.ContextMenuEvent;
@@ -28,6 +30,7 @@ package scenes.game.components
 	
 	import display.NineSliceButton;
 	import display.ToolTipText;
+	import display.TextBubble;
 	
 	import events.MenuEvent;
 	import events.MiniMapEvent;
@@ -163,6 +166,9 @@ package scenes.game.components
 
 		public static const CHANGE_BRUSH:String = "change_brush";
 		
+		public static var backQ:Quad;
+		public static var bubble:TextBubble;
+		
 		public static const MIN_SCALE:Number = 2.0 / Constants.GAME_SCALE;
 		private static var MAX_SCALE:Number = 25.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 12.0 / Constants.GAME_SCALE;
@@ -193,15 +199,22 @@ package scenes.game.components
 		private static const MAX_WAIT_TIME_FOR_GAME_TIMER:Number = MAX_WAIT_TIME_IN_MINUTES * 60;
 		
 		// Should we show the skip to end button yet?
-		private var m_showSkipToEnd:Boolean = false;
+		private var m_showSkipToEnd:Boolean = GameConfig.ENABLE_EXIT;
 		
 		// The text field wrapper to show on the screen for the timer.
 		private var m_gameTimerText:TextFieldWrapper;
 		
 		private static var attemptedLevel:Boolean = false;
-				
+		
+		private static var lastResult:int = -1;
+		
 		public function GridViewPanel(world:World)
 		{
+			
+			backQ = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
+			backQ.touchable = true;
+			backQ.alpha = 0.4;
+			
 			this.alpha = .999;
 
 			setMode(MODE_HOVER);
@@ -314,15 +327,23 @@ package scenes.game.components
 			// this will hide the brush until the game components are created
 			checkPaintBrushVisibility();
 			
-			if ((!TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_GAMEPLAY)) {
-				displaySkipButton();
-			}			
-			
-			if (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TO_END_GAMEPLAY) {
+			if (!GameConfig.ENABLE_EXIT)
+			{
+				if ((!TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_GAMEPLAY)) {
+					displaySkipButton();
+				}			
+				
+				if (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TO_END_GAMEPLAY) {
+					startGameTimer();
+					displayPassButton();
+				}
+			}
+			else
+			{
 				startGameTimer();
+				displaySkipButton();
 				displayPassButton();
 			}
-			
 				
 			
 			
@@ -340,6 +361,11 @@ package scenes.game.components
 		}
 		
 		//public var m_skipCount:int = 0;
+		
+		protected function onDialogBackgroundClicked():void
+		{
+			
+		}
 		
 		private function resetKeysDown():void
 		{
@@ -1512,8 +1538,8 @@ package scenes.game.components
 		{
 			m_buttonLayer.removeChild(m_playerRatingText);
 			m_buttonLayer.removeChild(m_levelRatingText);
-			var pr:Number = World.player.getRating();
-			var lr:Number = int(levelRating * 100) / 100;
+			var pr:Number = Math.round(World.player.getRating());
+			var lr:Number = Math.round(int(levelRating * 100) / 100);
 			pr = int(pr * 100) / 100;
 			m_playerRatingText = TextFactory.getInstance().createTextField("Your Rating: " + pr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0x660000, true);
 			m_playerRatingText.touchable = false;
@@ -1523,6 +1549,36 @@ package scenes.game.components
 			m_buttonLayer.addChild(m_playerRatingText);
 			
 			m_levelRatingText = TextFactory.getInstance().createTextField("Level Rating: " + lr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0x660000, true);
+			m_levelRatingText.touchable = false;
+			m_levelRatingText.x = m_buttonBufferValue;
+			m_levelRatingText.y = 20;
+			TextFactory.getInstance().updateAlign(m_levelRatingText, 0, 1);
+			m_buttonLayer.addChild(m_levelRatingText);
+		}
+		
+		public function displayRatingsWithBack(levelName:String, levelRating:Number):void
+		{
+			trace("Inside WITH BACK");
+			m_buttonLayer.removeChild(m_playerRatingText);
+			m_buttonLayer.removeChild(m_levelRatingText);
+			
+			var back:NineSliceBatch = new NineSliceBatch(180, 70, m_buttonBufferValue, 5, AssetInterface.DialogWindowAtlas, "DialogWindow");
+			back.scaleX = back.scaleY = .5;
+			back.x = m_buttonBufferValue - 4;
+			back.y = 5;
+			m_buttonLayer.addChild(back);
+			
+			var pr:Number = Math.round(World.player.getRating());
+			var lr:Number = Math.round(int(levelRating * 100) / 100);
+			pr = int(pr * 100) / 100;
+			m_playerRatingText = TextFactory.getInstance().createTextField("Your Rating: " + pr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0xFFFFFF, true);
+			m_playerRatingText.touchable = false;
+			m_playerRatingText.x = m_buttonBufferValue;
+			m_playerRatingText.y = 5;
+			TextFactory.getInstance().updateAlign(m_playerRatingText, 0, 1);
+			m_buttonLayer.addChild(m_playerRatingText);
+			
+			m_levelRatingText = TextFactory.getInstance().createTextField("Level Rating: " + lr.toString(), AssetsFont.FONT_UBUNTU, 100, 25, 10, 0xFFFFFF, true);
 			m_levelRatingText.touchable = false;
 			m_levelRatingText.x = m_buttonBufferValue;
 			m_levelRatingText.y = 20;
@@ -1614,9 +1670,10 @@ package scenes.game.components
 			if (GameConfig.NO_SURVEY)
 				var passText:String = "Exit";
 			else
-				var passText:String = "Go to survey";
+				var passText:String = "Go to Exit Survey";
 			passButton = ButtonFactory.getInstance().createDefaultButton(passText, m_buttonWidth, m_buttonHeight);
 			passButton.addEventListener(starling.events.Event.TRIGGERED, onPassButtonTriggered);
+			//passButton.addEventListener(MouseEvent.MOUSE_OVER, onPassButtonMouseOver);
 			passButton.x = m_buttonBufferValue;
 			passButton.y = HEIGHT - (2 * (m_buttonHeight + m_buttonBufferValue));
 			m_buttonLayer.addChild(passButton);
@@ -1795,11 +1852,30 @@ package scenes.game.components
 				var curPlayerRating:Number = World.player.getRating();
 				var curLevelRating:Number = m_currentLevel.m_player.getRating();
 				var res:int = 1;
+				lastResult = res;
 				World.m_world.updateRatings(curPlayerRating, World.player.getRD(), curLevelRating, m_currentLevel.m_player.getRD(),res);
 				logResult(curPlayerRating, World.player.getRating(), curLevelRating, m_currentLevel.m_player.getRating(), res);
 			}
 			World.levelTimer.reset();
-			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			if (World.RatingsDisplayMode > 2 && TutorialController.tutorialsDone)
+			{	
+				//content.removeEventListener(TouchEvent.TOUCH, onTouch);
+				this.removeEventListener(TouchEvent.TOUCH, onTouch);
+				if (!(World.noEasyLevels && World.noHardLevels && World.noRecLevels))
+					World.m_world.categorizeAndGet();
+				
+				//World.m_world.categorizeAndGet();
+				var text:String = "Choose next level to play";
+				var dialog:LevelChoiceDialog = new LevelChoiceDialog(text, World.player.getRating(), World.easyLevelRating, World.recLevelRating, World.hardLevelRating, 380, 200, levelChoiceEventHandler, 1, true);
+				
+				this.addChild(backQ);
+				this.addChild(dialog);		
+				
+			}
+			else
+			{
+				dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			}
 			
 			
 			var o:Object = new Object();
@@ -1843,6 +1919,7 @@ package scenes.game.components
 			// When a new level button is pressed, signal a run End event
 			NULogging.runEnd(o);
 		}
+		
 		
 		public function logFeatures(name:String, delta:Number, time:Number, numMoves:Number, hex:Number, square:Number, circle:Number, diamond:Number)
 		{
@@ -1945,6 +2022,8 @@ package scenes.game.components
 		{
 			trace("Inside onSkipLevel");
 			
+			lastResult = -1;
+			
 			if(forfeitButton)
 				forfeitButton.removeFromParent();
 				
@@ -1982,6 +2061,7 @@ package scenes.game.components
 					var curPlayerRating:Number = World.player.getRating();
 					var curLevelRating:Number = m_currentLevel.m_player.getRating();
 					var res:int = 0;
+					lastResult = res;
 					World.m_world.updateRatings(curPlayerRating, World.player.getRD(), curLevelRating, m_currentLevel.m_player.getRD(), res);
 					logResult(curPlayerRating, World.player.getRating(), curLevelRating, m_currentLevel.m_player.getRating(), res);				
 				}
@@ -2011,10 +2091,23 @@ package scenes.game.components
 			
 			World.levelTimer.reset();
 			
+			if (World.RatingsDisplayMode > 2 && TutorialController.tutorialsDone)
+			{
+				this.removeEventListener(TouchEvent.TOUCH, onTouch);
+				if (!World.m_world.allLevelsSeen())
+					World.m_world.categorizeAndGet();
 			
+			//World.m_world.categorizeAndGet();
+			var text:String = "Choose next level to play";
+			var dialog:LevelChoiceDialog = new LevelChoiceDialog(text, World.player.getRating(), World.easyLevelRating, World.recLevelRating, World.hardLevelRating, 380, 200, levelChoiceEventHandler, 1, true);
 			
-			//------------------------------------------------------------------
-			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			this.addChild(backQ);
+			this.addChild(dialog);			
+			}
+			else
+			{
+				dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+			}
 			
 			
 			var o:Object = new Object();
@@ -2054,9 +2147,59 @@ package scenes.game.components
 		}
 		//Alert.show("Testing..");
 		
+		private function levelChoiceEventHandler(button:String):void
+		{
+			this.addEventListener(TouchEvent.TOUCH, onTouch);
+			backQ.removeFromParent();
+			//m_paintBrush.visible = true;
+			trace("Inside levelChoiceEventHandler() ... ");
+			World.difficultyChoice = button;
+			logChoices(button);
+			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
+		}
 		
+		public function logChoices(choice:String):void
+		{
+			var choiceData:Object = new Object();
+			choiceData["isChoiceData"] = true;
+			choiceData["hitID"] = World.hitId;
+			choiceData["playerID"] = World.playerID;
+			choiceData["choice"] = choice;
+			choiceData["rating"] = World.player.getRating();
+			
+			if (lastResult == 1)
+				choiceData["last_result"] = "win";
+			else if (lastResult == 0)
+				choiceData["last_result"] = "loss";
+			else
+				choiceData["last_result"] = "skip";
+			
+			choiceData["easy_rating"] = World.easyLevelRating;
+			choiceData["rec_rating"] = World.recLevelRating;
+			choiceData["hard_rating"] = World.hardLevelRating;
+			
+			choiceData["easy_available"] = !World.noEasyLevels;
+			choiceData["rec_available"] = !World.noRecLevels;
+			choiceData["hard_available"] = !World.noHardLevels;
+			
+			choiceData["desired_win_rate"] = World.m_world.getAltWinRateFromRating(World.player.getRating());
+			NULogging.log(choiceData);
+		}
+		/*
+		private function onPassButtonMouseOver():void {
+			bubble = new TextBubble("Blah");
+			this.addChild(bubble);
+			var passButtonToolTipTimer = new Timer(1000, 3);
+			passButtonToolTipTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onPassButtonToolTipComplete);
+			passButtonToolTipTimer.start();
+		}
 		
+		private function onPassButtonToolTipComplete():void {
+			bubble.removeFromParent();
+		}
+		*/
 		private function onPassButtonTriggered(evt:starling.events.Event):void {
+			
 			var o:Object = new Object();
 			o["details"] = "Skip to Survey button clicked.";			
 			NULogging.action(o, NULogging.ACTION_TYPE_SKIP_TO_SURVEY_CLICKED);

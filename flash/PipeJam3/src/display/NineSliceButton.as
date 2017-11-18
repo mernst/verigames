@@ -29,12 +29,13 @@ package display
 		protected var m_buttonClickSkin:Sprite;
 		private var m_enabled:Boolean = true;
 		
-		protected static const TXT_PCT:Number = 0.9;
+		protected static var TXT_PCT:Number = 0.9;
 		protected static const MAX_DRAG_DIST:Number = 50;
 		
 		protected var fontName:String;
 		protected var fontColor:uint;
 		protected var m_toolTipText:String;
+		protected var m_buttonText:String;
 		
 		//allow for setting other values
 		public var alphaValue:Number = 0.3;
@@ -42,11 +43,13 @@ package display
 		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _atlas:TextureAtlas, 
 										_atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String = "", 
 										_atlasXMLButtonClickTexturePrefix:String = "", _fontColorOver:uint = 0xFFFFFF, _fontColorClick:uint = 0xFFFFFF,
-										_toolTipText:String = "")
+										_toolTipText:String = "", scale:Number = 0.9)
 		{
 			fontName = _fontName;
 			fontColor =  _fontColor;
 			m_toolTipText = _toolTipText;
+			TXT_PCT = scale;
+			m_buttonText = _text;
 			
 			m_buttonBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlas, _atlasXMLButtonTexturePrefix);
 			m_textField = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColor);
@@ -82,11 +85,18 @@ package display
 			useHandCursor = true;
 			addChild(m_buttonSkin);
 			addEventListener(TouchEvent.TOUCH, onTouch);
+			
+			
 		}
 		
 		public function removeTouchEvent():void
 		{
 			removeEventListener(TouchEvent.TOUCH, onTouch);
+		}
+				
+		public function GetText():String
+		{
+			return m_buttonText;
 		}
 		
 		protected var mEnabled:Boolean = true;

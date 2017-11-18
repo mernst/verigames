@@ -179,6 +179,7 @@ package scenes.splashscreen
 					dataLog["playerID"] = World.playerID;
 					//dataLog["workerId"] = World.workerId;
 					dataLog["HitId"] = World.hitId;
+					dataLog["source"] = World.src;
 					dataLog["totalLevelsInGame"] = World.totalLevelCount;
 					dataLog["levelsCompleted"] = World.totallevelsCompleted;
 					dataLog["levelsAbandoned"] = World.totallevelsAbandoned;
@@ -212,6 +213,16 @@ package scenes.splashscreen
 					else
 						displayMode = "Increasing Order";
 					dataLog["LevelDisplayMode"] = displayMode;
+					var ratingsMode:String;
+					if (World.RatingsDisplayMode == 1)
+						ratingsMode = "Blind";
+					else if (World.RatingsDisplayMode == 2)
+						ratingsMode = "Ratings";
+					else if (World.RatingsDisplayMode == 3)
+						ratingsMode = "Choice";
+					else
+						ratingsMode = "Blind Choice";
+					dataLog["RatingsDisplayMode"] = ratingsMode;
 					//dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
 					dataLog["PlayerRating"] = World.player.getRating();
 					dataLog["Metaphor"] = GameConfig.GAME_METAPHOR == 0 ? "Original" : "Powerplant";

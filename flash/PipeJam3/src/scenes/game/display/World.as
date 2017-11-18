@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import com.adobe.crypto.MD5Stream;
+	import dialogs.ExitGameDialog;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.StageDisplayState;
@@ -102,9 +103,14 @@ package scenes.game.display
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		
+		public var recLevels:Vector.<String> = new Vector.<String>();
+		public var easyLevels:Vector.<String> = new Vector.<String>();
+		public var hardLevels:Vector.<String> = new Vector.<String>();
 		public var chosenLevels:Vector.<String> = new Vector.<String>();
 			
 		public static var hasBeenSeen:Dictionary = new Dictionary();
+		
+		public static var category:Dictionary = new Dictionary();
 		
 		public static var player:GlickoPlayer = new GlickoPlayer(1500);
 		trace("INIT player.rating: " + player.rating);
@@ -122,6 +128,22 @@ package scenes.game.display
 		public var targetPercent:Number;
 		
 		public static var currentLevelName:String;
+		public static var currentEasyLevel:String;
+		public static var currentRecLevel:String;
+		public static var currentHardLevel:String;
+		public static var easyLevelIndex:Number;
+		public static var recLevelIndex:Number;
+		public static var hardLevelIndex:Number;
+		public static var easiestLevelIndex:Number;
+		public static var hardestLevelIndex:Number;
+		public static var noEasyLevels:Boolean = false;
+		public static var noRecLevels:Boolean = false;
+		public static var noHardLevels:Boolean = false;
+		public static var delta:Number;
+		
+		public static var easyLevelRating:Number;
+		public static var recLevelRating:Number;
+		public static var hardLevelRating:Number;
 		
 		protected var undoStack:Vector.<UndoEvent>;
 		protected var redoStack:Vector.<UndoEvent>;
@@ -200,13 +222,22 @@ package scenes.game.display
 		static public var tutorialOverCompletion:Number = 0;
 		static public var tutorialMoves:Number = 0;
 		static public var levelStartTime:Number = 0;
+		static public var src:String = "";
 		
 		// 1 -> Random Order
 		// 2 -> Rating Order
 		// 3 -> Strictly increasing rating order
-		static public var LevelDisplayMode:Number = 1;
+		static public var LevelDisplayMode:Number = 2;
 		
-		static private var CurrentIncreasingDifficultyLevel:int = 0;
+		// 1 -> Normal
+		// 2 -> With ratings info
+		// 3 -> With choice of next level
+		// 4 -> With choice but no ratings
+		static public var RatingsDisplayMode:Number = 1;
+		
+		static public var difficultyChoice:String = "Recommended";
+		
+		//static private var CurrentIncreasingDifficultyLevel:int = 0;
 		
 		// Wait time for the Help screen's tooltip to last. This value is in seconds.
 		static public const HELP_BUTTON_TOOLTIP_WAIT_TIME_IN_SECS:Number = 3;
@@ -274,6 +305,7 @@ package scenes.game.display
 				var my_level:Level = new Level(levelDisplayName, levelFileName, levelGraph, levelObj, levelLayoutObj, levelAssignmentsObj, levelNameFound);
 				levels.push(my_level);
 				hasBeenSeen[levelFileName] = false;
+				category[levelFileName] = "";
 				
 				if (!firstLevel) {
 					firstLevel = my_level; //grab first one..
@@ -336,6 +368,7 @@ package scenes.game.display
 			
 		}
 		
+		
 		public function getNextLevelIndex(playerRating:Number):int
 		{
 			trace("Inside gnli: " + playerRating);
@@ -356,9 +389,9 @@ package scenes.game.display
 			var desiredWinRate:Number = getAltWinRateFromRating(playerRating);
 			//var chosenLevels:Vector.<String> = getLevels(probs, desiredWinRate);
 			getLevels(probs, desiredWinRate);
-			trace("Chosen Levels: " + chosenLevels);
+			trace("Rec Levels: " + recLevels);
 			
-			var selectedLevel:String = chosenLevels[Math.round(Math.random() * (chosenLevels.length - 1))];
+			var selectedLevel:String = recLevels[Math.round(Math.random() * (recLevels.length - 1))];
 			trace("Selected Level: " + selectedLevel);
 			hasBeenSeen[selectedLevel] = true;
 			
@@ -371,13 +404,344 @@ package scenes.game.display
 			return 0;
 		}
 		
+		
+		public function categorizeLevels(playerRating:Number):void
+		{
+			trace("Inside categorize Levels...");
+			trace("Delta: " + delta);
+			/*
+			for (var i:int = 0; i < recLevels.length; i++)
+				trace(recLevels[i] + "\n");
+				*/
+			easyLevels.length = 0;
+			hardLevels.length = 0;
+			trace("Player Rating: " + playerRating);
+			var probs:Dictionary = computeProbabilities(playerRating);
+			var winRate:Number = getAltWinRateFromRating(playerRating);
+			for (var level:String in probs)
+			{
+				var prob:Number = probs[level];
+				if (recLevels.indexOf(level) != -1)
+				{
+					category[level] = "Recommended";
+				}
+				else if (prob < (winRate - delta))
+				{
+					category[level] = "Hard";
+					hardLevels.push(level);
+				}
+				else if (prob > (winRate + delta))
+				{
+					category[level] = "Easy";
+					easyLevels.push(level);
+				}
+			}
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				var levelName:String = levels[i].m_levelFileName;
+				trace(levelName +"\t" + category[levelName] + "\t" + levels[i].m_levelRating);
+			}
+		}
+		/*
+		public function getEasyLevelIndex():int
+		{
+			if (easyLevels.length == 0)
+				return -1;
+			var selectedLevel:String = easyLevels[Math.round(Math.random() * (easyLevels.length - 1))];
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if (levels[i].m_levelFileName == selectedLevel)
+						return i;	
+			}
+			return 0;
+		}
+		*/
+		public function getCategoryLevel(cat:String):int
+		{
+			var catLevels:Vector.<String> = new Vector.<String>();
+			if (cat == "Easy")
+				catLevels = easyLevels;
+			else if (cat == "Recommended")
+				catLevels = recLevels;
+			else if (cat == "Hard")
+				catLevels = hardLevels;
+			
+			trace("Cat: " + cat + "\n");
+			for (var i:int = 0; i < catLevels.length; i++)
+				trace(catLevels[i] + "\n");
+				
+			chosenLevels.length = 0;
+			for (var i:int = 0; i < catLevels.length; i++)
+			{
+				var levelName:String = catLevels[i];
+				if (!hasBeenSeen[levelName])
+				{
+					chosenLevels.push(levelName);
+				}
+			}
+			if (chosenLevels.length != 0)
+			{
+				var selectedLevel:String = chosenLevels[Math.round(Math.random() * (chosenLevels.length - 1))];
+				trace("Selected Level: " + selectedLevel);
+				
+				for (var i:int = 0; i < levels.length; i++)
+				{
+					if (levels[i].m_levelFileName == selectedLevel)
+						return i;
+				}
+				
+				return 0;
+			}
+			return -1;			
+		}
+		
+		public function getEasiestLevelIndex():int
+		{
+			var min_rating:Number = Number.MAX_VALUE;
+			var min_idx:int = -1;
+			var min_name:String = "";
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if (!hasBeenSeen[levels[i].m_levelFileName])
+				{
+					var level_rating:Number = levels[i].m_levelRating;
+					if (level_rating < min_rating)
+					{
+						min_rating = level_rating;
+						min_name = levels[i].m_levelFileName;
+						min_idx = i;
+					}
+				}
+			}
+			trace("\nEasiest Level: " + min_name + "\tRating: " + min_rating);
+			return min_idx;
+		}
+		
+		public function getHardestLevelIndex():int
+		{
+			var max_rating:Number = Number.MIN_VALUE;
+			var max_idx:int = -1;
+			var max_name:String = "";
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if (!hasBeenSeen[levels[i].m_levelFileName])
+				{
+					var level_rating:Number = levels[i].m_levelRating;
+					if (level_rating > max_rating)
+					{
+						max_rating = level_rating;
+						max_name = levels[i].m_levelFileName;
+						max_idx = i;
+					}
+				}
+			}
+			trace("\nHardest Level: " + max_name + "\tRating: " + max_rating);
+			return max_idx;
+		}
+		
+		public function getLevelIndices():void
+		{
+			recLevelIndex = easyLevelIndex = hardLevelIndex = -1;
+			var playerRating:Number = player.getRating();
+			var probs:Dictionary = computeProbabilities(playerRating);
+			var dwr:Number = getAltWinRateFromRating(playerRating);
+			var hard_dwr:Number = getAltWinRateFromRating(playerRating + 400);
+			var easy_dwr:Number = getAltWinRateFromRating(playerRating - 400);
+			
+			trace("Player: " + playerRating);
+			trace("\nEdwr: " + easy_dwr + "\tDwr: " + dwr + "\tHdwr: " + hard_dwr + "\n");
+			
+			var rec_min_diff:Number = Number.MAX_VALUE;
+			var hard_min_diff:Number = Number.MAX_VALUE;
+			var easy_min_diff:Number = Number.MAX_VALUE;
+			var rec_level:String = "";
+			var hard_level:String = "";
+			var easy_level:String = "";
+			var level_name:String = "";
+			var level_rating:Number;
+			var i:int;
+			var prob:Number;
+			var rec_level_rating:Number;
+			
+			easiestLevelIndex = getEasiestLevelIndex();
+			hardestLevelIndex = getHardestLevelIndex();
+			
+			trace("RECOMMENDED:\n");
+			//Get recommended level
+			for (i = 0; i < levels.length; i++)
+			{
+				
+				if (i == easiestLevelIndex || i == hardestLevelIndex)
+					continue;
+					
+				level_name = levels[i].m_levelFileName;
+				
+				prob = probs[level_name];
+				
+				if (!hasBeenSeen[level_name])
+				{
+					trace("\nLevel: " + level_name + "\tProb: " + prob + "\n");
+					var diff:Number = Math.abs(dwr - prob);
+					if (diff < rec_min_diff)
+					{
+						rec_min_diff = diff;
+						rec_level = level_name;
+						recLevelIndex = i;
+					}
+					trace("\nRD: " + rec_min_diff + "\tLevel: " + rec_level);
+				}
+			}
+			rec_level_rating = Level.levelRatings[rec_level];
+			
+			trace("EASY:\n");
+			//Get easy level
+			for (i = 0; i < levels.length; i++)
+			{
+				if (i == recLevelIndex)
+					continue;
+				level_name = levels[i].m_levelFileName;
+				prob = probs[level_name];
+				level_rating = levels[i].m_levelRating;
+				
+				if (!hasBeenSeen[level_name] && level_rating < rec_level_rating)
+				{
+					var diff:Number = Math.abs(easy_dwr - prob);
+					if (diff < easy_min_diff)
+					{
+						easy_min_diff = diff;
+						easy_level = level_name;
+						easyLevelIndex = i;
+					}
+				}
+			}
+			
+			trace("HARD:\n");
+			//Get hard level
+			for (i = 0; i < levels.length; i++)
+			{
+				if (i == recLevelIndex)
+					continue;
+				
+				level_name = levels[i].m_levelFileName;
+				prob = probs[level_name];
+				level_rating = levels[i].m_levelRating;
+				
+				if (!hasBeenSeen[level_name] && level_rating > rec_level_rating)
+				{
+					var diff:Number = Math.abs(hard_dwr - prob);
+					if (diff < hard_min_diff)
+					{
+						hard_min_diff = diff;
+						hard_level = level_name;
+						hardLevelIndex = i;
+					}
+				}
+			}
+			
+			trace("====GEt LEVEL INDICES=====");
+			trace("\nEasy: " + easy_level + "\tRec: " + rec_level + "\tHard: " + hard_level + "\n");
+			trace("================================");
+			
+			if (easy_level == "")
+			{
+				easyLevelIndex = easiestLevelIndex;
+				easy_level = levels[easiestLevelIndex].m_levelFileName;
+			}
+			if (hard_level == "")
+			{
+				hardLevelIndex = hardestLevelIndex;
+				hard_level = levels[hardestLevelIndex].m_levelFileName;
+			}
+			
+			if (rec_level == "")
+			{
+				if (easy_level == hard_level)
+				{
+					rec_level = easy_level;
+					recLevelIndex = easyLevelIndex;
+					easy_level = hard_level = "";
+				}
+				else
+				{
+					var easy_rating:Number = Level.levelRatings[easy_level];
+					var hard_rating:Number = Level.levelRatings[hard_level];
+					var easy_diff:Number = Math.abs(playerRating - easy_rating);
+					var hard_diff:Number = Math.abs(playerRating - hard_rating);
+					if (easy_diff < hard_diff)
+						{
+							rec_level = easy_level;
+							recLevelIndex = easyLevelIndex;
+							easy_level = "";
+						}
+					else{
+						rec_level = hard_level;
+						recLevelIndex = hardLevelIndex;
+						hard_level = "";
+					}
+				}	
+				
+			}
+			if (easy_level == "")
+				easyLevelIndex = -1;
+			if (hard_level == "")
+				hardLevelIndex = -1;
+		}
+		
+		public function categorizeAndGet():void
+		{
+				
+			trace("Inside categorizeAndGet");
+							
+			var playerRating:Number = player.getRating();
+			var probs:Dictionary = computeProbabilities(playerRating);
+			var desiredWinRate:Number = getAltWinRateFromRating(playerRating);
+			getLevelIndices();
+			//getLevels(probs, desiredWinRate);
+			//categorizeLevels(playerRating);
+			
+			//easyLevelIndex = getCategoryLevel("Easy");
+			if(easyLevelIndex != -1)
+				{
+					noEasyLevels = false;
+					easyLevelRating = levels[easyLevelIndex].m_levelRating;
+				}
+			else
+				noEasyLevels = true;
+			
+			//recLevelIndex = getCategoryLevel("Recommended");
+			if (recLevelIndex != -1)
+			{
+				noRecLevels = false;
+				recLevelRating = levels[recLevelIndex].m_levelRating;
+			}
+			else
+				noRecLevels = true;
+			
+			//hardLevelIndex = getCategoryLevel("Hard");
+			if (hardLevelIndex != -1)
+			{
+				noHardLevels = false;
+				hardLevelRating = levels[hardLevelIndex].m_levelRating;
+			}
+			else
+				noHardLevels = true;
+			
+			trace("Easy: " + easyLevelRating + "\tRec: " + recLevelRating + "\tHard: " + hardLevelRating);
+			
+			if(GameConfig.ENABLE_DEBUG_DISPLAY)
+				edgeSetGraphViewPanel.displayRatingsWithBack(currentLevelName, active_level.m_levelRating);
+			
+			
+		}
+		
+		
 		public function getLevels(probs:Dictionary, winRate:Number):void //Vector.<String>
 		{
 			trace("Inside getLevels...");
 			trace("Remaining Total Levels: " + remainingTotalLevels);
-			var delta:Number = 0.05;
-			chosenLevels.length = 0;
-			while (chosenLevels.length == 0)
+			delta = 0.05;
+			recLevels.length = 0;
+			while (recLevels.length == 0)
 			{
 				for (var level:String in probs)
 				{
@@ -385,18 +749,35 @@ package scenes.game.display
 					//trace(level + "\t" + prob  + "\tSeen: " + hasBeenSeen[level]);
 					if (prob >= (winRate - delta) && prob <= (winRate + delta) && !hasBeenSeen[level])
 					{
-						chosenLevels.push(level);
+						recLevels.push(level);
 					}
 				}
+				if (recLevels.length > 0) break;
 				delta += 0.05;
 				trace("\nWin Rate: " + winRate + "\tDelta: " + delta);
 			}
+			/*
+			if (noEasyLevels && noHardLevels && recLevels.length == 1)
+				noRecLevels = false;
+				*/
 			//return chosenLevels;
+		}
+		
+		public function allLevelsSeen():Boolean
+		{
+			for (var i:int = 0; i < levels.length; i++)
+			{
+				if (!hasBeenSeen[levels[i].m_levelFileName])
+				return false;
+			}
+			return true;
 		}
 		
 		public function computeProbabilities(playerRating:Number):Dictionary
 		{
 			var probs:Dictionary = new Dictionary();
+			var dwr:Number = getAltWinRateFromRating(playerRating);
+			trace("Player: " + playerRating + "\tDWR: " + dwr + "\n");
 			for (var i:int = 0; i < levels.length; i++)
 			{
 				var level:Level = levels[i];
@@ -404,9 +785,10 @@ package scenes.game.display
 				var WE:Number = getWinningExpectancy(playerRating, levelRating);
 				var GWE:Number = E(playerRating, levelRating, level.m_player.getRD());
 				trace("============");
-				trace("WE: " + WE + "\tGWE: " + GWE);
+				//trace("WE: " + WE + "\tGWE: " + GWE);
+				trace("GWE: " + GWE + "\tLevel: " + levelRating);
 				trace("=============");
-				probs[level.m_levelFileName] = WE;
+				probs[level.m_levelFileName] = GWE;
 			}
 			return probs;
 		}
@@ -463,10 +845,12 @@ package scenes.game.display
 			trace("Level: " + currentLevel.m_levelFileName + "\tRating: " + currentLevel.m_player.getRating() + "\tScore: " + levelScore);
 		}
 		
-		public static function setWorkerId(newWorkerId:String, hitId:String):void {
+		public static function setWorkerId(newWorkerId:String, hitId:String, src:String):void {
 			
+			trace("Inside setWorkerId");
 			World.workerId = newWorkerId;
 			World.hitId = hitId;
+			World.src = src;
 			var oldPlayerID:String = playerID;
 			
 			try {
@@ -483,7 +867,19 @@ package scenes.game.display
 					var mode:int = playerID.charAt(playerID.length - 1).charCodeAt(0) % 3;
 					World.LevelDisplayMode = mode+1;
 				}
-			
+				
+				// Set whether players are served levels as normal, with rating information or with choice of next level
+				
+				if (GameConfig.ENABLE_CHOICE_OPTION)
+				{
+					 var mode:int = playerID.charAt(playerID.length - 1).charCodeAt(0) % 4;
+					//var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 4;
+					World.RatingsDisplayMode = mode+1;
+					if (World.RatingsDisplayMode == 1 || World.RatingsDisplayMode == 4)
+						GameConfig.ENABLE_DEBUG_DISPLAY = false;
+				}
+				
+				trace("DEBUG DISPLAY: " + GameConfig.ENABLE_DEBUG_DISPLAY);
 				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
 			} catch (err:Error) {
 				var errLog:Object = new Object();
@@ -510,6 +906,7 @@ package scenes.game.display
 			else
 				displayMode = "Increasing Order";
 			initLog["LevelDisplayMode"] = displayMode;
+			initLog["RatingsDisplayMode"] = RatingsDisplayMode;
 			NULogging.log(initLog);
 			
 			// Begin a new session here..
@@ -521,6 +918,7 @@ package scenes.game.display
 			o["actionTaken"] = "Set WorkerId";
 			//o["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
 			o["LevelDisplayMode"] = displayMode;
+			o["RatingsDisplayMode"] = RatingsDisplayMode;
 			NULogging.sessionBegin(o);
 		}
 		
@@ -1376,7 +1774,10 @@ package scenes.game.display
 					//gamePlayDone = true;	
 					//onShowGameMenuEvent();
 					
-					LoadAllLevels();
+					//LoadAllLevels();
+					var dialog:ExitGameDialog = new ExitGameDialog(380, 200);
+					this.addChild(dialog);
+					return;
 				}
 				else{
 					
@@ -1399,9 +1800,37 @@ package scenes.game.display
 					// Pick the next one
 					else if (LevelDisplayMode == 2)
 					{
-						//trace('Rating order picking ' + (m_currentLevelNumber + 1) + ' level.');
-						//m_currentLevelNumber++;
-						m_currentLevelNumber = getNextLevelIndex(player.getRating());
+						if (RatingsDisplayMode > 2)
+						{
+							trace("Difficulty choice: " + difficultyChoice);
+							if (difficultyChoice == "Easy")
+							{
+								hasBeenSeen[levels[easyLevelIndex].m_levelFileName] = true;
+								m_currentLevelNumber = easyLevelIndex;
+							}
+							else if (difficultyChoice == "Recommended")
+							{
+								//m_currentLevelNumber = getNextLevelIndex(player.getRating());
+								hasBeenSeen[levels[recLevelIndex].m_levelFileName] = true;
+								m_currentLevelNumber = recLevelIndex;
+								/*
+								if (noEasyLevels && noHardLevels && recLevels.length == 1)
+									noRecLevels = false;
+									*/
+							}
+							else if (difficultyChoice == "Hard")
+							{
+								hasBeenSeen[levels[hardLevelIndex].m_levelFileName] = true;
+								m_currentLevelNumber = hardLevelIndex;
+							}
+						}
+						else
+						{
+							//m_currentLevelNumber = getNextLevelIndex(player.getRating());
+							getLevelIndices();
+							hasBeenSeen[levels[recLevelIndex].m_levelFileName] = true;
+							m_currentLevelNumber = recLevelIndex;
+						}
 					}
 					else if (LevelDisplayMode == 3)
 					{
@@ -1428,6 +1857,7 @@ package scenes.game.display
 			
 			
 		}
+		
 		
 		public function randomLevelNumber(range:int):int {
 			var pick:int;
@@ -1606,10 +2036,12 @@ package scenes.game.display
 			trace("Selectin a new level");
 			currentLevelName = newLevel.level_name;
 			
+			trace("DEBUG DISPLAY: " + GameConfig.ENABLE_DEBUG_DISPLAY);
+			
 			if(TutorialController.tutorialsDone && GameConfig.ENABLE_DEBUG_DISPLAY)
 			{ 
-			  edgeSetGraphViewPanel.displayRatings(newLevel.m_levelFileName, newLevel.m_player.getRating());
-			  edgeSetGraphViewPanel.displayMode(World.LevelDisplayMode);
+			  edgeSetGraphViewPanel.displayRatingsWithBack(newLevel.m_levelFileName, newLevel.m_player.getRating());
+			  //edgeSetGraphViewPanel.displayMode(World.LevelDisplayMode);
 			}
 			
 			var o:Object = new Object();
@@ -1781,7 +2213,7 @@ package scenes.game.display
 			
 		}
 		
-		private function clearSplashDisplay():void
+		public function clearSplashDisplay():void
 		{
 			// Touch screen pressed, remove it
 				m_splashLayer.removeChildren(0, -1, true);

@@ -4,6 +4,7 @@ package
 	import assets.AssetsFont;
 	import display.NineSliceButton;
 	import display.NineSliceToggleButton;
+	import starling.display.Quad;
 	
 	public class ButtonFactory
 	{
@@ -29,12 +30,12 @@ package
 			return createButton(text, width, height, height / 3.0, height / 3.0);
 		}
 		
-		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number, toolTipText:String = ""):NineSliceButton
+		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number, toolTipText:String = "", scale:Number = 0.9):NineSliceButton
 		{
 			return new NineSliceButton(text, width, height, cX, cY, AssetInterface.PipeJamSpriteSheetAtlas, 
 				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
 				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix,
-				0xFFFFFF, 0xFFFFFF, toolTipText);
+				0xFFFFFF, 0xFFFFFF, toolTipText, scale);
 		}
 		
 		public function createDefaultToggleButton(text:String, width:Number, height:Number, _toolTipText:String = ""):NineSliceToggleButton
@@ -61,6 +62,11 @@ package
 			return new NineSliceButton("", width, height, cX, cY, AssetInterface.ParadoxSpriteSheetAtlas, 
 				"Button"+imageName, AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
 				"Button"+imageName+"Over", "Button"+imageName+"Click");
+		}
+
+		public function createAPieceOfShit(width:Number, height:Number):Quad
+		{
+			return new Quad(width, height);
 		}
 	}
 }

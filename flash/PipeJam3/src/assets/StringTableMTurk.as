@@ -5,17 +5,53 @@ package assets
 		protected override function doLookup(key:int):String
 		{
 			switch(key) {
-				case SPLASH_TUTORIAL: return "The first set of levels introduces how to play.  You must play all levels for credit.";
-				case SPLASH_CHALLENGE: 
+				case SPLASH_TUTORIAL: 
+					if (GameConfig.ENABLE_EXIT)
+						return "The first set of levels introduces how to play.";
+					return "The first set of levels introduces how to play.  You must play all levels for credit.";
+			case SPLASH_CHALLENGE: 
+					
 					if (GameConfig.NO_SURVEY)
-						return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or exit if you wish.";
+					{
+						if (GameConfig.ENABLE_DEBUG_DISPLAY)
+						{
+							var text:String = "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or exit if you wish.\n";
+							text += "Gameplay is regulated by a rating system. Each challenge level is assigned a rating indicating its difficulty. The higher the rating, the harder is the level. \nYour rating is unaffected if you skip a level.\n";
+							text += "You are assigned a default starting rating of 1500. When you complete a level, your rating goes up and when you forfeit a level, your rating goes down.\n";
+							text += "Try to get as high a rating as you can by completing as many levels as possible!";
+							return text;
+						}
+						else
+							return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or exit if you wish.\nTry to complete as many levels as you can!";
+					}
 					else
-						return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.";
+					{
+						if (GameConfig.ENABLE_DEBUG_DISPLAY)
+						{
+							var text:String = "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.\n";
+							text += "Gameplay is regulated by a rating system. Each challenge level is assigned a rating indicating its difficulty. The higher the rating, the harder is the level.\n";
+							text += "You are assigned a default starting rating of 1500. When you complete a level, your rating goes up and when you forfeit a level, your rating goes down. \nYour rating is unaffected if you skip a level.\n";
+							text += "Try to get as high a rating as you can by completing as many levels as possible!";
+							return text;
+						}
+						else
+							return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.\nTry to complete as many levels as you can!";
+					}
 				case SPLASH_DONE: 
+					if (GameConfig.ENABLE_EXIT)
+					{
+						if (GameConfig.NO_SURVEY)
+							return "Thank you for playing.";
+						else
+							return "Please complete the following survey.";
+					}
+					else
+					{
 					if (GameConfig.NO_SURVEY)
 						return "Click Continue to get the completion code.";
 					else
 						return "Complete the following survey for your completion code.";
+					}
 				
 				case INTRO_VARIABLES: return "Variables have different colors: light and dark.\nClick and drag to select variables.\nRelease the mouse to use your editor to change them.";
 				case SELECTOR_UNLOCKED: return "New editor\nunlocked! Change\neditor by\nclicking on one\nof the editor\n    previews -->";

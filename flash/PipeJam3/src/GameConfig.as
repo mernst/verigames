@@ -29,10 +29,12 @@ package
 		public static const ENABLE_TIME_CONSTRAINT:Boolean = false;
 		
 		/** run with player and level ratings displayed along with current game mode */
-		public static const ENABLE_DEBUG_DISPLAY:Boolean = false;
+		public static var ENABLE_DEBUG_DISPLAY:Boolean = false;
 		
 		/** run with players being served levels in random, rating or strictly increasing rating order based on worker ID */
 		public static const ENABLE_DIFFERENT_ORDERS:Boolean = false;
+		
+		public static const ENABLE_CHOICE_OPTION:Boolean = false;
 		
 		/** run with different metaphors based on worker ID */
 		public static const ENABLE_METAPHORS:Boolean = false;
@@ -41,6 +43,9 @@ package
 		public static const DISABLE_TUTORIAL:Boolean = false;
 		
 		/** change survey button text if no survey at the end of trial */
-		public static const NO_SURVEY:Boolean = true;
+		public static const NO_SURVEY:Boolean = false;
+		
+		/** Allow players to exit whenever they want */
+		public static const ENABLE_EXIT:Boolean = true;
 	}
 }
