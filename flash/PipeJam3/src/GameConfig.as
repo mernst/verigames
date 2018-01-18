@@ -49,5 +49,6 @@ package
 		public static const ENABLE_EXIT:Boolean = true;
 		
 		/** instructions or nah */
+		public static var ENABLE_INSTRUCTIONS:Boolean = true;
 	}
 }
