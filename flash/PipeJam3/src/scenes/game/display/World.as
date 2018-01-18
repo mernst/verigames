@@ -200,11 +200,19 @@ package scenes.game.display
 		static public var totalCircleBrushCount:Number = 0;
 		static public var totalDiamondBrushCount:Number = 0;
 		static public var totalBrushUsageCount:Number = 0;
+		static public var tutorialHexagonBrushCount:Number = 0;
+		static public var tutorialSquareBrushCount:Number = 0;
+		static public var tutorialCircleBrushCount:Number = 0;
+		static public var tutorialDiamondBrushCount:Number = 0;
+		static public var tutorialBrushUsageCount:Number = 0;
 		static public var totalLevelCount:Number = 0;
 		static public var totallevelsSeen:Number = 0;
 		static public var totallevelsCompleted:Number = 0;
 		static public var totallevelsAbandoned:Number = 0;
 		static public var totalLevelsAttempted:Number = 0;
+		static public var tutorialLevelsCompleted:Number = 0;
+		static public var tutorialLevelsAttempted:Number = 0;
+		static public var tutorialLevelsAbandoned:Number = 0;
 		
 		static public var totalMoves:int;
 		static public var movesPerLevel:int;
@@ -217,12 +225,20 @@ package scenes.game.display
 		
 		static public var minTimeInLevel:Number = Number.MAX_VALUE;
 		static public var minTimeLevelName:String = "";
+		
+		static public var maxTimeInTutLevel:Number = -1;
+		static public var maxTimeTutLevelName:String = "";
+		
+		static public var minTimeInTutLevel:Number = Number.MAX_VALUE;
+		static public var minTimeTutLevelName:String = "";
+		
 		static public var workerId:String = "";
 		static public var hitId:String = "";
 		static public var tutorialOverCompletion:Number = 0;
 		static public var tutorialMoves:Number = 0;
 		static public var levelStartTime:Number = 0;
 		static public var src:String = "";
+		//static public var ip:String = "";
 		
 		// 1 -> Random Order
 		// 2 -> Rating Order
@@ -879,13 +895,17 @@ package scenes.game.display
 						GameConfig.ENABLE_DEBUG_DISPLAY = false;
 				}
 				
+				//Set instructions or no instructions
+				var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 2;
+				GameConfig.ENABLE_INSTRUCTIONS = mode == 0 ? true : false;
+				
 				trace("DEBUG DISPLAY: " + GameConfig.ENABLE_DEBUG_DISPLAY);
 				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
 			} catch (err:Error) {
 				var errLog:Object = new Object();
 				errLog["playerID"] = playerID;
 				errLog["RandomPlayerId"] = oldPlayerID;
-				errLog["workerId"] = workerId;
+				errLog["workerID"] = workerId;
 				errLog["actionTaken"] = "Error setting WorkerId";
 				errLog["ErrorMessage"] = err.message;
 				//errLog["HitId"] = World.hitId;
@@ -895,7 +915,7 @@ package scenes.game.display
 			var initLog:Object = new Object();
 			initLog["playerID"] = playerID;
 			initLog["RandomPlayerId"] = oldPlayerID;
-			initLog["workerId"] = workerId;
+			initLog["workerID"] = workerId;
 			initLog["hitId"] = hitId;
 			initLog["actionTaken"] = "Set WorkerId";
 			var displayMode:String;
@@ -907,18 +927,20 @@ package scenes.game.display
 				displayMode = "Increasing Order";
 			initLog["LevelDisplayMode"] = displayMode;
 			initLog["RatingsDisplayMode"] = RatingsDisplayMode;
+			initLog["source"] = src;
 			NULogging.log(initLog);
 			
 			// Begin a new session here..
 			var o:Object = new Object();
 			o["playerID"] = playerID;
 			o["RandomPlayerId"] = oldPlayerID;
-			o["workerId"] = workerId;
+			o["workerID"] = workerId;
 			o["hitId"] = hitId;
 			o["actionTaken"] = "Set WorkerId";
 			//o["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
 			o["LevelDisplayMode"] = displayMode;
 			o["RatingsDisplayMode"] = RatingsDisplayMode;
+			o["source"] = src;
 			NULogging.sessionBegin(o);
 		}
 		
@@ -955,6 +977,7 @@ package scenes.game.display
 			
 			var initLog:Object = new Object();
 			initLog["playerID"] = playerID;
+			initLog["workerID"] = workerId;
 			initLog["actionTaken"] = "Session start";
 			//initLog["HitId"] = World.hitId;
 			NULogging.log(initLog);
@@ -1600,6 +1623,7 @@ package scenes.game.display
 							targetReached = true;
 							var dataLog:Object = new Object();
 							dataLog["PlayerID"] = playerID;
+							dataLog["workerID"] = workerId;
 							dataLog["levelName"] = active_level.level_name;
 							dataLog["levelFile"] = active_level.m_levelFileName;
 							dataLog["actionTaken"] = "Target Reached";
@@ -1609,6 +1633,7 @@ package scenes.game.display
 							
 							var o:Object = new Object();
 							o["PlayerID"] = playerID;
+							o["workerID"] = workerId;
 							o["levelName"] = active_level.level_name;
 							o["levelFile"] = active_level.m_levelFileName;
 							o["actionTaken"] = "Target Reached";
@@ -2199,7 +2224,8 @@ package scenes.game.display
 			*/
 			
 			World.showHelpButtonIndicator = 1;
-			showSplashScreen(splash);
+			if(GameConfig.ENABLE_INSTRUCTIONS)
+				showSplashScreen(splash);
 		}
 		
 		public static var showHelpButtonIndicator:int = 0;
@@ -2219,11 +2245,13 @@ package scenes.game.display
 				m_splashLayer.removeChildren(0, -1, true);
 				m_splashLayer.removeFromParent();
 				
-				
-				if (World.showHelpButtonIndicator == 1)
+				if (GameConfig.ENABLE_INSTRUCTIONS)
 				{
-					World.showHelpButtonIndicator = 2;
-					showSHelpButton();
+					if (World.showHelpButtonIndicator == 1)
+					{
+						World.showHelpButtonIndicator = 2;
+						showSHelpButton();
+					}
 				}
 		}
 		
@@ -2243,16 +2271,94 @@ package scenes.game.display
 			var dataLoad:Object = new Object();
 			dataLoad["actionTaken"] = "New Level";
 			dataLoad["playerID"] = playerID;
+			dataLoad["workerID"] = workerId;
 			dataLoad["levelName"] = active_level.level_name;
 			dataLoad["levelFile"] = active_level.m_levelFileName;
+		
+			dataLoad["source"] = World.src;
+			dataLoad["levelsCompleted"] = World.totallevelsCompleted;
+			dataLoad["levelsAbandoned"] = World.totallevelsAbandoned;
+			dataLoad["levelsAttempted"] = World.totalLevelsAttempted;
+			dataLoad["tutLevelsCompleted"] = World.tutorialLevelsCompleted;
+			dataLoad["tutLevelsAbandoned"] = World.tutorialLevelsAbandoned;
+			dataLoad["tutLevelsAttempted"] = World.tutorialLevelsAttempted;
+			dataLoad["levelsDoneSomething"] = World.totallevelsSeen - World.totallevelsAbandoned;
+			dataLoad["levelsSeen"] = World.totallevelsSeen;
+			dataLoad["totalMoves"] = World.totalBrushUsageCount;
+			dataLoad["totalTutorialMoves"] = World.tutorialBrushUsageCount;
+			dataLoad["gameTime"] = World.gameTimer.currentCount;
+			dataLoad["realLevelsTime"] = World.realLevelsTimer.currentCount;
+			dataLoad["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
+			dataLoad["tutorialOverCompletion"] = World.tutorialOverCompletion;
+			dataLoad["tutorialMoves"] = World.tutorialMoves;
+			dataLoad["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
+			dataLoad["remainingTotalLevels"] = World.remainingTotalLevels;
+			dataLoad["MaxTimeSpentOnLevel"] = (World.maxTimeInLevel == -1 ? "" : World.maxTimeInLevel);
+			dataLoad["MaxTimelevelName"] = World.maxTimeLevelName;
+			dataLoad["MinTimeSpentOnLevel"] = (World.minTimeInLevel == Number.MAX_VALUE ? "" : World.minTimeInLevel);
+			dataLoad["MinTimeLevelName"] = World.minTimeLevelName;
+			dataLoad["WidenBrushCount"] = World.totalHexagonBrushCount;
+			dataLoad["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
+			dataLoad["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
+			dataLoad["NarrowBrushCount"] = World.totalSquareBrushCount;
+			dataLoad["MaxTutTimeSpentOnLevel"] = (World.maxTimeInTutLevel == -1 ? "" : World.maxTimeInTutLevel);
+			dataLoad["MaxTutTimelevelName"] = World.maxTimeTutLevelName;
+			dataLoad["MinTutTimeSpentOnLevel"] = (World.minTimeInTutLevel == Number.MAX_VALUE ? "" : World.minTimeInTutLevel);
+			dataLoad["MinTutTimeLevelName"] = World.minTimeTutLevelName;
+			dataLoad["TutWidenBrushCount"] = World.tutorialHexagonBrushCount;
+			dataLoad["TutSolver2_DiamondBrushCount"] = World.tutorialDiamondBrushCount;
+			dataLoad["TutSolver1_CircleBrushCount"] = World.tutorialCircleBrushCount;
+			dataLoad["TutNarrowBrushCount"] = World.tutorialSquareBrushCount;
+			dataLoad["PlayerRating"] = World.player.getRating();
+			var stage:String = (TutorialController.tutorialsDone) ? "challenge" : "tutorial";
+			dataLoad["stage"] = stage;
 			NULogging.log(dataLoad);
 			//-----------------------------------------------------------------
 			
 			var o:Object = new Object();
 			o["actionTaken"] = "New Level";
 			o["playerID"] = playerID;
+			o["workerID"] = workerId;
 			o["levelName"] = active_level.level_name;
 			o["levelFile"] = active_level.m_levelFileName;
+			
+			o["source"] = World.src;
+			o["levelsCompleted"] = World.totallevelsCompleted;
+			o["levelsAbandoned"] = World.totallevelsAbandoned;
+			o["levelsAttempted"] = World.totalLevelsAttempted;
+			o["tutLevelsCompleted"] = World.tutorialLevelsCompleted;
+			o["tutLevelsAbandoned"] = World.tutorialLevelsAbandoned;
+			o["tutLevelsAttempted"] = World.tutorialLevelsAttempted;
+			o["levelsDoneSomething"] = World.totallevelsSeen - World.totallevelsAbandoned;
+			o["levelsSeen"] = World.totallevelsSeen;
+			o["totalMoves"] = World.totalBrushUsageCount;
+			o["totalTutorialMoves"] = World.tutorialBrushUsageCount;
+			o["gameTime"] = World.gameTimer.currentCount;
+			o["realLevelsTime"] = World.realLevelsTimer.currentCount;
+			o["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
+			o["tutorialOverCompletion"] = World.tutorialOverCompletion;
+			o["tutorialMoves"] = World.tutorialMoves;
+			o["levelsPlayedAfterTarget"] = World.levelsContinuedAfterTargetScore;
+			o["remainingTotalLevels"] = World.remainingTotalLevels;
+			o["MaxTimeSpentOnLevel"] = (World.maxTimeInLevel == -1 ? "" : World.maxTimeInLevel);
+			o["MaxTimelevelName"] = World.maxTimeLevelName;
+			o["MinTimeSpentOnLevel"] = (World.minTimeInLevel == Number.MAX_VALUE ? "" : World.minTimeInLevel);
+			o["MinTimeLevelName"] = World.minTimeLevelName;
+			o["WidenBrushCount"] = World.totalHexagonBrushCount;
+			o["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
+			o["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
+			o["NarrowBrushCount"] = World.totalSquareBrushCount;
+			o["MaxTutTimeSpentOnLevel"] = (World.maxTimeInTutLevel == -1 ? "" : World.maxTimeInTutLevel);
+			o["MaxTutTimelevelName"] = World.maxTimeTutLevelName;
+			o["MinTutTimeSpentOnLevel"] = (World.minTimeInTutLevel == Number.MAX_VALUE ? "" : World.minTimeInTutLevel);
+			o["MinTutTimeLevelName"] = World.minTimeTutLevelName;
+			o["TutWidenBrushCount"] = World.tutorialHexagonBrushCount;
+			o["TutSolver2_DiamondBrushCount"] = World.tutorialDiamondBrushCount;
+			o["TutSolver1_CircleBrushCount"] = World.tutorialCircleBrushCount;
+			o["TutNarrowBrushCount"] = World.tutorialSquareBrushCount;
+			o["PlayerRating"] = World.player.getRating();
+			var stage:String = (TutorialController.tutorialsDone) ? "challenge" : "tutorial";
+			o["stage"] = stage;
 			NULogging.action(o, NULogging.ACTION_TYPE_NEW_LEVEL_LOADED);
 			
 			
@@ -2263,7 +2369,10 @@ package scenes.game.display
 			if (active_level.tutorialManager)
 				levelSplash = active_level.tutorialManager.getSplashScreen();
 			
-			showSplashScreen(levelSplash);
+			if (GameConfig.ENABLE_INSTRUCTIONS)
+			{
+				showSplashScreen(levelSplash);
+			}
 			
 			
 			//trace("edgeSetGraphViewPanel.loadLevel()");
@@ -2349,6 +2458,8 @@ package scenes.game.display
 		
 		private function onToolTipAdded(evt:ToolTipEvent):void
 		{
+			if (GameConfig.ENABLE_INSTRUCTIONS)
+			{
 			if (evt.text && evt.text.length && evt.component && active_level && !m_activeToolTip) {
 				function pointAt(lev:Level):DisplayObject {
 					return evt.component;
@@ -2369,6 +2480,7 @@ package scenes.game.display
 				m_activeToolTip = new ToolTipText(evt.text, active_level, false, pointAt, pointFrom);
 				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
 				addChild(m_activeToolTip);
+			}
 			}
 		}
 		

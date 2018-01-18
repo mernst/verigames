@@ -103,6 +103,8 @@ package scenes.game.display
 		
 		public function onWidgetChange(idChanged:String, propChanged:String, propValue:Boolean, levelGraph:ConstraintGraph):void
 		{
+			if (GameConfig.ENABLE_INSTRUCTIONS)
+			{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, widthTxt:String;
 			switch (m_tutorialTag) {
@@ -142,10 +144,13 @@ package scenes.game.display
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
 			}
+			}
 		}
 		
 		public function afterScoreUpdate(levelGraph:ConstraintGraph):void
 		{
+			if (GameConfig.ENABLE_INSTRUCTIONS)
+			{
 			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			var tip:TutorialManagerTextInfo, num:int, longConflictFound:Boolean, key:String;
 			switch (m_tutorialTag) {
@@ -246,6 +251,7 @@ package scenes.game.display
 					m_currentToolTipsText = tips;
 					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					break;
+			}
 			}
 		}
 		
@@ -514,6 +520,8 @@ package scenes.game.display
 		
 		public function emphasizeBrushes():int
 		{
+		if (GameConfig.ENABLE_INSTRUCTIONS)
+		{
 			switch(m_tutorialTag) {
 				case "002":
 				case "01":
@@ -524,6 +532,7 @@ package scenes.game.display
 				case "005":
 					if (GameConfig.ENABLE_SOLVER2_BRUSH) return SOLVER2_BRUSH;
 			}
+		}
 			return 0x0;
 		}
 		

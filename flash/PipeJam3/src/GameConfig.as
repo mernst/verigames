@@ -47,5 +47,7 @@ package
 		
 		/** Allow players to exit whenever they want */
 		public static const ENABLE_EXIT:Boolean = true;
+		
+		/** instructions or nah */
 	}
 }

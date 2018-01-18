@@ -167,6 +167,9 @@ package scenes.splashscreen
 					// Calclulate total Brush count used.
 					World.totalBrushUsageCount = World.totalHexagonBrushCount + World.totalDiamondBrushCount 
 						+ World.totalCircleBrushCount + World.totalSquareBrushCount;
+					
+					World.tutorialBrushUsageCount = World.tutorialHexagonBrushCount + World.tutorialDiamondBrushCount 
+						+ World.tutorialCircleBrushCount + World.tutorialSquareBrushCount;
 						
 					// Calculate total Levels Seen
 					World.totallevelsSeen = World.totallevelsCompleted + World.totallevelsAbandoned + World.totalLevelsAttempted;
@@ -177,17 +180,21 @@ package scenes.splashscreen
 					World.realLevelsTimer.stop();
 					var dataLog:Object = new Object();
 					dataLog["playerID"] = World.playerID;
-					//dataLog["workerId"] = World.workerId;
+					dataLog["workerID"] = World.workerId;
 					dataLog["HitId"] = World.hitId;
 					dataLog["source"] = World.src;
 					dataLog["totalLevelsInGame"] = World.totalLevelCount;
 					dataLog["levelsCompleted"] = World.totallevelsCompleted;
 					dataLog["levelsAbandoned"] = World.totallevelsAbandoned;
 					dataLog["levelsAttempted"] = World.totalLevelsAttempted;
+					dataLog["tutLevelsCompleted"] = World.tutorialLevelsCompleted;
+					dataLog["tutLevelsAbandoned"] = World.tutorialLevelsAbandoned;
+					dataLog["tutLevelsAttempted"] = World.tutorialLevelsAttempted;
 					//dataLog["levelsSkipped"] = World.totalLevelCount - World.totallevelsSeen;
 					dataLog["levelsDoneSomething"] = World.totallevelsSeen - World.totallevelsAbandoned;
 					dataLog["levelsSeen"] = World.totallevelsSeen;
 					dataLog["totalMoves"] = World.totalBrushUsageCount;
+					dataLog["totalTutorialMoves"] = World.tutorialBrushUsageCount;
 					dataLog["gameTime"] = World.gameTimer.currentCount;
 					dataLog["realLevelsTime"] = World.realLevelsTimer.currentCount;
 					dataLog["tutorialTime"] = World.gameTimer.currentCount - World.realLevelsTimer.currentCount;
@@ -204,6 +211,14 @@ package scenes.splashscreen
 					dataLog["Solver2_DiamondBrushCount"] = World.totalDiamondBrushCount;
 					dataLog["Solver1_CircleBrushCount"] = World.totalCircleBrushCount;
 					dataLog["NarrowBrushCount"] = World.totalSquareBrushCount;
+					dataLog["MaxTutTimeSpentOnLevel"] = (World.maxTimeInTutLevel == -1 ? "" : World.maxTimeInTutLevel);
+					dataLog["MaxTutTimelevelName"] = World.maxTimeTutLevelName;
+					dataLog["MinTutTimeSpentOnLevel"] = (World.minTimeInTutLevel == Number.MAX_VALUE ? "" : World.minTimeInTutLevel);
+					dataLog["MinTutTimeLevelName"] = World.minTimeTutLevelName;
+					dataLog["TutWidenBrushCount"] = World.tutorialHexagonBrushCount;
+					dataLog["TutSolver2_DiamondBrushCount"] = World.tutorialDiamondBrushCount;
+					dataLog["TutSolver1_CircleBrushCount"] = World.tutorialCircleBrushCount;
+					dataLog["TutNarrowBrushCount"] = World.tutorialSquareBrushCount;
 					dataLog["IsSummaryData"] = true;
 					var displayMode:String;
 					if (World.LevelDisplayMode == 1)
@@ -226,7 +241,7 @@ package scenes.splashscreen
 					//dataLog["LevelDisplayMode"] = World.LevelDisplayMode == 1 ? "Random Order" : "Rating Order";
 					dataLog["PlayerRating"] = World.player.getRating();
 					dataLog["Metaphor"] = GameConfig.GAME_METAPHOR == 0 ? "Original" : "Powerplant";
-					
+					dataLog["stage"] = "pre-survey";
 					NULogging.log(dataLog);
 					//------------------------------------------------------------------
 					
@@ -350,7 +365,7 @@ package scenes.splashscreen
 		}
 		
 		protected function onSurveyButtonTriggered(e:starling.events.Event):void {
-			navigateToURL(new URLRequest("http://viridian.ccs.neu.edu/api/survey/:" + World.playerID + "/:" + World.hitId));
+			navigateToURL(new URLRequest("http://viridian.ccs.neu.edu/api/survey/:" + World.playerID + "/:" + World.hitId),"_self");
 			parent.removeChild(play_button);
 		}
 		

@@ -203,12 +203,15 @@ package scenes.game.components
 			m_fullScreenButton.y = m_zoomOutButton.y + m_zoomOutButton.height + 5;
 			
 			
-			m_helpScreenButton = new HelpScreenButton(World.m_world);
-			m_helpScreenButton.scaleX = m_helpScreenButton.scaleY = m_zoomInButton.scaleX;
-			XSprite.setPivotCenter(m_helpScreenButton);
-			m_helpScreenButton.x = m_zoomInButton.x;
-			m_helpScreenButton.y = m_zoomOutButton.y + m_zoomInButton.height + 5;
-			addChild(m_helpScreenButton);
+			if (GameConfig.ENABLE_INSTRUCTIONS)
+			{
+				m_helpScreenButton = new HelpScreenButton(World.m_world);
+				m_helpScreenButton.scaleX = m_helpScreenButton.scaleY = m_zoomInButton.scaleX;
+				XSprite.setPivotCenter(m_helpScreenButton);
+				m_helpScreenButton.x = m_zoomInButton.x;
+				m_helpScreenButton.y = m_zoomOutButton.y + m_zoomInButton.height + 5;
+				addChild(m_helpScreenButton);
+			}
 			
 			m_brushButtonGroup = new RadioButtonGroup();
 			addChild(m_brushButtonGroup);

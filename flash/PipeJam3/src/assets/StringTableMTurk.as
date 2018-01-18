@@ -10,7 +10,11 @@ package assets
 						return "The first set of levels introduces how to play.";
 					return "The first set of levels introduces how to play.  You must play all levels for credit.";
 			case SPLASH_CHALLENGE: 
-					
+					if (GameConfig.ENABLE_EXIT)
+					{
+						return "Use the skills you have learnt to play the upcoming challenge levels. \nTry to complete as many levels as you can!";
+					}
+					else {
 					if (GameConfig.NO_SURVEY)
 					{
 						if (GameConfig.ENABLE_DEBUG_DISPLAY)
@@ -36,6 +40,7 @@ package assets
 						}
 						else
 							return "Use the skills you have learnt to play the upcoming challenge levels. You now have the option to skip levels, or go to the survey if you wish.\nTry to complete as many levels as you can!";
+					}
 					}
 				case SPLASH_DONE: 
 					if (GameConfig.ENABLE_EXIT)
