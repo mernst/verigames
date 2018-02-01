@@ -50,5 +50,8 @@ package
 		
 		/** instructions or nah */
 		public static var ENABLE_INSTRUCTIONS:Boolean = true;
+		
+		/** skip button or nah */
+		public static var ENABLE_SKIP_LEVEL:Boolean = false;
 	}
 }

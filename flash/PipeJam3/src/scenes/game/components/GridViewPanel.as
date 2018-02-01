@@ -330,7 +330,8 @@ package scenes.game.components
 			if (!GameConfig.ENABLE_EXIT)
 			{
 				if ((!TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TUTORIAL) || (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_GAMEPLAY)) {
-					displaySkipButton();
+					if(GameConfig.ENABLE_SKIP_LEVEL)
+						displaySkipButton();
 				}			
 				
 				if (TutorialController.tutorialsDone && GameConfig.ENABLE_SKIP_TO_END_GAMEPLAY) {
@@ -341,7 +342,10 @@ package scenes.game.components
 			else
 			{
 				startGameTimer();
-				displaySkipButton();
+				
+				if(GameConfig.ENABLE_SKIP_LEVEL)
+					displaySkipButton();
+					
 				displayPassButton();
 			}
 				
@@ -827,7 +831,13 @@ package scenes.game.components
 				//if (TutorialController.tutorialsDone && !World.m_world.active_level.targetScoreReached)
 				if (!World.m_world.active_level.targetScoreReached)
 				{
-					displayForfeitButton();
+					if (!TutorialController.tutorialsDone && !World.m_world.active_level.targetScoreReached)
+					{
+						if (GameConfig.ENABLE_SKIP_LEVEL)
+							displayForfeitButton();
+					}
+					else
+						displayForfeitButton();
 				}
 			}
 			
@@ -1721,14 +1731,15 @@ package scenes.game.components
 				
 				startFanfare();
 				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = PipeJamGameScene.inTutorial ? 2.0 : 0.0;
-				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
-				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
+				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 1.0;
+				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 5.0 : 5.0;
 				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, (PipeJam3.ASSET_SUFFIX == "Turk") ? Constants.NARROW_GRAY : Constants.BROWN);
 				if (!PipeJam3.DISABLE_FILTERS) TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				m_fanfareTextContainer.alpha = 1;
 				m_fanfareLayer.addChild(m_fanfareTextContainer);
 				
+				/*
 				if (PipeJamGameScene.inTutorial) {
 					// For tutorial, move text and button off to the side
 					var origX:Number = m_fanfareTextContainer.x;
@@ -1741,6 +1752,10 @@ package scenes.game.components
 					// For real levels, gradually fade out text
 					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_FADE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, alpha: 0, transition:Transitions.EASE_IN } );
 				}
+				*/
+				
+				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_FADE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, alpha: 0, transition:Transitions.EASE_IN } );
+				
 				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC + LEVEL_COMPLETE_TEXT_FADE_SEC - 0.5);
 			} // end if showing fanfare
 			
@@ -1842,7 +1857,8 @@ package scenes.game.components
 			//m_skipCount = 0;
 			
 			//if(TutorialController.tutorialsDone)
-			forfeitButton.removeFromParent();
+			if(forfeitButton)
+				forfeitButton.removeFromParent();
 				
 			buttonHit = true;
 			trace("Next level button is triggered");		

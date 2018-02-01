@@ -895,9 +895,15 @@ package scenes.game.display
 						GameConfig.ENABLE_DEBUG_DISPLAY = false;
 				}
 				
+				/*
 				//Set instructions or no instructions
 				var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 2;
 				GameConfig.ENABLE_INSTRUCTIONS = mode == 0 ? true : false;
+				*/
+				
+				//Set instructions or no instructions
+				var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 2;
+				GameConfig.ENABLE_SKIP_LEVEL = mode == 0 ? true : false;
 				
 				trace("DEBUG DISPLAY: " + GameConfig.ENABLE_DEBUG_DISPLAY);
 				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
