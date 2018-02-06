@@ -901,9 +901,15 @@ package scenes.game.display
 				GameConfig.ENABLE_INSTRUCTIONS = mode == 0 ? true : false;
 				*/
 				
+				/*
 				//Set instructions or no instructions
 				var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 2;
 				GameConfig.ENABLE_SKIP_LEVEL = mode == 0 ? true : false;
+				*/
+				
+				//Set delay or no delay
+				var mode:int = workerId.charAt(workerId.length - 1).charCodeAt(0) % 2;
+				GameConfig.ENABLE_DELAY = mode == 0 ? true : false;
 				
 				trace("DEBUG DISPLAY: " + GameConfig.ENABLE_DEBUG_DISPLAY);
 				//World.LevelDisplayMode = playerID.charAt(playerID.length - 1).charCodeAt(0) % 2 == 0 ? 1 : 2;
@@ -1657,9 +1663,11 @@ package scenes.game.display
 							var continueDelay:Number = 0;
 							var showFanfare:Boolean = true;
 							if (active_level && active_level.tutorialManager) {
-								continueDelay = 0;//active_level.tutorialManager.continueButtonDelay();
 								showFanfare = active_level.tutorialManager.showFanfare();
+								continueDelay = 0;//active_level.tutorialManager.continueButtonDelay();
 							}
+							
+							
 							
 							Starling.juggler.delayCall(edgeSetGraphViewPanel.displayContinueButton, continueDelay, true, showFanfare);
 						}

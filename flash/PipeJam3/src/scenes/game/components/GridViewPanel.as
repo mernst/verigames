@@ -1526,7 +1526,10 @@ package scenes.game.components
 		public function displaySkipButton():void
 		{	
 			skipButton = ButtonFactory.getInstance().createDefaultButton("Skip Level", m_buttonWidth, m_buttonHeight);
-			skipButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
+			if(GameConfig.ENABLE_DELAY)
+				skipButton.addEventListener(starling.events.Event.TRIGGERED, onDelaySkipLevelButtonTriggered);
+			else
+				skipButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
 			//skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
 			skipButton.x = m_buttonBufferValue ;
 			skipButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
@@ -1538,7 +1541,10 @@ package scenes.game.components
 			if (!forfeitButton)
 			{
 				forfeitButton = ButtonFactory.getInstance().createDefaultButton("Forfeit Level", m_buttonWidth, m_buttonHeight);
-				forfeitButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
+				if(GameConfig.ENABLE_DELAY)
+					forfeitButton.addEventListener(starling.events.Event.TRIGGERED, onDelaySkipLevelButtonTriggered);
+				else
+					forfeitButton.addEventListener(starling.events.Event.TRIGGERED, onSkipLevelButtonTriggered);
 				//skipButton.x = WIDTH - Constants.RightPanelWidth - skipButton.width + 10 ;
 				forfeitButton.x = m_buttonBufferValue ;
 				forfeitButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
@@ -1695,11 +1701,16 @@ package scenes.game.components
 
 		public function displayContinueButton(permanently:Boolean = false, showFanfare:Boolean = true):void
 		{
+			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION,true));
 			if (PipeJam3.ASSET_SUFFIX == "Turk") showFanfare = false;
 			if (permanently) m_continueButtonForced = true;
 			if (!continueButton) {
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", m_buttonWidth, m_buttonHeight);
-				continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
+				if(GameConfig.ENABLE_DELAY)
+					continueButton.addEventListener(starling.events.Event.TRIGGERED, onDelayNextLevelButtonTriggered);
+				else
+					continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
+				//continueButton.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = m_buttonBufferValue;
 				continueButton.y = HEIGHT - m_buttonHeight - m_buttonBufferValue;
 			}
@@ -1851,8 +1862,19 @@ package scenes.game.components
 		
 		private var m_skipCount:int = 0;
 		private var buttonHit:Boolean = false;
+		
+		private function onDelayNextLevelButtonTriggered(evt:starling.events.Event):void
+		{
+			dispatchEvent(new starling.events.Event(Constants.START_BUSY_ANIMATION, true));
+			var continueDelay:Number = 20;
+			Starling.juggler.delayCall(onNextLevelButtonTriggered, continueDelay, evt);
+		}
+		
 		private function onNextLevelButtonTriggered(evt:starling.events.Event):void
 		{
+			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION, true));
+			
+			
 			trace("Inside onNextLevel...");
 			//m_skipCount = 0;
 			
@@ -2067,10 +2089,17 @@ package scenes.game.components
 			
 		}
 		
+		private function onDelaySkipLevelButtonTriggered(evt:starling.events.Event):void
+		{
+			dispatchEvent(new starling.events.Event(Constants.START_BUSY_ANIMATION, true));
+			var continueDelay:Number = 20;
+			Starling.juggler.delayCall(onSkipLevelButtonTriggered, continueDelay, evt);
+		}
+		
 		private function onSkipLevelButtonTriggered(evt:starling.events.Event):void
 		{
 			trace("Inside onSkipLevel");
-			
+			dispatchEvent(new starling.events.Event(Constants.STOP_BUSY_ANIMATION, true));
 			lastResult = -1;
 			
 			if(forfeitButton)

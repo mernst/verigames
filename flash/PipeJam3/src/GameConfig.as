@@ -52,6 +52,9 @@ package
 		public static var ENABLE_INSTRUCTIONS:Boolean = true;
 		
 		/** skip button or nah */
-		public static var ENABLE_SKIP_LEVEL:Boolean = false;
+		public static var ENABLE_SKIP_LEVEL:Boolean = true;
+		
+		/** delay level load or nah */
+		public static var ENABLE_DELAY:Boolean = false;
 	}
 }

@@ -1280,6 +1280,7 @@ package scenes.game.display
 			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage); 
 			removeEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			
 			//disposeChildren();
 		}
 		
